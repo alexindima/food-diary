@@ -12,27 +12,27 @@ const ROUNDED_REQUEST_DURATION_MS = 123.5;
 const WEB_VITAL_LCP_INITIAL = 1000;
 const WEB_VITAL_LCP_DUPLICATE = 1200;
 
-describe('FrontendObservabilityService', () => {
-    let service: FrontendObservabilityService;
-    let loggingSpy: { logEvent: ReturnType<typeof vi.fn> };
+let service: FrontendObservabilityService;
+let loggingSpy: { logEvent: ReturnType<typeof vi.fn> };
 
-    beforeEach(() => {
-        environment.enableClientObservability = true;
-        loggingSpy = {
-            logEvent: vi.fn().mockReturnValue(of(undefined)),
-        };
+beforeEach(() => {
+    environment.enableClientObservability = true;
+    loggingSpy = {
+        logEvent: vi.fn().mockReturnValue(of(undefined)),
+    };
 
-        TestBed.configureTestingModule({
-            providers: [provideRouter([]), FrontendObservabilityService, { provide: LoggingApiService, useValue: loggingSpy }],
-        });
-
-        service = TestBed.inject(FrontendObservabilityService);
+    TestBed.configureTestingModule({
+        providers: [provideRouter([]), FrontendObservabilityService, { provide: LoggingApiService, useValue: loggingSpy }],
     });
 
-    afterEach(() => {
-        environment.enableClientObservability = false;
-    });
+    service = TestBed.inject(FrontendObservabilityService);
+});
 
+afterEach(() => {
+    environment.enableClientObservability = false;
+});
+
+describe('FrontendObservabilityService errors and requests', () => {
     it('should log client errors with client_error category', () => {
         service.recordClientError({
             message: 'Boom',
@@ -60,14 +60,18 @@ describe('FrontendObservabilityService', () => {
         expect(payload['durationMs']).toBe(ROUNDED_REQUEST_DURATION_MS);
         expect((payload['details'] as Record<string, unknown>)['url']).toBe('/api/v1/products');
     });
+});
 
+describe('FrontendObservabilityService web vitals', () => {
     it('should deduplicate repeated web vitals by name', () => {
         service.recordWebVital('lcp', WEB_VITAL_LCP_INITIAL);
         service.recordWebVital('lcp', WEB_VITAL_LCP_DUPLICATE);
 
         expect(loggingSpy.logEvent).toHaveBeenCalledTimes(1);
     });
+});
 
+describe('FrontendObservabilityService notification events', () => {
     it('should log notification preference changes as user actions', () => {
         service.recordNotificationPreferenceChanged('push', true, { permission: 'granted' });
 
@@ -86,7 +90,9 @@ describe('FrontendObservabilityService', () => {
         expect(payload['name']).toBe('notifications.subscription.ensure');
         expect(payload['outcome']).toBe('blocked');
     });
+});
 
+describe('FrontendObservabilityService fasting events', () => {
     it('should log fasting reminder preset selection', () => {
         service.recordFastingReminderPresetSelected({
             presetId: 'steady',

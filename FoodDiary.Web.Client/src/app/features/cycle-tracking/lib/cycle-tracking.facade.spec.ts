@@ -6,67 +6,50 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CyclesService } from '../api/cycles.service';
 import { CycleTrackingFacade } from './cycle-tracking.facade';
 
-describe('CycleTrackingFacade', () => {
-    let facade: CycleTrackingFacade;
-    let cyclesService: {
-        getCurrent: ReturnType<typeof vi.fn>;
-        create: ReturnType<typeof vi.fn>;
-        upsertDay: ReturnType<typeof vi.fn>;
+let facade: CycleTrackingFacade;
+let cyclesService: {
+    create: ReturnType<typeof vi.fn>;
+    getCurrent: ReturnType<typeof vi.fn>;
+    upsertDay: ReturnType<typeof vi.fn>;
+};
+
+beforeEach(() => {
+    cyclesService = {
+        getCurrent: vi.fn().mockReturnValue(
+            of({
+                id: 'cycle-1',
+                userId: 'user-1',
+                startDate: '2026-04-01T00:00:00Z',
+                averageLength: 28,
+                lutealLength: 14,
+                days: [],
+                predictions: {
+                    nextPeriodStart: '2026-04-29T00:00:00Z',
+                },
+            }),
+        ),
+        create: vi.fn().mockReturnValue(
+            of({
+                id: 'cycle-2',
+                userId: 'user-1',
+                startDate: '2026-04-03T00:00:00Z',
+                averageLength: 30,
+                lutealLength: 15,
+                days: [],
+                predictions: null,
+            }),
+        ),
+        upsertDay: vi.fn().mockReturnValue(of(createCycleDayResponse())),
     };
 
-    beforeEach(() => {
-        cyclesService = {
-            getCurrent: vi.fn().mockReturnValue(
-                of({
-                    id: 'cycle-1',
-                    userId: 'user-1',
-                    startDate: '2026-04-01T00:00:00Z',
-                    averageLength: 28,
-                    lutealLength: 14,
-                    days: [],
-                    predictions: {
-                        nextPeriodStart: '2026-04-29T00:00:00Z',
-                    },
-                }),
-            ),
-            create: vi.fn().mockReturnValue(
-                of({
-                    id: 'cycle-2',
-                    userId: 'user-1',
-                    startDate: '2026-04-03T00:00:00Z',
-                    averageLength: 30,
-                    lutealLength: 15,
-                    days: [],
-                    predictions: null,
-                }),
-            ),
-            upsertDay: vi.fn().mockReturnValue(
-                of({
-                    id: 'day-1',
-                    cycleId: 'cycle-1',
-                    date: '2026-04-02T00:00:00.000Z',
-                    isPeriod: true,
-                    symptoms: {
-                        pain: 5,
-                        mood: 3,
-                        edema: 1,
-                        headache: 2,
-                        energy: 4,
-                        sleepQuality: 6,
-                        libido: 2,
-                    },
-                    notes: 'note',
-                }),
-            ),
-        };
-
-        TestBed.configureTestingModule({
-            providers: [FormBuilder, CycleTrackingFacade, { provide: CyclesService, useValue: cyclesService }],
-        });
-
-        facade = TestBed.inject(CycleTrackingFacade);
+    TestBed.configureTestingModule({
+        providers: [FormBuilder, CycleTrackingFacade, { provide: CyclesService, useValue: cyclesService }],
     });
 
+    facade = TestBed.inject(CycleTrackingFacade);
+});
+
+describe('CycleTrackingFacade current cycle', () => {
     it('loads current cycle on initialize', () => {
         facade.initialize();
 
@@ -91,7 +74,9 @@ describe('CycleTrackingFacade', () => {
         });
         expect(facade.cycle()?.id).toBe('cycle-2');
     });
+});
 
+describe('CycleTrackingFacade days', () => {
     it('upserts a day and merges it into the current cycle', () => {
         facade.initialize();
         facade.dayForm.setValue({
@@ -127,3 +112,37 @@ describe('CycleTrackingFacade', () => {
         expect(facade.days()[0].id).toBe('day-1');
     });
 });
+
+function createCycleDayResponse(): {
+    cycleId: string;
+    date: string;
+    id: string;
+    isPeriod: boolean;
+    notes: string;
+    symptoms: {
+        edema: number;
+        energy: number;
+        headache: number;
+        libido: number;
+        mood: number;
+        pain: number;
+        sleepQuality: number;
+    };
+} {
+    return {
+        id: 'day-1',
+        cycleId: 'cycle-1',
+        date: '2026-04-02T00:00:00.000Z',
+        isPeriod: true,
+        symptoms: {
+            pain: 5,
+            mood: 3,
+            edema: 1,
+            headache: 2,
+            energy: 4,
+            sleepQuality: 6,
+            libido: 2,
+        },
+        notes: 'note',
+    };
+}

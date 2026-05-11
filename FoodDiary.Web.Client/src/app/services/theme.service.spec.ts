@@ -6,32 +6,24 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { ThemeService } from './theme.service';
 
-describe('ThemeService', () => {
-    let service: ThemeService;
-    let documentRef: Document;
+let service: ThemeService;
+let documentRef: Document;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [ThemeService],
-        });
-
-        service = TestBed.inject(ThemeService);
-        documentRef = TestBed.inject(DOCUMENT);
-        localStorage.clear();
-        documentRef.documentElement.removeAttribute('data-theme');
-        documentRef.documentElement.removeAttribute('data-ui-style');
-        documentRef.documentElement.style.colorScheme = '';
-
-        let metaThemeColor = documentRef.querySelector('meta[name="theme-color"]');
-        if (metaThemeColor === null) {
-            metaThemeColor = documentRef.createElement('meta');
-            metaThemeColor.setAttribute('name', 'theme-color');
-            documentRef.head.appendChild(metaThemeColor);
-        }
-
-        metaThemeColor.setAttribute('content', '#1d4ed8');
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [ThemeService],
     });
 
+    service = TestBed.inject(ThemeService);
+    documentRef = TestBed.inject(DOCUMENT);
+    localStorage.clear();
+    documentRef.documentElement.removeAttribute('data-theme');
+    documentRef.documentElement.removeAttribute('data-ui-style');
+    documentRef.documentElement.style.colorScheme = '';
+    ensureMetaThemeColor();
+});
+
+describe('ThemeService initialization', () => {
     it('should initialize with the default theme', () => {
         service.initializeTheme();
 
@@ -54,7 +46,9 @@ describe('ThemeService', () => {
         expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
         expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('var(--fd-color-emerald-700)');
     });
+});
 
+describe('ThemeService public routes', () => {
     it('should use default theme on public routes without overwriting stored preferences', () => {
         localStorage.setItem('fd_theme', 'leaf');
         localStorage.setItem('fd_ui_style', 'modern');
@@ -74,7 +68,6 @@ describe('ThemeService', () => {
         localStorage.setItem('fd_ui_style', 'modern');
 
         service.applyThemeForRoute('/auth/login');
-
         service.applyThemeForRoute('/dashboard');
 
         expect(service.theme()).toBe('leaf');
@@ -95,7 +88,9 @@ describe('ThemeService', () => {
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('ocean');
         expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('classic');
     });
+});
 
+describe('ThemeService preferences', () => {
     it('should apply dark color scheme for the dark theme', () => {
         service.setTheme('dark');
 
@@ -120,3 +115,14 @@ describe('ThemeService', () => {
         expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
     });
 });
+
+function ensureMetaThemeColor(): void {
+    let metaThemeColor = documentRef.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor === null) {
+        metaThemeColor = documentRef.createElement('meta');
+        metaThemeColor.setAttribute('name', 'theme-color');
+        documentRef.head.appendChild(metaThemeColor);
+    }
+
+    metaThemeColor.setAttribute('content', '#1d4ed8');
+}

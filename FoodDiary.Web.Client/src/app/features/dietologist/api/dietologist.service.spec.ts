@@ -6,33 +6,53 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { DietologistService } from './dietologist.service';
 
-describe('DietologistService', () => {
-    let service: DietologistService;
-    let httpMock: HttpTestingController;
+const BASE_URL = environment.apiUrls.dietologist;
+const PERMISSIONS = {
+    shareMeals: false,
+    shareStatistics: true,
+    shareWeight: true,
+    shareWaist: true,
+    shareGoals: false,
+    shareHydration: true,
+    shareProfile: true,
+    shareFasting: false,
+};
+const INVITE_PERMISSIONS = {
+    shareMeals: true,
+    shareStatistics: true,
+    shareWeight: false,
+    shareWaist: true,
+    shareGoals: true,
+    shareHydration: false,
+    shareProfile: true,
+    shareFasting: true,
+};
 
-    const baseUrl = environment.apiUrls.dietologist;
+let service: DietologistService;
+let httpMock: HttpTestingController;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [DietologistService, provideHttpClient(), provideHttpClientTesting()],
-        });
-
-        service = TestBed.inject(DietologistService);
-        httpMock = TestBed.inject(HttpTestingController);
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [DietologistService, provideHttpClient(), provideHttpClientTesting()],
     });
 
-    afterEach(() => {
-        httpMock.verify();
-    });
+    service = TestBed.inject(DietologistService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
 
+afterEach(() => {
+    httpMock.verify();
+});
+
+describe('DietologistService relationship reads', () => {
     it('gets relationship and current-user invitation', () => {
         service.getRelationship().subscribe();
-        const relationshipReq = httpMock.expectOne(`${baseUrl}/relationship`);
+        const relationshipReq = httpMock.expectOne(`${BASE_URL}/relationship`);
         expect(relationshipReq.request.method).toBe('GET');
         relationshipReq.flush(null);
 
         service.getInvitationForCurrentUser('inv-1').subscribe();
-        const invitationReq = httpMock.expectOne(`${baseUrl}/invitations/inv-1/current-user`);
+        const invitationReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/current-user`);
         expect(invitationReq.request.method).toBe('GET');
         invitationReq.flush({
             invitationId: 'inv-1',
@@ -45,84 +65,43 @@ describe('DietologistService', () => {
             expiresAtUtc: '2026-04-22T00:00:00Z',
         });
     });
+});
 
+describe('DietologistService invitations', () => {
     it('posts invite and current-user accept decline commands', () => {
-        service
-            .invite({
-                dietologistEmail: 'diet@example.com',
-                permissions: {
-                    shareMeals: true,
-                    shareStatistics: true,
-                    shareWeight: false,
-                    shareWaist: true,
-                    shareGoals: true,
-                    shareHydration: false,
-                    shareProfile: true,
-                    shareFasting: true,
-                },
-            })
-            .subscribe();
-        const inviteReq = httpMock.expectOne(`${baseUrl}/invite`);
+        service.invite({ dietologistEmail: 'diet@example.com', permissions: INVITE_PERMISSIONS }).subscribe();
+        const inviteReq = httpMock.expectOne(`${BASE_URL}/invite`);
         expect(inviteReq.request.method).toBe('POST');
         expect(inviteReq.request.body).toEqual({
             dietologistEmail: 'diet@example.com',
-            permissions: {
-                shareMeals: true,
-                shareStatistics: true,
-                shareWeight: false,
-                shareWaist: true,
-                shareGoals: true,
-                shareHydration: false,
-                shareProfile: true,
-                shareFasting: true,
-            },
+            permissions: INVITE_PERMISSIONS,
         });
         inviteReq.flush(null);
 
         service.acceptInvitationForCurrentUser('inv-1').subscribe();
-        const acceptReq = httpMock.expectOne(`${baseUrl}/invitations/inv-1/accept-current-user`);
+        const acceptReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/accept-current-user`);
         expect(acceptReq.request.method).toBe('POST');
         expect(acceptReq.request.body).toEqual({});
         acceptReq.flush(null);
 
         service.declineInvitationForCurrentUser('inv-1').subscribe();
-        const declineReq = httpMock.expectOne(`${baseUrl}/invitations/inv-1/decline-current-user`);
+        const declineReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/decline-current-user`);
         expect(declineReq.request.method).toBe('POST');
         expect(declineReq.request.body).toEqual({});
         declineReq.flush(null);
     });
+});
 
+describe('DietologistService relationship mutations', () => {
     it('updates permissions and revokes relationship', () => {
-        service
-            .updatePermissions({
-                shareMeals: false,
-                shareStatistics: true,
-                shareWeight: true,
-                shareWaist: true,
-                shareGoals: false,
-                shareHydration: true,
-                shareProfile: true,
-                shareFasting: false,
-            })
-            .subscribe();
-        const permissionsReq = httpMock.expectOne(`${baseUrl}/permissions`);
+        service.updatePermissions(PERMISSIONS).subscribe();
+        const permissionsReq = httpMock.expectOne(`${BASE_URL}/permissions`);
         expect(permissionsReq.request.method).toBe('PUT');
-        expect(permissionsReq.request.body).toEqual({
-            permissions: {
-                shareMeals: false,
-                shareStatistics: true,
-                shareWeight: true,
-                shareWaist: true,
-                shareGoals: false,
-                shareHydration: true,
-                shareProfile: true,
-                shareFasting: false,
-            },
-        });
+        expect(permissionsReq.request.body).toEqual({ permissions: PERMISSIONS });
         permissionsReq.flush(null);
 
         service.revokeRelationship().subscribe();
-        const revokeReq = httpMock.expectOne(`${baseUrl}/relationship`);
+        const revokeReq = httpMock.expectOne(`${BASE_URL}/relationship`);
         expect(revokeReq.request.method).toBe('DELETE');
         revokeReq.flush(null);
     });

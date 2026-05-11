@@ -8,112 +8,108 @@ import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.t
 import type { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardService } from './dashboard.service';
 
+const BASE_URL = environment.apiUrls.dashboard;
+const TEST_DATE = new Date('2026-03-15T00:00:00.000Z');
+const MOCK_SNAPSHOT: DashboardSnapshot = {
+    date: '2026-03-15',
+    dailyGoal: 2200,
+    weeklyCalorieGoal: 15400,
+    statistics: {
+        totalCalories: 2000,
+        averageProteins: 120,
+        averageFats: 70,
+        averageCarbs: 210,
+        averageFiber: 25,
+    },
+    weeklyCalories: [],
+    weight: {
+        latest: null,
+        previous: null,
+        desired: null,
+    },
+    waist: {
+        latest: null,
+        previous: null,
+        desired: null,
+    },
+    meals: {
+        items: [],
+        total: 0,
+    },
+};
+
+let service: DashboardService;
+let httpMock: HttpTestingController;
+
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [DashboardService, provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    service = TestBed.inject(DashboardService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
+
+afterEach(() => {
+    httpMock.verify();
+});
+
 describe('DashboardService', () => {
-    let service: DashboardService;
-    let httpMock: HttpTestingController;
-
-    const baseUrl = environment.apiUrls.dashboard;
-
-    const mockSnapshot: DashboardSnapshot = {
-        date: '2026-03-15',
-        dailyGoal: 2200,
-        weeklyCalorieGoal: 15400,
-        statistics: {
-            totalCalories: 2000,
-            averageProteins: 120,
-            averageFats: 70,
-            averageCarbs: 210,
-            averageFiber: 25,
-        },
-        weeklyCalories: [],
-        weight: {
-            latest: null,
-            previous: null,
-            desired: null,
-        },
-        waist: {
-            latest: null,
-            previous: null,
-            desired: null,
-        },
-        meals: {
-            items: [],
-            total: 0,
-        },
-    };
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [DashboardService, provideHttpClient(), provideHttpClientTesting()],
-        });
-
-        service = TestBed.inject(DashboardService);
-        httpMock = TestBed.inject(HttpTestingController);
-    });
-
-    afterEach(() => {
-        httpMock.verify();
-    });
-
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+});
 
+describe('DashboardService snapshot', () => {
     it('should get snapshot with date param', () => {
-        const date = new Date('2026-03-15T00:00:00.000Z');
-
-        service.getSnapshot({ date }).subscribe(result => {
-            expect(result).toEqual(mockSnapshot);
+        service.getSnapshot({ date: TEST_DATE }).subscribe(result => {
+            expect(result).toEqual(MOCK_SNAPSHOT);
         });
 
         const req = httpMock.expectOne(
             r =>
-                r.url === `${baseUrl}/` &&
-                r.params.get('date') === date.toISOString() &&
+                r.url === `${BASE_URL}/` &&
+                r.params.get('date') === TEST_DATE.toISOString() &&
                 r.params.get('page') === '1' &&
                 r.params.get('pageSize') === '10',
         );
         expect(req.request.method).toBe('GET');
-        req.flush(mockSnapshot);
+        req.flush(MOCK_SNAPSHOT);
     });
 
     it('should include optional params', () => {
-        const date = new Date('2026-03-15T00:00:00.000Z');
-
-        service.getSnapshot({ date, page: 2, pageSize: 20, locale: 'en', trendDays: 7 }).subscribe(result => {
-            expect(result).toEqual(mockSnapshot);
+        service.getSnapshot({ date: TEST_DATE, page: 2, pageSize: 20, locale: 'en', trendDays: 7 }).subscribe(result => {
+            expect(result).toEqual(MOCK_SNAPSHOT);
         });
 
         const req = httpMock.expectOne(
             r =>
-                r.url === `${baseUrl}/` &&
-                r.params.get('date') === date.toISOString() &&
+                r.url === `${BASE_URL}/` &&
+                r.params.get('date') === TEST_DATE.toISOString() &&
                 r.params.get('page') === '2' &&
                 r.params.get('pageSize') === '20' &&
                 r.params.get('locale') === 'en' &&
                 r.params.get('trendDays') === '7',
         );
         expect(req.request.method).toBe('GET');
-        req.flush(mockSnapshot);
+        req.flush(MOCK_SNAPSHOT);
     });
 
     it('should return null on error', () => {
-        const date = new Date('2026-03-15T00:00:00.000Z');
-
-        service.getSnapshot({ date }).subscribe(result => {
+        service.getSnapshot({ date: TEST_DATE }).subscribe(result => {
             expect(result).toBeNull();
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/`);
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
     });
+});
 
+describe('DashboardService silent snapshot', () => {
     it('should mark silent snapshot requests to skip global loading', () => {
-        const date = new Date('2026-03-15T00:00:00.000Z');
+        service.getSnapshotSilently({ date: TEST_DATE }).subscribe();
 
-        service.getSnapshotSilently({ date }).subscribe();
-
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/`);
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         req.flush({});
     });

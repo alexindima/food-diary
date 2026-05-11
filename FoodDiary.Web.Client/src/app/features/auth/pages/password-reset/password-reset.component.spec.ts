@@ -10,74 +10,87 @@ import type { User } from '../../../../shared/models/user.data';
 import type { AuthResponse, ConfirmPasswordResetRequest } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset.component';
 
-describe('PasswordResetComponent', () => {
-    let component: PasswordResetComponent;
-    let fixture: ComponentFixture<PasswordResetComponent>;
-    let authServiceSpy: { confirmPasswordReset: ReturnType<typeof vi.fn> };
-    let navigationServiceSpy: { navigateToHomeAsync: ReturnType<typeof vi.fn>; navigateToAuthAsync: ReturnType<typeof vi.fn> };
-    let translateServiceSpy: TranslateService;
+const USER: User = {
+    id: 'user-1',
+    email: 'user@example.com',
+    hasPassword: true,
+    pushNotificationsEnabled: true,
+    fastingPushNotificationsEnabled: true,
+    socialPushNotificationsEnabled: true,
+    fastingCheckInReminderHours: 12,
+    fastingCheckInFollowUpReminderHours: 20,
+    isActive: true,
+    isEmailConfirmed: true,
+};
+const AUTH_RESPONSE: AuthResponse = {
+    accessToken: 'access-token',
+    refreshToken: 'refresh-token',
+    user: USER,
+};
 
-    const user: User = {
-        id: 'user-1',
-        email: 'user@example.com',
-        hasPassword: true,
-        pushNotificationsEnabled: true,
-        fastingPushNotificationsEnabled: true,
-        socialPushNotificationsEnabled: true,
-        fastingCheckInReminderHours: 12,
-        fastingCheckInFollowUpReminderHours: 20,
-        isActive: true,
-        isEmailConfirmed: true,
+type PasswordResetTestContext = {
+    authServiceSpy: { confirmPasswordReset: ReturnType<typeof vi.fn> };
+    component: PasswordResetComponent;
+    fixture: ComponentFixture<PasswordResetComponent>;
+    navigationServiceSpy: {
+        navigateToAuthAsync: ReturnType<typeof vi.fn>;
+        navigateToHomeAsync: ReturnType<typeof vi.fn>;
     };
-    const authResponse: AuthResponse = {
-        accessToken: 'access-token',
-        refreshToken: 'refresh-token',
-        user,
-    };
+};
 
-    function createComponent(queryParams: Record<string, string> = { userId: 'user-1', token: 'tok-abc' }): void {
-        authServiceSpy = { confirmPasswordReset: vi.fn() };
-        navigationServiceSpy = { navigateToHomeAsync: vi.fn(), navigateToAuthAsync: vi.fn() };
-        navigationServiceSpy.navigateToHomeAsync.mockReturnValue(Promise.resolve());
-        navigationServiceSpy.navigateToAuthAsync.mockReturnValue(Promise.resolve());
+function createComponent(queryParams: Record<string, string> = { userId: 'user-1', token: 'tok-abc' }): PasswordResetTestContext {
+    const authServiceSpy = { confirmPasswordReset: vi.fn() };
+    const navigationServiceSpy = { navigateToHomeAsync: vi.fn(), navigateToAuthAsync: vi.fn() };
+    navigationServiceSpy.navigateToHomeAsync.mockReturnValue(Promise.resolve());
+    navigationServiceSpy.navigateToAuthAsync.mockReturnValue(Promise.resolve());
 
-        TestBed.configureTestingModule({
-            imports: [PasswordResetComponent, TranslateModule.forRoot()],
-            providers: [
-                { provide: AuthService, useValue: authServiceSpy },
-                { provide: NavigationService, useValue: navigationServiceSpy },
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: convertToParamMap(queryParams),
-                        },
+    TestBed.configureTestingModule({
+        imports: [PasswordResetComponent, TranslateModule.forRoot()],
+        providers: [
+            { provide: AuthService, useValue: authServiceSpy },
+            { provide: NavigationService, useValue: navigationServiceSpy },
+            {
+                provide: ActivatedRoute,
+                useValue: {
+                    snapshot: {
+                        queryParamMap: convertToParamMap(queryParams),
                     },
                 },
-            ],
-        });
-
-        translateServiceSpy = TestBed.inject(TranslateService);
-        vi.spyOn(translateServiceSpy, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
-
-        fixture = TestBed.createComponent(PasswordResetComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    }
-
-    it('should create', () => {
-        createComponent();
-        expect(component).toBeTruthy();
+            },
+        ],
     });
 
+    const translateServiceSpy = TestBed.inject(TranslateService);
+    vi.spyOn(translateServiceSpy, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
+
+    const fixture = TestBed.createComponent(PasswordResetComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    return { authServiceSpy, component, fixture, navigationServiceSpy };
+}
+
+function setValidPassword(component: PasswordResetComponent): void {
+    component.form.controls.password.setValue('newPassword123');
+    component.form.controls.confirmPassword.setValue('newPassword123');
+}
+
+describe('PasswordResetComponent', () => {
+    it('should create', () => {
+        const { component } = createComponent();
+        expect(component).toBeTruthy();
+    });
+});
+
+describe('PasswordResetComponent form validation', () => {
     it('should initialize form with password and confirmPassword fields', () => {
-        createComponent();
+        const { component } = createComponent();
         expect(component.form.contains('password')).toBe(true);
         expect(component.form.contains('confirmPassword')).toBe(true);
     });
 
     it('should validate required password', () => {
-        createComponent();
+        const { component } = createComponent();
         const control = component.form.controls.password;
         control.setValue('');
         control.markAsTouched();
@@ -85,7 +98,7 @@ describe('PasswordResetComponent', () => {
     });
 
     it('should validate password minimum length', () => {
-        createComponent();
+        const { component } = createComponent();
         const control = component.form.controls.password;
         control.setValue('abc');
         control.markAsTouched();
@@ -96,7 +109,7 @@ describe('PasswordResetComponent', () => {
     });
 
     it('should validate password confirmation match', () => {
-        createComponent();
+        const { component } = createComponent();
         component.form.controls.password.setValue('validPass1');
         component.form.controls.confirmPassword.setValue('differentPass');
         component.form.controls.confirmPassword.markAsTouched();
@@ -106,13 +119,14 @@ describe('PasswordResetComponent', () => {
         component.form.controls.confirmPassword.setValue('validPass1');
         expect(component.form.controls.confirmPassword.hasError('matchField')).toBe(false);
     });
+});
 
+describe('PasswordResetComponent submit', () => {
     it('should call confirmPasswordReset on submit', () => {
-        createComponent();
-        authServiceSpy.confirmPasswordReset.mockReturnValue(of(authResponse));
+        const { authServiceSpy, component } = createComponent();
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
 
-        component.form.controls.password.setValue('newPassword123');
-        component.form.controls.confirmPassword.setValue('newPassword123');
+        setValidPassword(component);
         component.onSubmit();
 
         expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledTimes(1);
@@ -129,11 +143,10 @@ describe('PasswordResetComponent', () => {
     });
 
     it('should navigate to home on successful submit', () => {
-        createComponent();
-        authServiceSpy.confirmPasswordReset.mockReturnValue(of(authResponse));
+        const { authServiceSpy, component, navigationServiceSpy } = createComponent();
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
 
-        component.form.controls.password.setValue('newPassword123');
-        component.form.controls.confirmPassword.setValue('newPassword123');
+        setValidPassword(component);
         component.onSubmit();
 
         expect(navigationServiceSpy.navigateToHomeAsync).toHaveBeenCalled();
@@ -141,37 +154,37 @@ describe('PasswordResetComponent', () => {
     });
 
     it('should handle submit error', () => {
-        createComponent();
+        const { authServiceSpy, component } = createComponent();
         authServiceSpy.confirmPasswordReset.mockReturnValue(throwError(() => new Error('fail')));
 
-        component.form.controls.password.setValue('newPassword123');
-        component.form.controls.confirmPassword.setValue('newPassword123');
+        setValidPassword(component);
         component.onSubmit();
 
         expect(component.state()).toBe('error');
         expect(component.errorMessage()).toBe('AUTH.RESET.ERROR_GENERIC');
         expect(component.isSubmitting()).toBe(false);
     });
+});
 
+describe('PasswordResetComponent invalid states', () => {
     it('should set invalid state when token is missing', () => {
-        createComponent({ userId: '', token: '' });
+        const { component } = createComponent({ userId: '', token: '' });
         expect(component.state()).toBe('invalid');
         expect(component.errorMessage()).toBe('AUTH.RESET.INVALID');
     });
 
     it('should not submit when form is invalid', () => {
-        createComponent();
+        const { authServiceSpy, component } = createComponent();
         component.form.controls.password.setValue('');
         component.onSubmit();
         expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
     });
 
     it('should not submit when already submitting', () => {
-        createComponent();
-        authServiceSpy.confirmPasswordReset.mockReturnValue(of(authResponse));
+        const { authServiceSpy, component } = createComponent();
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
 
-        component.form.controls.password.setValue('newPassword123');
-        component.form.controls.confirmPassword.setValue('newPassword123');
+        setValidPassword(component);
         component.isSubmitting.set(true);
         component.onSubmit();
 

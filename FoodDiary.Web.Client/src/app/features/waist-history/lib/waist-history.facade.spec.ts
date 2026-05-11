@@ -12,60 +12,47 @@ const TARGET_WAIST = 78;
 const UPDATED_TARGET_WAIST = 77;
 const EXPECTED_WHTR = 0.46;
 
-describe('WaistHistoryFacade', () => {
-    let facade: WaistHistoryFacade;
-    let waistEntriesService: {
-        getEntries: ReturnType<typeof vi.fn>;
-        getSummary: ReturnType<typeof vi.fn>;
-        create: ReturnType<typeof vi.fn>;
-        update: ReturnType<typeof vi.fn>;
-        remove: ReturnType<typeof vi.fn>;
-    };
-    let userService: {
-        getDesiredWaist: ReturnType<typeof vi.fn>;
-        getInfo: ReturnType<typeof vi.fn>;
-        updateDesiredWaist: ReturnType<typeof vi.fn>;
+let facade: WaistHistoryFacade;
+let waistEntriesService: {
+    create: ReturnType<typeof vi.fn>;
+    getEntries: ReturnType<typeof vi.fn>;
+    getSummary: ReturnType<typeof vi.fn>;
+    remove: ReturnType<typeof vi.fn>;
+    update: ReturnType<typeof vi.fn>;
+};
+let userService: {
+    getDesiredWaist: ReturnType<typeof vi.fn>;
+    getInfo: ReturnType<typeof vi.fn>;
+    updateDesiredWaist: ReturnType<typeof vi.fn>;
+};
+
+beforeEach(() => {
+    waistEntriesService = createWaistEntriesServiceMock();
+    userService = {
+        getDesiredWaist: vi.fn().mockReturnValue(of(TARGET_WAIST)),
+        getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
+        updateDesiredWaist: vi.fn().mockReturnValue(of(UPDATED_TARGET_WAIST)),
     };
 
-    beforeEach(() => {
-        waistEntriesService = {
-            getEntries: vi.fn().mockReturnValue(
-                of([
-                    { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 },
-                    { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumference: 83.5 },
-                ]),
-            ),
-            getSummary: vi
-                .fn()
-                .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82 }])),
-            create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', circumference: 81.7 })),
-            update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 })),
-            remove: vi.fn().mockReturnValue(of(void 0)),
-        };
-        userService = {
-            getDesiredWaist: vi.fn().mockReturnValue(of(TARGET_WAIST)),
-            getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
-            updateDesiredWaist: vi.fn().mockReturnValue(of(UPDATED_TARGET_WAIST)),
-        };
-
-        TestBed.configureTestingModule({
-            providers: [
-                FormBuilder,
-                WaistHistoryFacade,
-                { provide: WaistEntriesService, useValue: waistEntriesService },
-                { provide: UserService, useValue: userService },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: vi.fn((key: string) => key),
-                    },
+    TestBed.configureTestingModule({
+        providers: [
+            FormBuilder,
+            WaistHistoryFacade,
+            { provide: WaistEntriesService, useValue: waistEntriesService },
+            { provide: UserService, useValue: userService },
+            {
+                provide: TranslateService,
+                useValue: {
+                    instant: vi.fn((key: string) => key),
                 },
-            ],
-        });
-
-        facade = TestBed.inject(WaistHistoryFacade);
+            },
+        ],
     });
 
+    facade = TestBed.inject(WaistHistoryFacade);
+});
+
+describe('WaistHistoryFacade loading', () => {
     it('loads entries, summary, desired waist, and profile on initialize', () => {
         facade.initialize();
         TestBed.tick();
@@ -79,7 +66,9 @@ describe('WaistHistoryFacade', () => {
         expect(facade.desiredWaist()).toBe(TARGET_WAIST);
         expect(facade.whtrValue()).toBe(EXPECTED_WHTR);
     });
+});
 
+describe('WaistHistoryFacade entries', () => {
     it('submits a new entry and reloads the list', () => {
         facade.initialize();
         TestBed.tick();
@@ -113,7 +102,9 @@ describe('WaistHistoryFacade', () => {
             circumference: 82,
         });
     });
+});
 
+describe('WaistHistoryFacade desired waist', () => {
     it('saves desired waist after validation', () => {
         facade.desiredWaistControl.setValue(`${UPDATED_TARGET_WAIST}`);
 
@@ -124,3 +115,20 @@ describe('WaistHistoryFacade', () => {
         expect(facade.desiredWaistControl.value).toBe(`${UPDATED_TARGET_WAIST}`);
     });
 });
+
+function createWaistEntriesServiceMock(): typeof waistEntriesService {
+    return {
+        getEntries: vi.fn().mockReturnValue(
+            of([
+                { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 },
+                { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumference: 83.5 },
+            ]),
+        ),
+        getSummary: vi
+            .fn()
+            .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82 }])),
+        create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', circumference: 81.7 })),
+        update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 })),
+        remove: vi.fn().mockReturnValue(of(void 0)),
+    };
+}
