@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { TranslateService } from '@ngx-translate/core';
+import type { FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { EMPTY, type Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../services/localization.service';
@@ -23,6 +20,10 @@ import {
     type FastingSafetyDialogData,
     type FastingSafetyDialogResult,
 } from '../fasting-safety-dialog/fasting-safety-dialog.component';
+import { FastingActiveBasicControlsComponent } from './fasting-active-basic-controls.component';
+import { FastingActiveExtendedControlsComponent } from './fasting-active-extended-controls.component';
+import type { FastingCustomActionState } from './fasting-controls.types';
+import { FastingSetupControlsComponent } from './fasting-setup-controls.component';
 
 const HOURS_PER_DAY = 24;
 const EXTEND_DAY_HOURS = 24;
@@ -35,7 +36,7 @@ const CYCLIC_PRESET_SEPARATOR = ':';
 
 @Component({
     selector: 'fd-fasting-controls',
-    imports: [FormsModule, TranslatePipe, FdUiSegmentedToggleComponent, FdUiButtonComponent, FdUiInputComponent],
+    imports: [FastingSetupControlsComponent, FastingActiveExtendedControlsComponent, FastingActiveBasicControlsComponent],
     templateUrl: './fasting-controls.component.html',
     styleUrl: './fasting-controls.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -509,9 +510,4 @@ export class FastingControlsComponent {
             })
             .afterClosed();
     }
-}
-
-interface FastingCustomActionState {
-    variant: 'primary' | 'secondary' | 'danger';
-    fill: 'solid' | 'outline';
 }

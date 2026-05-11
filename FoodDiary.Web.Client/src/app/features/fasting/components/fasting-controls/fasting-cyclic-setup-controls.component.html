@@ -1,0 +1,74 @@
+<div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
+    <div class="fasting-controls__protocol-group-title fd-ui-overline">{{ 'FASTING.CYCLIC_GROUP' | translate }}</div>
+    <div class="fasting-controls__protocol-row">
+        <fd-ui-segmented-toggle
+            class="fasting-controls__segmented-toggle"
+            size="sm"
+            [options]="cyclicPresetOptions()"
+            [selectedValue]="selectedCyclicPresetValue()"
+            [ariaLabel]="'FASTING.CYCLIC_GROUP' | translate"
+            [shrinkItems]="true"
+            (selectedValueChange)="cyclicPresetChange.emit($event)"
+        />
+
+        @if (isCustomCyclicPresetSelected()) {
+            <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
+                <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                    <fd-ui-input
+                        type="number"
+                        size="sm"
+                        [label]="'FASTING.CYCLIC_FAST_DAYS_SHORT' | translate"
+                        [ngModel]="cyclicFastDays()"
+                        (ngModelChange)="cyclicFastDaysChange.emit($event)"
+                    />
+                </div>
+                <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                    <fd-ui-input
+                        type="number"
+                        size="sm"
+                        [label]="'FASTING.CYCLIC_EAT_DAYS_SHORT' | translate"
+                        [ngModel]="cyclicEatDays()"
+                        (ngModelChange)="cyclicEatDaysChange.emit($event)"
+                    />
+                </div>
+                <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
+                    {{ cyclicFastDays() }}:{{ cyclicEatDays() }}
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
+    <div class="fasting-controls__protocol-group-title fd-ui-overline">
+        {{ 'FASTING.EAT_DAY_WINDOW_GROUP' | translate }}
+    </div>
+    <div class="fasting-controls__protocol-row">
+        <fd-ui-segmented-toggle
+            class="fasting-controls__segmented-toggle"
+            size="sm"
+            [options]="cyclicEatDayProtocolOptions()"
+            [selectedValue]="cyclicEatDayProtocol()"
+            [ariaLabel]="'FASTING.EAT_DAY_WINDOW_GROUP' | translate"
+            [shrinkItems]="true"
+            (selectedValueChange)="cyclicEatDayProtocolChange.emit($event)"
+        />
+
+        @if (cyclicEatDayProtocol() === 'CustomIntermittent') {
+            <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
+                <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                    <fd-ui-input
+                        type="number"
+                        size="sm"
+                        [label]="'FASTING.FAST_HOURS_SHORT' | translate"
+                        [ngModel]="cyclicEatDayFastHours()"
+                        (ngModelChange)="cyclicEatDayFastHoursChange.emit($event)"
+                    />
+                </div>
+                <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
+                    {{ cyclicEatDayFastHours() }}:{{ cyclicEatDayEatingWindowHours() }}
+                </div>
+            </div>
+        }
+    </div>
+</div>

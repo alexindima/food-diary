@@ -4,11 +4,17 @@
     width: 100%;
 }
 
+fd-fasting-setup-controls,
+fd-fasting-active-extended-controls,
+fd-fasting-active-basic-controls {
+    display: contents;
+}
+
 .fasting-controls {
     padding: var(--fd-space-md) 0;
     width: 100%;
 
-    :host(.fasting-controls-host--setup) & {
+    .fasting-controls-host--setup & {
         align-items: stretch;
         justify-content: flex-start;
         width: min(100%, 720px);
@@ -17,7 +23,7 @@
         gap: var(--fd-space-md);
     }
 
-    :host(.fasting-controls-host--page-summary) & {
+    .fasting-controls-host--page-summary & {
         align-items: center;
         padding: 0;
         gap: var(--fd-space-sm);
@@ -26,7 +32,7 @@
     &__mode-switch {
         width: 100%;
 
-        :host(.fasting-controls-host--setup) & {
+        .fasting-controls-host--setup & {
             margin-bottom: var(--fd-space-sm);
         }
     }
@@ -44,7 +50,7 @@
         width: 100%;
         flex-wrap: wrap;
 
-        :host(.fasting-controls-host--setup) & {
+        .fasting-controls-host--setup & {
             flex-wrap: wrap;
         }
     }
@@ -58,12 +64,12 @@
     &__protocol-group {
         width: 100%;
 
-        :host(.fasting-controls-host--setup) & {
+        .fasting-controls-host--setup & {
             align-items: stretch;
             gap: var(--fd-space-xs);
         }
 
-        :host(.fasting-controls-host--page-summary) & {
+        .fasting-controls-host--page-summary & {
             width: auto;
             max-width: 100%;
         }
@@ -72,7 +78,7 @@
     &__protocol-group-title {
         text-align: center;
 
-        :host(.fasting-controls-host--setup) & {
+        .fasting-controls-host--setup & {
             text-align: left;
         }
     }
@@ -109,7 +115,7 @@
             max-width: 360px;
         }
 
-        :host(.fasting-controls-host--setup) & {
+        .fasting-controls-host--setup & {
             flex: 0 0 100%;
             flex-wrap: nowrap;
             justify-content: flex-start;
@@ -242,14 +248,14 @@
         width: 100%;
         justify-content: center;
 
-        :host(.fasting-controls-host--setup) & {
+        .fasting-controls-host--setup & {
             margin-top: var(--fd-space-xs);
             padding-bottom: 0;
             justify-content: flex-start;
         }
     }
 
-    :host(.fasting-controls-host--setup) &__actions > fd-ui-button {
+    .fasting-controls-host--setup &__actions > fd-ui-button {
         width: min(100%, 260px);
         align-self: flex-start;
     }

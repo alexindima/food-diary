@@ -1,0 +1,103 @@
+<div class="fasting-controls__mode-switch fd-row fd-wrap fd-justify-center fd-gap-xs">
+    <fd-ui-segmented-toggle
+        class="fasting-controls__segmented-toggle"
+        [options]="modeOptions()"
+        [selectedValue]="selectedMode()"
+        [ariaLabel]="'FASTING.MODE_GROUP' | translate"
+        (selectedValueChange)="modeChange.emit($event)"
+    />
+</div>
+
+@switch (selectedMode()) {
+    @case ('intermittent') {
+        <div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
+            <div class="fasting-controls__protocol-group-title fd-ui-overline">
+                {{ 'FASTING.INTERMITTENT_GROUP' | translate }}
+            </div>
+            <div class="fasting-controls__protocol-row">
+                <fd-ui-segmented-toggle
+                    class="fasting-controls__segmented-toggle"
+                    size="sm"
+                    [options]="intermittentProtocolOptions()"
+                    [selectedValue]="selectedProtocol()"
+                    [ariaLabel]="'FASTING.INTERMITTENT_GROUP' | translate"
+                    [shrinkItems]="true"
+                    (selectedValueChange)="protocolChange.emit($event)"
+                />
+
+                @if (selectedProtocol() === 'CustomIntermittent') {
+                    <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
+                        <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                            <fd-ui-input
+                                type="number"
+                                size="sm"
+                                [label]="'FASTING.FAST_HOURS_SHORT' | translate"
+                                [ngModel]="customIntermittentFastHours()"
+                                (ngModelChange)="customIntermittentFastHoursChange.emit($event)"
+                            />
+                        </div>
+                        <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
+                            {{ customIntermittentFastHours() }}:{{ customIntermittentEatingWindowHours() }}
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @case ('extended') {
+        <div class="fasting-controls__protocol-group fd-stack fd-align-center fd-gap-xs">
+            <div class="fasting-controls__protocol-group-title fd-ui-overline">
+                {{ 'FASTING.EXTENDED_GROUP' | translate }}
+            </div>
+            <div class="fasting-controls__protocol-row">
+                <fd-ui-segmented-toggle
+                    class="fasting-controls__segmented-toggle"
+                    size="sm"
+                    [options]="extendedProtocolOptions()"
+                    [selectedValue]="selectedProtocol()"
+                    [ariaLabel]="'FASTING.EXTENDED_GROUP' | translate"
+                    [shrinkItems]="true"
+                    (selectedValueChange)="protocolChange.emit($event)"
+                />
+
+                @if (selectedProtocol() === 'Custom') {
+                    <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
+                        <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                            <fd-ui-input
+                                type="number"
+                                size="sm"
+                                [label]="'FASTING.CUSTOM_HOURS' | translate"
+                                [ngModel]="customHours()"
+                                (ngModelChange)="customHoursChange.emit($event)"
+                            />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @case ('cyclic') {
+        <fd-fasting-cyclic-setup-controls
+            [cyclicPresetOptions]="cyclicPresetOptions()"
+            [cyclicEatDayProtocolOptions]="cyclicEatDayProtocolOptions()"
+            [selectedCyclicPresetValue]="selectedCyclicPresetValue()"
+            [cyclicEatDayProtocol]="cyclicEatDayProtocol()"
+            [cyclicFastDays]="cyclicFastDays()"
+            [cyclicEatDays]="cyclicEatDays()"
+            [cyclicEatDayFastHours]="cyclicEatDayFastHours()"
+            [cyclicEatDayEatingWindowHours]="cyclicEatDayEatingWindowHours()"
+            [isCustomCyclicPresetSelected]="isCustomCyclicPresetSelected()"
+            (cyclicPresetChange)="cyclicPresetChange.emit($event)"
+            (cyclicFastDaysChange)="cyclicFastDaysChange.emit($event)"
+            (cyclicEatDaysChange)="cyclicEatDaysChange.emit($event)"
+            (cyclicEatDayProtocolChange)="cyclicEatDayProtocolChange.emit($event)"
+            (cyclicEatDayFastHoursChange)="cyclicEatDayFastHoursChange.emit($event)"
+        />
+    }
+}
+
+<div class="fasting-controls__actions fd-ui-actions">
+    <fd-ui-button [loading]="isStarting()" [disabled]="isStarting()" (click)="startFasting.emit()">
+        {{ 'FASTING.START_FAST' | translate }}
+    </fd-ui-button>
+</div>

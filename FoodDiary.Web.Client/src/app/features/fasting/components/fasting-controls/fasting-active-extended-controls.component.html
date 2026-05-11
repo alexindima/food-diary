@@ -1,0 +1,165 @@
+<div class="fasting-controls__active-actions fasting-controls__active-actions--extended">
+    @if (canExtendActiveSession()) {
+        <div class="fasting-controls__session-actions-grid fd-grid fd-gap-sm">
+            <div class="fasting-controls__extend-panel fd-stack fd-gap-sm">
+                <button
+                    type="button"
+                    class="fasting-controls__extend-panel-header"
+                    [attr.aria-expanded]="isExtendPanelExpanded()"
+                    (click)="extendPanelToggle.emit()"
+                >
+                    <span class="fasting-controls__protocol-group-title fd-ui-overline">
+                        {{ 'FASTING.EXTEND_GROUP' | translate }}
+                    </span>
+                    <span class="fasting-controls__extend-panel-toggle fd-ui-body-sm">
+                        {{ extendPanelToggleLabel() }}
+                    </span>
+                </button>
+                @if (isExtendPanelExpanded()) {
+                    <div class="fasting-controls__extend-toolbar fd-row fd-wrap fd-justify-center fd-gap-sm">
+                        <fd-ui-button
+                            type="button"
+                            class="fasting-controls__protocol-action"
+                            variant="secondary"
+                            fill="outline"
+                            size="sm"
+                            [disabled]="extendActionsDisabled()"
+                            (click)="extendDay.emit()"
+                        >
+                            {{ 'FASTING.ADD_DAY' | translate }}
+                        </fd-ui-button>
+                        <fd-ui-button
+                            type="button"
+                            class="fasting-controls__protocol-action"
+                            variant="secondary"
+                            fill="outline"
+                            size="sm"
+                            [disabled]="extendActionsDisabled()"
+                            (click)="extend36Hours.emit()"
+                        >
+                            {{ 'FASTING.ADD_36_HOURS' | translate }}
+                        </fd-ui-button>
+                        <fd-ui-button
+                            type="button"
+                            class="fasting-controls__protocol-action"
+                            size="sm"
+                            [variant]="customExtendActionState().variant"
+                            [fill]="customExtendActionState().fill"
+                            [disabled]="extendActionsDisabled()"
+                            (click)="customExtendShow.emit()"
+                        >
+                            {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
+                        </fd-ui-button>
+                    </div>
+
+                    @if (isCustomExtendExpanded()) {
+                        <div class="fasting-controls__extend-custom">
+                            <div class="fasting-controls__custom-input fasting-controls__custom-input--compact">
+                                <fd-ui-input
+                                    type="number"
+                                    size="sm"
+                                    [label]="'FASTING.ADD_HOURS' | translate"
+                                    [ngModel]="extendHours()"
+                                    (ngModelChange)="extendHoursChange.emit($event)"
+                                />
+                            </div>
+                            <fd-ui-button
+                                variant="secondary"
+                                fill="outline"
+                                size="sm"
+                                [loading]="isExtending()"
+                                [disabled]="extendActionsDisabled()"
+                                (click)="extendCustom.emit()"
+                            >
+                                {{ 'FASTING.ADD_TIME' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="fasting-controls__extend-panel fasting-controls__extend-panel--subtle fd-stack fd-gap-sm">
+                <button
+                    type="button"
+                    class="fasting-controls__extend-panel-header"
+                    [attr.aria-expanded]="isReducePanelExpanded()"
+                    (click)="reducePanelToggle.emit()"
+                >
+                    <span class="fasting-controls__protocol-group-title fd-ui-overline">
+                        {{ 'FASTING.REDUCE_GROUP' | translate }}
+                    </span>
+                    <span class="fasting-controls__extend-panel-toggle fd-ui-body-sm">
+                        {{ reducePanelToggleLabel() }}
+                    </span>
+                </button>
+                @if (isReducePanelExpanded()) {
+                    <div class="fasting-controls__extend-toolbar fd-row fd-wrap fd-justify-center fd-gap-sm">
+                        <fd-ui-button
+                            type="button"
+                            class="fasting-controls__protocol-action"
+                            variant="danger"
+                            fill="outline"
+                            size="sm"
+                            [disabled]="reduceActionsDisabled()"
+                            (click)="reduce4Hours.emit()"
+                        >
+                            {{ 'FASTING.REDUCE_4_HOURS' | translate }}
+                        </fd-ui-button>
+                        <fd-ui-button
+                            type="button"
+                            class="fasting-controls__protocol-action"
+                            variant="danger"
+                            fill="outline"
+                            size="sm"
+                            [disabled]="reduceActionsDisabled()"
+                            (click)="reduce8Hours.emit()"
+                        >
+                            {{ 'FASTING.REDUCE_8_HOURS' | translate }}
+                        </fd-ui-button>
+                        <fd-ui-button
+                            type="button"
+                            class="fasting-controls__protocol-action"
+                            size="sm"
+                            [variant]="customReduceActionState().variant"
+                            [fill]="customReduceActionState().fill"
+                            [disabled]="reduceActionsDisabled()"
+                            (click)="customReduceShow.emit()"
+                        >
+                            {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
+                        </fd-ui-button>
+                    </div>
+
+                    @if (isCustomReduceExpanded()) {
+                        <div class="fasting-controls__extend-custom">
+                            <div class="fasting-controls__custom-input fasting-controls__custom-input--compact">
+                                <fd-ui-input
+                                    type="number"
+                                    size="sm"
+                                    [label]="'FASTING.REDUCE_HOURS' | translate"
+                                    [ngModel]="reduceHours()"
+                                    (ngModelChange)="reduceHoursChange.emit($event)"
+                                />
+                            </div>
+                            <fd-ui-button
+                                variant="secondary"
+                                fill="outline"
+                                size="sm"
+                                [loading]="isReducing()"
+                                [disabled]="reduceActionsDisabled()"
+                                (click)="reduceCustom.emit()"
+                            >
+                                {{ 'FASTING.REDUCE_TIME' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    <div class="fasting-controls__active-end-row">
+        <fd-ui-button size="sm" [loading]="isEnding()" [disabled]="endDisabled()" (click)="end.emit()">
+            {{ endActionLabelKey() | translate }}
+        </fd-ui-button>
+    </div>
+</div>
