@@ -1,9 +1,8 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -26,6 +25,7 @@ import {
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import type { ConsumptionAiItem, Meal } from '../../models/meal.data';
+import { MealDetailSummaryComponent } from './meal-detail-summary.component';
 
 const MACRO_SUMMARY_LIMIT = 3;
 const ITEM_PREVIEW_MAX_ITEMS = 2;
@@ -52,9 +52,8 @@ const MAX_SATIETY_LEVEL = 5;
         FdUiDialogHeaderDirective,
         FdUiButtonComponent,
         FdUiTabsComponent,
-        FdUiAccentSurfaceComponent,
         NutritionEditorComponent,
-        DecimalPipe,
+        MealDetailSummaryComponent,
     ],
 })
 export class MealDetailComponent {
@@ -95,13 +94,7 @@ export class MealDetailComponent {
     public activeTab: 'summary' | 'nutrients' = 'summary';
     public readonly itemPreviewMaxItems = ITEM_PREVIEW_MAX_ITEMS;
     public readonly isItemPreviewExpanded = signal(false);
-    public readonly macroBlocks: {
-        labelKey: string;
-        value: number;
-        unitKey: string;
-        color: string;
-        percent: number;
-    }[];
+    public readonly macroBlocks: MealMacroBlock[];
     public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
     public readonly itemPreview: MealDetailItemPreview[];
     public readonly visibleItemPreview = computed<MealDetailItemPreview[]>(() =>
@@ -435,15 +428,23 @@ export class MealDetailActionResult {
 
 export type MealDetailAction = 'Edit' | 'Delete' | 'Repeat' | 'FavoriteChanged';
 
-type MealSatietyMeta = {
+export type MealSatietyMeta = {
     emoji: string;
     title: string;
     description: string;
 };
 
-type MealDetailItemPreview = {
+export type MealDetailItemPreview = {
     name: string;
     amount: number;
     unitKey: string | null;
     unitText: string | null;
+};
+
+export type MealMacroBlock = {
+    labelKey: string;
+    value: number;
+    unitKey: string;
+    color: string;
+    percent: number;
 };

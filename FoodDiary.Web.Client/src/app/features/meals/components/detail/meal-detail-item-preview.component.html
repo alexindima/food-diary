@@ -1,0 +1,35 @@
+<section class="consumption-detail__list fd-stack fd-gap-xs">
+    <h3 class="consumption-detail__list-title fd-ui-card-title">
+        {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}
+        <span class="consumption-detail__list-count fd-ui-caption">{{ itemsCount() }}</span>
+    </h3>
+    @if (items().length) {
+        @for (item of items(); track $index) {
+            <div class="consumption-detail__list-row">
+                <span class="fd-ui-body-sm">{{ item.name }}</span>
+                <strong class="fd-ui-body-sm">
+                    {{ item.amount | number: '1.0-1' }}
+                    @if (item.unitKey) {
+                        {{ item.unitKey | translate }}
+                    } @else if (item.unitText) {
+                        {{ item.unitText }}
+                    }
+                </strong>
+            </div>
+        }
+        @if (hiddenItemPreviewCount() > 0) {
+            <button
+                type="button"
+                class="consumption-detail__list-more"
+                [attr.aria-expanded]="isItemPreviewExpanded()"
+                (click)="itemPreviewExpandedToggle.emit()"
+            >
+                @if (isItemPreviewExpanded()) {
+                    {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS_HIDE' | translate }}
+                } @else {
+                    {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS_MORE' | translate: { count: hiddenItemPreviewCount() } }}
+                }
+            </button>
+        }
+    }
+</section>
