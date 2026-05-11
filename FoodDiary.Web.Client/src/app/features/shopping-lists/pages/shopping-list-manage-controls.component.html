@@ -1,0 +1,78 @@
+<div class="shopping-list__header-actions" [class.shopping-list__header-actions--mobile]="isMobile()">
+    <fd-ui-select
+        class="shopping-list__list-select"
+        [formControl]="listSelectControl()"
+        [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
+        [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
+        [options]="listOptions()"
+    />
+    <fd-ui-input
+        class="shopping-list__name-input"
+        [formControl]="listNameControl()"
+        [label]="'SHOPPING_LIST.NAME_LABEL' | translate"
+        [placeholder]="'SHOPPING_LIST.NAME_PLACEHOLDER' | translate"
+    />
+    @if (isMobile()) {
+        <div class="shopping-list__mobile-manage-actions">
+            @if (listsCount() > 1) {
+                <fd-ui-button
+                    class="shopping-list__delete-button"
+                    variant="danger"
+                    fill="outline"
+                    icon="delete"
+                    [disabled]="!canDeleteList()"
+                    (click)="deleteList.emit()"
+                >
+                    {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
+                </fd-ui-button>
+            }
+            @if (listsCount() === 1) {
+                <fd-ui-button
+                    class="shopping-list__clear-button"
+                    variant="secondary"
+                    fill="outline"
+                    icon="delete_sweep"
+                    [disabled]="!canClearList()"
+                    (click)="clearList.emit()"
+                >
+                    {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+    } @else {
+        <fd-ui-button
+            class="shopping-list__new-button"
+            variant="secondary"
+            fill="outline"
+            icon="add"
+            [disabled]="isLoading()"
+            (click)="createList.emit()"
+        >
+            {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
+        </fd-ui-button>
+        @if (listsCount() > 1) {
+            <fd-ui-button
+                class="shopping-list__delete-button"
+                variant="danger"
+                fill="outline"
+                icon="delete"
+                [disabled]="!canDeleteList()"
+                (click)="deleteList.emit()"
+            >
+                {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
+            </fd-ui-button>
+        }
+        @if (listsCount() === 1) {
+            <fd-ui-button
+                class="shopping-list__clear-button"
+                variant="secondary"
+                fill="outline"
+                icon="delete_sweep"
+                [disabled]="!canClearList()"
+                (click)="clearList.emit()"
+            >
+                {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}
+            </fd-ui-button>
+        }
+    }
+</div>

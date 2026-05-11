@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -23,6 +20,8 @@ import type { FormGroupControls } from '../../../shared/lib/common.data';
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListFacade } from '../lib/shopping-list.facade';
 import type { ShoppingListItem } from '../models/shopping-list.data';
+import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel.component';
+import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls.component';
 
 @Component({
     selector: 'fd-shopping-list-page',
@@ -30,19 +29,15 @@ import type { ShoppingListItem } from '../models/shopping-list.data';
     styleUrls: ['./shopping-list-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
-        FormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiIconComponent,
-        FdUiInputComponent,
-        FdUiSelectComponent,
-        FdUiCheckboxComponent,
         FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ShoppingListItemsPanelComponent,
+        ShoppingListManageControlsComponent,
     ],
     providers: [ShoppingListFacade],
 })
@@ -67,7 +62,6 @@ export class ShoppingListPageComponent {
         () => this.lists().length === 1 && this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
     public readonly listOptions = computed(() => this.facade.listOptions());
-    public readonly isEmptyState = computed(() => this.items().length === 0);
     public readonly itemViewModels = computed<ShoppingListItemViewModel[]>(() => {
         this.activeLang();
 
@@ -269,8 +263,8 @@ interface ShoppingListItemFormValues {
     category: string | null;
 }
 
-interface ShoppingListItemViewModel extends ShoppingListItem {
+export interface ShoppingListItemViewModel extends ShoppingListItem {
     meta: string;
 }
 
-type ShoppingListItemFormGroup = FormGroupControls<ShoppingListItemFormValues>;
+export type ShoppingListItemFormGroup = FormGroupControls<ShoppingListItemFormValues>;

@@ -1,0 +1,65 @@
+<div class="shopping-list__panel">
+    <form class="shopping-list__add-form" [formGroup]="itemForm()" (ngSubmit)="itemAdd.emit()">
+        <fd-ui-input
+            formControlName="name"
+            [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
+            [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
+        />
+        <fd-ui-input
+            formControlName="amount"
+            type="number"
+            [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
+            [placeholder]="'SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER' | translate"
+        />
+        <fd-ui-select
+            formControlName="unit"
+            [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate"
+            [placeholder]="'SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER' | translate"
+            [options]="unitOptions()"
+        />
+        <fd-ui-input
+            formControlName="category"
+            [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate"
+            [placeholder]="'SHOPPING_LIST.ADD_ITEM_CATEGORY_PLACEHOLDER' | translate"
+        />
+        <fd-ui-button type="submit" variant="secondary" fill="outline" icon="add" [disabled]="itemForm().invalid">
+            {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}
+        </fd-ui-button>
+    </form>
+
+    @if (items().length > 0) {
+        <div class="shopping-list__items">
+            @for (item of items(); track item.id) {
+                <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
+                    <fd-ui-checkbox
+                        class="shopping-list__checkbox"
+                        label=""
+                        [ngModel]="item.isChecked"
+                        (ngModelChange)="itemCheckedChange.emit({ item, checked: $event })"
+                    />
+                    <div class="shopping-list__item-body">
+                        <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>
+                        @if (item.meta) {
+                            <div class="shopping-list__item-meta fd-ui-caption">{{ item.meta }}</div>
+                        }
+                    </div>
+                    <fd-ui-button
+                        class="shopping-list__item-remove"
+                        variant="secondary"
+                        fill="solid"
+                        icon="close"
+                        [fdUiHint]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
+                        [ariaLabel]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
+                        (click)="itemRemove.emit(item.id)"
+                    />
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="shopping-list__empty-state">
+            <fd-ui-icon name="shopping_cart" size="xl" />
+            <div class="shopping-list__empty-title fd-ui-card-title">{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</div>
+            <div class="shopping-list__empty-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</div>
+        </div>
+    }
+</div>
