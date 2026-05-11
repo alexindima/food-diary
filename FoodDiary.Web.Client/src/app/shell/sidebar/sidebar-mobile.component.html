@@ -1,0 +1,105 @@
+<nav class="sidebar-mobile" aria-label="Mobile navigation">
+    @if (isProgressVisible()) {
+        <section class="sidebar-mobile__progress" aria-live="polite">
+            <div class="sidebar-mobile__progress-head">
+                <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>
+                <span class="sidebar-mobile__progress-value fd-ui-caption">
+                    {{ dailyConsumedKcalRounded() }}/{{ dailyGoalKcalRounded() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                </span>
+            </div>
+            <div class="sidebar-mobile__progress-track fd-ui-progress-track" aria-hidden="true">
+                <span class="sidebar-mobile__progress-fill fd-ui-progress-fill" [style.width.%]="dailyProgressPercent()"></span>
+            </div>
+        </section>
+    }
+
+    <div class="sidebar-mobile__nav fd-grid">
+        <a
+            class="sidebar-mobile__item"
+            routerLink="/"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            [class.is-pending]="pendingRoute() === '/'"
+            (click)="directRouteClick.emit({ route: '/', exact: true }); closeMenus.emit()"
+        >
+            <fd-ui-icon name="dashboard" />
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
+        </a>
+        <button
+            #mobileFoodButton
+            type="button"
+            class="sidebar-mobile__item"
+            aria-haspopup="dialog"
+            [class.is-open]="isFoodOpen()"
+            [attr.aria-expanded]="isFoodOpen()"
+            (click)="foodToggle.emit(mobileFoodButton)"
+        >
+            <fd-ui-icon name="restaurant_menu" />
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.FOOD' | translate }}</span>
+        </button>
+        <button
+            #mobileBodyButton
+            type="button"
+            class="sidebar-mobile__item"
+            aria-haspopup="dialog"
+            [class.is-open]="isBodyOpen()"
+            [attr.aria-expanded]="isBodyOpen()"
+            (click)="bodyToggle.emit(mobileBodyButton)"
+        >
+            <fd-ui-icon name="monitor_weight" />
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.BODY' | translate }}</span>
+        </button>
+        <button
+            #mobileReportsButton
+            type="button"
+            class="sidebar-mobile__item"
+            aria-haspopup="dialog"
+            [class.is-open]="isReportsOpen()"
+            [attr.aria-expanded]="isReportsOpen()"
+            (click)="reportsToggle.emit(mobileReportsButton)"
+        >
+            <fd-ui-icon name="bar_chart" />
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.REPORTS' | translate }}</span>
+        </button>
+        <button
+            #mobileUserButton
+            type="button"
+            class="sidebar-mobile__item"
+            aria-haspopup="dialog"
+            [class.is-open]="isUserOpen()"
+            [attr.aria-expanded]="isUserOpen()"
+            (click)="userToggle.emit(mobileUserButton)"
+        >
+            <fd-ui-icon name="person" />
+            @if (unreadNotificationCount() > 0) {
+                <span class="sidebar-mobile__item-dot" aria-hidden="true"></span>
+            }
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.USER' | translate }}</span>
+        </button>
+    </div>
+
+    @if (isSheetOpen()) {
+        <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMenus.emit()"></div>
+
+        <div
+            #mobileSheetPanel
+            class="sidebar-mobile__sheet"
+            role="dialog"
+            aria-modal="true"
+            tabindex="-1"
+            [attr.aria-label]="activeSheetLabelKey() | translate"
+        >
+            <fd-sidebar-mobile-sheet
+                [mobileSheet]="mobileSheet()"
+                [pendingRoute]="pendingRoute()"
+                [unreadNotificationCount]="unreadNotificationCount()"
+                [isAdmin]="isAdmin()"
+                [activeRouteItems]="activeRouteItems()"
+                (directRouteClick)="directRouteClick.emit($event)"
+                (closeMenus)="closeMenus.emit()"
+                (mobileAction)="mobileAction.emit($event)"
+                (routeSelected)="routeSelected.emit($event)"
+            />
+        </div>
+    }
+</nav>

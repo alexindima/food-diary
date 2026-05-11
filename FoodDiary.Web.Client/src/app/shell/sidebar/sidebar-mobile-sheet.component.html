@@ -1,0 +1,62 @@
+@if (mobileSheet() === 'user') {
+    <div class="sidebar-mobile__user-row">
+        <a
+            routerLink="/profile"
+            routerLinkActive="is-active"
+            class="sidebar-mobile__sheet-link sidebar-mobile__profile-link fd-row fd-gap-xs"
+            [class.is-pending]="pendingRoute() === '/profile'"
+            (click)="directRouteClick.emit({ route: '/profile' }); closeMenus.emit()"
+        >
+            <fd-ui-icon name="settings" />
+            <span class="fd-ui-action-text">{{ 'HEADER.PROFILE' | translate }}</span>
+        </a>
+        <fd-ui-button
+            class="sidebar-mobile__notifications-button"
+            type="button"
+            variant="secondary"
+            fill="outline"
+            appearance="toolbar"
+            icon="notifications"
+            [ariaLabel]="'NOTIFICATIONS.TITLE' | translate"
+            [fdUiHint]="'NOTIFICATIONS.TITLE' | translate"
+            (click)="mobileAction.emit('openNotifications')"
+        >
+            @if (unreadNotificationCount() > 0) {
+                <span class="sidebar-mobile__notifications-badge fd-ui-caption">{{ unreadNotificationCount() }}</span>
+            }
+        </fd-ui-button>
+    </div>
+
+    @if (isAdmin()) {
+        <fd-ui-button
+            class="sidebar-mobile__sheet-action"
+            type="button"
+            variant="danger"
+            fill="outline"
+            icon="admin_panel_settings"
+            [fullWidth]="true"
+            (click)="mobileAction.emit('openAdminPanel')"
+        >
+            {{ 'SIDEBAR.ADMIN_PANEL' | translate }}
+        </fd-ui-button>
+    }
+
+    <fd-ui-button
+        class="sidebar-mobile__sheet-logout"
+        type="button"
+        variant="danger"
+        fill="outline"
+        icon="logout"
+        [fullWidth]="true"
+        (click)="mobileAction.emit('logout')"
+    >
+        {{ 'HEADER.LOGOUT' | translate }}
+    </fd-ui-button>
+} @else {
+    <fd-sidebar-route-links
+        linkClass="sidebar-mobile__sheet-link fd-row fd-gap-xs"
+        [items]="activeRouteItems()"
+        [pendingRoute]="pendingRoute()"
+        (itemSelected)="routeSelected.emit($event); closeMenus.emit()"
+    />
+}

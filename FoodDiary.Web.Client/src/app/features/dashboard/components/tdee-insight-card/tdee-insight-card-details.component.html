@@ -1,0 +1,22 @@
+@if (insight().bmr) {
+    <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
+        <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.BMR' | translate }}</span>
+        <span class="tdee-card__meta-value fd-ui-stat-value">{{ insight().bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span>
+    </div>
+}
+
+@if (insight().adaptiveTdee && insight().estimatedTdee) {
+    <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
+        <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.FORMULA_ESTIMATE' | translate }}</span>
+        <span class="tdee-card__meta-value fd-ui-stat-value"
+            >{{ insight().estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+        >
+    </div>
+}
+
+@if (weightTrendFormatted()) {
+    <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
+        <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.WEIGHT_TREND' | translate }}</span>
+        <span class="tdee-card__meta-value fd-ui-stat-value">{{ weightTrendFormatted() }} {{ 'TDEE_CARD.KG_WEEK' | translate }}</span>
+    </div>
+}

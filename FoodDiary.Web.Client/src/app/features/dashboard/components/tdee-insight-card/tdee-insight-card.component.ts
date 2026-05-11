@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import type { TdeeInsight } from '../../models/tdee-insight.data';
+import { TdeeInsightCardContentComponent } from './tdee-insight-card-content.component';
 
 const CALORIE_TARGET_DIFF_THRESHOLD = 50;
 const WEIGHT_TREND_FRACTION_DIGITS = 2;
@@ -13,7 +12,7 @@ const WEIGHT_TREND_FRACTION_DIGITS = 2;
 @Component({
     selector: 'fd-tdee-insight-card',
     standalone: true,
-    imports: [CommonModule, FdUiIconComponent, TranslatePipe, FdUiButtonComponent, DashboardWidgetFrameComponent],
+    imports: [FdUiIconComponent, TranslatePipe, DashboardWidgetFrameComponent, TdeeInsightCardContentComponent],
     templateUrl: './tdee-insight-card.component.html',
     styleUrl: './tdee-insight-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

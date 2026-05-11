@@ -20,3 +20,11 @@ export type SidebarActionItem = {
 };
 
 export type SidebarNavItem = SidebarRouteItem | SidebarActionItem;
+
+export type DesktopSectionId = 'food' | 'body' | null;
+export type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
+
+export type SidebarDirectRouteRequest = {
+    route: string;
+    exact?: boolean;
+};

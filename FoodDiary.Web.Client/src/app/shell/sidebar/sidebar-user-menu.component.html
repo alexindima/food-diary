@@ -1,0 +1,54 @@
+<div class="sidebar__user-wrapper fd-stack fd-gap-xxs">
+    <button
+        #userMenuButton
+        type="button"
+        class="sidebar__user fd-grid fd-gap-xs fd-align-center"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="isOpen()"
+        (click)="toggleMenu.emit(userMenuButton)"
+    >
+        @if (user().profileImage) {
+            <div class="sidebar__avatar sidebar__avatar--image fd-place-center">
+                <img alt="Avatar" width="40" height="40" [ngSrc]="user().profileImage" />
+            </div>
+        } @else {
+            <div class="sidebar__avatar fd-place-center">
+                {{ user().username || user().email || 'U' | slice: 0 : 1 | uppercase }}
+            </div>
+        }
+        <div class="sidebar__user-meta fd-stack">
+            <div class="sidebar__user-name fd-ui-action-text">{{ user().username || user().email }}</div>
+            <div class="sidebar__user-plan fd-ui-caption">
+                {{ userPlanLabelKey() | translate }}
+            </div>
+        </div>
+        <fd-ui-icon class="sidebar__user-arrow" name="expand_less" [class.is-open]="isOpen()" />
+    </button>
+
+    @if (isOpen()) {
+        <div #userMenu class="sidebar__user-menu fd-stack fd-gap-xxs" role="menu" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
+            <a
+                routerLink="/profile"
+                routerLinkActive="is-active"
+                class="sidebar__user-menu-link fd-row fd-gap-xs"
+                role="menuitem"
+                [class.is-pending]="pendingRoute() === '/profile'"
+                (click)="directRouteClick.emit({ route: '/profile' })"
+            >
+                <fd-ui-icon name="settings" />
+                <span>{{ 'HEADER.PROFILE' | translate }}</span>
+            </a>
+            <fd-ui-button
+                class="sidebar__logout"
+                type="button"
+                variant="danger"
+                fill="outline"
+                icon="logout"
+                role="menuitem"
+                (click)="logout.emit()"
+            >
+                {{ 'HEADER.LOGOUT' | translate }}
+            </fd-ui-button>
+        </div>
+    }
+</div>

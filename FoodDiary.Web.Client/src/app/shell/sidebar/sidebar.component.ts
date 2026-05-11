@@ -1,21 +1,8 @@
-import { DOCUMENT, NgOptimizedImage } from '@angular/common';
-import { SlicePipe, UpperCasePipe } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    effect,
-    type ElementRef,
-    inject,
-    signal,
-    viewChild,
-} from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationCancel, NavigationEnd, NavigationError, Router, RouterModule } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
@@ -30,8 +17,16 @@ import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UserService } from '../../shared/api/user.service';
-import type { SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
-import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
+import type {
+    DesktopSectionId,
+    MobileSheetId,
+    SidebarActionItem,
+    SidebarDirectRouteRequest,
+    SidebarNavItem,
+    SidebarRouteItem,
+} from './sidebar.models';
+import { SidebarDesktopComponent } from './sidebar-desktop.component';
+import { SidebarMobileComponent } from './sidebar-mobile.component';
 
 const FOOD_TRACKING_ITEMS: SidebarRouteItem[] = [
     { id: 'meals', icon: 'restaurant_menu', labelKey: 'SIDEBAR.FOOD_DIARY', route: '/meals' },
@@ -66,22 +61,9 @@ const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
 const PERCENT_FULL = 100;
 const ADMIN_LOADING_URL_TTL_MS = 30_000;
 
-type DesktopSectionId = 'food' | 'body' | null;
-type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
-
 @Component({
     selector: 'fd-sidebar',
-    imports: [
-        NgOptimizedImage,
-        TranslateModule,
-        RouterModule,
-        FdUiHintDirective,
-        FdUiButtonComponent,
-        FdUiIconComponent,
-        SidebarRouteLinksComponent,
-        SlicePipe,
-        UpperCasePipe,
-    ],
+    imports: [SidebarDesktopComponent, SidebarMobileComponent],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -199,8 +181,6 @@ export class SidebarComponent {
 
         return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * PERCENT_FULL, PERCENT_FULL));
     });
-    private readonly userMenuRef = viewChild<ElementRef<HTMLElement>>('userMenu');
-    private readonly mobileSheetRef = viewChild<ElementRef<HTMLElement>>('mobileSheetPanel');
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
 
@@ -229,25 +209,6 @@ export class SidebarComponent {
             this.notificationService.ensureNotificationsLoaded();
         }
     });
-    private readonly userMenuFocusSync = effect(() => {
-        if (!this.isUserMenuOpen()) {
-            return;
-        }
-
-        queueMicrotask(() => {
-            this.focusFirstInteractive(this.userMenuRef()?.nativeElement);
-        });
-    });
-    private readonly mobileSheetFocusSync = effect(() => {
-        if (!this.isMobileSheetOpen()) {
-            return;
-        }
-
-        queueMicrotask(() => {
-            this.focusFirstInteractive(this.mobileSheetRef()?.nativeElement);
-        });
-    });
-
     public constructor() {
         const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia('(max-width: 767px)');
         const updateMobileViewport = (): void => {
@@ -303,6 +264,10 @@ export class SidebarComponent {
         if (!this.isRouteActive(route, exact)) {
             this.pendingRoute.set(route);
         }
+    }
+
+    protected onDirectRouteRequest(request: SidebarDirectRouteRequest): void {
+        this.onDirectRouteClick(request.route, request.exact ?? false);
     }
 
     private syncCurrentUser(): void {
@@ -522,14 +487,5 @@ export class SidebarComponent {
     private closeUserMenu(): void {
         this.isUserMenuOpen.set(false);
         this.lastUserMenuTrigger?.focus();
-    }
-
-    private focusFirstInteractive(container?: HTMLElement | null): void {
-        if (container === null || container === undefined) {
-            return;
-        }
-
-        const firstInteractive = container.querySelector<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])');
-        firstInteractive?.focus();
     }
 }
