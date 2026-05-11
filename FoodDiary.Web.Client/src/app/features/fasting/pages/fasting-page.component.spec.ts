@@ -22,56 +22,14 @@ const CHECK_IN_MOOD_LEVEL = 3;
 const HISTORY_START_HOUR = 10;
 const INITIAL_VISIBLE_CHECK_INS = 5;
 
-describe('FastingPageComponent', () => {
-    let component: FastingPageComponent;
-    let fixture: ComponentFixture<FastingPageComponent>;
-    let facade: ReturnType<typeof createFacadeMock>;
-    let toastService: { success: ReturnType<typeof vi.fn> };
-    let dialogService: { open: ReturnType<typeof vi.fn> };
+let component: FastingPageComponent;
+let fixture: ComponentFixture<FastingPageComponent>;
+let facade: FastingFacadeMock;
+let toastService: { success: ReturnType<typeof vi.fn> };
+let dialogService: { open: ReturnType<typeof vi.fn> };
 
-    beforeEach(async () => {
-        facade = createFacadeMock();
-        toastService = {
-            success: vi.fn(),
-        };
-        dialogService = {
-            open: vi.fn((): { afterClosed: () => Observable<undefined> } => ({ afterClosed: () => of(undefined) })),
-        };
-
-        await TestBed.configureTestingModule({
-            imports: [FastingPageComponent],
-            providers: [
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: vi.fn((key: string) => key),
-                    },
-                },
-                {
-                    provide: FdUiDialogService,
-                    useValue: dialogService,
-                },
-                {
-                    provide: LocalizationService,
-                    useValue: {
-                        getCurrentLanguage: vi.fn(() => 'ru'),
-                    },
-                },
-                { provide: FdUiToastService, useValue: toastService },
-            ],
-        })
-            .overrideComponent(FastingPageComponent, {
-                set: {
-                    template: '<div></div>',
-                    providers: [{ provide: FastingFacade, useValue: facade }],
-                },
-            })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(FastingPageComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+describe('FastingPageComponent setup and actions', () => {
+    beforeEach(createComponentAsync);
 
     it('initializes facade on init', () => {
         expect(facade.initialize).toHaveBeenCalledTimes(1);
@@ -138,6 +96,10 @@ describe('FastingPageComponent', () => {
         expect(component.isHistorySessionExpanded('session-2')).toBe(false);
         expect(component.getHistoryCheckInToggleKey(createHistorySession('session-2', 2))).toBe('FASTING.SHOW_HISTORY_CHECK_INS');
     });
+});
+
+describe('FastingPageComponent check-in history', () => {
+    beforeEach(createComponentAsync);
 
     it('opens chart dialog only for sessions with multiple check-ins', () => {
         const singleCheckInSession = createHistorySession('session-1', 1);
@@ -201,7 +163,51 @@ describe('FastingPageComponent', () => {
     });
 });
 
-function createFacadeMock(): {
+async function createComponentAsync(): Promise<void> {
+    facade = createFacadeMock();
+    toastService = {
+        success: vi.fn(),
+    };
+    dialogService = {
+        open: vi.fn((): { afterClosed: () => Observable<undefined> } => ({ afterClosed: () => of(undefined) })),
+    };
+
+    await TestBed.configureTestingModule({
+        imports: [FastingPageComponent],
+        providers: [
+            {
+                provide: TranslateService,
+                useValue: {
+                    instant: vi.fn((key: string) => key),
+                },
+            },
+            {
+                provide: FdUiDialogService,
+                useValue: dialogService,
+            },
+            {
+                provide: LocalizationService,
+                useValue: {
+                    getCurrentLanguage: vi.fn(() => 'ru'),
+                },
+            },
+            { provide: FdUiToastService, useValue: toastService },
+        ],
+    })
+        .overrideComponent(FastingPageComponent, {
+            set: {
+                template: '<div></div>',
+                providers: [{ provide: FastingFacade, useValue: facade }],
+            },
+        })
+        .compileComponents();
+
+    fixture = TestBed.createComponent(FastingPageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+}
+
+interface FastingFacadeMock {
     initialize: ReturnType<typeof vi.fn>;
     loadMoreHistory: ReturnType<typeof vi.fn>;
     startFasting: ReturnType<typeof vi.fn>;
@@ -269,7 +275,48 @@ function createFacadeMock(): {
     isOvertime: ReturnType<typeof signal<boolean>>;
     isActive: ReturnType<typeof signal<boolean>>;
     canExtendActiveSession: ReturnType<typeof signal<boolean>>;
-} {
+}
+
+function createFacadeMock(): FastingFacadeMock {
+    return {
+        ...createFacadeActions(),
+        ...createFacadeState(),
+    };
+}
+
+function createFacadeActions(): Pick<
+    FastingFacadeMock,
+    | 'initialize'
+    | 'loadMoreHistory'
+    | 'startFasting'
+    | 'endFasting'
+    | 'selectMode'
+    | 'selectProtocol'
+    | 'setCustomHours'
+    | 'setCustomIntermittentFastHours'
+    | 'setCyclicPreset'
+    | 'selectCustomCyclicPreset'
+    | 'setCyclicFastDays'
+    | 'setCyclicEatDays'
+    | 'selectCyclicEatDayProtocol'
+    | 'setCyclicEatDayFastHours'
+    | 'setExtendHours'
+    | 'setReduceHours'
+    | 'setHungerLevel'
+    | 'setEnergyLevel'
+    | 'setMoodLevel'
+    | 'toggleSymptom'
+    | 'setCheckInNotes'
+    | 'saveCheckIn'
+    | 'resetCheckInDraft'
+    | 'dismissPrompt'
+    | 'snoozePrompt'
+    | 'extendByHours'
+    | 'reduceTargetByHours'
+    | 'skipCyclicDay'
+    | 'postponeCyclicDay'
+    | 'isPromptVisible'
+> {
     return {
         initialize: vi.fn(),
         loadMoreHistory: vi.fn(),
@@ -301,6 +348,11 @@ function createFacadeMock(): {
         skipCyclicDay: vi.fn(),
         postponeCyclicDay: vi.fn(),
         isPromptVisible: vi.fn(() => true),
+    };
+}
+
+function createFacadeState(): Omit<FastingFacadeMock, keyof ReturnType<typeof createFacadeActions>> {
+    return {
         isLoading: signal(false),
         isStarting: signal(false),
         isEnding: signal(false),

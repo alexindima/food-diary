@@ -203,7 +203,40 @@ export class BaseMealManageComponent {
     public mealTypeSelectOptions: FdUiSelectOption<string>[] = [];
 
     public constructor() {
-        this.consumptionForm = new FormGroup<ConsumptionFormData>({
+        this.consumptionForm = this.createConsumptionForm();
+        this.buildMealTypeOptions();
+        this.buildNutritionModeOptions();
+        this.buildSatietyEmojiOptions();
+        this.nutritionMode.set(this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual');
+        this.watchLanguageChanges();
+        this.watchGeneralFieldErrors();
+        this.updateGeneralFieldErrors();
+        this.watchSatietyChanges();
+        this.updateSatietyAriaLabels();
+        this.watchMealTypeChanges();
+        this.updateManualNutritionValidators(true);
+        this.updateItemValidationRules();
+        this.watchNutritionModeChanges();
+
+        this.loadAiUsage();
+        const presetMealType = this.resolvePresetMealType();
+        if (presetMealType !== null) {
+            this.consumptionForm.controls.mealType.setValue(presetMealType);
+        } else if (this.consumption() === null) {
+            this.setAutoMealTypeFromDate();
+        }
+
+        this.watchConsumptionInput();
+
+        if (presetMealType === null && this.consumption() === null) {
+            this.watchAutoMealTypeChanges();
+        }
+
+        this.watchFormChanges();
+    }
+
+    private createConsumptionForm(): FormGroup<ConsumptionFormData> {
+        return new FormGroup<ConsumptionFormData>({
             date: new FormControl<string>(this.getDateInputValue(new Date()), {
                 nonNullable: true,
                 validators: Validators.required,
@@ -229,11 +262,9 @@ export class BaseMealManageComponent {
             preMealSatietyLevel: new FormControl<number | null>(DEFAULT_SATIETY_LEVEL),
             postMealSatietyLevel: new FormControl<number | null>(DEFAULT_SATIETY_LEVEL),
         });
+    }
 
-        this.buildMealTypeOptions();
-        this.buildNutritionModeOptions();
-        this.buildSatietyEmojiOptions();
-        this.nutritionMode.set(this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual');
+    private watchLanguageChanges(): void {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
             this.buildNutritionModeOptions();
@@ -241,13 +272,18 @@ export class BaseMealManageComponent {
             this.updateSatietyAriaLabels();
             this.updateGeneralFieldErrors();
         });
+    }
+
+    private watchGeneralFieldErrors(): void {
         const formEvents = (this.consumptionForm as { events?: Observable<unknown> }).events ?? EMPTY;
         merge(formEvents, this.consumptionForm.statusChanges, this.consumptionForm.valueChanges)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.updateGeneralFieldErrors();
             });
-        this.updateGeneralFieldErrors();
+    }
+
+    private watchSatietyChanges(): void {
         merge(
             this.consumptionForm.controls.preMealSatietyLevel.valueChanges,
             this.consumptionForm.controls.postMealSatietyLevel.valueChanges,
@@ -258,13 +294,15 @@ export class BaseMealManageComponent {
                 this.postMealSatietyLevel.set(this.consumptionForm.controls.postMealSatietyLevel.value);
                 this.updateSatietyAriaLabels();
             });
-        this.updateSatietyAriaLabels();
+    }
+
+    private watchMealTypeChanges(): void {
         this.consumptionForm.controls.mealType.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
             this.selectedMealType.set(value);
         });
+    }
 
-        this.updateManualNutritionValidators(true);
-        this.updateItemValidationRules();
+    private watchNutritionModeChanges(): void {
         this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(isAuto => {
             this.nutritionMode.set(isAuto ? 'auto' : 'manual');
             this.updateManualNutritionValidators(isAuto);
@@ -273,15 +311,9 @@ export class BaseMealManageComponent {
             }
             this.updateSummary();
         });
+    }
 
-        this.loadAiUsage();
-        const presetMealType = this.resolvePresetMealType();
-        if (presetMealType !== null) {
-            this.consumptionForm.controls.mealType.setValue(presetMealType);
-        } else if (this.consumption() === null) {
-            this.setAutoMealTypeFromDate();
-        }
-
+    private watchConsumptionInput(): void {
         effect(() => {
             const consumption = this.consumption();
             untracked(() => {
@@ -300,16 +332,18 @@ export class BaseMealManageComponent {
                 this.updateSummary();
             });
         });
+    }
 
-        if (presetMealType === null && this.consumption() === null) {
-            this.consumptionForm.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-                this.setAutoMealTypeFromDate();
-            });
-            this.consumptionForm.controls.time.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-                this.setAutoMealTypeFromDate();
-            });
-        }
+    private watchAutoMealTypeChanges(): void {
+        this.consumptionForm.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.setAutoMealTypeFromDate();
+        });
+        this.consumptionForm.controls.time.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.setAutoMealTypeFromDate();
+        });
+    }
 
+    private watchFormChanges(): void {
         this.consumptionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.updateItemValidationRules();
             this.updateSummary();

@@ -266,7 +266,7 @@ export default [
             'no-lonely-if': 'error',
             'max-depth': ['error', 4],
             'max-lines-per-function': [
-                'warn',
+                'error',
                 {
                     max: 80,
                     skipBlankLines: true,

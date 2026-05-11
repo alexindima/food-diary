@@ -25,121 +25,16 @@ const ENERGY_LEVEL = 4;
 const MOOD_LEVEL = 4;
 const EXTENDED_PROTOCOL_HOURS = 36;
 
-describe('FastingFacade', () => {
-    let facade: FastingFacade;
-    let fastingService: {
-        getOverview: ReturnType<typeof vi.fn>;
-        getHistory: ReturnType<typeof vi.fn>;
-        updateCheckIn: ReturnType<typeof vi.fn>;
-        end: ReturnType<typeof vi.fn>;
-        start: ReturnType<typeof vi.fn>;
-        extend: ReturnType<typeof vi.fn>;
-        reduceTarget: ReturnType<typeof vi.fn>;
-        skipCyclicDay: ReturnType<typeof vi.fn>;
-        postponeCyclicDay: ReturnType<typeof vi.fn>;
-    };
-    let frontendObservability: { recordFastingLifecycleEvent: ReturnType<typeof vi.fn> };
-    let userService: { user: ReturnType<typeof vi.fn> };
+let facade: FastingFacade;
+let fastingService: FastingServiceMock;
+let frontendObservability: { recordFastingLifecycleEvent: ReturnType<typeof vi.fn> };
+let userService: { user: ReturnType<typeof vi.fn> };
+let activeSession: FastingSession;
+let baseOverview: FastingOverview;
 
-    const activeSession: FastingSession = {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T06:00:00Z',
-        endedAtUtc: null,
-        initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
-        addedDurationHours: 0,
-        plannedDurationHours: DEFAULT_FASTING_HOURS,
-        protocol: 'F16_8',
-        planType: 'Intermittent',
-        occurrenceKind: 'FastingWindow',
-        cyclicFastDays: null,
-        cyclicEatDays: null,
-        cyclicEatDayFastHours: null,
-        cyclicEatDayEatingWindowHours: null,
-        cyclicPhaseDayNumber: null,
-        cyclicPhaseDayTotal: null,
-        isCompleted: false,
-        status: 'Active',
-        notes: null,
-        checkInAtUtc: null,
-        hungerLevel: null,
-        energyLevel: null,
-        moodLevel: null,
-        symptoms: [],
-        checkInNotes: null,
-        checkIns: [],
-    };
-
-    const baseOverview: FastingOverview = {
-        currentSession: null,
-        stats: {
-            totalCompleted: 2,
-            currentStreak: 1,
-            averageDurationHours: DEFAULT_FASTING_HOURS,
-            completionRateLast30Days: COMPLETION_RATE,
-            checkInRateLast30Days: CHECK_IN_RATE,
-            lastCheckInAtUtc: null,
-            topSymptom: null,
-        },
-        insights: {
-            alerts: [],
-            insights: [],
-        },
-        history: {
-            data: [],
-            page: 1,
-            limit: 10,
-            totalPages: 0,
-            totalItems: 0,
-        },
-    };
-
-    beforeEach(() => {
-        vi.useFakeTimers();
-        vi.setSystemTime(new Date('2026-04-13T09:45:00Z'));
-
-        fastingService = {
-            getOverview: vi.fn().mockReturnValue(of(baseOverview)),
-            getHistory: vi
-                .fn()
-                .mockReturnValue(
-                    of({ data: [], page: HISTORY_PAGE, limit: 10, totalPages: HISTORY_PAGE, totalItems: HISTORY_TOTAL_ITEMS }),
-                ),
-            updateCheckIn: vi.fn(),
-            end: vi.fn(),
-            start: vi.fn(),
-            extend: vi.fn(),
-            reduceTarget: vi.fn(),
-            skipCyclicDay: vi.fn(),
-            postponeCyclicDay: vi.fn(),
-        };
-        frontendObservability = {
-            recordFastingLifecycleEvent: vi.fn(),
-        };
-        userService = {
-            user: vi.fn(() => ({
-                fastingCheckInReminderHours: REMINDER_HOURS,
-                fastingCheckInFollowUpReminderHours: FOLLOW_UP_REMINDER_HOURS,
-            })),
-        };
-
-        localStorage.clear();
-
-        TestBed.configureTestingModule({
-            providers: [
-                FastingFacade,
-                { provide: FastingService, useValue: fastingService },
-                { provide: FrontendObservabilityService, useValue: frontendObservability },
-                { provide: UserService, useValue: userService },
-            ],
-        });
-
-        facade = TestBed.inject(FastingFacade);
-    });
-
-    afterEach(() => {
-        vi.clearAllTimers();
-        vi.useRealTimers();
-    });
+describe('FastingFacade overview history', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
 
     it('initializes from overview bootstrap', () => {
         const overview: FastingOverview = {
@@ -203,6 +98,11 @@ describe('FastingFacade', () => {
         expect(facade.history()).toEqual([activeSession, olderSession]);
         expect(facade.historyPage()).toBe(HISTORY_PAGE);
     });
+});
+
+describe('FastingFacade check-ins', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
 
     it('saves check-in, increments version, and refreshes overview', () => {
         facade.currentSession.set(activeSession);
@@ -280,6 +180,11 @@ describe('FastingFacade', () => {
             }),
         );
     });
+});
+
+describe('FastingFacade session completion', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
 
     it('ends fasting and resets draft state when overview returns idle state', () => {
         facade.currentSession.set(activeSession);
@@ -305,6 +210,11 @@ describe('FastingFacade', () => {
         expect(facade.selectedProtocol()).toBe('F16_8');
         expect(facade.extendHours()).toBe(DEFAULT_EXTEND_HOURS);
     });
+});
+
+describe('FastingFacade setup modes and target changes', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
 
     it('keeps selected protocol valid when switching between setup modes', () => {
         facade.selectProtocol('F20_4');
@@ -361,3 +271,123 @@ describe('FastingFacade', () => {
         expect(facade.currentSession()?.plannedDurationHours).toBe(REDUCED_PLANNED_HOURS);
     });
 });
+
+interface FastingServiceMock {
+    getOverview: ReturnType<typeof vi.fn>;
+    getHistory: ReturnType<typeof vi.fn>;
+    updateCheckIn: ReturnType<typeof vi.fn>;
+    end: ReturnType<typeof vi.fn>;
+    start: ReturnType<typeof vi.fn>;
+    extend: ReturnType<typeof vi.fn>;
+    reduceTarget: ReturnType<typeof vi.fn>;
+    skipCyclicDay: ReturnType<typeof vi.fn>;
+    postponeCyclicDay: ReturnType<typeof vi.fn>;
+}
+
+function setupFacade(): void {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-13T09:45:00Z'));
+
+    activeSession = createActiveSession();
+    baseOverview = createBaseOverview();
+    fastingService = createFastingServiceMock(baseOverview);
+    frontendObservability = {
+        recordFastingLifecycleEvent: vi.fn(),
+    };
+    userService = {
+        user: vi.fn(() => ({
+            fastingCheckInReminderHours: REMINDER_HOURS,
+            fastingCheckInFollowUpReminderHours: FOLLOW_UP_REMINDER_HOURS,
+        })),
+    };
+
+    localStorage.clear();
+
+    TestBed.configureTestingModule({
+        providers: [
+            FastingFacade,
+            { provide: FastingService, useValue: fastingService },
+            { provide: FrontendObservabilityService, useValue: frontendObservability },
+            { provide: UserService, useValue: userService },
+        ],
+    });
+
+    facade = TestBed.inject(FastingFacade);
+}
+
+function teardownFacade(): void {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+}
+
+function createFastingServiceMock(overview: FastingOverview): FastingServiceMock {
+    return {
+        getOverview: vi.fn().mockReturnValue(of(overview)),
+        getHistory: vi
+            .fn()
+            .mockReturnValue(of({ data: [], page: HISTORY_PAGE, limit: 10, totalPages: HISTORY_PAGE, totalItems: HISTORY_TOTAL_ITEMS })),
+        updateCheckIn: vi.fn(),
+        end: vi.fn(),
+        start: vi.fn(),
+        extend: vi.fn(),
+        reduceTarget: vi.fn(),
+        skipCyclicDay: vi.fn(),
+        postponeCyclicDay: vi.fn(),
+    };
+}
+
+function createActiveSession(): FastingSession {
+    return {
+        id: 'session-1',
+        startedAtUtc: '2026-04-12T06:00:00Z',
+        endedAtUtc: null,
+        initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
+        addedDurationHours: 0,
+        plannedDurationHours: DEFAULT_FASTING_HOURS,
+        protocol: 'F16_8',
+        planType: 'Intermittent',
+        occurrenceKind: 'FastingWindow',
+        cyclicFastDays: null,
+        cyclicEatDays: null,
+        cyclicEatDayFastHours: null,
+        cyclicEatDayEatingWindowHours: null,
+        cyclicPhaseDayNumber: null,
+        cyclicPhaseDayTotal: null,
+        isCompleted: false,
+        status: 'Active',
+        notes: null,
+        checkInAtUtc: null,
+        hungerLevel: null,
+        energyLevel: null,
+        moodLevel: null,
+        symptoms: [],
+        checkInNotes: null,
+        checkIns: [],
+    };
+}
+
+function createBaseOverview(): FastingOverview {
+    return {
+        currentSession: null,
+        stats: {
+            totalCompleted: 2,
+            currentStreak: 1,
+            averageDurationHours: DEFAULT_FASTING_HOURS,
+            completionRateLast30Days: COMPLETION_RATE,
+            checkInRateLast30Days: CHECK_IN_RATE,
+            lastCheckInAtUtc: null,
+            topSymptom: null,
+        },
+        insights: {
+            alerts: [],
+            insights: [],
+        },
+        history: {
+            data: [],
+            page: 1,
+            limit: 10,
+            totalPages: 0,
+            totalItems: 0,
+        },
+    };
+}

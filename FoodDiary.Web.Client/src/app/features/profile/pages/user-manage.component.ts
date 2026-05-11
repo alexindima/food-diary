@@ -343,7 +343,27 @@ export class UserManageComponent {
     });
 
     public constructor() {
-        this.userForm = new FormGroup<UserFormData>({
+        this.userForm = this.createUserForm();
+        this.dietologistForm = this.createDietologistForm();
+
+        this.buildSelectOptions();
+        this.watchLanguageChanges();
+        this.watchPasswordSetupIntent();
+        this.watchUserProfile();
+        this.watchPasswordSetupDialog();
+        this.watchDietologistRelationship();
+        this.watchProfileStatusSignals();
+        this.watchNotificationRelationshipRefresh();
+        this.watchUserFormChanges();
+        this.watchDietologistFormChanges();
+        this.updateDietologistInviteEmailError();
+
+        this.facade.initialize();
+        this.loadBillingOverview();
+    }
+
+    private createUserForm(): FormGroup<UserFormData> {
+        return new FormGroup<UserFormData>({
             email: new FormControl<string | null>({ value: '', disabled: true }),
             username: new FormControl<string | null>(null),
             firstName: new FormControl<string | null>(null),
@@ -358,7 +378,10 @@ export class UserManageComponent {
             stepGoal: new FormControl<number | null>(null),
             profileImage: new FormControl<ImageSelection | null>(null),
         });
-        this.dietologistForm = new FormGroup<DietologistFormData>({
+    }
+
+    private createDietologistForm(): FormGroup<DietologistFormData> {
+        return new FormGroup<DietologistFormData>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
             shareProfile: new FormControl<boolean>(true, { nonNullable: true }),
             shareMeals: new FormControl<boolean>(true, { nonNullable: true }),
@@ -369,16 +392,23 @@ export class UserManageComponent {
             shareHydration: new FormControl<boolean>(true, { nonNullable: true }),
             shareFasting: new FormControl<boolean>(true, { nonNullable: true }),
         });
+    }
 
-        this.buildSelectOptions();
+    private watchLanguageChanges(): void {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildSelectOptions();
             this.languageVersion.update(version => version + 1);
             this.updateDietologistInviteEmailError();
         });
+    }
+
+    private watchPasswordSetupIntent(): void {
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             this.pendingPasswordSetupIntent.set(params.get('intent') === 'set-password');
         });
+    }
+
+    private watchUserProfile(): void {
         effect(() => {
             const user = this.facade.user();
             if (user === null) {
@@ -400,6 +430,9 @@ export class UserManageComponent {
                 this.hasTrackedNotificationsView.set(true);
             }
         });
+    }
+
+    private watchPasswordSetupDialog(): void {
         effect(() => {
             const user = this.facade.user();
             if (user === null || !this.pendingPasswordSetupIntent()) {
@@ -413,16 +446,23 @@ export class UserManageComponent {
                 this.facade.openChangePasswordDialog();
             }
         });
+    }
 
+    private watchDietologistRelationship(): void {
         effect(() => {
             this.syncDietologistFormFromRelationship(this.facade.dietologistRelationship());
         });
+    }
+
+    private watchProfileStatusSignals(): void {
         effect(() => {
             this.globalError();
             this.isSavingProfile();
             this.updateProfileStatus();
         });
+    }
 
+    private watchNotificationRelationshipRefresh(): void {
         effect(() => {
             const version = this.notificationService.notificationsChangedVersion();
             if (version === this.lastNotificationSyncVersion) {
@@ -436,6 +476,9 @@ export class UserManageComponent {
 
             this.loadDietologistRelationship();
         });
+    }
+
+    private watchUserFormChanges(): void {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.facade.clearGlobalError();
             this.queueUserAutosave();
@@ -444,6 +487,9 @@ export class UserManageComponent {
         this.userForm.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.updateProfileStatus();
         });
+    }
+
+    private watchDietologistFormChanges(): void {
         this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.dietologistError.set(null);
             this.updateDietologistPermissionsState();
@@ -454,10 +500,6 @@ export class UserManageComponent {
             .subscribe(() => {
                 this.updateDietologistInviteEmailError();
             });
-        this.updateDietologistInviteEmailError();
-
-        this.facade.initialize();
-        this.loadBillingOverview();
     }
 
     public onSubmit(): void {

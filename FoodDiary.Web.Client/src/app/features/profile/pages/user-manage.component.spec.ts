@@ -19,121 +19,15 @@ import type { DietologistRelationship } from '../../dietologist/models/dietologi
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { UserManageComponent } from './user-manage.component';
 
-describe('UserManageComponent dietologist section', () => {
-    let fixture: ComponentFixture<UserManageComponent>;
-    let component: UserManageComponent;
-    let dietologistService: {
-        getRelationship: ReturnType<typeof vi.fn>;
-        invite: ReturnType<typeof vi.fn>;
-        updatePermissions: ReturnType<typeof vi.fn>;
-        revokeRelationship: ReturnType<typeof vi.fn>;
-    };
-    let facade: ReturnType<typeof createFacadeMock>;
-    let dialogService: { open: ReturnType<typeof vi.fn> };
-    let router: { navigate: ReturnType<typeof vi.fn> };
-    let notificationService: {
-        scheduleTestNotification: ReturnType<typeof vi.fn>;
-        notificationsChangedVersion: ReturnType<typeof signal<number>>;
-    };
+let fixture: ComponentFixture<UserManageComponent>;
+let component: UserManageComponent;
+let dietologistService: DietologistServiceMock;
+let facade: ProfileManageFacadeMock;
+let dialogService: { open: ReturnType<typeof vi.fn> };
+let router: { navigate: ReturnType<typeof vi.fn> };
+let notificationService: NotificationServiceMock;
 
-    async function createComponentAsync(
-        relationship: DietologistRelationship | null,
-        dialogResult = false,
-        user: User | null = null,
-        queryParams: Record<string, string> = {},
-    ): Promise<void> {
-        facade = createFacadeMock(relationship, user);
-        dietologistService = {
-            getRelationship: vi.fn().mockReturnValue(of(relationship)),
-            invite: vi.fn().mockReturnValue(of(undefined)),
-            updatePermissions: vi.fn().mockReturnValue(of(undefined)),
-            revokeRelationship: vi.fn().mockReturnValue(of(undefined)),
-        };
-        dialogService = {
-            open: vi.fn().mockReturnValue({
-                afterClosed: () => of(dialogResult),
-            }),
-        };
-        router = {
-            navigate: vi.fn().mockResolvedValue(true),
-        };
-        notificationService = {
-            scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)),
-            notificationsChangedVersion: signal(0),
-        };
-
-        await TestBed.configureTestingModule({
-            imports: [UserManageComponent, TranslateModule.forRoot()],
-            providers: [
-                { provide: DietologistService, useValue: dietologistService },
-                { provide: ImageUploadService, useValue: { deleteAsset: vi.fn().mockReturnValue(of(undefined)) } },
-                { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParamMap: of(convertToParamMap(queryParams)),
-                    },
-                },
-                { provide: Router, useValue: router },
-                {
-                    provide: LocalizationService,
-                    useValue: {
-                        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
-                        getCurrentLanguage: vi.fn(() => 'en'),
-                    },
-                },
-                {
-                    provide: NotificationService,
-                    useValue: notificationService,
-                },
-                {
-                    provide: PushNotificationService,
-                    useValue: {
-                        isSupported: signal(false),
-                        isSubscribed: signal(false),
-                        isBusy: signal(false),
-                        currentSubscriptionEndpoint: signal<string | null>(null),
-                        ensureSubscriptionAsync: vi.fn().mockResolvedValue('unsupported'),
-                        removeSubscriptionAsync: vi.fn().mockResolvedValue(true),
-                    },
-                },
-                {
-                    provide: FdUiToastService,
-                    useValue: {
-                        success: vi.fn(),
-                        info: vi.fn(),
-                        error: vi.fn(),
-                    },
-                },
-                { provide: FdUiDialogService, useValue: dialogService },
-                {
-                    provide: FrontendObservabilityService,
-                    useValue: {
-                        recordNotificationSettingsViewed: vi.fn(),
-                        recordNotificationPreferenceChanged: vi.fn(),
-                        recordNotificationSubscriptionEvent: vi.fn(),
-                        recordFastingReminderPresetSelected: vi.fn(),
-                        recordFastingReminderTimingSaved: vi.fn(),
-                    },
-                },
-            ],
-        })
-            .overrideComponent(UserManageComponent, {
-                remove: { providers: [ProfileManageFacade] },
-                add: { providers: [{ provide: ProfileManageFacade, useValue: facade }] },
-            })
-            .compileComponents();
-
-        const translateService = TestBed.inject(TranslateService);
-        vi.spyOn(translateService, 'instant').mockImplementation((key: string) => key);
-        translateService.setFallbackLang('en');
-        translateService.use('en');
-
-        fixture = TestBed.createComponent(UserManageComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    }
-
+describe('UserManageComponent dietologist invite state', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {
         await createComponentAsync(null);
 
@@ -182,7 +76,9 @@ describe('UserManageComponent dietologist section', () => {
         expect(host.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
         expect(host.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS');
     });
+});
 
+describe('UserManageComponent dietologist profile sharing', () => {
     it('asks for confirmation before disabling profile sharing', async () => {
         await createComponentAsync(null, false);
 
@@ -200,7 +96,9 @@ describe('UserManageComponent dietologist section', () => {
 
         expect(component.dietologistForm.controls.shareProfile.value).toBe(false);
     });
+});
 
+describe('UserManageComponent dietologist permissions', () => {
     it('autosaves permissions when a relationship toggle changes', async () => {
         await createComponentAsync({
             invitationId: 'inv-1',
@@ -237,7 +135,9 @@ describe('UserManageComponent dietologist section', () => {
             shareFasting: false,
         });
     });
+});
 
+describe('UserManageComponent dietologist disconnect', () => {
     it('asks for confirmation before disconnecting an accepted dietologist relationship', async () => {
         await createComponentAsync(
             {
@@ -300,7 +200,9 @@ describe('UserManageComponent dietologist section', () => {
 
         expect(dietologistService.revokeRelationship).toHaveBeenCalledTimes(1);
     });
+});
 
+describe('UserManageComponent notification relationship refresh', () => {
     it('reloads dietologist relationship when notifications realtime changes', async () => {
         await createComponentAsync(null);
         expect(dietologistService.getRelationship).toHaveBeenCalledTimes(0);
@@ -310,7 +212,9 @@ describe('UserManageComponent dietologist section', () => {
 
         expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
     });
+});
 
+describe('UserManageComponent profile autosave feedback', () => {
     it('queues profile autosave when editable user fields change', async () => {
         await createComponentAsync(null);
 
@@ -349,7 +253,9 @@ describe('UserManageComponent dietologist section', () => {
         fixture.detectChanges();
         expect(component.getNotificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING');
     });
+});
 
+describe('UserManageComponent profile normalization and intents', () => {
     it('normalizes legacy profile select values from user overview', async () => {
         await createComponentAsync(null, false, {
             id: 'u1',
@@ -411,10 +317,19 @@ describe('UserManageComponent dietologist section', () => {
     });
 });
 
-function createFacadeMock(
-    relationship: DietologistRelationship | null,
-    user: User | null = null,
-): {
+interface DietologistServiceMock {
+    getRelationship: ReturnType<typeof vi.fn>;
+    invite: ReturnType<typeof vi.fn>;
+    updatePermissions: ReturnType<typeof vi.fn>;
+    revokeRelationship: ReturnType<typeof vi.fn>;
+}
+
+interface NotificationServiceMock {
+    scheduleTestNotification: ReturnType<typeof vi.fn>;
+    notificationsChangedVersion: ReturnType<typeof signal<number>>;
+}
+
+interface ProfileManageFacadeMock {
     user: WritableSignal<User | null>;
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
@@ -437,7 +352,139 @@ function createFacadeMock(
     refreshWebPushSubscriptions: ReturnType<typeof vi.fn>;
     removeWebPushSubscription: ReturnType<typeof vi.fn>;
     openAdminPanel: ReturnType<typeof vi.fn>;
+}
+
+async function createComponentAsync(
+    relationship: DietologistRelationship | null,
+    dialogResult = false,
+    user: User | null = null,
+    queryParams: Record<string, string> = {},
+): Promise<void> {
+    facade = createFacadeMock(relationship, user);
+    dietologistService = createDietologistServiceMock(relationship);
+    dialogService = createDialogServiceMock(dialogResult);
+    router = {
+        navigate: vi.fn().mockResolvedValue(true),
+    };
+    notificationService = {
+        scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)),
+        notificationsChangedVersion: signal(0),
+    };
+
+    await TestBed.configureTestingModule({
+        imports: [UserManageComponent, TranslateModule.forRoot()],
+        providers: createTestingProviders(queryParams),
+    })
+        .overrideComponent(UserManageComponent, {
+            remove: { providers: [ProfileManageFacade] },
+            add: { providers: [{ provide: ProfileManageFacade, useValue: facade }] },
+        })
+        .compileComponents();
+
+    configureTranslateService();
+
+    fixture = TestBed.createComponent(UserManageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+}
+
+function createTestingProviders(queryParams: Record<string, string>): unknown[] {
+    return [
+        { provide: DietologistService, useValue: dietologistService },
+        { provide: ImageUploadService, useValue: { deleteAsset: vi.fn().mockReturnValue(of(undefined)) } },
+        { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
+        { provide: ActivatedRoute, useValue: { queryParamMap: of(convertToParamMap(queryParams)) } },
+        { provide: Router, useValue: router },
+        { provide: LocalizationService, useValue: createLocalizationServiceMock() },
+        { provide: NotificationService, useValue: notificationService },
+        { provide: PushNotificationService, useValue: createPushNotificationServiceMock() },
+        { provide: FdUiToastService, useValue: createToastServiceMock() },
+        { provide: FdUiDialogService, useValue: dialogService },
+        { provide: FrontendObservabilityService, useValue: createFrontendObservabilityServiceMock() },
+    ];
+}
+
+function createDietologistServiceMock(relationship: DietologistRelationship | null): DietologistServiceMock {
+    return {
+        getRelationship: vi.fn().mockReturnValue(of(relationship)),
+        invite: vi.fn().mockReturnValue(of(undefined)),
+        updatePermissions: vi.fn().mockReturnValue(of(undefined)),
+        revokeRelationship: vi.fn().mockReturnValue(of(undefined)),
+    };
+}
+
+function createDialogServiceMock(dialogResult: boolean): { open: ReturnType<typeof vi.fn> } {
+    return {
+        open: vi.fn().mockReturnValue({
+            afterClosed: () => of(dialogResult),
+        }),
+    };
+}
+
+function createLocalizationServiceMock(): {
+    applyLanguagePreferenceAsync: ReturnType<typeof vi.fn>;
+    getCurrentLanguage: ReturnType<typeof vi.fn>;
 } {
+    return {
+        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
+        getCurrentLanguage: vi.fn(() => 'en'),
+    };
+}
+
+function createPushNotificationServiceMock(): {
+    isSupported: ReturnType<typeof signal<boolean>>;
+    isSubscribed: ReturnType<typeof signal<boolean>>;
+    isBusy: ReturnType<typeof signal<boolean>>;
+    currentSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
+    ensureSubscriptionAsync: ReturnType<typeof vi.fn>;
+    removeSubscriptionAsync: ReturnType<typeof vi.fn>;
+} {
+    return {
+        isSupported: signal(false),
+        isSubscribed: signal(false),
+        isBusy: signal(false),
+        currentSubscriptionEndpoint: signal<string | null>(null),
+        ensureSubscriptionAsync: vi.fn().mockResolvedValue('unsupported'),
+        removeSubscriptionAsync: vi.fn().mockResolvedValue(true),
+    };
+}
+
+function createToastServiceMock(): {
+    success: ReturnType<typeof vi.fn>;
+    info: ReturnType<typeof vi.fn>;
+    error: ReturnType<typeof vi.fn>;
+} {
+    return {
+        success: vi.fn(),
+        info: vi.fn(),
+        error: vi.fn(),
+    };
+}
+
+function createFrontendObservabilityServiceMock(): {
+    recordNotificationSettingsViewed: ReturnType<typeof vi.fn>;
+    recordNotificationPreferenceChanged: ReturnType<typeof vi.fn>;
+    recordNotificationSubscriptionEvent: ReturnType<typeof vi.fn>;
+    recordFastingReminderPresetSelected: ReturnType<typeof vi.fn>;
+    recordFastingReminderTimingSaved: ReturnType<typeof vi.fn>;
+} {
+    return {
+        recordNotificationSettingsViewed: vi.fn(),
+        recordNotificationPreferenceChanged: vi.fn(),
+        recordNotificationSubscriptionEvent: vi.fn(),
+        recordFastingReminderPresetSelected: vi.fn(),
+        recordFastingReminderTimingSaved: vi.fn(),
+    };
+}
+
+function configureTranslateService(): void {
+    const translateService = TestBed.inject(TranslateService);
+    vi.spyOn(translateService, 'instant').mockImplementation((key: string) => key);
+    translateService.setFallbackLang('en');
+    translateService.use('en');
+}
+
+function createFacadeMock(relationship: DietologistRelationship | null, user: User | null = null): ProfileManageFacadeMock {
     return {
         user: signal(user),
         globalError: signal<string | null>(null),
