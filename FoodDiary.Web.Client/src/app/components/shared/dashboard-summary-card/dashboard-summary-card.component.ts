@@ -6,6 +6,35 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
 
+const COLOR_FALLBACK = '#5aa9fa';
+const OUTER_RING_RADIUS = 112;
+const INNER_RING_RADIUS = 88;
+const RANDOM_ID_RADIX = 36;
+const RANDOM_ID_START = 2;
+const RANDOM_ID_END = 9;
+const WEEK_DAYS = 7;
+const PERCENT_MAX = 100;
+const PROGRESS_CLAMP_MAX = 120;
+const GRADIENT_START_WHITE_MIX = 0.05;
+const GRADIENT_END_WHITE_MIX = 0.15;
+const ANIMATION_MS_PER_PERCENT = 10;
+const BLEND_HALF_WIDTH = 5;
+const COLOR_SHORT_HEX_LENGTH = 3;
+const COLOR_HEX_RADIX = 16;
+const COLOR_RED_SHIFT = 16;
+const COLOR_GREEN_SHIFT = 8;
+const COLOR_BYTE_MASK = 0xff;
+const RGB_CHANNEL_COUNT = 3;
+const WHITE_CHANNEL = 255;
+const DEFAULT_PROTEIN_CURRENT = 110;
+const DEFAULT_PROTEIN_TARGET = 140;
+const DEFAULT_CARBS_CURRENT = 180;
+const DEFAULT_CARBS_TARGET = 250;
+const DEFAULT_FATS_CURRENT = 45;
+const DEFAULT_FATS_TARGET = 70;
+const DEFAULT_FIBER_CURRENT = 18;
+const DEFAULT_FIBER_TARGET = 30;
+
 export interface NutrientBar {
     id: string;
     label: string;
@@ -31,17 +60,16 @@ export class DashboardSummaryCardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly languageVersion = signal(0);
 
-    private static readonly COLOR_FALLBACK_RGB: [number, number, number] = [90, 169, 250];
     private static readonly CSS_VAR_PATTERN = /^var\((--[^),\s]+)(?:,\s*([^)]+))?\)$/;
-    private static readonly CSS_COLOR_CHANNELS: Partial<Record<string, [number, number, number]>> = {
-        '--fd-color-sky-500': [14, 165, 233],
-        '--fd-color-blue-500': [59, 130, 246],
-        '--fd-color-emerald-500': [16, 185, 129],
-        '--fd-color-green-500': [34, 197, 94],
-        '--fd-color-emerald-700': [4, 120, 87],
-        '--fd-color-amber-500': [245, 158, 11],
-        '--fd-color-orange-500': [249, 115, 22],
-        '--fd-color-danger': [239, 68, 68],
+    private static readonly CSS_COLOR_VALUES: Partial<Record<string, string>> = {
+        '--fd-color-sky-500': '#0ea5e9',
+        '--fd-color-blue-500': '#3b82f6',
+        '--fd-color-emerald-500': '#10b981',
+        '--fd-color-green-500': '#22c55e',
+        '--fd-color-emerald-700': '#047857',
+        '--fd-color-amber-500': '#f59e0b',
+        '--fd-color-orange-500': '#f97316',
+        '--fd-color-danger': '#ef4444',
     };
     public readonly goalAction = output<void>();
     public readonly dailyGoal = input.required<number>();
@@ -52,12 +80,12 @@ export class DashboardSummaryCardComponent {
     public readonly caloriesBurned = input<number>(0);
     public readonly isDailyHovered = signal(false);
     public readonly isWeeklyHovered = signal(false);
-    private readonly outerRadius = 112;
-    private readonly innerRadius = 88;
+    private readonly outerRadius = OUTER_RING_RADIUS;
+    private readonly innerRadius = INNER_RING_RADIUS;
     public readonly dailyCircumference = 2 * Math.PI * this.outerRadius;
     public readonly weeklyCircumference = 2 * Math.PI * this.innerRadius;
-    private readonly gradientIdDaily = `consumption-ring-daily-${Math.random().toString(36).slice(2, 9)}`;
-    private readonly gradientIdWeekly = `consumption-ring-weekly-${Math.random().toString(36).slice(2, 9)}`;
+    private readonly gradientIdDaily = `consumption-ring-daily-${this.createRandomIdPart()}`;
+    private readonly gradientIdWeekly = `consumption-ring-weekly-${this.createRandomIdPart()}`;
     private readonly colorStops = [
         { percent: 0, color: 'var(--fd-color-sky-500)' },
         { percent: 50, color: 'var(--fd-color-blue-500)' },
@@ -73,12 +101,12 @@ export class DashboardSummaryCardComponent {
     public readonly normalizedDailyGoal = computed(() => Math.max(this.dailyGoal(), 0));
     public readonly normalizedWeeklyGoal = computed(() => {
         const explicitWeeklyGoal = this.weeklyGoal();
-        if (explicitWeeklyGoal && explicitWeeklyGoal > 0) {
+        if (explicitWeeklyGoal !== null && explicitWeeklyGoal > 0) {
             return explicitWeeklyGoal;
         }
 
         const dailyGoal = this.normalizedDailyGoal();
-        return dailyGoal > 0 ? dailyGoal * 7 : 0;
+        return dailyGoal > 0 ? dailyGoal * WEEK_DAYS : 0;
     });
 
     public readonly safeWeeklyConsumed = computed(() => Math.max(this.weeklyConsumed(), 0));
@@ -94,10 +122,10 @@ export class DashboardSummaryCardComponent {
     public readonly weeklyDasharray = computed(() => this.buildDasharray(this.animatedWeeklyPercent(), this.innerRadius));
     public readonly dailyStrokeColor = computed(() => this.getColorForPercent(this.animatedDailyPercent()));
     public readonly weeklyStrokeColor = computed(() => this.getColorForPercent(this.animatedWeeklyPercent()));
-    public readonly dailyGradientStart = computed(() => this.mixWithWhite(this.dailyStrokeColor(), 0.05));
-    public readonly dailyGradientEnd = computed(() => this.mixWithWhite(this.dailyStrokeColor(), 0.15));
-    public readonly weeklyGradientStart = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.05));
-    public readonly weeklyGradientEnd = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.15));
+    public readonly dailyGradientStart = computed(() => this.mixWithWhite(this.dailyStrokeColor(), GRADIENT_START_WHITE_MIX));
+    public readonly dailyGradientEnd = computed(() => this.mixWithWhite(this.dailyStrokeColor(), GRADIENT_END_WHITE_MIX));
+    public readonly weeklyGradientStart = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), GRADIENT_START_WHITE_MIX));
+    public readonly weeklyGradientEnd = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), GRADIENT_END_WHITE_MIX));
     public readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? this.buildDefaultNutrientBars());
     public readonly nutrientBarViewModels = computed<NutrientBarViewModel[]>(() =>
         this.resolvedNutrientBars().map(bar => {
@@ -105,12 +133,14 @@ export class DashboardSummaryCardComponent {
 
             return {
                 ...bar,
-                labelText: bar.labelKey ? this.translateService.instant(bar.labelKey) : bar.label,
-                unitText: bar.unitKey ? this.translateService.instant(bar.unitKey) : bar.unit,
+                labelText: bar.labelKey !== undefined && bar.labelKey.length > 0 ? this.translateService.instant(bar.labelKey) : bar.label,
+                unitText: bar.unitKey !== undefined && bar.unitKey.length > 0 ? this.translateService.instant(bar.unitKey) : bar.unit,
                 valueColor: this.getBarColor(bar),
                 fillBackground:
-                    bar.target > 0 ? `linear-gradient(90deg, ${bar.colorStart} 0%, ${bar.colorEnd} 100%)` : 'var(--fd-color-slate-300)',
-                fillWidth: bar.target > 0 ? this.clampPercent((bar.current / bar.target) * 100) : 100,
+                    bar.target > 0
+                        ? `linear-gradient(90deg, ${bar.colorStart} 0%, ${bar.colorEnd} ${PERCENT_MAX}%)`
+                        : 'var(--fd-color-slate-300)',
+                fillWidth: bar.target > 0 ? this.clampPercent((bar.current / bar.target) * PERCENT_MAX) : PERCENT_MAX,
             };
         }),
     );
@@ -181,26 +211,31 @@ export class DashboardSummaryCardComponent {
         });
     }
 
+    private createRandomIdPart(): string {
+        return Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_START, RANDOM_ID_END);
+    }
+
     private calculatePercent(value: number, goal: number): number {
-        if (!goal || goal <= 0) {
+        if (goal <= 0) {
             return 0;
         }
 
         const normalized = Math.max(value, 0);
-        return Math.round((normalized / goal) * 100);
+        return Math.round((normalized / goal) * PERCENT_MAX);
     }
 
     private buildDasharray(percent: number, radius: number): string {
         const circumference = 2 * Math.PI * radius;
-        const clamped = Math.min(Math.max(percent, 0), 100);
-        const filled = (circumference * clamped) / 100;
+        const clamped = Math.min(Math.max(percent, 0), PERCENT_MAX);
+        const filled = (circumference * clamped) / PERCENT_MAX;
         return `${filled} ${circumference}`;
     }
+
     public clampPercent(value: number): number {
         if (Number.isNaN(value)) {
             return 0;
         }
-        return Math.min(Math.max(value, 0), 120);
+        return Math.min(Math.max(value, 0), PROGRESS_CLAMP_MAX);
     }
 
     private startAnimation(targetSignal: { set: (v: number) => void; (): number }, target: number): void {
@@ -208,7 +243,7 @@ export class DashboardSummaryCardComponent {
         targetSignal.set(0);
 
         const startTime = performance.now();
-        const duration = Math.max(target, 1) * 10; // 10 ms на 1% → 1.3s для 130%
+        const duration = Math.max(target, 1) * ANIMATION_MS_PER_PERCENT;
 
         const step = (): void => {
             const elapsed = performance.now() - startTime;
@@ -265,7 +300,7 @@ export class DashboardSummaryCardComponent {
             return stops[stops.length - 1].color;
         }
 
-        const blendHalfWidth = 5; // плавный переход ±5% вокруг порога
+        const blendHalfWidth = BLEND_HALF_WIDTH;
 
         for (let i = 1; i < stops.length; i += 1) {
             const prev = stops[i - 1];
@@ -301,28 +336,28 @@ export class DashboardSummaryCardComponent {
     private hexToChannels(hex: string): [number, number, number] {
         const normalized = hex.replace('#', '');
         const value =
-            normalized.length === 3
+            normalized.length === COLOR_SHORT_HEX_LENGTH
                 ? normalized
                       .split('')
                       .map(ch => ch + ch)
                       .join('')
                 : normalized;
-        const num = parseInt(value, 16);
-        const r = (num >> 16) & 0xff;
-        const g = (num >> 8) & 0xff;
-        const b = num & 0xff;
+        const num = parseInt(value, COLOR_HEX_RADIX);
+        const r = (num >> COLOR_RED_SHIFT) & COLOR_BYTE_MASK;
+        const g = (num >> COLOR_GREEN_SHIFT) & COLOR_BYTE_MASK;
+        const b = num & COLOR_BYTE_MASK;
         return [r, g, b];
     }
 
     private readonly animationHandles = new Map<object, number>();
 
     private toHex(value: number): string {
-        return value.toString(16).padStart(2, '0');
+        return value.toString(COLOR_HEX_RADIX).padStart(2, '0');
     }
 
     private parseColor(value: string): [number, number, number] {
         const cached = this.colorCache.get(value);
-        if (cached) {
+        if (cached !== undefined) {
             return cached;
         }
 
@@ -332,30 +367,30 @@ export class DashboardSummaryCardComponent {
             channels = this.hexToChannels(value);
         } else {
             const cssVariable = DashboardSummaryCardComponent.CSS_VAR_PATTERN.exec(value.trim());
-            if (cssVariable) {
+            if (cssVariable !== null) {
                 channels = this.parseCssVariable(cssVariable[1], cssVariable[2]);
             } else {
                 channels = this.parseRgbChannels(value);
             }
         }
 
-        const resolved = channels ?? DashboardSummaryCardComponent.COLOR_FALLBACK_RGB;
+        const resolved = channels ?? this.hexToChannels(COLOR_FALLBACK);
         this.colorCache.set(value, resolved);
         return resolved;
     }
 
     private parseCssVariable(variableName: string, fallback?: string): [number, number, number] | null {
-        const channels = DashboardSummaryCardComponent.CSS_COLOR_CHANNELS[variableName];
-        if (channels !== undefined) {
-            return channels;
+        const colorValue = DashboardSummaryCardComponent.CSS_COLOR_VALUES[variableName];
+        if (colorValue !== undefined) {
+            return this.parseColor(colorValue);
         }
 
-        return fallback ? this.parseColor(fallback.trim()) : null;
+        return fallback !== undefined && fallback.length > 0 ? this.parseColor(fallback.trim()) : null;
     }
 
     private parseRgbChannels(value: string): [number, number, number] | null {
-        const channels = value.match(/\d+/g)?.slice(0, 3).map(Number);
-        if (channels?.length === 3) {
+        const channels = value.match(/\d+/g)?.slice(0, RGB_CHANNEL_COUNT).map(Number);
+        if (channels?.length === RGB_CHANNEL_COUNT) {
             return [channels[0], channels[1], channels[2]];
         }
 
@@ -364,7 +399,7 @@ export class DashboardSummaryCardComponent {
 
     private mixWithWhite(color: string, ratio: number): string {
         const [r, g, b] = this.parseColor(color);
-        const mix = (c: number): number => Math.round(c + (255 - c) * ratio);
+        const mix = (c: number): number => Math.round(c + (WHITE_CHANNEL - c) * ratio);
         return `#${this.toHex(mix(r))}${this.toHex(mix(g))}${this.toHex(mix(b))}`;
     }
 
@@ -380,8 +415,8 @@ export class DashboardSummaryCardComponent {
                 id: 'protein',
                 label: 'Protein',
                 labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-                current: 110,
-                target: 140,
+                current: DEFAULT_PROTEIN_CURRENT,
+                target: DEFAULT_PROTEIN_TARGET,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: 'var(--fd-gradient-brand-start)',
@@ -391,8 +426,8 @@ export class DashboardSummaryCardComponent {
                 id: 'carbs',
                 label: 'Carbs',
                 labelKey: 'GENERAL.NUTRIENTS.CARB',
-                current: 180,
-                target: 250,
+                current: DEFAULT_CARBS_CURRENT,
+                target: DEFAULT_CARBS_TARGET,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: 'var(--fd-color-teal-500)',
@@ -402,8 +437,8 @@ export class DashboardSummaryCardComponent {
                 id: 'fats',
                 label: 'Fats',
                 labelKey: 'GENERAL.NUTRIENTS.FAT',
-                current: 45,
-                target: 70,
+                current: DEFAULT_FATS_CURRENT,
+                target: DEFAULT_FATS_TARGET,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: 'var(--fd-color-yellow-300)',
@@ -413,8 +448,8 @@ export class DashboardSummaryCardComponent {
                 id: 'fiber',
                 label: 'Fiber',
                 labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-                current: 18,
-                target: 30,
+                current: DEFAULT_FIBER_CURRENT,
+                target: DEFAULT_FIBER_TARGET,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
                 colorStart: 'var(--fd-color-rose-500)',
@@ -424,10 +459,10 @@ export class DashboardSummaryCardComponent {
     }
 
     private getBarColor(bar: NutrientBar): string {
-        if (!bar.target || bar.target <= 0) {
+        if (bar.target <= 0) {
             return 'var(--fd-color-gray-500-static)';
         }
-        const pct = (bar.current / bar.target) * 100;
+        const pct = (bar.current / bar.target) * PERCENT_MAX;
         return this.getColorForPercent(pct);
     }
 }
