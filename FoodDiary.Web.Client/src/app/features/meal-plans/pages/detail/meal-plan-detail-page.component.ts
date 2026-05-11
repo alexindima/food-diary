@@ -37,6 +37,7 @@ export class MealPlanDetailPageComponent {
                 meals: day.meals.map(meal => ({
                     ...meal,
                     mealTypeKey: `MEAL_PLANS.MEAL_TYPE.${meal.mealType.toUpperCase()}`,
+                    nutritionItems: this.buildNutritionItems(meal),
                 })),
             })),
         };
@@ -68,6 +69,15 @@ export class MealPlanDetailPageComponent {
     public goBack(): void {
         void this.router.navigate(['/meal-plans']);
     }
+
+    private buildNutritionItems(meal: MealPlanMeal): MealPlanNutritionItem[] {
+        return [
+            { unitKey: 'GENERAL.UNITS.KCAL', value: meal.calories, prefix: '' },
+            { unitKey: 'GENERAL.UNITS.G', value: meal.proteins, prefix: 'P: ' },
+            { unitKey: 'GENERAL.UNITS.G', value: meal.fats, prefix: 'F: ' },
+            { unitKey: 'GENERAL.UNITS.G', value: meal.carbs, prefix: 'C: ' },
+        ].filter((item): item is MealPlanNutritionItem => item.value !== null && item.value !== undefined && item.value > 0);
+    }
 }
 
 interface MealPlanDetailViewModel extends Omit<MealPlan, 'days'> {
@@ -81,4 +91,11 @@ interface MealPlanDayViewModel extends Omit<MealPlanDay, 'meals'> {
 
 interface MealPlanMealViewModel extends MealPlanMeal {
     mealTypeKey: string;
+    nutritionItems: MealPlanNutritionItem[];
+}
+
+interface MealPlanNutritionItem {
+    unitKey: string;
+    value: number;
+    prefix: string;
 }

@@ -13,55 +13,56 @@
         [state]="hasData() ? 'content' : 'empty'"
         [emptyMessage]="'STATISTICS.NO_DATA' | translate"
     >
-        @switch (selectedTab()) {
-            @case ('calories') {
-                @if (caloriesLineChartData(); as chartData) {
-                    <div class="stats-nutrition-card__chart-area">
-                        <canvas
-                            baseChart
-                            type="line"
-                            [data]="chartData"
-                            [options]="caloriesLineChartOptions() || {}"
-                            [legend]="false"
-                        ></canvas>
-                    </div>
-                }
-            }
-            @case ('macros') {
-                @if (nutrientsLineChartData(); as chartData) {
-                    <div class="stats-nutrition-card__chart-area">
-                        <canvas baseChart type="line" [data]="chartData" [options]="nutrientsLineChartOptions() || {}"></canvas>
-                    </div>
-                }
-            }
-            @case ('distribution') {
-                <div class="stats-nutrition-card__distribution-grid fd-grid fd-gap-md">
-                    @if (nutrientsPieChartData(); as chartData) {
-                        <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
-                            <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
-                            <canvas baseChart type="pie" [data]="chartData" [options]="pieChartOptions() || {}" [legend]="false"></canvas>
-                        </div>
-                    }
-                    @if (nutrientsRadarChartData(); as chartData) {
-                        <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
-                            <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.RADAR' | translate }}</h4>
-                            <canvas
-                                baseChart
-                                type="radar"
-                                [data]="chartData"
-                                [options]="radarChartOptions() || {}"
-                                [legend]="false"
-                            ></canvas>
-                        </div>
-                    }
-                    @if (nutrientsBarChartData(); as chartData) {
-                        <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
-                            <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
-                            <canvas baseChart type="bar" [data]="chartData" [options]="barChartOptions() || {}" [legend]="false"></canvas>
-                        </div>
-                    }
-                </div>
-            }
-        }
+        <div class="stats-nutrition-card__chart-area" [hidden]="selectedTab() !== 'calories'">
+            <canvas
+                baseChart
+                type="line"
+                [data]="caloriesLineChartData() ?? emptyLineChartData"
+                [options]="caloriesLineChartOptions() || {}"
+                [legend]="false"
+            ></canvas>
+        </div>
+
+        <div class="stats-nutrition-card__chart-area" [hidden]="selectedTab() !== 'macros'">
+            <canvas
+                baseChart
+                type="line"
+                [data]="nutrientsLineChartData() ?? emptyLineChartData"
+                [options]="nutrientsLineChartOptions() || {}"
+            ></canvas>
+        </div>
+
+        <div class="stats-nutrition-card__distribution-grid fd-grid fd-gap-md" [hidden]="selectedTab() !== 'distribution'">
+            <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
+                <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
+                <canvas
+                    baseChart
+                    type="pie"
+                    [data]="nutrientsPieChartData() ?? emptyPieChartData"
+                    [options]="pieChartOptions() || {}"
+                    [legend]="false"
+                ></canvas>
+            </div>
+            <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
+                <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.RADAR' | translate }}</h4>
+                <canvas
+                    baseChart
+                    type="radar"
+                    [data]="nutrientsRadarChartData() ?? emptyRadarChartData"
+                    [options]="radarChartOptions() || {}"
+                    [legend]="false"
+                ></canvas>
+            </div>
+            <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
+                <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
+                <canvas
+                    baseChart
+                    type="bar"
+                    [data]="nutrientsBarChartData() ?? emptyBarChartData"
+                    [options]="barChartOptions() || {}"
+                    [legend]="false"
+                ></canvas>
+            </div>
+        </div>
     </fd-ui-section-state>
 </fd-ui-card>

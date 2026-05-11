@@ -1,14 +1,13 @@
 <div class="dashboard-summary-card">
     <fd-dashboard-widget-frame [title]="'DASHBOARD_SUMMARY.TITLE' | translate">
-        @if (showNotice()) {
-            <fd-notice-banner
-                type="info"
-                [title]="noticeTitleKey() | translate"
-                [message]="noticeMessageKey() | translate"
-                [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
-                (action)="onGoalAction()"
-            />
-        }
+        <fd-notice-banner
+            type="info"
+            [hidden]="!showNotice()"
+            [title]="noticeTitleKey() | translate"
+            [message]="noticeMessageKey() | translate"
+            [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
+            (action)="onGoalAction()"
+        />
         <div class="dashboard-summary-card__layout fd-grid fd-gap-card-content">
             <div
                 class="dashboard-summary-card__chart"
@@ -83,33 +82,28 @@
                     [class.is-daily-hovered]="isDailyHovered()"
                     [class.is-weekly-hovered]="isWeeklyHovered()"
                 >
-                    @if (normalizedDailyGoal() > 0) {
-                        <div class="dashboard-summary-card__percent fd-row fd-align-baseline fd-gap-card-header fd-ui-metric-hero">
-                            <span class="dashboard-summary-card__percent-value">{{ dailyPercent() }}</span>
-                            <span class="dashboard-summary-card__percent-sign fd-ui-metric-unit">%</span>
-                        </div>
-                    }
+                    <div
+                        class="dashboard-summary-card__percent fd-row fd-align-baseline fd-gap-card-header fd-ui-metric-hero"
+                        [hidden]="normalizedDailyGoal() <= 0"
+                    >
+                        <span class="dashboard-summary-card__percent-value">{{ dailyPercent() }}</span>
+                        <span class="dashboard-summary-card__percent-sign fd-ui-metric-unit">%</span>
+                    </div>
                     <div
                         class="dashboard-summary-card__primary-line fd-ui-stat-value"
                         [class.dashboard-summary-card__primary-line--solo]="normalizedDailyGoal() <= 0"
                     >
                         {{ dailyConsumed() | number: '1.0-0' }}
-                        @if (normalizedDailyGoal() > 0) {
-                            / {{ normalizedDailyGoal() | number: '1.0-0' }}
-                        }
+                        <span [hidden]="normalizedDailyGoal() <= 0"> / {{ normalizedDailyGoal() | number: '1.0-0' }} </span>
                         {{ 'CONSUMPTION_RING.UNIT' | translate }}
                     </div>
-                    @if (normalizedDailyGoal() > 0) {
-                        <div class="dashboard-summary-card__secondary-line fd-ui-body-sm">
-                            {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
-                        </div>
-                    }
-                    @if (caloriesBurned() > 0) {
-                        <div class="dashboard-summary-card__burned-line fd-ui-overline">
-                            {{ 'CONSUMPTION_RING.BURNED' | translate }}: {{ caloriesBurned() | number: '1.0-0' }}
-                            {{ 'CONSUMPTION_RING.UNIT' | translate }}
-                        </div>
-                    }
+                    <div class="dashboard-summary-card__secondary-line fd-ui-body-sm" [hidden]="normalizedDailyGoal() <= 0">
+                        {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
+                    </div>
+                    <div class="dashboard-summary-card__burned-line fd-ui-overline" [hidden]="caloriesBurned() <= 0">
+                        {{ 'CONSUMPTION_RING.BURNED' | translate }}: {{ caloriesBurned() | number: '1.0-0' }}
+                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                    </div>
                 </div>
             </div>
 
@@ -122,9 +116,7 @@
                             </span>
                             <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="bar.valueColor">
                                 {{ bar.current | number: '1.0-0' }}
-                                @if (bar.target > 0) {
-                                    / {{ bar.target | number: '1.0-0' }}
-                                }
+                                <span [hidden]="bar.target <= 0"> / {{ bar.target | number: '1.0-0' }} </span>
                                 {{ bar.unitText }}
                             </span>
                         </div>

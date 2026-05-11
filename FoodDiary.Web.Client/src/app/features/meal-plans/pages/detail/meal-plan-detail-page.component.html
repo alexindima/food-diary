@@ -12,15 +12,11 @@
                     {{ plan.dietTypeKey | translate }}
                 </div>
                 <h1 class="meal-plan-detail__title fd-ui-display-sm">{{ plan.name }}</h1>
-                @if (plan.description) {
-                    <p class="meal-plan-detail__desc fd-ui-body">{{ plan.description }}</p>
-                }
+                <p class="meal-plan-detail__desc fd-ui-body" [hidden]="!plan.description">{{ plan.description }}</p>
                 <div class="meal-plan-detail__actions fd-row fd-wrap fd-gap-sm">
-                    @if (plan.isCurated) {
-                        <fd-ui-button icon="content_copy" (click)="adopt()">
-                            {{ 'MEAL_PLANS.ADOPT' | translate }}
-                        </fd-ui-button>
-                    }
+                    <fd-ui-button icon="content_copy" [hidden]="!plan.isCurated" (click)="adopt()">
+                        {{ 'MEAL_PLANS.ADOPT' | translate }}
+                    </fd-ui-button>
                     <fd-ui-button variant="secondary" icon="shopping_cart" (click)="generateShoppingList()">
                         {{ 'MEAL_PLANS.GENERATE_SHOPPING_LIST' | translate }}
                     </fd-ui-button>
@@ -41,17 +37,8 @@
                                     </div>
                                     <div class="meal-plan-meal__recipe fd-ui-helper-strong">{{ meal.recipeName ?? meal.recipeId }}</div>
                                     <div class="meal-plan-meal__nutrition fd-row fd-gap-xs fd-ui-caption-strong">
-                                        @if (meal.calories) {
-                                            <span>{{ meal.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
-                                        }
-                                        @if (meal.proteins) {
-                                            <span>P: {{ meal.proteins | number: '1.0-0' }}g</span>
-                                        }
-                                        @if (meal.fats) {
-                                            <span>F: {{ meal.fats | number: '1.0-0' }}g</span>
-                                        }
-                                        @if (meal.carbs) {
-                                            <span>C: {{ meal.carbs | number: '1.0-0' }}g</span>
+                                        @for (item of meal.nutritionItems; track item.prefix) {
+                                            <span>{{ item.prefix }}{{ item.value | number: '1.0-0' }} {{ item.unitKey | translate }}</span>
                                         }
                                     </div>
                                 </div>

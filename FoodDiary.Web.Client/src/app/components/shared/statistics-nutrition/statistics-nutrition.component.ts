@@ -16,6 +16,11 @@ import { BaseChartDirective } from 'ng2-charts';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsNutritionComponent {
+    protected readonly emptyLineChartData: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
+    protected readonly emptyPieChartData: ChartConfiguration<'pie'>['data'] = { labels: [], datasets: [] };
+    protected readonly emptyRadarChartData: ChartConfiguration<'radar'>['data'] = { labels: [], datasets: [] };
+    protected readonly emptyBarChartData: ChartConfiguration<'bar'>['data'] = { labels: [], datasets: [] };
+
     public readonly tabs = input.required<FdUiTab[]>();
     public readonly selectedTab = input.required<string>();
     public readonly hasData = input.required<boolean>();

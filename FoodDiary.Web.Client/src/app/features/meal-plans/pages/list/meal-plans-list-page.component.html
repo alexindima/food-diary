@@ -35,22 +35,18 @@
                             {{ plan.dietTypeKey | translate }}
                         </div>
                         <h3 class="meal-plan-card__name fd-ui-title-sm">{{ plan.name }}</h3>
-                        @if (plan.description) {
-                            <p class="meal-plan-card__desc fd-ui-body">{{ plan.description }}</p>
-                        }
+                        <p class="meal-plan-card__desc fd-ui-body" [hidden]="!plan.description">{{ plan.description }}</p>
                         <div class="meal-plan-card__meta fd-row fd-wrap fd-gap-sm fd-ui-caption-strong">
                             <span>{{ 'MEAL_PLANS.DAYS' | translate: { count: plan.durationDays } }}</span>
                             <span>{{ 'MEAL_PLANS.RECIPES' | translate: { count: plan.totalRecipes } }}</span>
-                            @if (plan.targetCaloriesPerDay) {
-                                <span>~{{ plan.targetCaloriesPerDay | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
-                            }
+                            <span [hidden]="!plan.targetCaloriesPerDay"
+                                >~{{ plan.targetCaloriesPerDay | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
+                            >
                         </div>
-                        @if (plan.isCurated) {
-                            <div class="meal-plan-card__curated fd-ui-pill fd-ui-pill--compact fd-ui-action-text">
-                                <fd-ui-icon name="verified" size="sm" />
-                                {{ 'MEAL_PLANS.CURATED' | translate }}
-                            </div>
-                        }
+                        <div class="meal-plan-card__curated fd-ui-pill fd-ui-pill--compact fd-ui-action-text" [hidden]="!plan.isCurated">
+                            <fd-ui-icon name="verified" size="sm" />
+                            {{ 'MEAL_PLANS.CURATED' | translate }}
+                        </div>
                     </div>
                 }
             </div>

@@ -15,11 +15,9 @@
         [tintColor]="nutrientFillColors.calories"
         [textColor]="nutrientTextColors.calories"
     />
-    @if (caloriesError()) {
-        <div class="nutrition-editor__errors fd-ui-error-text">
-            {{ caloriesError() }}
-        </div>
-    }
+    <div class="nutrition-editor__errors fd-ui-error-text" [hidden]="caloriesError() === null">
+        {{ caloriesError() }}
+    </div>
 
     <div class="nutrition-editor__grid fd-grid fd-gap-card-header">
         <fd-ui-nutrient-input
@@ -64,16 +62,12 @@
     </div>
 
     <div class="nutrition-editor__macro-bar fd-row" aria-hidden="true">
-        @if (macroBarState(); as macroBar) {
-            @if (!macroBar.isEmpty) {
-                @for (segment of macroBar.segments; track segment.key) {
-                    <span
-                        class="nutrition-editor__macro-bar-segment"
-                        [style.width.%]="segment.percent"
-                        [style.backgroundColor]="segment.color"
-                    ></span>
-                }
-            }
+        @for (segment of macroBarState().segments; track segment.key) {
+            <span
+                class="nutrition-editor__macro-bar-segment"
+                [style.width.%]="segment.percent"
+                [style.backgroundColor]="segment.color"
+            ></span>
         }
     </div>
 
@@ -106,17 +100,13 @@
         />
     </div>
 
-    @if (macrosError()) {
-        <div class="nutrition-editor__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text">
-            {{ macrosError() }}
-        </div>
-    }
+    <div class="nutrition-editor__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text" [hidden]="macrosError() === null">
+        {{ macrosError() }}
+    </div>
 
-    @if (showManualHint() && manualHintKey()) {
-        <p class="nutrition-editor__hint fd-ui-body-sm">
-            {{ manualHintKey() | translate }}
-        </p>
-    }
+    <p class="nutrition-editor__hint fd-ui-body-sm" [hidden]="!showManualHint() || !manualHintKey()">
+        {{ manualHintKey() | translate }}
+    </p>
 
     @if (warning(); as warningData) {
         <div class="nutrition-editor__warning fd-ui-body-sm">

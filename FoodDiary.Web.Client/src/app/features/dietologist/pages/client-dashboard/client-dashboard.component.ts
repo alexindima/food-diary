@@ -30,22 +30,67 @@ export class ClientDashboardComponent {
         const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
         return fullName.length > 0 ? fullName : client.email;
     });
-    public readonly hasAnyPermission = computed(() => {
-        const p = this.client()?.permissions;
-        if (p === undefined) {
-            return false;
+    public readonly profileChips = computed(() => {
+        const client = this.client();
+        if (client?.permissions.shareProfile !== true) {
+            return [];
         }
 
-        return (
-            p.shareProfile ||
-            p.shareMeals ||
-            p.shareStatistics ||
-            p.shareWeight ||
-            p.shareWaist ||
-            p.shareGoals ||
-            p.shareHydration ||
-            p.shareFasting
+        return [this.formatProfileChip(client.height, ' cm'), client.gender, client.activityLevel].filter(
+            (value): value is string => value !== null && value.length > 0,
         );
+    });
+    public readonly visibleSections = computed<ClientDashboardSection[]>(() => {
+        const permissions = this.client()?.permissions;
+        if (permissions === undefined) {
+            return [];
+        }
+
+        return [
+            {
+                isVisible: permissions.shareProfile,
+                title: 'Profile',
+                body: 'Client profile data will be displayed here.',
+            },
+            {
+                isVisible: permissions.shareStatistics,
+                title: 'Statistics',
+                body: 'Dashboard data will be displayed here.',
+            },
+            {
+                isVisible: permissions.shareMeals,
+                title: 'Meals',
+                body: 'Meal data will be displayed here.',
+            },
+            {
+                isVisible: permissions.shareWeight,
+                title: 'Weight',
+                body: 'Weight history will be displayed here.',
+            },
+            {
+                isVisible: permissions.shareWaist,
+                title: 'Waist',
+                body: 'Waist history will be displayed here.',
+            },
+            {
+                isVisible: permissions.shareGoals,
+                title: 'Goals',
+                body: 'Client goals will be displayed here.',
+            },
+            {
+                isVisible: permissions.shareHydration,
+                title: 'Hydration',
+                body: 'Hydration data will be displayed here.',
+            },
+            {
+                isVisible: permissions.shareFasting,
+                title: 'Fasting',
+                body: 'Fasting data will be displayed here.',
+            },
+        ].filter(section => section.isVisible);
+    });
+    public readonly hasAnyPermission = computed(() => {
+        return this.visibleSections().length > 0;
     });
 
     public constructor() {
@@ -65,4 +110,14 @@ export class ClientDashboardComponent {
     public goBack(): void {
         void this.router.navigate(['/dietologist']);
     }
+
+    private formatProfileChip(value: number | null | undefined, suffix: string): string | null {
+        return value === null || value === undefined ? null : `${value}${suffix}`;
+    }
+}
+
+interface ClientDashboardSection {
+    isVisible: boolean;
+    title: string;
+    body: string;
 }
