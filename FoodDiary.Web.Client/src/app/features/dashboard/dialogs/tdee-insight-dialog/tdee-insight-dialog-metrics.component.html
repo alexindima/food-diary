@@ -1,0 +1,34 @@
+<section class="tdee-dialog__metrics" aria-label="TDEE metrics">
+    @if (insight().estimatedTdee) {
+        <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+            <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.FORMULA_ESTIMATE' | translate }}</span>
+            <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                >{{ insight().estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+            >
+        </div>
+    }
+    @if (insight().adaptiveTdee) {
+        <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+            <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_DIALOG.ADAPTIVE' | translate }}</span>
+            <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                >{{ insight().adaptiveTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+            >
+        </div>
+    }
+    @if (insight().bmr) {
+        <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+            <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.BMR' | translate }}</span>
+            <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                >{{ insight().bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+            >
+        </div>
+    }
+    @if (weightTrendFormatted()) {
+        <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
+            <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.WEIGHT_TREND' | translate }}</span>
+            <span class="tdee-dialog__metric-value fd-ui-stat-value"
+                >{{ weightTrendFormatted() }} {{ 'TDEE_CARD.KG_WEEK' | translate }}</span
+            >
+        </div>
+    }
+</section>

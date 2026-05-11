@@ -1,0 +1,22 @@
+<section class="tdee-dialog__setup fd-stack fd-gap-sm" aria-labelledby="tdee-dialog-setup-title">
+    <div class="tdee-dialog__section-header fd-stack fd-gap-xxs">
+        <h3 id="tdee-dialog-setup-title" class="tdee-dialog__section-title fd-ui-card-title">
+            {{ 'TDEE_DIALOG.SETUP.TITLE' | translate }}
+        </h3>
+        <p class="tdee-dialog__section-copy fd-ui-body-sm fd-ui-text-muted">{{ 'TDEE_DIALOG.SETUP.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="tdee-dialog__setup-list fd-stack fd-gap-xs">
+        @for (item of items(); track item.key) {
+            <div class="tdee-dialog__setup-item fd-row fd-align-start fd-gap-sm" [class.tdee-dialog__setup-item--complete]="item.complete">
+                <span class="tdee-dialog__setup-icon fd-inline-center" aria-hidden="true">
+                    <fd-ui-icon [name]="item.complete ? 'check_circle' : item.icon" />
+                </span>
+                <div class="tdee-dialog__setup-copy fd-stack fd-gap-xxs fd-min-w-0">
+                    <div class="tdee-dialog__setup-title fd-ui-action-text">{{ item.titleKey | translate }}</div>
+                    <div class="tdee-dialog__setup-text fd-ui-body-sm fd-ui-text-muted">{{ item.textKey | translate }}</div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

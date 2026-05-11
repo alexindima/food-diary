@@ -1,0 +1,20 @@
+<div fdUiDialogFooter class="tdee-dialog__footer fd-ui-actions fd-ui-actions--end">
+    <fd-ui-button type="button" variant="secondary" fill="outline" icon="person" (click)="dialogClose.emit({ type: 'profile' })">
+        {{ 'TDEE_DIALOG.ACTIONS.PROFILE' | translate }}
+    </fd-ui-button>
+    <fd-ui-button type="button" variant="secondary" fill="outline" icon="monitor_weight" (click)="dialogClose.emit({ type: 'weight' })">
+        {{ 'TDEE_DIALOG.ACTIONS.WEIGHT' | translate }}
+    </fd-ui-button>
+    <fd-ui-button type="button" variant="secondary" fill="outline" icon="restaurant" (click)="dialogClose.emit({ type: 'meal' })">
+        {{ 'TDEE_DIALOG.ACTIONS.MEAL' | translate }}
+    </fd-ui-button>
+    @if (showSuggestion()) {
+        <fd-ui-button type="button" variant="primary" icon="done" (click)="suggestionApply.emit()">
+            {{ 'TDEE_CARD.APPLY' | translate }}
+        </fd-ui-button>
+    } @else {
+        <fd-ui-button type="button" variant="primary" icon="flag" (click)="dialogClose.emit({ type: 'goals' })">
+            {{ 'TDEE_DIALOG.ACTIONS.GOALS' | translate }}
+        </fd-ui-button>
+    }
+</div>

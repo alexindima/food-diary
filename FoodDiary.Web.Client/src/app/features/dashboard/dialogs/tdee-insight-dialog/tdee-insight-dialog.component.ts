@@ -1,14 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
-import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import type { TdeeInsight } from '../../models/tdee-insight.data';
+import { TdeeInsightDialogFooterComponent } from './tdee-insight-dialog-footer.component';
+import { TdeeInsightDialogHintComponent } from './tdee-insight-dialog-hint.component';
+import { TdeeInsightDialogMetricsComponent } from './tdee-insight-dialog-metrics.component';
+import { TdeeInsightDialogSetupComponent } from './tdee-insight-dialog-setup.component';
+import { TdeeInsightDialogSummaryComponent } from './tdee-insight-dialog-summary.component';
 
 const MIN_FOOD_WINDOW_DAYS = 14;
 const SUGGESTION_DIFF_THRESHOLD = 50;
@@ -25,7 +26,7 @@ export type TdeeInsightDialogAction =
     | { type: 'goals' }
     | { type: 'applyGoal'; target: number };
 
-interface TdeeSetupItem {
+export interface TdeeSetupItem {
     readonly key: string;
     readonly icon: string;
     readonly complete: boolean;
@@ -36,7 +37,15 @@ interface TdeeSetupItem {
 @Component({
     selector: 'fd-tdee-insight-dialog',
     standalone: true,
-    imports: [CommonModule, TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiIconComponent],
+    imports: [
+        TranslateModule,
+        FdUiDialogComponent,
+        TdeeInsightDialogFooterComponent,
+        TdeeInsightDialogHintComponent,
+        TdeeInsightDialogMetricsComponent,
+        TdeeInsightDialogSetupComponent,
+        TdeeInsightDialogSummaryComponent,
+    ],
     templateUrl: './tdee-insight-dialog.component.html',
     styleUrl: './tdee-insight-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

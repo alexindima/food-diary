@@ -1,0 +1,34 @@
+<section class="tdee-dialog__summary fd-stack fd-gap-sm" aria-labelledby="tdee-dialog-summary-title">
+    <div class="tdee-dialog__summary-header fd-row fd-align-start fd-gap-sm">
+        <span class="tdee-dialog__summary-icon fd-inline-center" aria-hidden="true">
+            <fd-ui-icon name="local_fire_department" />
+        </span>
+        <div class="tdee-dialog__summary-copy fd-stack fd-gap-xxs fd-min-w-0">
+            <div id="tdee-dialog-summary-title" class="tdee-dialog__state fd-ui-overline">
+                {{ stateKey() | translate }}
+            </div>
+            @if (effectiveTdee()) {
+                <div class="tdee-dialog__value fd-row fd-align-baseline fd-gap-xs">
+                    <span class="tdee-dialog__number fd-ui-metric-lg">{{ effectiveTdee() | number: '1.0-0' }}</span>
+                    <span class="tdee-dialog__unit fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.KCAL_DAY' | translate }}</span>
+                </div>
+            } @else {
+                <div class="tdee-dialog__empty-title fd-ui-card-title">{{ 'TDEE_DIALOG.EMPTY_TITLE' | translate }}</div>
+            }
+            <p class="tdee-dialog__summary-text fd-ui-body-sm fd-ui-text-muted">{{ summaryKey() | translate }}</p>
+        </div>
+    </div>
+
+    @if (insight(); as currentInsight) {
+        <div class="tdee-dialog__confidence fd-row fd-wrap fd-gap-xs">
+            <span class="tdee-dialog__pill fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                <fd-ui-icon name="verified" />
+                {{ confidenceKey() | translate }}
+            </span>
+            <span class="tdee-dialog__pill fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                <fd-ui-icon name="calendar_month" />
+                {{ 'TDEE_DIALOG.DATA_DAYS' | translate: { days: currentInsight.dataDaysUsed } }}
+            </span>
+        </div>
+    }
+</section>

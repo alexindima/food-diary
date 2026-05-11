@@ -1,0 +1,17 @@
+@if (hintKey() || showSuggestion()) {
+    <section class="tdee-dialog__hint fd-row fd-align-start fd-gap-sm">
+        <fd-ui-icon name="tips_and_updates" />
+        <div class="tdee-dialog__hint-copy fd-stack fd-gap-xxs">
+            @if (hintKey(); as currentHintKey) {
+                <p class="tdee-dialog__hint-text fd-ui-body-sm">{{ currentHintKey | translate }}</p>
+            }
+            @if (showSuggestion() && insight()?.suggestedCalorieTarget) {
+                @if (insight(); as currentInsight) {
+                    <p class="tdee-dialog__hint-text fd-ui-body-sm">
+                        {{ 'TDEE_DIALOG.SUGGESTED_TARGET' | translate: { value: currentInsight.suggestedCalorieTarget | number: '1.0-0' } }}
+                    </p>
+                }
+            }
+        </div>
+    </section>
+}
