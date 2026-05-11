@@ -42,7 +42,24 @@ export function buildFastingTimerCardComputedState(input: FastingTimerCardComput
     const baseStage = session !== null ? resolveFastingStage(elapsedMs, session.plannedDurationHours) : null;
     const totalMs = Math.max(0, (session?.plannedDurationHours ?? 0) * MS_PER_HOUR);
     const remainingMs = Math.max(0, totalMs - elapsedMs);
-    const fallback: FastingTimerCardComputedState = {
+    const fallback = buildFastingFallbackState({ session, elapsedMs, translate, baseStage, totalMs, remainingMs });
+
+    if (!shouldUseIntermittentCycleState(session)) {
+        return fallback;
+    }
+
+    return buildIntermittentCycleState({ session, elapsedMs, translate });
+}
+
+interface FastingFallbackStateInput extends FastingTimerCardComputedStateInput {
+    baseStage: FastingStagePresentation | null;
+    totalMs: number;
+    remainingMs: number;
+}
+
+function buildFastingFallbackState(input: FastingFallbackStateInput): FastingTimerCardComputedState {
+    const { session, elapsedMs, translate, baseStage, totalMs, remainingMs } = input;
+    return {
         progressPercent: totalMs > 0 ? Math.min((elapsedMs / totalMs) * PERCENT_FULL, PERCENT_FULL) : 0,
         elapsedFormatted: formatFastingDuration(elapsedMs),
         remainingFormatted: formatFastingDuration(remainingMs),
@@ -54,14 +71,22 @@ export function buildFastingTimerCardComputedState(input: FastingTimerCardComput
         metaLabel: session?.planType === 'Cyclic' ? getCyclicPhaseProgressLabel(translate, session, baseStage) : null,
         ringColor: baseStage?.color ?? null,
         stage: baseStage,
-        nextStageFormatted:
-            baseStage?.nextInMs !== null && baseStage?.nextInMs !== undefined ? formatFastingDuration(baseStage.nextInMs) : null,
+        nextStageFormatted: formatNextStageDuration(baseStage),
     };
+}
 
-    if (session?.planType !== 'Intermittent' || session.endedAtUtc !== null) {
-        return fallback;
-    }
+function formatNextStageDuration(stage: FastingStagePresentation | null): string | null {
+    return stage?.nextInMs !== null && stage?.nextInMs !== undefined ? formatFastingDuration(stage.nextInMs) : null;
+}
 
+function shouldUseIntermittentCycleState(session: FastingSession | null): session is FastingSession {
+    return session?.planType === 'Intermittent' && session.endedAtUtc === null;
+}
+
+function buildIntermittentCycleState(
+    input: FastingTimerCardComputedStateInput & { session: FastingSession },
+): FastingTimerCardComputedState {
+    const { session, elapsedMs, translate } = input;
     const fastHours = Math.max(
         1,
         session.initialPlannedDurationHours > 0 ? session.initialPlannedDurationHours : session.plannedDurationHours,
@@ -73,29 +98,49 @@ export function buildFastingTimerCardComputedState(input: FastingTimerCardComput
     const fastWindowMs = fastHours * MS_PER_HOUR;
     const eatingWindowMs = eatingHours * MS_PER_HOUR;
 
-    if (cycleElapsedMs < fastWindowMs) {
-        const stage = resolveFastingStage(cycleElapsedMs, fastHours);
-        return {
-            progressPercent: Math.min((cycleElapsedMs / fastWindowMs) * PERCENT_FULL, PERCENT_FULL),
-            elapsedFormatted: formatFastingDuration(cycleElapsedMs),
-            remainingFormatted: formatFastingDuration(Math.max(0, fastWindowMs - cycleElapsedMs)),
-            remainingLabelKey: 'FASTING.UNTIL_EATING_WINDOW',
-            isOvertime: false,
-            showStageProgress: true,
-            stateLabel: translate('FASTING.FASTING_WINDOW'),
-            detailLabel: getFastingProtocolBaseLabel(translate, session),
-            metaLabel: getFastingCycleLabel(translate, cycleDay),
-            ringColor: stage.color,
-            stage,
-            nextStageFormatted: stage.nextInMs !== null ? formatFastingDuration(stage.nextInMs) : null,
-        };
-    }
+    return cycleElapsedMs < fastWindowMs
+        ? buildIntermittentFastWindowState({ session, elapsedMs: cycleElapsedMs, translate, cycleDay, fastWindowMs, fastHours })
+        : buildIntermittentEatingWindowState({ session, elapsedMs: cycleElapsedMs - fastWindowMs, translate, cycleDay, eatingWindowMs });
+}
 
-    const eatingElapsedMs = cycleElapsedMs - fastWindowMs;
+function buildIntermittentFastWindowState(input: {
+    session: FastingSession;
+    elapsedMs: number;
+    translate: TranslateFn;
+    cycleDay: number;
+    fastWindowMs: number;
+    fastHours: number;
+}): FastingTimerCardComputedState {
+    const { session, elapsedMs, translate, cycleDay, fastWindowMs, fastHours } = input;
+    const stage = resolveFastingStage(elapsedMs, fastHours);
     return {
-        progressPercent: Math.min((eatingElapsedMs / eatingWindowMs) * PERCENT_FULL, PERCENT_FULL),
-        elapsedFormatted: formatFastingDuration(eatingElapsedMs),
-        remainingFormatted: formatFastingDuration(Math.max(0, eatingWindowMs - eatingElapsedMs)),
+        progressPercent: Math.min((elapsedMs / fastWindowMs) * PERCENT_FULL, PERCENT_FULL),
+        elapsedFormatted: formatFastingDuration(elapsedMs),
+        remainingFormatted: formatFastingDuration(Math.max(0, fastWindowMs - elapsedMs)),
+        remainingLabelKey: 'FASTING.UNTIL_EATING_WINDOW',
+        isOvertime: false,
+        showStageProgress: true,
+        stateLabel: translate('FASTING.FASTING_WINDOW'),
+        detailLabel: getFastingProtocolBaseLabel(translate, session),
+        metaLabel: getFastingCycleLabel(translate, cycleDay),
+        ringColor: stage.color,
+        stage,
+        nextStageFormatted: stage.nextInMs !== null ? formatFastingDuration(stage.nextInMs) : null,
+    };
+}
+
+function buildIntermittentEatingWindowState(input: {
+    session: FastingSession;
+    elapsedMs: number;
+    translate: TranslateFn;
+    cycleDay: number;
+    eatingWindowMs: number;
+}): FastingTimerCardComputedState {
+    const { session, elapsedMs, translate, cycleDay, eatingWindowMs } = input;
+    return {
+        progressPercent: Math.min((elapsedMs / eatingWindowMs) * PERCENT_FULL, PERCENT_FULL),
+        elapsedFormatted: formatFastingDuration(elapsedMs),
+        remainingFormatted: formatFastingDuration(Math.max(0, eatingWindowMs - elapsedMs)),
         remainingLabelKey: 'FASTING.NEXT_FAST',
         isOvertime: false,
         showStageProgress: false,

@@ -260,7 +260,7 @@ export default [
         },
         rules: {
             ...eslintConfigPrettier.rules,
-            complexity: ['warn', 10],
+            complexity: ['error', 10],
             'no-console': 'error',
             'no-else-return': 'error',
             'no-lonely-if': 'error',

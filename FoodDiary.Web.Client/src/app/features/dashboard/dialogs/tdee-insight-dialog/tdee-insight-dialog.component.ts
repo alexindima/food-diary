@@ -49,30 +49,12 @@ export class TdeeInsightDialogComponent {
     public readonly effectiveTdee = this.insight?.adaptiveTdee ?? this.insight?.estimatedTdee ?? null;
     public readonly hasProfileBasis = (this.insight?.estimatedTdee ?? this.insight?.bmr ?? 0) > 0;
     public readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= MIN_FOOD_WINDOW_DAYS || (this.insight?.adaptiveTdee ?? 0) > 0;
-    public readonly hasBodyTrend =
-        (this.insight?.adaptiveTdee ?? 0) > 0 ||
-        (this.insight?.weightTrendPerWeek !== null && this.insight?.weightTrendPerWeek !== undefined);
+    public readonly hasBodyTrend = this.hasBodyTrendValue();
     public readonly weightTrendFormatted = this.formatWeightTrend(this.insight?.weightTrendPerWeek);
-    public readonly confidenceKey =
-        this.insight !== null && this.insight.confidence !== 'none'
-            ? `TDEE_CARD.CONFIDENCE.${this.insight.confidence.toUpperCase()}`
-            : 'TDEE_DIALOG.CONFIDENCE.NONE';
-    public readonly stateKey =
-        this.effectiveTdee === null || this.effectiveTdee <= 0
-            ? 'TDEE_DIALOG.STATE.EMPTY'
-            : (this.insight?.adaptiveTdee ?? 0) > 0
-              ? 'TDEE_DIALOG.STATE.ADAPTIVE'
-              : 'TDEE_DIALOG.STATE.ESTIMATED';
-    public readonly summaryKey =
-        this.effectiveTdee === null || this.effectiveTdee <= 0
-            ? 'TDEE_DIALOG.SUMMARY.EMPTY'
-            : (this.insight?.adaptiveTdee ?? 0) > 0
-              ? 'TDEE_DIALOG.SUMMARY.ADAPTIVE'
-              : 'TDEE_DIALOG.SUMMARY.ESTIMATED';
-    public readonly showSuggestion =
-        (this.insight?.suggestedCalorieTarget ?? 0) > 0 &&
-        (this.insight?.currentCalorieTarget ?? 0) > 0 &&
-        Math.abs((this.insight?.suggestedCalorieTarget ?? 0) - (this.insight?.currentCalorieTarget ?? 0)) > SUGGESTION_DIFF_THRESHOLD;
+    public readonly confidenceKey = this.buildConfidenceKey();
+    public readonly stateKey = this.buildTdeeStateKey('STATE');
+    public readonly summaryKey = this.buildTdeeStateKey('SUMMARY');
+    public readonly showSuggestion = this.hasMeaningfulSuggestion();
     public readonly hintKey = this.buildHintKey();
     public readonly setupItems: readonly TdeeSetupItem[] = [
         {
@@ -123,5 +105,29 @@ export class TdeeInsightDialogComponent {
     private buildHintKey(): string | null {
         const hint = this.insight?.goalAdjustmentHint ?? '';
         return hint.length > 0 ? `TDEE_CARD.HINTS.${hint.replace('hint.', '').toUpperCase()}` : null;
+    }
+
+    private hasBodyTrendValue(): boolean {
+        return (this.insight?.adaptiveTdee ?? 0) > 0 || this.insight?.weightTrendPerWeek !== null;
+    }
+
+    private buildConfidenceKey(): string {
+        return this.insight !== null && this.insight.confidence !== 'none'
+            ? `TDEE_CARD.CONFIDENCE.${this.insight.confidence.toUpperCase()}`
+            : 'TDEE_DIALOG.CONFIDENCE.NONE';
+    }
+
+    private buildTdeeStateKey(section: 'STATE' | 'SUMMARY'): string {
+        if (this.effectiveTdee === null || this.effectiveTdee <= 0) {
+            return `TDEE_DIALOG.${section}.EMPTY`;
+        }
+
+        return (this.insight?.adaptiveTdee ?? 0) > 0 ? `TDEE_DIALOG.${section}.ADAPTIVE` : `TDEE_DIALOG.${section}.ESTIMATED`;
+    }
+
+    private hasMeaningfulSuggestion(): boolean {
+        const suggested = this.insight?.suggestedCalorieTarget ?? 0;
+        const current = this.insight?.currentCalorieTarget ?? 0;
+        return suggested > 0 && current > 0 && Math.abs(suggested - current) > SUGGESTION_DIFF_THRESHOLD;
     }
 }

@@ -23,6 +23,13 @@ interface ResolvedDialogPreset {
     backdropClass?: string[];
 }
 
+interface ResolvedDialogLayout {
+    panelClass: string[];
+    backdropClass: string[];
+    isEdgeMobile: boolean;
+    isFullscreen: boolean;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -31,37 +38,18 @@ export class FdUiDialogService {
     private readonly overlay = inject(Overlay);
 
     public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
-        const resolvedPreset = this.resolvePreset(config.preset);
-        const presetPanelClasses = resolvedPreset.panelClass ?? [];
-        const presetBackdropClasses = resolvedPreset.backdropClass ?? [];
-        const size = config.size ?? resolvedPreset.size ?? 'md';
-        const providedPanelClasses = this.asArray(config.panelClass);
-        const isFullscreen = [...presetPanelClasses, ...providedPanelClasses].includes('fd-ui-dialog-panel--fullscreen');
-        const isEdgeMobile = this.isCompactMobile() && !isFullscreen;
-        const mobileClasses = isEdgeMobile ? ['fd-ui-dialog-panel--edge-mobile'] : [];
-        const panelClass = this.mergeClasses(config.panelClass, [
-            ...presetPanelClasses,
-            'fd-ui-dialog-panel',
-            `fd-ui-dialog-panel--${size}`,
-            ...mobileClasses,
-        ]);
-        const backdropClass = this.mergeClasses(config.backdropClass, [...presetBackdropClasses, 'fd-ui-dialog-backdrop']);
-        const positionStrategy =
-            config.positionStrategy ??
-            (isFullscreen
-                ? undefined
-                : isEdgeMobile
-                  ? this.overlay.position().global().centerHorizontally().bottom('0')
-                  : this.overlay.position().global().centerHorizontally().top(DEFAULT_DIALOG_TOP_OFFSET));
+        const layout = this.resolveDialogLayout(config);
+        const size = this.resolveDialogSize(config);
+        const positionStrategy = config.positionStrategy ?? this.resolvePositionStrategy(layout);
         const baseProviders = config.providers ?? [];
 
         const dialogConfig: DialogConfig<D, DialogRef<R, T>> = {
             ...config,
-            width: config.width ?? (isEdgeMobile ? '100vw' : undefined),
-            maxWidth: config.maxWidth ?? (isEdgeMobile ? '100vw' : undefined),
+            width: config.width ?? (layout.isEdgeMobile ? '100vw' : undefined),
+            maxWidth: config.maxWidth ?? (layout.isEdgeMobile ? '100vw' : undefined),
             positionStrategy,
-            panelClass,
-            backdropClass,
+            panelClass: this.withSizeClass(layout.panelClass, size),
+            backdropClass: layout.backdropClass,
             autoFocus: config.autoFocus ?? 'first-tabbable',
             providers: cdkDialogRef => {
                 const wrappedRef = new FdUiDialogRef<T, R>(cdkDialogRef);
@@ -72,6 +60,43 @@ export class FdUiDialogService {
         const dialogRef = this.dialog.open<R, D, T>(component, dialogConfig);
 
         return new FdUiDialogRef<T, R>(dialogRef);
+    }
+
+    private resolveDialogSize(config: FdUiDialogConfig): FdUiDialogSize {
+        return config.size ?? this.resolvePreset(config.preset).size ?? 'md';
+    }
+
+    private resolveDialogLayout(config: FdUiDialogConfig): ResolvedDialogLayout {
+        const resolvedPreset = this.resolvePreset(config.preset);
+        const presetPanelClasses = resolvedPreset.panelClass ?? [];
+        const providedPanelClasses = this.asArray(config.panelClass);
+        const isFullscreen = [...presetPanelClasses, ...providedPanelClasses].includes('fd-ui-dialog-panel--fullscreen');
+        const isEdgeMobile = this.isCompactMobile() && !isFullscreen;
+
+        return {
+            panelClass: this.mergeClasses(config.panelClass, [
+                ...presetPanelClasses,
+                'fd-ui-dialog-panel',
+                ...(isEdgeMobile ? ['fd-ui-dialog-panel--edge-mobile'] : []),
+            ]),
+            backdropClass: this.mergeClasses(config.backdropClass, [...(resolvedPreset.backdropClass ?? []), 'fd-ui-dialog-backdrop']),
+            isEdgeMobile,
+            isFullscreen,
+        };
+    }
+
+    private withSizeClass(panelClass: string[], size: FdUiDialogSize): string[] {
+        return [...panelClass, `fd-ui-dialog-panel--${size}`];
+    }
+
+    private resolvePositionStrategy(layout: ResolvedDialogLayout): DialogConfig['positionStrategy'] {
+        if (layout.isFullscreen) {
+            return undefined;
+        }
+
+        return layout.isEdgeMobile
+            ? this.overlay.position().global().centerHorizontally().bottom('0')
+            : this.overlay.position().global().centerHorizontally().top(DEFAULT_DIALOG_TOP_OFFSET);
     }
 
     private resolvePreset(preset: FdUiDialogPreset | undefined): ResolvedDialogPreset {

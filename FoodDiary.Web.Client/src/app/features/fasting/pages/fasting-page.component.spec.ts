@@ -386,11 +386,28 @@ function createHistorySession(id: string, checkInCount: number): FastingSession 
         ...createSession(),
         id,
         checkIns,
-        checkInAtUtc: checkIns[0]?.checkedInAtUtc ?? null,
-        hungerLevel: checkIns[0]?.hungerLevel ?? null,
-        energyLevel: checkIns[0]?.energyLevel ?? null,
-        moodLevel: checkIns[0]?.moodLevel ?? null,
-        symptoms: checkIns[0]?.symptoms ?? [],
-        checkInNotes: checkIns[0]?.notes ?? null,
+        ...createLatestCheckInSessionFields(checkIns[0]),
+    };
+}
+
+function createLatestCheckInSessionFields(checkIn: FastingSession['checkIns'][number] | undefined): Partial<FastingSession> {
+    if (checkIn === undefined) {
+        return {
+            checkInAtUtc: null,
+            hungerLevel: null,
+            energyLevel: null,
+            moodLevel: null,
+            symptoms: [],
+            checkInNotes: null,
+        };
+    }
+
+    return {
+        checkInAtUtc: checkIn.checkedInAtUtc,
+        hungerLevel: checkIn.hungerLevel,
+        energyLevel: checkIn.energyLevel,
+        moodLevel: checkIn.moodLevel,
+        symptoms: checkIn.symptoms,
+        checkInNotes: checkIn.notes,
     };
 }

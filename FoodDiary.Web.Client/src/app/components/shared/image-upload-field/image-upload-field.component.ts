@@ -86,7 +86,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     private readonly initialSelectionEffect = effect(() => {
         const initial = this.initialSelection();
-        if ((initial?.url !== null && initial?.url !== undefined) || (initial?.assetId !== null && initial?.assetId !== undefined)) {
+        if (this.hasInitialSelection(initial)) {
             this.selection = {
                 url: initial.url ?? null,
                 assetId: initial.assetId ?? null,
@@ -103,6 +103,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     private onTouched: () => void = () => {};
 
     protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
+
+    private hasInitialSelection(initial: ImageSelection | null): initial is ImageSelection {
+        return initial !== null && (initial.url !== null || initial.assetId !== null);
+    }
 
     public writeValue(value: ImageSelection | null): void {
         this.selection = value ?? { url: null, assetId: null };
@@ -404,7 +408,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
 
         const fixedSize = this.cropSize();
-        let canvas = await selection.$toCanvas(
+        const canvas = await selection.$toCanvas(
             fixedSize !== null && fixedSize > 0
                 ? {
                       width: fixedSize,
@@ -413,29 +417,14 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
                 : undefined,
         );
 
-        if (fixedSize === null || fixedSize <= 0) {
-            const maxSize = this.cropMaxSize();
-            if (maxSize > 0 && (canvas.width > maxSize || canvas.height > maxSize)) {
-                const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
-                const targetWidth = Math.max(1, Math.round(canvas.width * scale));
-                const targetHeight = Math.max(1, Math.round(canvas.height * scale));
-                const resized = document.createElement('canvas');
-                resized.width = targetWidth;
-                resized.height = targetHeight;
-                const ctx = resized.getContext('2d');
-                if (ctx === null) {
-                    this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
-                    this.cdr.markForCheck();
-                    return;
-                }
-                ctx.fillStyle = 'var(--fd-color-white)';
-                ctx.fillRect(0, 0, targetWidth, targetHeight);
-                ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
-                canvas = resized;
-            }
+        const resizedCanvas = this.resizeCropCanvasIfNeeded(canvas, fixedSize);
+        if (resizedCanvas === null) {
+            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
+            this.cdr.markForCheck();
+            return;
         }
 
-        canvas.toBlob((blob: Blob | null) => {
+        resizedCanvas.toBlob((blob: Blob | null) => {
             if (blob === null) {
                 this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
                 this.cdr.markForCheck();
@@ -449,6 +438,37 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             this.clearCropState();
             this.uploadFile(croppedFile);
         }, this.originalFile?.type ?? 'image/png');
+    }
+
+    private resizeCropCanvasIfNeeded(canvas: HTMLCanvasElement, fixedSize: number | null): HTMLCanvasElement | null {
+        const maxSize = this.cropMaxSize();
+        if (fixedSize !== null && fixedSize > 0) {
+            return canvas;
+        }
+
+        if (maxSize <= 0 || (canvas.width <= maxSize && canvas.height <= maxSize)) {
+            return canvas;
+        }
+
+        return this.resizeCanvas(canvas, maxSize);
+    }
+
+    private resizeCanvas(canvas: HTMLCanvasElement, maxSize: number): HTMLCanvasElement | null {
+        const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
+        const targetWidth = Math.max(1, Math.round(canvas.width * scale));
+        const targetHeight = Math.max(1, Math.round(canvas.height * scale));
+        const resized = document.createElement('canvas');
+        resized.width = targetWidth;
+        resized.height = targetHeight;
+        const ctx = resized.getContext('2d');
+        if (ctx === null) {
+            return null;
+        }
+
+        ctx.fillStyle = 'var(--fd-color-white)';
+        ctx.fillRect(0, 0, targetWidth, targetHeight);
+        ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
+        return resized;
     }
 
     private clearCropState(): void {

@@ -274,42 +274,75 @@ export class MealCardComponent {
         const seen = new Set<string>();
         const result: EntityCardCollageImage[] = [];
 
+        this.appendItemImages(result, seen);
+        this.appendAiSessionImages(result, seen);
+
+        return result;
+    }
+
+    private appendItemImages(result: EntityCardCollageImage[], seen: Set<string>): void {
         for (const item of this.meal().items ?? []) {
-            const imageUrl = item?.product?.imageUrl?.trim() ?? item?.recipe?.imageUrl?.trim();
-            if (imageUrl === undefined || imageUrl.length === 0 || seen.has(imageUrl)) {
-                continue;
-            }
-
-            seen.add(imageUrl);
-            result.push({
-                url: imageUrl,
-                alt: item?.product?.name?.trim() ?? item?.recipe?.name?.trim() ?? this.mealTitle(),
-            });
-
-            if (result.length === COLLAGE_IMAGE_LIMIT) {
+            const image = this.resolveMealItemCollageImage(item);
+            if (!this.appendCollageImage(result, seen, image.url, image.alt)) {
                 break;
             }
         }
+    }
 
-        if (result.length < COLLAGE_IMAGE_LIMIT) {
-            for (const session of this.meal().aiSessions ?? []) {
-                const imageUrl = session?.imageUrl?.trim();
-                if (imageUrl === undefined || imageUrl.length === 0 || seen.has(imageUrl)) {
-                    continue;
-                }
-
-                seen.add(imageUrl);
-                result.push({
-                    url: imageUrl,
-                    alt: session?.notes?.trim() ?? this.mealTitle(),
-                });
-
-                if (result.length === COLLAGE_IMAGE_LIMIT) {
-                    break;
-                }
-            }
+    private appendAiSessionImages(result: EntityCardCollageImage[], seen: Set<string>): void {
+        if (result.length === COLLAGE_IMAGE_LIMIT) {
+            return;
         }
 
-        return result;
+        for (const session of this.meal().aiSessions ?? []) {
+            if (!this.appendCollageImage(result, seen, session?.imageUrl?.trim(), session?.notes?.trim())) {
+                break;
+            }
+        }
+    }
+
+    private appendCollageImage(
+        result: EntityCardCollageImage[],
+        seen: Set<string>,
+        imageUrl: string | undefined,
+        alt: string | undefined,
+    ): boolean {
+        if (imageUrl === undefined || imageUrl.length === 0 || seen.has(imageUrl)) {
+            return true;
+        }
+
+        seen.add(imageUrl);
+        result.push({
+            url: imageUrl,
+            alt: alt ?? this.mealTitle(),
+        });
+
+        return result.length < COLLAGE_IMAGE_LIMIT;
+    }
+
+    private resolveMealItemCollageImage(item: NonNullable<NonNullable<MealCardItem['items']>[number]> | null): {
+        url: string | undefined;
+        alt: string | undefined;
+    } {
+        return {
+            url: this.resolveMealItemProductImage(item) ?? this.resolveMealItemRecipeImage(item),
+            alt: this.resolveMealItemProductName(item) ?? this.resolveMealItemRecipeName(item),
+        };
+    }
+
+    private resolveMealItemProductImage(item: NonNullable<NonNullable<MealCardItem['items']>[number]> | null): string | undefined {
+        return item?.product?.imageUrl?.trim();
+    }
+
+    private resolveMealItemRecipeImage(item: NonNullable<NonNullable<MealCardItem['items']>[number]> | null): string | undefined {
+        return item?.recipe?.imageUrl?.trim();
+    }
+
+    private resolveMealItemProductName(item: NonNullable<NonNullable<MealCardItem['items']>[number]> | null): string | undefined {
+        return item?.product?.name?.trim();
+    }
+
+    private resolveMealItemRecipeName(item: NonNullable<NonNullable<MealCardItem['items']>[number]> | null): string | undefined {
+        return item?.recipe?.name?.trim();
     }
 }

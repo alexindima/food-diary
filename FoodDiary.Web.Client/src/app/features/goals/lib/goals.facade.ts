@@ -5,7 +5,7 @@ import { finalize } from 'rxjs';
 
 import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { GoalsService } from '../api/goals.service';
-import type { UpdateGoalsRequest } from '../models/goals.data';
+import { DAYS_OF_WEEK, type GoalsResponse, type UpdateGoalsRequest } from '../models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 
@@ -412,66 +412,62 @@ export class GoalsFacade {
             )
             .subscribe({
                 next: goals => {
-                    this.selectedPreset.set('custom');
-
-                    if (goals?.dailyCalorieTarget !== undefined && goals.dailyCalorieTarget !== null) {
-                        this.calorieTarget.set(this.clampCalories(goals.dailyCalorieTarget));
-                    }
-
-                    const nextMacros = { ...this.macroValues() };
-                    const macroInputs: Array<[MacroKey, number | null | undefined]> = [
-                        ['protein', goals?.proteinTarget],
-                        ['fats', goals?.fatTarget],
-                        ['carbs', goals?.carbTarget],
-                        ['fiber', goals?.fiberTarget],
-                    ];
-
-                    for (const [key, value] of macroInputs) {
-                        if (value === null || value === undefined) {
-                            continue;
-                        }
-
-                        const cfg = this.macroConfigs.find(item => item.key === key);
-                        if (cfg === undefined) {
-                            continue;
-                        }
-
-                        nextMacros[key] = this.clampValue(value, cfg.max);
-                    }
-
-                    if (macroInputs.some(([, value]) => value !== null && value !== undefined)) {
-                        this.macroValues.set(nextMacros);
-                    }
-
-                    this.waterValue.set(
-                        goals?.waterGoal !== undefined && goals.waterGoal !== null
-                            ? this.clampValue(goals.waterGoal, this.waterConfig.max)
-                            : 0,
-                    );
-
-                    this.bodyTargetValues.set({
-                        weight: goals?.desiredWeight ?? 0,
-                        waist: goals?.desiredWaist ?? 0,
-                    });
-
-                    this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
-                    this.dayCalories.set({
-                        mondayCalories: goals?.mondayCalories ?? 0,
-                        tuesdayCalories: goals?.tuesdayCalories ?? 0,
-                        wednesdayCalories: goals?.wednesdayCalories ?? 0,
-                        thursdayCalories: goals?.thursdayCalories ?? 0,
-                        fridayCalories: goals?.fridayCalories ?? 0,
-                        saturdayCalories: goals?.saturdayCalories ?? 0,
-                        sundayCalories: goals?.sundayCalories ?? 0,
-                    });
-
-                    this.hasAutosaveError.set(false);
-                    this.hasPendingAutosave.set(false);
+                    this.applyLoadedGoals(goals);
                 },
                 error: () => {
                     this.hasLoadError.set(true);
                 },
             });
+    }
+
+    private applyLoadedGoals(goals: GoalsResponse | null): void {
+        this.selectedPreset.set('custom');
+        this.applyLoadedCalorieTarget(goals);
+        this.applyLoadedMacroTargets(goals);
+        this.waterValue.set(this.clampOptionalValue(goals?.waterGoal, this.waterConfig.max));
+        this.bodyTargetValues.set({
+            weight: goals?.desiredWeight ?? 0,
+            waist: goals?.desiredWaist ?? 0,
+        });
+        this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
+        this.dayCalories.set(Object.fromEntries(DAYS_OF_WEEK.map(day => [day.key, goals?.[day.key] ?? 0])));
+        this.hasAutosaveError.set(false);
+        this.hasPendingAutosave.set(false);
+    }
+
+    private applyLoadedCalorieTarget(goals: GoalsResponse | null): void {
+        if (goals?.dailyCalorieTarget !== undefined && goals.dailyCalorieTarget !== null) {
+            this.calorieTarget.set(this.clampCalories(goals.dailyCalorieTarget));
+        }
+    }
+
+    private applyLoadedMacroTargets(goals: GoalsResponse | null): void {
+        const macroInputs: Array<[MacroKey, number | null | undefined]> = [
+            ['protein', goals?.proteinTarget],
+            ['fats', goals?.fatTarget],
+            ['carbs', goals?.carbTarget],
+            ['fiber', goals?.fiberTarget],
+        ];
+        const nextMacros = { ...this.macroValues() };
+
+        macroInputs.forEach(([key, value]) => {
+            this.applyLoadedMacroTarget(nextMacros, key, value);
+        });
+
+        if (macroInputs.some(([, value]) => value !== null && value !== undefined)) {
+            this.macroValues.set(nextMacros);
+        }
+    }
+
+    private applyLoadedMacroTarget(nextMacros: Record<MacroKey, number>, key: MacroKey, value: number | null | undefined): void {
+        const cfg = this.macroConfigs.find(item => item.key === key);
+        if (value !== null && value !== undefined && cfg !== undefined) {
+            nextMacros[key] = this.clampValue(value, cfg.max);
+        }
+    }
+
+    private clampOptionalValue(value: number | null | undefined, max: number): number {
+        return value !== undefined && value !== null ? this.clampValue(value, max) : 0;
     }
 
     private queueAutosave(): void {

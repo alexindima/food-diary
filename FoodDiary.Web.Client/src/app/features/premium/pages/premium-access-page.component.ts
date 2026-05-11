@@ -296,20 +296,14 @@ export class PremiumAccessPageComponent {
             return;
         }
 
-        const paddleClientToken = this.overview()?.paddleClientToken?.trim() ?? environment.paddleClientToken?.trim();
-        if (paddleClientToken === undefined || paddleClientToken.length === 0) {
-            const message = 'Paddle client token is not configured.';
-            this.errorMessage.set(message);
-            this.toastService.error(message);
+        const paddleClientToken = this.resolvePaddleClientToken();
+        if (paddleClientToken === null) {
+            this.showPaddleClientTokenMissingError();
             return;
         }
 
         try {
-            await this.paddleCheckoutService.openTransactionCheckoutAsync(transactionId, {
-                token: paddleClientToken,
-                environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
-                locale: this.resolveCheckoutLocale(),
-            });
+            await this.openPaddleTransactionCheckoutAsync(transactionId, paddleClientToken);
 
             await this.router.navigate([], {
                 relativeTo: this.route,
@@ -321,6 +315,25 @@ export class PremiumAccessPageComponent {
             this.errorMessage.set(message);
             this.toastService.error(message);
         }
+    }
+
+    private resolvePaddleClientToken(): string | null {
+        const token = this.overview()?.paddleClientToken?.trim() ?? environment.paddleClientToken?.trim();
+        return token !== undefined && token.length > 0 ? token : null;
+    }
+
+    private showPaddleClientTokenMissingError(): void {
+        const message = 'Paddle client token is not configured.';
+        this.errorMessage.set(message);
+        this.toastService.error(message);
+    }
+
+    private async openPaddleTransactionCheckoutAsync(transactionId: string, paddleClientToken: string): Promise<void> {
+        await this.paddleCheckoutService.openTransactionCheckoutAsync(transactionId, {
+            token: paddleClientToken,
+            environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
+            locale: this.resolveCheckoutLocale(),
+        });
     }
 
     private getErrorMessage(error: unknown): string {

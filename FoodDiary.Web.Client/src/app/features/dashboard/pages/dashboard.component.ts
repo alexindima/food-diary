@@ -431,17 +431,33 @@ export class DashboardComponent {
         options: DashboardBlockStateOptions,
     ): DashboardBlockState {
         const isVisible = this.layout.isBlockVisible(blockId);
-        const isAlwaysInteractive = options.alwaysInteractive === true;
-        const ariaLabelKey = editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null);
+        const isInteractive = this.isDashboardBlockInteractive(editing, options);
         return {
             hidden: editing && !isVisible,
-            role: editing || isAlwaysInteractive ? 'button' : null,
-            tabIndex: editing || isAlwaysInteractive ? 0 : EMPTY_INDEX,
+            role: isInteractive ? 'button' : null,
+            tabIndex: isInteractive ? 0 : EMPTY_INDEX,
             ariaPressed: editing ? isVisible : null,
-            ariaDisabled: editing && options.locked === true ? !this.layout.canToggleBlock(blockId) : null,
-            ariaLabel: ariaLabelKey !== null ? this.translateService.instant(ariaLabelKey) : null,
+            ariaDisabled: this.resolveDashboardBlockAriaDisabled(blockId, editing, options),
+            ariaLabel: this.resolveDashboardBlockAriaLabel(editing, options),
             inert: editing ? '' : null,
         };
+    }
+
+    private isDashboardBlockInteractive(editing: boolean, options: DashboardBlockStateOptions): boolean {
+        return editing || options.alwaysInteractive === true;
+    }
+
+    private resolveDashboardBlockAriaDisabled(
+        blockId: DashboardBlockId,
+        editing: boolean,
+        options: DashboardBlockStateOptions,
+    ): boolean | null {
+        return editing && options.locked === true ? !this.layout.canToggleBlock(blockId) : null;
+    }
+
+    private resolveDashboardBlockAriaLabel(editing: boolean, options: DashboardBlockStateOptions): string | null {
+        const ariaLabelKey = editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null);
+        return ariaLabelKey !== null ? this.translateService.instant(ariaLabelKey) : null;
     }
 
     private isAsideBlock(blockId: string): boolean {

@@ -96,18 +96,23 @@ export class FdUiFormErrorComponent {
             const controlParams = this.getValidationParams(controlError);
             const result = resolver(controlError);
 
-            if (typeof result === 'string') {
-                return this.translateMessage(result, { ...controlParams, ...(this.context() ?? {}) });
-            }
-
-            return this.translateMessage(result.key, {
-                ...controlParams,
-                ...(result.params ?? {}),
-                ...(this.context() ?? {}),
-            });
+            return this.translateValidationResult(result, controlParams);
         }
 
         return this.translateMessage('FORM_ERRORS.UNKNOWN');
+    }
+
+    private translateValidationResult(result: FdValidationErrorConfig | string, controlParams: Record<string, unknown>): string {
+        const context = this.context() ?? {};
+        if (typeof result === 'string') {
+            return this.translateMessage(result, { ...controlParams, ...context });
+        }
+
+        return this.translateMessage(result.key, {
+            ...controlParams,
+            ...(result.params ?? {}),
+            ...context,
+        });
     }
 
     private translateMessage(key: string, params?: Record<string, unknown>): string {

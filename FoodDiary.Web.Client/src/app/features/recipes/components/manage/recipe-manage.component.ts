@@ -348,26 +348,6 @@ export class RecipeManageComponent {
     private prepareRecipeDto(): RecipeDto {
         const formValue = this.recipeForm.value as RecipeFormValues;
 
-        const steps = formValue.steps
-            .map(step => {
-                const ingredients = step.ingredients
-                    .filter(ingredient => ingredient.food !== null || ingredient.nestedRecipeId !== null)
-                    .map(ingredient => ({
-                        productId: ingredient.food?.id,
-                        nestedRecipeId: ingredient.nestedRecipeId ?? undefined,
-                        amount: ingredient.amount ?? 0,
-                    }));
-
-                return {
-                    title: step.title ?? null,
-                    imageUrl: step.imageUrl?.url ?? null,
-                    imageAssetId: step.imageUrl?.assetId ?? null,
-                    description: step.description,
-                    ingredients,
-                };
-            })
-            .filter(step => step.ingredients.length > 0);
-
         return {
             name: formValue.name,
             description: formValue.description ?? null,
@@ -380,76 +360,133 @@ export class RecipeManageComponent {
             servings: formValue.servings,
             visibility: formValue.visibility,
             calculateNutritionAutomatically: formValue.calculateNutritionAutomatically,
-            manualCalories: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualCalories),
-            manualProteins: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualProteins),
-            manualFats: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualFats),
-            manualCarbs: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualCarbs),
-            manualFiber: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualFiber),
-            manualAlcohol: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualAlcohol),
-            steps,
+            ...this.buildManualRecipeTotals(formValue),
+            steps: this.mapRecipeSteps(formValue.steps),
+        };
+    }
+
+    private mapRecipeSteps(steps: RecipeFormValues['steps']): RecipeDto['steps'] {
+        return steps.map(step => this.mapRecipeStep(step)).filter(step => step.ingredients.length > 0);
+    }
+
+    private mapRecipeStep(step: RecipeFormValues['steps'][number]): RecipeDto['steps'][number] {
+        return {
+            title: step.title ?? null,
+            imageUrl: step.imageUrl?.url ?? null,
+            imageAssetId: step.imageUrl?.assetId ?? null,
+            description: step.description,
+            ingredients: step.ingredients
+                .filter(ingredient => ingredient.food !== null || ingredient.nestedRecipeId !== null)
+                .map(ingredient => ({
+                    productId: ingredient.food?.id,
+                    nestedRecipeId: ingredient.nestedRecipeId ?? undefined,
+                    amount: ingredient.amount ?? 0,
+                })),
+        };
+    }
+
+    private buildManualRecipeTotals(formValue: RecipeFormValues): Partial<RecipeDto> {
+        const calculateAutomatically = formValue.calculateNutritionAutomatically;
+        return {
+            manualCalories: calculateAutomatically ? null : this.toRecipeTotal(formValue.manualCalories),
+            manualProteins: calculateAutomatically ? null : this.toRecipeTotal(formValue.manualProteins),
+            manualFats: calculateAutomatically ? null : this.toRecipeTotal(formValue.manualFats),
+            manualCarbs: calculateAutomatically ? null : this.toRecipeTotal(formValue.manualCarbs),
+            manualFiber: calculateAutomatically ? null : this.toRecipeTotal(formValue.manualFiber),
+            manualAlcohol: calculateAutomatically ? null : this.toRecipeTotal(formValue.manualAlcohol),
         };
     }
 
     private populateForm(recipeData: Recipe): void {
         this.isFormReady = false;
-        this.recipeForm.patchValue({
-            name: recipeData.name,
-            description: recipeData.description ?? '',
-            comment: recipeData.comment ?? null,
-            category: recipeData.category ?? null,
-            imageUrl: {
-                url: recipeData.imageUrl ?? null,
-                assetId: recipeData.imageAssetId ?? null,
-            },
-            prepTime: recipeData.prepTime ?? 0,
-            cookTime: recipeData.cookTime ?? null,
-            servings: recipeData.servings,
-            visibility: this.normalizeVisibility(recipeData.visibility),
-            calculateNutritionAutomatically: recipeData.isNutritionAutoCalculated,
-            manualCalories: recipeData.manualCalories ?? recipeData.totalCalories ?? null,
-            manualProteins: recipeData.manualProteins ?? recipeData.totalProteins ?? null,
-            manualFats: recipeData.manualFats ?? recipeData.totalFats ?? null,
-            manualCarbs: recipeData.manualCarbs ?? recipeData.totalCarbs ?? null,
-            manualFiber: recipeData.manualFiber ?? recipeData.totalFiber ?? null,
-            manualAlcohol: recipeData.manualAlcohol ?? recipeData.totalAlcohol ?? null,
-        });
+        this.recipeForm.patchValue(this.buildRecipeFormPatchValue(recipeData));
 
         this.resetSteps();
         this.expandedSteps.clear();
 
+        this.populateRecipeSteps(recipeData);
+
+        this.updateNutrientSummary(recipeData);
+        this.isFormReady = true;
+        if (this.hasNoRecipeNutritionTotals(recipeData)) {
+            this.recalculateNutrientsFromForm();
+        } else {
+            this.updateSummaryFromForm();
+        }
+    }
+
+    private buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
+        return {
+            name: recipeData.name,
+            description: recipeData.description ?? '',
+            comment: this.toNullable(recipeData.comment),
+            category: this.toNullable(recipeData.category),
+            imageUrl: {
+                url: this.toNullable(recipeData.imageUrl),
+                assetId: this.toNullable(recipeData.imageAssetId),
+            },
+            prepTime: this.withDefault(recipeData.prepTime, 0),
+            cookTime: this.toNullable(recipeData.cookTime),
+            servings: recipeData.servings,
+            visibility: this.normalizeVisibility(recipeData.visibility),
+            calculateNutritionAutomatically: recipeData.isNutritionAutoCalculated,
+            ...this.buildRecipeManualNutritionPatchValue(recipeData),
+        };
+    }
+
+    private buildRecipeManualNutritionPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
+        return {
+            manualCalories: this.resolveRecipeManualNutritionValue(recipeData.manualCalories, recipeData.totalCalories),
+            manualProteins: this.resolveRecipeManualNutritionValue(recipeData.manualProteins, recipeData.totalProteins),
+            manualFats: this.resolveRecipeManualNutritionValue(recipeData.manualFats, recipeData.totalFats),
+            manualCarbs: this.resolveRecipeManualNutritionValue(recipeData.manualCarbs, recipeData.totalCarbs),
+            manualFiber: this.resolveRecipeManualNutritionValue(recipeData.manualFiber, recipeData.totalFiber),
+            manualAlcohol: this.resolveRecipeManualNutritionValue(recipeData.manualAlcohol, recipeData.totalAlcohol),
+        };
+    }
+
+    private resolveRecipeManualNutritionValue(manual: number | null | undefined, total: number | null | undefined): number | null {
+        return manual ?? total ?? null;
+    }
+
+    private toNullable<T>(value: T | null | undefined): T | null {
+        return value ?? null;
+    }
+
+    private withDefault<T>(value: T | null | undefined, fallback: T): T {
+        return value ?? fallback;
+    }
+
+    private populateRecipeSteps(recipeData: Recipe): void {
         if (recipeData.steps.length === 0) {
             this.addStep();
             return;
         }
 
         recipeData.steps.forEach((step, index) => {
-            const stepValue: StepFormValues = {
-                title: step.title ?? null,
-                imageUrl: {
-                    url: step.imageUrl ?? null,
-                    assetId: step.imageAssetId ?? null,
-                },
-                description: step.instruction,
-                ingredients: step.ingredients
-                    .map(ingredient => this.mapIngredientToFormValue(ingredient))
-                    .filter(Boolean) as IngredientFormValues[],
-            };
-            this.steps.push(this.createStepGroup(stepValue));
+            this.steps.push(this.createStepGroup(this.mapRecipeStepToFormValue(step)));
             this.expandedSteps.add(index);
         });
+    }
 
-        this.updateNutrientSummary(recipeData);
-        this.isFormReady = true;
-        if (
-            (recipeData.totalCalories === null || recipeData.totalCalories === undefined) &&
-            (recipeData.totalProteins === null || recipeData.totalProteins === undefined) &&
-            (recipeData.totalFats === null || recipeData.totalFats === undefined) &&
-            (recipeData.totalCarbs === null || recipeData.totalCarbs === undefined)
-        ) {
-            this.recalculateNutrientsFromForm();
-        } else {
-            this.updateSummaryFromForm();
-        }
+    private mapRecipeStepToFormValue(step: Recipe['steps'][number]): StepFormValues {
+        return {
+            title: step.title ?? null,
+            imageUrl: {
+                url: step.imageUrl ?? null,
+                assetId: step.imageAssetId ?? null,
+            },
+            description: step.instruction,
+            ingredients: step.ingredients
+                .map(ingredient => this.mapIngredientToFormValue(ingredient))
+                .filter(Boolean) as IngredientFormValues[],
+        };
+    }
+
+    private hasNoRecipeNutritionTotals(recipeData: Recipe): boolean {
+        return [recipeData.totalCalories, recipeData.totalProteins, recipeData.totalFats, recipeData.totalCarbs].every(
+            value => value === null || value === undefined,
+        );
     }
 
     private resetSteps(): void {
@@ -540,18 +577,26 @@ export class RecipeManageComponent {
             imageUrl: null,
             baseAmount,
             defaultPortionAmount: baseAmount,
-            caloriesPerBase: ingredient.productCaloriesPerBase ?? 0,
-            proteinsPerBase: ingredient.productProteinsPerBase ?? 0,
-            fatsPerBase: ingredient.productFatsPerBase ?? 0,
-            carbsPerBase: ingredient.productCarbsPerBase ?? 0,
-            fiberPerBase: ingredient.productFiberPerBase ?? 0,
-            alcoholPerBase: ingredient.productAlcoholPerBase ?? 0,
+            ...this.buildIngredientProductNutrition(ingredient),
             usageCount: 0,
             visibility: ProductVisibility.Private,
             createdAt: new Date(),
             isOwnedByCurrentUser: true,
             qualityScore: DEFAULT_PRODUCT_QUALITY_SCORE,
             qualityGrade: 'yellow',
+        };
+    }
+
+    private buildIngredientProductNutrition(
+        ingredient: RecipeIngredient,
+    ): Pick<Product, 'alcoholPerBase' | 'caloriesPerBase' | 'carbsPerBase' | 'fatsPerBase' | 'fiberPerBase' | 'proteinsPerBase'> {
+        return {
+            caloriesPerBase: ingredient.productCaloriesPerBase ?? 0,
+            proteinsPerBase: ingredient.productProteinsPerBase ?? 0,
+            fatsPerBase: ingredient.productFatsPerBase ?? 0,
+            carbsPerBase: ingredient.productCarbsPerBase ?? 0,
+            fiberPerBase: ingredient.productFiberPerBase ?? 0,
+            alcoholPerBase: ingredient.productAlcoholPerBase ?? 0,
         };
     }
 

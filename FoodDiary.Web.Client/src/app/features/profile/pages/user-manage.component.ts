@@ -22,7 +22,12 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import {
+    FD_VALIDATION_ERRORS,
+    FdUiFormErrorComponent,
+    type FdValidationErrorConfig,
+    type FdValidationErrors,
+} from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state.component';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -69,6 +74,20 @@ const DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
 const MAX_FASTING_REMINDER_HOURS = 168;
 const TEST_NOTIFICATION_DELAY_SECONDS = 20;
 const DATE_INPUT_PAD_LENGTH = 2;
+const BROWSER_LABEL_MATCHERS: ReadonlyArray<{ label: string; matches: (userAgent: string) => boolean }> = [
+    { label: 'Edge', matches: userAgent => userAgent.includes('edg/') },
+    { label: 'Opera', matches: userAgent => userAgent.includes('opr/') || userAgent.includes('opera') },
+    { label: 'Chrome', matches: userAgent => userAgent.includes('chrome/') && !userAgent.includes('edg/') && !userAgent.includes('opr/') },
+    { label: 'Firefox', matches: userAgent => userAgent.includes('firefox/') },
+    { label: 'Safari', matches: userAgent => userAgent.includes('safari/') && !userAgent.includes('chrome/') },
+];
+const PLATFORM_LABEL_MATCHERS: ReadonlyArray<{ label: string; matches: (userAgent: string) => boolean }> = [
+    { label: 'iOS', matches: userAgent => userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ios') },
+    { label: 'Android', matches: userAgent => userAgent.includes('android') },
+    { label: 'Windows', matches: userAgent => userAgent.includes('windows') },
+    { label: 'macOS', matches: userAgent => userAgent.includes('mac os') || userAgent.includes('macintosh') },
+    { label: 'Linux', matches: userAgent => userAgent.includes('linux') },
+];
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -161,20 +180,7 @@ export class UserManageComponent {
     public readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
     public readonly isUpdatingNotifications = this.facade.isUpdatingNotifications;
     public readonly isSchedulingTestNotification = signal(false);
-    public readonly isSurfaceBusy = computed(
-        () =>
-            this.isSavingProfile() ||
-            this.isDeleting() ||
-            this.isRevokingAiConsent() ||
-            this.isUpdatingNotifications() ||
-            this.isSchedulingTestNotification() ||
-            this.isSavingDietologist() ||
-            this.isLoadingDietologist() ||
-            this.isLoadingBilling() ||
-            this.isOpeningBillingPortal() ||
-            this.isLoadingConnectedDevices() ||
-            this.removingConnectedDeviceEndpoint() !== null,
-    );
+    public readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().some(isBusy => isBusy));
     public readonly hasAiConsent = computed(() => {
         const acceptedAt = this.facade.user()?.aiConsentAcceptedAt;
         return acceptedAt !== null && acceptedAt !== undefined && acceptedAt.length > 0;
@@ -506,14 +512,22 @@ export class UserManageComponent {
 
         this.notificationPermission.set(this.readNotificationPermission());
         if (!nextEnabled) {
-            this.frontendObservability.recordNotificationPreferenceChanged('push', false, {
-                permission: this.notificationPermission(),
-            });
-            this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'));
+            this.handlePushNotificationsDisabled();
             return;
         }
 
         const result = await this.pushNotifications.ensureSubscriptionAsync();
+        this.handlePushSubscriptionResult(result);
+    }
+
+    private handlePushNotificationsDisabled(): void {
+        this.frontendObservability.recordNotificationPreferenceChanged('push', false, {
+            permission: this.notificationPermission(),
+        });
+        this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'));
+    }
+
+    private handlePushSubscriptionResult(result: Awaited<ReturnType<PushNotificationService['ensureSubscriptionAsync']>>): void {
         switch (result) {
             case 'subscribed':
             case 'already-subscribed':
@@ -896,17 +910,21 @@ export class UserManageComponent {
             const controlParams = this.getValidationParams(controlError);
             const result = resolver(controlError);
 
-            if (typeof result === 'string') {
-                return this.translateService.instant(result, controlParams);
-            }
-
-            return this.translateService.instant(result.key, {
-                ...controlParams,
-                ...(result.params ?? {}),
-            });
+            return this.translateValidationResult(result, controlParams);
         }
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
+    private translateValidationResult(result: FdValidationErrorConfig | string, controlParams: Record<string, unknown>): string {
+        if (typeof result === 'string') {
+            return this.translateService.instant(result, controlParams);
+        }
+
+        return this.translateService.instant(result.key, {
+            ...controlParams,
+            ...(result.params ?? {}),
+        });
     }
 
     public formatMetric(value: number | null | undefined): string {
@@ -1249,27 +1267,37 @@ export class UserManageComponent {
     }
 
     private mapUserToForm(user: User): Partial<UserFormValues> {
-        const birthDate = user.birthDate ?? null;
-        const activityLevel = user.activityLevel ?? '';
-        const profileImage = user.profileImage ?? '';
         return {
             email: user.email,
             username: user.username,
-            firstName: user.firstName ?? null,
-            lastName: user.lastName ?? null,
+            firstName: this.toNullable(user.firstName),
+            lastName: this.toNullable(user.lastName),
             gender: this.normalizeGender(user.gender),
             language: this.normalizeLanguage(user.language),
             theme: this.normalizeTheme(user.theme),
             uiStyle: this.normalizeUiStyle(user.uiStyle),
-            birthDate: birthDate !== null ? this.formatDateInput(new Date(birthDate)) : null,
-            height: user.height ?? null,
-            activityLevel: activityLevel.length > 0 ? (activityLevel.toUpperCase() as ActivityLevelOption) : null,
-            stepGoal: user.stepGoal ?? null,
-            profileImage: profileImage.length > 0 ? { url: profileImage, assetId: user.profileImageAssetId ?? null } : null,
+            birthDate: this.mapUserBirthDate(user.birthDate),
+            height: this.toNullable(user.height),
+            activityLevel: this.mapUserActivityLevel(user.activityLevel),
+            stepGoal: this.toNullable(user.stepGoal),
+            profileImage: this.mapUserProfileImage(user),
             pushNotificationsEnabled: user.pushNotificationsEnabled,
             fastingPushNotificationsEnabled: user.fastingPushNotificationsEnabled,
             socialPushNotificationsEnabled: user.socialPushNotificationsEnabled,
         };
+    }
+
+    private mapUserBirthDate(value: Date | string | null | undefined): string | null {
+        return value !== null && value !== undefined ? this.formatDateInput(new Date(value)) : null;
+    }
+
+    private mapUserActivityLevel(value: string | null | undefined): ActivityLevelOption | null {
+        return value !== null && value !== undefined && value.length > 0 ? (value.toUpperCase() as ActivityLevelOption) : null;
+    }
+
+    private mapUserProfileImage(user: User): ImageSelection | null {
+        const profileImage = user.profileImage ?? '';
+        return profileImage.length > 0 ? { url: profileImage, assetId: this.toNullable(user.profileImageAssetId) } : null;
     }
 
     private formatDateInput(date: Date): string {
@@ -1375,52 +1403,35 @@ export class UserManageComponent {
 
     private getBrowserLabel(userAgent: string | null): string {
         const normalized = userAgent?.toLowerCase() ?? '';
-        if (normalized.includes('edg/')) {
-            return 'Edge';
-        }
-
-        if (normalized.includes('opr/') || normalized.includes('opera')) {
-            return 'Opera';
-        }
-
-        if (normalized.includes('chrome/') && !normalized.includes('edg/') && !normalized.includes('opr/')) {
-            return 'Chrome';
-        }
-
-        if (normalized.includes('firefox/')) {
-            return 'Firefox';
-        }
-
-        if (normalized.includes('safari/') && !normalized.includes('chrome/')) {
-            return 'Safari';
-        }
-
-        return this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_GENERIC');
+        return (
+            BROWSER_LABEL_MATCHERS.find(item => item.matches(normalized))?.label ??
+            this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_GENERIC')
+        );
     }
 
     private getPlatformLabel(userAgent: string | null): string | null {
         const normalized = userAgent?.toLowerCase() ?? '';
-        if (normalized.includes('iphone') || normalized.includes('ipad') || normalized.includes('ios')) {
-            return 'iOS';
-        }
+        return PLATFORM_LABEL_MATCHERS.find(item => item.matches(normalized))?.label ?? null;
+    }
 
-        if (normalized.includes('android')) {
-            return 'Android';
-        }
+    private surfaceBusySignals(): boolean[] {
+        return [
+            this.isSavingProfile(),
+            this.isDeleting(),
+            this.isRevokingAiConsent(),
+            this.isUpdatingNotifications(),
+            this.isSchedulingTestNotification(),
+            this.isSavingDietologist(),
+            this.isLoadingDietologist(),
+            this.isLoadingBilling(),
+            this.isOpeningBillingPortal(),
+            this.isLoadingConnectedDevices(),
+            this.removingConnectedDeviceEndpoint() !== null,
+        ];
+    }
 
-        if (normalized.includes('windows')) {
-            return 'Windows';
-        }
-
-        if (normalized.includes('mac os') || normalized.includes('macintosh')) {
-            return 'macOS';
-        }
-
-        if (normalized.includes('linux')) {
-            return 'Linux';
-        }
-
-        return null;
+    private toNullable<T>(value: T | null | undefined): T | null {
+        return value ?? null;
     }
 }
 

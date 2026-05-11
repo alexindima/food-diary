@@ -48,6 +48,7 @@ import { MealManageFacade } from '../../lib/meal-manage.facade';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
+    type ConsumptionItem,
     type ConsumptionItemManageDto,
     type ConsumptionManageDto,
     ConsumptionSourceType,
@@ -55,11 +56,14 @@ import {
 import type {
     CalorieMismatchWarning,
     ConsumptionFormData,
+    ConsumptionFormValues,
     ConsumptionItemFormData,
+    ConsumptionItemFormValues,
     MacroBarState,
     MacroKey,
     MealNutritionSummaryState,
     NutritionMode,
+    NutritionTotals,
 } from './base-meal-manage.types';
 import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
 import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
@@ -525,70 +529,76 @@ export class BaseMealManageComponent {
             return;
         }
 
-        const mealType = this.consumptionForm.controls.mealType.value;
-        const comment = this.consumptionForm.controls.comment.value;
-        const formItems = this.consumptionForm.controls.items.value;
-        const consumptionDate = this.buildDateTime();
-
-        const mappedItems: ConsumptionItemManageDto[] = [];
-
-        formItems.forEach(item => {
-            const parsedAmount = Number(item.amount);
-            const amountValue = Number.isNaN(parsedAmount) || parsedAmount === 0 ? 0 : parsedAmount;
-            const sourceType =
-                item.sourceType ??
-                (item.recipe !== null && item.recipe !== undefined ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
-
-            if (sourceType === ConsumptionSourceType.Product && item.product !== null && item.product !== undefined) {
-                mappedItems.push({
-                    productId: item.product.id,
-                    recipeId: null,
-                    amount: amountValue,
-                });
-                return;
-            }
-
-            if (sourceType === ConsumptionSourceType.Recipe && item.recipe !== null && item.recipe !== undefined) {
-                const servingsAmount = this.mealManageFacade.convertRecipeGramsToServings(item.recipe, amountValue);
-                mappedItems.push({
-                    recipeId: item.recipe.id,
-                    productId: null,
-                    amount: servingsAmount,
-                });
-            }
-        });
-
-        const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
-        const manualTotals = this.mealManageFacade.getManualNutritionTotals(this.consumptionForm);
-        const preMealSatietyLevel = this.consumptionForm.controls.preMealSatietyLevel.value;
-        const postMealSatietyLevel = this.consumptionForm.controls.postMealSatietyLevel.value;
-        const image = this.consumptionForm.controls.imageUrl.value;
-
-        const consumptionData: ConsumptionManageDto = {
-            date: consumptionDate,
-            mealType: mealType ?? undefined,
-            comment: comment ?? undefined,
-            imageUrl: image?.url ?? undefined,
-            imageAssetId: image?.assetId ?? undefined,
-            items: mappedItems,
-            aiSessions: this.aiSessions(),
-            isNutritionAutoCalculated,
-            manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
-            manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
-            manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
-            manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
-            manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
-            manualAlcohol: isNutritionAutoCalculated ? undefined : manualTotals.alcohol,
-            preMealSatietyLevel: this.normalizeSatietyLevel(preMealSatietyLevel),
-            postMealSatietyLevel: this.normalizeSatietyLevel(postMealSatietyLevel),
-        };
-
+        const consumptionData = this.buildConsumptionManageDto();
         const consumption = this.consumption();
         void (consumption !== null ? this.updateConsumptionAsync(consumptionData) : this.addConsumptionAsync(consumptionData)).catch(
             error => {
                 this.handleSubmitError(error as HttpErrorResponse);
             },
         );
+    }
+
+    private buildConsumptionManageDto(): ConsumptionManageDto {
+        const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
+        const manualTotals = this.mealManageFacade.getManualNutritionTotals(this.consumptionForm);
+        const image = this.consumptionForm.controls.imageUrl.value;
+
+        return {
+            date: this.buildDateTime(),
+            mealType: this.consumptionForm.controls.mealType.value ?? undefined,
+            comment: this.consumptionForm.controls.comment.value ?? undefined,
+            imageUrl: image?.url ?? undefined,
+            imageAssetId: image?.assetId ?? undefined,
+            items: this.mapConsumptionItems(),
+            aiSessions: this.aiSessions(),
+            isNutritionAutoCalculated,
+            ...this.buildManualNutritionPayload(isNutritionAutoCalculated, manualTotals),
+            preMealSatietyLevel: this.normalizeSatietyLevel(this.consumptionForm.controls.preMealSatietyLevel.value),
+            postMealSatietyLevel: this.normalizeSatietyLevel(this.consumptionForm.controls.postMealSatietyLevel.value),
+        };
+    }
+
+    private mapConsumptionItems(): ConsumptionItemManageDto[] {
+        return this.consumptionForm.controls.items.value.flatMap(item => this.mapConsumptionItem(item));
+    }
+
+    private mapConsumptionItem(item: Partial<ConsumptionItemFormValues>): ConsumptionItemManageDto[] {
+        const amount = this.normalizeItemAmount(item.amount);
+        const sourceType =
+            item.sourceType ??
+            (item.recipe !== null && item.recipe !== undefined ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
+
+        if (sourceType === ConsumptionSourceType.Product && item.product !== null && item.product !== undefined) {
+            return [{ productId: item.product.id, recipeId: null, amount }];
+        }
+
+        if (sourceType === ConsumptionSourceType.Recipe && item.recipe !== null && item.recipe !== undefined) {
+            return [
+                {
+                    recipeId: item.recipe.id,
+                    productId: null,
+                    amount: this.mealManageFacade.convertRecipeGramsToServings(item.recipe, amount),
+                },
+            ];
+        }
+
+        return [];
+    }
+
+    private normalizeItemAmount(value: unknown): number {
+        const parsedAmount = Number(value);
+        return Number.isNaN(parsedAmount) || parsedAmount === 0 ? 0 : parsedAmount;
+    }
+
+    private buildManualNutritionPayload(isNutritionAutoCalculated: boolean, manualTotals: NutritionTotals): Partial<ConsumptionManageDto> {
+        return {
+            manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
+            manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
+            manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
+            manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
+            manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
+            manualAlcohol: isNutritionAutoCalculated ? undefined : manualTotals.alcohol,
+        };
     }
 
     // --- Private methods ---
@@ -634,25 +644,7 @@ export class BaseMealManageComponent {
     }
 
     private populateForm(consumption: Consumption): void {
-        this.consumptionForm.patchValue({
-            date: this.getDateInputValue(new Date(consumption.date)),
-            time: this.getTimeInputValue(new Date(consumption.date)),
-            mealType: normalizeMealType(consumption.mealType),
-            comment: consumption.comment ?? null,
-            imageUrl: {
-                url: consumption.imageUrl ?? null,
-                assetId: consumption.imageAssetId ?? null,
-            },
-            isNutritionAutoCalculated: consumption.isNutritionAutoCalculated,
-            manualCalories: consumption.manualCalories ?? consumption.totalCalories,
-            manualProteins: consumption.manualProteins ?? consumption.totalProteins,
-            manualFats: consumption.manualFats ?? consumption.totalFats,
-            manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
-            manualFiber: consumption.manualFiber ?? consumption.totalFiber,
-            manualAlcohol: consumption.manualAlcohol ?? consumption.totalAlcohol,
-            preMealSatietyLevel: this.normalizeSatietyLevel(consumption.preMealSatietyLevel ?? null),
-            postMealSatietyLevel: this.normalizeSatietyLevel(consumption.postMealSatietyLevel ?? null),
-        });
+        this.consumptionForm.patchValue(this.buildConsumptionFormPatchValue(consumption));
         this.aiSessions.set(consumption.aiSessions ?? []);
 
         const itemsArray = this.items;
@@ -664,29 +656,67 @@ export class BaseMealManageComponent {
         }
 
         consumption.items.forEach(item => {
-            const sourceType = item.sourceType;
-            const initialAmount =
-                sourceType === ConsumptionSourceType.Recipe
-                    ? this.mealManageFacade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount)
-                    : item.amount;
-
-            itemsArray.push(
-                this.mealManageFacade.createConsumptionItem(
-                    sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
-                    sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
-                    initialAmount,
-                    sourceType,
-                ),
-            );
-
-            if (sourceType === ConsumptionSourceType.Recipe) {
-                const currentIndex = itemsArray.length - 1;
-                this.mealManageFacade.ensureRecipeWeightForExistingItem(itemsArray.at(currentIndex), item.amount, item.recipe ?? null);
-            }
+            this.appendConsumptionItemForm(item);
         });
 
         this.items.updateValueAndValidity({ emitEvent: false });
         this.updateItemValidationRules();
+    }
+
+    private buildConsumptionFormPatchValue(consumption: Consumption): Partial<ConsumptionFormValues> {
+        return {
+            date: this.getDateInputValue(new Date(consumption.date)),
+            time: this.getTimeInputValue(new Date(consumption.date)),
+            mealType: normalizeMealType(consumption.mealType),
+            comment: this.toNullable(consumption.comment),
+            imageUrl: {
+                url: this.toNullable(consumption.imageUrl),
+                assetId: this.toNullable(consumption.imageAssetId),
+            },
+            isNutritionAutoCalculated: consumption.isNutritionAutoCalculated,
+            ...this.buildConsumptionManualNutritionPatchValue(consumption),
+            preMealSatietyLevel: this.normalizeSatietyLevel(this.toNullable(consumption.preMealSatietyLevel)),
+            postMealSatietyLevel: this.normalizeSatietyLevel(this.toNullable(consumption.postMealSatietyLevel)),
+        };
+    }
+
+    private buildConsumptionManualNutritionPatchValue(consumption: Consumption): Partial<ConsumptionFormValues> {
+        return {
+            manualCalories: consumption.manualCalories ?? consumption.totalCalories,
+            manualProteins: consumption.manualProteins ?? consumption.totalProteins,
+            manualFats: consumption.manualFats ?? consumption.totalFats,
+            manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
+            manualFiber: consumption.manualFiber ?? consumption.totalFiber,
+            manualAlcohol: consumption.manualAlcohol ?? consumption.totalAlcohol,
+        };
+    }
+
+    private toNullable<T>(value: T | null | undefined): T | null {
+        return value ?? null;
+    }
+
+    private appendConsumptionItemForm(item: ConsumptionItem): void {
+        const sourceType = item.sourceType;
+        const initialAmount = this.getConsumptionItemInitialAmount(item);
+        this.items.push(
+            this.mealManageFacade.createConsumptionItem(
+                sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
+                sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
+                initialAmount,
+                sourceType,
+            ),
+        );
+
+        if (sourceType === ConsumptionSourceType.Recipe) {
+            const currentIndex = this.items.length - 1;
+            this.mealManageFacade.ensureRecipeWeightForExistingItem(this.items.at(currentIndex), item.amount, item.recipe ?? null);
+        }
+    }
+
+    private getConsumptionItemInitialAmount(item: ConsumptionItem): number {
+        return item.sourceType === ConsumptionSourceType.Recipe
+            ? this.mealManageFacade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount)
+            : item.amount;
     }
 
     private updateSummary(): void {

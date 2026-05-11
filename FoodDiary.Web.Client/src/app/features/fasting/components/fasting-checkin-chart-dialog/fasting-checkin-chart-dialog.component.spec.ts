@@ -95,22 +95,30 @@ describe('FastingCheckInChartDialogComponent', () => {
     it('configures fixed 1..5 y-axis and tooltip footer from symptoms and notes', () => {
         const fixture = TestBed.createComponent(FastingCheckInChartDialogComponent);
         const component = fixture.componentInstance;
-        const tooltipCallbacks = component.chartOptions?.plugins?.tooltip?.callbacks;
-        const yScale = component.chartOptions?.scales?.['y'];
-        const yTicks = yScale?.ticks as { stepSize?: number } | undefined;
 
-        expect(yScale?.min).toBe(1);
-        expect(yScale?.max).toBe(CHECK_IN_SCALE_MAX);
-        expect(yTicks?.stepSize).toBe(1);
-
-        const tooltipArgs = [{ dataIndex: 0 }];
-        const titleCallback = tooltipCallbacks?.title as ((items: unknown[]) => string | string[]) | undefined;
-        const footerCallback = tooltipCallbacks?.footer as ((items: unknown[]) => string | string[]) | undefined;
-        const title = titleCallback === undefined ? '' : Reflect.apply(titleCallback, undefined, [tooltipArgs]);
-        const footer = footerCallback === undefined ? '' : Reflect.apply(footerCallback, undefined, [tooltipArgs]);
-
-        expect(title).toContain('2026');
-        expect(String(footer)).toContain('FASTING.CHECK_IN.CHART_TOOLTIP_SYMPTOMS');
-        expect(String(footer)).toContain('FASTING.CHECK_IN.CHART_TOOLTIP_NOTES');
+        expectFixedYAxis(component);
+        expectTooltipFooter(component);
     });
 });
+
+function expectFixedYAxis(component: FastingCheckInChartDialogComponent): void {
+    const yScale = component.chartOptions?.scales?.['y'];
+    const yTicks = yScale?.ticks as { stepSize?: number } | undefined;
+
+    expect(yScale?.min).toBe(1);
+    expect(yScale?.max).toBe(CHECK_IN_SCALE_MAX);
+    expect(yTicks?.stepSize).toBe(1);
+}
+
+function expectTooltipFooter(component: FastingCheckInChartDialogComponent): void {
+    const tooltipCallbacks = component.chartOptions?.plugins?.tooltip?.callbacks;
+    const tooltipArgs = [{ dataIndex: 0 }];
+    const titleCallback = tooltipCallbacks?.title as ((items: unknown[]) => string | string[]) | undefined;
+    const footerCallback = tooltipCallbacks?.footer as ((items: unknown[]) => string | string[]) | undefined;
+    const title = titleCallback === undefined ? '' : Reflect.apply(titleCallback, undefined, [tooltipArgs]);
+    const footer = footerCallback === undefined ? '' : Reflect.apply(footerCallback, undefined, [tooltipArgs]);
+
+    expect(title).toContain('2026');
+    expect(String(footer)).toContain('FASTING.CHECK_IN.CHART_TOOLTIP_SYMPTOMS');
+    expect(String(footer)).toContain('FASTING.CHECK_IN.CHART_TOOLTIP_NOTES');
+}

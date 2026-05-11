@@ -21,7 +21,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import {
+    FD_VALIDATION_ERRORS,
+    FdUiFormErrorComponent,
+    type FdValidationErrorConfig,
+    type FdValidationErrors,
+} from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
@@ -660,21 +665,34 @@ export class AuthComponent {
             return false;
         }
 
-        const email = form.querySelector<HTMLInputElement>('input[autocomplete="username"]')?.value ?? '';
-        const password = form.querySelector<HTMLInputElement>('input[autocomplete="current-password"]')?.value ?? '';
-
-        if (email.length > 0 && password.length > 0) {
+        const fields = this.getLoginAutofillFieldValues(form);
+        if (this.hasFilledLoginAutofillFields(fields)) {
             return true;
         }
 
-        if (this.hasLoginNativeInteraction) {
+        if (this.hasLoginNativeInteraction || this.hasPartialLoginAutofillFields(fields)) {
             return false;
         }
 
-        if (email.length > 0 || password.length > 0) {
-            return false;
-        }
+        return this.hasDetectedLoginWebkitAutofill(form);
+    }
 
+    private getLoginAutofillFieldValues(form: HTMLFormElement): { email: string; password: string } {
+        return {
+            email: form.querySelector<HTMLInputElement>('input[autocomplete="username"]')?.value ?? '',
+            password: form.querySelector<HTMLInputElement>('input[autocomplete="current-password"]')?.value ?? '',
+        };
+    }
+
+    private hasFilledLoginAutofillFields(fields: { email: string; password: string }): boolean {
+        return fields.email.length > 0 && fields.password.length > 0;
+    }
+
+    private hasPartialLoginAutofillFields(fields: { email: string; password: string }): boolean {
+        return fields.email.length > 0 || fields.password.length > 0;
+    }
+
+    private hasDetectedLoginWebkitAutofill(form: HTMLFormElement): boolean {
         try {
             return form.querySelectorAll('input:-webkit-autofill').length >= LOGIN_AUTOFILL_FIELD_COUNT;
         } catch {
@@ -749,17 +767,21 @@ export class AuthComponent {
             const controlParams = this.getValidationParams(controlError);
             const result = resolver(controlError);
 
-            if (typeof result === 'string') {
-                return this.translateService.instant(result, controlParams);
-            }
-
-            return this.translateService.instant(result.key, {
-                ...controlParams,
-                ...(result.params ?? {}),
-            });
+            return this.translateValidationResult(result, controlParams);
         }
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
+    private translateValidationResult(result: FdValidationErrorConfig | string, controlParams: Record<string, unknown>): string {
+        if (typeof result === 'string') {
+            return this.translateService.instant(result, controlParams);
+        }
+
+        return this.translateService.instant(result.key, {
+            ...controlParams,
+            ...(result.params ?? {}),
+        });
     }
 
     private markDirtyControlsTouched(form: FormGroup): void {

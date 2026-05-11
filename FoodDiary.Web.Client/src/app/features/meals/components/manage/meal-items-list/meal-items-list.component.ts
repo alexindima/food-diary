@@ -167,23 +167,29 @@ export class MealItemsListComponent {
         const amount = group.controls.amount.value ?? 0;
 
         if (group.controls.sourceType.value === ConsumptionSourceType.Product) {
-            const product = group.controls.product.value;
-            if (product === null || product.baseAmount <= 0) {
-                return this.getEmptyTotals();
-            }
-
-            const multiplier = amount / product.baseAmount;
-            return {
-                calories: product.caloriesPerBase * multiplier,
-                proteins: product.proteinsPerBase * multiplier,
-                fats: product.fatsPerBase * multiplier,
-                carbs: product.carbsPerBase * multiplier,
-                fiber: product.fiberPerBase * multiplier,
-                alcohol: product.alcoholPerBase * multiplier,
-            };
+            return this.getProductManualItemTotals(group.controls.product.value, amount);
         }
 
-        const recipe = group.controls.recipe.value;
+        return this.getRecipeManualItemTotals(group.controls.recipe.value, amount);
+    }
+
+    private getProductManualItemTotals(product: ConsumptionItemFormData['product']['value'], amount: number): NutritionTotals {
+        if (product === null || product.baseAmount <= 0) {
+            return this.getEmptyTotals();
+        }
+
+        const multiplier = amount / product.baseAmount;
+        return {
+            calories: product.caloriesPerBase * multiplier,
+            proteins: product.proteinsPerBase * multiplier,
+            fats: product.fatsPerBase * multiplier,
+            carbs: product.carbsPerBase * multiplier,
+            fiber: product.fiberPerBase * multiplier,
+            alcohol: product.alcoholPerBase * multiplier,
+        };
+    }
+
+    private getRecipeManualItemTotals(recipe: ConsumptionItemFormData['recipe']['value'], amount: number): NutritionTotals {
         if (recipe === null || recipe.servings <= 0) {
             return this.getEmptyTotals();
         }

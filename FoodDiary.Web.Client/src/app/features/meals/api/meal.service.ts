@@ -33,6 +33,10 @@ const SATIETY_NORMALIZATION_DIVISOR = 2;
 const NUTRITION_CLOSE_TOLERANCE = 0.000001;
 const DEFAULT_ITEM_AMOUNT = 1;
 const EMPTY_NUTRITION_VALUE = 0;
+const MEAL_NUTRITION_FIELDS = ['calories', 'proteins', 'fats', 'carbs', 'fiber', 'alcohol'] as const;
+
+type NutritionField = (typeof MEAL_NUTRITION_FIELDS)[number];
+type NutritionTotals = Record<NutritionField, number>;
 
 @Injectable({
     providedIn: 'root',
@@ -111,8 +115,8 @@ export class MealService extends ApiService {
             date: response.date,
             mealType: normalizeMealType(response.mealType),
             comment: response.comment,
-            imageUrl: response.imageUrl ?? null,
-            imageAssetId: response.imageAssetId ?? null,
+            imageUrl: this.toNullable(response.imageUrl),
+            imageAssetId: this.toNullable(response.imageAssetId),
             totalCalories: response.totalCalories,
             totalProteins: response.totalProteins,
             totalFats: response.totalFats,
@@ -120,38 +124,48 @@ export class MealService extends ApiService {
             totalFiber: response.totalFiber,
             totalAlcohol: response.totalAlcohol,
             isNutritionAutoCalculated,
-            manualCalories: response.manualCalories ?? null,
-            manualProteins: response.manualProteins ?? null,
-            manualFats: response.manualFats ?? null,
-            manualCarbs: response.manualCarbs ?? null,
-            manualFiber: response.manualFiber ?? null,
-            manualAlcohol: response.manualAlcohol ?? null,
+            manualCalories: this.toNullable(response.manualCalories),
+            manualProteins: this.toNullable(response.manualProteins),
+            manualFats: this.toNullable(response.manualFats),
+            manualCarbs: this.toNullable(response.manualCarbs),
+            manualFiber: this.toNullable(response.manualFiber),
+            manualAlcohol: this.toNullable(response.manualAlcohol),
             preMealSatietyLevel: this.normalizeSatietyLevel(response.preMealSatietyLevel),
             postMealSatietyLevel: this.normalizeSatietyLevel(response.postMealSatietyLevel),
-            qualityScore: response.qualityScore ?? null,
-            qualityGrade: response.qualityGrade ?? null,
-            isFavorite: response.isFavorite ?? false,
-            favoriteMealId: response.favoriteMealId ?? null,
+            qualityScore: this.toNullable(response.qualityScore),
+            qualityGrade: this.toNullable(response.qualityGrade),
+            isFavorite: this.withDefault(response.isFavorite, false),
+            favoriteMealId: this.toNullable(response.favoriteMealId),
             items: response.items.map(item => this.mapConsumptionItem(item)),
-            aiSessions: response.aiSessions?.map(session => this.mapAiSession(session)) ?? [],
+            aiSessions: this.mapOptionalArray(response.aiSessions, session => this.mapAiSession(session)),
         };
     }
 
     private resolveIsNutritionAutoCalculated(response: ConsumptionResponseDto): boolean {
         const isAuto = response.isNutritionAutoCalculated;
-        if (isAuto || response.items.length > 0 || !this.hasAiItems(response)) {
+        if (this.shouldUseServerNutritionAutoCalculated(response, isAuto)) {
             return isAuto;
         }
 
         const aiTotals = this.calculateAiTotals(response);
-        return (
-            this.areClose(response.manualCalories ?? response.totalCalories, aiTotals.calories) &&
-            this.areClose(response.manualProteins ?? response.totalProteins, aiTotals.proteins) &&
-            this.areClose(response.manualFats ?? response.totalFats, aiTotals.fats) &&
-            this.areClose(response.manualCarbs ?? response.totalCarbs, aiTotals.carbs) &&
-            this.areClose(response.manualFiber ?? response.totalFiber, aiTotals.fiber) &&
-            this.areClose(response.manualAlcohol ?? response.totalAlcohol, aiTotals.alcohol)
-        );
+        return MEAL_NUTRITION_FIELDS.every(field => this.areClose(this.resolveResponseNutrition(response, field), aiTotals[field]));
+    }
+
+    private shouldUseServerNutritionAutoCalculated(response: ConsumptionResponseDto, isAuto: boolean): boolean {
+        return isAuto || response.items.length > 0 || !this.hasAiItems(response);
+    }
+
+    private resolveResponseNutrition(response: ConsumptionResponseDto, field: NutritionField): number {
+        const nutrition: NutritionTotals = {
+            calories: response.manualCalories ?? response.totalCalories,
+            proteins: response.manualProteins ?? response.totalProteins,
+            fats: response.manualFats ?? response.totalFats,
+            carbs: response.manualCarbs ?? response.totalCarbs,
+            fiber: response.manualFiber ?? response.totalFiber,
+            alcohol: response.manualAlcohol ?? response.totalAlcohol,
+        };
+
+        return nutrition[field];
     }
 
     private normalizeSatietyLevel(value: number | null | undefined): number {
@@ -170,14 +184,7 @@ export class MealService extends ApiService {
         return response.aiSessions?.some(session => session.items.length > 0) ?? false;
     }
 
-    private calculateAiTotals(response: ConsumptionResponseDto): {
-        calories: number;
-        proteins: number;
-        fats: number;
-        carbs: number;
-        fiber: number;
-        alcohol: number;
-    } {
+    private calculateAiTotals(response: ConsumptionResponseDto): NutritionTotals {
         return (
             response.aiSessions?.reduce(
                 (totals, session) =>
@@ -226,18 +233,18 @@ export class MealService extends ApiService {
         const base = createEmptyProductSnapshot();
         return {
             ...base,
-            id: response.productId ?? '',
-            name: response.productName ?? '',
-            imageUrl: response.productImageUrl ?? null,
+            id: this.withDefault(response.productId, ''),
+            name: this.withDefault(response.productName, ''),
+            imageUrl: this.toNullable(response.productImageUrl),
             baseUnit: this.normalizeMeasurementUnit(response.productBaseUnit),
-            baseAmount: response.productBaseAmount ?? DEFAULT_ITEM_AMOUNT,
-            defaultPortionAmount: response.productBaseAmount ?? DEFAULT_ITEM_AMOUNT,
-            caloriesPerBase: response.productCaloriesPerBase ?? EMPTY_NUTRITION_VALUE,
-            proteinsPerBase: response.productProteinsPerBase ?? EMPTY_NUTRITION_VALUE,
-            fatsPerBase: response.productFatsPerBase ?? EMPTY_NUTRITION_VALUE,
-            carbsPerBase: response.productCarbsPerBase ?? EMPTY_NUTRITION_VALUE,
-            fiberPerBase: response.productFiberPerBase ?? EMPTY_NUTRITION_VALUE,
-            alcoholPerBase: response.productAlcoholPerBase ?? EMPTY_NUTRITION_VALUE,
+            baseAmount: this.withDefault(response.productBaseAmount, DEFAULT_ITEM_AMOUNT),
+            defaultPortionAmount: this.withDefault(response.productBaseAmount, DEFAULT_ITEM_AMOUNT),
+            caloriesPerBase: this.withDefault(response.productCaloriesPerBase, EMPTY_NUTRITION_VALUE),
+            proteinsPerBase: this.withDefault(response.productProteinsPerBase, EMPTY_NUTRITION_VALUE),
+            fatsPerBase: this.withDefault(response.productFatsPerBase, EMPTY_NUTRITION_VALUE),
+            carbsPerBase: this.withDefault(response.productCarbsPerBase, EMPTY_NUTRITION_VALUE),
+            fiberPerBase: this.withDefault(response.productFiberPerBase, EMPTY_NUTRITION_VALUE),
+            alcoholPerBase: this.withDefault(response.productAlcoholPerBase, EMPTY_NUTRITION_VALUE),
         };
     }
 
@@ -245,16 +252,16 @@ export class MealService extends ApiService {
         const base = createEmptyRecipeSnapshot();
         return {
             ...base,
-            id: response.recipeId ?? '',
-            name: response.recipeName ?? '',
-            imageUrl: response.recipeImageUrl ?? null,
-            servings: response.recipeServings ?? DEFAULT_ITEM_AMOUNT,
-            totalCalories: response.recipeTotalCalories ?? EMPTY_NUTRITION_VALUE,
-            totalProteins: response.recipeTotalProteins ?? EMPTY_NUTRITION_VALUE,
-            totalFats: response.recipeTotalFats ?? EMPTY_NUTRITION_VALUE,
-            totalCarbs: response.recipeTotalCarbs ?? EMPTY_NUTRITION_VALUE,
-            totalFiber: response.recipeTotalFiber ?? EMPTY_NUTRITION_VALUE,
-            totalAlcohol: response.recipeTotalAlcohol ?? EMPTY_NUTRITION_VALUE,
+            id: this.withDefault(response.recipeId, ''),
+            name: this.withDefault(response.recipeName, ''),
+            imageUrl: this.toNullable(response.recipeImageUrl),
+            servings: this.withDefault(response.recipeServings, DEFAULT_ITEM_AMOUNT),
+            totalCalories: this.withDefault(response.recipeTotalCalories, EMPTY_NUTRITION_VALUE),
+            totalProteins: this.withDefault(response.recipeTotalProteins, EMPTY_NUTRITION_VALUE),
+            totalFats: this.withDefault(response.recipeTotalFats, EMPTY_NUTRITION_VALUE),
+            totalCarbs: this.withDefault(response.recipeTotalCarbs, EMPTY_NUTRITION_VALUE),
+            totalFiber: this.withDefault(response.recipeTotalFiber, EMPTY_NUTRITION_VALUE),
+            totalAlcohol: this.withDefault(response.recipeTotalAlcohol, EMPTY_NUTRITION_VALUE),
         };
     }
 
@@ -296,14 +303,7 @@ export class MealService extends ApiService {
         return MeasurementUnit.G;
     }
 
-    private createEmptyNutritionTotals(): {
-        calories: number;
-        proteins: number;
-        fats: number;
-        carbs: number;
-        fiber: number;
-        alcohol: number;
-    } {
+    private createEmptyNutritionTotals(): NutritionTotals {
         return {
             calories: EMPTY_NUTRITION_VALUE,
             proteins: EMPTY_NUTRITION_VALUE,
@@ -312,5 +312,17 @@ export class MealService extends ApiService {
             fiber: EMPTY_NUTRITION_VALUE,
             alcohol: EMPTY_NUTRITION_VALUE,
         };
+    }
+
+    private toNullable<T>(value: T | null | undefined): T | null {
+        return value ?? null;
+    }
+
+    private withDefault<T>(value: T | null | undefined, fallback: T): T {
+        return value ?? fallback;
+    }
+
+    private mapOptionalArray<T, R>(items: T[] | null | undefined, mapper: (item: T) => R): R[] {
+        return items?.map(mapper) ?? [];
     }
 }

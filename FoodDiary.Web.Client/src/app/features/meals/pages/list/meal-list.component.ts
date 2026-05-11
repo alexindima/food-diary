@@ -234,22 +234,35 @@ export class MealListComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                if (result === null || result === undefined) {
-                    return;
-                }
-
-                const nextDateRange = result.dateRange ?? null;
-                const currentStart = currentDateRange?.start?.getTime() ?? null;
-                const currentEnd = currentDateRange?.end?.getTime() ?? null;
-                const nextStart = nextDateRange?.start?.getTime() ?? null;
-                const nextEnd = nextDateRange?.end?.getTime() ?? null;
-
-                if (currentStart === nextStart && currentEnd === nextEnd) {
-                    return;
-                }
-
-                this.searchForm.controls.dateRange.setValue(nextDateRange);
+                this.applyFilterDialogResult(currentDateRange, result);
             });
+    }
+
+    private applyFilterDialogResult(
+        currentDateRange: FdUiDateRangeValue | null,
+        result: MealListFiltersDialogResult | null | undefined,
+    ): void {
+        if (result === null || result === undefined) {
+            return;
+        }
+
+        const nextDateRange = result.dateRange ?? null;
+        if (this.hasSameDateRange(currentDateRange, nextDateRange)) {
+            return;
+        }
+
+        this.searchForm.controls.dateRange.setValue(nextDateRange);
+    }
+
+    private hasSameDateRange(left: FdUiDateRangeValue | null, right: FdUiDateRangeValue | null): boolean {
+        return (
+            this.getDateRangeTimestamp(left, 'start') === this.getDateRangeTimestamp(right, 'start') &&
+            this.getDateRangeTimestamp(left, 'end') === this.getDateRangeTimestamp(right, 'end')
+        );
+    }
+
+    private getDateRangeTimestamp(value: FdUiDateRangeValue | null, key: keyof FdUiDateRangeValue): number | null {
+        return value?.[key]?.getTime() ?? null;
     }
 
     protected scrollToTop(): void {
