@@ -1,0 +1,35 @@
+<fd-ui-card class="weight-history-page__card weight-history-page__card--entries" [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate">
+    @if (isLoading()) {
+        <div class="weight-history-page__loader fd-ui-body-sm">
+            {{ 'WEIGHT_HISTORY.LOADING' | translate }}
+        </div>
+    } @else {
+        @if (items().length === 0) {
+            <div class="weight-history-page__empty fd-ui-body-sm">
+                {{ 'WEIGHT_HISTORY.NO_ENTRIES' | translate }}
+            </div>
+        } @else {
+            <div class="weight-history-page__entries fd-stack fd-gap-card-header">
+                @for (item of items(); track item.entry.id) {
+                    <div class="weight-history-page__entry fd-grid fd-gap-card-header fd-align-center">
+                        <div class="weight-history-page__entry-date fd-ui-stat-value">
+                            {{ item.dateLabel }}
+                        </div>
+                        <div class="weight-history-page__entry-weight fd-ui-body">
+                            {{ item.entry.weight | number: '1.0-2' }}
+                            {{ 'DASHBOARD.KG' | translate }}
+                        </div>
+                        <div class="weight-history-page__entry-actions fd-row fd-wrap fd-gap-actions fd-justify-end">
+                            <fd-ui-button type="button" fill="text" variant="secondary" icon="edit" (click)="editEntry.emit(item.entry)">
+                                {{ 'WEIGHT_HISTORY.EDIT' | translate }}
+                            </fd-ui-button>
+                            <fd-ui-button type="button" fill="text" variant="danger" icon="delete" (click)="removeEntry.emit(item.entry)">
+                                {{ 'WEIGHT_HISTORY.DELETE' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</fd-ui-card>

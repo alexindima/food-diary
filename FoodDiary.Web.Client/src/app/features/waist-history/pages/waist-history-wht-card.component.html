@@ -1,0 +1,42 @@
+<fd-ui-card class="waist-history-page__card waist-history-page__card--wht" [title]="'WAIST_HISTORY.WHT_CARD_TITLE' | translate">
+    @if (value() !== null) {
+        @if (status(); as statusInfo) {
+            <div class="waist-history-page__wht-top">
+                <p class="waist-history-page__wht-note fd-ui-caption">
+                    {{ 'WAIST_HISTORY.WHT_NOTE' | translate }}
+                </p>
+                <div class="waist-history-page__wht-scale">
+                    <div class="waist-history-page__wht-segments">
+                        @for (segment of segments(); track segment.labelKey) {
+                            <div [class]="`waist-history-page__wht-segment ${segment.class}`" [style.width]="segment.width">
+                                <span class="fd-ui-overline">{{ segment.labelKey | translate }}</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="waist-history-page__wht-pointer" [style.left]="pointerPosition()">
+                        <div class="waist-history-page__wht-pointer-dot"></div>
+                        <span class="fd-ui-meta-text">{{ value() }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="waist-history-page__wht-bottom">
+                <div class="waist-history-page__wht-footer">
+                    <div class="waist-history-page__wht-value fd-ui-body-sm">
+                        {{ 'WAIST_HISTORY.WHT_CURRENT' | translate }}:
+                        <strong>{{ value() }}</strong>
+                    </div>
+                    <div [class]="`waist-history-page__wht-status fd-ui-stat-value ${statusInfo.class}`">
+                        {{ statusInfo.labelKey | translate }}
+                    </div>
+                </div>
+                <p class="waist-history-page__wht-description fd-ui-caption">
+                    {{ statusInfo.descriptionKey | translate }}
+                </p>
+            </div>
+        }
+    } @else {
+        <p class="waist-history-page__empty fd-ui-body-sm">
+            {{ 'WAIST_HISTORY.WHT_NO_DATA' | translate }}
+        </p>
+    }
+</fd-ui-card>

@@ -19,203 +19,48 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
-            @if (isSummaryLoading()) {
-                <div class="waist-history-page__loader fd-ui-body-sm">
-                    {{ 'WAIST_HISTORY.LOADING' | translate }}
-                </div>
-            } @else {
-                @if (summaryPoints().length > 0) {
-                    @defer (when summaryPoints().length > 0) {
-                        <canvas
-                            baseChart
-                            class="waist-history-page__chart-canvas"
-                            type="line"
-                            [data]="chartData()"
-                            [options]="chartOptions"
-                            [legend]="false"
-                        ></canvas>
-                    } @placeholder {
-                        <fd-ui-loader />
-                    } @loading (minimum 300ms) {
-                        <fd-ui-loader />
-                    }
-                } @else {
-                    <p class="waist-history-page__empty-chart fd-ui-body-sm">
-                        {{ 'WAIST_HISTORY.NO_DATA_FOR_CHART' | translate }}
-                    </p>
-                }
-            }
-        </fd-ui-card>
+        <fd-waist-history-chart-card
+            [isLoading]="isSummaryLoading()"
+            [hasPoints]="hasSummaryPoints()"
+            [chartData]="chartData()"
+            [chartOptions]="chartOptions"
+        />
 
         @defer (on viewport) {
-            <fd-ui-card class="waist-history-page__card waist-history-page__card--wht" [title]="'WAIST_HISTORY.WHT_CARD_TITLE' | translate">
-                @if (whtrValue() !== null) {
-                    @if (whtrStatusInfo(); as status) {
-                        <div class="waist-history-page__wht-top">
-                            <p class="waist-history-page__wht-note fd-ui-caption">
-                                {{ 'WAIST_HISTORY.WHT_NOTE' | translate }}
-                            </p>
-                            <div class="waist-history-page__wht-scale">
-                                <div class="waist-history-page__wht-segments">
-                                    @for (segment of whtSegments; track segment.labelKey) {
-                                        <div [class]="`waist-history-page__wht-segment ${segment.class}`" [style.width]="segment.width">
-                                            <span class="fd-ui-overline">{{ segment.labelKey | translate }}</span>
-                                        </div>
-                                    }
-                                </div>
-                                <div class="waist-history-page__wht-pointer" [style.left]="whtrPointerPosition()">
-                                    <div class="waist-history-page__wht-pointer-dot"></div>
-                                    <span class="fd-ui-meta-text">{{ whtrValue() }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="waist-history-page__wht-bottom">
-                            <div class="waist-history-page__wht-footer">
-                                <div class="waist-history-page__wht-value fd-ui-body-sm">
-                                    {{ 'WAIST_HISTORY.WHT_CURRENT' | translate }}:
-                                    <strong>{{ whtrValue() }}</strong>
-                                </div>
-                                <div [class]="`waist-history-page__wht-status fd-ui-stat-value ${status.class}`">
-                                    {{ status.labelKey | translate }}
-                                </div>
-                            </div>
-                            <p class="waist-history-page__wht-description fd-ui-caption">
-                                {{ status.descriptionKey | translate }}
-                            </p>
-                        </div>
-                    }
-                } @else {
-                    <p class="waist-history-page__empty fd-ui-body-sm">
-                        {{ 'WAIST_HISTORY.WHT_NO_DATA' | translate }}
-                    </p>
-                }
-            </fd-ui-card>
+            <fd-waist-history-wht-card
+                [value]="whtrValue()"
+                [status]="whtrStatusInfo()"
+                [segments]="whtSegments"
+                [pointerPosition]="whtrPointerPosition()"
+            />
         } @placeholder {
             <div class="waist-history-page__placeholder" aria-hidden="true"></div>
         }
 
         <div class="waist-history-page__content waist-history-page__content--form">
-            <fd-ui-card
-                class="waist-history-page__card waist-history-page__card--form"
-                [title]="'WAIST_HISTORY.ADD_ENTRY_TITLE' | translate"
-            >
-                <form class="waist-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
-                    <div class="waist-history-page__form-row">
-                        <fd-ui-date-input
-                            class="waist-history-page__form-control"
-                            formControlName="date"
-                            [label]="'WAIST_HISTORY.DATE_LABEL' | translate"
-                            [placeholder]="'WAIST_HISTORY.DATE_PLACEHOLDER' | translate"
-                        />
+            <fd-waist-history-form-card
+                [form]="form"
+                [isSaving]="isSaving()"
+                [isEditing]="isEditing()"
+                (formSubmit)="submit()"
+                (editCancel)="cancelEdit()"
+            />
 
-                        <fd-ui-input
-                            class="waist-history-page__form-control"
-                            formControlName="circumference"
-                            type="number"
-                            [step]="0.1"
-                            [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate"
-                            [placeholder]="'WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER' | translate"
-                        />
-                    </div>
-
-                    <div class="waist-history-page__form-actions">
-                        <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
-                            @if (isEditing()) {
-                                {{ 'WAIST_HISTORY.UPDATE' | translate }}
-                            } @else {
-                                {{ 'WAIST_HISTORY.ADD' | translate }}
-                            }
-                        </fd-ui-button>
-                        @if (isEditing()) {
-                            <fd-ui-button type="button" variant="secondary" fill="text" (click)="cancelEdit()">
-                                {{ 'WAIST_HISTORY.CANCEL_EDIT' | translate }}
-                            </fd-ui-button>
-                        }
-                    </div>
-                </form>
-            </fd-ui-card>
-
-            <fd-ui-card
-                class="waist-history-page__card waist-history-page__card--goal"
-                [title]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate"
-            >
-                <div class="waist-history-page__goal-body">
-                    <fd-ui-input
-                        class="waist-history-page__goal-input"
-                        type="number"
-                        [step]="0.1"
-                        [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
-                        [suffixButtonIcon]="desiredWaistControl.value ? 'backspace' : undefined"
-                        [formControl]="desiredWaistControl"
-                        (suffixButtonClicked)="desiredWaistControl.setValue('')"
-                    />
-                    <div class="waist-history-page__goal-actions">
-                        <fd-ui-button
-                            type="button"
-                            [disabled]="isDesiredWaistSaving()"
-                            [loading]="isDesiredWaistSaving()"
-                            (click)="saveDesiredWaist()"
-                        >
-                            {{ 'WAIST_HISTORY.SAVE_GOAL' | translate }}
-                        </fd-ui-button>
-                    </div>
-                </div>
-            </fd-ui-card>
+            <fd-waist-history-goal-card
+                [control]="desiredWaistControl"
+                [isSaving]="isDesiredWaistSaving()"
+                (saveGoal)="saveDesiredWaist()"
+            />
         </div>
 
         @defer (on viewport) {
             <div class="waist-history-page__content waist-history-page__content--full">
-                <fd-ui-card
-                    class="waist-history-page__card waist-history-page__card--entries"
-                    [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate"
-                >
-                    @if (isLoading()) {
-                        <div class="waist-history-page__loader fd-ui-body-sm">
-                            {{ 'WAIST_HISTORY.LOADING' | translate }}
-                        </div>
-                    } @else {
-                        @if (entriesDescending().length === 0) {
-                            <div class="waist-history-page__empty fd-ui-body-sm">
-                                {{ 'WAIST_HISTORY.NO_ENTRIES' | translate }}
-                            </div>
-                        } @else {
-                            <div class="waist-history-page__entries">
-                                @for (item of entryItems(); track item.entry.id) {
-                                    <div class="waist-history-page__entry">
-                                        <div class="waist-history-page__entry-date fd-ui-stat-value">
-                                            {{ item.dateLabel }}
-                                        </div>
-                                        <div class="waist-history-page__entry-value fd-ui-body">
-                                            {{ item.entry.circumference | number: '1.0-2' }}
-                                            {{ 'WAIST_HISTORY.CM' | translate }}
-                                        </div>
-                                        <div class="waist-history-page__entry-actions">
-                                            <fd-ui-button
-                                                type="button"
-                                                fill="text"
-                                                variant="secondary"
-                                                icon="edit"
-                                                (click)="startEdit(item.entry)"
-                                            >
-                                                {{ 'WAIST_HISTORY.EDIT' | translate }}
-                                            </fd-ui-button>
-                                            <fd-ui-button
-                                                type="button"
-                                                fill="text"
-                                                variant="danger"
-                                                icon="delete"
-                                                (click)="deleteEntry(item.entry)"
-                                            >
-                                                {{ 'WAIST_HISTORY.DELETE' | translate }}
-                                            </fd-ui-button>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                    }
-                </fd-ui-card>
+                <fd-waist-history-entries-card
+                    [isLoading]="isLoading()"
+                    [items]="entryItems()"
+                    (editEntry)="startEdit($event)"
+                    (removeEntry)="deleteEntry($event)"
+                />
             </div>
         } @placeholder {
             <div class="waist-history-page__placeholder" aria-hidden="true"></div>

@@ -1,0 +1,35 @@
+<fd-ui-card class="waist-history-page__card waist-history-page__card--entries" [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate">
+    @if (isLoading()) {
+        <div class="waist-history-page__loader fd-ui-body-sm">
+            {{ 'WAIST_HISTORY.LOADING' | translate }}
+        </div>
+    } @else {
+        @if (items().length === 0) {
+            <div class="waist-history-page__empty fd-ui-body-sm">
+                {{ 'WAIST_HISTORY.NO_ENTRIES' | translate }}
+            </div>
+        } @else {
+            <div class="waist-history-page__entries">
+                @for (item of items(); track item.entry.id) {
+                    <div class="waist-history-page__entry">
+                        <div class="waist-history-page__entry-date fd-ui-stat-value">
+                            {{ item.dateLabel }}
+                        </div>
+                        <div class="waist-history-page__entry-value fd-ui-body">
+                            {{ item.entry.circumference | number: '1.0-2' }}
+                            {{ 'WAIST_HISTORY.CM' | translate }}
+                        </div>
+                        <div class="waist-history-page__entry-actions">
+                            <fd-ui-button type="button" fill="text" variant="secondary" icon="edit" (click)="editEntry.emit(item.entry)">
+                                {{ 'WAIST_HISTORY.EDIT' | translate }}
+                            </fd-ui-button>
+                            <fd-ui-button type="button" fill="text" variant="danger" icon="delete" (click)="removeEntry.emit(item.entry)">
+                                {{ 'WAIST_HISTORY.DELETE' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</fd-ui-card>

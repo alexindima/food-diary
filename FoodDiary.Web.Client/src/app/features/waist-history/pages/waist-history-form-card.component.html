@@ -1,0 +1,36 @@
+<fd-ui-card class="waist-history-page__card waist-history-page__card--form" [title]="'WAIST_HISTORY.ADD_ENTRY_TITLE' | translate">
+    <form class="waist-history-page__form" [formGroup]="form()" (ngSubmit)="formSubmit.emit()">
+        <div class="waist-history-page__form-row">
+            <fd-ui-date-input
+                class="waist-history-page__form-control"
+                formControlName="date"
+                [label]="'WAIST_HISTORY.DATE_LABEL' | translate"
+                [placeholder]="'WAIST_HISTORY.DATE_PLACEHOLDER' | translate"
+            />
+
+            <fd-ui-input
+                class="waist-history-page__form-control"
+                formControlName="circumference"
+                type="number"
+                [step]="0.1"
+                [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate"
+                [placeholder]="'WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER' | translate"
+            />
+        </div>
+
+        <div class="waist-history-page__form-actions">
+            <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
+                @if (isEditing()) {
+                    {{ 'WAIST_HISTORY.UPDATE' | translate }}
+                } @else {
+                    {{ 'WAIST_HISTORY.ADD' | translate }}
+                }
+            </fd-ui-button>
+            @if (isEditing()) {
+                <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
+                    {{ 'WAIST_HISTORY.CANCEL_EDIT' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+    </form>
+</fd-ui-card>

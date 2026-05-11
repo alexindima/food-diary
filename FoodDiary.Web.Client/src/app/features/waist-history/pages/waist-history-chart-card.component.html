@@ -1,0 +1,28 @@
+<fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
+    @if (isLoading()) {
+        <div class="waist-history-page__loader fd-ui-body-sm">
+            {{ 'WAIST_HISTORY.LOADING' | translate }}
+        </div>
+    } @else {
+        @if (hasPoints()) {
+            @defer (when hasPoints()) {
+                <canvas
+                    baseChart
+                    class="waist-history-page__chart-canvas"
+                    type="line"
+                    [data]="chartData()"
+                    [options]="chartOptions()"
+                    [legend]="false"
+                ></canvas>
+            } @placeholder {
+                <fd-ui-loader />
+            } @loading (minimum 300ms) {
+                <fd-ui-loader />
+            }
+        } @else {
+            <p class="waist-history-page__empty-chart fd-ui-body-sm">
+                {{ 'WAIST_HISTORY.NO_DATA_FOR_CHART' | translate }}
+            </p>
+        }
+    }
+</fd-ui-card>

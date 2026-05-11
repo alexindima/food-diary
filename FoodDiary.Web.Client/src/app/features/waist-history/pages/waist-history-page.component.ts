@@ -1,15 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import type { ChartConfiguration } from 'chart.js';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { BaseChartDirective } from 'ng2-charts';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
@@ -18,6 +10,12 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { NavigationService } from '../../../services/navigation.service';
 import { WaistHistoryFacade } from '../lib/waist-history.facade';
 import type { WaistEntry } from '../models/waist-entry.data';
+import { WaistHistoryChartCardComponent } from './waist-history-chart-card.component';
+import { WaistHistoryEntriesCardComponent } from './waist-history-entries-card.component';
+import { WaistHistoryFormCardComponent } from './waist-history-form-card.component';
+import { WaistHistoryGoalCardComponent } from './waist-history-goal-card.component';
+import type { WaistEntryViewModel, WhtSegment } from './waist-history-page.types';
+import { WaistHistoryWhtCardComponent } from './waist-history-wht-card.component';
 
 const WHT_SCALE_MAX = 0.8;
 const WHT_UNDER_MAX = 0.4;
@@ -29,19 +27,16 @@ const PERCENT_FULL = 100;
     selector: 'fd-waist-history-page',
     standalone: true,
     imports: [
-        CommonModule,
         TranslateModule,
-        ReactiveFormsModule,
-        BaseChartDirective,
-        FdUiCardComponent,
-        FdUiButtonComponent,
-        FdUiDateInputComponent,
-        FdUiInputComponent,
-        FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         PeriodFilterComponent,
+        WaistHistoryChartCardComponent,
+        WaistHistoryEntriesCardComponent,
+        WaistHistoryFormCardComponent,
+        WaistHistoryGoalCardComponent,
+        WaistHistoryWhtCardComponent,
     ],
     templateUrl: './waist-history-page.component.html',
     styleUrls: ['./waist-history-page.component.scss'],
@@ -79,6 +74,7 @@ export class WaistHistoryPageComponent {
     public readonly whtrValue = this.facade.whtrValue;
     public readonly whtrPointerPosition = this.facade.whtrPointerPosition;
     public readonly whtrStatusInfo = this.facade.whtrStatusInfo;
+    public readonly hasSummaryPoints = computed(() => this.summaryPoints().length > 0);
 
     public readonly chartOptions: ChartConfiguration<'line'>['options'] = {
         responsive: true,
@@ -178,15 +174,4 @@ export class WaistHistoryPageComponent {
             year: 'numeric',
         }).format(date);
     }
-}
-
-interface WhtSegment {
-    labelKey: string;
-    width: string;
-    class: string;
-}
-
-interface WaistEntryViewModel {
-    entry: WaistEntry;
-    dateLabel: string;
 }

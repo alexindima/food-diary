@@ -1,0 +1,18 @@
+<fd-ui-card class="weight-history-page__card weight-history-page__card--goal" [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate">
+    <div class="weight-history-page__goal-body fd-stack fd-gap-card-header">
+        <fd-ui-input
+            class="weight-history-page__goal-input"
+            type="number"
+            [step]="0.1"
+            [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
+            [suffixButtonIcon]="control().value ? 'backspace' : undefined"
+            [formControl]="control()"
+            (suffixButtonClicked)="control().setValue('')"
+        />
+        <div class="weight-history-page__goal-actions fd-row fd-gap-actions">
+            <fd-ui-button type="button" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveGoal.emit()">
+                {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</fd-ui-card>

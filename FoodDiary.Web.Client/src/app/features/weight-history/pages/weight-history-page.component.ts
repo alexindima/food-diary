@@ -1,15 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import type { ChartConfiguration } from 'chart.js';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { BaseChartDirective } from 'ng2-charts';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
@@ -18,6 +10,12 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { NavigationService } from '../../../services/navigation.service';
 import { WeightHistoryFacade } from '../lib/weight-history.facade';
 import type { WeightEntry } from '../models/weight-entry.data';
+import { WeightHistoryBmiCardComponent } from './weight-history-bmi-card.component';
+import { WeightHistoryChartCardComponent } from './weight-history-chart-card.component';
+import { WeightHistoryEntriesCardComponent } from './weight-history-entries-card.component';
+import { WeightHistoryFormCardComponent } from './weight-history-form-card.component';
+import { WeightHistoryGoalCardComponent } from './weight-history-goal-card.component';
+import type { BmiSegmentViewModel, WeightEntryViewModel } from './weight-history-page.types';
 
 const BMI_SCALE_MAX = 40;
 const PERCENTAGE_MULTIPLIER = 100;
@@ -26,19 +24,16 @@ const PERCENTAGE_MULTIPLIER = 100;
     selector: 'fd-weight-history-page',
     standalone: true,
     imports: [
-        CommonModule,
         TranslateModule,
-        ReactiveFormsModule,
-        BaseChartDirective,
-        FdUiCardComponent,
-        FdUiButtonComponent,
-        FdUiDateInputComponent,
-        FdUiInputComponent,
-        FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         PeriodFilterComponent,
+        WeightHistoryBmiCardComponent,
+        WeightHistoryChartCardComponent,
+        WeightHistoryEntriesCardComponent,
+        WeightHistoryFormCardComponent,
+        WeightHistoryGoalCardComponent,
     ],
     templateUrl: './weight-history-page.component.html',
     styleUrls: ['./weight-history-page.component.scss'],
@@ -75,6 +70,7 @@ export class WeightHistoryPageComponent {
     public readonly bmiValue = this.facade.bmiValue;
     public readonly bmiPointerPosition = this.facade.bmiPointerPosition;
     public readonly bmiStatusInfo = this.facade.bmiStatusInfo;
+    public readonly hasSummaryPoints = computed(() => this.summaryPoints().length > 0);
 
     public readonly chartOptions: ChartConfiguration<'line'>['options'] = {
         responsive: true,
@@ -166,13 +162,4 @@ interface BmiSegment {
     from: number;
     to: number;
     class: string;
-}
-
-interface BmiSegmentViewModel extends BmiSegment {
-    width: string;
-}
-
-interface WeightEntryViewModel {
-    entry: WeightEntry;
-    dateLabel: string;
 }

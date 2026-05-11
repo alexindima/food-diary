@@ -1,0 +1,18 @@
+<fd-ui-card class="waist-history-page__card waist-history-page__card--goal" [title]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate">
+    <div class="waist-history-page__goal-body">
+        <fd-ui-input
+            class="waist-history-page__goal-input"
+            type="number"
+            [step]="0.1"
+            [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
+            [suffixButtonIcon]="control().value ? 'backspace' : undefined"
+            [formControl]="control()"
+            (suffixButtonClicked)="control().setValue('')"
+        />
+        <div class="waist-history-page__goal-actions">
+            <fd-ui-button type="button" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveGoal.emit()">
+                {{ 'WAIST_HISTORY.SAVE_GOAL' | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</fd-ui-card>

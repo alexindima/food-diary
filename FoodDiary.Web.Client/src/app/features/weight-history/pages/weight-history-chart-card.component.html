@@ -1,0 +1,28 @@
+<fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
+    @if (isLoading()) {
+        <div class="weight-history-page__loader fd-ui-body-sm">
+            {{ 'WEIGHT_HISTORY.LOADING' | translate }}
+        </div>
+    } @else {
+        @if (hasPoints()) {
+            @defer (when hasPoints()) {
+                <canvas
+                    baseChart
+                    class="weight-history-page__chart-canvas"
+                    type="line"
+                    [data]="chartData()"
+                    [options]="chartOptions()"
+                    [legend]="false"
+                ></canvas>
+            } @placeholder {
+                <fd-ui-loader />
+            } @loading (minimum 300ms) {
+                <fd-ui-loader />
+            }
+        } @else {
+            <p class="weight-history-page__empty-chart fd-ui-body-sm">
+                {{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}
+            </p>
+        }
+    }
+</fd-ui-card>

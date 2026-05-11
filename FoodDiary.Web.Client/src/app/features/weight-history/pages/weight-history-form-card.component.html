@@ -1,0 +1,36 @@
+<fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
+    <form class="weight-history-page__form fd-stack fd-gap-card-header" [formGroup]="form()" (ngSubmit)="formSubmit.emit()">
+        <div class="weight-history-page__form-row fd-grid fd-gap-card-header">
+            <fd-ui-date-input
+                class="weight-history-page__form-control"
+                formControlName="date"
+                [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
+                [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
+            />
+
+            <fd-ui-input
+                class="weight-history-page__form-control"
+                formControlName="weight"
+                type="number"
+                [step]="0.1"
+                [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
+                [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
+            />
+        </div>
+
+        <div class="weight-history-page__form-actions fd-row fd-wrap fd-gap-actions">
+            <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
+                @if (isEditing()) {
+                    {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
+                } @else {
+                    {{ 'WEIGHT_HISTORY.ADD' | translate }}
+                }
+            </fd-ui-button>
+            @if (isEditing()) {
+                <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
+                    {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+    </form>
+</fd-ui-card>
