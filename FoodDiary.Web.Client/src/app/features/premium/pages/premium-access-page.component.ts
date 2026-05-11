@@ -61,7 +61,7 @@ export class PremiumAccessPageComponent {
     public readonly showManageBilling = computed(() => this.canManageBilling() && this.isPremium());
     public readonly availableProviders = computed(() => {
         const overview = this.overview();
-        const providers = overview?.availableProviders.filter(provider => !!provider.trim()) ?? [];
+        const providers = overview?.availableProviders.filter(provider => provider.trim().length > 0) ?? [];
         return providers;
     });
     public readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
@@ -78,7 +78,8 @@ export class PremiumAccessPageComponent {
         const overview = this.overview();
 
         return {
-            planLabelKey: this.isPremium() && overview?.plan ? this.getPlanLabelKey(overview.plan) : null,
+            planLabelKey:
+                this.isPremium() && overview?.plan !== null && overview?.plan !== undefined ? this.getPlanLabelKey(overview.plan) : null,
             statusLabelKey: this.getStatusLabelKey(overview?.subscriptionStatus ?? null),
         };
     });
@@ -87,7 +88,7 @@ export class PremiumAccessPageComponent {
 
         return {
             stateLabelKey: this.isPremium() ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE' : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE',
-            periodLabelKey: overview?.cancelAtPeriodEnd ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
+            periodLabelKey: overview?.cancelAtPeriodEnd === true ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
             showCancelAtPeriodEndBanner: overview?.cancelAtPeriodEnd ?? false,
         };
     });
@@ -143,7 +144,7 @@ export class PremiumAccessPageComponent {
 
         try {
             const session = await firstValueFrom(this.billingService.createCheckoutSession(plan, provider));
-            if (!session.url) {
+            if (session.url.length === 0) {
                 throw new Error('Checkout URL is missing.');
             }
 
@@ -167,7 +168,7 @@ export class PremiumAccessPageComponent {
 
         try {
             const session = await firstValueFrom(this.billingService.createPortalSession());
-            if (!session.url) {
+            if (session.url.length === 0) {
                 throw new Error('Portal URL is missing.');
             }
 
@@ -224,7 +225,7 @@ export class PremiumAccessPageComponent {
     }
 
     private formatMediumDate(value: string | null | undefined): string | null {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return null;
         }
 
@@ -246,7 +247,7 @@ export class PremiumAccessPageComponent {
 
     private async handleCheckoutReturnStateAsync(): Promise<void> {
         const checkoutState = this.route.snapshot.queryParamMap.get('checkout');
-        if (!checkoutState) {
+        if (checkoutState === null || checkoutState.length === 0) {
             return;
         }
 
@@ -291,12 +292,12 @@ export class PremiumAccessPageComponent {
         }
 
         const transactionId = this.route.snapshot.queryParamMap.get('_ptxn');
-        if (!transactionId) {
+        if (transactionId === null || transactionId.length === 0) {
             return;
         }
 
         const paddleClientToken = this.overview()?.paddleClientToken?.trim() ?? environment.paddleClientToken?.trim();
-        if (!paddleClientToken) {
+        if (paddleClientToken === undefined || paddleClientToken.length === 0) {
             const message = 'Paddle client token is not configured.';
             this.errorMessage.set(message);
             this.toastService.error(message);
@@ -307,7 +308,7 @@ export class PremiumAccessPageComponent {
             await this.paddleCheckoutService.openTransactionCheckoutAsync(transactionId, {
                 token: paddleClientToken,
                 environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
-                locale: (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en',
+                locale: this.resolveCheckoutLocale(),
             });
 
             await this.router.navigate([], {
@@ -325,20 +326,39 @@ export class PremiumAccessPageComponent {
     private getErrorMessage(error: unknown): string {
         if (error instanceof HttpErrorResponse) {
             const payload = error.error as { message?: string } | string | null;
-            if (payload && typeof payload === 'object' && typeof payload.message === 'string' && payload.message.trim()) {
-                return payload.message.trim();
+            if (payload !== null && typeof payload === 'object' && typeof payload.message === 'string') {
+                const message = payload.message.trim();
+                if (message.length > 0) {
+                    return message;
+                }
             }
 
-            if (typeof payload === 'string' && payload.trim()) {
-                return payload.trim();
+            if (typeof payload === 'string') {
+                const message = payload.trim();
+                if (message.length > 0) {
+                    return message;
+                }
             }
         }
 
-        if (error instanceof Error && error.message.trim()) {
-            return error.message.trim();
+        if (error instanceof Error) {
+            const message = error.message.trim();
+            if (message.length > 0) {
+                return message;
+            }
         }
 
         return this.translateService.instant('PREMIUM_PAGE.ERROR_GENERIC');
+    }
+
+    private resolveCheckoutLocale(): string {
+        const currentLang = this.translateService.getCurrentLang();
+        if (currentLang.length > 0) {
+            return currentLang;
+        }
+
+        const fallbackLang = this.translateService.getFallbackLang() ?? '';
+        return fallbackLang.length > 0 ? fallbackLang : 'en';
     }
 }
 

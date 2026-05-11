@@ -27,6 +27,16 @@ import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import type { ConsumptionAiItem, Meal } from '../../models/meal.data';
 
+const MACRO_SUMMARY_LIMIT = 3;
+const ITEM_PREVIEW_MAX_ITEMS = 2;
+const QUALITY_SCORE_MIN = 0;
+const QUALITY_SCORE_MAX = 100;
+const DEFAULT_QUALITY_SCORE = 50;
+const PERCENT_FULL = 100;
+const MIN_MACRO_BAR_PERCENT = 4;
+const MIN_SATIETY_LEVEL = 1;
+const MAX_SATIETY_LEVEL = 5;
+
 @Component({
     selector: 'fd-meal-detail',
     standalone: true,
@@ -83,7 +93,7 @@ export class MealDetailComponent {
         { value: 'nutrients', labelKey: 'CONSUMPTION_DETAIL.TABS.NUTRIENTS' },
     ];
     public activeTab: 'summary' | 'nutrients' = 'summary';
-    public readonly itemPreviewMaxItems = 2;
+    public readonly itemPreviewMaxItems = ITEM_PREVIEW_MAX_ITEMS;
     public readonly isItemPreviewExpanded = signal(false);
     public readonly macroBlocks: {
         labelKey: string;
@@ -92,7 +102,7 @@ export class MealDetailComponent {
         color: string;
         percent: number;
     }[];
-    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, 3));
+    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
     public readonly itemPreview: MealDetailItemPreview[];
     public readonly visibleItemPreview = computed<MealDetailItemPreview[]>(() =>
         this.isItemPreviewExpanded() ? this.itemPreview : this.itemPreview.slice(0, this.itemPreviewMaxItems),
@@ -122,12 +132,17 @@ export class MealDetailComponent {
         this.carbs = data.totalCarbs;
         this.fiber = data.totalFiber;
         this.alcohol = data.totalAlcohol;
-        this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
+        this.qualityScore = Math.round(
+            Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, data.qualityScore ?? DEFAULT_QUALITY_SCORE)),
+        );
         this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
         this.itemsCount = this.getTotalItemsCount(data);
         this.formattedDate = this.datePipe.transform(this.consumption.date, 'dd.MM.yyyy, HH:mm');
-        this.mealTypeLabel = data.mealType ? this.translate.instant(`MEAL_TYPES.${data.mealType}`) : null;
+        this.mealTypeLabel =
+            data.mealType !== null && data.mealType !== undefined && data.mealType.length > 0
+                ? this.translate.instant(`MEAL_TYPES.${data.mealType}`)
+                : null;
         this.preMealSatietyMeta = this.buildSatietyMeta('before', data.preMealSatietyLevel);
         this.postMealSatietyMeta = this.buildSatietyMeta('after', data.postMealSatietyLevel);
         this.itemPreview = this.buildItemPreview();
@@ -209,32 +224,38 @@ export class MealDetailComponent {
         return {
             isEmpty: total <= 0,
             segments: [
-                { key: 'proteins', percent: total > 0 ? (values[0] / total) * 100 : 0 },
-                { key: 'fats', percent: total > 0 ? (values[1] / total) * 100 : 0 },
-                { key: 'carbs', percent: total > 0 ? (values[2] / total) * 100 : 0 },
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_FULL : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_FULL : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_FULL : 0 },
             ],
         };
     }
 
     private resolveMacroPercent(value: number, values: number[]): number {
         const max = Math.max(...values, value, 1);
-        return Math.max(4, Math.round((value / max) * 100));
+        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_FULL));
     }
 
     private buildItemPreview(): MealDetailItemPreview[] {
-        const manualItems = this.consumption.items.map(item => ({
-            name: item.product?.name ?? item.recipe?.name ?? this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM'),
-            amount: item.amount,
-            unitKey: item.product?.baseUnit ? `GENERAL.UNITS.${item.product.baseUnit}` : 'CONSUMPTION_DETAIL.SERVINGS',
-            unitText: null,
-        }));
-        const aiItems = (this.consumption.aiSessions ?? []).flatMap(session =>
-            session.items.map(item => ({
-                name: this.getAiItemName(item),
+        const manualItems = this.consumption.items.map(item => {
+            const unit = item.product?.baseUnit;
+            return {
+                name: item.product?.name ?? item.recipe?.name ?? this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM'),
                 amount: item.amount,
-                unitKey: this.getAiItemUnitKey(item.unit),
-                unitText: this.getAiItemUnitKey(item.unit) ? null : item.unit,
-            })),
+                unitKey: unit !== undefined ? `GENERAL.UNITS.${unit}` : 'CONSUMPTION_DETAIL.SERVINGS',
+                unitText: null,
+            };
+        });
+        const aiItems = (this.consumption.aiSessions ?? []).flatMap(session =>
+            session.items.map(item => {
+                const unitKey = this.getAiItemUnitKey(item.unit);
+                return {
+                    name: this.getAiItemName(item),
+                    amount: item.amount,
+                    unitKey,
+                    unitText: unitKey !== null ? null : item.unit,
+                };
+            }),
         );
 
         return [...manualItems, ...aiItems];
@@ -246,7 +267,8 @@ export class MealDetailComponent {
     }
 
     private getAiItemName(item: ConsumptionAiItem): string {
-        return (item.nameLocal?.trim() ?? item.nameEn.trim()) || this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM');
+        const itemName = item.nameLocal?.trim() ?? item.nameEn.trim();
+        return itemName.length > 0 ? itemName : this.translate.instant('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM');
     }
 
     private getAiItemUnitKey(unit: string): string | null {
@@ -276,7 +298,7 @@ export class MealDetailComponent {
             };
         }
 
-        const normalizedValue = Math.min(5, Math.max(1, Math.round(value)));
+        const normalizedValue = Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value)));
         const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
         const level = levels.find(item => item.value === normalizedValue);
 
@@ -304,7 +326,7 @@ export class MealDetailComponent {
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {
-            if (this.favoriteMealId) {
+            if (this.favoriteMealId !== null && this.favoriteMealId.length > 0) {
                 this.favoriteMealService.remove(this.favoriteMealId).subscribe({
                     next: () => {
                         this.isFavorite.set(false);
@@ -319,7 +341,7 @@ export class MealDetailComponent {
                 this.favoriteMealService.getAll().subscribe({
                     next: favorites => {
                         const match = favorites.find(f => f.mealId === this.consumption.id);
-                        if (match) {
+                        if (match !== undefined) {
                             this.favoriteMealService.remove(match.id).subscribe({
                                 next: () => {
                                     this.isFavorite.set(false);
@@ -391,7 +413,7 @@ export class MealDetailComponent {
             .open(ConfirmDeleteDialogComponent, { data, size: 'sm' })
             .afterClosed()
             .subscribe(confirm => {
-                if (confirm) {
+                if (confirm === true) {
                     const deleteResult = new MealDetailActionResult(this.consumption.id, 'Delete', this.hasFavoriteChanged());
                     this.dialogRef.close(deleteResult);
                 }

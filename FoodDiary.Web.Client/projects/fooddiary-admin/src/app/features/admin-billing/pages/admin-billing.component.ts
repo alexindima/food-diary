@@ -39,6 +39,11 @@ interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
     externalObjectIdText: string;
 }
 
+const DEFAULT_PAGE_SIZE = 20;
+const SHORT_ID_MIN_LENGTH = 18;
+const SHORT_ID_PREFIX_LENGTH = 8;
+const SHORT_ID_SUFFIX_START = -6;
+
 @Component({
     selector: 'fd-admin-billing',
     standalone: true,
@@ -90,7 +95,7 @@ export class AdminBillingComponent {
     public readonly totalPages = signal(1);
     public readonly totalItems = signal(0);
     public readonly page = signal(1);
-    public readonly limit = 20;
+    public readonly limit = DEFAULT_PAGE_SIZE;
     public readonly isLoading = signal(false);
     public readonly provider = signal('');
     public readonly status = signal('');
@@ -136,7 +141,7 @@ export class AdminBillingComponent {
     }
 
     public showMetadata(value?: string | null): void {
-        this.selectedMetadata.set(value ? this.formatJson(value) : null);
+        this.selectedMetadata.set(value !== null && value !== undefined && value.length > 0 ? this.formatJson(value) : null);
     }
 
     private formatMoney(amount?: number | null, currency?: string | null): string {
@@ -144,19 +149,21 @@ export class AdminBillingComponent {
             return '-';
         }
 
-        return currency ? `${amount.toFixed(2)} ${currency}` : amount.toFixed(2);
+        return currency !== null && currency !== undefined && currency.length > 0 ? `${amount.toFixed(2)} ${currency}` : amount.toFixed(2);
     }
 
     private formatDateLabel(value?: string | Date | null, format = 'short'): string {
-        return value ? formatDate(value, format, this.locale) : '-';
+        return value !== null && value !== undefined ? formatDate(value, format, this.locale) : '-';
     }
 
     private shortId(value?: string | null): string {
-        if (!value) {
+        if (value === null || value === undefined || value.length === 0) {
             return '-';
         }
 
-        return value.length > 18 ? `${value.slice(0, 8)}...${value.slice(-6)}` : value;
+        return value.length > SHORT_ID_MIN_LENGTH
+            ? `${value.slice(0, SHORT_ID_PREFIX_LENGTH)}...${value.slice(SHORT_ID_SUFFIX_START)}`
+            : value;
     }
 
     public load(): void {
@@ -210,7 +217,7 @@ export class AdminBillingComponent {
     }
 
     private applyPageData<T>(response: PagedResponse<T>): void {
-        this.totalPages.set(response.totalPages || 1);
+        this.totalPages.set(response.totalPages > 0 ? response.totalPages : 1);
         this.totalItems.set(response.totalItems);
         this.isLoading.set(false);
     }
@@ -225,22 +232,26 @@ export class AdminBillingComponent {
     }
 
     private buildFilters(): AdminBillingFilters {
+        const provider = this.provider().trim();
+        const status = this.status().trim();
+        const kind = this.kind().trim();
+        const search = this.search().trim();
         return {
-            provider: this.provider().trim() || null,
-            status: this.status().trim() || null,
-            kind: this.activeTab() === 'payments' ? this.kind().trim() || null : null,
-            search: this.search().trim() || null,
+            provider: provider.length > 0 ? provider : null,
+            status: status.length > 0 ? status : null,
+            kind: this.activeTab() === 'payments' && kind.length > 0 ? kind : null,
+            search: search.length > 0 ? search : null,
             fromUtc: this.toUtcStart(this.fromDate()),
             toUtc: this.toUtcEnd(this.toDate()),
         };
     }
 
     private toUtcStart(value: string): string | null {
-        return value ? new Date(`${value}T00:00:00.000Z`).toISOString() : null;
+        return value.length > 0 ? new Date(`${value}T00:00:00.000Z`).toISOString() : null;
     }
 
     private toUtcEnd(value: string): string | null {
-        return value ? new Date(`${value}T23:59:59.999Z`).toISOString() : null;
+        return value.length > 0 ? new Date(`${value}T23:59:59.999Z`).toISOString() : null;
     }
 
     private formatJson(value: string): string {

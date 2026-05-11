@@ -60,9 +60,11 @@ export class ShoppingListPageComponent {
     public readonly lists = this.facade.lists;
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
-    public readonly canDeleteList = computed(() => this.lists().length > 1 && !!this.list() && !this.isSaving() && !this.isLoading());
+    public readonly canDeleteList = computed(
+        () => this.lists().length > 1 && this.list() !== null && !this.isSaving() && !this.isLoading(),
+    );
     public readonly canClearList = computed(
-        () => this.lists().length === 1 && this.items().length > 0 && !!this.list() && !this.isSaving() && !this.isLoading(),
+        () => this.lists().length === 1 && this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
     public readonly listOptions = computed(() => this.facade.listOptions());
     public readonly isEmptyState = computed(() => this.items().length === 0);
@@ -102,7 +104,7 @@ export class ShoppingListPageComponent {
         });
 
         this.listSelectControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => {
-            if (id) {
+            if (id !== null && id.length > 0) {
                 this.facade.selectList(id);
             }
         });
@@ -137,7 +139,7 @@ export class ShoppingListPageComponent {
         }
 
         const name = this.itemForm.controls.name.value.trim();
-        if (!name) {
+        if (name.length === 0) {
             return;
         }
 
@@ -166,11 +168,11 @@ export class ShoppingListPageComponent {
 
     private formatItemMeta(item: ShoppingListItem): string {
         const parts: string[] = [];
-        if (item.amount) {
+        if (item.amount !== null && item.amount !== undefined && Number.isNaN(item.amount) === false) {
             const unitLabel = this.getUnitLabel(item.unit);
-            parts.push(unitLabel ? `${item.amount} ${unitLabel}` : `${item.amount}`);
+            parts.push(unitLabel !== null ? `${item.amount} ${unitLabel}` : `${item.amount}`);
         }
-        if (item.category) {
+        if (item.category !== null && item.category !== undefined && item.category.length > 0) {
             parts.push(item.category);
         }
         return parts.join(' - ');
@@ -182,7 +184,7 @@ export class ShoppingListPageComponent {
 
     public deleteCurrentList(): void {
         const current = this.list();
-        if (!current || !this.canDeleteList()) {
+        if (current === null || !this.canDeleteList()) {
             return;
         }
 
@@ -203,7 +205,7 @@ export class ShoppingListPageComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
-                if (confirmed) {
+                if (confirmed === true) {
                     this.facade.deleteCurrentList();
                 }
             });
@@ -211,7 +213,7 @@ export class ShoppingListPageComponent {
 
     public clearCurrentList(): void {
         const current = this.list();
-        if (!current || !this.canClearList()) {
+        if (current === null || !this.canClearList()) {
             return;
         }
 
@@ -232,7 +234,7 @@ export class ShoppingListPageComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
-                if (confirmed) {
+                if (confirmed === true) {
                     this.facade.clearCurrentList();
                 }
             });
@@ -250,7 +252,7 @@ export class ShoppingListPageComponent {
     }
 
     private getUnitLabel(unit?: MeasurementUnit | string | null): string | null {
-        if (!unit) {
+        if (unit === null || unit === undefined || unit.length === 0) {
             return null;
         }
 

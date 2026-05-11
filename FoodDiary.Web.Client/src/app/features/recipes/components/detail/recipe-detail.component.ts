@@ -26,6 +26,15 @@ import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import type { Recipe } from '../../models/recipe.data';
 
+const MACRO_SUMMARY_LIMIT = 3;
+const QUALITY_SCORE_MIN = 0;
+const QUALITY_SCORE_MAX = 100;
+const DEFAULT_QUALITY_SCORE = 50;
+const PERCENT_FULL = 100;
+const MIN_MACRO_BAR_PERCENT = 4;
+const INGREDIENT_PREVIEW_LIMIT = 6;
+const NUTRIENT_ROUNDING_FACTOR = 100;
+
 @Component({
     selector: 'fd-recipe-detail',
     standalone: true,
@@ -77,7 +86,7 @@ export class RecipeDetailComponent {
         color: string;
         percent: number;
     }[];
-    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, 3));
+    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
     public readonly ingredientPreview: {
         name: string;
         amount: number;
@@ -121,7 +130,9 @@ export class RecipeDetailComponent {
         this.carbs = this.resolveNutrientValue(data.totalCarbs, data.manualCarbs);
         this.fiber = this.resolveFiberValue();
         this.alcohol = this.resolveAlcoholValue();
-        this.qualityScore = Math.round(Math.min(100, Math.max(0, data.qualityScore ?? 50)));
+        this.qualityScore = Math.round(
+            Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, data.qualityScore ?? DEFAULT_QUALITY_SCORE)),
+        );
         this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
         this.totalTime = this.calculateTotalPreparationTime();
@@ -214,29 +225,32 @@ export class RecipeDetailComponent {
         return {
             isEmpty: total <= 0,
             segments: [
-                { key: 'proteins', percent: total > 0 ? (values[0] / total) * 100 : 0 },
-                { key: 'fats', percent: total > 0 ? (values[1] / total) * 100 : 0 },
-                { key: 'carbs', percent: total > 0 ? (values[2] / total) * 100 : 0 },
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_FULL : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_FULL : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_FULL : 0 },
             ],
         };
     }
 
     private resolveMacroPercent(value: number, values: number[]): number {
         const max = Math.max(...values, value, 1);
-        return Math.max(4, Math.round((value / max) * 100));
+        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_FULL));
     }
 
     private buildIngredientPreview(): { name: string; amount: number; unitKey: string | null }[] {
         return this.recipe.steps
             .flatMap(step => step.ingredients)
-            .slice(0, 6)
+            .slice(0, INGREDIENT_PREVIEW_LIMIT)
             .map(ingredient => ({
                 name:
                     ingredient.productName ??
                     ingredient.nestedRecipeName ??
                     this.translateService.instant('RECIPE_DETAIL.UNKNOWN_INGREDIENT'),
                 amount: ingredient.amount,
-                unitKey: ingredient.productBaseUnit ? `GENERAL.UNITS.${ingredient.productBaseUnit}` : null,
+                unitKey:
+                    ingredient.productBaseUnit !== null && ingredient.productBaseUnit !== undefined && ingredient.productBaseUnit.length > 0
+                        ? `GENERAL.UNITS.${ingredient.productBaseUnit}`
+                        : null,
             }));
     }
 
@@ -285,7 +299,7 @@ export class RecipeDetailComponent {
         const hasPrep = this.recipe.prepTime !== null && this.recipe.prepTime !== undefined;
         const hasCook = this.recipe.cookTime !== null && this.recipe.cookTime !== undefined;
 
-        if (!hasPrep && !hasCook) {
+        if (hasPrep === false && hasCook === false) {
             return null;
         }
 
@@ -301,7 +315,7 @@ export class RecipeDetailComponent {
     }
 
     private computeFiberFromSteps(): number | null {
-        if (!this.recipe.steps.length) {
+        if (this.recipe.steps.length === 0) {
             return null;
         }
 
@@ -328,11 +342,11 @@ export class RecipeDetailComponent {
             }
         }
 
-        return hasFiber ? Math.round(totalFiber * 100) / 100 : null;
+        return hasFiber ? Math.round(totalFiber * NUTRIENT_ROUNDING_FACTOR) / NUTRIENT_ROUNDING_FACTOR : null;
     }
 
     private computeAlcoholFromSteps(): number | null {
-        if (!this.recipe.steps.length) {
+        if (this.recipe.steps.length === 0) {
             return null;
         }
 
@@ -359,11 +373,11 @@ export class RecipeDetailComponent {
             }
         }
 
-        return hasAlcohol ? Math.round(totalAlcohol * 100) / 100 : null;
+        return hasAlcohol ? Math.round(totalAlcohol * NUTRIENT_ROUNDING_FACTOR) / NUTRIENT_ROUNDING_FACTOR : null;
     }
 
     private computeIngredientCount(): number {
-        if (!this.recipe.steps.length) {
+        if (this.recipe.steps.length === 0) {
             return 0;
         }
 
@@ -422,7 +436,7 @@ export class RecipeDetailComponent {
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {
-            if (this.favoriteRecipeId) {
+            if (this.favoriteRecipeId !== null && this.favoriteRecipeId.length > 0) {
                 this.favoriteRecipeService.remove(this.favoriteRecipeId).subscribe({
                     next: () => {
                         this.isFavorite.set(false);
@@ -439,7 +453,7 @@ export class RecipeDetailComponent {
             this.favoriteRecipeService.getAll().subscribe({
                 next: favorites => {
                     const match = favorites.find(f => f.recipeId === this.recipe.id);
-                    if (match) {
+                    if (match !== undefined) {
                         this.favoriteRecipeService.remove(match.id).subscribe({
                             next: () => {
                                 this.isFavorite.set(false);
@@ -496,7 +510,7 @@ export class RecipeDetailComponent {
             })
             .afterClosed()
             .subscribe(confirm => {
-                if (confirm) {
+                if (confirm === true) {
                     this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'Delete', this.hasFavoriteChanged()));
                 }
             });

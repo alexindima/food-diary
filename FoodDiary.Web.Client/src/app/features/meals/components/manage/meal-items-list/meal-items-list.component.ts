@@ -13,6 +13,8 @@ import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.s
 import { ConsumptionSourceType } from '../../../models/meal.data';
 import type { ConsumptionItemFormData, NutritionTotals } from '../base-meal-manage.types';
 
+const NUTRITION_FRACTION_THRESHOLD = 0.01;
+
 @Component({
     selector: 'fd-meal-items-list',
     templateUrl: './meal-items-list.component.html',
@@ -66,7 +68,7 @@ export class MealItemsListComponent {
             });
     });
     public readonly arrayError = computed(() =>
-        this.formArray().touched && this.formArray().errors?.['nonEmptyArray']
+        this.formArray().touched && this.formArray().errors?.['nonEmptyArray'] === true
             ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY')
             : null,
     );
@@ -100,7 +102,7 @@ export class MealItemsListComponent {
     public getAmountUnitLabel(index: number): string | null {
         if (this.isProductItem(index)) {
             const unit = this.formArray().at(index).controls.product.value?.baseUnit;
-            return unit ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase()) : null;
+            return unit !== undefined ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase()) : null;
         }
 
         if (this.isRecipeItem(index)) {
@@ -142,10 +144,10 @@ export class MealItemsListComponent {
     }
 
     private getItemSourceIcon(index: number): string {
-        if (this.isRecipeItem(index) && this.formArray().at(index).controls.recipe.value) {
+        if (this.isRecipeItem(index) && this.formArray().at(index).controls.recipe.value !== null) {
             return 'menu_book';
         }
-        if (this.isProductItem(index) && this.formArray().at(index).controls.product.value) {
+        if (this.isProductItem(index) && this.formArray().at(index).controls.product.value !== null) {
             return 'restaurant';
         }
         return 'search';
@@ -166,7 +168,7 @@ export class MealItemsListComponent {
 
         if (group.controls.sourceType.value === ConsumptionSourceType.Product) {
             const product = group.controls.product.value;
-            if (!product || product.baseAmount <= 0) {
+            if (product === null || product.baseAmount <= 0) {
                 return this.getEmptyTotals();
             }
 
@@ -182,7 +184,7 @@ export class MealItemsListComponent {
         }
 
         const recipe = group.controls.recipe.value;
-        if (!recipe?.servings || recipe.servings <= 0) {
+        if (recipe === null || recipe.servings <= 0) {
             return this.getEmptyTotals();
         }
 
@@ -198,8 +200,8 @@ export class MealItemsListComponent {
     }
 
     private formatManualMacro(value: number, unitKey: string): string {
-        const locale = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
-        const hasFraction = Math.abs(value % 1) > 0.01;
+        const locale = this.getCurrentLanguage();
+        const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,
             minimumFractionDigits: hasFraction ? 1 : 0,
@@ -211,7 +213,7 @@ export class MealItemsListComponent {
     private formatManualAmount(index: number): string {
         const amount = this.formArray().at(index).controls.amount.value ?? 0;
         const unitLabel = this.getAmountUnitLabel(index);
-        return unitLabel ? `${this.formatNumber(amount)} ${unitLabel}`.trim() : this.formatNumber(amount);
+        return unitLabel !== null ? `${this.formatNumber(amount)} ${unitLabel}`.trim() : this.formatNumber(amount);
     }
 
     private getManualItemImageUrl(index: number): string | null {
@@ -229,7 +231,7 @@ export class MealItemsListComponent {
     public hasManualItem(index: number): boolean {
         this.renderVersion();
         const group = this.formArray().at(index);
-        return Boolean(group.controls.product.value) || Boolean(group.controls.recipe.value);
+        return group.controls.product.value !== null || group.controls.recipe.value !== null;
     }
 
     public onRemoveItem(index: number): void {
@@ -241,8 +243,8 @@ export class MealItemsListComponent {
     }
 
     private formatNumber(value: number): string {
-        const locale = (this.translateService.getCurrentLang() || this.translateService.getFallbackLang()) ?? 'en';
-        const hasFraction = Math.abs(value % 1) > 0.01;
+        const locale = this.getCurrentLanguage();
+        const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
         return new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,
             minimumFractionDigits: hasFraction ? 1 : 0,
@@ -250,16 +252,16 @@ export class MealItemsListComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control || !control.invalid || !control.touched) {
+        if (control === null || control.invalid === false || control.touched === false) {
             return null;
         }
 
-        if (control.errors?.['required']) {
+        if (control.errors?.['required'] === true) {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
         const minError = control.getError('min') as { min?: number } | null;
-        if (minError) {
+        if (minError !== null) {
             const min = minError.min ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
@@ -269,6 +271,16 @@ export class MealItemsListComponent {
 
     private getEmptyTotals(): NutritionTotals {
         return { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
+    }
+
+    private getCurrentLanguage(): string {
+        const currentLang = this.translateService.getCurrentLang();
+        if (currentLang.length > 0) {
+            return currentLang;
+        }
+
+        const fallbackLang = this.translateService.getFallbackLang() ?? '';
+        return fallbackLang.length > 0 ? fallbackLang : 'en';
     }
 }
 

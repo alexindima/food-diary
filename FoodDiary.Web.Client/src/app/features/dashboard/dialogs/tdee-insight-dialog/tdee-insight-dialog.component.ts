@@ -10,6 +10,10 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import type { TdeeInsight } from '../../models/tdee-insight.data';
 
+const MIN_FOOD_WINDOW_DAYS = 14;
+const SUGGESTION_DIFF_THRESHOLD = 50;
+const WEIGHT_TREND_FRACTION_DIGITS = 2;
+
 export interface TdeeInsightDialogData {
     insight: TdeeInsight | null;
 }
@@ -43,32 +47,33 @@ export class TdeeInsightDialogComponent {
 
     public readonly insight = this.data?.insight ?? null;
     public readonly effectiveTdee = this.insight?.adaptiveTdee ?? this.insight?.estimatedTdee ?? null;
-    public readonly hasProfileBasis = !!(this.insight?.estimatedTdee ?? this.insight?.bmr);
-    public readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= 14 || !!this.insight?.adaptiveTdee;
+    public readonly hasProfileBasis = (this.insight?.estimatedTdee ?? this.insight?.bmr ?? 0) > 0;
+    public readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= MIN_FOOD_WINDOW_DAYS || (this.insight?.adaptiveTdee ?? 0) > 0;
     public readonly hasBodyTrend =
-        !!this.insight?.adaptiveTdee || (this.insight?.weightTrendPerWeek !== null && this.insight?.weightTrendPerWeek !== undefined);
+        (this.insight?.adaptiveTdee ?? 0) > 0 ||
+        (this.insight?.weightTrendPerWeek !== null && this.insight?.weightTrendPerWeek !== undefined);
     public readonly weightTrendFormatted = this.formatWeightTrend(this.insight?.weightTrendPerWeek);
     public readonly confidenceKey =
-        this.insight && this.insight.confidence !== 'none'
+        this.insight !== null && this.insight.confidence !== 'none'
             ? `TDEE_CARD.CONFIDENCE.${this.insight.confidence.toUpperCase()}`
             : 'TDEE_DIALOG.CONFIDENCE.NONE';
-    public readonly stateKey = !this.effectiveTdee
-        ? 'TDEE_DIALOG.STATE.EMPTY'
-        : this.insight?.adaptiveTdee
-          ? 'TDEE_DIALOG.STATE.ADAPTIVE'
-          : 'TDEE_DIALOG.STATE.ESTIMATED';
-    public readonly summaryKey = !this.effectiveTdee
-        ? 'TDEE_DIALOG.SUMMARY.EMPTY'
-        : this.insight?.adaptiveTdee
-          ? 'TDEE_DIALOG.SUMMARY.ADAPTIVE'
-          : 'TDEE_DIALOG.SUMMARY.ESTIMATED';
+    public readonly stateKey =
+        this.effectiveTdee === null || this.effectiveTdee <= 0
+            ? 'TDEE_DIALOG.STATE.EMPTY'
+            : (this.insight?.adaptiveTdee ?? 0) > 0
+              ? 'TDEE_DIALOG.STATE.ADAPTIVE'
+              : 'TDEE_DIALOG.STATE.ESTIMATED';
+    public readonly summaryKey =
+        this.effectiveTdee === null || this.effectiveTdee <= 0
+            ? 'TDEE_DIALOG.SUMMARY.EMPTY'
+            : (this.insight?.adaptiveTdee ?? 0) > 0
+              ? 'TDEE_DIALOG.SUMMARY.ADAPTIVE'
+              : 'TDEE_DIALOG.SUMMARY.ESTIMATED';
     public readonly showSuggestion =
-        !!this.insight?.suggestedCalorieTarget &&
-        !!this.insight.currentCalorieTarget &&
-        Math.abs(this.insight.suggestedCalorieTarget - this.insight.currentCalorieTarget) > 50;
-    public readonly hintKey = this.insight?.goalAdjustmentHint
-        ? `TDEE_CARD.HINTS.${this.insight.goalAdjustmentHint.replace('hint.', '').toUpperCase()}`
-        : null;
+        (this.insight?.suggestedCalorieTarget ?? 0) > 0 &&
+        (this.insight?.currentCalorieTarget ?? 0) > 0 &&
+        Math.abs((this.insight?.suggestedCalorieTarget ?? 0) - (this.insight?.currentCalorieTarget ?? 0)) > SUGGESTION_DIFF_THRESHOLD;
+    public readonly hintKey = this.buildHintKey();
     public readonly setupItems: readonly TdeeSetupItem[] = [
         {
             key: 'profile',
@@ -99,7 +104,7 @@ export class TdeeInsightDialogComponent {
 
     public applySuggestion(): void {
         const target = this.insight?.suggestedCalorieTarget;
-        if (!target) {
+        if (target === null || target === undefined || target <= 0) {
             return;
         }
 
@@ -112,6 +117,11 @@ export class TdeeInsightDialogComponent {
         }
 
         const sign = value > 0 ? '+' : '';
-        return `${sign}${value.toFixed(2)}`;
+        return `${sign}${value.toFixed(WEIGHT_TREND_FRACTION_DIGITS)}`;
+    }
+
+    private buildHintKey(): string | null {
+        const hint = this.insight?.goalAdjustmentHint ?? '';
+        return hint.length > 0 ? `TDEE_CARD.HINTS.${hint.replace('hint.', '').toUpperCase()}` : null;
     }
 }
