@@ -1,0 +1,22 @@
+<div class="ai-photo-result__items-header fd-row fd-gap-xs">
+    <span class="ai-photo-result__items-title fd-inline-center fd-gap-xxs">
+        <fd-ui-button
+            class="ai-photo-result__action-btn"
+            variant="secondary"
+            fill="text"
+            icon="refresh"
+            [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+            [ariaLabel]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+            [disabled]="isAnalyzing() || isEditing()"
+            (click)="reanalyze.emit()"
+        />
+    </span>
+    <fd-ui-button size="sm" [variant]="editActionView().variant" [fill]="editActionView().fill" (click)="editAction.emit()">
+        {{ editActionView().labelKey | translate }}
+    </fd-ui-button>
+    @if (isEditing()) {
+        <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="editCancel.emit()">
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
+    }
+</div>

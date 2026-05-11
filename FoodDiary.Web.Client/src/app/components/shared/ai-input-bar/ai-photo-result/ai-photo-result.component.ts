@@ -1,21 +1,26 @@
-import { type CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { NgOptimizedImage } from '@angular/common';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
-import { MealDetailsFieldsComponent } from '../../meal-details-fields/meal-details-fields.component';
 import type { AiInputBarMealDetails } from '../ai-input-bar.types';
-
-type EditableAiItem = {
-    id: string;
-    name: string;
-    nameEn: string;
-    nameLocal: string | null;
-    amount: number;
-    unit: string;
-};
+import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel.component';
+import { AiPhotoEditListComponent } from './ai-photo-edit-list.component';
+import { AiPhotoNutritionSummaryComponent } from './ai-photo-nutrition-summary.component';
+import { AiPhotoPreviewComponent } from './ai-photo-preview.component';
+import type {
+    AiDetailsToggleView,
+    AiEditActionView,
+    AiEditItemDrop,
+    AiEditItemUpdate,
+    AiEditUnitOption,
+    AiNutritionSummaryItem,
+    AiResultRow,
+    EditableAiItem,
+} from './ai-photo-result.types';
+import { AiPhotoResultActionsComponent } from './ai-photo-result-actions.component';
+import { AiPhotoResultRowsComponent } from './ai-photo-result-rows.component';
 
 type AmountChange = {
     id: string;
@@ -30,33 +35,6 @@ type EditChangeSummary = {
     amountChanges: AmountChange[];
 };
 
-interface AiResultRow {
-    key: string;
-    displayName: string;
-    amountLabel: string;
-}
-
-interface AiNutritionSummaryItem {
-    labelKey: string;
-    value: string;
-}
-
-interface AiEditUnitOption {
-    value: string;
-    label: string;
-}
-
-interface AiEditActionView {
-    variant: 'primary' | 'secondary';
-    fill: 'solid' | 'outline';
-    labelKey: string;
-}
-
-interface AiDetailsToggleView {
-    icon: string;
-    labelKey: string;
-}
-
 const DEFAULT_SATIETY_LEVEL = 3;
 const MAX_LEGACY_SATIETY_LEVEL = 5;
 const LEGACY_SATIETY_SCALE_FACTOR = 2;
@@ -67,13 +45,15 @@ const NUTRITION_FRACTION_THRESHOLD = 0.01;
     selector: 'fd-ai-photo-result',
     standalone: true,
     imports: [
-        NgOptimizedImage,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiIconComponent,
-        DragDropModule,
-        MealDetailsFieldsComponent,
+        AiPhotoPreviewComponent,
+        AiPhotoResultActionsComponent,
+        AiPhotoEditListComponent,
+        AiPhotoResultRowsComponent,
+        AiPhotoNutritionSummaryComponent,
+        AiPhotoDetailsPanelComponent,
     ],
     templateUrl: './ai-photo-result.component.html',
     styleUrls: ['./ai-photo-result.component.scss'],
@@ -192,12 +172,6 @@ export class AiPhotoResultComponent {
         return unitKey !== null ? this.translateService.instant(unitKey) : unit;
     }
 
-    public removeEditItemAriaLabel(item: EditableAiItem): string {
-        return this.translateService.instant('AI_INPUT_BAR.REMOVE_AI_ITEM', {
-            name: item.name.trim().length > 0 ? item.name.trim() : item.nameEn.trim().length > 0 ? item.nameEn.trim() : '?',
-        });
-    }
-
     public startEditing(): void {
         const items =
             this.results().length > 0
@@ -265,7 +239,7 @@ export class AiPhotoResultComponent {
         this.isEditing.set(false);
     }
 
-    public onEditItemDrop(event: CdkDragDrop<EditableAiItem[]>): void {
+    public reorderEditItems(event: AiEditItemDrop): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -273,6 +247,10 @@ export class AiPhotoResultComponent {
         const items = [...this.editItems()];
         moveItemInArray(items, event.previousIndex, event.currentIndex);
         this.editItems.set(items);
+    }
+
+    public updateEditItemFromView(update: AiEditItemUpdate): void {
+        this.updateEditItem(update.index, update.field, update.value);
     }
 
     public updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {

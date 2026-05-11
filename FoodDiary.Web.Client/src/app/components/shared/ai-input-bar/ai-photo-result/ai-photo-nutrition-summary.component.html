@@ -1,0 +1,10 @@
+<div class="ai-photo-result__nutrition">
+    <div class="ai-photo-result__nutrition-grid">
+        @for (item of items(); track item.labelKey) {
+            <div class="ai-photo-result__nutrition-item fd-stack">
+                <span class="ai-photo-result__nutrition-label fd-ui-overline">{{ item.labelKey | translate }}</span>
+                <span class="ai-photo-result__nutrition-value fd-ui-stat-value">{{ item.value }}</span>
+            </div>
+        }
+    </div>
+</div>

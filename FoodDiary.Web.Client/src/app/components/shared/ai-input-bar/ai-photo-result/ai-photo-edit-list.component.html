@@ -1,0 +1,40 @@
+<div class="ai-photo-result__edit-list fd-stack fd-gap-xs" cdkDropList (cdkDropListDropped)="onDrop($event)">
+    @for (item of items(); track item.id; let i = $index) {
+        <div class="ai-photo-result__edit-row fd-gap-xs" cdkDrag>
+            <div class="ai-photo-result__edit-handle fd-inline-center" cdkDragHandle>
+                <fd-ui-icon name="drag_indicator" />
+            </div>
+            <input
+                #nameInput
+                class="ai-photo-result__edit-input ai-photo-result__edit-input--name"
+                type="text"
+                [value]="item.name"
+                (input)="updateItem(i, 'name', nameInput.value)"
+            />
+            <input
+                #amountInput
+                class="ai-photo-result__edit-input ai-photo-result__edit-input--amount"
+                type="number"
+                [value]="item.amount"
+                (input)="updateItem(i, 'amount', amountInput.value)"
+            />
+            <select #unitSelect class="ai-photo-result__edit-select" [value]="item.unit" (change)="updateItem(i, 'unit', unitSelect.value)">
+                @for (unit of unitOptions(); track unit.value) {
+                    <option [value]="unit.value">{{ unit.label }}</option>
+                }
+            </select>
+            <fd-ui-button
+                class="ai-photo-result__edit-remove"
+                variant="danger"
+                fill="text"
+                icon="delete"
+                [fdUiHint]="'COMMON.DELETE' | translate"
+                [ariaLabel]="removeItemAriaLabel(item)"
+                (click)="itemRemoved.emit(i)"
+            />
+        </div>
+    }
+</div>
+<fd-ui-button class="ai-photo-result__edit-add" variant="secondary" appearance="dashed" fullWidth (click)="itemAdded.emit()">
+    + {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
+</fd-ui-button>

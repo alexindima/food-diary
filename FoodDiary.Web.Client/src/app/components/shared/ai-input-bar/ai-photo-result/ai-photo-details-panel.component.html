@@ -1,0 +1,40 @@
+@if (isVisible()) {
+    <div class="ai-photo-result__actions fd-ui-actions fd-ui-actions--split">
+        @if (showDetails()) {
+            <fd-ui-button class="ai-photo-result__details-toggle" variant="secondary" fill="text" (click)="detailsToggle.emit()">
+                <span>{{ toggleView().labelKey | translate }}</span>
+                <fd-ui-icon [name]="toggleView().icon" />
+            </fd-ui-button>
+        } @else {
+            <span></span>
+        }
+        <fd-ui-button
+            class="ai-photo-result__submit-action"
+            size="sm"
+            variant="primary"
+            [disabled]="submitDisabled()"
+            (click)="mealSubmit.emit()"
+        >
+            {{ submitLabelKey() | translate }}
+        </fd-ui-button>
+    </div>
+
+    <div class="ai-photo-result__details" [class.ai-photo-result__details--expanded]="showDetails() && isExpanded()">
+        <fd-meal-details-fields
+            class="ai-photo-result__details-inner"
+            density="regular"
+            satietyLayout="columns"
+            [date]="date()"
+            [time]="time()"
+            [comment]="comment()"
+            [preMealSatietyLevel]="preMealSatietyLevel()"
+            [postMealSatietyLevel]="postMealSatietyLevel()"
+            [surface]="false"
+            (dateChange)="dateChange.emit($event)"
+            (timeChange)="timeChange.emit($event)"
+            (commentChange)="commentChange.emit($event)"
+            (preMealSatietyLevelChange)="preMealSatietyLevelChange.emit($event)"
+            (postMealSatietyLevelChange)="postMealSatietyLevelChange.emit($event)"
+        />
+    </div>
+}

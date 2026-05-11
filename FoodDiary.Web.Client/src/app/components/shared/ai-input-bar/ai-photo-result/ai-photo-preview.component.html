@@ -1,0 +1,32 @@
+@if (imageUrl() || sourceText()) {
+    <div class="ai-photo-result__preview-wrap">
+        @if (imageUrl(); as previewUrl) {
+            <img
+                class="ai-photo-result__preview"
+                width="512"
+                height="512"
+                [ngSrc]="previewUrl"
+                [alt]="'AI_INPUT_BAR.PHOTO_PREVIEW_ALT' | translate"
+            />
+        } @else {
+            <div class="ai-photo-result__text-preview fd-stack fd-gap-xs">
+                <div class="ai-photo-result__text-preview-label fd-ui-overline">{{ sourceTextLabelKey() | translate }}</div>
+                <div class="ai-photo-result__text-preview-value fd-ui-body">{{ sourceText() }}</div>
+            </div>
+        }
+        @if (isAnalyzing() || isNutritionLoading()) {
+            <div class="ai-photo-result__scan-overlay">
+                <div class="ai-photo-result__scan-line" [class.ai-photo-result__scan-line--nutrition]="isNutritionLoading()"></div>
+            </div>
+        }
+        @if (isAnalyzing()) {
+            <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
+                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
+            </div>
+        } @else if (isNutritionLoading()) {
+            <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
+                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION' | translate }}
+            </div>
+        }
+    </div>
+}

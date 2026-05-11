@@ -1,0 +1,8 @@
+<div class="ai-photo-result__table fd-stack fd-gap-xxs">
+    @for (item of rows(); track item.key) {
+        <div class="ai-photo-result__table-row fd-row fd-justify-between">
+            <span class="ai-photo-result__item-name fd-ui-body-sm">{{ item.displayName }}</span>
+            <span class="ai-photo-result__item-amount fd-ui-caption">{{ item.amountLabel }}</span>
+        </div>
+    }
+</div>
