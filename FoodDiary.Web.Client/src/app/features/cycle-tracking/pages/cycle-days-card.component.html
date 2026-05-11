@@ -1,0 +1,34 @@
+<fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.DAYS_TITLE' | translate">
+    @if (isLoading()) {
+        <div class="cycle-tracking__loader fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
+    } @else if (items().length === 0) {
+        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_DAYS' | translate }}</p>
+    } @else {
+        <div class="cycle-tracking__days fd-stack fd-gap-card-header">
+            @for (item of items(); track item.day.id) {
+                <fd-ui-accent-surface class="cycle-tracking__day" accentSide="left" [accentColor]="item.accentColor" [tinted]="true">
+                    <div class="cycle-tracking__day-header fd-row fd-justify-between fd-gap-card-header">
+                        <div class="cycle-tracking__day-date fd-ui-stat-value">
+                            {{ item.dateLabel }}
+                        </div>
+                        <div
+                            class="cycle-tracking__day-badge fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text"
+                            [class.cycle-tracking__day-badge--period]="item.day.isPeriod"
+                        >
+                            {{ item.badgeLabelKey | translate }}
+                        </div>
+                    </div>
+                    <div class="cycle-tracking__symptoms-row fd-ui-body-sm fd-grid fd-gap-card-header">
+                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_PAIN' | translate }}: {{ item.day.symptoms.pain }}/9</span>
+                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_MOOD' | translate }}: {{ item.day.symptoms.mood }}/9</span>
+                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_ENERGY' | translate }}: {{ item.day.symptoms.energy }}/9</span>
+                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_SLEEP' | translate }}: {{ item.day.symptoms.sleepQuality }}/9</span>
+                    </div>
+                    @if (item.day.notes) {
+                        <p class="cycle-tracking__day-notes fd-ui-caption">{{ item.day.notes }}</p>
+                    }
+                </fd-ui-accent-surface>
+            }
+        </div>
+    }
+</fd-ui-card>

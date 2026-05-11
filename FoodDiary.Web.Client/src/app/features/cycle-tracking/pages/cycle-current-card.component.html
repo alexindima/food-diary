@@ -1,0 +1,93 @@
+<fd-ui-card class="cycle-tracking__card" [title]="titleKey() | translate">
+    @if (isLoading()) {
+        <div class="cycle-tracking__loader fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
+    } @else if (current(); as currentCycle) {
+        <div class="cycle-tracking__summary fd-grid fd-gap-card-header">
+            <fd-ui-accent-surface
+                class="cycle-tracking__summary-item fd-ui-summary-surface"
+                accentSide="top"
+                accentColor="var(--fd-color-purple-500)"
+                [tinted]="true"
+            >
+                <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                    'CYCLE_TRACKING.STARTED' | translate
+                }}</span>
+                <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                    {{ currentCycle.startDateLabel }}
+                </strong>
+            </fd-ui-accent-surface>
+            <fd-ui-accent-surface
+                class="cycle-tracking__summary-item fd-ui-summary-surface"
+                accentSide="top"
+                accentColor="var(--fd-color-sky-500)"
+                [tinted]="true"
+            >
+                <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                    'CYCLE_TRACKING.AVG_LENGTH' | translate
+                }}</span>
+                <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                    {{ currentCycle.cycle.averageLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}
+                </strong>
+            </fd-ui-accent-surface>
+            <fd-ui-accent-surface
+                class="cycle-tracking__summary-item fd-ui-summary-surface"
+                accentSide="top"
+                accentColor="var(--fd-color-teal-500)"
+                [tinted]="true"
+            >
+                <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                    'CYCLE_TRACKING.LUTEAL_LENGTH' | translate
+                }}</span>
+                <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                    {{ currentCycle.cycle.lutealLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}
+                </strong>
+            </fd-ui-accent-surface>
+        </div>
+
+        @if (prediction(); as cyclePrediction) {
+            <div class="cycle-tracking__predictions fd-grid fd-gap-card-header">
+                <fd-ui-accent-surface
+                    class="cycle-tracking__prediction fd-ui-summary-surface"
+                    accentSide="top"
+                    accentColor="var(--fd-color-orange-500)"
+                    [tinted]="true"
+                >
+                    <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                        'CYCLE_TRACKING.PRED_NEXT' | translate
+                    }}</span>
+                    <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                        {{ cyclePrediction.nextPeriodStartLabel }}
+                    </strong>
+                </fd-ui-accent-surface>
+                <fd-ui-accent-surface
+                    class="cycle-tracking__prediction fd-ui-summary-surface"
+                    accentSide="top"
+                    accentColor="var(--fd-color-green-500)"
+                    [tinted]="true"
+                >
+                    <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                        'CYCLE_TRACKING.PRED_OVULATION' | translate
+                    }}</span>
+                    <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                        {{ cyclePrediction.ovulationDateLabel }}
+                    </strong>
+                </fd-ui-accent-surface>
+                <fd-ui-accent-surface
+                    class="cycle-tracking__prediction fd-ui-summary-surface"
+                    accentSide="top"
+                    accentColor="var(--fd-color-primary-500)"
+                    [tinted]="true"
+                >
+                    <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                        'CYCLE_TRACKING.PRED_PMS' | translate
+                    }}</span>
+                    <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                        {{ cyclePrediction.pmsStartLabel }}
+                    </strong>
+                </fd-ui-accent-surface>
+            </div>
+        }
+    } @else {
+        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_COPY' | translate }}</p>
+    }
+</fd-ui-card>

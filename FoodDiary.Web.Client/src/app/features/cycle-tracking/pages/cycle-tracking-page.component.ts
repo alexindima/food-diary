@@ -1,9 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
@@ -14,13 +12,14 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
-import type { CycleDay, CyclePredictions, CycleResponse } from '../models/cycle.data';
+import { CycleCurrentCardComponent } from './cycle-current-card.component';
+import { CycleDaysCardComponent } from './cycle-days-card.component';
+import type { CycleDayViewModel, CyclePredictionViewModel, CycleViewModel } from './cycle-tracking-page.models';
 
 @Component({
     selector: 'fd-cycle-tracking-page',
     standalone: true,
     imports: [
-        CommonModule,
         TranslatePipe,
         PageHeaderComponent,
         PageBodyComponent,
@@ -31,7 +30,8 @@ import type { CycleDay, CyclePredictions, CycleResponse } from '../models/cycle.
         FdUiInputComponent,
         FdUiDateInputComponent,
         FdUiCheckboxComponent,
-        FdUiAccentSurfaceComponent,
+        CycleCurrentCardComponent,
+        CycleDaysCardComponent,
     ],
     templateUrl: './cycle-tracking-page.component.html',
     styleUrl: './cycle-tracking-page.component.scss',
@@ -137,23 +137,4 @@ export class CycleTrackingPageComponent {
             timeZone,
         }).format(date);
     }
-}
-
-interface CycleViewModel {
-    cycle: CycleResponse;
-    startDateLabel: string;
-}
-
-interface CyclePredictionViewModel {
-    prediction: CyclePredictions;
-    nextPeriodStartLabel: string;
-    ovulationDateLabel: string;
-    pmsStartLabel: string;
-}
-
-interface CycleDayViewModel {
-    day: CycleDay;
-    dateLabel: string;
-    accentColor: string;
-    badgeLabelKey: string;
 }
