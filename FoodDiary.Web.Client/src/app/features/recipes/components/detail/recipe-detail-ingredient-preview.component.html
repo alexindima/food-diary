@@ -1,0 +1,18 @@
+@if (ingredients().length) {
+    <section class="recipe-detail__list fd-stack fd-gap-xs">
+        <h3 class="recipe-detail__list-title fd-ui-card-title">
+            {{ 'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate }}
+        </h3>
+        @for (ingredient of ingredients(); track $index) {
+            <div class="recipe-detail__list-row">
+                <span class="fd-ui-body-sm">{{ ingredient.name }}</span>
+                <strong class="fd-ui-body-sm">
+                    {{ ingredient.amount }}
+                    @if (ingredient.unitKey) {
+                        {{ ingredient.unitKey | translate }}
+                    }
+                </strong>
+            </div>
+        }
+    </section>
+}

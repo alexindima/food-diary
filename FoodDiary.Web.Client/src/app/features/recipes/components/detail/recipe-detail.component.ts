@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormControl, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -25,6 +24,7 @@ import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import type { Recipe } from '../../models/recipe.data';
+import { RecipeDetailSummaryComponent } from './recipe-detail-summary.component';
 
 const MACRO_SUMMARY_LIMIT = 3;
 const QUALITY_SCORE_MIN = 0;
@@ -49,8 +49,8 @@ const NUTRIENT_ROUNDING_FACTOR = 100;
         FdUiDialogHeaderDirective,
         FdUiButtonComponent,
         FdUiTabsComponent,
-        FdUiAccentSurfaceComponent,
         NutritionEditorComponent,
+        RecipeDetailSummaryComponent,
     ],
 })
 export class RecipeDetailComponent {
@@ -79,19 +79,9 @@ export class RecipeDetailComponent {
     public readonly qualityScore: number;
     public readonly qualityGrade: string;
     public readonly qualityHintKey: string;
-    public readonly macroBlocks: {
-        labelKey: string;
-        value: number;
-        unitKey: string;
-        color: string;
-        percent: number;
-    }[];
+    public readonly macroBlocks: MacroBlock[];
     public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
-    public readonly ingredientPreview: {
-        name: string;
-        amount: number;
-        unitKey: string | null;
-    }[];
+    public readonly ingredientPreview: IngredientPreviewItem[];
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',
         proteins: 'proteins',
@@ -172,13 +162,7 @@ export class RecipeDetailComponent {
         return this.recipe.isOwnedByCurrentUser ? 'RECIPE_DETAIL.WARNING_IN_USE' : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
     }
 
-    private buildMacroBlocks(datasetValues: number[]): {
-        labelKey: string;
-        value: number;
-        unitKey: string;
-        color: string;
-        percent: number;
-    }[] {
+    private buildMacroBlocks(datasetValues: number[]): MacroBlock[] {
         return [
             {
                 labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
@@ -254,7 +238,7 @@ export class RecipeDetailComponent {
         return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_FULL));
     }
 
-    private buildIngredientPreview(): { name: string; amount: number; unitKey: string | null }[] {
+    private buildIngredientPreview(): IngredientPreviewItem[] {
         return this.recipe.steps
             .flatMap(step => step.ingredients)
             .slice(0, INGREDIENT_PREVIEW_LIMIT)
@@ -535,6 +519,20 @@ export class RecipeDetailComponent {
 }
 
 export type RecipeDetailAction = 'Edit' | 'Delete' | 'Duplicate' | 'FavoriteChanged';
+
+export interface MacroBlock {
+    labelKey: string;
+    value: number;
+    unitKey: string;
+    color: string;
+    percent: number;
+}
+
+export interface IngredientPreviewItem {
+    name: string;
+    amount: number;
+    unitKey: string | null;
+}
 
 export class RecipeDetailActionResult {
     public constructor(
