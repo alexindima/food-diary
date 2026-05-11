@@ -22,6 +22,8 @@ interface AdminUserLoginDeviceSummaryViewModel extends AdminUserLoginDeviceSumma
     label: string;
 }
 
+const ADMIN_USERS_PAGE_SIZE = 20;
+
 @Component({
     selector: 'fd-admin-users',
     standalone: true,
@@ -39,7 +41,7 @@ export class AdminUsersComponent {
     public readonly totalPages = signal(1);
     public readonly totalItems = signal(0);
     public readonly page = signal(1);
-    public readonly limit = 20;
+    public readonly limit = ADMIN_USERS_PAGE_SIZE;
     public readonly isLoading = signal(false);
     public readonly search = signal('');
     public readonly includeDeleted = signal(false);
@@ -73,7 +75,7 @@ export class AdminUsersComponent {
     public loadUsers(): void {
         this.isLoading.set(true);
         this.usersService
-            .getUsers(this.page(), this.limit, this.search().trim() || null, this.includeDeleted())
+            .getUsers(this.page(), this.limit, this.resolveSearchQuery(this.search()), this.includeDeleted())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -120,7 +122,7 @@ export class AdminUsersComponent {
             })
             .afterClosed()
             .subscribe(updated => {
-                if (updated) {
+                if (updated === true) {
                     this.loadUsers();
                 }
             });
@@ -134,7 +136,7 @@ export class AdminUsersComponent {
             })
             .afterClosed()
             .subscribe(response => {
-                if (!response) {
+                if (response === null || response === undefined) {
                     return;
                 }
 
@@ -148,7 +150,7 @@ export class AdminUsersComponent {
     public loadSessions(): void {
         this.isSessionsLoading.set(true);
         this.usersService
-            .getImpersonationSessions(this.sessionsPage(), this.limit, this.sessionsSearch().trim() || null)
+            .getImpersonationSessions(this.sessionsPage(), this.limit, this.resolveSearchQuery(this.sessionsSearch()))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -184,7 +186,7 @@ export class AdminUsersComponent {
     public loadLoginEvents(): void {
         this.isLoginEventsLoading.set(true);
         this.usersService
-            .getLoginEvents(this.loginEventsPage(), this.limit, this.loginEventsSearch().trim() || null)
+            .getLoginEvents(this.loginEventsPage(), this.limit, this.resolveSearchQuery(this.loginEventsSearch()))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -233,6 +235,11 @@ export class AdminUsersComponent {
 
     private formatSummaryKey(key: string): string {
         const [category, value] = key.split(':', 2);
-        return `${category.toUpperCase()} / ${value || 'Unknown'}`;
+        return `${category.toUpperCase()} / ${value.length > 0 ? value : 'Unknown'}`;
+    }
+
+    private resolveSearchQuery(value: string): string | null {
+        const trimmed = value.trim();
+        return trimmed.length > 0 ? trimmed : null;
     }
 }

@@ -18,6 +18,9 @@ interface RecipeCommentViewModel {
     dateLabel: string;
 }
 
+const COMMENTS_PAGE_SIZE = 10;
+const COMMENT_MAX_LENGTH = 2_000;
+
 @Component({
     selector: 'fd-recipe-comments',
     templateUrl: './recipe-comments.component.html',
@@ -38,12 +41,12 @@ export class RecipeCommentsComponent {
     public readonly isLoading = signal(false);
     public readonly totalItems = signal(0);
     public readonly currentPage = signal(1);
-    public readonly pageSize = 10;
-    public readonly commentControl = new FormControl('', [Validators.required, Validators.maxLength(2000)]);
+    public readonly pageSize = COMMENTS_PAGE_SIZE;
+    public readonly commentControl = new FormControl('', [Validators.required, Validators.maxLength(COMMENT_MAX_LENGTH)]);
     public readonly editingCommentId = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
     public readonly hasMore = computed(() => this.comments().length < this.totalItems());
-    public readonly submitLabelKey = computed(() => (this.editingCommentId() ? 'COMMON.SAVE' : 'COMMENTS.POST'));
+    public readonly submitLabelKey = computed(() => (this.editingCommentId() !== null ? 'COMMON.SAVE' : 'COMMENTS.POST'));
     public readonly commentItems = computed<RecipeCommentViewModel[]>(() => {
         this.languageVersion();
 
@@ -79,9 +82,10 @@ export class RecipeCommentsComponent {
         const editId = this.editingCommentId();
         this.isSubmitting.set(true);
 
-        const operation = editId
-            ? this.commentService.updateComment(this.recipeId(), editId, { text })
-            : this.commentService.createComment(this.recipeId(), { text });
+        const operation =
+            editId !== null
+                ? this.commentService.updateComment(this.recipeId(), editId, { text })
+                : this.commentService.createComment(this.recipeId(), { text });
 
         operation
             .pipe(
@@ -119,7 +123,7 @@ export class RecipeCommentsComponent {
             })
             .afterClosed()
             .subscribe(confirmed => {
-                if (confirmed) {
+                if (confirmed === true) {
                     this.commentService
                         .deleteComment(this.recipeId(), comment.id)
                         .pipe(takeUntilDestroyed(this.destroyRef))

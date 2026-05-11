@@ -27,6 +27,10 @@ interface FastingTelemetryPresetViewModel extends FastingTelemetryPresetSummary 
     completionRatePercentText: string;
 }
 
+const MS_PER_MINUTE = 60_000;
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_DAY = 24;
+
 @Component({
     selector: 'fd-admin-dashboard',
     standalone: true,
@@ -46,7 +50,7 @@ export class AdminDashboardComponent {
     public readonly fastingTelemetry = signal<FastingTelemetrySummary | null>(null);
     public readonly fastingTelemetryView = computed<FastingTelemetryViewModel | null>(() => {
         const telemetry = this.fastingTelemetry();
-        if (!telemetry) {
+        if (telemetry === null) {
             return null;
         }
 
@@ -122,7 +126,7 @@ export class AdminDashboardComponent {
     }
 
     private formatRelativeTime(value: string | null): string | null {
-        if (!value) {
+        if (value === null || value.length === 0) {
             return null;
         }
 
@@ -132,19 +136,19 @@ export class AdminDashboardComponent {
         }
 
         const diffMs = timestamp - Date.now();
-        const diffMinutes = Math.round(diffMs / 60000);
+        const diffMinutes = Math.round(diffMs / MS_PER_MINUTE);
         const formatter = new Intl.RelativeTimeFormat('en-US', { numeric: 'auto' });
 
-        if (Math.abs(diffMinutes) < 60) {
+        if (Math.abs(diffMinutes) < MINUTES_PER_HOUR) {
             return formatter.format(diffMinutes, 'minute');
         }
 
-        const diffHours = Math.round(diffMinutes / 60);
-        if (Math.abs(diffHours) < 24) {
+        const diffHours = Math.round(diffMinutes / MINUTES_PER_HOUR);
+        if (Math.abs(diffHours) < HOURS_PER_DAY) {
             return formatter.format(diffHours, 'hour');
         }
 
-        const diffDays = Math.round(diffHours / 24);
+        const diffDays = Math.round(diffHours / HOURS_PER_DAY);
         return formatter.format(diffDays, 'day');
     }
 }

@@ -18,6 +18,7 @@ import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
 type ResetState = 'ready' | 'invalid' | 'error';
 const ERROR_FIELDS = ['password', 'confirmPassword'] as const;
+const PASSWORD_MIN_LENGTH = 6;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
 
@@ -52,7 +53,10 @@ export class PasswordResetComponent {
     public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
 
     public readonly form = new FormGroup<PasswordResetFormGroup>({
-        password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
+        password: new FormControl<string>('', {
+            nonNullable: true,
+            validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
+        }),
         confirmPassword: new FormControl<string>('', {
             nonNullable: true,
             validators: [Validators.required, matchFieldValidator('password')],
@@ -79,7 +83,7 @@ export class PasswordResetComponent {
         }
 
         const { userId, token } = this.token();
-        if (!userId || !token) {
+        if (userId === null || userId.length === 0 || token === null || token.length === 0) {
             this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
             return;
@@ -131,40 +135,46 @@ export class PasswordResetComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control?.invalid) {
+        if (control?.invalid !== true) {
             return null;
         }
 
-        const shouldShow = control.touched || control.dirty;
+        const shouldShow = control.touched === true || control.dirty === true;
         if (!shouldShow) {
             return null;
         }
         const errors = control.errors;
-        if (!errors) {
+        if (errors === null) {
             return null;
         }
 
         for (const key of Object.keys(errors)) {
-            const resolver = this.validationErrors?.[key];
-            if (!resolver) {
-                continue;
+            const message = this.resolveValidationErrorMessage(key, errors[key]);
+            if (message !== null) {
+                return message;
             }
-
-            const controlError: unknown = errors[key];
-            const controlParams = this.getValidationParams(controlError);
-            const result = resolver(controlError);
-
-            if (typeof result === 'string') {
-                return this.translateService.instant(result, controlParams);
-            }
-
-            return this.translateService.instant(result.key, {
-                ...controlParams,
-                ...(result.params ?? {}),
-            });
         }
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
+    private resolveValidationErrorMessage(key: string, controlError: unknown): string | null {
+        const resolver = this.validationErrors?.[key];
+        if (resolver === undefined) {
+            return null;
+        }
+
+        const controlParams = this.getValidationParams(controlError);
+        const result = resolver(controlError);
+
+        if (typeof result === 'string') {
+            return this.translateService.instant(result, controlParams);
+        }
+
+        return this.translateService.instant(result.key, {
+            ...controlParams,
+            ...(result.params ?? {}),
+        });
     }
 
     private resolveToken(): void {
@@ -173,7 +183,7 @@ export class PasswordResetComponent {
         const token = params.get('token');
         this.token.set({ userId, token });
 
-        if (!userId || !token) {
+        if (userId === null || userId.length === 0 || token === null || token.length === 0) {
             this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
         }

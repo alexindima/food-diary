@@ -11,6 +11,9 @@ import type { RecursivePartial } from '../../../shared/lib/common.data';
 import type { NutrientData } from '../../../shared/models/charts.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
+const NUTRIENT_COLOR_WIDTH_MULTIPLIER = 2;
+const TOOLTIP_DECIMAL_PLACES = 2;
+
 @Component({
     selector: 'fd-nutrients-summary',
     imports: [BaseChartDirective, DecimalPipe, TranslatePipe, NgStyle, CustomGroupComponent, NgTemplateOutlet],
@@ -58,7 +61,7 @@ export class NutrientsSummaryComponent {
         const fontSize = this.mergedConfig().styles.info.lineStyles.nutrients.fontSize;
         return {
             height: `${fontSize}px`,
-            width: `${fontSize * 2}px`,
+            width: `${fontSize * NUTRIENT_COLOR_WIDTH_MULTIPLIER}px`,
         };
     });
     public readonly chartsWrapperStyles = computed(() => {
@@ -129,35 +132,43 @@ export class NutrientsSummaryComponent {
     }
 
     private mergeConfig(userConfig: Partial<NutrientsSummaryConfig>): NutrientsSummaryConfigInternal {
+        const styles = userConfig.styles;
+        const commonStyles = styles?.common;
+        const infoBreakpoints = commonStyles?.infoBreakpoints;
+        const chartStyles = styles?.charts;
+        const chartBreakpoints = chartStyles?.breakpoints;
+        const infoStyles = styles?.info;
+        const nutrientLineStyles = infoStyles?.lineStyles?.nutrients;
+
         return {
             ...DEFAULT_CONFIG,
             ...userConfig,
             styles: {
                 ...DEFAULT_CONFIG.styles,
-                ...userConfig.styles,
+                ...styles,
                 common: {
                     ...DEFAULT_CONFIG.styles.common,
-                    ...userConfig.styles?.common,
+                    ...commonStyles,
                     infoBreakpoints: {
                         ...DEFAULT_CONFIG.styles.common.infoBreakpoints,
-                        ...userConfig.styles?.common?.infoBreakpoints,
+                        ...infoBreakpoints,
                     },
                 },
                 charts: {
                     ...DEFAULT_CONFIG.styles.charts,
-                    ...userConfig.styles?.charts,
+                    ...chartStyles,
                     breakpoints: {
                         ...DEFAULT_CONFIG.styles.charts.breakpoints,
-                        ...userConfig.styles?.charts?.breakpoints,
+                        ...chartBreakpoints,
                     },
                 },
                 info: {
                     ...DEFAULT_CONFIG.styles.info,
-                    ...userConfig.styles?.info,
+                    ...infoStyles,
                     lineStyles: {
                         nutrients: {
                             ...DEFAULT_CONFIG.styles.info.lineStyles.nutrients,
-                            ...userConfig.styles?.info?.lineStyles?.nutrients,
+                            ...nutrientLineStyles,
                         },
                     },
                 },
@@ -189,9 +200,10 @@ export class NutrientsSummaryComponent {
     };
 
     private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>): string {
-        const label = context.label || '';
-        const value = Number(context.raw) || 0;
-        const formattedValue = parseFloat(value.toFixed(2));
+        const label = context.label.length > 0 ? context.label : '';
+        const rawValue = Number(context.raw);
+        const value = Number.isNaN(rawValue) ? 0 : rawValue;
+        const formattedValue = parseFloat(value.toFixed(TOOLTIP_DECIMAL_PLACES));
 
         return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
     }
@@ -200,7 +212,7 @@ export class NutrientsSummaryComponent {
 interface NutrientsSummaryConfigInternal {
     styles: {
         common: {
-            gap: 16;
+            gap: number;
             infoBreakpoints: {
                 columnLayout: number;
                 chartBlockSize: number;
