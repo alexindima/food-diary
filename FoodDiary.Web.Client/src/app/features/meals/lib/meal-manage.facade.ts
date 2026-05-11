@@ -48,6 +48,10 @@ import {
 } from '../models/meal.data';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
 
+const DEFAULT_ITEM_AMOUNT = 1;
+const MIN_NUTRITION_VALUE = 0;
+const MIN_ITEM_AMOUNT = 0.01;
+
 @Injectable({ providedIn: 'root' })
 export class MealManageFacade {
     private readonly mealService = inject(MealService);
@@ -70,7 +74,7 @@ export class MealManageFacade {
             .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { preset: 'confirm' })
             .afterClosed()
             .subscribe(confirmed => {
-                if (confirmed) {
+                if (confirmed === true) {
                     void this.navigationService.navigateToPremiumAccessAsync();
                 }
             });
@@ -81,7 +85,7 @@ export class MealManageFacade {
         consumption: Consumption | null,
         consumptionData: ConsumptionManageDto,
     ): Promise<Consumption | null> {
-        return consumption
+        return consumption !== null
             ? await firstValueFrom(this.mealService.update(consumption.id, consumptionData))
             : await firstValueFrom(this.mealService.create(consumptionData));
     }
@@ -128,9 +132,10 @@ export class MealManageFacade {
     public async openEditAiPhotoSessionDialogAsync(session: ConsumptionAiSessionManageDto): Promise<ConsumptionAiSessionManageDto | null> {
         const { MealPhotoRecognitionDialogComponent } =
             await import('../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component');
-        const selection: ImageSelection | null = session.imageUrl
-            ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
-            : null;
+        const selection: ImageSelection | null =
+            session.imageUrl !== null && session.imageUrl !== undefined && session.imageUrl.length > 0
+                ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
+                : null;
 
         return (
             (await firstValueFrom(
@@ -214,7 +219,7 @@ export class MealManageFacade {
                 .afterClosed(),
         );
 
-        if (!selection) {
+        if (selection === null || selection === undefined) {
             return;
         }
 
@@ -231,10 +236,10 @@ export class MealManageFacade {
         group.patchValue({
             recipe: selection.recipe,
             product: null,
-            amount: 1,
+            amount: DEFAULT_ITEM_AMOUNT,
         });
         this.configureItemType(group, ConsumptionSourceType.Recipe);
-        this.ensureRecipeWeightForExistingItem(group, 1, selection.recipe);
+        this.ensureRecipeWeightForExistingItem(group, DEFAULT_ITEM_AMOUNT, selection.recipe);
     }
 
     public ensureRecipeWeightForExistingItem(
@@ -242,12 +247,12 @@ export class MealManageFacade {
         servingsAmount: number,
         recipe: Recipe | null,
     ): void {
-        if (!recipe) {
+        if (recipe === null) {
             return;
         }
 
         this.recipeWeight.loadServingWeight(recipe).subscribe(servingWeight => {
-            if (!servingWeight) {
+            if (servingWeight === null || servingWeight <= 0) {
                 return;
             }
 
@@ -258,7 +263,7 @@ export class MealManageFacade {
 
     public async resolveRecipeServingsToGramsAsync(recipe: Recipe | null, servingsAmount: number): Promise<number> {
         const servingWeight = await firstValueFrom(this.recipeWeight.loadServingWeight(recipe));
-        return servingWeight && servingWeight > 0 ? servingsAmount * servingWeight : servingsAmount;
+        return servingWeight !== null && servingWeight > 0 ? servingsAmount * servingWeight : servingsAmount;
     }
 
     public convertRecipeGramsToServings(recipe: Recipe | null, grams: number): number {
@@ -272,7 +277,7 @@ export class MealManageFacade {
     public createItemsValidator(getAiSessions: () => ConsumptionAiSessionManageDto[]): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value as ConsumptionItemFormValues[] | null;
-            const hasManualItems = Array.isArray(value) ? value.some(item => Boolean(item.product) || Boolean(item.recipe)) : false;
+            const hasManualItems = Array.isArray(value) ? value.some(item => item.product !== null || item.recipe !== null) : false;
             const hasAiItems = getAiSessions().length > 0;
             return hasManualItems || hasAiItems ? null : { nonEmptyArray: true };
         };
@@ -294,7 +299,7 @@ export class MealManageFacade {
                     group.controls.recipe.setValidators([Validators.required]);
                     group.controls.product.clearValidators();
                 }
-                group.controls.amount.setValidators([Validators.required, Validators.min(0.01)]);
+                group.controls.amount.setValidators([Validators.required, Validators.min(MIN_ITEM_AMOUNT)]);
             }
 
             group.controls.product.updateValueAndValidity({ emitEvent: false });
@@ -306,12 +311,14 @@ export class MealManageFacade {
     }
 
     public updateManualNutritionValidators(form: FormGroup<ConsumptionFormData>, isAuto: boolean): void {
-        const caloriesValidators = isAuto ? [Validators.min(0)] : [Validators.required, Validators.min(0)];
+        const caloriesValidators = isAuto
+            ? [Validators.min(MIN_NUTRITION_VALUE)]
+            : [Validators.required, Validators.min(MIN_NUTRITION_VALUE)];
         form.controls.manualCalories.setValidators(caloriesValidators);
         form.controls.manualCalories.updateValueAndValidity({ emitEvent: false });
 
         this.getOptionalManualNutritionControls(form).forEach(control => {
-            control.setValidators([Validators.min(0)]);
+            control.setValidators([Validators.min(MIN_NUTRITION_VALUE)]);
             control.updateValueAndValidity({ emitEvent: false });
         });
     }
@@ -358,7 +365,7 @@ export class MealManageFacade {
     }
 
     private updateAmountControlState(group: FormGroup<ConsumptionItemFormData>): void {
-        const shouldDisable = !group.controls.product.value && !group.controls.recipe.value;
+        const shouldDisable = group.controls.product.value === null && group.controls.recipe.value === null;
         if (shouldDisable && group.controls.amount.enabled) {
             group.controls.amount.disable({ emitEvent: false });
             return;
@@ -378,7 +385,7 @@ export class MealManageFacade {
             return product.baseAmount;
         }
 
-        return 1;
+        return DEFAULT_ITEM_AMOUNT;
     }
 
     private calculateAutoNutritionTotals(
@@ -386,50 +393,55 @@ export class MealManageFacade {
         aiSessions: ConsumptionAiSessionManageDto[],
     ): NutritionTotals {
         const aiTotals = this.getAiNutritionTotals(aiSessions);
-        return items.controls.reduce(
-            (totals, group) => {
-                const sourceType = group.controls.sourceType.value;
-                const amount = group.controls.amount.value ?? 0;
+        return items.controls.reduce((totals, group) => this.addItemNutritionTotals(totals, group), { ...aiTotals });
+    }
 
-                if (sourceType === ConsumptionSourceType.Product) {
-                    const food = group.controls.product.value;
-                    if (!food || food.baseAmount <= 0) {
-                        return totals;
-                    }
+    private addItemNutritionTotals(totals: NutritionTotals, group: FormGroup<ConsumptionItemFormData>): NutritionTotals {
+        const sourceType = group.controls.sourceType.value;
+        const amount = group.controls.amount.value ?? 0;
 
-                    const multiplier = amount / food.baseAmount;
-                    totals.calories += food.caloriesPerBase * multiplier;
-                    totals.proteins += food.proteinsPerBase * multiplier;
-                    totals.fats += food.fatsPerBase * multiplier;
-                    totals.carbs += food.carbsPerBase * multiplier;
-                    totals.fiber += food.fiberPerBase * multiplier;
-                    totals.alcohol += food.alcoholPerBase * multiplier;
-                    return totals;
-                }
+        if (sourceType === ConsumptionSourceType.Product) {
+            return this.addProductNutritionTotals(totals, group.controls.product.value, amount);
+        }
 
-                const recipe = group.controls.recipe.value;
-                if (recipe?.servings && recipe.servings > 0) {
-                    const servings = recipe.servings <= 0 ? 1 : recipe.servings;
-                    const caloriesPerServing = (recipe.totalCalories ?? 0) / servings;
-                    const proteinsPerServing = (recipe.totalProteins ?? 0) / servings;
-                    const fatsPerServing = (recipe.totalFats ?? 0) / servings;
-                    const carbsPerServing = (recipe.totalCarbs ?? 0) / servings;
-                    const fiberPerServing = (recipe.totalFiber ?? 0) / servings;
-                    const alcoholPerServing = (recipe.totalAlcohol ?? 0) / servings;
-                    const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
+        return this.addRecipeNutritionTotals(totals, group.controls.recipe.value, amount);
+    }
 
-                    totals.calories += caloriesPerServing * servingsAmount;
-                    totals.proteins += proteinsPerServing * servingsAmount;
-                    totals.fats += fatsPerServing * servingsAmount;
-                    totals.carbs += carbsPerServing * servingsAmount;
-                    totals.fiber += fiberPerServing * servingsAmount;
-                    totals.alcohol += alcoholPerServing * servingsAmount;
-                }
+    private addProductNutritionTotals(totals: NutritionTotals, food: Product | null, amount: number): NutritionTotals {
+        if (food === null || food.baseAmount <= 0) {
+            return totals;
+        }
 
-                return totals;
-            },
-            { ...aiTotals },
-        );
+        const multiplier = amount / food.baseAmount;
+        totals.calories += food.caloriesPerBase * multiplier;
+        totals.proteins += food.proteinsPerBase * multiplier;
+        totals.fats += food.fatsPerBase * multiplier;
+        totals.carbs += food.carbsPerBase * multiplier;
+        totals.fiber += food.fiberPerBase * multiplier;
+        totals.alcohol += food.alcoholPerBase * multiplier;
+        return totals;
+    }
+
+    private addRecipeNutritionTotals(totals: NutritionTotals, recipe: Recipe | null, amount: number): NutritionTotals {
+        if (recipe === null || recipe.servings <= 0) {
+            return totals;
+        }
+
+        const caloriesPerServing = (recipe.totalCalories ?? 0) / recipe.servings;
+        const proteinsPerServing = (recipe.totalProteins ?? 0) / recipe.servings;
+        const fatsPerServing = (recipe.totalFats ?? 0) / recipe.servings;
+        const carbsPerServing = (recipe.totalCarbs ?? 0) / recipe.servings;
+        const fiberPerServing = (recipe.totalFiber ?? 0) / recipe.servings;
+        const alcoholPerServing = (recipe.totalAlcohol ?? 0) / recipe.servings;
+        const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
+
+        totals.calories += caloriesPerServing * servingsAmount;
+        totals.proteins += proteinsPerServing * servingsAmount;
+        totals.fats += fatsPerServing * servingsAmount;
+        totals.carbs += carbsPerServing * servingsAmount;
+        totals.fiber += fiberPerServing * servingsAmount;
+        totals.alcohol += alcoholPerServing * servingsAmount;
+        return totals;
     }
 
     private getAiNutritionTotals(aiSessions: ConsumptionAiSessionManageDto[]): NutritionTotals {
@@ -485,7 +497,7 @@ export class MealManageFacade {
     }
 
     private isItemEmpty(group: FormGroup<ConsumptionItemFormData>): boolean {
-        const hasSource = Boolean(group.controls.product.value) || Boolean(group.controls.recipe.value);
+        const hasSource = group.controls.product.value !== null || group.controls.recipe.value !== null;
         const amount = group.controls.amount.value ?? 0;
         return !hasSource && amount <= 0;
     }

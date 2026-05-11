@@ -63,6 +63,9 @@ const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
     { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
 ];
 
+const PERCENT_FULL = 100;
+const ADMIN_LOADING_URL_TTL_MS = 30_000;
+
 type DesktopSectionId = 'food' | 'body' | null;
 type MobileSheetId = 'food' | 'body' | 'reports' | 'user' | null;
 
@@ -194,7 +197,7 @@ export class SidebarComponent {
             return 0;
         }
 
-        return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * 100, 100));
+        return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * PERCENT_FULL, PERCENT_FULL));
     });
     private readonly userMenuRef = viewChild<ElementRef<HTMLElement>>('userMenu');
     private readonly mobileSheetRef = viewChild<ElementRef<HTMLElement>>('mobileSheetPanel');
@@ -303,7 +306,7 @@ export class SidebarComponent {
     }
 
     private syncCurrentUser(): void {
-        if (this.currentUser()) {
+        if (this.currentUser() !== null) {
             return;
         }
 
@@ -326,7 +329,8 @@ export class SidebarComponent {
     }
 
     private getCurrentPath(url = this.router.url): string {
-        return url.split('?')[0].split('#')[0] || '/';
+        const path = url.split('?')[0].split('#')[0];
+        return path.length > 0 ? path : '/';
     }
 
     protected toggleFoodTracking(): void {
@@ -338,7 +342,7 @@ export class SidebarComponent {
     }
 
     protected toggleUserMenu(trigger?: HTMLElement): void {
-        if (trigger) {
+        if (trigger !== undefined) {
             this.lastUserMenuTrigger = trigger;
         }
 
@@ -359,7 +363,8 @@ export class SidebarComponent {
     }
 
     protected openAdminPanel(): void {
-        if (!this.isAdmin() || !environment.adminAppUrl) {
+        const adminAppUrl = environment.adminAppUrl;
+        if (!this.isAdmin() || adminAppUrl === undefined || adminAppUrl.length === 0) {
             return;
         }
 
@@ -394,11 +399,11 @@ export class SidebarComponent {
         const adminWindow = window.open(loadingUrl, '_blank');
         window.setTimeout(() => {
             URL.revokeObjectURL(loadingUrl);
-        }, 30_000);
+        }, ADMIN_LOADING_URL_TTL_MS);
 
         this.authService.startAdminSso().subscribe({
             next: response => {
-                const url = new URL('/', environment.adminAppUrl);
+                const url = new URL('/', adminAppUrl);
                 url.searchParams.set('code', response.code);
                 adminWindow?.location.assign(url.toString());
             },
@@ -445,7 +450,7 @@ export class SidebarComponent {
 
     private async confirmUnsavedChangesAsync(): Promise<boolean> {
         const handler = this.unsavedChangesService.getHandler();
-        if (!handler?.hasChanges()) {
+        if (handler?.hasChanges() !== true) {
             return true;
         }
 
@@ -475,7 +480,7 @@ export class SidebarComponent {
     }
 
     private toggleMobileSheet(sheet: Exclude<MobileSheetId, null>, trigger?: HTMLElement): void {
-        if (trigger) {
+        if (trigger !== undefined) {
             this.lastMobileSheetTrigger = trigger;
         }
 
@@ -488,7 +493,8 @@ export class SidebarComponent {
     }
 
     private isRouteActive(route: string, exact: boolean): boolean {
-        const currentPath = this.router.url.split('?')[0].split('#')[0] || '/';
+        const rawPath = this.router.url.split('?')[0].split('#')[0];
+        const currentPath = rawPath.length > 0 ? rawPath : '/';
         if (exact) {
             return currentPath === route;
         }
@@ -519,7 +525,7 @@ export class SidebarComponent {
     }
 
     private focusFirstInteractive(container?: HTMLElement | null): void {
-        if (!container) {
+        if (container === null || container === undefined) {
             return;
         }
 

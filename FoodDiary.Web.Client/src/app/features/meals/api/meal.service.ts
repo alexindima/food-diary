@@ -25,6 +25,15 @@ import {
     type MealOverview,
 } from '../models/meal.data';
 
+const DEFAULT_FAVORITE_LIMIT = 10;
+const DEFAULT_SATIETY_LEVEL = 3;
+const MIN_SATIETY_LEVEL = 1;
+const MAX_SATIETY_LEVEL = 5;
+const SATIETY_NORMALIZATION_DIVISOR = 2;
+const NUTRITION_CLOSE_TOLERANCE = 0.000001;
+const DEFAULT_ITEM_AMOUNT = 1;
+const EMPTY_NUTRITION_VALUE = 0;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -42,7 +51,12 @@ export class MealService extends ApiService {
         );
     }
 
-    public queryOverview(page: number, limit: number, filters: MealFilters, favoriteLimit = 10): Observable<MealOverview> {
+    public queryOverview(
+        page: number,
+        limit: number,
+        filters: MealFilters,
+        favoriteLimit = DEFAULT_FAVORITE_LIMIT,
+    ): Observable<MealOverview> {
         const params = { page, limit, favoriteLimit, ...filters };
         return this.get<ConsumptionOverview>('overview', params).pipe(
             map(response => ({
@@ -141,15 +155,15 @@ export class MealService extends ApiService {
     }
 
     private normalizeSatietyLevel(value: number | null | undefined): number {
-        if (!value) {
-            return 3;
+        if (value === null || value === undefined || value <= 0 || Number.isNaN(value)) {
+            return DEFAULT_SATIETY_LEVEL;
         }
 
-        if (value > 5) {
-            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        if (value > MAX_SATIETY_LEVEL) {
+            return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / SATIETY_NORMALIZATION_DIVISOR)));
         }
 
-        return Math.max(1, value);
+        return Math.max(MIN_SATIETY_LEVEL, value);
     }
 
     private hasAiItems(response: ConsumptionResponseDto): boolean {
@@ -178,19 +192,25 @@ export class MealService extends ApiService {
                         }),
                         totals,
                     ),
-                { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
-            ) ?? { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
+                this.createEmptyNutritionTotals(),
+            ) ?? this.createEmptyNutritionTotals()
         );
     }
 
     private areClose(left: number, right: number): boolean {
-        return Math.abs(left - right) <= 0.000001;
+        return Math.abs(left - right) <= NUTRITION_CLOSE_TOLERANCE;
     }
 
     private mapConsumptionItem(response: ConsumptionItemResponseDto): ConsumptionItem {
-        const product = response.productId ? this.createProductFromSnapshot(response) : null;
-        const recipe = response.recipeId ? this.createRecipeFromSnapshot(response) : null;
-        const sourceType = product ? ConsumptionSourceType.Product : ConsumptionSourceType.Recipe;
+        const product =
+            response.productId !== null && response.productId !== undefined && response.productId.length > 0
+                ? this.createProductFromSnapshot(response)
+                : null;
+        const recipe =
+            response.recipeId !== null && response.recipeId !== undefined && response.recipeId.length > 0
+                ? this.createRecipeFromSnapshot(response)
+                : null;
+        const sourceType = product !== null ? ConsumptionSourceType.Product : ConsumptionSourceType.Recipe;
 
         return {
             id: response.id,
@@ -210,14 +230,14 @@ export class MealService extends ApiService {
             name: response.productName ?? '',
             imageUrl: response.productImageUrl ?? null,
             baseUnit: this.normalizeMeasurementUnit(response.productBaseUnit),
-            baseAmount: response.productBaseAmount ?? 1,
-            defaultPortionAmount: response.productBaseAmount ?? 1,
-            caloriesPerBase: response.productCaloriesPerBase ?? 0,
-            proteinsPerBase: response.productProteinsPerBase ?? 0,
-            fatsPerBase: response.productFatsPerBase ?? 0,
-            carbsPerBase: response.productCarbsPerBase ?? 0,
-            fiberPerBase: response.productFiberPerBase ?? 0,
-            alcoholPerBase: response.productAlcoholPerBase ?? 0,
+            baseAmount: response.productBaseAmount ?? DEFAULT_ITEM_AMOUNT,
+            defaultPortionAmount: response.productBaseAmount ?? DEFAULT_ITEM_AMOUNT,
+            caloriesPerBase: response.productCaloriesPerBase ?? EMPTY_NUTRITION_VALUE,
+            proteinsPerBase: response.productProteinsPerBase ?? EMPTY_NUTRITION_VALUE,
+            fatsPerBase: response.productFatsPerBase ?? EMPTY_NUTRITION_VALUE,
+            carbsPerBase: response.productCarbsPerBase ?? EMPTY_NUTRITION_VALUE,
+            fiberPerBase: response.productFiberPerBase ?? EMPTY_NUTRITION_VALUE,
+            alcoholPerBase: response.productAlcoholPerBase ?? EMPTY_NUTRITION_VALUE,
         };
     }
 
@@ -228,13 +248,13 @@ export class MealService extends ApiService {
             id: response.recipeId ?? '',
             name: response.recipeName ?? '',
             imageUrl: response.recipeImageUrl ?? null,
-            servings: response.recipeServings ?? 1,
-            totalCalories: response.recipeTotalCalories ?? 0,
-            totalProteins: response.recipeTotalProteins ?? 0,
-            totalFats: response.recipeTotalFats ?? 0,
-            totalCarbs: response.recipeTotalCarbs ?? 0,
-            totalFiber: response.recipeTotalFiber ?? 0,
-            totalAlcohol: response.recipeTotalAlcohol ?? 0,
+            servings: response.recipeServings ?? DEFAULT_ITEM_AMOUNT,
+            totalCalories: response.recipeTotalCalories ?? EMPTY_NUTRITION_VALUE,
+            totalProteins: response.recipeTotalProteins ?? EMPTY_NUTRITION_VALUE,
+            totalFats: response.recipeTotalFats ?? EMPTY_NUTRITION_VALUE,
+            totalCarbs: response.recipeTotalCarbs ?? EMPTY_NUTRITION_VALUE,
+            totalFiber: response.recipeTotalFiber ?? EMPTY_NUTRITION_VALUE,
+            totalAlcohol: response.recipeTotalAlcohol ?? EMPTY_NUTRITION_VALUE,
         };
     }
 
@@ -264,7 +284,7 @@ export class MealService extends ApiService {
     }
 
     private normalizeMeasurementUnit(unit?: MeasurementUnit | string | null): MeasurementUnit {
-        if (!unit) {
+        if (unit === null || unit === undefined || unit.length === 0) {
             return MeasurementUnit.G;
         }
 
@@ -274,5 +294,23 @@ export class MealService extends ApiService {
         }
 
         return MeasurementUnit.G;
+    }
+
+    private createEmptyNutritionTotals(): {
+        calories: number;
+        proteins: number;
+        fats: number;
+        carbs: number;
+        fiber: number;
+        alcohol: number;
+    } {
+        return {
+            calories: EMPTY_NUTRITION_VALUE,
+            proteins: EMPTY_NUTRITION_VALUE,
+            fats: EMPTY_NUTRITION_VALUE,
+            carbs: EMPTY_NUTRITION_VALUE,
+            fiber: EMPTY_NUTRITION_VALUE,
+            alcohol: EMPTY_NUTRITION_VALUE,
+        };
     }
 }

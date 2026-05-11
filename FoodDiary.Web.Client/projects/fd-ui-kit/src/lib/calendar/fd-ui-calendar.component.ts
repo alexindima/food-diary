@@ -3,6 +3,19 @@ import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input
 
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 
+const WEEK_DAYS_COUNT = 7;
+const CALENDAR_WEEKS_COUNT = 6;
+const UTC_WEEKDAY_REFERENCE_YEAR = 2024;
+const UTC_WEEKDAY_REFERENCE_MONTH = 0;
+const UTC_WEEKDAY_REFERENCE_DAY = 7;
+const PREVIOUS_DAY_OFFSET = -1;
+const NEXT_DAY_OFFSET = 1;
+const PREVIOUS_WEEK_OFFSET = -WEEK_DAYS_COUNT;
+const NEXT_WEEK_OFFSET = WEEK_DAYS_COUNT;
+const PREVIOUS_MONTH_OFFSET = -1;
+const NEXT_MONTH_OFFSET = 1;
+const LAST_WEEKDAY_OFFSET = CALENDAR_WEEKS_COUNT;
+
 interface FdUiCalendarCell {
     date: Date;
     iso: string;
@@ -48,8 +61,14 @@ export class FdUiCalendarComponent {
 
     protected readonly weekdayLabels = computed(() => {
         const startIndex = this.weekStartsOn();
-        return Array.from({ length: 7 }, (_, index) => {
-            const day = new Date(Date.UTC(2024, 0, 7 + ((startIndex + index) % 7)));
+        return Array.from({ length: WEEK_DAYS_COUNT }, (_, index) => {
+            const day = new Date(
+                Date.UTC(
+                    UTC_WEEKDAY_REFERENCE_YEAR,
+                    UTC_WEEKDAY_REFERENCE_MONTH,
+                    UTC_WEEKDAY_REFERENCE_DAY + ((startIndex + index) % WEEK_DAYS_COUNT),
+                ),
+            );
             return new Intl.DateTimeFormat(this.locale, { weekday: 'short', timeZone: 'UTC' }).format(day);
         });
     });
@@ -57,12 +76,13 @@ export class FdUiCalendarComponent {
     protected readonly weeks = computed(() => {
         const monthStart = this.visibleMonth();
         const gridStart = this.startOfWeek(monthStart);
-        const selectedIso = this.value() ? this.toIsoDate(this.value()) : null;
+        const selectedValue = this.value();
+        const selectedIso = selectedValue !== null ? this.toIsoDate(selectedValue) : null;
         const activeIso = this.toIsoDate(this.activeDate());
 
-        return Array.from({ length: 6 }, (_week, weekIndex) =>
-            Array.from({ length: 7 }, (_day, dayIndex) => {
-                const cellDate = this.addDays(gridStart, weekIndex * 7 + dayIndex);
+        return Array.from({ length: CALENDAR_WEEKS_COUNT }, (_week, weekIndex) =>
+            Array.from({ length: WEEK_DAYS_COUNT }, (_day, dayIndex) => {
+                const cellDate = this.addDays(gridStart, weekIndex * WEEK_DAYS_COUNT + dayIndex);
                 const iso = this.toIsoDate(cellDate);
 
                 return {
@@ -102,40 +122,10 @@ export class FdUiCalendarComponent {
     }
 
     protected onCellKeydown(event: KeyboardEvent, date: Date): void {
-        let nextDate: Date | null = null;
+        const nextDate = this.getNextDateForKey(event, date);
 
-        switch (event.key) {
-            case 'ArrowLeft':
-                nextDate = this.addDays(date, -1);
-                break;
-            case 'ArrowRight':
-                nextDate = this.addDays(date, 1);
-                break;
-            case 'ArrowUp':
-                nextDate = this.addDays(date, -7);
-                break;
-            case 'ArrowDown':
-                nextDate = this.addDays(date, 7);
-                break;
-            case 'Home':
-                nextDate = this.startOfWeek(date);
-                break;
-            case 'End':
-                nextDate = this.addDays(this.startOfWeek(date), 6);
-                break;
-            case 'PageUp':
-                nextDate = this.addMonths(date, -1);
-                break;
-            case 'PageDown':
-                nextDate = this.addMonths(date, 1);
-                break;
-            case 'Enter':
-            case ' ':
-                event.preventDefault();
-                this.selectDate(date);
-                return;
-            default:
-                return;
+        if (nextDate === null) {
+            return;
         }
 
         event.preventDefault();
@@ -147,6 +137,31 @@ export class FdUiCalendarComponent {
         }
 
         this.focusCell(normalized);
+    }
+
+    private getNextDateForKey(event: KeyboardEvent, date: Date): Date | null {
+        const handlers = new Map<string, () => Date>([
+            ['ArrowLeft', (): Date => this.addDays(date, PREVIOUS_DAY_OFFSET)],
+            ['ArrowRight', (): Date => this.addDays(date, NEXT_DAY_OFFSET)],
+            ['ArrowUp', (): Date => this.addDays(date, PREVIOUS_WEEK_OFFSET)],
+            ['ArrowDown', (): Date => this.addDays(date, NEXT_WEEK_OFFSET)],
+            ['Home', (): Date => this.startOfWeek(date)],
+            ['End', (): Date => this.addDays(this.startOfWeek(date), LAST_WEEKDAY_OFFSET)],
+            ['PageUp', (): Date => this.addMonths(date, PREVIOUS_MONTH_OFFSET)],
+            ['PageDown', (): Date => this.addMonths(date, NEXT_MONTH_OFFSET)],
+        ]);
+
+        const handler = handlers.get(event.key);
+        if (handler !== undefined) {
+            return handler();
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.selectDate(date);
+        }
+
+        return null;
     }
 
     private changeMonth(offset: number): void {
@@ -168,7 +183,7 @@ export class FdUiCalendarComponent {
 
     private startOfWeek(date: Date): Date {
         const normalized = this.stripTime(date);
-        const delta = (normalized.getDay() - this.weekStartsOn() + 7) % 7;
+        const delta = (normalized.getDay() - this.weekStartsOn() + WEEK_DAYS_COUNT) % WEEK_DAYS_COUNT;
         return this.addDays(normalized, -delta);
     }
 
@@ -185,11 +200,11 @@ export class FdUiCalendarComponent {
     }
 
     private clampDate(date: Date, min: Date | null, max: Date | null): Date {
-        if (min && date < this.stripTime(min)) {
+        if (min !== null && date < this.stripTime(min)) {
             return this.stripTime(min);
         }
 
-        if (max && date > this.stripTime(max)) {
+        if (max !== null && date > this.stripTime(max)) {
             return this.stripTime(max);
         }
 
@@ -198,11 +213,11 @@ export class FdUiCalendarComponent {
 
     private isOutOfRange(date: Date, min: Date | null, max: Date | null): boolean {
         const normalized = this.stripTime(date);
-        if (min && normalized < this.stripTime(min)) {
+        if (min !== null && normalized < this.stripTime(min)) {
             return true;
         }
 
-        if (max && normalized > this.stripTime(max)) {
+        if (max !== null && normalized > this.stripTime(max)) {
             return true;
         }
 
@@ -210,7 +225,7 @@ export class FdUiCalendarComponent {
     }
 
     private stripTime(date: Date | null): Date {
-        if (!date) {
+        if (date === null) {
             return this.today;
         }
 
@@ -220,7 +235,7 @@ export class FdUiCalendarComponent {
     private toIsoDate(date: Date | null): string {
         const normalized = this.stripTime(date);
         const year = normalized.getFullYear();
-        const month = String(normalized.getMonth() + 1).padStart(2, '0');
+        const month = String(normalized.getMonth() + NEXT_MONTH_OFFSET).padStart(2, '0');
         const day = String(normalized.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     }

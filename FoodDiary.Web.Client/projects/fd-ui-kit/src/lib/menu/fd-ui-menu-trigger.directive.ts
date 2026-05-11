@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 
 import type { FdUiMenuComponent } from './fd-ui-menu.component';
 
+const MENU_OFFSET_Y = 8;
+
 @Directive({
     selector: '[fdUiMenuTrigger]',
     standalone: true,
@@ -32,21 +34,21 @@ export class FdUiMenuTriggerDirective {
             originY: 'bottom',
             overlayX: 'start',
             overlayY: 'top',
-            offsetY: 8,
+            offsetY: MENU_OFFSET_Y,
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
             overlayY: 'bottom',
-            offsetY: -8,
+            offsetY: -MENU_OFFSET_Y,
         },
     ];
 
     public constructor() {
         effect(() => {
             const currentMenu = this.menu();
-            if (!currentMenu && this.overlayRef?.hasAttached()) {
+            if (currentMenu === null && this.overlayRef?.hasAttached() === true) {
                 this.close();
             }
         });
@@ -74,7 +76,7 @@ export class FdUiMenuTriggerDirective {
                 this.open('last');
                 break;
             case 'Escape':
-                if (this.overlayRef?.hasAttached()) {
+                if (this.overlayRef?.hasAttached() === true) {
                     event.preventDefault();
                     this.close();
                 }
@@ -83,7 +85,7 @@ export class FdUiMenuTriggerDirective {
     }
 
     public toggle(): void {
-        if (this.overlayRef?.hasAttached()) {
+        if (this.overlayRef?.hasAttached() === true) {
             this.close();
             return;
         }
@@ -93,7 +95,7 @@ export class FdUiMenuTriggerDirective {
 
     public open(focusTarget: 'first' | 'last' = 'first'): void {
         const menu = this.menu();
-        if (!menu) {
+        if (menu === null) {
             return;
         }
 
@@ -139,7 +141,7 @@ export class FdUiMenuTriggerDirective {
     }
 
     public close(restoreFocus = true): void {
-        if (!this.overlayRef?.hasAttached()) {
+        if (this.overlayRef?.hasAttached() !== true) {
             return;
         }
 
@@ -150,7 +152,7 @@ export class FdUiMenuTriggerDirective {
     }
 
     private getOverlayRef(): OverlayRef {
-        if (this.overlayRef) {
+        if (this.overlayRef !== null) {
             return this.overlayRef;
         }
 

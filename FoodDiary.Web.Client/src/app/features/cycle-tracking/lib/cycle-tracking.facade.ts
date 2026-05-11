@@ -5,6 +5,17 @@ import { finalize } from 'rxjs';
 import { CyclesService } from '../api/cycles.service';
 import type { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySymptoms } from '../models/cycle.data';
 
+const DEFAULT_AVERAGE_CYCLE_LENGTH = 28;
+const MIN_AVERAGE_CYCLE_LENGTH = 18;
+const MAX_AVERAGE_CYCLE_LENGTH = 60;
+const DEFAULT_LUTEAL_LENGTH = 14;
+const MIN_LUTEAL_LENGTH = 8;
+const MAX_LUTEAL_LENGTH = 18;
+const MIN_SYMPTOM_VALUE = 0;
+const MAX_SYMPTOM_VALUE = 9;
+const NEXT_MONTH_OFFSET = 1;
+const PADDED_DATE_PART_LENGTH = 2;
+
 @Injectable({ providedIn: 'root' })
 export class CycleTrackingFacade {
     private readonly cyclesService = inject(CyclesService);
@@ -17,8 +28,12 @@ export class CycleTrackingFacade {
 
     public readonly startCycleForm = this.fb.group({
         startDate: new FormControl<string | null>(this.formatDateInput(new Date()), { validators: [Validators.required] }),
-        averageLength: new FormControl<number | null>(28, { validators: [Validators.min(18), Validators.max(60)] }),
-        lutealLength: new FormControl<number | null>(14, { validators: [Validators.min(8), Validators.max(18)] }),
+        averageLength: new FormControl<number | null>(DEFAULT_AVERAGE_CYCLE_LENGTH, {
+            validators: [Validators.min(MIN_AVERAGE_CYCLE_LENGTH), Validators.max(MAX_AVERAGE_CYCLE_LENGTH)],
+        }),
+        lutealLength: new FormControl<number | null>(DEFAULT_LUTEAL_LENGTH, {
+            validators: [Validators.min(MIN_LUTEAL_LENGTH), Validators.max(MAX_LUTEAL_LENGTH)],
+        }),
     });
 
     public readonly dayForm = this.fb.group({
@@ -41,7 +56,7 @@ export class CycleTrackingFacade {
     });
     public readonly currentCycleTitle = computed(() => {
         const cycle = this.cycle();
-        return cycle ? 'CYCLE_TRACKING.CURRENT_CYCLE' : 'CYCLE_TRACKING.NO_CYCLE';
+        return cycle !== null ? 'CYCLE_TRACKING.CURRENT_CYCLE' : 'CYCLE_TRACKING.NO_CYCLE';
     });
 
     public initialize(): void {
@@ -55,7 +70,7 @@ export class CycleTrackingFacade {
         }
 
         const formValue = this.startCycleForm.value;
-        if (!formValue.startDate) {
+        if (formValue.startDate === null || formValue.startDate === undefined || formValue.startDate.length === 0) {
             return;
         }
 
@@ -81,7 +96,7 @@ export class CycleTrackingFacade {
 
     public saveDay(): void {
         const currentCycle = this.cycle();
-        if (!currentCycle?.id) {
+        if (currentCycle === null || currentCycle.id.length === 0) {
             return;
         }
 
@@ -92,7 +107,7 @@ export class CycleTrackingFacade {
 
         const formValue = this.dayForm.value;
         const date = formValue.date;
-        if (!date) {
+        if (date === null || date === undefined || date.length === 0) {
             return;
         }
 
@@ -111,7 +126,7 @@ export class CycleTrackingFacade {
         this.cyclesService
             .upsertDay(currentCycle.id, {
                 date: entryDate.toISOString(),
-                isPeriod: !!formValue.isPeriod,
+                isPeriod: formValue.isPeriod === true,
                 symptoms,
                 notes: formValue.notes ?? undefined,
             })
@@ -122,7 +137,7 @@ export class CycleTrackingFacade {
             )
             .subscribe(day => {
                 const current = this.cycle();
-                if (!current) {
+                if (current === null) {
                     return;
                 }
 
@@ -150,16 +165,16 @@ export class CycleTrackingFacade {
 
     private clampSymptom(value: number | null | undefined): number {
         if (value === null || value === undefined || Number.isNaN(value)) {
-            return 0;
+            return MIN_SYMPTOM_VALUE;
         }
 
-        return Math.min(9, Math.max(0, value));
+        return Math.min(MAX_SYMPTOM_VALUE, Math.max(MIN_SYMPTOM_VALUE, value));
     }
 
     private formatDateInput(date: Date): string {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + NEXT_MONTH_OFFSET).padStart(PADDED_DATE_PART_LENGTH, '0');
+        const day = String(date.getDate()).padStart(PADDED_DATE_PART_LENGTH, '0');
         return `${year}-${month}-${day}`;
     }
 }

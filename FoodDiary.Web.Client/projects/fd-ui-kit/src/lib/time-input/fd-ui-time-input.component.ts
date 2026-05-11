@@ -5,6 +5,13 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
+const MIN_TIME_VALUE = 0;
+const MAX_HOURS_VALUE = 23;
+const MAX_MINUTES_VALUE = 59;
+const TIME_MATCH_HOURS_INDEX = 1;
+const TIME_MATCH_MINUTES_INDEX = 2;
+const PADDED_TIME_PART_LENGTH = 2;
+
 let uniqueId = 0;
 
 @Component({
@@ -43,7 +50,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-time-input ${this.sizeClass()}${this.error() ? ' fd-ui-time-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-time-input--floating' : ''}`,
+            `fd-ui-time-input ${this.sizeClass()}${this.error() !== null ? ' fd-ui-time-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-time-input--floating' : ''}`,
     );
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? 'HH:mm') : null));
@@ -69,14 +76,14 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
             return;
         }
 
-        if (!value) {
+        if (value.length === 0) {
             this.internalValue.set('');
             this.onChange(null);
             return;
         }
 
         const parsed = this.parseTime(value);
-        if (!parsed) {
+        if (parsed === null) {
             this.internalValue.set(value);
             return;
         }
@@ -88,9 +95,9 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     protected onBlur(): void {
         this.isFocused.set(false);
         const internalValue = this.internalValue();
-        if (internalValue) {
+        if (internalValue.length > 0) {
             const parsed = this.parseTime(internalValue);
-            if (parsed) {
+            if (parsed !== null) {
                 this.internalValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
                 this.onChange(this.internalValue());
             }
@@ -112,7 +119,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
 
     protected onFocusOut(): void {
         const active = document.activeElement;
-        if (active && this.host.nativeElement.contains(active)) {
+        if (active !== null && this.host.nativeElement.contains(active)) {
             return;
         }
         this.isFocused.set(false);
@@ -121,21 +128,24 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
 
     private parseTime(value: string): { hours: number; minutes: number } | null {
         const match = value.match(/^(\d{1,2}):?(\d{2})$/);
-        if (!match) {
+        if (match === null) {
             return null;
         }
-        const hours = Number(match[1]);
-        const minutes = Number(match[2]);
+
+        const hours = Number(match[TIME_MATCH_HOURS_INDEX]);
+        const minutes = Number(match[TIME_MATCH_MINUTES_INDEX]);
         if (Number.isNaN(hours) || Number.isNaN(minutes)) {
             return null;
         }
-        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+
+        if (hours < MIN_TIME_VALUE || hours > MAX_HOURS_VALUE || minutes < MIN_TIME_VALUE || minutes > MAX_MINUTES_VALUE) {
             return null;
         }
+
         return { hours, minutes };
     }
 
     private padNumber(value: number): string {
-        return value.toString().padStart(2, '0');
+        return value.toString().padStart(PADDED_TIME_PART_LENGTH, '0');
     }
 }

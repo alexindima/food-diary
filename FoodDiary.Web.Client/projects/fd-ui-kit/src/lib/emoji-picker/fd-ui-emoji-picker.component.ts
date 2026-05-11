@@ -5,6 +5,13 @@ import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 
 export type FdUiEmojiPickerValue = string | number;
 
+const NOT_FOCUSABLE_TAB_INDEX = -1;
+const FOCUSABLE_TAB_INDEX = 0;
+const NO_ENABLED_OPTION_INDEX = -1;
+const FIRST_OPTION_INDEX = 0;
+const NEXT_OPTION_OFFSET = 1;
+const PREVIOUS_OPTION_OFFSET = -1;
+
 export interface FdUiEmojiPickerOption<T extends FdUiEmojiPickerValue = FdUiEmojiPickerValue> {
     value: T;
     emoji: string;
@@ -51,7 +58,7 @@ export class FdUiEmojiPickerComponent {
     });
 
     private readonly firstEnabledValue = computed<FdUiEmojiPickerValue | null>(() => {
-        const option = this.options().find(item => !item.disabled);
+        const option = this.options().find(item => item.disabled !== true);
         return option?.value ?? null;
     });
 
@@ -62,14 +69,14 @@ export class FdUiEmojiPickerComponent {
     protected getTabIndex(value: FdUiEmojiPickerValue): number {
         const selectedValue = this.selectedValue();
         if (selectedValue !== null) {
-            return selectedValue === value ? 0 : -1;
+            return selectedValue === value ? FOCUSABLE_TAB_INDEX : NOT_FOCUSABLE_TAB_INDEX;
         }
 
-        return this.firstEnabledValue() === value ? 0 : -1;
+        return this.firstEnabledValue() === value ? FOCUSABLE_TAB_INDEX : NOT_FOCUSABLE_TAB_INDEX;
     }
 
     protected select(option: FdUiEmojiPickerOption): void {
-        if (option.disabled || option.value === this.selectedValue()) {
+        if (option.disabled === true || option.value === this.selectedValue()) {
             return;
         }
 
@@ -81,26 +88,26 @@ export class FdUiEmojiPickerComponent {
             case 'ArrowRight':
             case 'ArrowDown':
                 event.preventDefault();
-                this.focusRelative(index, 1);
+                this.focusRelative(index, NEXT_OPTION_OFFSET);
                 break;
             case 'ArrowLeft':
             case 'ArrowUp':
                 event.preventDefault();
-                this.focusRelative(index, -1);
+                this.focusRelative(index, PREVIOUS_OPTION_OFFSET);
                 break;
             case 'Home':
                 event.preventDefault();
-                this.focusIndex(this.findEnabledIndex(0, 1));
+                this.focusIndex(this.findEnabledIndex(FIRST_OPTION_INDEX, NEXT_OPTION_OFFSET));
                 break;
             case 'End':
                 event.preventDefault();
-                this.focusIndex(this.findEnabledIndex(this.options().length - 1, -1));
+                this.focusIndex(this.findEnabledIndex(this.options().length + PREVIOUS_OPTION_OFFSET, PREVIOUS_OPTION_OFFSET));
                 break;
             case ' ':
             case 'Enter': {
                 event.preventDefault();
                 const option = this.options().at(index);
-                if (option) {
+                if (option !== undefined) {
                     this.select(option);
                 }
                 break;
@@ -121,29 +128,29 @@ export class FdUiEmojiPickerComponent {
 
     private findEnabledIndex(startIndex: number, direction: 1 | -1): number {
         const options = this.options();
-        if (!options.length) {
-            return -1;
+        if (options.length === 0) {
+            return NO_ENABLED_OPTION_INDEX;
         }
 
         let index = startIndex;
-        while (index >= 0 && index < options.length) {
+        while (index >= FIRST_OPTION_INDEX && index < options.length) {
             const option = options.at(index);
-            if (option && !option.disabled) {
+            if (option !== undefined && option.disabled !== true) {
                 return index;
             }
             index += direction;
         }
 
-        return -1;
+        return NO_ENABLED_OPTION_INDEX;
     }
 
     private focusIndex(index: number): void {
-        if (index < 0) {
+        if (index < FIRST_OPTION_INDEX) {
             return;
         }
 
         const option = this.options().at(index);
-        if (!option || option.disabled) {
+        if (option === undefined || option.disabled === true) {
             return;
         }
 

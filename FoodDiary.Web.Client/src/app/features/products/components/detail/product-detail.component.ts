@@ -28,6 +28,13 @@ import { ProductService } from '../../api/product.service';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
 import type { Product } from '../../models/product.data';
 
+const MACRO_SUMMARY_LIMIT = 3;
+const QUALITY_SCORE_MIN = 0;
+const QUALITY_SCORE_MAX = 100;
+const PERCENT_FULL = 100;
+const MIN_MACRO_BAR_PERCENT = 4;
+const MIN_MACRO_REFERENCE_VALUE = 1;
+
 @Component({
     selector: 'fd-product-detail',
     standalone: true,
@@ -98,7 +105,7 @@ export class ProductDetailComponent {
         color: string;
         percent: number;
     }[];
-    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, 3));
+    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',
         proteins: 'proteins',
@@ -120,7 +127,7 @@ export class ProductDetailComponent {
         this.favoriteProductId = this.product.favoriteProductId ?? null;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
         this.baseUnitKey = `GENERAL.UNITS.${this.product.baseUnit}`;
-        this.qualityScore = Math.round(Math.min(100, Math.max(0, this.product.qualityScore)));
+        this.qualityScore = Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, this.product.qualityScore)));
         this.qualityGrade = this.product.qualityGrade;
         this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
 
@@ -207,16 +214,16 @@ export class ProductDetailComponent {
         return {
             isEmpty: total <= 0,
             segments: [
-                { key: 'proteins', percent: total > 0 ? (values[0] / total) * 100 : 0 },
-                { key: 'fats', percent: total > 0 ? (values[1] / total) * 100 : 0 },
-                { key: 'carbs', percent: total > 0 ? (values[2] / total) * 100 : 0 },
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_FULL : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_FULL : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_FULL : 0 },
             ],
         };
     }
 
     private resolveMacroPercent(value: number, values: number[]): number {
-        const max = Math.max(...values, value, 1);
-        return Math.max(4, Math.round((value / max) * 100));
+        const max = Math.max(...values, value, MIN_MACRO_REFERENCE_VALUE);
+        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_FULL));
     }
 
     public close(): void {
@@ -255,7 +262,7 @@ export class ProductDetailComponent {
             .open(ConfirmDeleteDialogComponent, { data, size: 'sm' })
             .afterClosed()
             .subscribe(confirm => {
-                if (confirm) {
+                if (confirm === true) {
                     const deleteResult = new ProductDetailActionResult(this.product.id, 'Delete', this.hasFavoriteChanged());
                     this.dialogRef.close(deleteResult);
                 }
@@ -286,7 +293,7 @@ export class ProductDetailComponent {
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {
-            if (this.favoriteProductId) {
+            if (this.favoriteProductId !== null && this.favoriteProductId.length > 0) {
                 this.favoriteProductService.remove(this.favoriteProductId).subscribe({
                     next: () => {
                         this.isFavorite.set(false);
@@ -303,7 +310,7 @@ export class ProductDetailComponent {
             this.favoriteProductService.getAll().subscribe({
                 next: favorites => {
                     const match = favorites.find(f => f.productId === this.product.id);
-                    if (match) {
+                    if (match !== undefined) {
                         this.favoriteProductService.remove(match.id).subscribe({
                             next: () => {
                                 this.isFavorite.set(false);

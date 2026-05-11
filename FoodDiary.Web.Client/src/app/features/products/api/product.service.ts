@@ -15,6 +15,10 @@ import type {
     UpdateProductRequest,
 } from '../models/product.data';
 
+const DEFAULT_RECENT_LIMIT = 10;
+const DEFAULT_FAVORITE_LIMIT = 10;
+const DEFAULT_SUGGESTIONS_LIMIT = 5;
+
 export interface ProductOverviewQuery {
     page: number;
     limit: number;
@@ -32,13 +36,7 @@ export class ProductService extends ApiService {
 
     public query(page: number, limit: number, filters?: ProductFilters, includePublic = true): Observable<PageOf<Product>> {
         const params: Record<string, string | number | boolean> = { page, limit, includePublic };
-        const search = filters?.search?.trim();
-        if (search) {
-            params['search'] = search;
-        }
-        if (filters?.productTypes && filters.productTypes.length > 0) {
-            params['productTypes'] = filters.productTypes.join(',');
-        }
+        this.applyProductFilters(params, filters);
 
         return this.get<PageOf<Product>>('', params).pipe(
             catchError((error: HttpErrorResponse) =>
@@ -52,15 +50,16 @@ export class ProductService extends ApiService {
     }
 
     public queryOverview(query: ProductOverviewQuery): Observable<ProductOverview> {
-        const { page, limit, filters, includePublic = true, recentLimit = 10, favoriteLimit = 10 } = query;
+        const {
+            page,
+            limit,
+            filters,
+            includePublic = true,
+            recentLimit = DEFAULT_RECENT_LIMIT,
+            favoriteLimit = DEFAULT_FAVORITE_LIMIT,
+        } = query;
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
-        const search = filters?.search?.trim();
-        if (search) {
-            params['search'] = search;
-        }
-        if (filters?.productTypes && filters.productTypes.length > 0) {
-            params['productTypes'] = filters.productTypes.join(',');
-        }
+        this.applyProductFilters(params, filters);
 
         return this.get<ProductOverview>('overview', params).pipe(
             catchError((error: HttpErrorResponse) =>
@@ -74,14 +73,24 @@ export class ProductService extends ApiService {
         );
     }
 
-    public getRecent(limit = 10, includePublic = true): Observable<Product[]> {
+    private applyProductFilters(params: Record<string, string | number | boolean>, filters?: ProductFilters): void {
+        const search = filters?.search?.trim();
+        if (search !== undefined && search.length > 0) {
+            params['search'] = search;
+        }
+        if (filters?.productTypes !== undefined && filters.productTypes.length > 0) {
+            params['productTypes'] = filters.productTypes.join(',');
+        }
+    }
+
+    public getRecent(limit = DEFAULT_RECENT_LIMIT, includePublic = true): Observable<Product[]> {
         const params: Record<string, string | number | boolean> = { limit, includePublic };
         return this.get<Product[]>('recent', params).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Get recent products error', error, [])),
         );
     }
 
-    public searchSuggestions(search: string, limit = 5): Observable<ProductSearchSuggestion[]> {
+    public searchSuggestions(search: string, limit = DEFAULT_SUGGESTIONS_LIMIT): Observable<ProductSearchSuggestion[]> {
         return this.get<ProductSearchSuggestion[]>('suggestions', { search, limit }).pipe(
             catchError((error: HttpErrorResponse) => fallbackApiError('Search product suggestions error', error, [])),
         );

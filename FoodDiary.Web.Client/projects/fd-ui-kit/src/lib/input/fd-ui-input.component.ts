@@ -8,6 +8,19 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
+const AUTOFILL_SYNC_FAST_DELAY_MS = 100;
+const AUTOFILL_SYNC_SHORT_DELAY_MS = 500;
+const AUTOFILL_SYNC_MEDIUM_DELAY_MS = 1000;
+const AUTOFILL_SYNC_LONG_DELAY_MS = 2500;
+const AUTOFILL_SYNC_FINAL_DELAY_MS = 5000;
+const AUTOFILL_SYNC_DELAYS_MS = [
+    AUTOFILL_SYNC_FAST_DELAY_MS,
+    AUTOFILL_SYNC_SHORT_DELAY_MS,
+    AUTOFILL_SYNC_MEDIUM_DELAY_MS,
+    AUTOFILL_SYNC_LONG_DELAY_MS,
+    AUTOFILL_SYNC_FINAL_DELAY_MS,
+] as const;
+
 let uniqueId = 0;
 export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
 
@@ -61,7 +74,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
         afterNextRender(() => {
             this.monitorAutofill();
             this.syncNativeValue();
-            this.autofillSyncTimers = [100, 500, 1000, 2500, 5000].map(delay =>
+            this.autofillSyncTimers = AUTOFILL_SYNC_DELAYS_MS.map(delay =>
                 setTimeout(() => {
                     this.syncNativeValue();
                 }, delay),
@@ -79,7 +92,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     protected readonly appearanceClass = computed(() => `fd-ui-input--appearance-${this.appearance()}`);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-input ${this.sizeClass()} ${this.appearanceClass()}${this.error() ? ' fd-ui-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-input--floating' : ''}`,
+            `fd-ui-input ${this.sizeClass()} ${this.appearanceClass()}${this.error() !== null ? ' fd-ui-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-input--floating' : ''}`,
     );
     protected readonly isDateInput = computed(() => {
         const type = this.type();
@@ -139,7 +152,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     protected triggerSuffixButton(): void {
-        if (this.disabled() || !this.suffixButtonIcon()) {
+        if (this.disabled() || this.suffixButtonIcon() === undefined) {
             return;
         }
 
@@ -152,7 +165,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
         }
 
         const target = event.target as HTMLElement | null;
-        if (target?.closest('.fd-ui-input__suffix')) {
+        if (target?.closest('.fd-ui-input__suffix') !== null && target?.closest('.fd-ui-input__suffix') !== undefined) {
             return;
         }
 
@@ -184,7 +197,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     private monitorAutofill(): void {
         const control = this.control();
 
-        if (!control) {
+        if (control === undefined) {
             return;
         }
 

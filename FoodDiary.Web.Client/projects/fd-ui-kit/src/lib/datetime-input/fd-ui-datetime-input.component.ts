@@ -7,6 +7,18 @@ import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
+const DEFAULT_TIME_VALUE = '00:00';
+const MIN_TIME_VALUE = 0;
+const MAX_HOURS_VALUE = 23;
+const MAX_MINUTES_VALUE = 59;
+const DATE_INDEX_YEAR = 1;
+const DATE_INDEX_MONTH = 2;
+const DATE_INDEX_DAY = 3;
+const DATE_INDEX_HOURS = 4;
+const DATE_INDEX_MINUTES = 5;
+const NEXT_MONTH_OFFSET = 1;
+const PADDED_NUMBER_LENGTH = 2;
+
 let uniqueId = 0;
 
 @Component({
@@ -38,10 +50,12 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
     protected readonly sizeClass = computed(() => `fd-ui-datetime-input--size-${this.size()}`);
-    protected readonly shouldFloatLabel = computed(() => this.isFocused() || !!this.dateValue() || this.timeValue().trim().length > 0);
+    protected readonly shouldFloatLabel = computed(
+        () => this.isFocused() || this.dateValue() !== null || this.timeValue().trim().length > 0,
+    );
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-datetime-input ${this.sizeClass()}${this.error() ? ' fd-ui-datetime-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-datetime-input--floating' : ''}`,
+            `fd-ui-datetime-input ${this.sizeClass()}${this.error() !== null ? ' fd-ui-datetime-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-datetime-input--floating' : ''}`,
     );
 
     private readonly destroyRef = inject(DestroyRef);
@@ -49,7 +63,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
     private onChange: (value: string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
-    private lastValidTime = '00:00';
+    private lastValidTime = DEFAULT_TIME_VALUE;
 
     public constructor() {
         this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
@@ -59,16 +73,16 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     }
 
     public writeValue(value: string | Date | null): void {
-        if (!value) {
+        if (value === null || value === '') {
             this.dateControl.setValue(null, { emitEvent: false });
             this.dateValue.set(null);
             this.timeValue.set('');
-            this.lastValidTime = '00:00';
+            this.lastValidTime = DEFAULT_TIME_VALUE;
             return;
         }
 
         const parsed = typeof value === 'string' ? this.parseDateTimeString(value) : value;
-        if (!parsed) {
+        if (parsed === null) {
             this.dateControl.setValue(null, { emitEvent: false });
             this.dateValue.set(null);
             this.timeValue.set('');
@@ -108,7 +122,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         }
 
         const parsed = this.parseTime(value);
-        if (!parsed) {
+        if (parsed === null) {
             this.timeValue.set(value);
             return;
         }
@@ -120,13 +134,13 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
     protected onTimeBlur(): void {
         const timeValue = this.timeValue();
-        if (!timeValue) {
-            this.lastValidTime = '00:00';
+        if (timeValue.length === 0) {
+            this.lastValidTime = DEFAULT_TIME_VALUE;
             this.timeValue.set(this.lastValidTime);
             this.emitValue();
         } else {
             const parsed = this.parseTime(timeValue);
-            if (parsed) {
+            if (parsed !== null) {
                 this.timeValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
                 this.lastValidTime = this.timeValue();
                 this.emitValue();
@@ -151,7 +165,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
     protected onFocusOut(): void {
         const active = document.activeElement;
-        if (active && this.host.nativeElement.contains(active)) {
+        if (active !== null && this.host.nativeElement.contains(active)) {
             return;
         }
 
@@ -161,28 +175,29 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
     private emitValue(): void {
         const date = this.dateControl.value;
-        if (!date) {
+        if (date === null || date.length === 0) {
             this.onChange(null);
             return;
         }
 
-        const time = this.parseTime(this.timeValue()) ?? this.parseTime(this.lastValidTime) ?? { hours: 0, minutes: 0 };
+        const time = this.parseTime(this.timeValue()) ??
+            this.parseTime(this.lastValidTime) ?? { hours: MIN_TIME_VALUE, minutes: MIN_TIME_VALUE };
         this.onChange(`${date}T${this.padNumber(time.hours)}:${this.padNumber(time.minutes)}`);
     }
 
     private parseTime(value: string): { hours: number; minutes: number } | null {
         const match = value.match(/^(\d{1,2}):?(\d{2})$/);
-        if (!match) {
+        if (match === null) {
             return null;
         }
 
-        const hours = Number(match[1]);
-        const minutes = Number(match[2]);
+        const hours = Number(match[DATE_INDEX_YEAR]);
+        const minutes = Number(match[DATE_INDEX_MONTH]);
         if (Number.isNaN(hours) || Number.isNaN(minutes)) {
             return null;
         }
 
-        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        if (hours < MIN_TIME_VALUE || hours > MAX_HOURS_VALUE || minutes < MIN_TIME_VALUE || minutes > MAX_MINUTES_VALUE) {
             return null;
         }
 
@@ -191,24 +206,24 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
     private parseDateTimeString(value: string): Date | null {
         const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
-        if (!match) {
+        if (match === null) {
             const date = new Date(value);
             return Number.isNaN(date.getTime()) ? null : date;
         }
 
-        const year = Number(match[1]);
-        const month = Number(match[2]);
-        const day = Number(match[3]);
-        const hours = Number(match[4]);
-        const minutes = Number(match[5]);
-        return new Date(year, month - 1, day, hours, minutes);
+        const year = Number(match[DATE_INDEX_YEAR]);
+        const month = Number(match[DATE_INDEX_MONTH]);
+        const day = Number(match[DATE_INDEX_DAY]);
+        const hours = Number(match[DATE_INDEX_HOURS]);
+        const minutes = Number(match[DATE_INDEX_MINUTES]);
+        return new Date(year, month - NEXT_MONTH_OFFSET, day, hours, minutes);
     }
 
     private formatDate(value: Date): string {
-        return [value.getFullYear(), this.padNumber(value.getMonth() + 1), this.padNumber(value.getDate())].join('-');
+        return [value.getFullYear(), this.padNumber(value.getMonth() + NEXT_MONTH_OFFSET), this.padNumber(value.getDate())].join('-');
     }
 
     private padNumber(value: number): string {
-        return value.toString().padStart(2, '0');
+        return value.toString().padStart(PADDED_NUMBER_LENGTH, '0');
     }
 }

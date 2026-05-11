@@ -5,7 +5,15 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Product } from '../../products/models/product.data';
 import type { Recipe } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
-import { type MealManageDto, MealSourceType } from '../models/meal.data';
+import type { ConsumptionItemManageDto, MealManageDto } from '../models/meal.data';
+
+const DEFAULT_ITEM_AMOUNT = 1;
+const DEFAULT_SATIETY_LEVEL = 3;
+const MIN_SATIETY_LEVEL = 1;
+const MAX_SATIETY_LEVEL = 5;
+const SATIETY_NORMALIZATION_DIVISOR = 2;
+const NEXT_MONTH_OFFSET = 1;
+const PADDED_DATE_PART_LENGTH = 2;
 
 export type QuickMealItemType = 'product' | 'recipe';
 
@@ -46,7 +54,7 @@ export class QuickMealService {
     public readonly isSaving = computed(() => this.isSavingSignal());
 
     public addProduct(product: Product): void {
-        if (!product.id) {
+        if (product.id.length === 0) {
             return;
         }
 
@@ -68,7 +76,7 @@ export class QuickMealService {
     }
 
     public addRecipe(recipe: Recipe): void {
-        if (!recipe.id) {
+        if (recipe.id.length === 0) {
             return;
         }
 
@@ -78,7 +86,7 @@ export class QuickMealService {
             key,
             type: 'recipe',
             recipe,
-            amount: 1,
+            amount: DEFAULT_ITEM_AMOUNT,
         });
 
         if (this.isPreviewMode) {
@@ -137,12 +145,12 @@ export class QuickMealService {
         }
 
         const items = this.itemsSignal();
-        if (!items.length || this.isSavingSignal()) {
+        if (items.length === 0 || this.isSavingSignal()) {
             return;
         }
 
         const payload = this.toMealDto(items);
-        if (!payload.items.length) {
+        if (payload.items.length === 0) {
             this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
             return;
         }
@@ -151,7 +159,7 @@ export class QuickMealService {
         this.mealService.create(payload).subscribe({
             next: meal => {
                 this.isSavingSignal.set(false);
-                if (!meal) {
+                if (meal === null) {
                     this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
                     return;
                 }
@@ -191,11 +199,11 @@ export class QuickMealService {
             return product.baseAmount;
         }
 
-        return 1;
+        return DEFAULT_ITEM_AMOUNT;
     }
 
     private refreshDetailsForFirstItem(): void {
-        if (!this.itemsSignal().length) {
+        if (this.itemsSignal().length === 0) {
             this.detailsSignal.set(this.createDefaultDetails());
         }
     }
@@ -219,34 +227,31 @@ export class QuickMealService {
     }
 
     private toMealDto(items: QuickMealItem[]): MealManageDto {
-        const mappedItems = items
-            .map(item => {
-                if (item.type === 'product' && item.product) {
-                    return {
-                        sourceType: MealSourceType.Product,
-                        productId: item.product.id,
-                        recipeId: null,
-                        amount: item.amount,
-                    };
-                }
+        const mappedItems = items.reduce<ConsumptionItemManageDto[]>((result, item) => {
+            if (item.type === 'product' && item.product !== undefined) {
+                result.push({
+                    productId: item.product.id,
+                    recipeId: null,
+                    amount: item.amount,
+                });
+                return result;
+            }
 
-                if (item.type === 'recipe' && item.recipe) {
-                    return {
-                        sourceType: MealSourceType.Recipe,
-                        recipeId: item.recipe.id,
-                        productId: null,
-                        amount: item.amount,
-                    };
-                }
+            if (item.type === 'recipe' && item.recipe !== undefined) {
+                result.push({
+                    recipeId: item.recipe.id,
+                    productId: null,
+                    amount: item.amount,
+                });
+            }
 
-                return null;
-            })
-            .filter(Boolean) as MealManageDto['items'];
+            return result;
+        }, []);
 
         return {
             date: this.getDetailsDateTime(),
             mealType: undefined,
-            comment: this.detailsSignal().comment.trim() || undefined,
+            comment: this.resolveComment(),
             imageUrl: undefined,
             imageAssetId: undefined,
             items: mappedItems,
@@ -262,14 +267,14 @@ export class QuickMealService {
             date: this.getDateInputValue(now),
             time: this.getTimeInputValue(now),
             comment: '',
-            preMealSatietyLevel: 3,
-            postMealSatietyLevel: 3,
+            preMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
+            postMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
         };
     }
 
     private getDateInputValue(date: Date): string {
         const year = date.getFullYear();
-        const month = this.padNumber(date.getMonth() + 1);
+        const month = this.padNumber(date.getMonth() + NEXT_MONTH_OFFSET);
         const day = this.padNumber(date.getDate());
         return `${year}-${month}-${day}`;
     }
@@ -287,18 +292,23 @@ export class QuickMealService {
     }
 
     private normalizeSatietyLevel(value: number | null): number {
-        if (!value) {
-            return 3;
+        if (value === null || value <= 0 || Number.isNaN(value)) {
+            return DEFAULT_SATIETY_LEVEL;
         }
 
-        if (value > 5) {
-            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        if (value > MAX_SATIETY_LEVEL) {
+            return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / SATIETY_NORMALIZATION_DIVISOR)));
         }
 
-        return Math.max(1, value);
+        return Math.max(MIN_SATIETY_LEVEL, value);
+    }
+
+    private resolveComment(): string | undefined {
+        const comment = this.detailsSignal().comment.trim();
+        return comment.length > 0 ? comment : undefined;
     }
 
     private padNumber(value: number): string {
-        return value.toString().padStart(2, '0');
+        return value.toString().padStart(PADDED_DATE_PART_LENGTH, '0');
     }
 }

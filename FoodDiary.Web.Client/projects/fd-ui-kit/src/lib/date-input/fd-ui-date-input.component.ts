@@ -7,6 +7,12 @@ import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar.component';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
+const DATE_MATCH_YEAR_INDEX = 1;
+const DATE_MATCH_MONTH_INDEX = 2;
+const DATE_MATCH_DAY_INDEX = 3;
+const NEXT_MONTH_OFFSET = 1;
+const PADDED_DATE_PART_LENGTH = 2;
+
 let uniqueId = 0;
 
 @Component({
@@ -44,16 +50,16 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     protected readonly isFocused = signal(false);
 
     protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
-    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.isOpen() || !!this.value());
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.isOpen() || this.value() !== null);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-date-input ${this.sizeClass()}${this.error() ? ' fd-ui-date-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-date-input--floating' : ''}`,
+            `fd-ui-date-input ${this.sizeClass()}${this.error() !== null ? ' fd-ui-date-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-date-input--floating' : ''}`,
     );
-    protected readonly shouldShowPlaceholder = computed(() => (this.isFocused() || this.isOpen()) && !this.value());
+    protected readonly shouldShowPlaceholder = computed(() => (this.isFocused() || this.isOpen()) && this.value() === null);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
     protected readonly displayValue = computed(() => {
         const value = this.value();
-        if (!value) {
+        if (value === null) {
             return '';
         }
 
@@ -109,7 +115,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     }
 
     protected onDateSelect(value: Date | null): void {
-        if (!value) {
+        if (value === null) {
             return;
         }
 
@@ -121,7 +127,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     }
 
     protected onDisplayMonthChange(value: Date | null): void {
-        if (!value) {
+        if (value === null) {
             return;
         }
 
@@ -134,7 +140,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
 
     protected onFocusOut(): void {
         const active = document.activeElement;
-        if (active && this.host.nativeElement.contains(active)) {
+        if (active !== null && this.host.nativeElement.contains(active)) {
             return;
         }
 
@@ -174,7 +180,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     protected readonly maxDate = computed(() => this.parseDateValue(this.max()));
 
     private parseDateValue(value: string | Date | null | undefined): Date | null {
-        if (!value) {
+        if (value === null || value === undefined) {
             return null;
         }
 
@@ -182,12 +188,16 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
             return Number.isNaN(value.getTime()) ? null : this.stripTime(value);
         }
 
+        if (value.length === 0) {
+            return null;
+        }
+
         const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
-        if (match) {
-            const year = Number(match[1]);
-            const month = Number(match[2]);
-            const day = Number(match[3]);
-            return new Date(year, month - 1, day);
+        if (match !== null) {
+            const year = Number(match[DATE_MATCH_YEAR_INDEX]);
+            const month = Number(match[DATE_MATCH_MONTH_INDEX]);
+            const day = Number(match[DATE_MATCH_DAY_INDEX]);
+            return new Date(year, month - NEXT_MONTH_OFFSET, day);
         }
 
         const parsed = new Date(value);
@@ -200,8 +210,8 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
 
     private formatIsoDate(date: Date): string {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + NEXT_MONTH_OFFSET).padStart(PADDED_DATE_PART_LENGTH, '0');
+        const day = String(date.getDate()).padStart(PADDED_DATE_PART_LENGTH, '0');
         return `${year}-${month}-${day}`;
     }
 }

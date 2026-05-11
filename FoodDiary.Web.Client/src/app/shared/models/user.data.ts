@@ -128,11 +128,11 @@ export class UpdateUserAppearanceDto {
 
 const normalizeString = (value: string | null | undefined): string | undefined => {
     const trimmed = value?.trim();
-    return trimmed ?? undefined;
+    return trimmed !== undefined && trimmed.length > 0 ? trimmed : undefined;
 };
 
 const normalizeDate = (value: Date | string | null | undefined): Date | undefined => {
-    if (!value) {
+    if (value === null || value === undefined || value === '') {
         return undefined;
     }
 
@@ -153,7 +153,7 @@ const normalizeInteger = (value: number | null | undefined): number | undefined 
 };
 
 const normalizeActivityLevel = (value: ActivityLevelOption | null | undefined): string | undefined => {
-    if (!value) {
+    if (value === null || value === undefined) {
         return undefined;
     }
 
@@ -162,46 +162,46 @@ const normalizeActivityLevel = (value: ActivityLevelOption | null | undefined): 
 };
 
 const normalizeLanguage = (value: string | null | undefined): string | undefined => {
-    if (!value) {
+    if (value === null || value === undefined) {
         return undefined;
     }
 
     const normalized = value.trim().toLowerCase();
-    return normalized ? normalized : undefined;
+    return normalized.length > 0 ? normalized : undefined;
 };
 
 const normalizeTheme = (value: string | null | undefined): string | undefined => {
-    if (!value) {
+    if (value === null || value === undefined) {
         return undefined;
     }
 
     const normalized = value.trim().toLowerCase();
-    return normalized ? normalized : undefined;
+    return normalized.length > 0 ? normalized : undefined;
 };
 
 const normalizeUiStyle = (value: string | null | undefined): string | undefined => {
-    if (!value) {
+    if (value === null || value === undefined) {
         return undefined;
     }
 
     const normalized = value.trim().toLowerCase();
-    return normalized ? normalized : undefined;
+    return normalized.length > 0 ? normalized : undefined;
 };
 
 const normalizeBoolean = (value: boolean | null | undefined): boolean | undefined => value ?? undefined;
 
 const normalizeProfileImage = (value: ImageSelection | string | null | undefined): { url: string; assetId?: string } | undefined => {
-    if (!value) {
+    if (value === null || value === undefined || value === '') {
         return undefined;
     }
 
     if (typeof value === 'string') {
         const normalized = normalizeString(value);
-        return normalized ? { url: normalized } : undefined;
+        return normalized !== undefined ? { url: normalized } : undefined;
     }
 
     const url = normalizeString(value.url ?? undefined);
-    if (!url) {
+    if (url === undefined) {
         return undefined;
     }
 
