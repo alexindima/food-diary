@@ -1,0 +1,70 @@
+<div class="user-manage__dietologist-summary fd-row fd-wrap fd-gap-md fd-justify-between fd-ui-surface fd-ui-surface--warning">
+    <div class="user-manage__dietologist-copy fd-stack fd-gap-xxs">
+        @let label = labelView();
+        <div class="user-manage__dietologist-label">
+            {{ label.key | translate: label.params }}
+        </div>
+        @if (isDietologistConnected()) {
+            <div class="user-manage__dietologist-info-list fd-stack fd-gap-xxs">
+                @if (dietologistAcceptedDateLabel(); as acceptedDate) {
+                    <div class="user-manage__dietologist-info-row">
+                        {{ 'USER_MANAGE.DIETOLOGIST_CONNECTED_DATE' | translate: { date: acceptedDate } }}
+                    </div>
+                }
+                <div class="user-manage__dietologist-hint">
+                    {{ 'USER_MANAGE.DIETOLOGIST_CONNECTED_HINT' | translate }}
+                </div>
+            </div>
+        } @else {
+            @let hint = hintView();
+            <div class="user-manage__dietologist-hint">
+                {{ hint.key | translate: hint.params }}
+            </div>
+        }
+    </div>
+    @if (!isDietologistConnected()) {
+        <div class="user-manage__dietologist-summary-form fd-grid fd-gap-md" [formGroup]="dietologistForm()">
+            <div class="user-manage__dietologist-email user-manage__dietologist-email--summary">
+                <fd-ui-input
+                    formControlName="email"
+                    type="email"
+                    size="lg"
+                    [label]="'USER_MANAGE.DIETOLOGIST_EMAIL' | translate"
+                    [placeholder]="'USER_MANAGE.DIETOLOGIST_EMAIL_PLACEHOLDER' | translate"
+                    [error]="dietologistInviteEmailError()"
+                />
+            </div>
+        </div>
+    }
+
+    @let action = summaryAction();
+    <div class="user-manage__dietologist-summary-actions fd-row fd-justify-end fd-align-start">
+        <fd-ui-button
+            class="user-manage__dietologist-summary-button"
+            type="button"
+            [fill]="action.fill"
+            [variant]="action.variant"
+            [icon]="action.icon"
+            [disabled]="action.disabled"
+            [loading]="isSavingDietologist()"
+            (click)="handleSummaryAction(action.action)"
+        >
+            {{ action.labelKey | translate }}
+        </fd-ui-button>
+    </div>
+
+    @if (showPendingStatus()) {
+        <div class="user-manage__notifications-meta fd-row fd-wrap fd-gap-xs">
+            <span
+                class="user-manage__notifications-badge user-manage__notifications-badge--account fd-ui-pill fd-ui-pill--warning fd-ui-caption"
+            >
+                {{ 'USER_MANAGE.DIETOLOGIST_STATUS_PENDING' | translate }}
+            </span>
+        </div>
+    }
+    @if (pendingExpiresDate(); as expiresDate) {
+        <div class="user-manage__dietologist-meta">
+            {{ 'USER_MANAGE.DIETOLOGIST_PENDING_EXPIRES' | translate: { date: expiresDate } }}
+        </div>
+    }
+</div>

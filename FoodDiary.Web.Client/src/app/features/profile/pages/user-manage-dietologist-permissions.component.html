@@ -1,0 +1,22 @@
+<div class="user-manage__dietologist-permissions fd-stack fd-gap-sm">
+    <div class="user-manage__dietologist-permission-list fd-stack fd-gap-sm">
+        @for (permission of permissionOptions; track permission.controlName) {
+            <div
+                class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
+            >
+                <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
+                    <div class="user-manage__notifications-label">
+                        {{ permission.labelKey | translate }}
+                    </div>
+                </div>
+                <fd-ui-switch
+                    [checked]="permissions()[permission.controlName]"
+                    [disabled]="isSavingDietologist()"
+                    [fdUiHint]="permission.labelKey | translate"
+                    [ariaLabel]="permission.labelKey | translate"
+                    (checkedChange)="permissionChange.emit({ controlName: permission.controlName, value: $event })"
+                />
+            </div>
+        }
+    </div>
+</div>

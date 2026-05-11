@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 
 import type { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import type { DietologistFormData } from './user-manage.component';
+import { UserManageDietologistPermissionsComponent } from './user-manage-dietologist-permissions.component';
+import { UserManageDietologistSummaryComponent } from './user-manage-dietologist-summary.component';
 
 export type DietologistPermissionChange = {
     controlName: keyof DietologistPermissions;
@@ -21,12 +19,10 @@ export type DietologistPermissionChange = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiHintDirective,
-        FdUiButtonComponent,
         FdUiCardComponent,
         FdUiFormErrorComponent,
-        FdUiInputComponent,
-        FdUiSwitchComponent,
+        UserManageDietologistSummaryComponent,
+        UserManageDietologistPermissionsComponent,
     ],
     templateUrl: './user-manage-dietologist-card.component.html',
     styleUrl: './user-manage.component.scss',
@@ -50,4 +46,13 @@ export class UserManageDietologistCardComponent {
     public readonly dietologistRevoke = output<void>();
     public readonly dietologistProfileToggle = output<boolean>();
     public readonly dietologistPermissionChange = output<DietologistPermissionChange>();
+
+    protected handleDietologistPermissionChange(change: DietologistPermissionChange): void {
+        if (change.controlName === 'shareProfile') {
+            this.dietologistProfileToggle.emit(change.value);
+            return;
+        }
+
+        this.dietologistPermissionChange.emit(change);
+    }
 }
