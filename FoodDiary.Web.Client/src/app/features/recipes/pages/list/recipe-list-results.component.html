@@ -1,0 +1,62 @@
+@if (hasVisibleRecipes()) {
+    <div class="recipe-list__groups fd-stack fd-gap-card-profile">
+        @if (showRecentSection()) {
+            <div class="recipe-list__section fd-stack fd-gap-sm">
+                <div class="recipe-list__section-header fd-row fd-gap-sm">
+                    <span class="recipe-list__section-label fd-ui-card-title">
+                        {{ 'RECIPE_LIST.RECENT_RECIPES' | translate }}
+                    </span>
+                    <span class="recipe-list__section-line"></span>
+                </div>
+                <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
+                    @for (item of recentRecipeItems(); track item.recipe.id) {
+                        <fd-recipe-card
+                            [recipe]="item.recipe"
+                            [imageUrl]="item.imageUrl"
+                            (open)="recipeOpen.emit(item.recipe)"
+                            (addToMeal)="recipeAddToMeal.emit(item.recipe)"
+                            (favoriteChanged)="recipeFavoriteChanged.emit({ recipe: item.recipe, change: $event })"
+                        />
+                    }
+                </div>
+            </div>
+        }
+
+        @if (allRecipeItems().length > 0) {
+            <div class="recipe-list__section fd-stack fd-gap-sm">
+                <div class="recipe-list__section-header fd-row fd-gap-sm">
+                    <span class="recipe-list__section-label fd-ui-card-title">
+                        {{ allRecipesSectionLabelKey() | translate }}
+                    </span>
+                    <span class="recipe-list__section-line"></span>
+                </div>
+                <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
+                    @for (item of allRecipeItems(); track item.recipe.id) {
+                        <fd-recipe-card
+                            [recipe]="item.recipe"
+                            [imageUrl]="item.imageUrl"
+                            (open)="recipeOpen.emit(item.recipe)"
+                            (addToMeal)="recipeAddToMeal.emit(item.recipe)"
+                            (favoriteChanged)="recipeFavoriteChanged.emit({ recipe: item.recipe, change: $event })"
+                        />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+} @else if (isEmptyState()) {
+    <div class="recipe-list__empty-state fd-stack fd-gap-xs fd-align-center">
+        <fd-ui-icon class="recipe-list__no-results-icon" name="menu_book" size="xl" />
+        <div class="recipe-list__empty-title fd-ui-card-title">{{ 'RECIPE_LIST.EMPTY_TITLE' | translate }}</div>
+        <div class="recipe-list__empty-copy fd-ui-body-sm">{{ 'RECIPE_LIST.EMPTY_COPY' | translate }}</div>
+        <fd-ui-button variant="primary" fill="solid" icon="add" (click)="recipeAdd.emit()">
+            {{ 'RECIPE_LIST.ADD_FIRST_RECIPE_BUTTON' | translate }}
+        </fd-ui-button>
+    </div>
+} @else {
+    <div class="recipe-list__no-results fd-stack fd-gap-xs fd-align-center">
+        <fd-ui-icon class="recipe-list__no-results-icon" name="search_off" size="xl" />
+        <div class="recipe-list__empty-title fd-ui-card-title">{{ 'RECIPE_LIST.NO_RESULTS_TITLE' | translate }}</div>
+        <div class="recipe-list__empty-copy fd-ui-body-sm">{{ 'RECIPE_LIST.NO_RESULTS_COPY' | translate }}</div>
+    </div>
+}

@@ -15,16 +15,14 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import { RecipeCardComponent, type RecipeFavoriteChange } from '../../../../components/shared/recipe-card/recipe-card.component';
+import type { RecipeFavoriteChange } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../../services/viewport.service';
@@ -39,8 +37,10 @@ import {
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import type { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { RecipeListFavoritesComponent } from './recipe-list-favorites.component';
+import { type RecipeFavoriteChangeRequest, RecipeListResultsComponent } from './recipe-list-results.component';
 
-interface RecipeCardViewModel {
+export interface RecipeCardViewModel {
     recipe: Recipe;
     imageUrl: string | undefined;
 }
@@ -61,12 +61,11 @@ const SEARCH_DEBOUNCE_MS = 300;
         FdUiPaginationComponent,
         SkeletonCardComponent,
         ErrorStateComponent,
-        FavoritesSectionComponent,
-        FdUiIconComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        RecipeCardComponent,
+        RecipeListFavoritesComponent,
+        RecipeListResultsComponent,
     ],
     providers: [RecipeListFacade],
 })
@@ -295,6 +294,10 @@ export class RecipeListComponent {
     public onRecipeFavoriteChanged(recipe: Recipe, change: RecipeFavoriteChange): void {
         this.syncRecipeFavoriteState(recipe.id, change.isFavorite, change.favoriteRecipeId);
         this.loadFavorites();
+    }
+
+    public onRecipeFavoriteChangeRequest(request: RecipeFavoriteChangeRequest): void {
+        this.onRecipeFavoriteChanged(request.recipe, request.change);
     }
 
     public toggleFavorites(): void {
