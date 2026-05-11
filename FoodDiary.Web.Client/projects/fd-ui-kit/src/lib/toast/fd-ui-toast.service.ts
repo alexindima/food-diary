@@ -17,6 +17,15 @@ export interface FdUiToastOptions {
 
 type FdUiToastSemanticKind = 'success' | 'error' | 'info';
 
+const ENTER_ANIMATION_MS = 250;
+const EXIT_ANIMATION_MS = 200;
+const DEFAULT_DURATION_MS = 5_000;
+const SUCCESS_DURATION_MS = 3_500;
+const INFO_DURATION_MS = 4_000;
+const RANDOM_ID_RADIX = 36;
+const RANDOM_ID_SLICE_START = 2;
+const RANDOM_ID_SLICE_END = 9;
+
 export interface FdUiToastDismiss {
     dismissedByAction: boolean;
 }
@@ -74,8 +83,8 @@ export class FdUiToastRef {
     providedIn: 'root',
 })
 export class FdUiToastService {
-    private readonly enterAnimationMs = 250;
-    private readonly exitAnimationMs = 200;
+    private readonly enterAnimationMs = ENTER_ANIMATION_MS;
+    private readonly exitAnimationMs = EXIT_ANIMATION_MS;
     private readonly toastState = signal<FdUiToastInstance[]>([]);
     private readonly refs = new Map<string, FdUiToastRef>();
     private readonly dismissTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -85,7 +94,7 @@ export class FdUiToastService {
 
     public open(message: string, options: FdUiToastOptions = {}): FdUiToastRef {
         const existingToast = this.findDuplicate(message, options);
-        if (existingToast) {
+        if (existingToast !== undefined) {
             this.clearDismissTimer(existingToast.id);
             this.toastState.update(current =>
                 current.map(item =>
@@ -93,15 +102,15 @@ export class FdUiToastService {
                         ? {
                               ...item,
                               action: options.action ?? item.action,
-                              duration: options.duration ?? 5000,
+                              duration: options.duration ?? DEFAULT_DURATION_MS,
                               politeness: options.politeness ?? item.politeness,
                           }
                         : item,
                 ),
             );
-            this.scheduleDismiss(existingToast.id, options.duration ?? 5000);
+            this.scheduleDismiss(existingToast.id, options.duration ?? DEFAULT_DURATION_MS);
             const existingRef = this.refs.get(existingToast.id);
-            if (existingRef) {
+            if (existingRef !== undefined) {
                 return existingRef;
             }
         }
@@ -112,7 +121,7 @@ export class FdUiToastService {
             message,
             action: options.action,
             appearance: options.appearance ?? 'default',
-            duration: options.duration ?? 5000,
+            duration: options.duration ?? DEFAULT_DURATION_MS,
             horizontalPosition: options.horizontalPosition ?? 'center',
             verticalPosition: options.verticalPosition ?? 'bottom',
             politeness: options.politeness ?? 'polite',
@@ -142,7 +151,7 @@ export class FdUiToastService {
 
     public dismiss(id: string, dismissedByAction = false): void {
         const toast = this.toastState().find(item => item.id === id);
-        if (!toast || toast.leaving) {
+        if (toast === undefined || toast.leaving) {
             return;
         }
 
@@ -201,7 +210,7 @@ export class FdUiToastService {
 
     private clearDismissTimer(id: string): void {
         const timer = this.dismissTimers.get(id);
-        if (timer) {
+        if (timer !== undefined) {
             clearTimeout(timer);
             this.dismissTimers.delete(id);
         }
@@ -209,7 +218,7 @@ export class FdUiToastService {
 
     private clearRemoveTimer(id: string): void {
         const timer = this.removeTimers.get(id);
-        if (timer) {
+        if (timer !== undefined) {
             clearTimeout(timer);
             this.removeTimers.delete(id);
         }
@@ -220,7 +229,7 @@ export class FdUiToastService {
             return crypto.randomUUID();
         }
 
-        return `fd-ui-toast-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+        return `fd-ui-toast-${Date.now()}-${Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_SLICE_START, RANDOM_ID_SLICE_END)}`;
     }
 
     private buildSemanticOptions(kind: FdUiToastSemanticKind, options: FdUiToastOptions): FdUiToastOptions {
@@ -228,21 +237,21 @@ export class FdUiToastService {
             case 'success':
                 return {
                     appearance: 'positive',
-                    duration: 3500,
+                    duration: SUCCESS_DURATION_MS,
                     politeness: 'polite',
                     ...options,
                 };
             case 'error':
                 return {
                     appearance: 'negative',
-                    duration: 5000,
+                    duration: DEFAULT_DURATION_MS,
                     politeness: 'assertive',
                     ...options,
                 };
             case 'info':
                 return {
                     appearance: 'info',
-                    duration: 4000,
+                    duration: INFO_DURATION_MS,
                     politeness: 'polite',
                     ...options,
                 };

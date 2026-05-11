@@ -56,6 +56,9 @@ const UNIT_OPTIONS: readonly UnitOptionView[] = [
     { value: 'ml', labelKey: 'GENERAL.UNITS.ML' },
     { value: 'pcs', labelKey: 'GENERAL.UNITS.PCS' },
 ];
+const HTTP_FORBIDDEN_STATUS = 403;
+const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
+const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
 @Component({
     selector: 'fd-meal-photo-recognition-dialog',
@@ -108,7 +111,7 @@ export class MealPhotoRecognitionDialogComponent {
     );
     public readonly macroSummaryItems = computed<MacroSummaryItem[]>(() => {
         const nutrition = this.nutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return [];
         }
 
@@ -138,7 +141,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL',
     );
     public readonly statusKey = computed(() => {
-        if (!this.selection()) {
+        if (this.selection() === null) {
             return null;
         }
 
@@ -159,7 +162,7 @@ export class MealPhotoRecognitionDialogComponent {
 
     public constructor() {
         const session = this.dialogData.initialSession;
-        if (session) {
+        if (session !== null && session !== undefined) {
             this.applyInitialSession(session);
         }
     }
@@ -170,7 +173,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private resolveUnitKey(unit?: string | null): string | null {
-        if (!unit) {
+        if (unit === null || unit === undefined) {
             return null;
         }
 
@@ -193,12 +196,12 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private capitalizeLabel(value?: string | null): string {
-        if (!value) {
+        if (value === null || value === undefined) {
             return '';
         }
 
         const trimmed = value.trim();
-        if (!trimmed) {
+        if (trimmed.length === 0) {
             return '';
         }
 
@@ -221,7 +224,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.nutrition.set(null);
         this.nutritionErrorKey.set(null);
 
-        if (!selection?.assetId) {
+        if (selection?.assetId === null || selection?.assetId === undefined) {
             return;
         }
 
@@ -230,7 +233,7 @@ export class MealPhotoRecognitionDialogComponent {
 
     public onReanalyze(): void {
         const assetId = this.selection()?.assetId;
-        if (!assetId || this.isLoading() || this.isEditing()) {
+        if (assetId === null || assetId === undefined || this.isLoading() || this.isEditing()) {
             return;
         }
 
@@ -245,7 +248,7 @@ export class MealPhotoRecognitionDialogComponent {
 
     public addToMeal(): void {
         const session = this.buildSessionPayload();
-        if (!session) {
+        if (session === null) {
             return;
         }
         this.dialogRef?.close(session);
@@ -257,7 +260,7 @@ export class MealPhotoRecognitionDialogComponent {
 
     private buildSessionPayload(): MealAiSessionManageDto | null {
         const nutrition = this.nutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return null;
         }
 
@@ -288,7 +291,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private findVisionMatch(name: string | null | undefined): FoodVisionItem | null {
-        if (!name) {
+        if (name === null || name === undefined) {
             return null;
         }
 
@@ -306,9 +309,9 @@ export class MealPhotoRecognitionDialogComponent {
             .analyzeFoodImage({ imageAssetId: assetId })
             .pipe(
                 catchError((err: HttpErrorResponse) => {
-                    if (err.status === 403) {
+                    if (err.status === HTTP_FORBIDDEN_STATUS) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (err.status === 429) {
+                    } else if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
@@ -319,12 +322,12 @@ export class MealPhotoRecognitionDialogComponent {
             .subscribe(response => {
                 this.isLoading.set(false);
                 this.hasAnalyzed.set(true);
-                if (!response) {
+                if (response === null) {
                     return;
                 }
                 const items = response.items;
                 this.results.set(items);
-                if (items.length) {
+                if (items.length > 0) {
                     this.runNutrition(items);
                 }
             });
@@ -339,7 +342,7 @@ export class MealPhotoRecognitionDialogComponent {
             .calculateNutrition({ items })
             .pipe(
                 catchError((err: HttpErrorResponse) => {
-                    if (err.status === 429) {
+                    if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
@@ -349,7 +352,7 @@ export class MealPhotoRecognitionDialogComponent {
             )
             .subscribe(response => {
                 this.isNutritionLoading.set(false);
-                if (!response) {
+                if (response === null) {
                     return;
                 }
                 this.nutrition.set(response);
@@ -357,15 +360,16 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     public startEditing(): void {
-        const items = this.results().length
-            ? this.results()
-            : (this.nutrition()?.items.map(item => ({
-                  nameEn: item.name,
-                  nameLocal: null,
-                  amount: item.amount,
-                  unit: item.unit,
-                  confidence: 1,
-              })) ?? []);
+        const items =
+            this.results().length > 0
+                ? this.results()
+                : (this.nutrition()?.items.map(item => ({
+                      nameEn: item.name,
+                      nameLocal: null,
+                      amount: item.amount,
+                      unit: item.unit,
+                      confidence: 1,
+                  })) ?? []);
 
         const editable = items.map(item => ({
             id: this.createEditId(),
@@ -382,13 +386,16 @@ export class MealPhotoRecognitionDialogComponent {
 
     public applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
-        const normalized = edited.map(item => ({
-            nameEn: item.nameEn.trim() || item.name.trim(),
-            nameLocal: item.nameLocal?.trim().length ? item.nameLocal.trim() : null,
-            amount: item.amount,
-            unit: item.unit,
-            confidence: 1,
-        }));
+        const normalized = edited.map(item => {
+            const localName = item.nameLocal?.trim() ?? '';
+            return {
+                nameEn: item.nameEn.trim().length > 0 ? item.nameEn.trim() : item.name.trim(),
+                nameLocal: localName.length > 0 ? localName : null,
+                amount: item.amount,
+                unit: item.unit,
+                confidence: 1,
+            };
+        });
 
         const changes = this.analyzeEditChanges(this.sourceItems(), edited);
         this.results.set(normalized);
@@ -401,7 +408,7 @@ export class MealPhotoRecognitionDialogComponent {
         }
 
         const recalculated = this.recalculateNutritionFromLocal(changes, edited);
-        if (recalculated) {
+        if (recalculated !== null) {
             this.nutrition.set(recalculated);
         } else {
             this.runNutrition(normalized);
@@ -467,7 +474,7 @@ export class MealPhotoRecognitionDialogComponent {
 
     private applyInitialSession(session: MealAiSessionManageDto): void {
         this.selection.set(
-            session.imageUrl || session.imageAssetId
+            session.imageUrl !== null || session.imageAssetId !== null
                 ? {
                       url: session.imageUrl ?? null,
                       assetId: session.imageAssetId ?? null,
@@ -531,12 +538,12 @@ export class MealPhotoRecognitionDialogComponent {
 
         for (const item of edited) {
             const previous = sourceById.get(item.id);
-            if (!previous) {
+            if (previous === undefined) {
                 continue;
             }
 
             const nameChanged = this.normalizeName(previous.name) !== this.normalizeName(item.name);
-            const unitChanged = (previous.unit || '').trim().toLowerCase() !== (item.unit || '').trim().toLowerCase();
+            const unitChanged = previous.unit.trim().toLowerCase() !== item.unit.trim().toLowerCase();
             if (nameChanged || unitChanged) {
                 requiresAi = true;
             }
@@ -560,7 +567,7 @@ export class MealPhotoRecognitionDialogComponent {
 
     private recalculateNutritionFromLocal(changes: EditChangeSummary, edited: EditableAiItem[]): FoodNutritionResponse | null {
         const nutrition = this.nutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return null;
         }
 
@@ -572,11 +579,11 @@ export class MealPhotoRecognitionDialogComponent {
                 const base = source.find(sourceItem => sourceItem.id === item.id);
                 const originalName = base?.nameEn ?? base?.name ?? item.name;
                 const originalNutrition = nutritionById.get(this.normalizeName(originalName));
-                if (!originalNutrition) {
+                if (originalNutrition === undefined) {
                     return null;
                 }
 
-                const ratio = base && base.amount > 0 ? item.amount / base.amount : 1;
+                const ratio = base !== undefined && base.amount > 0 ? item.amount / base.amount : 1;
                 return {
                     name: item.name,
                     amount: item.amount,
@@ -619,7 +626,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private toMacroSummaryItem(key: MacroSummaryItem['key'], labelKey: string, value: number, unitKey: string): MacroSummaryItem {
-        const hasFraction = Math.abs(value % 1) > 0.01;
+        const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
         return {
             key,
             labelKey,

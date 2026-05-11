@@ -24,9 +24,10 @@ export class DailyAdviceCardComponent {
             return null;
         }
 
+        const tag = advice.tag ?? '';
         return {
             value: advice.value,
-            tagKey: advice.tag !== null && advice.tag.length > 0 ? `DASHBOARD.ADVICE_TAGS.${advice.tag.toUpperCase()}` : null,
+            tagKey: tag.length > 0 ? `DASHBOARD.ADVICE_TAGS.${tag.toUpperCase()}` : null,
         };
     });
 }

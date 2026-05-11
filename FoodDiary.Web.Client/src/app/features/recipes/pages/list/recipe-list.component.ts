@@ -260,7 +260,7 @@ export class RecipeListComponent {
             )
             .afterClosed()
             .subscribe(result => {
-                if (result === null || result.onlyMine === currentOnlyMine) {
+                if (result === null || result === undefined || result.onlyMine === currentOnlyMine) {
                     return;
                 }
 

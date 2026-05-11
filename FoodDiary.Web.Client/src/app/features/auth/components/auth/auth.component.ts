@@ -54,6 +54,24 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 const LOGIN_ERROR_FIELDS = ['email', 'password'] as const;
 const REGISTER_ERROR_FIELDS = ['email', 'password', 'confirmPassword'] as const;
 const PASSWORD_RESET_ERROR_FIELDS = ['email'] as const;
+const PASSWORD_MIN_LENGTH = 6;
+const PASSWORD_RESET_COOLDOWN_SECONDS = 60;
+const MS_PER_SECOND = 1_000;
+const LOGIN_AUTOFILL_CHECK_DELAY_SHORT_MS = 100;
+const LOGIN_AUTOFILL_CHECK_DELAY_MEDIUM_MS = 300;
+const LOGIN_AUTOFILL_CHECK_DELAY_LONG_MS = 700;
+const LOGIN_AUTOFILL_CHECK_DELAY_EXTENDED_MS = 1_500;
+const LOGIN_AUTOFILL_CHECK_DELAY_SLOW_MS = 3_000;
+const LOGIN_AUTOFILL_CHECK_DELAY_FINAL_MS = 5_000;
+const LOGIN_AUTOFILL_CHECK_DELAYS_MS = [
+    LOGIN_AUTOFILL_CHECK_DELAY_SHORT_MS,
+    LOGIN_AUTOFILL_CHECK_DELAY_MEDIUM_MS,
+    LOGIN_AUTOFILL_CHECK_DELAY_LONG_MS,
+    LOGIN_AUTOFILL_CHECK_DELAY_EXTENDED_MS,
+    LOGIN_AUTOFILL_CHECK_DELAY_SLOW_MS,
+    LOGIN_AUTOFILL_CHECK_DELAY_FINAL_MS,
+] as const;
+const LOGIN_AUTOFILL_FIELD_COUNT = 2;
 
 type LoginErrorField = (typeof LOGIN_ERROR_FIELDS)[number];
 type RegisterErrorField = (typeof REGISTER_ERROR_FIELDS)[number];
@@ -133,13 +151,19 @@ export class AuthComponent {
     public constructor() {
         this.loginForm = new FormGroup<LoginFormGroup>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-            password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
+            password: new FormControl<string>('', {
+                nonNullable: true,
+                validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
+            }),
             rememberMe: new FormControl<boolean>(false, { nonNullable: true }),
         });
 
         this.registerForm = new FormGroup<RegisterFormGroup>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-            password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
+            password: new FormControl<string>('', {
+                nonNullable: true,
+                validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
+            }),
             confirmPassword: new FormControl<string>('', {
                 nonNullable: true,
                 validators: [Validators.required, matchFieldValidator('password')],
@@ -204,7 +228,7 @@ export class AuthComponent {
                 : this.initialAdminReturnUrl();
         });
         effect(() => {
-            if (!this.adminReturnUrl) {
+            if ((this.adminReturnUrl ?? '').length === 0) {
                 return;
             }
 
@@ -248,7 +272,7 @@ export class AuthComponent {
         this.passwordResetSent.set(false);
         this.hasLoginNativeInteraction = false;
         this.loginAutofillDetected.set(false);
-        if (this.useRouting() && this.router) {
+        if (this.useRouting() && this.router !== null) {
             await this.router.navigate(['/auth', mode]);
         }
     }
@@ -334,8 +358,8 @@ export class AuthComponent {
     }
 
     private async initializeGoogleAsync(): Promise<void> {
-        const clientId = environment.googleClientId;
-        if (!clientId) {
+        const clientId = environment.googleClientId ?? '';
+        if (clientId.length === 0) {
             return;
         }
         try {
@@ -358,11 +382,12 @@ export class AuthComponent {
         }
         const target = this.authMode === 'login' ? this.googleLoginButton()?.nativeElement : this.googleRegisterButton()?.nativeElement;
         [this.googleLoginButton(), this.googleRegisterButton()].forEach(ref => {
-            if (ref?.nativeElement) {
-                ref.nativeElement.innerHTML = '';
+            const element = ref?.nativeElement;
+            if (element !== undefined) {
+                element.innerHTML = '';
             }
         });
-        if (target) {
+        if (target !== undefined) {
             this.googleIdentityService.renderButton(target, 'filled_blue');
         }
     }
@@ -389,7 +414,7 @@ export class AuthComponent {
         }
         this.clearGlobalError();
         this.passwordResetForm.reset({
-            email: this.loginForm.controls.email.value || '',
+            email: this.loginForm.controls.email.value,
         });
         this.passwordResetSent.set(false);
         this.showPasswordReset.set(true);
@@ -425,26 +450,26 @@ export class AuthComponent {
         });
     }
 
-    private startPasswordResetCooldown(seconds = 60): void {
+    private startPasswordResetCooldown(seconds = PASSWORD_RESET_COOLDOWN_SECONDS): void {
         this.passwordResetCooldownSeconds.set(seconds);
-        if (this.passwordResetCooldownTimerId) {
+        if (this.passwordResetCooldownTimerId !== null) {
             window.clearInterval(this.passwordResetCooldownTimerId);
         }
         this.passwordResetCooldownTimerId = window.setInterval(() => {
             const remaining = this.passwordResetCooldownSeconds();
             if (remaining <= 1) {
                 this.passwordResetCooldownSeconds.set(0);
-                if (this.passwordResetCooldownTimerId) {
+                if (this.passwordResetCooldownTimerId !== null) {
                     window.clearInterval(this.passwordResetCooldownTimerId);
                     this.passwordResetCooldownTimerId = null;
                 }
                 return;
             }
             this.passwordResetCooldownSeconds.set(remaining - 1);
-        }, 1000);
+        }, MS_PER_SECOND);
 
         this.destroyRef.onDestroy(() => {
-            if (this.passwordResetCooldownTimerId) {
+            if (this.passwordResetCooldownTimerId !== null) {
                 window.clearInterval(this.passwordResetCooldownTimerId);
                 this.passwordResetCooldownTimerId = null;
             }
@@ -472,7 +497,7 @@ export class AuthComponent {
         }
 
         const adminRedirectUrl = await this.tryBuildAdminRedirectUrlAsync();
-        if (adminRedirectUrl) {
+        if (adminRedirectUrl !== null) {
             window.location.assign(adminRedirectUrl);
             return;
         }
@@ -481,12 +506,14 @@ export class AuthComponent {
     }
 
     private async tryBuildAdminRedirectUrlAsync(): Promise<string | null> {
-        if (!this.adminReturnUrl || !environment.adminAppUrl) {
+        const adminReturnUrl = this.adminReturnUrl;
+        const adminAppUrl = environment.adminAppUrl ?? '';
+        if (adminReturnUrl === null || adminReturnUrl.length === 0 || adminAppUrl.length === 0) {
             return null;
         }
 
-        const adminPath = this.normalizeAdminReturnUrl(this.adminReturnUrl);
-        if (!adminPath) {
+        const adminPath = this.normalizeAdminReturnUrl(adminReturnUrl);
+        if (adminPath === null || adminPath.length === 0) {
             return null;
         }
 
@@ -496,7 +523,7 @@ export class AuthComponent {
 
         try {
             const response = await firstValueFrom(this.authService.startAdminSso());
-            const adminUrl = new URL(adminPath, environment.adminAppUrl);
+            const adminUrl = new URL(adminPath, adminAppUrl);
             adminUrl.searchParams.set('code', response.code);
             return adminUrl.toString();
         } catch {
@@ -505,14 +532,14 @@ export class AuthComponent {
     }
 
     private buildAdminUnauthorizedUrl(returnUrl: string, reason: 'forbidden' | 'unauthenticated'): string {
-        const unauthorizedUrl = new URL('/unauthorized', environment.adminAppUrl);
+        const unauthorizedUrl = new URL('/unauthorized', environment.adminAppUrl ?? window.location.origin);
         unauthorizedUrl.searchParams.set('reason', reason);
         unauthorizedUrl.searchParams.set('returnUrl', returnUrl);
         return unauthorizedUrl.toString();
     }
 
     private normalizeAdminReturnUrl(value: string): string | null {
-        if (!value) {
+        if (value.length === 0) {
             return '/';
         }
 
@@ -522,16 +549,17 @@ export class AuthComponent {
         }
 
         try {
-            const parsed = new URL(decoded, environment.adminAppUrl ?? window.location.origin);
-            if (environment.adminAppUrl) {
-                const adminOrigin = new URL(environment.adminAppUrl).origin;
+            const adminAppUrl = environment.adminAppUrl ?? '';
+            const parsed = new URL(decoded, adminAppUrl.length > 0 ? adminAppUrl : window.location.origin);
+            if (adminAppUrl.length > 0) {
+                const adminOrigin = new URL(adminAppUrl).origin;
                 if (parsed.origin !== adminOrigin) {
                     return '/';
                 }
             }
 
             const search = parsed.searchParams.toString();
-            return search ? `${parsed.pathname}?${search}` : parsed.pathname;
+            return search.length > 0 ? `${parsed.pathname}?${search}` : parsed.pathname;
         } catch {
             return decoded.startsWith('/') ? decoded : '/';
         }
@@ -583,7 +611,7 @@ export class AuthComponent {
     private syncLoginNativeValues(): void {
         const form = this.loginFormElement()?.nativeElement;
 
-        if (!form) {
+        if (form === undefined) {
             return;
         }
 
@@ -601,7 +629,7 @@ export class AuthComponent {
 
     private startLoginAutofillDetection(): void {
         this.updateLoginAutofillState();
-        this.loginAutofillCheckTimerIds = [100, 300, 700, 1500, 3000, 5000].map(delay =>
+        this.loginAutofillCheckTimerIds = LOGIN_AUTOFILL_CHECK_DELAYS_MS.map(delay =>
             window.setTimeout(() => {
                 this.updateLoginAutofillState();
             }, delay),
@@ -628,14 +656,14 @@ export class AuthComponent {
     }
 
     private hasCompleteLoginAutofill(form: HTMLFormElement | undefined): boolean {
-        if (!form) {
+        if (form === undefined) {
             return false;
         }
 
         const email = form.querySelector<HTMLInputElement>('input[autocomplete="username"]')?.value ?? '';
         const password = form.querySelector<HTMLInputElement>('input[autocomplete="current-password"]')?.value ?? '';
 
-        if (email && password) {
+        if (email.length > 0 && password.length > 0) {
             return true;
         }
 
@@ -643,12 +671,12 @@ export class AuthComponent {
             return false;
         }
 
-        if (email || password) {
+        if (email.length > 0 || password.length > 0) {
             return false;
         }
 
         try {
-            return form.querySelectorAll('input:-webkit-autofill').length >= 2;
+            return form.querySelectorAll('input:-webkit-autofill').length >= LOGIN_AUTOFILL_FIELD_COUNT;
         } catch {
             return false;
         }
@@ -697,7 +725,7 @@ export class AuthComponent {
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control?.invalid) {
+        if (control?.invalid !== true) {
             return null;
         }
 
@@ -707,13 +735,13 @@ export class AuthComponent {
         }
 
         const errors = control.errors;
-        if (!errors) {
+        if (errors === null) {
             return null;
         }
 
         for (const key of Object.keys(errors)) {
             const resolver = this.validationErrors?.[key];
-            if (!resolver) {
+            if (resolver === undefined) {
                 continue;
             }
 

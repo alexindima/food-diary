@@ -116,7 +116,7 @@ export class MealAiSessionsComponent {
             return currentLang;
         }
 
-        const fallbackLang = this.translateService.getFallbackLang();
+        const fallbackLang = this.translateService.getFallbackLang() ?? '';
         return fallbackLang.length > 0 ? fallbackLang : 'en';
     }
 

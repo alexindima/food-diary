@@ -57,6 +57,12 @@ interface AiDetailsToggleView {
     labelKey: string;
 }
 
+const DEFAULT_SATIETY_LEVEL = 3;
+const MAX_LEGACY_SATIETY_LEVEL = 5;
+const LEGACY_SATIETY_SCALE_FACTOR = 2;
+const TIME_PAD_LENGTH = 2;
+const NUTRITION_FRACTION_THRESHOLD = 0.01;
+
 @Component({
     selector: 'fd-ai-photo-result',
     standalone: true,
@@ -101,8 +107,8 @@ export class AiPhotoResultComponent {
     public readonly detailsDate = signal(this.getDateInputValue(new Date()));
     public readonly detailsTime = signal(this.getTimeInputValue(new Date()));
     public readonly detailsComment = signal('');
-    public readonly preMealSatietyLevel = signal<number | null>(3);
-    public readonly postMealSatietyLevel = signal<number | null>(3);
+    public readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
+    public readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     public readonly editItems = signal<EditableAiItem[]>([]);
     public readonly resultRows = computed<AiResultRow[]>(() =>
         this.results().map(item => ({
@@ -137,7 +143,7 @@ export class AiPhotoResultComponent {
     );
     public readonly nutritionSummary = computed<AiNutritionSummaryItem[]>(() => {
         const nutrition = this.nutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return [];
         }
 
@@ -166,13 +172,13 @@ export class AiPhotoResultComponent {
     private resolveAmountLabel(item: FoodVisionItem): string {
         const amount = item.amount;
         const unitKey = this.resolveUnitKey(item.unit);
-        const unitLabel = unitKey ? this.translateService.instant(unitKey) : item.unit;
-        return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
+        const unitLabel = unitKey !== null ? this.translateService.instant(unitKey) : item.unit;
+        return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
     }
 
     private resolveMacroLabel(value: number, unitKey: string): string {
         const locale = this.translateService.getCurrentLang();
-        const hasFraction = Math.abs(value % 1) > 0.01;
+        const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,
             minimumFractionDigits: hasFraction ? 1 : 0,
@@ -183,25 +189,26 @@ export class AiPhotoResultComponent {
 
     private resolveUnitLabel(unit: string): string {
         const unitKey = this.resolveUnitKey(unit);
-        return unitKey ? this.translateService.instant(unitKey) : unit;
+        return unitKey !== null ? this.translateService.instant(unitKey) : unit;
     }
 
     public removeEditItemAriaLabel(item: EditableAiItem): string {
         return this.translateService.instant('AI_INPUT_BAR.REMOVE_AI_ITEM', {
-            name: item.name.trim() || item.nameEn.trim() || '?',
+            name: item.name.trim().length > 0 ? item.name.trim() : item.nameEn.trim().length > 0 ? item.nameEn.trim() : '?',
         });
     }
 
     public startEditing(): void {
-        const items = this.results().length
-            ? this.results()
-            : (this.nutrition()?.items.map(item => ({
-                  nameEn: item.name,
-                  nameLocal: null,
-                  amount: item.amount,
-                  unit: item.unit,
-                  confidence: 1,
-              })) ?? []);
+        const items =
+            this.results().length > 0
+                ? this.results()
+                : (this.nutrition()?.items.map(item => ({
+                      nameEn: item.name,
+                      nameLocal: null,
+                      amount: item.amount,
+                      unit: item.unit,
+                      confidence: 1,
+                  })) ?? []);
 
         const editable = items.map(item => ({
             id: this.createEditId(),
@@ -218,13 +225,16 @@ export class AiPhotoResultComponent {
 
     public applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
-        const normalized: FoodVisionItem[] = edited.map(item => ({
-            nameEn: item.nameEn.trim() || item.name.trim(),
-            nameLocal: item.nameLocal?.trim().length ? item.nameLocal.trim() : null,
-            amount: item.amount,
-            unit: item.unit,
-            confidence: 1,
-        }));
+        const normalized: FoodVisionItem[] = edited.map(item => {
+            const localName = item.nameLocal?.trim() ?? '';
+            return {
+                nameEn: item.nameEn.trim().length > 0 ? item.nameEn.trim() : item.name.trim(),
+                nameLocal: localName.length > 0 ? localName : null,
+                amount: item.amount,
+                unit: item.unit,
+                confidence: 1,
+            };
+        });
 
         const changes = this.analyzeEditChanges(this.sourceItems(), edited);
         this.isEditing.set(false);
@@ -235,7 +245,7 @@ export class AiPhotoResultComponent {
         }
 
         const recalculated = this.recalculateNutritionFromLocal(changes, edited);
-        if (recalculated) {
+        if (recalculated !== null) {
             this.editApplied.emit(normalized);
         } else {
             this.editApplied.emit(normalized);
@@ -314,14 +324,14 @@ export class AiPhotoResultComponent {
         this.addToMeal.emit({
             date: this.detailsDate(),
             time: this.detailsTime(),
-            comment: this.detailsComment().trim() || null,
+            comment: this.detailsComment().trim().length > 0 ? this.detailsComment().trim() : null,
             preMealSatietyLevel: this.normalizeSatietyLevel(this.preMealSatietyLevel()),
             postMealSatietyLevel: this.normalizeSatietyLevel(this.postMealSatietyLevel()),
         });
     }
 
     private resolveUnitKey(unit?: string | null): string | null {
-        if (!unit) {
+        if (unit === null || unit === undefined) {
             return null;
         }
 
@@ -344,12 +354,12 @@ export class AiPhotoResultComponent {
     }
 
     private capitalizeLabel(value?: string | null): string {
-        if (!value) {
+        if (value === null || value === undefined) {
             return '';
         }
 
         const trimmed = value.trim();
-        if (!trimmed) {
+        if (trimmed.length === 0) {
             return '';
         }
 
@@ -364,24 +374,24 @@ export class AiPhotoResultComponent {
 
     private getDateInputValue(date: Date): string {
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(TIME_PAD_LENGTH, '0');
+        const day = date.getDate().toString().padStart(TIME_PAD_LENGTH, '0');
         return `${year}-${month}-${day}`;
     }
 
     private getTimeInputValue(date: Date): string {
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(TIME_PAD_LENGTH, '0');
+        const minutes = date.getMinutes().toString().padStart(TIME_PAD_LENGTH, '0');
         return `${hours}:${minutes}`;
     }
 
     private normalizeSatietyLevel(value: number | null): number {
-        if (!value) {
-            return 3;
+        if (value === null || value === 0) {
+            return DEFAULT_SATIETY_LEVEL;
         }
 
-        if (value > 5) {
-            return Math.min(5, Math.max(1, Math.round(value / 2)));
+        if (value > MAX_LEGACY_SATIETY_LEVEL) {
+            return Math.min(MAX_LEGACY_SATIETY_LEVEL, Math.max(1, Math.round(value / LEGACY_SATIETY_SCALE_FACTOR)));
         }
 
         return Math.max(1, value);
@@ -398,12 +408,12 @@ export class AiPhotoResultComponent {
 
         for (const item of edited) {
             const previous = sourceById.get(item.id);
-            if (!previous) {
+            if (previous === undefined) {
                 continue;
             }
 
             const nameChanged = this.normalizeName(previous.name) !== this.normalizeName(item.name);
-            const unitChanged = (previous.unit || '').trim().toLowerCase() !== (item.unit || '').trim().toLowerCase();
+            const unitChanged = previous.unit.trim().toLowerCase() !== item.unit.trim().toLowerCase();
             if (nameChanged || unitChanged) {
                 requiresAi = true;
             }
@@ -422,7 +432,7 @@ export class AiPhotoResultComponent {
 
     private recalculateNutritionFromLocal(changes: EditChangeSummary, edited: EditableAiItem[]): FoodNutritionResponse | null {
         const nutrition = this.nutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return null;
         }
 
@@ -434,11 +444,11 @@ export class AiPhotoResultComponent {
                 const base = source.find(sourceItem => sourceItem.id === item.id);
                 const originalName = base?.nameEn ?? base?.name ?? item.name;
                 const originalNutrition = nutritionById.get(this.normalizeName(originalName));
-                if (!originalNutrition) {
+                if (originalNutrition === undefined) {
                     return null;
                 }
 
-                const ratio = base && base.amount > 0 ? item.amount / base.amount : 1;
+                const ratio = base !== undefined && base.amount > 0 ? item.amount / base.amount : 1;
                 return {
                     name: item.name,
                     amount: item.amount,

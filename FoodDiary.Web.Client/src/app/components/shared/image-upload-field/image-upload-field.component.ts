@@ -22,6 +22,14 @@ import { FrontendLoggerService } from '../../../services/frontend-logger.service
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 
+const DEFAULT_MAX_SIZE_MB = 20;
+const DEFAULT_CROP_SIZE = 512;
+const DEFAULT_CROP_MAX_SIZE = 1024;
+const DEFAULT_RESIZE_QUALITY = 0.86;
+const RANDOM_ID_RADIX = 36;
+const RANDOM_ID_SLICE_START = 2;
+const BYTES_PER_KB = 1024;
+
 @Component({
     selector: 'fd-image-upload-field',
     standalone: true,
@@ -50,14 +58,14 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
     public readonly recommendedSize = input<string>('2160 x 1080');
-    public readonly maxSizeMb = input<number>(20);
+    public readonly maxSizeMb = input<number>(DEFAULT_MAX_SIZE_MB);
     public readonly acceptedTypes = input<string>('image/jpeg,image/png,image/webp,image/gif');
     public readonly cropEnabled = input<boolean>(false);
-    public readonly cropSize = input<number | null>(512);
-    public readonly cropMaxSize = input<number>(1024);
+    public readonly cropSize = input<number | null>(DEFAULT_CROP_SIZE);
+    public readonly cropMaxSize = input<number>(DEFAULT_CROP_MAX_SIZE);
     public readonly cropAspectRatio = input<number | null>(1);
     public readonly resizeMaxDimension = input<number | null>(null);
-    public readonly resizeQuality = input<number>(0.86);
+    public readonly resizeQuality = input<number>(DEFAULT_RESIZE_QUALITY);
     public readonly deleteOnClear = input<boolean>(false);
     public readonly initialSelection = input<ImageSelection | null>(null);
     public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'hidden'>('default');
@@ -78,7 +86,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     private readonly initialSelectionEffect = effect(() => {
         const initial = this.initialSelection();
-        if (initial?.url || initial?.assetId) {
+        if ((initial?.url !== null && initial?.url !== undefined) || (initial?.assetId !== null && initial?.assetId !== undefined)) {
             this.selection = {
                 url: initial.url ?? null,
                 assetId: initial.assetId ?? null,
@@ -117,7 +125,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public onFileSelected(event: Event): void {
         const target = event.target as HTMLInputElement;
         const file = target.files?.[0];
-        if (file) {
+        if (file !== undefined) {
             this.handleIncomingFile(file);
         }
         target.value = '';
@@ -131,7 +139,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
         this.isDragging = false;
         const file = event.dataTransfer?.files[0];
-        if (file) {
+        if (file !== undefined) {
             this.handleIncomingFile(file);
         }
     }
@@ -161,7 +169,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.clearCropState();
         this.cdr.markForCheck();
 
-        if (this.deleteOnClear() && assetId) {
+        if (this.deleteOnClear() && assetId !== null) {
             this.imageUploadService.deleteAsset(assetId).subscribe({
                 error: err => {
                     this.logger.warn('Failed to delete orphan image asset', err);
@@ -177,7 +185,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
         const selection = this.cropper.getCropperSelection();
         const aspectRatio = this.cropAspectRatio();
-        if (selection && aspectRatio) {
+        if (selection !== null && aspectRatio !== null && aspectRatio > 0) {
             selection.aspectRatio = aspectRatio;
             selection.initialAspectRatio = aspectRatio;
         }
@@ -199,7 +207,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     public onZoneClick(fileInput: HTMLInputElement): void {
-        if (this.disabled || this.isUploading || this.selection.url) {
+        if (this.disabled || this.isUploading || this.selection.url !== null) {
             return;
         }
         fileInput.click();
@@ -216,7 +224,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     private static createId(prefix: string): string {
         const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
-        return `${prefix}-${cryptoLike?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
+        return `${prefix}-${cryptoLike?.randomUUID?.() ?? Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_SLICE_START)}`;
     }
 
     private async handleIncomingFileAsync(file: File): Promise<void> {
@@ -231,7 +239,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             return;
         }
 
-        const maxBytes = this.maxSizeMb() * 1024 * 1024;
+        const maxBytes = this.maxSizeMb() * BYTES_PER_KB * BYTES_PER_KB;
 
         if (this.cropEnabled()) {
             this.startCropping(file);
@@ -251,7 +259,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     private async resizeFileIfNeededAsync(file: File): Promise<File> {
         const maxDimension = this.resizeMaxDimension();
-        if (!maxDimension || maxDimension <= 0 || !this.canResizeFile(file)) {
+        if (maxDimension === null || maxDimension <= 0 || !this.canResizeFile(file)) {
             return file;
         }
 
@@ -269,7 +277,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             canvas.width = targetWidth;
             canvas.height = targetHeight;
             const ctx = canvas.getContext('2d');
-            if (!ctx) {
+            if (ctx === null) {
                 return file;
             }
 
@@ -311,7 +319,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         return new Promise((resolve, reject) => {
             canvas.toBlob(
                 blob => {
-                    if (blob) {
+                    if (blob !== null) {
                         resolve(blob);
                     } else {
                         reject(new Error('Canvas export failed'));
@@ -328,7 +336,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         const reader = new FileReader();
         reader.onload = (): void => {
             this.cropPreviewUrl = typeof reader.result === 'string' ? reader.result : null;
-            this.isCropping = !!this.cropPreviewUrl;
+            this.isCropping = this.cropPreviewUrl !== null;
             this.cdr.markForCheck();
         };
         reader.onerror = (): void => {
@@ -377,19 +385,19 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     private destroyCropper(): void {
-        if (this.cropper) {
+        if (this.cropper !== null) {
             this.cropper.destroy();
             this.cropper = null;
         }
     }
 
     private async confirmCropAsync(): Promise<void> {
-        if (!this.cropper) {
+        if (this.cropper === null) {
             return;
         }
 
         const selection = this.cropper.getCropperSelection();
-        if (!selection) {
+        if (selection === null) {
             this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
             this.cdr.markForCheck();
             return;
@@ -397,7 +405,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
         const fixedSize = this.cropSize();
         let canvas = await selection.$toCanvas(
-            fixedSize
+            fixedSize !== null && fixedSize > 0
                 ? {
                       width: fixedSize,
                       height: fixedSize,
@@ -405,7 +413,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
                 : undefined,
         );
 
-        if (!fixedSize) {
+        if (fixedSize === null || fixedSize <= 0) {
             const maxSize = this.cropMaxSize();
             if (maxSize > 0 && (canvas.width > maxSize || canvas.height > maxSize)) {
                 const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
@@ -415,7 +423,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
                 resized.width = targetWidth;
                 resized.height = targetHeight;
                 const ctx = resized.getContext('2d');
-                if (!ctx) {
+                if (ctx === null) {
                     this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
                     this.cdr.markForCheck();
                     return;
@@ -428,7 +436,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
 
         canvas.toBlob((blob: Blob | null) => {
-            if (!blob) {
+            if (blob === null) {
                 this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
                 this.cdr.markForCheck();
                 return;
@@ -444,7 +452,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     private clearCropState(): void {
-        if (this.cropPreviewUrl) {
+        if (this.cropPreviewUrl !== null) {
             this.cropPreviewUrl = null;
         }
         this.originalFile = null;

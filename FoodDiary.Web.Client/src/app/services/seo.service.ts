@@ -103,7 +103,7 @@ export class SeoService {
     }
 
     private updateCanonical(url: string): void {
-        let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]');
+        let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]') ?? null;
         if (link === null) {
             link = this.document.createElement('link');
             link.setAttribute('rel', 'canonical');
@@ -120,7 +120,7 @@ export class SeoService {
         ];
 
         for (const alternate of alternates) {
-            let link = this.document.querySelector(`link[rel="alternate"][hreflang="${alternate.hreflang}"]`);
+            let link = this.document.querySelector(`link[rel="alternate"][hreflang="${alternate.hreflang}"]`) ?? null;
             if (link === null) {
                 link = this.document.createElement('link');
                 link.setAttribute('rel', 'alternate');
@@ -133,7 +133,7 @@ export class SeoService {
     }
 
     private updateStructuredData(pageTitle: string, description: string, currentUrl: string, data: SeoData): void {
-        let script = this.document.querySelector<HTMLScriptElement>(STRUCTURED_DATA_SELECTOR);
+        let script = this.document.querySelector<HTMLScriptElement>(STRUCTURED_DATA_SELECTOR) ?? null;
         if (script === null) {
             script = this.document.createElement('script');
             script.type = 'application/ld+json';

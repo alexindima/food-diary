@@ -51,8 +51,8 @@ export class TdeeInsightCardComponent {
     });
 
     public readonly hintKey = computed(() => {
-        const hint = this.insight()?.goalAdjustmentHint;
-        if (hint === undefined || hint.length === 0) {
+        const hint = this.insight()?.goalAdjustmentHint ?? '';
+        if (hint.length === 0) {
             return null;
         }
         return `TDEE_CARD.HINTS.${hint.replace('hint.', '').toUpperCase()}`;

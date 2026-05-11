@@ -33,6 +33,9 @@ interface AiInputBarChannelState {
     nutritionErrorKey: WritableSignal<string | null>;
 }
 
+const HTTP_FORBIDDEN_STATUS = 403;
+const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
+
 @Component({
     selector: 'fd-ai-input-bar',
     templateUrl: './ai-input-bar.component.html',
@@ -107,7 +110,7 @@ export class AiInputBarComponent {
 
     public async submitTextAsync(source: AiRecognitionSource = 'Text'): Promise<void> {
         const text = this.voiceText().trim();
-        if (!text || this.isDisabled()) {
+        if (text.length === 0 || this.isDisabled()) {
             return;
         }
 
@@ -143,7 +146,7 @@ export class AiInputBarComponent {
         const SpeechRecognitionCtor =
             (window as unknown as Record<string, unknown>)['SpeechRecognition'] ??
             (window as unknown as Record<string, unknown>)['webkitSpeechRecognition'];
-        if (!SpeechRecognitionCtor) {
+        if (SpeechRecognitionCtor === undefined) {
             return;
         }
 
@@ -156,7 +159,7 @@ export class AiInputBarComponent {
         recognition['onresult'] = (event: Record<string, unknown>): void => {
             const results = event['results'] as { [key: number]: { [key: number]: { transcript: string } } } | undefined;
             const transcript = results?.[0]?.[0]?.transcript;
-            if (transcript) {
+            if (transcript !== undefined && transcript.length > 0) {
                 this.voiceText.set(transcript);
                 void this.submitTextAsync('Voice');
             }
@@ -178,7 +181,7 @@ export class AiInputBarComponent {
 
     public onTextAddToMeal(details: AiInputBarMealDetails): void {
         const nutrition = this.textNutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return;
         }
 
@@ -215,7 +218,7 @@ export class AiInputBarComponent {
     }
 
     public onPhotoSelected(selection: ImageSelection | null): void {
-        if (!selection?.assetId) {
+        if (selection?.assetId === null || selection?.assetId === undefined) {
             return;
         }
 
@@ -229,7 +232,7 @@ export class AiInputBarComponent {
 
     public onPhotoAddToMeal(details: AiInputBarMealDetails): void {
         const nutrition = this.photoNutrition();
-        if (!nutrition) {
+        if (nutrition === null) {
             return;
         }
 
@@ -269,7 +272,7 @@ export class AiInputBarComponent {
 
     public onTextReanalyze(): void {
         const query = this.textSubmittedQuery();
-        if (!query || this.textIsAnalyzing()) {
+        if (query === null || query.length === 0 || this.textIsAnalyzing()) {
             return;
         }
 
@@ -293,7 +296,7 @@ export class AiInputBarComponent {
 
     public onPhotoReanalyze(): void {
         const assetId = this.photoSelection()?.assetId;
-        if (!assetId || this.photoIsAnalyzing()) {
+        if (assetId === null || assetId === undefined || this.photoIsAnalyzing()) {
             return;
         }
 
@@ -317,7 +320,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        const mealDate = result.date && result.time ? new Date(`${result.date}T${result.time}`) : new Date();
+        const mealDate = new Date(`${result.date}T${result.time}`);
         this.isSubmittingMeal.set(true);
         this.mealService
             .create(buildMealManageDtoFromAiResult(result, mealDate))
@@ -329,7 +332,7 @@ export class AiInputBarComponent {
             )
             .subscribe({
                 next: (meal: Meal | null) => {
-                    if (!meal) {
+                    if (meal === null) {
                         return;
                     }
 
@@ -393,7 +396,7 @@ export class AiInputBarComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
-                if (confirmed) {
+                if (confirmed === true) {
                     void this.navigationService.navigateToPremiumAccessAsync();
                 }
             });
@@ -403,12 +406,12 @@ export class AiInputBarComponent {
 
     private async ensureAiConsentAsync(): Promise<boolean> {
         const cachedUser = this.userService.user();
-        if (cachedUser?.aiConsentAcceptedAt) {
+        if (cachedUser?.aiConsentAcceptedAt !== null && cachedUser?.aiConsentAcceptedAt !== undefined) {
             return true;
         }
 
         const freshUser = await firstValueFrom(this.userService.getInfoSilently());
-        if (freshUser?.aiConsentAcceptedAt) {
+        if (freshUser?.aiConsentAcceptedAt !== null && freshUser?.aiConsentAcceptedAt !== undefined) {
             return true;
         }
 
@@ -421,7 +424,7 @@ export class AiInputBarComponent {
                 .afterClosed(),
         );
 
-        if (!accepted) {
+        if (accepted !== true) {
             return false;
         }
 
@@ -430,7 +433,7 @@ export class AiInputBarComponent {
     }
 
     private stopListening(): void {
-        if (this.speechRecognition) {
+        if (this.speechRecognition !== null) {
             const stopFn = (this.speechRecognition as Record<string, unknown>)['stop'];
             if (typeof stopFn === 'function') {
                 stopFn.call(this.speechRecognition);
@@ -477,9 +480,9 @@ export class AiInputBarComponent {
         request$
             .pipe(
                 catchError((err: HttpErrorResponse) => {
-                    if (err.status === 403) {
+                    if (err.status === HTTP_FORBIDDEN_STATUS) {
                         state.errorKey.set(errorKeys.premium);
-                    } else if (err.status === 429) {
+                    } else if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         state.errorKey.set(errorKeys.quota);
                     } else {
                         state.errorKey.set(errorKeys.generic);
@@ -490,13 +493,13 @@ export class AiInputBarComponent {
             )
             .subscribe(response => {
                 state.analyzing.set(false);
-                if (!response) {
+                if (response === null) {
                     return;
                 }
 
                 const items = response.items;
                 state.results.set(items);
-                if (items.length) {
+                if (items.length > 0) {
                     onItems(items);
                 }
             });
@@ -515,7 +518,7 @@ export class AiInputBarComponent {
             .calculateNutrition({ items })
             .pipe(
                 catchError((err: HttpErrorResponse) => {
-                    if (err.status === 429) {
+                    if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         state.nutritionErrorKey.set(errorKeys.quota);
                     } else {
                         state.nutritionErrorKey.set(errorKeys.generic);
@@ -526,7 +529,7 @@ export class AiInputBarComponent {
             )
             .subscribe(response => {
                 state.nutritionLoading.set(false);
-                if (!response) {
+                if (response === null) {
                     return;
                 }
 
