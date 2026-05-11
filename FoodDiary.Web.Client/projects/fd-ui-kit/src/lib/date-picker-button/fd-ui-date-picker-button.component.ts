@@ -40,7 +40,7 @@ export class FdUiDatePickerButtonComponent {
     }
 
     protected onCalendarSelect(value: Date | null): void {
-        if (!value) {
+        if (value === null) {
             return;
         }
 
@@ -49,7 +49,7 @@ export class FdUiDatePickerButtonComponent {
     }
 
     protected onDisplayMonthChange(value: Date | null): void {
-        if (!value) {
+        if (value === null) {
             return;
         }
 

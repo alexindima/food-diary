@@ -53,7 +53,7 @@ export class FdUiTabsComponent {
 
         return this.tabs().map(tab => ({
             ...tab,
-            labelText: tab.label ?? (tab.labelKey ? this.translateService.instant(tab.labelKey) : ''),
+            labelText: tab.label ?? (tab.labelKey !== undefined ? this.translateService.instant(tab.labelKey) : ''),
         }));
     });
 
@@ -65,7 +65,7 @@ export class FdUiTabsComponent {
 
     protected selectIndex(index: number): void {
         const tab = this.tabs().at(index);
-        if (!tab) {
+        if (tab === undefined) {
             return;
         }
         this.selectedValue.set(tab.value);
@@ -74,7 +74,7 @@ export class FdUiTabsComponent {
 
     protected onKeydown(index: number, event: KeyboardEvent): void {
         const tabs = this.tabs();
-        if (!tabs.length) {
+        if (tabs.length === 0) {
             return;
         }
 

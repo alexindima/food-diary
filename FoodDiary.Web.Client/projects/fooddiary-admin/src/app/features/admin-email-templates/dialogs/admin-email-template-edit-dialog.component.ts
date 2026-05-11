@@ -156,13 +156,13 @@ export class AdminEmailTemplateEditDialogComponent {
         const clientName = this.previewClientName();
 
         const html = this.applyTokens(
-            htmlBody || `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
+            htmlBody !== '' ? htmlBody : `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
             link,
             brand,
             clientName,
         );
         this.previewHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
-        this.previewText.set(this.applyTokens(textBody || subject, link, brand, clientName));
+        this.previewText.set(this.applyTokens(textBody !== '' ? textBody : subject, link, brand, clientName));
     }
 
     private applyTokens(value: string, link: string, brand: string, clientName: string): string {

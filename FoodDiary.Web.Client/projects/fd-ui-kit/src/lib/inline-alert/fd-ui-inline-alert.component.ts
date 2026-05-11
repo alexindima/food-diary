@@ -49,5 +49,5 @@ export class FdUiInlineAlertComponent {
         }
     });
 
-    public readonly hasActions = computed(() => !!this.primaryActionLabel() || !!this.secondaryActionLabel());
+    public readonly hasActions = computed(() => this.primaryActionLabel() !== null || this.secondaryActionLabel() !== null);
 }

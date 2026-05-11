@@ -409,7 +409,7 @@ export default [
             '@typescript-eslint/require-await': 'error',
             '@typescript-eslint/restrict-template-expressions': 'error',
             '@typescript-eslint/strict-boolean-expressions': [
-                'warn',
+                'error',
                 {
                     allowString: false,
                     allowNumber: false,

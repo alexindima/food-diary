@@ -16,7 +16,7 @@ function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): 
         configurable: true,
     });
 
-    if (typeof window !== 'undefined') {
+    if (typeof window === 'object') {
         Object.defineProperty(window, storageName, {
             value: storage,
             configurable: true,
@@ -26,7 +26,8 @@ function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): 
 
 function isStorageLike(value: unknown): value is Storage {
     return Boolean(
-        value &&
+        value !== null &&
+        value !== undefined &&
         typeof value === 'object' &&
         typeof (value as Storage).getItem === 'function' &&
         typeof (value as Storage).setItem === 'function' &&
@@ -96,7 +97,7 @@ function shouldIgnoreCssParseWarning(args: unknown[], ignoredMessage: string): b
             return arg.message.includes(ignoredMessage);
         }
 
-        if (arg && typeof arg === 'object' && 'message' in arg) {
+        if (arg !== null && typeof arg === 'object' && 'message' in arg) {
             const message = (arg as { message?: unknown }).message;
             return typeof message === 'string' && message.includes(ignoredMessage);
         }
@@ -118,7 +119,7 @@ function installCssParseStderrFilter(): void {
     ).process;
 
     const stderr = processRef?.stderr;
-    if (!stderr?.write) {
+    if (stderr?.write === undefined) {
         return;
     }
 

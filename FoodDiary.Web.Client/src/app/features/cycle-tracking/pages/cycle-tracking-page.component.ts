@@ -67,7 +67,7 @@ export class CycleTrackingPageComponent {
     public readonly currentCycleView = computed<CycleViewModel | null>(() => {
         this.languageVersion();
         const cycle = this.cycle();
-        if (!cycle) {
+        if (cycle === null) {
             return null;
         }
 
@@ -79,7 +79,7 @@ export class CycleTrackingPageComponent {
     public readonly predictionView = computed<CyclePredictionViewModel | null>(() => {
         this.languageVersion();
         const prediction = this.predictions();
-        if (!prediction) {
+        if (prediction === null) {
             return null;
         }
 
@@ -123,7 +123,7 @@ export class CycleTrackingPageComponent {
         options: Intl.DateTimeFormatOptions,
         timeZone?: Intl.DateTimeFormatOptions['timeZone'],
     ): string {
-        if (!value) {
+        if (value === null || value === undefined || value === '') {
             return '';
         }
 

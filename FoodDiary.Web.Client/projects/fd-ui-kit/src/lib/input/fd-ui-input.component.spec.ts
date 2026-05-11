@@ -108,7 +108,7 @@ describe('FdUiInputComponent', () => {
 
         const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
         expect(input).toBeTruthy();
-        if (input) {
+        if (input !== null) {
             input.value = 'test';
         }
         input?.dispatchEvent(new Event('input'));
@@ -142,7 +142,7 @@ describe('FdUiInputComponent', () => {
 
         const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
         expect(input).toBeTruthy();
-        if (input) {
+        if (input !== null) {
             input.value = 'blocked';
         }
         input?.dispatchEvent(new Event('input'));
@@ -178,7 +178,7 @@ describe('FdUiInputComponent', () => {
 
         const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control');
         expect(input).toBeTruthy();
-        if (input) {
+        if (input !== null) {
             input.value = 'autofilled@example.com';
         }
         input?.dispatchEvent(new Event('focus'));
@@ -255,7 +255,7 @@ describe('FdUiInputComponent', () => {
         it('should propagate input value to FormControl', () => {
             const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
             expect(input).toBeTruthy();
-            if (input) {
+            if (input !== null) {
                 input.value = 'typed';
             }
             input?.dispatchEvent(new Event('input'));
@@ -267,7 +267,7 @@ describe('FdUiInputComponent', () => {
         it('should sync native autofilled value to FormControl on focus', () => {
             const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control');
             expect(input).toBeTruthy();
-            if (input) {
+            if (input !== null) {
                 input.value = 'autofilled@example.com';
             }
             input?.dispatchEvent(new Event('focus'));

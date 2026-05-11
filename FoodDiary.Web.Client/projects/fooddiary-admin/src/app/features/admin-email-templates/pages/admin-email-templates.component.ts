@@ -54,7 +54,7 @@ export class AdminEmailTemplatesComponent {
             })
             .afterClosed()
             .subscribe(updated => {
-                if (updated) {
+                if (updated === true) {
                     this.loadTemplates();
                 }
             });
@@ -82,7 +82,7 @@ export class AdminEmailTemplatesComponent {
             })
             .afterClosed()
             .subscribe(updated => {
-                if (updated) {
+                if (updated === true) {
                     this.loadTemplates();
                 }
             });

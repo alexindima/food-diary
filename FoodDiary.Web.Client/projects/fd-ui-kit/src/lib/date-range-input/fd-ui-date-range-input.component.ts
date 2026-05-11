@@ -84,7 +84,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     }
 
     private toRangeValue(value: FdUiDateRangeValue | null): { start: string | null; end: string | null } {
-        if (!value) {
+        if (value === null) {
             return { start: null, end: null };
         }
 
@@ -95,7 +95,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     }
 
     private toDateValue(value: string | Date | null | undefined): Date | null {
-        if (!value) {
+        if (value === null || value === undefined || value === '') {
             return null;
         }
 
@@ -108,7 +108,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     }
 
     private formatDate(value: Date | null | undefined): string | null {
-        if (!value) {
+        if (value === null || value === undefined) {
             return null;
         }
 

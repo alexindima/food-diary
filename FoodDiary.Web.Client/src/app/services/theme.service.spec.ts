@@ -23,7 +23,7 @@ describe('ThemeService', () => {
         documentRef.documentElement.style.colorScheme = '';
 
         let metaThemeColor = documentRef.querySelector('meta[name="theme-color"]');
-        if (!metaThemeColor) {
+        if (metaThemeColor === null) {
             metaThemeColor = documentRef.createElement('meta');
             metaThemeColor.setAttribute('name', 'theme-color');
             documentRef.head.appendChild(metaThemeColor);
