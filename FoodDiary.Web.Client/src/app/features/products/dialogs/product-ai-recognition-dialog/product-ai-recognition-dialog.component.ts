@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -8,8 +7,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { catchError, of } from 'rxjs';
 
@@ -20,6 +18,8 @@ import { ImageUploadService } from '../../../../shared/api/image-upload.service'
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../models/product.data';
+import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action.component';
+import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result.component';
 
 type ProductAiDialogData = {
     initialDescription?: string | null;
@@ -43,6 +43,18 @@ export type ProductAiRecognitionResult = {
     alcoholPerBase: number;
 };
 
+export type ProductAiRecognitionFormGroup = FormGroup<{
+    name: FormControl<string>;
+    portionAmount: FormControl<number>;
+    baseUnit: FormControl<MeasurementUnit>;
+    caloriesPerBase: FormControl<number>;
+    proteinsPerBase: FormControl<number>;
+    fatsPerBase: FormControl<number>;
+    carbsPerBase: FormControl<number>;
+    fiberPerBase: FormControl<number>;
+    alcoholPerBase: FormControl<number>;
+}>;
+
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
     standalone: true,
@@ -50,16 +62,15 @@ export type ProductAiRecognitionResult = {
     styleUrls: ['./product-ai-recognition-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
-        FdUiInputComponent,
-        FdUiSelectComponent,
         FdUiTextareaComponent,
         ImageUploadFieldComponent,
+        ProductAiRecognitionActionComponent,
+        ProductAiRecognitionResultComponent,
     ],
 })
 export class ProductAiRecognitionDialogComponent {
@@ -81,10 +92,10 @@ export class ProductAiRecognitionDialogComponent {
     public readonly results = signal<FoodVisionItem[]>([]);
     public readonly nutrition = signal<FoodNutritionResponse | null>(null);
     public readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
-    public readonly resultForm = new FormGroup({
+    public readonly resultForm: ProductAiRecognitionFormGroup = new FormGroup({
         name: new FormControl('', { nonNullable: true }),
         portionAmount: new FormControl(DEFAULT_BASE_AMOUNT, { nonNullable: true }),
-        baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true }),
+        baseUnit: new FormControl<MeasurementUnit>(MeasurementUnit.G, { nonNullable: true }),
         caloriesPerBase: new FormControl(0, { nonNullable: true }),
         proteinsPerBase: new FormControl(0, { nonNullable: true }),
         fatsPerBase: new FormControl(0, { nonNullable: true }),
@@ -125,6 +136,7 @@ export class ProductAiRecognitionDialogComponent {
         return null;
     });
     public readonly canApply = computed(() => this.nutrition() !== null);
+    public readonly isAnalyzeDisabled = computed(() => this.selection() === null || this.isLoading() || this.isNutritionLoading());
     public readonly itemNames = computed(() =>
         this.results()
             .map(item => this.capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))

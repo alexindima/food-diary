@@ -1,0 +1,27 @@
+<div class="product-ai-dialog__controls fd-row">
+    @if (hasAnalyzed()) {
+        <fd-ui-button
+            type="button"
+            appearance="ai-action"
+            variant="primary"
+            fill="solid"
+            icon="auto_awesome"
+            [disabled]="disabled()"
+            (click)="reanalyze.emit()"
+        >
+            {{ 'PRODUCT_AI_DIALOG.REANALYZE' | translate }}
+        </fd-ui-button>
+    } @else {
+        <fd-ui-button
+            type="button"
+            appearance="ai-action"
+            variant="primary"
+            fill="solid"
+            icon="auto_awesome"
+            [disabled]="disabled()"
+            (click)="analyze.emit()"
+        >
+            {{ 'PRODUCT_AI_DIALOG.ANALYZE' | translate }}
+        </fd-ui-button>
+    }
+</div>
