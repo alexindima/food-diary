@@ -141,7 +141,11 @@ export const CYCLIC_PRESETS: CyclicPresetOption[] = [
     { fastDays: 3, eatDays: 1, label: '3:1' },
 ];
 
-export const FASTING_CHECK_IN_SCALE = [1, 2, 3, 4, 5] as const;
+const FASTING_CHECK_IN_LEVEL_3 = 3;
+const FASTING_CHECK_IN_LEVEL_4 = 4;
+const FASTING_CHECK_IN_LEVEL_5 = 5;
+
+export const FASTING_CHECK_IN_SCALE = [1, 2, FASTING_CHECK_IN_LEVEL_3, FASTING_CHECK_IN_LEVEL_4, FASTING_CHECK_IN_LEVEL_5] as const;
 
 export const FASTING_SYMPTOM_OPTIONS = [
     { value: 'headache', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE' },

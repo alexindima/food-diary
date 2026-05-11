@@ -10,6 +10,8 @@ import { BaseChartDirective } from 'ng2-charts';
 import { LocalizationService } from '../../../../services/localization.service';
 import type { FastingCheckIn } from '../../models/fasting.data';
 
+const INITIAL_CHART_RESIZE_DELAY_MS = 180;
+
 export interface FastingCheckInChartDialogData {
     title: string;
     subtitle: string;
@@ -134,11 +136,11 @@ export class FastingCheckInChartDialogComponent {
                 callbacks: {
                     title: items => {
                         const point = this.getTooltipPoint(items);
-                        return point ? this.formatTooltipTitle(point.checkedInAtUtc) : '';
+                        return point === undefined ? '' : this.formatTooltipTitle(point.checkedInAtUtc);
                     },
                     footer: items => {
                         const point = this.getTooltipPoint(items);
-                        if (!point) {
+                        if (point === undefined) {
                             return '';
                         }
 
@@ -151,7 +153,7 @@ export class FastingCheckInChartDialogComponent {
                             );
                         }
 
-                        if (point.notes) {
+                        if (point.notes !== null && point.notes.length > 0) {
                             parts.push(
                                 this.translateService.instant('FASTING.CHECK_IN.CHART_TOOLTIP_NOTES', {
                                     value: point.notes,
@@ -194,7 +196,7 @@ export class FastingCheckInChartDialogComponent {
     public constructor() {
         effect(() => {
             const chartDirective = this.chartDirective();
-            if (!chartDirective || this.hasScheduledInitialChartResize) {
+            if (chartDirective === undefined || this.hasScheduledInitialChartResize) {
                 return;
             }
 
@@ -204,7 +206,7 @@ export class FastingCheckInChartDialogComponent {
                     window.setTimeout(() => {
                         chartDirective.chart?.resize();
                         chartDirective.update();
-                    }, 180);
+                    }, INITIAL_CHART_RESIZE_DELAY_MS);
                 });
             });
         });
@@ -212,7 +214,7 @@ export class FastingCheckInChartDialogComponent {
 
     private getTooltipPoint(items: readonly { dataIndex: number }[]): FastingCheckInChartPoint | undefined {
         const tooltipItem = (items as readonly ({ dataIndex: number } | undefined)[])[0];
-        if (!tooltipItem) {
+        if (tooltipItem === undefined) {
             return undefined;
         }
 

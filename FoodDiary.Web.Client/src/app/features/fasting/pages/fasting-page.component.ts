@@ -40,6 +40,15 @@ import {
     type FastingStats,
 } from '../models/fasting.data';
 
+const CURRENT_SESSION_RECENT_CHECK_INS_LIMIT = 3;
+const DEFAULT_CYCLIC_FAST_DAYS = 1;
+const DEFAULT_CYCLIC_EAT_DAYS = 1;
+const DEFAULT_CYCLIC_EAT_WINDOW_HOURS = 8;
+const DEFAULT_CYCLIC_EAT_FAST_HOURS = 16;
+const HOURS_PER_DAY = 24;
+const MS_PER_MINUTE = 60_000;
+const MINUTES_PER_HOUR = 60;
+
 @Component({
     selector: 'fd-fasting-page',
     standalone: true,
@@ -111,7 +120,7 @@ export class FastingPageComponent {
     public readonly statsView = computed<FastingStatsViewModel | null>(() => {
         this.currentLanguage();
         const stats = this.stats();
-        if (!stats) {
+        if (stats === null) {
             return null;
         }
 
@@ -150,18 +159,18 @@ export class FastingPageComponent {
     public readonly currentSessionLatestCheckInView = computed<FastingCheckInViewModel | null>(() => {
         this.currentLanguage();
         const checkIn = this.currentSessionLatestCheckIn();
-        return checkIn ? this.buildCheckInViewModel(checkIn) : null;
+        return checkIn === null ? null : this.buildCheckInViewModel(checkIn);
     });
     public readonly currentCheckInCtaKey = computed(() =>
         this.hasCurrentCheckIn() ? 'FASTING.CHECK_IN.UPDATE_ACTION' : 'FASTING.CHECK_IN.ADD_ACTION',
     );
     public readonly currentSessionRecentCheckIns = computed(() => {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return [];
         }
 
-        return this.getSessionCheckIns(session).slice(0, 3);
+        return this.getSessionCheckIns(session).slice(0, CURRENT_SESSION_RECENT_CHECK_INS_LIMIT);
     });
     public constructor() {
         this.facade.initialize();
@@ -269,7 +278,7 @@ export class FastingPageComponent {
 
     public getHistoryProtocolLabel(protocol: string): string {
         const option = FASTING_PROTOCOLS.find(item => item.value === protocol);
-        return option ? this.translateService.instant(option.labelKey) : protocol;
+        return option === undefined ? protocol : this.translateService.instant(option.labelKey);
     }
 
     public getHistorySessionTypeLabel(session: FastingSession): string {
@@ -278,7 +287,7 @@ export class FastingPageComponent {
         }
 
         const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
-        if (!option) {
+        if (option === undefined) {
             return this.translateService.instant('FASTING.EXTENDED_TYPE');
         }
 
@@ -287,17 +296,13 @@ export class FastingPageComponent {
 
     public getHistoryProtocolDisplay(session: FastingSession): string {
         if (session.planType === 'Cyclic') {
-            const cycleLabel =
-                session.cyclicFastDays && session.cyclicEatDays ? `${session.cyclicFastDays}:${session.cyclicEatDays}` : '1:1';
-            const eatWindowHours = session.cyclicEatDayEatingWindowHours ?? 8;
-            const eatFastHours = session.cyclicEatDayFastHours ?? 16;
-            return `${cycleLabel} (${eatFastHours}:${eatWindowHours})`;
+            return this.getCyclicProtocolDisplay(session);
         }
 
         const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
         const hoursLabel = this.translateService.instant('FASTING.HOURS');
 
-        if (!option) {
+        if (option === undefined) {
             return this.formatHistoryDuration(session.initialPlannedDurationHours, session.addedDurationHours, hoursLabel);
         }
 
@@ -324,13 +329,16 @@ export class FastingPageComponent {
 
     public hasPersonalSummary(stats: FastingStats | null): boolean {
         return (
-            !!stats &&
-            (stats.completionRateLast30Days > 0 || stats.checkInRateLast30Days > 0 || !!stats.lastCheckInAtUtc || !!stats.topSymptom)
+            stats !== null &&
+            (stats.completionRateLast30Days > 0 ||
+                stats.checkInRateLast30Days > 0 ||
+                stats.lastCheckInAtUtc !== null ||
+                stats.topSymptom !== null)
         );
     }
 
     public getTopSymptomLabel(symptom: string | null): string {
-        return symptom ? this.getSymptomLabel(symptom) : this.translateService.instant('FASTING.PERSONAL_SUMMARY.NO_SYMPTOM');
+        return symptom === null ? this.translateService.instant('FASTING.PERSONAL_SUMMARY.NO_SYMPTOM') : this.getSymptomLabel(symptom);
     }
 
     public hasCheckIn(session: FastingSession): boolean {
@@ -376,7 +384,7 @@ export class FastingPageComponent {
 
     public getCurrentSessionOlderCheckInsCount(): number {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return 0;
         }
 
@@ -388,7 +396,7 @@ export class FastingPageComponent {
             return session.checkIns;
         }
 
-        if (!session.checkInAtUtc) {
+        if (session.checkInAtUtc === null) {
             return [];
         }
 
@@ -456,12 +464,12 @@ export class FastingPageComponent {
     }
 
     private getIntermittentRatioLabel(fastHours: number): string {
-        return `${fastHours}:${24 - fastHours}`;
+        return `${fastHours}:${HOURS_PER_DAY - fastHours}`;
     }
 
     private getCurrentSessionLatestCheckIn(): FastingCheckIn | null {
         const session = this.currentSession();
-        if (!session) {
+        if (session === null) {
             return null;
         }
 
@@ -512,6 +520,15 @@ export class FastingPageComponent {
         };
     }
 
+    private getCyclicProtocolDisplay(session: FastingSession): string {
+        const fastDays = session.cyclicFastDays ?? DEFAULT_CYCLIC_FAST_DAYS;
+        const eatDays = session.cyclicEatDays ?? DEFAULT_CYCLIC_EAT_DAYS;
+        const eatWindowHours = session.cyclicEatDayEatingWindowHours ?? DEFAULT_CYCLIC_EAT_WINDOW_HOURS;
+        const eatFastHours = session.cyclicEatDayFastHours ?? DEFAULT_CYCLIC_EAT_FAST_HOURS;
+
+        return `${fastDays}:${eatDays} (${eatFastHours}:${eatWindowHours})`;
+    }
+
     private getHistoryChartSubtitle(session: FastingSession): string {
         return `${this.formatSessionDateLabel(session.startedAtUtc)} Â· ${this.getHistorySessionTypeLabel(session)} Â· ${this.getHistoryProtocolDisplay(session)}`;
     }
@@ -543,19 +560,19 @@ export class FastingPageComponent {
     }
 
     public getEnergyEmoji(level: number | null | undefined): string {
-        return this.energyEmojiScale.find(option => option.value === level)?.emoji ?? '—';
+        return this.energyEmojiScale.find(option => option.value === level)?.emoji ?? 'â€”';
     }
 
     public getHungerEmoji(level: number | null | undefined): string {
-        return this.hungerEmojiScale.find(option => option.value === level)?.emoji ?? '—';
+        return this.hungerEmojiScale.find(option => option.value === level)?.emoji ?? 'â€”';
     }
 
     public getMoodEmoji(level: number | null | undefined): string {
-        return this.moodEmojiScale.find(option => option.value === level)?.emoji ?? '—';
+        return this.moodEmojiScale.find(option => option.value === level)?.emoji ?? 'â€”';
     }
 
     public formatRelativeTime(value: string | null): string | null {
-        if (!value) {
+        if (value === null || value.length === 0) {
             return null;
         }
 
@@ -565,25 +582,25 @@ export class FastingPageComponent {
         }
 
         const diffMs = timestamp - Date.now();
-        const diffMinutes = Math.round(diffMs / 60000);
+        const diffMinutes = Math.round(diffMs / MS_PER_MINUTE);
         const locale = this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US';
         const formatter = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
 
-        if (Math.abs(diffMinutes) < 60) {
+        if (Math.abs(diffMinutes) < MINUTES_PER_HOUR) {
             return formatter.format(diffMinutes, 'minute');
         }
 
-        const diffHours = Math.round(diffMinutes / 60);
-        if (Math.abs(diffHours) < 24) {
+        const diffHours = Math.round(diffMinutes / MINUTES_PER_HOUR);
+        if (Math.abs(diffHours) < HOURS_PER_DAY) {
             return formatter.format(diffHours, 'hour');
         }
 
-        const diffDays = Math.round(diffHours / 24);
+        const diffDays = Math.round(diffHours / HOURS_PER_DAY);
         return formatter.format(diffDays, 'day');
     }
 
     private resolveMessageParams(params: Record<string, string> | null): Record<string, string> | undefined {
-        if (!params) {
+        if (params === null) {
             return undefined;
         }
 
@@ -597,7 +614,7 @@ export class FastingPageComponent {
 
     private getEnergyDisplay(level: number | null): string {
         if (level === null) {
-            return '—';
+            return 'â€”';
         }
 
         return `${this.getEnergyEmoji(level)} ${level}/5`;
@@ -605,7 +622,7 @@ export class FastingPageComponent {
 
     private getMoodDisplay(level: number | null): string {
         if (level === null) {
-            return '—';
+            return 'â€”';
         }
 
         return `${this.getMoodEmoji(level)} ${level}/5`;
@@ -613,7 +630,7 @@ export class FastingPageComponent {
 
     private getHungerSummaryValue(level: number | null): string {
         if (level === null) {
-            return '—';
+            return 'â€”';
         }
 
         return this.getHungerEmoji(level);
@@ -621,7 +638,7 @@ export class FastingPageComponent {
 
     private getEnergySummaryValue(level: number | null): string {
         if (level === null) {
-            return '—';
+            return 'â€”';
         }
 
         return this.getEnergyEmoji(level);
@@ -629,7 +646,7 @@ export class FastingPageComponent {
 
     private getMoodSummaryValue(level: number | null): string {
         if (level === null) {
-            return '—';
+            return 'â€”';
         }
 
         return this.getMoodEmoji(level);

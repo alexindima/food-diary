@@ -12,6 +12,16 @@ import { FastingFacade } from '../lib/fasting.facade';
 import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
 import { FastingPageComponent } from './fasting-page.component';
 
+const SESSION_CHECK_INS_BEYOND_PAGE_SIZE = 6;
+const DEFAULT_SESSION_HOURS = 16;
+const DEFAULT_EXTEND_HOURS = 24;
+const DEFAULT_REDUCE_HOURS = 4;
+const CHECK_IN_HUNGER_LEVEL = 2;
+const CHECK_IN_ENERGY_LEVEL = 4;
+const CHECK_IN_MOOD_LEVEL = 3;
+const HISTORY_START_HOUR = 10;
+const INITIAL_VISIBLE_CHECK_INS = 5;
+
 describe('FastingPageComponent', () => {
     let component: FastingPageComponent;
     let fixture: ComponentFixture<FastingPageComponent>;
@@ -153,14 +163,14 @@ describe('FastingPageComponent', () => {
     });
 
     it('tracks session check-in pagination locally', () => {
-        const session = createHistorySession('session-3', 6);
+        const session = createHistorySession('session-3', SESSION_CHECK_INS_BEYOND_PAGE_SIZE);
 
-        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(5);
+        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(INITIAL_VISIBLE_CHECK_INS);
         expect(component.canLoadMoreSessionCheckIns(session)).toBe(true);
 
         component.loadMoreSessionCheckIns(session.id);
 
-        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(6);
+        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(SESSION_CHECK_INS_BEYOND_PAGE_SIZE);
         expect(component.canLoadMoreSessionCheckIns(session)).toBe(false);
     });
 
@@ -177,9 +187,9 @@ describe('FastingPageComponent', () => {
         const session = {
             ...createHistorySession('session-5', 0),
             checkInAtUtc: '2026-04-12T10:00:00Z',
-            hungerLevel: 2,
-            energyLevel: 4,
-            moodLevel: 4,
+            hungerLevel: CHECK_IN_HUNGER_LEVEL,
+            energyLevel: CHECK_IN_ENERGY_LEVEL,
+            moodLevel: CHECK_IN_ENERGY_LEVEL,
             symptoms: ['weakness'],
             checkInNotes: 'legacy',
         };
@@ -308,18 +318,18 @@ function createFacadeMock(): {
         checkInSavedVersion: signal(0),
         selectedMode: signal<'intermittent' | 'extended' | 'cyclic'>('intermittent'),
         selectedProtocol: signal<FastingProtocol>('F16_8'),
-        customHours: signal(16),
-        customIntermittentFastHours: signal(16),
+        customHours: signal(DEFAULT_SESSION_HOURS),
+        customIntermittentFastHours: signal(DEFAULT_SESSION_HOURS),
         cyclicEatDayProtocol: signal<FastingProtocol>('F16_8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),
-        cyclicEatDayFastHours: signal(16),
-        extendHours: signal(24),
-        reduceHours: signal(4),
-        hungerLevel: signal(3),
-        energyLevel: signal(3),
-        moodLevel: signal(3),
+        cyclicEatDayFastHours: signal(DEFAULT_SESSION_HOURS),
+        extendHours: signal(DEFAULT_EXTEND_HOURS),
+        reduceHours: signal(DEFAULT_REDUCE_HOURS),
+        hungerLevel: signal(CHECK_IN_MOOD_LEVEL),
+        energyLevel: signal(CHECK_IN_MOOD_LEVEL),
+        moodLevel: signal(CHECK_IN_MOOD_LEVEL),
         selectedSymptoms: signal<string[]>([]),
         checkInNotes: signal(''),
         progressPercent: signal(0),
@@ -336,9 +346,9 @@ function createSession(): FastingSession {
         id: 'session-1',
         startedAtUtc: '2026-04-12T06:00:00Z',
         endedAtUtc: null,
-        initialPlannedDurationHours: 16,
+        initialPlannedDurationHours: DEFAULT_SESSION_HOURS,
         addedDurationHours: 0,
-        plannedDurationHours: 16,
+        plannedDurationHours: DEFAULT_SESSION_HOURS,
         protocol: 'F16_8',
         planType: 'Intermittent',
         occurrenceKind: 'FastingWindow',
@@ -364,10 +374,10 @@ function createSession(): FastingSession {
 function createHistorySession(id: string, checkInCount: number): FastingSession {
     const checkIns = Array.from({ length: checkInCount }, (_, index) => ({
         id: `${id}-checkin-${index + 1}`,
-        checkedInAtUtc: `2026-04-12T${String(10 + index).padStart(2, '0')}:00:00Z`,
-        hungerLevel: 2,
-        energyLevel: 4,
-        moodLevel: 4,
+        checkedInAtUtc: `2026-04-12T${String(HISTORY_START_HOUR + index).padStart(2, '0')}:00:00Z`,
+        hungerLevel: CHECK_IN_HUNGER_LEVEL,
+        energyLevel: CHECK_IN_ENERGY_LEVEL,
+        moodLevel: CHECK_IN_ENERGY_LEVEL,
         symptoms: index === 0 ? ['weakness'] : [],
         notes: index === 0 ? 'steady' : null,
     }));

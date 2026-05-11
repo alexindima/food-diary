@@ -18,6 +18,8 @@ import type {
     UpdateFastingCheckInPayload,
 } from '../models/fasting.data';
 
+const DEFAULT_HISTORY_PAGE_SIZE = 10;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -93,7 +95,7 @@ export class FastingService extends ApiService {
                     history: {
                         data: [],
                         page: 1,
-                        limit: 10,
+                        limit: DEFAULT_HISTORY_PAGE_SIZE,
                         totalPages: 0,
                         totalItems: 0,
                     },
@@ -107,13 +109,13 @@ export class FastingService extends ApiService {
             from: query.from,
             to: query.to,
             page: query.page ?? 1,
-            limit: query.limit ?? 10,
+            limit: query.limit ?? DEFAULT_HISTORY_PAGE_SIZE,
         }).pipe(
             catchError((error: HttpErrorResponse) =>
                 fallbackApiError('Get fasting history error', error, {
                     data: [],
                     page: query.page ?? 1,
-                    limit: query.limit ?? 10,
+                    limit: query.limit ?? DEFAULT_HISTORY_PAGE_SIZE,
                     totalPages: 0,
                     totalItems: 0,
                 }),

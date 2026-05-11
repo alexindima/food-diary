@@ -10,6 +10,16 @@ import { FastingFacade } from '../../lib/fasting.facade';
 import type { FastingProtocol, FastingSession } from '../../models/fasting.data';
 import { FastingControlsComponent } from './fasting-controls.component';
 
+const CUSTOM_EXTEND_HOURS = 12;
+const CUSTOM_REDUCE_HOURS = 2;
+const WARNING_PLANNED_DURATION_HOURS = 80;
+const HARD_STOP_PLANNED_DURATION_HOURS = 160;
+const HARD_STOP_EXTEND_HOURS = 24;
+const INTERMITTENT_FAST_HOURS = 16;
+const DEFAULT_EXTEND_HOURS = 24;
+const DEFAULT_REDUCE_HOURS = 4;
+const DEFAULT_EATING_WINDOW_HOURS = 8;
+
 describe('FastingControlsComponent', () => {
     let fixture: ComponentFixture<FastingControlsComponent>;
     let component: FastingControlsComponent;
@@ -133,8 +143,8 @@ describe('FastingControlsComponent', () => {
     it('expands extended controls and delegates custom duration actions', () => {
         facade.isActive.set(true);
         facade.currentSession.set(createExtendedSession());
-        facade.extendHours.set(12);
-        facade.reduceHours.set(2);
+        facade.extendHours.set(CUSTOM_EXTEND_HOURS);
+        facade.reduceHours.set(CUSTOM_REDUCE_HOURS);
         fixture.detectChanges();
 
         component.showCustomExtend();
@@ -148,28 +158,28 @@ describe('FastingControlsComponent', () => {
         component.extendByCustom();
         component.reduceByCustom();
 
-        expect(facade.extendByHours).toHaveBeenCalledWith(12);
-        expect(facade.reduceTargetByHours).toHaveBeenCalledWith(2);
+        expect(facade.extendByHours).toHaveBeenCalledWith(CUSTOM_EXTEND_HOURS);
+        expect(facade.reduceTargetByHours).toHaveBeenCalledWith(CUSTOM_REDUCE_HOURS);
     });
 
     it('asks for safety confirmation before extending beyond the warning threshold', () => {
         facade.isActive.set(true);
-        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: 80 });
-        facade.extendHours.set(12);
+        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: WARNING_PLANNED_DURATION_HOURS });
+        facade.extendHours.set(CUSTOM_EXTEND_HOURS);
         fixture.detectChanges();
 
         component.extendByCustom();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
-        expect(facade.extendByHours).toHaveBeenCalledWith(12);
+        expect(facade.extendByHours).toHaveBeenCalledWith(CUSTOM_EXTEND_HOURS);
     });
 
     it('blocks extensions beyond the hard stop threshold', () => {
         facade.isActive.set(true);
-        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: 160 });
+        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: HARD_STOP_PLANNED_DURATION_HOURS });
         fixture.detectChanges();
 
-        component.onExtendHoursChange(24);
+        component.onExtendHoursChange(HARD_STOP_EXTEND_HOURS);
         component.extendByCustom();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
@@ -185,7 +195,7 @@ function getButtonByText(fixture: ComponentFixture<FastingControlsComponent>, te
     const button = Array.from(host(fixture).querySelectorAll<HTMLElement>('fd-ui-button')).find(element =>
         element.textContent.includes(text),
     );
-    if (!button) {
+    if (button === undefined) {
         throw new Error(`Button with text "${text}" was not found.`);
     }
 
@@ -254,15 +264,15 @@ function createFacadeMock(): {
         currentSession: signal<FastingSession | null>(null),
         selectedMode: signal<'intermittent' | 'extended' | 'cyclic'>('intermittent'),
         selectedProtocol: signal<FastingProtocol>('F16_8'),
-        customHours: signal(16),
-        customIntermittentFastHours: signal(16),
+        customHours: signal(INTERMITTENT_FAST_HOURS),
+        customIntermittentFastHours: signal(INTERMITTENT_FAST_HOURS),
         cyclicEatDayProtocol: signal<FastingProtocol>('F16_8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),
-        cyclicEatDayFastHours: signal(16),
-        extendHours: signal(24),
-        reduceHours: signal(4),
+        cyclicEatDayFastHours: signal(INTERMITTENT_FAST_HOURS),
+        extendHours: signal(DEFAULT_EXTEND_HOURS),
+        reduceHours: signal(DEFAULT_REDUCE_HOURS),
         isStarting: signal(false),
         isEnding: signal(false),
         isExtending: signal(false),
@@ -277,16 +287,16 @@ function createCyclicSession(): FastingSession {
         id: 'session-1',
         startedAtUtc: '2026-04-12T06:00:00Z',
         endedAtUtc: null,
-        initialPlannedDurationHours: 24,
+        initialPlannedDurationHours: DEFAULT_EXTEND_HOURS,
         addedDurationHours: 0,
-        plannedDurationHours: 24,
+        plannedDurationHours: DEFAULT_EXTEND_HOURS,
         protocol: 'Cyclic',
         planType: 'Cyclic',
         occurrenceKind: 'FastDay',
         cyclicFastDays: 1,
         cyclicEatDays: 1,
-        cyclicEatDayFastHours: 16,
-        cyclicEatDayEatingWindowHours: 8,
+        cyclicEatDayFastHours: INTERMITTENT_FAST_HOURS,
+        cyclicEatDayEatingWindowHours: DEFAULT_EATING_WINDOW_HOURS,
         cyclicPhaseDayNumber: 1,
         cyclicPhaseDayTotal: 1,
         isCompleted: false,

@@ -6,6 +6,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LocalizationService } from '../../../../services/localization.service';
 import { FastingCheckInChartDialogComponent } from './fasting-checkin-chart-dialog.component';
 
+const EARLIER_HUNGER_LEVEL = 2;
+const EARLIER_ENERGY_LEVEL = 4;
+const EARLIER_MOOD_LEVEL = 3;
+const LATER_HUNGER_LEVEL = 3;
+const LATER_ENERGY_LEVEL = 2;
+const LATER_MOOD_LEVEL = 4;
+const CHECK_IN_METRIC_COUNT = 3;
+const CHECK_IN_SCALE_MAX = 5;
+
 describe('FastingCheckInChartDialogComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -20,18 +29,18 @@ describe('FastingCheckInChartDialogComponent', () => {
                             {
                                 id: 'checkin-2',
                                 checkedInAtUtc: '2026-04-12T12:30:00Z',
-                                hungerLevel: 3,
-                                energyLevel: 2,
-                                moodLevel: 4,
+                                hungerLevel: LATER_HUNGER_LEVEL,
+                                energyLevel: LATER_ENERGY_LEVEL,
+                                moodLevel: LATER_MOOD_LEVEL,
                                 symptoms: ['weakness'],
                                 notes: 'later',
                             },
                             {
                                 id: 'checkin-1',
                                 checkedInAtUtc: '2026-04-12T11:00:00Z',
-                                hungerLevel: 2,
-                                energyLevel: 4,
-                                moodLevel: 3,
+                                hungerLevel: EARLIER_HUNGER_LEVEL,
+                                energyLevel: EARLIER_ENERGY_LEVEL,
+                                moodLevel: EARLIER_MOOD_LEVEL,
                                 symptoms: ['headache'],
                                 notes: 'earlier',
                             },
@@ -42,7 +51,7 @@ describe('FastingCheckInChartDialogComponent', () => {
                     provide: TranslateService,
                     useValue: {
                         instant: vi.fn((key: string, params?: Record<string, string>) => {
-                            if (!params) {
+                            if (params === undefined) {
                                 return key;
                             }
 
@@ -74,13 +83,13 @@ describe('FastingCheckInChartDialogComponent', () => {
         const chartData = component.chartData();
 
         expect(points.map(point => point.checkedInAtUtc)).toEqual(['2026-04-12T11:00:00Z', '2026-04-12T12:30:00Z']);
-        expect(chartData.datasets).toHaveLength(3);
+        expect(chartData.datasets).toHaveLength(CHECK_IN_METRIC_COUNT);
         expect(chartData.datasets[0]?.label).toBe('FASTING.CHECK_IN.HUNGER');
         expect(chartData.datasets[1]?.label).toBe('FASTING.CHECK_IN.ENERGY');
         expect(chartData.datasets[2]?.label).toBe('FASTING.CHECK_IN.MOOD');
-        expect(chartData.datasets[0]?.data).toEqual([2, 3]);
-        expect(chartData.datasets[1]?.data).toEqual([4, 2]);
-        expect(chartData.datasets[2]?.data).toEqual([3, 4]);
+        expect(chartData.datasets[0]?.data).toEqual([EARLIER_HUNGER_LEVEL, LATER_HUNGER_LEVEL]);
+        expect(chartData.datasets[1]?.data).toEqual([EARLIER_ENERGY_LEVEL, LATER_ENERGY_LEVEL]);
+        expect(chartData.datasets[2]?.data).toEqual([EARLIER_MOOD_LEVEL, LATER_MOOD_LEVEL]);
     });
 
     it('configures fixed 1..5 y-axis and tooltip footer from symptoms and notes', () => {
@@ -91,14 +100,14 @@ describe('FastingCheckInChartDialogComponent', () => {
         const yTicks = yScale?.ticks as { stepSize?: number } | undefined;
 
         expect(yScale?.min).toBe(1);
-        expect(yScale?.max).toBe(5);
+        expect(yScale?.max).toBe(CHECK_IN_SCALE_MAX);
         expect(yTicks?.stepSize).toBe(1);
 
         const tooltipArgs = [{ dataIndex: 0 }];
         const titleCallback = tooltipCallbacks?.title as ((items: unknown[]) => string | string[]) | undefined;
         const footerCallback = tooltipCallbacks?.footer as ((items: unknown[]) => string | string[]) | undefined;
-        const title = titleCallback ? Reflect.apply(titleCallback, undefined, [tooltipArgs]) : '';
-        const footer = footerCallback ? Reflect.apply(footerCallback, undefined, [tooltipArgs]) : '';
+        const title = titleCallback === undefined ? '' : Reflect.apply(titleCallback, undefined, [tooltipArgs]);
+        const footer = footerCallback === undefined ? '' : Reflect.apply(footerCallback, undefined, [tooltipArgs]);
 
         expect(title).toContain('2026');
         expect(String(footer)).toContain('FASTING.CHECK_IN.CHART_TOOLTIP_SYMPTOMS');
