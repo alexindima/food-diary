@@ -6,6 +6,7 @@ import eslintCommentsPlugin from '@eslint-community/eslint-plugin-eslint-comment
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import parser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import boundariesPlugin from 'eslint-plugin-boundaries';
 import prettierPlugin from 'eslint-plugin-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
@@ -22,6 +23,42 @@ const noAnyCastSyntax = [
     {
         selector: 'TSTypeAssertion[typeAnnotation.type="TSAnyKeyword"]',
         message: 'Do not cast to any. Fix the type or narrow the value instead.',
+    },
+];
+
+const appBoundaryElements = [
+    { type: 'app-shared-models', pattern: 'src/app/shared/models', mode: 'folder' },
+    { type: 'app-shared-api', pattern: 'src/app/shared/api', mode: 'folder' },
+    { type: 'app-shared-lib', pattern: 'src/app/shared/lib', mode: 'folder' },
+    { type: 'app-shared-dialogs', pattern: 'src/app/shared/dialogs', mode: 'folder' },
+    { type: 'app-shared-ui', pattern: 'src/app/components/shared', mode: 'folder' },
+    { type: 'app-feature-api', pattern: 'src/app/features/(*)/api', mode: 'folder', capture: ['feature'] },
+    { type: 'app-feature-models', pattern: 'src/app/features/(*)/models', mode: 'folder', capture: ['feature'] },
+    { type: 'app-feature-components', pattern: 'src/app/features/(*)/components', mode: 'folder', capture: ['feature'] },
+    { type: 'app-feature-dialogs', pattern: 'src/app/features/(*)/dialogs', mode: 'folder', capture: ['feature'] },
+    { type: 'app-feature-lib', pattern: 'src/app/features/(*)/lib', mode: 'folder', capture: ['feature'] },
+    { type: 'app-feature-resolvers', pattern: 'src/app/features/(*)/resolvers', mode: 'folder', capture: ['feature'] },
+    { type: 'app-feature-pages', pattern: 'src/app/features/(*)/pages', mode: 'folder', capture: ['feature'] },
+    { type: 'app-feature-routes', pattern: 'src/app/features/(*)/*.routes.ts', mode: 'file', capture: ['feature', 'file'] },
+    { type: 'admin-feature-api', pattern: 'projects/fooddiary-admin/src/app/features/(*)/api', mode: 'folder', capture: ['feature'] },
+    {
+        type: 'admin-feature-components',
+        pattern: 'projects/fooddiary-admin/src/app/features/(*)/components',
+        mode: 'folder',
+        capture: ['feature'],
+    },
+    {
+        type: 'admin-feature-dialogs',
+        pattern: 'projects/fooddiary-admin/src/app/features/(*)/dialogs',
+        mode: 'folder',
+        capture: ['feature'],
+    },
+    { type: 'admin-feature-pages', pattern: 'projects/fooddiary-admin/src/app/features/(*)/pages', mode: 'folder', capture: ['feature'] },
+    {
+        type: 'admin-feature-routes',
+        pattern: 'projects/fooddiary-admin/src/app/features/(*)/*.routes.ts',
+        mode: 'file',
+        capture: ['feature', 'file'],
     },
 ];
 
@@ -310,8 +347,14 @@ export default [
             'eslint-comments': eslintCommentsPlugin,
             prettier: prettierPlugin,
             'simple-import-sort': simpleImportSortPlugin,
+            boundaries: boundariesPlugin,
             sonarjs: sonarjsPlugin,
             local: localTsPlugin,
+        },
+        settings: {
+            'boundaries/include': ['src/app/**/*.ts', 'projects/fooddiary-admin/src/app/**/*.ts'],
+            'boundaries/ignore': ['**/*.spec.ts'],
+            'boundaries/elements': appBoundaryElements,
         },
         rules: {
             ...eslintConfigPrettier.rules,
@@ -346,6 +389,107 @@ export default [
             'no-unreachable': 'error',
             'simple-import-sort/imports': 'error',
             'simple-import-sort/exports': 'error',
+            'boundaries/dependencies': [
+                'error',
+                {
+                    default: 'allow',
+                    rules: [
+                        {
+                            from: { type: 'app-shared-models' },
+                            disallow: {
+                                to: {
+                                    type: ['app-shared-api', 'app-shared-dialogs', 'app-shared-ui', 'app-feature-*'],
+                                },
+                            },
+                            message: 'shared/models must stay pure and must not depend on API, UI, or feature code.',
+                        },
+                        {
+                            from: { type: 'app-shared-api' },
+                            disallow: {
+                                to: {
+                                    type: ['app-shared-dialogs', 'app-shared-ui', 'app-feature-*'],
+                                },
+                            },
+                            message: 'shared/api must not depend on UI or feature code.',
+                        },
+                        {
+                            from: { type: 'app-shared-ui' },
+                            disallow: {
+                                to: {
+                                    type: 'app-feature-*',
+                                },
+                            },
+                            message: 'shared UI must stay feature-agnostic.',
+                        },
+                        {
+                            from: { type: 'app-feature-models' },
+                            disallow: {
+                                to: {
+                                    type: ['app-feature-api', 'app-feature-components', 'app-feature-dialogs', 'app-feature-lib', 'app-feature-pages'],
+                                },
+                            },
+                            message: 'Feature models must stay data-only and must not depend on API, UI, lib, or pages.',
+                        },
+                        {
+                            from: { type: 'app-feature-api' },
+                            disallow: {
+                                to: {
+                                    type: ['app-feature-components', 'app-feature-dialogs', 'app-feature-pages'],
+                                },
+                            },
+                            message: 'Feature API code must not depend on feature UI or pages.',
+                        },
+                        {
+                            from: { type: ['app-feature-components', 'app-feature-dialogs', 'app-feature-lib', 'app-feature-resolvers'] },
+                            disallow: {
+                                to: {
+                                    type: 'app-feature-api',
+                                    captured: {
+                                        feature: '!({{ from.captured.feature }})',
+                                    },
+                                },
+                            },
+                            message: 'Feature internals must use their own feature API or shared APIs, not another feature API.',
+                        },
+                        {
+                            from: { type: 'app-feature-*' },
+                            disallow: {
+                                to: {
+                                    type: 'app-feature-pages',
+                                    captured: {
+                                        feature: '!({{ from.captured.feature }})',
+                                    },
+                                },
+                            },
+                            message: 'Feature code must not import pages from another feature.',
+                        },
+                        {
+                            from: { type: ['admin-feature-components', 'admin-feature-dialogs', 'admin-feature-pages'] },
+                            disallow: {
+                                to: {
+                                    type: 'admin-feature-api',
+                                    captured: {
+                                        feature: '!({{ from.captured.feature }})',
+                                    },
+                                },
+                            },
+                            message: 'Admin feature code must use its own feature API, not another admin feature API.',
+                        },
+                        {
+                            from: { type: 'admin-feature-*' },
+                            disallow: {
+                                to: {
+                                    type: 'admin-feature-pages',
+                                    captured: {
+                                        feature: '!({{ from.captured.feature }})',
+                                    },
+                                },
+                            },
+                            message: 'Admin feature code must not import pages from another admin feature.',
+                        },
+                    ],
+                },
+            ],
             'sonarjs/no-duplicated-branches': 'error',
             'sonarjs/no-identical-functions': 'error',
             'sonarjs/no-nested-switch': 'error',
