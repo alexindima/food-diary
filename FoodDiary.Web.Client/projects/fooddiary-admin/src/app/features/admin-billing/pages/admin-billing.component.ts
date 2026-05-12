@@ -1,9 +1,7 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, LOCALE_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import {
     type AdminBillingFilters,
@@ -14,8 +12,13 @@ import {
     type AdminBillingWebhookEvent,
     type PagedResponse,
 } from '../api/admin-billing.service';
+import { AdminBillingFiltersComponent } from './admin-billing-filters.component';
+import { AdminBillingMetadataPanelComponent } from './admin-billing-metadata-panel.component';
+import { AdminBillingPaymentsTableComponent } from './admin-billing-payments-table.component';
+import { AdminBillingSubscriptionsTableComponent } from './admin-billing-subscriptions-table.component';
+import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-table.component';
 
-interface AdminBillingSubscriptionViewModel extends AdminBillingSubscription {
+export interface AdminBillingSubscriptionViewModel extends AdminBillingSubscription {
     currentPeriodStartText: string;
     currentPeriodEndText: string;
     nextBillingAttemptText: string;
@@ -25,7 +28,7 @@ interface AdminBillingSubscriptionViewModel extends AdminBillingSubscription {
     externalPaymentMethodIdText: string;
 }
 
-interface AdminBillingPaymentViewModel extends AdminBillingPayment {
+export interface AdminBillingPaymentViewModel extends AdminBillingPayment {
     createdText: string;
     amountText: string;
     externalPaymentIdText: string;
@@ -33,7 +36,7 @@ interface AdminBillingPaymentViewModel extends AdminBillingPayment {
     webhookEventIdText: string;
 }
 
-interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
+export interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
     processedText: string;
     eventIdText: string;
     externalObjectIdText: string;
@@ -47,7 +50,15 @@ const SHORT_ID_SUFFIX_START = -6;
 @Component({
     selector: 'fd-admin-billing',
     standalone: true,
-    imports: [CommonModule, FormsModule, FdUiButtonComponent, FdUiInputComponent],
+    imports: [
+        CommonModule,
+        FdUiButtonComponent,
+        AdminBillingFiltersComponent,
+        AdminBillingSubscriptionsTableComponent,
+        AdminBillingPaymentsTableComponent,
+        AdminBillingWebhooksTableComponent,
+        AdminBillingMetadataPanelComponent,
+    ],
     templateUrl: './admin-billing.component.html',
     styleUrl: './admin-billing.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

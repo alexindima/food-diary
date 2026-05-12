@@ -1,0 +1,44 @@
+<table class="admin-billing__table">
+    <thead>
+        <tr>
+            <th>Processed</th>
+            <th>Provider</th>
+            <th>Event</th>
+            <th>Status</th>
+            <th>External object</th>
+            <th>Error</th>
+            <th>Payload</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (event of items(); track event.id) {
+            <tr>
+                <td>{{ event.processedText }}</td>
+                <td>{{ event.provider }}</td>
+                <td>
+                    <strong>{{ event.eventType }}</strong>
+                    <span>{{ event.eventIdText }}</span>
+                </td>
+                <td>
+                    <span class="admin-billing__badge">{{ event.status }}</span>
+                </td>
+                <td>{{ event.externalObjectIdText }}</td>
+                <td>{{ event.errorMessage || '-' }}</td>
+                <td>
+                    <fd-ui-button
+                        type="button"
+                        variant="secondary"
+                        [disabled]="!event.payloadJson"
+                        (click)="metadataOpen.emit(event.payloadJson)"
+                    >
+                        View
+                    </fd-ui-button>
+                </td>
+            </tr>
+        } @empty {
+            <tr>
+                <td colspan="7">No webhook events found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

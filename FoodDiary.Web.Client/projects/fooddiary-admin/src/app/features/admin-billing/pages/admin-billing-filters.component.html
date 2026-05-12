@@ -1,0 +1,18 @@
+<section class="admin-billing__filters fd-row fd-gap-sm fd-wrap">
+    <fd-ui-input placeholder="Search email or external id" [ngModel]="search()" (ngModelChange)="searchChange.emit($event)" />
+    <fd-ui-input placeholder="Provider" [ngModel]="provider()" (ngModelChange)="providerChange.emit($event)" />
+    <fd-ui-input placeholder="Status" [ngModel]="status()" (ngModelChange)="statusChange.emit($event)" />
+    @if (activeTab() === 'payments') {
+        <fd-ui-input placeholder="Kind" [ngModel]="kind()" (ngModelChange)="kindChange.emit($event)" />
+    }
+    <label class="fd-grid fd-gap-xxs">
+        <span>From</span>
+        <input type="date" [ngModel]="fromDate()" (ngModelChange)="fromDateChange.emit($event)" />
+    </label>
+    <label class="fd-grid fd-gap-xxs">
+        <span>To</span>
+        <input type="date" [ngModel]="toDate()" (ngModelChange)="toDateChange.emit($event)" />
+    </label>
+    <fd-ui-button type="button" (click)="filtersApply.emit()"> Apply </fd-ui-button>
+    <fd-ui-button type="button" variant="secondary" (click)="filtersReset.emit()"> Reset </fd-ui-button>
+</section>

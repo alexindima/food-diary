@@ -1,0 +1,47 @@
+<table class="admin-billing__table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Provider</th>
+            <th>Plan</th>
+            <th>Status</th>
+            <th>Period</th>
+            <th>Next charge</th>
+            <th>External ids</th>
+            <th>Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (subscription of items(); track subscription.id) {
+            <tr>
+                <td>
+                    <strong>{{ subscription.userEmail }}</strong>
+                    <span>{{ subscription.userId }}</span>
+                </td>
+                <td>{{ subscription.provider }}</td>
+                <td>{{ subscription.plan || '-' }}</td>
+                <td>
+                    <span class="admin-billing__badge">{{ subscription.status }}</span>
+                    @if (subscription.cancelAtPeriodEnd) {
+                        <span class="admin-billing__badge admin-billing__badge--warn">canceling</span>
+                    }
+                </td>
+                <td>
+                    <span>{{ subscription.currentPeriodStartText }}</span>
+                    <span>{{ subscription.currentPeriodEndText }}</span>
+                </td>
+                <td>{{ subscription.nextBillingAttemptText }}</td>
+                <td>
+                    <span>Customer: {{ subscription.externalCustomerIdText }}</span>
+                    <span>Sub: {{ subscription.externalSubscriptionIdText }}</span>
+                    <span>PM: {{ subscription.externalPaymentMethodIdText }}</span>
+                </td>
+                <td>{{ subscription.updatedText }}</td>
+            </tr>
+        } @empty {
+            <tr>
+                <td colspan="8">No subscriptions found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

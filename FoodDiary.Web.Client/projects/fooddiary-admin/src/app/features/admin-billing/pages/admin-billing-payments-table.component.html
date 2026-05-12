@@ -1,0 +1,50 @@
+<table class="admin-billing__table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>User</th>
+            <th>Provider</th>
+            <th>Kind</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>External ids</th>
+            <th>Metadata</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (payment of items(); track payment.id) {
+            <tr>
+                <td>{{ payment.createdText }}</td>
+                <td>
+                    <strong>{{ payment.userEmail }}</strong>
+                    <span>{{ payment.userId }}</span>
+                </td>
+                <td>{{ payment.provider }}</td>
+                <td>{{ payment.kind }}</td>
+                <td>
+                    <span class="admin-billing__badge">{{ payment.status }}</span>
+                </td>
+                <td>{{ payment.amountText }}</td>
+                <td>
+                    <span>Payment: {{ payment.externalPaymentIdText }}</span>
+                    <span>Customer: {{ payment.externalCustomerIdText }}</span>
+                    <span>Webhook: {{ payment.webhookEventIdText }}</span>
+                </td>
+                <td>
+                    <fd-ui-button
+                        type="button"
+                        variant="secondary"
+                        [disabled]="!payment.providerMetadataJson"
+                        (click)="metadataOpen.emit(payment.providerMetadataJson)"
+                    >
+                        View
+                    </fd-ui-button>
+                </td>
+            </tr>
+        } @empty {
+            <tr>
+                <td colspan="8">No payments found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

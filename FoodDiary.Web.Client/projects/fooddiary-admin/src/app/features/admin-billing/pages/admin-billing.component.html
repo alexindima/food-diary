@@ -13,24 +13,23 @@
         <button type="button" [class.active]="activeTab() === 'webhook-events'" (click)="setTab('webhook-events')">Webhooks</button>
     </div>
 
-    <section class="admin-billing__filters fd-row fd-gap-sm fd-wrap">
-        <fd-ui-input placeholder="Search email or external id" [ngModel]="search()" (ngModelChange)="search.set($event)" />
-        <fd-ui-input placeholder="Provider" [ngModel]="provider()" (ngModelChange)="provider.set($event)" />
-        <fd-ui-input placeholder="Status" [ngModel]="status()" (ngModelChange)="status.set($event)" />
-        @if (activeTab() === 'payments') {
-            <fd-ui-input placeholder="Kind" [ngModel]="kind()" (ngModelChange)="kind.set($event)" />
-        }
-        <label class="fd-grid fd-gap-xxs">
-            <span>From</span>
-            <input type="date" [ngModel]="fromDate()" (ngModelChange)="fromDate.set($event)" />
-        </label>
-        <label class="fd-grid fd-gap-xxs">
-            <span>To</span>
-            <input type="date" [ngModel]="toDate()" (ngModelChange)="toDate.set($event)" />
-        </label>
-        <fd-ui-button type="button" (click)="applyFilters()"> Apply </fd-ui-button>
-        <fd-ui-button type="button" variant="secondary" (click)="resetFilters()"> Reset </fd-ui-button>
-    </section>
+    <fd-admin-billing-filters
+        [activeTab]="activeTab()"
+        [search]="search()"
+        [provider]="provider()"
+        [status]="status()"
+        [kind]="kind()"
+        [fromDate]="fromDate()"
+        [toDate]="toDate()"
+        (searchChange)="search.set($event)"
+        (providerChange)="provider.set($event)"
+        (statusChange)="status.set($event)"
+        (kindChange)="kind.set($event)"
+        (fromDateChange)="fromDate.set($event)"
+        (toDateChange)="toDate.set($event)"
+        (filtersApply)="applyFilters()"
+        (filtersReset)="resetFilters()"
+    />
 
     @if (isLoading()) {
         <p>Loading billing records...</p>
@@ -38,153 +37,15 @@
         <div class="admin-billing__summary fd-ui-action-text">Total records: {{ totalItems() }}</div>
 
         @if (activeTab() === 'subscriptions') {
-            <table class="admin-billing__table">
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Provider</th>
-                        <th>Plan</th>
-                        <th>Status</th>
-                        <th>Period</th>
-                        <th>Next charge</th>
-                        <th>External ids</th>
-                        <th>Updated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (subscription of subscriptionItems(); track subscription.id) {
-                        <tr>
-                            <td>
-                                <strong>{{ subscription.userEmail }}</strong>
-                                <span>{{ subscription.userId }}</span>
-                            </td>
-                            <td>{{ subscription.provider }}</td>
-                            <td>{{ subscription.plan || '-' }}</td>
-                            <td>
-                                <span class="admin-billing__badge">{{ subscription.status }}</span>
-                                @if (subscription.cancelAtPeriodEnd) {
-                                    <span class="admin-billing__badge admin-billing__badge--warn">canceling</span>
-                                }
-                            </td>
-                            <td>
-                                <span>{{ subscription.currentPeriodStartText }}</span>
-                                <span>{{ subscription.currentPeriodEndText }}</span>
-                            </td>
-                            <td>{{ subscription.nextBillingAttemptText }}</td>
-                            <td>
-                                <span>Customer: {{ subscription.externalCustomerIdText }}</span>
-                                <span>Sub: {{ subscription.externalSubscriptionIdText }}</span>
-                                <span>PM: {{ subscription.externalPaymentMethodIdText }}</span>
-                            </td>
-                            <td>{{ subscription.updatedText }}</td>
-                        </tr>
-                    } @empty {
-                        <tr>
-                            <td colspan="8">No subscriptions found.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <fd-admin-billing-subscriptions-table [items]="subscriptionItems()" />
         }
 
         @if (activeTab() === 'payments') {
-            <table class="admin-billing__table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>User</th>
-                        <th>Provider</th>
-                        <th>Kind</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                        <th>External ids</th>
-                        <th>Metadata</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (payment of paymentItems(); track payment.id) {
-                        <tr>
-                            <td>{{ payment.createdText }}</td>
-                            <td>
-                                <strong>{{ payment.userEmail }}</strong>
-                                <span>{{ payment.userId }}</span>
-                            </td>
-                            <td>{{ payment.provider }}</td>
-                            <td>{{ payment.kind }}</td>
-                            <td>
-                                <span class="admin-billing__badge">{{ payment.status }}</span>
-                            </td>
-                            <td>{{ payment.amountText }}</td>
-                            <td>
-                                <span>Payment: {{ payment.externalPaymentIdText }}</span>
-                                <span>Customer: {{ payment.externalCustomerIdText }}</span>
-                                <span>Webhook: {{ payment.webhookEventIdText }}</span>
-                            </td>
-                            <td>
-                                <fd-ui-button
-                                    type="button"
-                                    variant="secondary"
-                                    [disabled]="!payment.providerMetadataJson"
-                                    (click)="showMetadata(payment.providerMetadataJson)"
-                                >
-                                    View
-                                </fd-ui-button>
-                            </td>
-                        </tr>
-                    } @empty {
-                        <tr>
-                            <td colspan="8">No payments found.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <fd-admin-billing-payments-table [items]="paymentItems()" (metadataOpen)="showMetadata($event)" />
         }
 
         @if (activeTab() === 'webhook-events') {
-            <table class="admin-billing__table">
-                <thead>
-                    <tr>
-                        <th>Processed</th>
-                        <th>Provider</th>
-                        <th>Event</th>
-                        <th>Status</th>
-                        <th>External object</th>
-                        <th>Error</th>
-                        <th>Payload</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (event of webhookEventItems(); track event.id) {
-                        <tr>
-                            <td>{{ event.processedText }}</td>
-                            <td>{{ event.provider }}</td>
-                            <td>
-                                <strong>{{ event.eventType }}</strong>
-                                <span>{{ event.eventIdText }}</span>
-                            </td>
-                            <td>
-                                <span class="admin-billing__badge">{{ event.status }}</span>
-                            </td>
-                            <td>{{ event.externalObjectIdText }}</td>
-                            <td>{{ event.errorMessage || '-' }}</td>
-                            <td>
-                                <fd-ui-button
-                                    type="button"
-                                    variant="secondary"
-                                    [disabled]="!event.payloadJson"
-                                    (click)="showMetadata(event.payloadJson)"
-                                >
-                                    View
-                                </fd-ui-button>
-                            </td>
-                        </tr>
-                    } @empty {
-                        <tr>
-                            <td colspan="7">No webhook events found.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <fd-admin-billing-webhooks-table [items]="webhookEventItems()" (metadataOpen)="showMetadata($event)" />
         }
 
         <div class="admin-billing__pagination fd-row fd-gap-sm fd-wrap">
@@ -199,12 +60,6 @@
     }
 
     @if (selectedMetadata(); as metadata) {
-        <aside class="admin-billing__metadata">
-            <div class="admin-billing__metadata-header fd-row fd-justify-between">
-                <strong>Provider metadata</strong>
-                <button type="button" (click)="selectedMetadata.set(null)">Close</button>
-            </div>
-            <pre>{{ metadata }}</pre>
-        </aside>
+        <fd-admin-billing-metadata-panel [metadata]="metadata" (closePanel)="selectedMetadata.set(null)" />
     }
 </div>
