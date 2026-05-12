@@ -7,7 +7,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import type { Product } from '../models/product.data';
-import type { ProductSelectItemViewModel } from './product-list-dialog.component';
+import type { ProductSelectItemViewModel } from './product-list-dialog.types';
 
 @Component({
     selector: 'fd-product-list-dialog-content',

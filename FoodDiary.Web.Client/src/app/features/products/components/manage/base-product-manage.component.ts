@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -31,7 +30,6 @@ import type { ConfirmDeleteDialogData } from '../../../../components/shared/conf
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
     calculateCalorieMismatchWarning,
@@ -46,10 +44,8 @@ import { UsdaService } from '../../../usda/api/usda.service';
 import type { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
 import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
-import {
-    ProductAiRecognitionDialogComponent,
-    type ProductAiRecognitionResult,
-} from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
+import { ProductAiRecognitionDialogComponent } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
+import type { ProductAiRecognitionResult } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import { ProductManageFacade } from '../../lib/product-manage.facade';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
 import {
@@ -60,6 +56,7 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../models/product.data';
+import type { NutritionMode, ProductFormData, ProductFormValues } from './base-product-manage.types';
 import {
     ProductBasicInfoComponent,
     type ProductNameAutocompleteOption,
@@ -824,10 +821,11 @@ export class BaseProductManageComponent {
         this.updateMacroDistribution();
     }
 
-    private handleSubmitError(error: HttpErrorResponse): void {
-        if (error.status === HTTP_STATUS_UNAUTHORIZED) {
+    private handleSubmitError(error: unknown): void {
+        const status = getRecordProperty(error, 'status');
+        if (status === HTTP_STATUS_UNAUTHORIZED) {
             this.setGlobalError('FORM_ERRORS.UNAUTHORIZED');
-        } else if (error.status === HTTP_STATUS_BAD_REQUEST) {
+        } else if (status === HTTP_STATUS_BAD_REQUEST) {
             this.setGlobalError('FORM_ERRORS.INVALID_DATA');
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
@@ -951,29 +949,6 @@ export class BaseProductManageComponent {
     protected readonly ProductType = ProductType;
 }
 
-export interface ProductFormValues {
-    name: string;
-    barcode: string | null;
-    brand: string | null;
-    productType: ProductType;
-    description: string | null;
-    comment: string | null;
-    imageUrl: ImageSelection | null;
-    baseAmount: number;
-    defaultPortionAmount: number;
-    baseUnit: MeasurementUnit;
-    caloriesPerBase: number | null;
-    proteinsPerBase: number | null;
-    fatsPerBase: number | null;
-    carbsPerBase: number | null;
-    fiberPerBase: number | null;
-    alcoholPerBase: number | null;
-    visibility: ProductVisibility;
-    usdaFdcId: number | null;
-}
-
-export type NutritionMode = 'base' | 'portion';
-
 interface NutritionValues {
     caloriesPerBase: number | null;
     proteinsPerBase: number | null;
@@ -1005,8 +980,6 @@ interface MacroBarState {
     isEmpty: boolean;
     segments: MacroBarSegment[];
 }
-
-export type ProductFormData = FormGroupControls<ProductFormValues>;
 
 interface CalorieMismatchWarning {
     expectedCalories: number;

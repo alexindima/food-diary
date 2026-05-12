@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
 import type { NotificationItem } from '../../../services/notification.service';
-import type { NotificationViewModel } from './notifications-dialog.component';
+import type { NotificationViewModel } from './notifications-dialog.types';
 
 @Component({
     selector: 'fd-notifications-dialog-item',

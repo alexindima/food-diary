@@ -1,4 +1,4 @@
-import type { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, type HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
@@ -20,17 +20,19 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
             },
         }),
     ).pipe(
-        catchError((error: HttpErrorResponse) => {
+        catchError((error: unknown) => {
             if (req.url.includes('/admin-sso/exchange')) {
                 return throwError(() => error);
             }
 
-            if (error.status === HTTP_UNAUTHORIZED || error.status === HTTP_FORBIDDEN) {
+            const status = error instanceof HttpErrorResponse ? error.status : undefined;
+
+            if (status === HTTP_UNAUTHORIZED || status === HTTP_FORBIDDEN) {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('refreshToken');
                 sessionStorage.removeItem('authToken');
 
-                const reason = error.status === HTTP_FORBIDDEN ? 'forbidden' : 'unauthenticated';
+                const reason = status === HTTP_FORBIDDEN ? 'forbidden' : 'unauthenticated';
                 const returnUrl = router.url;
                 void router.navigate(['/unauthorized'], {
                     queryParams: { reason, returnUrl },

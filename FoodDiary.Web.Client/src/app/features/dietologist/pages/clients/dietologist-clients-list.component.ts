@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import type { ClientSummary } from '../../models/dietologist.data';
+import type { ClientSummary } from '../../../../shared/models/dietologist.data';
 import { DietologistClientCardComponent } from './dietologist-client-card.component';
-import type { ClientCardViewModel } from './dietologist-clients-page.component';
+import type { ClientCardViewModel } from './dietologist-clients.types';
 
 @Component({
     selector: 'fd-dietologist-clients-list',

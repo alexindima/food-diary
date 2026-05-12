@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,6 +29,7 @@ export class MealListFacade {
     public readonly favorites = signal<FavoriteMeal[]>([]);
     public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesLoadingMore = signal(false);
+    public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
 
     public loadFavorites(): void {
         this.isFavoritesLoadingMore.set(true);
@@ -62,7 +62,7 @@ export class MealListFacade {
                 this.clearError();
             }),
             map(() => void 0),
-            catchError((_error: HttpErrorResponse) => {
+            catchError((_error: unknown) => {
                 this.consumptionData.clearData();
                 this.showLoadError();
                 return of(void 0);
@@ -86,7 +86,7 @@ export class MealListFacade {
                 this.clearError();
             }),
             map(() => void 0),
-            catchError((_error: HttpErrorResponse) => {
+            catchError((_error: unknown) => {
                 this.consumptionData.clearData();
                 this.favorites.set([]);
                 this.favoriteTotalCount.set(0);
@@ -137,10 +137,84 @@ export class MealListFacade {
             });
     }
 
+    public toggleMealFavorite(meal: Meal): void {
+        if (this.favoriteLoadingIds().has(meal.id)) {
+            return;
+        }
+
+        this.setFavoriteLoading(meal.id, true);
+
+        if (meal.isFavorite === true) {
+            this.removeMealFavorite(meal);
+            return;
+        }
+
+        this.favoriteMealService
+            .add(meal.id)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.setFavoriteLoading(meal.id, false);
+                }),
+            )
+            .subscribe({
+                next: favorite => {
+                    this.syncMealFavoriteState(meal.id, true, favorite.id);
+                    this.loadFavorites();
+                },
+                error: () => {
+                    this.showOperationError();
+                },
+            });
+    }
+
     public syncMealFavoriteState(mealId: string, isFavorite: boolean, favoriteMealId: string | null): void {
         this.consumptionData.items.update(items =>
             items.map(item => (item.id === mealId ? { ...item, isFavorite, favoriteMealId } : item)),
         );
+    }
+
+    private removeMealFavorite(meal: Meal): void {
+        const favoriteId = meal.favoriteMealId;
+        const request$ =
+            favoriteId !== null && favoriteId !== undefined && favoriteId.length > 0
+                ? this.favoriteMealService.remove(favoriteId)
+                : this.favoriteMealService.getAll().pipe(
+                      switchMap(favorites => {
+                          const match = favorites.find(favorite => favorite.mealId === meal.id);
+                          return match === undefined ? of(null) : this.favoriteMealService.remove(match.id);
+                      }),
+                  );
+
+        request$
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.setFavoriteLoading(meal.id, false);
+                }),
+            )
+            .subscribe({
+                next: () => {
+                    this.syncMealFavoriteState(meal.id, false, null);
+                    this.loadFavorites();
+                },
+                error: () => {
+                    this.showOperationError();
+                },
+            });
+    }
+
+    private setFavoriteLoading(mealId: string, isLoading: boolean): void {
+        this.favoriteLoadingIds.update(current => {
+            const next = new Set(current);
+            if (isLoading) {
+                next.add(mealId);
+            } else {
+                next.delete(mealId);
+            }
+
+            return next;
+        });
     }
 
     private buildFilters(dateRange: FdUiDateRangeValue | null): MealFilters {

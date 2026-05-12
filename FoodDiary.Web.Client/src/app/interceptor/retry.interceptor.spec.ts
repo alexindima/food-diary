@@ -1,8 +1,9 @@
-import { HTTP_INTERCEPTORS, HttpClient, type HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import { RetryInterceptor } from './retry.interceptor';
 
 const HTTP_BAD_REQUEST = 400;
@@ -45,8 +46,8 @@ describe('RetryInterceptor', () => {
 
     it('should not retry on 400 errors', () => {
         http.get('/api/test').subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_BAD_REQUEST);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HTTP_BAD_REQUEST);
             },
         });
 
@@ -56,8 +57,8 @@ describe('RetryInterceptor', () => {
 
     it('should not retry on 404 errors', () => {
         http.get('/api/test').subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_NOT_FOUND);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HTTP_NOT_FOUND);
             },
         });
 
@@ -67,8 +68,8 @@ describe('RetryInterceptor', () => {
 
     it('should not retry POST requests', () => {
         http.post('/api/test', { value: 1 }).subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_INTERNAL_SERVER_ERROR);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HTTP_INTERNAL_SERVER_ERROR);
             },
         });
 

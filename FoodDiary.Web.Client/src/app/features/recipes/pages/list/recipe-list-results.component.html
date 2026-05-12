@@ -13,9 +13,10 @@
                         <fd-recipe-card
                             [recipe]="item.recipe"
                             [imageUrl]="item.imageUrl"
+                            [favoriteLoading]="favoriteLoadingIds().has(item.recipe.id)"
                             (open)="recipeOpen.emit(item.recipe)"
                             (addToMeal)="recipeAddToMeal.emit(item.recipe)"
-                            (favoriteChanged)="recipeFavoriteChanged.emit({ recipe: item.recipe, change: $event })"
+                            (favoriteToggle)="recipeFavoriteToggle.emit(item.recipe)"
                         />
                     }
                 </div>
@@ -35,9 +36,10 @@
                         <fd-recipe-card
                             [recipe]="item.recipe"
                             [imageUrl]="item.imageUrl"
+                            [favoriteLoading]="favoriteLoadingIds().has(item.recipe.id)"
                             (open)="recipeOpen.emit(item.recipe)"
                             (addToMeal)="recipeAddToMeal.emit(item.recipe)"
-                            (favoriteChanged)="recipeFavoriteChanged.emit({ recipe: item.recipe, change: $event })"
+                            (favoriteToggle)="recipeFavoriteToggle.emit(item.recipe)"
                         />
                     }
                 </div>

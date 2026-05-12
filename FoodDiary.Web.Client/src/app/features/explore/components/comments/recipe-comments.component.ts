@@ -10,13 +10,8 @@ import { filter, finalize, switchMap } from 'rxjs';
 
 import { CommentService } from '../../api/comment.service';
 import type { RecipeComment } from '../../models/comment.data';
+import type { RecipeCommentViewModel } from './recipe-comments.types';
 import { RecipeCommentsListComponent } from './recipe-comments-list.component';
-
-export interface RecipeCommentViewModel {
-    comment: RecipeComment;
-    authorLabel: string;
-    dateLabel: string;
-}
 
 const COMMENTS_PAGE_SIZE = 10;
 const COMMENT_MAX_LENGTH = 2_000;

@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
@@ -134,7 +133,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, data.rememberMe || false);
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Login error', error)),
+            catchError((error: unknown) => rethrowApiError('Login error', error)),
         );
     }
 
@@ -148,7 +147,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, false);
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Register error', error)),
+            catchError((error: unknown) => rethrowApiError('Register error', error)),
         );
     }
 
@@ -157,13 +156,13 @@ export class AuthService extends ApiService {
             tap(() => {
                 this.setEmailConfirmed(true);
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Verify email error', error)),
+            catchError((error: unknown) => rethrowApiError('Verify email error', error)),
         );
     }
 
     public resendEmailVerification(): Observable<void> {
         return this.post<void>('verify-email/resend', { clientOrigin: this.getClientOrigin() }).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Resend email verification error', error)),
+            catchError((error: unknown) => rethrowApiError('Resend email verification error', error)),
         );
     }
 
@@ -172,7 +171,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, rememberMe);
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Restore account error', error)),
+            catchError((error: unknown) => rethrowApiError('Restore account error', error)),
         );
     }
 
@@ -181,7 +180,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, data.rememberMe ?? false);
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Google login error', error)),
+            catchError((error: unknown) => rethrowApiError('Google login error', error)),
         );
     }
 
@@ -189,7 +188,7 @@ export class AuthService extends ApiService {
         return this.post<void>('password-reset/request', {
             email: data.email,
             clientOrigin: this.getClientOrigin(),
-        }).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Password reset request error', error)));
+        }).pipe(catchError((error: unknown) => rethrowApiError('Password reset request error', error)));
     }
 
     public confirmPasswordReset(data: ConfirmPasswordResetRequest): Observable<AuthResponse> {
@@ -197,7 +196,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, false);
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Password reset confirm error', error)),
+            catchError((error: unknown) => rethrowApiError('Password reset confirm error', error)),
         );
     }
 
@@ -206,7 +205,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, rememberMe);
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Telegram login error', error)),
+            catchError((error: unknown) => rethrowApiError('Telegram login error', error)),
         );
     }
 
@@ -233,7 +232,7 @@ export class AuthService extends ApiService {
                 }
                 return accessToken;
             }),
-            catchError(error => {
+            catchError((error: unknown) => {
                 void this.onLogoutAsync(true);
                 return fallbackApiError('refreshToken error', error, null);
             }),
@@ -351,7 +350,7 @@ export class AuthService extends ApiService {
         const request: TelegramAuthRequest = { initData };
         this.post<unknown>('telegram/link', request)
             .pipe(
-                catchError(error => {
+                catchError((error: unknown) => {
                     this.logger.warn('Telegram link failed', error);
                     return of(null);
                 }),

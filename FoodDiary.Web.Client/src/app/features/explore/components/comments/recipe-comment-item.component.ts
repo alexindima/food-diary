@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import type { RecipeComment } from '../../models/comment.data';
-import type { RecipeCommentViewModel } from './recipe-comments.component';
+import type { RecipeCommentViewModel } from './recipe-comments.types';
 
 @Component({
     selector: 'fd-recipe-comment-item',

@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -13,7 +12,6 @@ import { BarcodeScannerComponent } from '../../../../components/shared/barcode-s
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import type { ProductFavoriteChange } from '../../../../components/shared/product-card/product-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -27,17 +25,13 @@ import { ProductService } from '../../api/product.service';
 import { resolveProductImageUrl } from '../../lib/product-image.util';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
+import type { ProductCardViewModel } from './product-list.types';
 import { ProductListEmptyStateComponent } from './product-list-empty-state.component';
 import { ProductListFavoritesComponent } from './product-list-favorites.component';
 import { ProductListFiltersDialogComponent, type ProductListFiltersDialogResult } from './product-list-filters-dialog.component';
 import { ProductListGroupsComponent } from './product-list-groups.component';
 import { ProductListOffSectionComponent } from './product-list-off-section.component';
 import { ProductListPaginationComponent } from './product-list-pagination.component';
-
-export interface ProductCardViewModel {
-    product: Product;
-    imageUrl: string | undefined;
-}
 
 const DEFAULT_PAGE_SIZE = 10;
 const SEARCH_DEBOUNCE_MS = 300;
@@ -87,6 +81,7 @@ export class ProductListBaseComponent {
     public readonly favorites = signal<FavoriteProduct[]>([]);
     public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
+    public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
     public readonly searchValue = signal<string | null>(null);
@@ -281,7 +276,7 @@ export class ProductListBaseComponent {
                 this.errorKey.set(null);
             }),
             map(() => void 0),
-            catchError((_error: HttpErrorResponse) => {
+            catchError((_error: unknown) => {
                 this.productData.clearData();
                 this.recentProducts.set([]);
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
@@ -310,7 +305,7 @@ export class ProductListBaseComponent {
                     this.errorKey.set(null);
                 }),
                 map(() => void 0),
-                catchError((_error: HttpErrorResponse) => {
+                catchError((_error: unknown) => {
                     this.productData.clearData();
                     this.recentProducts.set([]);
                     this.favorites.set([]);
@@ -386,9 +381,30 @@ export class ProductListBaseComponent {
             });
     }
 
-    public onProductFavoriteChanged(product: Product, change: ProductFavoriteChange): void {
-        this.syncProductFavoriteState(product.id, change.isFavorite, change.favoriteProductId);
-        this.loadFavorites();
+    public onProductFavoriteToggle(product: Product): void {
+        if (this.favoriteLoadingIds().has(product.id)) {
+            return;
+        }
+
+        this.setFavoriteLoading(product.id, true);
+
+        if (product.isFavorite === true) {
+            this.removeProductFavorite(product);
+            return;
+        }
+
+        this.favoriteProductService
+            .add(product.id, product.name)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.setFavoriteLoading(product.id, false);
+                }),
+            )
+            .subscribe(favorite => {
+                this.syncProductFavoriteState(product.id, true, favorite.id);
+                this.loadFavorites();
+            });
     }
 
     public toggleFavorites(): void {
@@ -455,6 +471,44 @@ export class ProductListBaseComponent {
         this.recentProducts.update(products =>
             products.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
         );
+    }
+
+    private removeProductFavorite(product: Product): void {
+        const favoriteId = product.favoriteProductId;
+        const request$ =
+            favoriteId !== null && favoriteId !== undefined && favoriteId.length > 0
+                ? this.favoriteProductService.remove(favoriteId)
+                : this.favoriteProductService.getAll().pipe(
+                      switchMap(favorites => {
+                          const match = favorites.find(favorite => favorite.productId === product.id);
+                          return match === undefined ? of(null) : this.favoriteProductService.remove(match.id);
+                      }),
+                  );
+
+        request$
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.setFavoriteLoading(product.id, false);
+                }),
+            )
+            .subscribe(() => {
+                this.syncProductFavoriteState(product.id, false, null);
+                this.loadFavorites();
+            });
+    }
+
+    private setFavoriteLoading(productId: string, isLoading: boolean): void {
+        this.favoriteLoadingIds.update(current => {
+            const next = new Set(current);
+            if (isLoading) {
+                next.add(productId);
+            } else {
+                next.delete(productId);
+            }
+
+            return next;
+        });
     }
 }
 

@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable, tap } from 'rxjs';
 
@@ -16,7 +15,7 @@ export class HydrationService extends ApiService {
     public getDaily(dateUtc: Date): Observable<HydrationDaily> {
         const params = { dateUtc: dateUtc.toISOString() };
         return this.get<HydrationDaily>('daily', params).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Hydration daily fetch error', error, {
                     dateUtc: dateUtc.toISOString(),
                     totalMl: 0,
@@ -29,7 +28,7 @@ export class HydrationService extends ApiService {
     public getEntries(dateUtc: Date): Observable<HydrationEntry[]> {
         const params = { dateUtc: dateUtc.toISOString() };
         return this.get<HydrationEntry[]>('', params).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Hydration entries fetch error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Hydration entries fetch error', error, [])),
         );
     }
 
@@ -43,7 +42,7 @@ export class HydrationService extends ApiService {
             tap(() => {
                 // no-op side effects; refresh handled by caller
             }),
-            catchError((error: HttpErrorResponse) => rethrowApiError('Create hydration entry error', error)),
+            catchError((error: unknown) => rethrowApiError('Create hydration entry error', error)),
         );
     }
 }

@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -14,8 +13,6 @@ export class ReportService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.reports;
 
     public create(dto: CreateReportDto): Observable<ContentReport> {
-        return this.post<ContentReport>('', dto).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Create report error', error)),
-        );
+        return this.post<ContentReport>('', dto).pipe(catchError((error: unknown) => rethrowApiError('Create report error', error)));
     }
 }

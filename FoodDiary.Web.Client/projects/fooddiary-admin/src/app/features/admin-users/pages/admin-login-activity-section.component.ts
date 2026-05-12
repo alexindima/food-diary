@@ -5,7 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import type { AdminUserLoginEvent } from '../api/admin-users.service';
-import type { AdminUserLoginDeviceSummaryViewModel } from './admin-users.component';
+import type { AdminUserLoginDeviceSummaryViewModel } from './admin-users.types';
 
 @Component({
     selector: 'fd-admin-login-activity-section',

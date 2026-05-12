@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
+import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { MealsPreviewComponent } from '../../../components/shared/meals-preview/meals-preview.component';
 import type { DashboardBlockState, DashboardMealPreviewEntry, DashboardMealsPreviewState } from './dashboard-view.types';
 
@@ -19,6 +20,6 @@ export class DashboardMealsBlockComponent {
     public readonly blockToggle = output();
     public readonly viewAll = output();
     public readonly add = output<string | null | undefined>();
-    public readonly aiMealCreated = output();
+    public readonly aiMealCreateRequested = output<AiInputBarResult>();
     public readonly open = output<{ id: string }>();
 }

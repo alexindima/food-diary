@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 
-import type { WeeklyCheckInTrendCardViewModel } from './weekly-check-in-page.component';
+import type { WeeklyCheckInTrendCardViewModel } from './weekly-check-in.types';
 
 @Component({
     selector: 'fd-weekly-check-in-trends',

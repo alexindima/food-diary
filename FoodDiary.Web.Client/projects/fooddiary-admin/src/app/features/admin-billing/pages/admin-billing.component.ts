@@ -12,35 +12,16 @@ import {
     type AdminBillingWebhookEvent,
     type PagedResponse,
 } from '../api/admin-billing.service';
+import type {
+    AdminBillingPaymentViewModel,
+    AdminBillingSubscriptionViewModel,
+    AdminBillingWebhookEventViewModel,
+} from './admin-billing.types';
 import { AdminBillingFiltersComponent } from './admin-billing-filters.component';
 import { AdminBillingMetadataPanelComponent } from './admin-billing-metadata-panel.component';
 import { AdminBillingPaymentsTableComponent } from './admin-billing-payments-table.component';
 import { AdminBillingSubscriptionsTableComponent } from './admin-billing-subscriptions-table.component';
 import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-table.component';
-
-export interface AdminBillingSubscriptionViewModel extends AdminBillingSubscription {
-    currentPeriodStartText: string;
-    currentPeriodEndText: string;
-    nextBillingAttemptText: string;
-    updatedText: string;
-    externalCustomerIdText: string;
-    externalSubscriptionIdText: string;
-    externalPaymentMethodIdText: string;
-}
-
-export interface AdminBillingPaymentViewModel extends AdminBillingPayment {
-    createdText: string;
-    amountText: string;
-    externalPaymentIdText: string;
-    externalCustomerIdText: string;
-    webhookEventIdText: string;
-}
-
-export interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
-    processedText: string;
-    eventIdText: string;
-    externalObjectIdText: string;
-}
 
 const DEFAULT_PAGE_SIZE = 20;
 const SHORT_ID_MIN_LENGTH = 18;

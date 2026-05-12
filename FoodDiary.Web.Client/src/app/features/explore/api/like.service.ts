@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -15,13 +14,13 @@ export class LikeService extends ApiService {
 
     public getStatus(recipeId: string): Observable<RecipeLikeStatus> {
         return this.get<RecipeLikeStatus>(`${recipeId}/likes`).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get like status error', error, { isLiked: false, totalLikes: 0 })),
+            catchError((error: unknown) => fallbackApiError('Get like status error', error, { isLiked: false, totalLikes: 0 })),
         );
     }
 
     public toggle(recipeId: string): Observable<RecipeLikeStatus> {
         return this.post<RecipeLikeStatus>(`${recipeId}/likes/toggle`, {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Toggle like error', error)),
+            catchError((error: unknown) => rethrowApiError('Toggle like error', error)),
         );
     }
 }

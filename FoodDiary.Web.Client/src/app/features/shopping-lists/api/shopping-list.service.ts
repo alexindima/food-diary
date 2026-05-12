@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -15,35 +14,31 @@ export class ShoppingListService extends ApiService {
 
     public getCurrent(): Observable<ShoppingList | null> {
         return this.get<ShoppingList>('current').pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get current shopping list error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Get current shopping list error', error, null)),
         );
     }
 
     public getAll(): Observable<ShoppingListSummary[]> {
         return this.get<ShoppingListSummary[]>('').pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get shopping lists error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Get shopping lists error', error, [])),
         );
     }
 
     public getById(id: string): Observable<ShoppingList | null> {
-        return this.get<ShoppingList>(id).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get shopping list error', error, null)),
-        );
+        return this.get<ShoppingList>(id).pipe(catchError((error: unknown) => fallbackApiError('Get shopping list error', error, null)));
     }
 
     public create(data: ShoppingListCreateDto): Observable<ShoppingList> {
-        return this.post<ShoppingList>('', data).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Create shopping list error', error)),
-        );
+        return this.post<ShoppingList>('', data).pipe(catchError((error: unknown) => rethrowApiError('Create shopping list error', error)));
     }
 
     public update(id: string, data: ShoppingListUpdateDto): Observable<ShoppingList> {
         return this.patch<ShoppingList>(id, data).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Update shopping list error', error)),
+            catchError((error: unknown) => rethrowApiError('Update shopping list error', error)),
         );
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete shopping list error', error)));
+        return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete shopping list error', error)));
     }
 }

@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
-import type { RegisterFieldErrors, RegisterForm } from './auth.component';
+import type { RegisterFieldErrors, RegisterForm } from './auth.types';
 
 @Component({
     selector: 'fd-auth-register-fields',

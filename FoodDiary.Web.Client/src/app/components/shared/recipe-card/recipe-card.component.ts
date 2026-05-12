@@ -1,13 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize, of, switchMap } from 'rxjs';
 
-import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
-import type { FavoriteRecipe } from '../../../features/recipes/models/recipe.data';
 import { AuthService } from '../../../services/auth.service';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
@@ -38,11 +33,6 @@ export interface RecipeCardItem {
     favoriteRecipeId?: string | null;
 }
 
-export interface RecipeFavoriteChange {
-    isFavorite: boolean;
-    favoriteRecipeId: string | null;
-}
-
 @Component({
     selector: 'fd-recipe-card',
     standalone: true,
@@ -54,18 +44,15 @@ export interface RecipeFavoriteChange {
 export class RecipeCardComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
-    private readonly favoriteRecipeService = inject(FavoriteRecipeService);
     private readonly authService = inject(AuthService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly toastService = inject(FdUiToastService);
 
     public readonly recipe = input.required<RecipeCardItem>();
     public readonly imageUrl = input.required<string | null | undefined>();
+    public readonly favoriteLoading = input(false);
     public readonly open = output();
     public readonly addToMeal = output();
-    public readonly favoriteChanged = output<RecipeFavoriteChange>();
-    public readonly isFavorite = signal(false);
-    public readonly isFavoriteLoading = signal(false);
+    public readonly favoriteToggle = output();
+    public readonly isFavorite = computed(() => Boolean(this.recipe().isFavorite));
     public readonly isAuthenticated = this.authService.isAuthenticated;
     public readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasRecipeId());
     public readonly favoriteAriaLabelKey = computed(() =>
@@ -117,16 +104,6 @@ export class RecipeCardComponent {
 
         return `${ingredients} - ${totalTime} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
     });
-    private favoriteRecipeId: string | null = null;
-
-    public constructor() {
-        effect(() => {
-            const recipe = this.recipe();
-            this.isFavorite.set(Boolean(recipe.isFavorite));
-            this.favoriteRecipeId = recipe.favoriteRecipeId ?? null;
-        });
-    }
-
     public handleOpen(): void {
         this.open.emit();
     }
@@ -155,90 +132,11 @@ export class RecipeCardComponent {
 
     public toggleFavorite(): void {
         const recipeId = this.recipe().id;
-        if (recipeId === undefined || recipeId.length === 0 || this.isFavoriteLoading()) {
+        if (recipeId === undefined || recipeId.length === 0 || this.favoriteLoading()) {
             return;
         }
 
-        this.isFavoriteLoading.set(true);
-
-        if (this.isFavorite()) {
-            this.removeFavorite(recipeId);
-            return;
-        }
-
-        this.favoriteRecipeService
-            .add(recipeId, this.recipe().name)
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.isFavoriteLoading.set(false);
-                }),
-            )
-            .subscribe({
-                next: favorite => {
-                    this.favoriteRecipeId = favorite.id;
-                    this.isFavorite.set(true);
-                    this.favoriteChanged.emit({ isFavorite: true, favoriteRecipeId: favorite.id });
-                },
-                error: () => {
-                    this.showFavoriteError();
-                },
-            });
-    }
-
-    private removeFavorite(recipeId: string): void {
-        if (this.favoriteRecipeId !== null && this.favoriteRecipeId.length > 0) {
-            this.favoriteRecipeService
-                .remove(this.favoriteRecipeId)
-                .pipe(
-                    takeUntilDestroyed(this.destroyRef),
-                    finalize(() => {
-                        this.isFavoriteLoading.set(false);
-                    }),
-                )
-                .subscribe({
-                    next: () => {
-                        this.favoriteRecipeId = null;
-                        this.isFavorite.set(false);
-                        this.favoriteChanged.emit({ isFavorite: false, favoriteRecipeId: null });
-                    },
-                    error: () => {
-                        this.showFavoriteError();
-                    },
-                });
-            return;
-        }
-
-        this.favoriteRecipeService
-            .getAll()
-            .pipe(
-                switchMap(favorites => {
-                    const match = favorites.find((favorite: FavoriteRecipe) => favorite.recipeId === recipeId);
-                    if (match === undefined) {
-                        return of(null);
-                    }
-
-                    return this.favoriteRecipeService.remove(match.id);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.isFavoriteLoading.set(false);
-                }),
-            )
-            .subscribe({
-                next: () => {
-                    this.favoriteRecipeId = null;
-                    this.isFavorite.set(false);
-                    this.favoriteChanged.emit({ isFavorite: false, favoriteRecipeId: null });
-                },
-                error: () => {
-                    this.showFavoriteError();
-                },
-            });
-    }
-
-    private showFavoriteError(): void {
-        this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
+        this.favoriteToggle.emit();
     }
 
     private hasRecipeId(): boolean {

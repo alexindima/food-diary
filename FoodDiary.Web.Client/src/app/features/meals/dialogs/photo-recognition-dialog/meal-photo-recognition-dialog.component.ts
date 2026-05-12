@@ -1,5 +1,4 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -10,6 +9,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { catchError, of } from 'rxjs';
 
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../models/meal.data';
@@ -292,10 +292,11 @@ export class MealPhotoRecognitionDialogComponent {
         this.aiFoodService
             .analyzeFoodImage({ imageAssetId: assetId })
             .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    if (err.status === HTTP_FORBIDDEN_STATUS) {
+                catchError((err: unknown) => {
+                    const status = getNumberProperty(err, 'status');
+                    if (status === HTTP_FORBIDDEN_STATUS) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    } else if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
@@ -325,8 +326,9 @@ export class MealPhotoRecognitionDialogComponent {
         this.aiFoodService
             .calculateNutrition({ items })
             .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                catchError((err: unknown) => {
+                    const status = getNumberProperty(err, 'status');
+                    if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');

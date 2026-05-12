@@ -3,11 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { Micronutrient } from '../../models/usda.data';
+import type { MicronutrientView } from './micronutrient-panel.types';
 import { MicronutrientSectionComponent } from './micronutrient-section.component';
-
-export type MicronutrientView = Micronutrient & {
-    percentDailyValueWidth: number | null;
-};
 
 const NUTRIENT_ID_VITAMIN_A = 1106;
 const NUTRIENT_ID_THIAMIN = 1165;

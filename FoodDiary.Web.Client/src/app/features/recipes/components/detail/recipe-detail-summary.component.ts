@@ -4,7 +4,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 
 import type { Recipe } from '../../models/recipe.data';
-import type { IngredientPreviewItem, MacroBlock } from './recipe-detail.component';
+import type { IngredientPreviewItem, MacroBlock } from './recipe-detail.types';
 import { RecipeDetailIngredientPreviewComponent } from './recipe-detail-ingredient-preview.component';
 
 @Component({

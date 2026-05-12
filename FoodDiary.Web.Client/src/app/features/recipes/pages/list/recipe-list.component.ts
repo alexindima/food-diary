@@ -17,19 +17,18 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, of, switchMap } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
-import type { RecipeFavoriteChange } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
-import { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
+import { RecipeDetailActionResult } from '../../components/detail/recipe-detail.types';
 import {
     RecipeListFiltersDialogComponent,
     type RecipeListFiltersDialogResult,
@@ -37,13 +36,9 @@ import {
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import type { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
+import type { RecipeCardViewModel } from './recipe-list.types';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites.component';
-import { type RecipeFavoriteChangeRequest, RecipeListResultsComponent } from './recipe-list-results.component';
-
-export interface RecipeCardViewModel {
-    recipe: Recipe;
-    imageUrl: string | undefined;
-}
+import { RecipeListResultsComponent } from './recipe-list-results.component';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -122,6 +117,7 @@ export class RecipeListComponent {
     private readonly isMobileSearchOpen = signal(false);
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public readonly isDeleting = this.recipeListFacade.isDeleting;
+    public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
 
     public constructor() {
@@ -290,13 +286,30 @@ export class RecipeListComponent {
             });
     }
 
-    public onRecipeFavoriteChanged(recipe: Recipe, change: RecipeFavoriteChange): void {
-        this.syncRecipeFavoriteState(recipe.id, change.isFavorite, change.favoriteRecipeId);
-        this.loadFavorites();
-    }
+    public onRecipeFavoriteToggle(recipe: Recipe): void {
+        if (this.favoriteLoadingIds().has(recipe.id)) {
+            return;
+        }
 
-    public onRecipeFavoriteChangeRequest(request: RecipeFavoriteChangeRequest): void {
-        this.onRecipeFavoriteChanged(request.recipe, request.change);
+        this.setFavoriteLoading(recipe.id, true);
+
+        if (recipe.isFavorite === true) {
+            this.removeRecipeFavorite(recipe);
+            return;
+        }
+
+        this.favoriteRecipeService
+            .add(recipe.id, recipe.name)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.setFavoriteLoading(recipe.id, false);
+                }),
+            )
+            .subscribe(favorite => {
+                this.syncRecipeFavoriteState(recipe.id, true, favorite.id);
+                this.loadFavorites();
+            });
     }
 
     public toggleFavorites(): void {
@@ -361,6 +374,44 @@ export class RecipeListComponent {
         this.recentRecipes.update(recipes =>
             recipes.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
         );
+    }
+
+    private removeRecipeFavorite(recipe: Recipe): void {
+        const favoriteId = recipe.favoriteRecipeId;
+        const request$ =
+            favoriteId !== null && favoriteId !== undefined && favoriteId.length > 0
+                ? this.favoriteRecipeService.remove(favoriteId)
+                : this.favoriteRecipeService.getAll().pipe(
+                      switchMap(favorites => {
+                          const match = favorites.find(favorite => favorite.recipeId === recipe.id);
+                          return match === undefined ? of(null) : this.favoriteRecipeService.remove(match.id);
+                      }),
+                  );
+
+        request$
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.setFavoriteLoading(recipe.id, false);
+                }),
+            )
+            .subscribe(() => {
+                this.syncRecipeFavoriteState(recipe.id, false, null);
+                this.loadFavorites();
+            });
+    }
+
+    private setFavoriteLoading(recipeId: string, isLoading: boolean): void {
+        this.favoriteLoadingIds.update(current => {
+            const next = new Set(current);
+            if (isLoading) {
+                next.add(recipeId);
+            } else {
+                next.delete(recipeId);
+            }
+
+            return next;
+        });
     }
 }
 

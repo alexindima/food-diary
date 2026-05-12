@@ -10,12 +10,8 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { ProductListBaseComponent } from '../components/list/product-list-base.component';
 import type { Product } from '../models/product.data';
 import { ProductAddDialogComponent } from './product-add-dialog.component';
+import type { ProductSelectItemViewModel } from './product-list-dialog.types';
 import { ProductListDialogContentComponent } from './product-list-dialog-content.component';
-
-export interface ProductSelectItemViewModel {
-    product: Product;
-    imageUrl: string | undefined;
-}
 
 @Component({
     selector: 'fd-product-list-dialog',

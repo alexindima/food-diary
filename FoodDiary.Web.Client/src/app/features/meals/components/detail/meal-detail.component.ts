@@ -26,6 +26,7 @@ import {
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import type { ConsumptionAiItem, Meal } from '../../models/meal.data';
+import { MealDetailActionResult, type MealDetailItemPreview, type MealMacroBlock, type MealSatietyMeta } from './meal-detail.types';
 import { MealDetailSummaryComponent } from './meal-detail-summary.component';
 
 const MACRO_SUMMARY_LIMIT = 3;
@@ -413,34 +414,3 @@ export class MealDetailComponent {
         return this.initialFavoriteState !== this.isFavorite();
     }
 }
-
-export class MealDetailActionResult {
-    public constructor(
-        public id: string,
-        public action: MealDetailAction,
-        public favoriteChanged = false,
-    ) {}
-}
-
-export type MealDetailAction = 'Edit' | 'Delete' | 'Repeat' | 'FavoriteChanged';
-
-export type MealSatietyMeta = {
-    emoji: string;
-    title: string;
-    description: string;
-};
-
-export type MealDetailItemPreview = {
-    name: string;
-    amount: number;
-    unitKey: string | null;
-    unitText: string | null;
-};
-
-export type MealMacroBlock = {
-    labelKey: string;
-    value: number;
-    unitKey: string;
-    color: string;
-    percent: number;
-};

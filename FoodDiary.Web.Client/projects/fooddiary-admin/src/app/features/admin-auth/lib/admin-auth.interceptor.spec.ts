@@ -1,4 +1,4 @@
-import { HttpClient, type HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -8,6 +8,8 @@ import { adminAuthInterceptor } from './admin-auth.interceptor';
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_FORBIDDEN = 403;
+
+const getHttpStatus = (error: unknown): number | undefined => (error instanceof HttpErrorResponse ? error.status : undefined);
 
 describe('adminAuthInterceptor', () => {
     let http: HttpClient;
@@ -58,8 +60,8 @@ describe('adminAuthInterceptor', () => {
         sessionStorage.setItem('authToken', 'session-token');
 
         http.get('/api/admin/users').subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_UNAUTHORIZED);
+            error: (error: unknown) => {
+                expect(getHttpStatus(error)).toBe(HTTP_UNAUTHORIZED);
             },
         });
 
@@ -78,8 +80,8 @@ describe('adminAuthInterceptor', () => {
         localStorage.setItem('authToken', 'admin-token');
 
         http.get('/api/admin/users').subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_FORBIDDEN);
+            error: (error: unknown) => {
+                expect(getHttpStatus(error)).toBe(HTTP_FORBIDDEN);
             },
         });
 
@@ -95,8 +97,8 @@ describe('adminAuthInterceptor', () => {
         localStorage.setItem('authToken', 'admin-token');
 
         http.post('/api/v1/auth/admin-sso/exchange', {}).subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_UNAUTHORIZED);
+            error: (error: unknown) => {
+                expect(getHttpStatus(error)).toBe(HTTP_UNAUTHORIZED);
             },
         });
 

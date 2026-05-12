@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-input-bar.component';
+import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 
 @Component({
     selector: 'fd-dashboard-quick-add',
@@ -12,6 +13,6 @@ import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardQuickAddComponent {
-    public readonly mealCreated = output();
+    public readonly mealCreateRequested = output<AiInputBarResult>();
     public readonly manualAdd = output();
 }

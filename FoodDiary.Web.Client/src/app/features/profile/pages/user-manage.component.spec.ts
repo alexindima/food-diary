@@ -13,9 +13,9 @@ import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { User } from '../../../shared/models/user.data';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
-import type { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
 import { UserManageComponent } from './user-manage.component';
 

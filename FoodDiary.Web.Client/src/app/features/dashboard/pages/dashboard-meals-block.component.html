@@ -20,7 +20,7 @@
             [showEmptyState]="previewState().showEmptyState"
             (viewAll)="viewAll.emit()"
             (add)="add.emit($event)"
-            (aiMealCreated)="aiMealCreated.emit()"
+            (aiMealCreateRequested)="aiMealCreateRequested.emit($event)"
             (open)="open.emit($event)"
         />
     </div>

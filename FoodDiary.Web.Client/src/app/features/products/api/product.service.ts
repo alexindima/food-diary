@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -39,14 +38,14 @@ export class ProductService extends ApiService {
         this.applyProductFilters(params, filters);
 
         return this.get<PageOf<Product>>('', params).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Query products error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
             ),
         );
     }
 
     public getById(id: string): Observable<Product | null> {
-        return this.get<Product>(id).pipe(catchError((error: HttpErrorResponse) => fallbackApiError('Get product error', error, null)));
+        return this.get<Product>(id).pipe(catchError((error: unknown) => fallbackApiError('Get product error', error, null)));
     }
 
     public queryOverview(query: ProductOverviewQuery): Observable<ProductOverview> {
@@ -62,7 +61,7 @@ export class ProductService extends ApiService {
         this.applyProductFilters(params, filters);
 
         return this.get<ProductOverview>('overview', params).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Query product overview error', error, {
                     recentItems: [],
                     favoriteItems: [],
@@ -86,31 +85,31 @@ export class ProductService extends ApiService {
     public getRecent(limit = DEFAULT_RECENT_LIMIT, includePublic = true): Observable<Product[]> {
         const params: Record<string, string | number | boolean> = { limit, includePublic };
         return this.get<Product[]>('recent', params).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get recent products error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Get recent products error', error, [])),
         );
     }
 
     public searchSuggestions(search: string, limit = DEFAULT_SUGGESTIONS_LIMIT): Observable<ProductSearchSuggestion[]> {
         return this.get<ProductSearchSuggestion[]>('suggestions', { search, limit }).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Search product suggestions error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Search product suggestions error', error, [])),
         );
     }
 
     public create(data: CreateProductRequest): Observable<Product> {
-        return this.post<Product>('', data).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Create product error', error)));
+        return this.post<Product>('', data).pipe(catchError((error: unknown) => rethrowApiError('Create product error', error)));
     }
 
     public update(id: string, data: UpdateProductRequest): Observable<Product> {
-        return this.patch<Product>(id, data).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Update product error', error)));
+        return this.patch<Product>(id, data).pipe(catchError((error: unknown) => rethrowApiError('Update product error', error)));
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete product error', error)));
+        return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete product error', error)));
     }
 
     public duplicate(id: string): Observable<Product> {
         return this.post<Product>(`${id}/duplicate`, {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Duplicate product error', error)),
+            catchError((error: unknown) => rethrowApiError('Duplicate product error', error)),
         );
     }
 }

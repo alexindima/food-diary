@@ -179,7 +179,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
         if (this.deleteOnClear() && assetId !== null) {
             this.imageUploadService.deleteAsset(assetId).subscribe({
-                error: err => {
+                error: (err: unknown) => {
                     this.logger.warn('Failed to delete orphan image asset', err);
                 },
             });

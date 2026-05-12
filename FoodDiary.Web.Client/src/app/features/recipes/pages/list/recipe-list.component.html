@@ -130,9 +130,10 @@
                 [allRecipeItems]="allRecipeItems()"
                 [allRecipesSectionLabelKey]="allRecipesSectionLabelKey()"
                 [isEmptyState]="isEmptyState()"
+                [favoriteLoadingIds]="favoriteLoadingIds()"
                 (recipeOpen)="onRecipeClick($event)"
                 (recipeAddToMeal)="onAddToMeal($event)"
-                (recipeFavoriteChanged)="onRecipeFavoriteChangeRequest($event)"
+                (recipeFavoriteToggle)="onRecipeFavoriteToggle($event)"
                 (recipeAdd)="onAddRecipeClickAsync()"
             />
         }

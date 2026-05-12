@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -16,7 +15,7 @@ export class CommentService extends ApiService {
 
     public getComments(recipeId: string, page: number, limit: number): Observable<PageOf<RecipeComment>> {
         return this.get<PageOf<RecipeComment>>(`${recipeId}/comments`, { page, limit }).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Get comments error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
             ),
         );
@@ -24,19 +23,19 @@ export class CommentService extends ApiService {
 
     public createComment(recipeId: string, dto: CreateCommentDto): Observable<RecipeComment> {
         return this.post<RecipeComment>(`${recipeId}/comments`, dto).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Create comment error', error)),
+            catchError((error: unknown) => rethrowApiError('Create comment error', error)),
         );
     }
 
     public updateComment(recipeId: string, commentId: string, dto: UpdateCommentDto): Observable<RecipeComment> {
         return this.patch<RecipeComment>(`${recipeId}/comments/${commentId}`, dto).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Update comment error', error)),
+            catchError((error: unknown) => rethrowApiError('Update comment error', error)),
         );
     }
 
     public deleteComment(recipeId: string, commentId: string): Observable<void> {
         return this.delete<void>(`${recipeId}/comments/${commentId}`).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Delete comment error', error)),
+            catchError((error: unknown) => rethrowApiError('Delete comment error', error)),
         );
     }
 }

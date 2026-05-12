@@ -29,14 +29,14 @@ export class DashboardService extends ApiService {
     public getSnapshot(query: DashboardSnapshotQuery): Observable<DashboardSnapshot | null> {
         const params = this.createSnapshotParams(query);
         return this.get<DashboardSnapshot>('', params).pipe(
-            catchError(error => fallbackApiError('Dashboard snapshot fetch error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
     }
 
     public getSnapshotSilently(query: DashboardSnapshotQuery): Observable<DashboardSnapshot | null> {
         const params = this.createSnapshotParams(query);
         return this.get<DashboardSnapshot>('', params, undefined, this.silentLoadingContext).pipe(
-            catchError(error => fallbackApiError('Dashboard snapshot fetch error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
     }
 

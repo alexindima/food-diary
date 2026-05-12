@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -8,7 +7,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
 import { RecipeService } from '../api/recipe.service';
-import type { RecipeDetailActionResult } from '../components/detail/recipe-detail.component';
+import type { RecipeDetailActionResult } from '../components/detail/recipe-detail.types';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
 const RECIPE_PAGE_SIZE = 10;
@@ -68,7 +67,7 @@ export class RecipeListFacade {
                 this.errorKey.set(null);
             }),
             map(() => void 0),
-            catchError((_error: HttpErrorResponse) => {
+            catchError((_error: unknown) => {
                 this.recipeData.clearData();
                 this.recentRecipes.set([]);
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
@@ -105,7 +104,7 @@ export class RecipeListFacade {
                     this.errorKey.set(null);
                 }),
                 map(() => void 0),
-                catchError((_error: HttpErrorResponse) => {
+                catchError((_error: unknown) => {
                     this.recipeData.clearData();
                     this.recentRecipes.set([]);
                     this.favoriteRecipes.set([]);

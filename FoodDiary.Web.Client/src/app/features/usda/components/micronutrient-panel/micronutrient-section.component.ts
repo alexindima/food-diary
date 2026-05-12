@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { MicronutrientView } from './micronutrient-panel.component';
+import type { MicronutrientView } from './micronutrient-panel.types';
 
 @Component({
     selector: 'fd-micronutrient-section',

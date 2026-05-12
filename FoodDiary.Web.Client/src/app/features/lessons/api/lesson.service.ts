@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -20,16 +19,14 @@ export class LessonService extends ApiService {
         }
         return super
             .get<LessonSummary[]>('', params)
-            .pipe(catchError((error: HttpErrorResponse) => fallbackApiError('Get lessons error', error, [])));
+            .pipe(catchError((error: unknown) => fallbackApiError('Get lessons error', error, [])));
     }
 
     public getById(id: string): Observable<LessonDetail> {
-        return super.get<LessonDetail>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Get lesson error', error)));
+        return super.get<LessonDetail>(id).pipe(catchError((error: unknown) => rethrowApiError('Get lesson error', error)));
     }
 
     public markRead(id: string): Observable<void> {
-        return super
-            .post<void>(`${id}/read`, {})
-            .pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Mark lesson read error', error)));
+        return super.post<void>(`${id}/read`, {}).pipe(catchError((error: unknown) => rethrowApiError('Mark lesson read error', error)));
     }
 }

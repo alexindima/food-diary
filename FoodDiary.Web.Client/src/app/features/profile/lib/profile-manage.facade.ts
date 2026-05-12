@@ -14,8 +14,8 @@ import { type NotificationPreferences, NotificationService, type WebPushSubscrip
 import { ThemeService } from '../../../services/theme.service';
 import { UserService } from '../../../shared/api/user.service';
 import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { UpdateUserDto, User } from '../../../shared/models/user.data';
-import type { DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';

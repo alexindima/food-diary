@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
 import type { FavoriteMeal } from '../../models/meal.data';
-import type { FavoriteMealView } from './meal-list.component';
+import type { FavoriteMealView } from './meal-list.types';
 
 @Component({
     selector: 'fd-meal-list-favorites',

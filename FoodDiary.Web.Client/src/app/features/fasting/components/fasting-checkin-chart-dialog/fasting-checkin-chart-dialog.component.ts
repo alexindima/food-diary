@@ -200,16 +200,29 @@ export class FastingCheckInChartDialogComponent {
                 return;
             }
 
-            this.hasScheduledInitialChartResize = true;
-            afterNextRender(() => {
-                this.ngZone.runOutsideAngular(() => {
-                    window.setTimeout(() => {
-                        chartDirective.chart?.resize();
-                        chartDirective.update();
-                    }, INITIAL_CHART_RESIZE_DELAY_MS);
-                });
+            this.scheduleInitialChartResize();
+        });
+    }
+
+    private scheduleInitialChartResize(): void {
+        this.hasScheduledInitialChartResize = true;
+        afterNextRender(() => {
+            this.ngZone.runOutsideAngular(() => {
+                this.resizeChartLater();
             });
         });
+    }
+
+    private resizeChartLater(): void {
+        window.setTimeout(() => {
+            const chartDirective = this.chartDirective();
+            if (chartDirective === undefined) {
+                return;
+            }
+
+            chartDirective.chart?.resize();
+            chartDirective.update();
+        }, INITIAL_CHART_RESIZE_DELAY_MS);
     }
 
     private getTooltipPoint(items: ReadonlyArray<{ dataIndex: number }>): FastingCheckInChartPoint | undefined {

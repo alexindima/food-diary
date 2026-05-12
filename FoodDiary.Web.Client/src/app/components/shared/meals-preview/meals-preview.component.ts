@@ -2,15 +2,10 @@ import { ChangeDetectionStrategy, Component, input, output, signal } from '@angu
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
 
+import type { AiInputBarResult } from '../ai-input-bar/ai-input-bar.types';
 import type { MealCardItem } from '../meal-card/meal-card.component';
+import type { MealPreviewEntry } from './meals-preview.types';
 import { MealsPreviewEntryComponent } from './meals-preview-entry.component';
-
-export interface MealPreviewEntry {
-    meal?: MealCardItem | null;
-    slot?: string | null;
-    icon?: string;
-    labelKey?: string;
-}
 
 @Component({
     selector: 'fd-meals-preview',
@@ -33,7 +28,7 @@ export class MealsPreviewComponent {
 
     public readonly viewAll = output();
     public readonly add = output<string | null | undefined>();
-    public readonly aiMealCreated = output();
+    public readonly aiMealCreateRequested = output<AiInputBarResult>();
     public readonly open = output<MealCardItem>();
     public readonly expandedAiSlot = signal<string | null>(null);
 
@@ -42,8 +37,8 @@ export class MealsPreviewComponent {
         this.expandedAiSlot.update(current => (current === normalizedSlot ? null : normalizedSlot));
     }
 
-    public handleAiMealCreated(): void {
+    public handleAiMealCreateRequested(result: AiInputBarResult): void {
         this.expandedAiSlot.set(null);
-        this.aiMealCreated.emit();
+        this.aiMealCreateRequested.emit(result);
     }
 }

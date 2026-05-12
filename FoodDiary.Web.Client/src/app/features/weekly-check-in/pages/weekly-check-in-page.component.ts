@@ -5,6 +5,7 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { WeeklyCheckInFacade } from '../lib/weekly-check-in.facade';
+import type { WeeklyCheckInTrendCardConfig, WeeklyCheckInTrendCardViewModel } from './weekly-check-in.types';
 import { WeeklyCheckInStatsCardComponent } from './weekly-check-in-stats-card.component';
 import { WeeklyCheckInSuggestionsCardComponent } from './weekly-check-in-suggestions-card.component';
 import { WeeklyCheckInTrendsComponent } from './weekly-check-in-trends.component';
@@ -109,28 +110,4 @@ export class WeeklyCheckInPageComponent {
             icon: this.facade.getTrendIcon(value),
         };
     }
-}
-
-type WeeklyCheckInTrendCardKey = 'calories' | 'protein' | 'weight' | 'hydration';
-
-interface WeeklyCheckInTrendCardConfig {
-    key: WeeklyCheckInTrendCardKey;
-    labelKey: string;
-    value: number;
-    unitKey: string;
-    numberFormat: string;
-    invertPositive?: boolean;
-    unitSeparator?: string;
-}
-
-export interface WeeklyCheckInTrendCardViewModel {
-    key: WeeklyCheckInTrendCardKey;
-    labelKey: string;
-    value: number;
-    unitKey: string;
-    unitSeparator: string;
-    numberFormat: string;
-    valuePrefix: string;
-    color: string;
-    icon: string;
 }

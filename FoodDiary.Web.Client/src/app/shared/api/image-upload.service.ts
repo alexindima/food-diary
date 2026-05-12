@@ -23,7 +23,7 @@ export class ImageUploadService {
 
         return this.http
             .post<ImageUploadUrlResponse>(`${this.baseUrl}/upload-url`, body)
-            .pipe(catchError(error => rethrowApiError('Failed to request image upload URL', error)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Failed to request image upload URL', error)));
     }
 
     public uploadToPresignedUrl(uploadUrl: string, file: File): Observable<void> {
@@ -35,13 +35,13 @@ export class ImageUploadService {
 
         return this.http.put(uploadUrl, file, { headers, responseType: 'text', context }).pipe(
             map(() => void 0),
-            catchError(error => rethrowApiError('Failed to upload image to S3', error)),
+            catchError((error: unknown) => rethrowApiError('Failed to upload image to S3', error)),
         );
     }
 
     public deleteAsset(assetId: string): Observable<void> {
         return this.http
             .delete<void>(`${this.baseUrl}/${assetId}`)
-            .pipe(catchError(error => rethrowApiError('Failed to delete image asset', error)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Failed to delete image asset', error)));
     }
 }

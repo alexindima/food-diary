@@ -40,6 +40,12 @@ import {
     type FastingSessionStatus,
     type FastingStats,
 } from '../models/fasting.data';
+import type {
+    FastingCheckInViewModel,
+    FastingHistorySessionViewModel,
+    FastingMessageViewModel,
+    FastingStatsViewModel,
+} from './fasting-page.types';
 
 const CURRENT_SESSION_RECENT_CHECK_INS_LIMIT = 3;
 const DEFAULT_CYCLIC_FAST_DAYS = 1;
@@ -651,42 +657,4 @@ export class FastingPageComponent {
 
         return this.getMoodEmoji(level);
     }
-}
-
-interface FastingStatsViewModel {
-    stats: FastingStats;
-    hasPersonalSummary: boolean;
-    topSymptomLabel: string;
-}
-
-export interface FastingMessageViewModel {
-    message: FastingMessage;
-    severity: FdUiInlineAlertSeverity;
-    title: string;
-    body: string;
-}
-
-export interface FastingCheckInViewModel {
-    checkIn: FastingCheckIn;
-    checkedInAtLabel: string;
-    relativeCheckedInAt: string | null;
-    summary: string;
-    symptomLabels: string[];
-}
-
-export interface FastingHistorySessionViewModel {
-    session: FastingSession;
-    startedAtLabel: string;
-    accentColor: string;
-    sessionTypeLabel: string;
-    protocolDisplay: string;
-    badgeKey: string;
-    hasCheckIns: boolean;
-    checkInCount: number;
-    canViewChart: boolean;
-    isExpanded: boolean;
-    checkInRegionId: string;
-    toggleKey: string;
-    visibleCheckIns: FastingCheckInViewModel[];
-    canLoadMoreCheckIns: boolean;
 }

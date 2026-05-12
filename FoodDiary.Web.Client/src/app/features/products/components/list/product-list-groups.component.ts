@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ProductCardComponent, type ProductFavoriteChange } from '../../../../components/shared/product-card/product-card.component';
+import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import type { Product } from '../../models/product.data';
-import type { ProductCardViewModel } from './product-list-base.component';
+import type { ProductCardViewModel } from './product-list.types';
 
 @Component({
     selector: 'fd-product-list-groups',
@@ -20,13 +20,9 @@ export class ProductListGroupsComponent {
     public readonly recentItems = input.required<ProductCardViewModel[]>();
     public readonly allItems = input.required<ProductCardViewModel[]>();
     public readonly allProductsSectionLabelKey = input.required<string>();
+    public readonly favoriteLoadingIds = input.required<ReadonlySet<string>>();
 
     public readonly openProduct = output<Product>();
     public readonly addToMeal = output<Product>();
-    public readonly favoriteChanged = output<ProductListFavoriteChange>();
-}
-
-export interface ProductListFavoriteChange {
-    product: Product;
-    change: ProductFavoriteChange;
+    public readonly favoriteToggle = output<Product>();
 }

@@ -39,7 +39,7 @@
     </fd-page-header>
 
     @defer (on idle) {
-        <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
+        <fd-ai-input-bar mode="create" (mealCreateRequested)="onAiMealCreateRequested($event)" />
     } @placeholder {
         <div class="consumption-list__ai-placeholder" aria-hidden="true"></div>
     }
@@ -81,10 +81,11 @@
             [totalPages]="consumptionData.totalPages"
             [totalItems]="consumptionData.totalItems"
             [currentPageIndex]="currentPageIndex()"
+            [favoriteLoadingIds]="favoriteLoadingIds()"
             (retry)="retryLoad()"
             (mealAdd)="goToMealAddAsync()"
             (mealOpened)="openMealDetailsAsync($event)"
-            (mealFavoriteChanged)="onMealFavoriteChanged($event.meal, $event.change)"
+            (mealFavoriteToggle)="onMealFavoriteToggle($event)"
             (pageIndexChange)="onPageChange($event)"
         />
     </fd-page-body>

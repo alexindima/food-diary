@@ -7,7 +7,8 @@ import {
     DashboardSummaryCardComponent,
     type NutrientBar,
 } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
-import { type MealPreviewEntry, MealsPreviewComponent } from '../../../../components/shared/meals-preview/meals-preview.component';
+import { MealsPreviewComponent } from '../../../../components/shared/meals-preview/meals-preview.component';
+import type { MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview.types';
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
 import { AuthService } from '../../../../services/auth.service';

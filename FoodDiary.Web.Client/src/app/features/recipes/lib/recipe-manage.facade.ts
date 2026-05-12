@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import type { FormArray, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -185,7 +184,7 @@ export class RecipeManageFacade {
             )
             .subscribe({
                 next: recipe => void this.handleSubmitResponseAsync(recipe),
-                error: (error: HttpErrorResponse) => {
+                error: (error: unknown) => {
                     this.handleSubmitError(error);
                 },
             });
@@ -202,7 +201,7 @@ export class RecipeManageFacade {
             )
             .subscribe({
                 next: recipe => void this.handleSubmitResponseAsync(recipe),
-                error: (error: HttpErrorResponse) => {
+                error: (error: unknown) => {
                     this.handleSubmitError(error);
                 },
             });
@@ -235,13 +234,17 @@ export class RecipeManageFacade {
         await this.navigationService.navigateToRecipeListAsync();
     }
 
-    private handleSubmitError(error?: HttpErrorResponse): void {
+    private handleSubmitError(error?: unknown): void {
         const message = this.getErrorMessage(error) ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
         this.setGlobalError(message, false);
     }
 
-    private getErrorMessage(error: HttpErrorResponse | undefined): string | null {
-        const responseBody: unknown = error?.error;
+    private getErrorMessage(error: unknown): string | null {
+        if (!this.isRecord(error)) {
+            return null;
+        }
+
+        const responseBody = error['error'];
         return this.isRecord(responseBody) && typeof responseBody['message'] === 'string' ? responseBody['message'] : null;
     }
 

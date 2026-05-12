@@ -9,7 +9,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import type { MeasurementUnit } from '../../products/models/product.data';
-import type { ShoppingListItemFormGroup, ShoppingListItemViewModel } from './shopping-list-page.component';
+import type { ShoppingListItemFormGroup, ShoppingListItemViewModel } from './shopping-list.types';
 
 @Component({
     selector: 'fd-shopping-list-items-panel',

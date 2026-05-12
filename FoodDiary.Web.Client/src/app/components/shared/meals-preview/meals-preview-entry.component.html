@@ -45,7 +45,11 @@
         </div>
         @if (showAiButtons() && expandedAiSlot() === (entry().slot ?? null)) {
             <div class="meals-preview__ai-panel">
-                <fd-ai-input-bar mode="create" [mealType]="entry().slot ?? null" (mealCreated)="aiMealCreated.emit()" />
+                <fd-ai-input-bar
+                    mode="create"
+                    [mealType]="entry().slot ?? null"
+                    (mealCreateRequested)="aiMealCreateRequested.emit($event)"
+                />
             </div>
         }
     </div>

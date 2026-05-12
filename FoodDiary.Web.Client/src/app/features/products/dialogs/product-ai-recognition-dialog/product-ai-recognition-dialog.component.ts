@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -15,45 +14,17 @@ import { ImageUploadFieldComponent } from '../../../../components/shared/image-u
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { ImageUploadService } from '../../../../shared/api/image-upload.service';
+import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../models/product.data';
 import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action.component';
+import type { ProductAiDialogData, ProductAiRecognitionFormGroup, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result.component';
-
-type ProductAiDialogData = {
-    initialDescription?: string | null;
-};
 
 const DEFAULT_BASE_AMOUNT = 100;
 const HTTP_FORBIDDEN_STATUS = 403;
 const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
-
-export type ProductAiRecognitionResult = {
-    name: string;
-    description?: string | null;
-    image: ImageSelection | null;
-    baseAmount: number;
-    baseUnit: MeasurementUnit;
-    caloriesPerBase: number;
-    proteinsPerBase: number;
-    fatsPerBase: number;
-    carbsPerBase: number;
-    fiberPerBase: number;
-    alcoholPerBase: number;
-};
-
-export type ProductAiRecognitionFormGroup = FormGroup<{
-    name: FormControl<string>;
-    portionAmount: FormControl<number>;
-    baseUnit: FormControl<MeasurementUnit>;
-    caloriesPerBase: FormControl<number>;
-    proteinsPerBase: FormControl<number>;
-    fatsPerBase: FormControl<number>;
-    carbsPerBase: FormControl<number>;
-    fiberPerBase: FormControl<number>;
-    alcoholPerBase: FormControl<number>;
-}>;
 
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
@@ -221,10 +192,11 @@ export class ProductAiRecognitionDialogComponent {
                 description: this.getDescription(),
             })
             .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    if (err.status === HTTP_FORBIDDEN_STATUS) {
+                catchError((err: unknown) => {
+                    const status = getNumberProperty(err, 'status');
+                    if (status === HTTP_FORBIDDEN_STATUS) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    } else if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_GENERIC');
@@ -253,8 +225,9 @@ export class ProductAiRecognitionDialogComponent {
         this.aiFoodService
             .calculateNutrition({ items: normalizedItems })
             .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                catchError((err: unknown) => {
+                    const status = getNumberProperty(err, 'status');
+                    if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
@@ -366,7 +339,7 @@ export class ProductAiRecognitionDialogComponent {
         }
 
         this.imageUploadService.deleteAsset(assetId).subscribe({
-            error: err => {
+            error: (err: unknown) => {
                 this.logger.warn('Failed to delete AI product image asset', err);
             },
         });

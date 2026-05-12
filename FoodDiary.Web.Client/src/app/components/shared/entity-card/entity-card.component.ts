@@ -2,45 +2,23 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
-import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { MediaCardComponent } from '../media-card/media-card.component';
+import type {
+    EntityCardCollageImage,
+    EntityCardCollageState,
+    EntityCardNormalizedQuality,
+    EntityCardNutrition,
+    EntityCardOwnershipIcon,
+    EntityCardPreviewInteractionState,
+    EntityCardQuality,
+} from './entity-card.types';
 import { EntityCardActionsComponent } from './entity-card-actions.component';
 import { EntityCardBodyComponent } from './entity-card-body.component';
-import { type EntityCardPreviewInteractionState, EntityCardThumbComponent } from './entity-card-thumb.component';
+import { EntityCardThumbComponent } from './entity-card-thumb.component';
 
 const QUALITY_SCORE_MIN = 0;
 const QUALITY_SCORE_MAX = 100;
 const COLLAGE_VISIBLE_LIMIT = 4;
-
-export interface EntityCardNutrition {
-    proteins: number;
-    fats: number;
-    carbs: number;
-    fiber: number;
-    alcohol: number;
-}
-
-export interface EntityCardQuality {
-    score: number;
-    grade: QualityGrade;
-}
-
-export interface EntityCardCollageImage {
-    url: string;
-    alt: string;
-}
-
-export interface EntityCardCollageState {
-    images: EntityCardCollageImage[];
-    count: number;
-    hasImages: boolean;
-}
-
-export interface EntityCardNormalizedQuality extends EntityCardQuality {
-    hintKey: string;
-}
-
-export type EntityCardOwnershipIcon = 'person' | 'groups' | null;
 
 @Component({
     selector: 'fd-entity-card',

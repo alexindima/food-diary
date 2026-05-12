@@ -4,7 +4,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
-import type { LessonListItem } from './lessons-list-page.component';
+import type { LessonListItem } from './lessons-list.types';
 
 @Component({
     selector: 'fd-lessons-list-grid',

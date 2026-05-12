@@ -15,16 +15,16 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
+import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
-import type {
-    TdeeInsightDialogAction,
-    TdeeInsightDialogComponent as TdeeInsightDialogComponentType,
-    TdeeInsightDialogData,
-} from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
+import { MealService } from '../../meals/api/meal.service';
+import { buildMealManageDtoFromAiResult } from '../../meals/lib/ai-meal-result.mapper';
+import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
+import type { TdeeInsightDialogAction, TdeeInsightDialogData } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.types';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardAdviceBlockComponent } from './dashboard-advice-block.component';
@@ -82,6 +82,7 @@ export class DashboardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
+    private readonly mealService = inject(MealService);
     private readonly facade = inject(DashboardFacade);
     public readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
@@ -326,6 +327,18 @@ export class DashboardComponent {
 
     public onMealCreated(): void {
         this.facade.reload(false);
+    }
+
+    public onAiMealCreateRequested(result: AiInputBarResult): void {
+        const mealDate = result.date !== undefined && result.time !== undefined ? new Date(`${result.date}T${result.time}`) : undefined;
+        this.mealService
+            .create(buildMealManageDtoFromAiResult(result, mealDate))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(meal => {
+                if (meal !== null) {
+                    this.onMealCreated();
+                }
+            });
     }
 
     public openConsumption(consumption: { id: string }): void {

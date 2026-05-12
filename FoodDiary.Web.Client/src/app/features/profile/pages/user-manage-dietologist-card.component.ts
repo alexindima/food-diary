@@ -4,15 +4,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 
-import type { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
-import type { DietologistFormData } from './user-manage.component';
+import type { DietologistPermissions, DietologistRelationship } from '../../../shared/models/dietologist.data';
+import type { DietologistFormData, DietologistPermissionChange } from './user-manage.types';
 import { UserManageDietologistPermissionsComponent } from './user-manage-dietologist-permissions.component';
 import { UserManageDietologistSummaryComponent } from './user-manage-dietologist-summary.component';
-
-export type DietologistPermissionChange = {
-    controlName: keyof DietologistPermissions;
-    value: boolean;
-};
 
 @Component({
     selector: 'fd-user-manage-dietologist-card',

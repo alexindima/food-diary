@@ -5,10 +5,10 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
-import { MealCardComponent, type MealFavoriteChange } from '../../../../components/shared/meal-card/meal-card.component';
+import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import type { Meal } from '../../models/meal.data';
-import type { MealDateGroupView } from './meal-list.component';
+import type { MealDateGroupView } from './meal-list.types';
 
 @Component({
     selector: 'fd-meal-list-content',
@@ -34,10 +34,11 @@ export class MealListContentComponent {
     public readonly totalPages = input.required<number>();
     public readonly totalItems = input.required<number>();
     public readonly currentPageIndex = input.required<number>();
+    public readonly favoriteLoadingIds = input.required<ReadonlySet<string>>();
 
     public readonly retry = output();
     public readonly mealAdd = output();
     public readonly mealOpened = output<Meal>();
-    public readonly mealFavoriteChanged = output<{ meal: Meal; change: MealFavoriteChange }>();
+    public readonly mealFavoriteToggle = output<Meal>();
     public readonly pageIndexChange = output<number>();
 }

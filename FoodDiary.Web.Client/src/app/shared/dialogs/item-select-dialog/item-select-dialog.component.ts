@@ -11,7 +11,6 @@ import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.compo
 import { ProductAddDialogComponent } from '../../../features/products/dialogs/product-add-dialog.component';
 import { ProductListDialogComponent } from '../../../features/products/dialogs/product-list-dialog.component';
 import type { Product } from '../../../features/products/models/product.data';
-import { RecipeManageComponent } from '../../../features/recipes/components/manage/recipe-manage.component';
 import { RecipeSelectDialogComponent } from '../../../features/recipes/dialogs/recipe-select-dialog.component';
 import type { Recipe } from '../../../features/recipes/models/recipe.data';
 
@@ -89,17 +88,7 @@ export class ItemSelectDialogComponent {
             return;
         }
 
-        this.fdDialogService
-            .open<RecipeManageComponent, null, Recipe | null>(RecipeManageComponent, {
-                preset: 'fullscreen',
-            })
-            .afterClosed()
-            .subscribe(recipe => {
-                if (recipe === null || recipe === undefined) {
-                    return;
-                }
-                this.completeWith({ type: 'Recipe', recipe });
-            });
+        this.onCreateRecipeRequested();
     }
 
     private completeWith(selection: ItemSelection | null): void {

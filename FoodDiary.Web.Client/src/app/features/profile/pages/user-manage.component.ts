@@ -43,15 +43,15 @@ import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import type { FormGroupControls } from '../../../shared/lib/common.data';
 import {
     FASTING_REMINDER_PRESETS,
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../shared/lib/fasting-reminder-presets';
 import { parseIntegerInput } from '../../../shared/lib/number.utils';
+import type { DietologistPermissions, DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
-import { type ActivityLevelOption, Gender, type UiStyleOption, UpdateUserDto, type User } from '../../../shared/models/user.data';
+import { type ActivityLevelOption, Gender, UpdateUserDto, type User } from '../../../shared/models/user.data';
 import {
     APP_THEMES,
     APP_UI_STYLES,
@@ -61,12 +61,20 @@ import {
     isAppUiStyleName,
 } from '../../../theme/app-theme.config';
 import { DietologistService } from '../../dietologist/api/dietologist.service';
-import type { DietologistPermissions, DietologistRelationship } from '../../dietologist/models/dietologist.data';
 import { PremiumBillingService } from '../../premium/api/premium-billing.service';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
 import { ProfileManageFacade } from '../lib/profile-manage.facade';
+import type {
+    BillingViewModel,
+    ConnectedDeviceViewModel,
+    DietologistFormData,
+    DietologistPermissionChange,
+    DietologistPermissionControlName,
+    UserFormData,
+    UserFormValues,
+} from './user-manage.types';
 import { UserManageBillingCardComponent } from './user-manage-billing-card.component';
-import { type DietologistPermissionChange, UserManageDietologistCardComponent } from './user-manage-dietologist-card.component';
+import { UserManageDietologistCardComponent } from './user-manage-dietologist-card.component';
 import { type FastingReminderHoursChange, UserManageNotificationsCardComponent } from './user-manage-notifications-card.component';
 import { UserManagePrivacyCardComponent } from './user-manage-privacy-card.component';
 
@@ -1495,65 +1503,12 @@ export class UserManageComponent {
     }
 }
 
-export interface UserFormValues {
-    username: string | null;
-    firstName: string | null;
-    lastName: string | null;
-    email: string | null;
-    birthDate: string | null;
-    gender: Gender | null;
-    language: string | null;
-    theme: AppThemeName | null;
-    uiStyle: UiStyleOption | null;
-    height: number | null;
-    activityLevel: ActivityLevelOption | null;
-    stepGoal: number | null;
-    profileImage: ImageSelection | null;
-    pushNotificationsEnabled?: boolean | null;
-    fastingPushNotificationsEnabled?: boolean | null;
-    socialPushNotificationsEnabled?: boolean | null;
-}
-
-export type UserFormData = FormGroupControls<UserFormValues>;
-
-interface DietologistFormValues {
-    email: string;
-    shareProfile: boolean;
-    shareMeals: boolean;
-    shareStatistics: boolean;
-    shareWeight: boolean;
-    shareWaist: boolean;
-    shareGoals: boolean;
-    shareHydration: boolean;
-    shareFasting: boolean;
-}
-
-export type DietologistFormData = FormGroupControls<DietologistFormValues>;
-type DietologistPermissionControlName = Exclude<keyof DietologistFormValues, 'email'>;
-
 interface ProfileStatusViewModel {
     key: string;
     tone: 'success' | 'warning' | 'danger' | 'muted';
 }
 
-export interface ConnectedDeviceViewModel {
-    subscription: WebPushSubscriptionItem;
-    label: string;
-    meta: string;
-    isCurrent: boolean;
-}
-
 interface PasswordActionState {
     buttonLabelKey: string;
     descriptionKey: string;
-}
-
-export interface BillingViewModel {
-    overview: BillingOverview;
-    statusTone: 'success' | 'muted';
-    endLabelKey: string;
-    showNextAttempt: boolean;
-    premiumActionVariant: 'secondary' | 'primary';
-    premiumActionLabelKey: string;
-    showManagedSupportNote: boolean;
 }

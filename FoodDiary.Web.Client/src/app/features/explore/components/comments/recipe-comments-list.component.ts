@@ -5,7 +5,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import type { RecipeComment } from '../../models/comment.data';
 import { RecipeCommentItemComponent } from './recipe-comment-item.component';
-import type { RecipeCommentViewModel } from './recipe-comments.component';
+import type { RecipeCommentViewModel } from './recipe-comments.types';
 
 @Component({
     selector: 'fd-recipe-comments-list',

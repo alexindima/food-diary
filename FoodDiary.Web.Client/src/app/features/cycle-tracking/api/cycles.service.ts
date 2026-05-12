@@ -13,11 +13,13 @@ export class CyclesService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.cycles;
 
     public getCurrent(): Observable<CycleResponse | null> {
-        return this.get<CycleResponse | null>('current').pipe(catchError(error => fallbackApiError('Cycle fetch error', error, null)));
+        return this.get<CycleResponse | null>('current').pipe(
+            catchError((error: unknown) => fallbackApiError('Cycle fetch error', error, null)),
+        );
     }
 
     public create(payload: CreateCyclePayload): Observable<CycleResponse> {
-        return this.post<CycleResponse>('', payload).pipe(catchError(error => rethrowApiError('Cycle create error', error)));
+        return this.post<CycleResponse>('', payload).pipe(catchError((error: unknown) => rethrowApiError('Cycle create error', error)));
     }
 
     public upsertDay(cycleId: string, payload: UpsertCycleDayPayload): Observable<CycleDay> {
@@ -26,7 +28,7 @@ export class CyclesService extends ApiService {
                 ...day,
                 date: day.date,
             })),
-            catchError(error => rethrowApiError('Cycle day upsert error', error)),
+            catchError((error: unknown) => rethrowApiError('Cycle day upsert error', error)),
         );
     }
 }

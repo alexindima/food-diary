@@ -19,11 +19,8 @@ import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
 import { AdminLoginActivitySectionComponent } from './admin-login-activity-section.component';
 import { AdminSessionsSectionComponent } from './admin-sessions-section.component';
+import type { AdminUserLoginDeviceSummaryViewModel } from './admin-users.types';
 import { AdminUsersTableComponent } from './admin-users-table.component';
-
-export interface AdminUserLoginDeviceSummaryViewModel extends AdminUserLoginDeviceSummary {
-    label: string;
-}
 
 const ADMIN_USERS_PAGE_SIZE = 20;
 

@@ -16,10 +16,10 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../services/viewport.service';
-import type { FormGroupControls } from '../../../shared/lib/common.data';
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListFacade } from '../lib/shopping-list.facade';
 import type { ShoppingListItem } from '../models/shopping-list.data';
+import type { ShoppingListItemFormGroup, ShoppingListItemViewModel } from './shopping-list.types';
 import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel.component';
 import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls.component';
 
@@ -255,16 +255,3 @@ export class ShoppingListPageComponent {
         return translated === key ? unit : translated;
     }
 }
-
-interface ShoppingListItemFormValues {
-    name: string;
-    amount: number | null;
-    unit: MeasurementUnit | null;
-    category: string | null;
-}
-
-export interface ShoppingListItemViewModel extends ShoppingListItem {
-    meta: string;
-}
-
-export type ShoppingListItemFormGroup = FormGroupControls<ShoppingListItemFormValues>;

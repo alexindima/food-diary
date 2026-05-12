@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import type { AdminBillingSubscriptionViewModel } from './admin-billing.component';
+import type { AdminBillingSubscriptionViewModel } from './admin-billing.types';
 
 @Component({
     selector: 'fd-admin-billing-subscriptions-table',

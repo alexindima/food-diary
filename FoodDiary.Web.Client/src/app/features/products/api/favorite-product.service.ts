@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -15,25 +14,23 @@ export class FavoriteProductService extends ApiService {
 
     public getAll(): Observable<FavoriteProduct[]> {
         return this.get<FavoriteProduct[]>('').pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get favorite products error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Get favorite products error', error, [])),
         );
     }
 
     public isFavorite(productId: string): Observable<boolean> {
         return this.get<boolean>(`check/${productId}`).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Check favorite product error', error, false)),
+            catchError((error: unknown) => fallbackApiError('Check favorite product error', error, false)),
         );
     }
 
     public add(productId: string, name?: string): Observable<FavoriteProduct> {
         return this.post<FavoriteProduct>('', { productId, name }).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Add favorite product error', error)),
+            catchError((error: unknown) => rethrowApiError('Add favorite product error', error)),
         );
     }
 
     public remove(id: string): Observable<void> {
-        return this.delete<void>(id).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Remove favorite product error', error)),
-        );
+        return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Remove favorite product error', error)));
     }
 }

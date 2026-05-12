@@ -120,6 +120,7 @@ const mockBreakpointObserver = {
 };
 
 const mockFavoriteMealService = {
+    add: vi.fn().mockReturnValue(of({ id: 'favorite-1', mealId: 'meal-1' })),
     getAll: vi.fn().mockReturnValue(of([])),
     remove: vi.fn().mockReturnValue(of(void 0)),
 };
@@ -144,6 +145,7 @@ describe('MealListComponent', () => {
         mockMealService.repeat.mockReturnValue(of(createMockMeal()));
         mockMealService.deleteById.mockReturnValue(of(void 0));
         mockFavoriteMealService.getAll.mockReturnValue(of([]));
+        mockFavoriteMealService.add.mockReturnValue(of({ id: 'favorite-1', mealId: 'meal-1' }));
         mockFavoriteMealService.remove.mockReturnValue(of(void 0));
         mockToastService.error.mockClear();
 
@@ -392,12 +394,13 @@ function registerFavoriteTests(context: TestContext): void {
             expect(context.component().consumptionData.items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
         });
 
-        it('should sync meal card favorite changes before refreshing favorites', () => {
+        it('should add meal favorite and refresh favorites', () => {
             const meal = createMockMeal({ id: 'meal-1', isFavorite: false, favoriteMealId: null });
             context.component().consumptionData.setData(createPageOf([meal]));
 
-            context.component().onMealFavoriteChanged(meal, { isFavorite: true, favoriteMealId: 'favorite-1' });
+            context.component().onMealFavoriteToggle(meal);
 
+            expect(context.mockFavoriteMealService.add).toHaveBeenCalledWith('meal-1');
             expect(context.component().consumptionData.items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
             expect(context.mockFavoriteMealService.getAll).toHaveBeenCalled();
         });

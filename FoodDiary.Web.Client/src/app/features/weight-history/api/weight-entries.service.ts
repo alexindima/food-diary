@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -41,30 +40,28 @@ export class WeightEntriesService extends ApiService {
         addOptionalStringParam(params, 'sort', filters?.sort);
 
         return this.get<WeightEntry[]>('', params).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Weight entries fetch error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Weight entries fetch error', error, [])),
         );
     }
 
     public getLatest(): Observable<WeightEntry | null> {
         return this.get<WeightEntry | null>('latest').pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Weight latest fetch error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Weight latest fetch error', error, null)),
         );
     }
 
     public create(payload: CreateWeightEntryPayload): Observable<WeightEntry> {
         return this.post<WeightEntry>('', payload).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Create weight entry error', error)),
+            catchError((error: unknown) => rethrowApiError('Create weight entry error', error)),
         );
     }
 
     public update(id: string, payload: UpdateWeightEntryPayload): Observable<WeightEntry> {
-        return this.put<WeightEntry>(id, payload).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Update weight entry error', error)),
-        );
+        return this.put<WeightEntry>(id, payload).pipe(catchError((error: unknown) => rethrowApiError('Update weight entry error', error)));
     }
 
     public remove(id: string): Observable<void> {
-        return super.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete weight entry error', error)));
+        return super.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete weight entry error', error)));
     }
 
     public getSummary(filters: WeightEntrySummaryFilters): Observable<WeightEntrySummaryPoint[]> {
@@ -75,7 +72,7 @@ export class WeightEntriesService extends ApiService {
         };
 
         return this.get<WeightEntrySummaryPoint[]>('summary', params).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Weight summary fetch error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Weight summary fetch error', error, [])),
         );
     }
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { SeoLandingContentItemKeys, SeoLandingFaqItemKeys, SeoLandingTextKeys } from './seo-landing-page.component';
+import type { SeoLandingContentItemKeys, SeoLandingFaqItemKeys, SeoLandingTextKeys } from './seo-landing.types';
 
 interface SeoLandingContentSection extends SeoLandingTextKeys {
     items: readonly SeoLandingContentItemKeys[];

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
-import type { EntityCardCollageState } from './entity-card.component';
+import type { EntityCardCollageState, EntityCardPreviewInteractionState } from './entity-card.types';
 
 @Component({
     selector: 'fd-entity-card-thumb',
@@ -31,11 +31,4 @@ export class EntityCardThumbComponent {
 
         this.preview.emit();
     }
-}
-
-export interface EntityCardPreviewInteractionState {
-    hint: string | null;
-    role: string | null;
-    tabIndex: string | null;
-    ariaLabel: string | null;
 }

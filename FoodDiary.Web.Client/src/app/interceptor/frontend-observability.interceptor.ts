@@ -40,7 +40,7 @@ export class FrontendObservabilityInterceptor implements HttpInterceptor {
                         });
                     }
                 },
-                error: error => {
+                error: (error: unknown) => {
                     const statusCode = error instanceof HttpErrorResponse ? error.status : 0;
                     this.frontendObservabilityService.recordHttpRequest({
                         url: req.url,

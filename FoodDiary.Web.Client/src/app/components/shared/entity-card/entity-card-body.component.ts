@@ -5,7 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
-import type { EntityCardNormalizedQuality, EntityCardNutrition, EntityCardOwnershipIcon } from './entity-card.component';
+import type { EntityCardNormalizedQuality, EntityCardNutrition, EntityCardOwnershipIcon } from './entity-card.types';
 
 @Component({
     selector: 'fd-entity-card-body',

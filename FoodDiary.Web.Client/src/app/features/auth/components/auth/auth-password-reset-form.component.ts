@@ -5,7 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
-import type { PasswordResetFieldErrors, PasswordResetForm } from './auth.component';
+import type { PasswordResetFieldErrors, PasswordResetForm } from './auth.types';
 
 @Component({
     selector: 'fd-auth-password-reset-form',

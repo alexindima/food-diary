@@ -1,8 +1,9 @@
-import { type HttpErrorResponse, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ConsumptionManageDto, ConsumptionResponseDto, MealFilters } from '../models/meal.data';
 import { MealService } from './meal.service';
@@ -116,8 +117,8 @@ describe('MealService query', () => {
             next: () => {
                 expect.fail('Expected query to fail');
             },
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(SERVER_ERROR_STATUS);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(SERVER_ERROR_STATUS);
             },
         });
 
@@ -257,8 +258,8 @@ describe('MealService delete', () => {
             next: () => {
                 expect.fail('Expected delete to fail');
             },
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(SERVER_ERROR_STATUS);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(SERVER_ERROR_STATUS);
             },
         });
 

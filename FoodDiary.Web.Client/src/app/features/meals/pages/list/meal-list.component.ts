@@ -9,7 +9,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { debounceTime, EMPTY, type Observable, switchMap } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
-import type { MealFavoriteChange } from '../../../../components/shared/meal-card/meal-card.component';
+import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -17,20 +17,18 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
-import type { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
+import { MealService } from '../../api/meal.service';
+import type { MealDetailComponent } from '../../components/detail/meal-detail.component';
+import type { MealDetailActionResult } from '../../components/detail/meal-detail.types';
+import { buildMealManageDtoFromAiResult } from '../../lib/ai-meal-result.mapper';
 import { MealListFacade } from '../../lib/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
+import type { FavoriteMealView, MealDateGroupView } from './meal-list.types';
 import { MealListContentComponent } from './meal-list-content.component';
 import { MealListFavoritesComponent } from './meal-list-favorites.component';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
 
 const FILTER_CHANGE_DEBOUNCE_MS = 300;
-
-export interface FavoriteMealView {
-    favorite: FavoriteMeal;
-    displayName: string | null;
-    displayNameKey: string;
-}
 
 @Component({
     selector: 'fd-meal-list',
@@ -58,6 +56,7 @@ export class MealListComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
     private readonly translateService = inject(TranslateService);
+    private readonly mealService = inject(MealService);
     private readonly languageVersion = signal(0);
 
     public searchForm: FormGroup<SearchFormGroup>;
@@ -73,6 +72,7 @@ export class MealListComponent {
     );
     public readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
     public readonly isFavoritesLoadingMore = this.mealListFacade.isFavoritesLoadingMore;
+    public readonly favoriteLoadingIds = this.mealListFacade.favoriteLoadingIds;
     public readonly groupedConsumptions = computed(() => {
         this.languageVersion();
         return this.groupByDate(this.consumptionData.items());
@@ -132,14 +132,25 @@ export class MealListComponent {
         this.mealListFacade.removeFavorite(favorite);
     }
 
-    public onMealFavoriteChanged(meal: Meal, change: MealFavoriteChange): void {
-        this.mealListFacade.syncMealFavoriteState(meal.id, change.isFavorite, change.favoriteMealId);
-        this.loadFavorites();
+    public onMealFavoriteToggle(meal: Meal): void {
+        this.mealListFacade.toggleMealFavorite(meal);
     }
 
     public onMealCreated(): void {
         this.scrollToTop();
         this.reloadCurrentPage();
+    }
+
+    public onAiMealCreateRequested(result: AiInputBarResult): void {
+        const mealDate = result.date !== undefined && result.time !== undefined ? new Date(`${result.date}T${result.time}`) : undefined;
+        this.mealService
+            .create(buildMealManageDtoFromAiResult(result, mealDate))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(meal => {
+                if (meal !== null) {
+                    this.onMealCreated();
+                }
+            });
     }
 
     public loadConsumptions(page: number): Observable<void> {
@@ -311,9 +322,3 @@ interface SearchFormValues {
 }
 
 type SearchFormGroup = FormGroupControls<SearchFormValues>;
-
-export interface MealDateGroupView {
-    date: Date;
-    dateLabel: string;
-    items: Meal[];
-}

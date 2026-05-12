@@ -21,24 +21,24 @@ export class AiFoodService {
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
         return this.http
             .post<FoodVisionResponse>(`${this.baseUrl}/food/vision`, request)
-            .pipe(catchError(error => rethrowApiError('Food image analysis error', error)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Food image analysis error', error)));
     }
 
     public parseFoodText(request: FoodTextRequest): Observable<FoodVisionResponse> {
         return this.http
             .post<FoodVisionResponse>(`${this.baseUrl}/food/text`, request)
-            .pipe(catchError(error => rethrowApiError('Food text parsing error', error)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Food text parsing error', error)));
     }
 
     public calculateNutrition(request: FoodNutritionRequest): Observable<FoodNutritionResponse> {
         return this.http
             .post<FoodNutritionResponse>(`${this.baseUrl}/food/nutrition`, request)
-            .pipe(catchError(error => rethrowApiError('Food nutrition calculation error', error)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Food nutrition calculation error', error)));
     }
 
     public getUsageSummary(): Observable<UserAiUsageResponse | null> {
         return this.http
             .get<UserAiUsageResponse>(`${this.baseUrl}/usage/me`)
-            .pipe(catchError(error => fallbackApiError('AI usage summary fetch error', error, null)));
+            .pipe(catchError((error: unknown) => fallbackApiError('AI usage summary fetch error', error, null)));
     }
 }

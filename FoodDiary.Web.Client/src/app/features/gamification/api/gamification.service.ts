@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -15,7 +14,7 @@ export class GamificationService extends ApiService {
 
     public getData(): Observable<GamificationData> {
         return super.get<GamificationData>('').pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Get gamification error', error, {
                     currentStreak: 0,
                     longestStreak: 0,

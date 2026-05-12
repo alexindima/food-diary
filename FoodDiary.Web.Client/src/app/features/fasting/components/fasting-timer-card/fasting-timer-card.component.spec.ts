@@ -3,7 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../services/localization.service';
@@ -330,11 +330,7 @@ async function createHostFixtureWithoutFacadeAsync(): Promise<ComponentFixture<F
 function createDialogServiceStub(): Pick<FdUiDialogService, 'open'> {
     return {
         open: () => ({
-            afterClosed: () => ({
-                pipe: () => ({
-                    subscribe: (): undefined => undefined,
-                }),
-            }),
+            afterClosed: () => of(undefined),
         }),
     } as unknown as Pick<FdUiDialogService, 'open'>;
 }

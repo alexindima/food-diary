@@ -8,19 +8,8 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { type NotificationItem, NotificationService } from '../../../services/notification.service';
+import type { NotificationViewModel } from './notifications-dialog.types';
 import { NotificationsDialogListComponent } from './notifications-dialog-list.component';
-
-export interface NotificationViewModel {
-    notification: NotificationItem;
-    isPasswordSetupSuggestion: boolean;
-    isDietologistInvitation: boolean;
-    hasAccentIcon: boolean;
-    icon: string;
-    badgeKey: string | null;
-    actionKey: string | null;
-    ariaLabel: string;
-    dateLabel: string;
-}
 
 @Component({
     selector: 'fd-notifications-dialog',

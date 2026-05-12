@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import type { FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 
-import type { FastingCheckInViewModel } from '../../pages/fasting-page.component';
+import type { FastingCheckInViewModel } from '../../pages/fasting-page.types';
 import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fasting-check-in-summary.component';
 
 @Component({

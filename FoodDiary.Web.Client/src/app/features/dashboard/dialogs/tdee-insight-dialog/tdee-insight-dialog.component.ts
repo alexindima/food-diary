@@ -4,7 +4,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import type { TdeeInsight } from '../../models/tdee-insight.data';
+import type { TdeeInsightDialogAction, TdeeInsightDialogData, TdeeSetupItem } from './tdee-insight-dialog.types';
 import { TdeeInsightDialogFooterComponent } from './tdee-insight-dialog-footer.component';
 import { TdeeInsightDialogHintComponent } from './tdee-insight-dialog-hint.component';
 import { TdeeInsightDialogMetricsComponent } from './tdee-insight-dialog-metrics.component';
@@ -14,25 +14,6 @@ import { TdeeInsightDialogSummaryComponent } from './tdee-insight-dialog-summary
 const MIN_FOOD_WINDOW_DAYS = 14;
 const SUGGESTION_DIFF_THRESHOLD = 50;
 const WEIGHT_TREND_FRACTION_DIGITS = 2;
-
-export interface TdeeInsightDialogData {
-    insight: TdeeInsight | null;
-}
-
-export type TdeeInsightDialogAction =
-    | { type: 'profile' }
-    | { type: 'meal' }
-    | { type: 'weight' }
-    | { type: 'goals' }
-    | { type: 'applyGoal'; target: number };
-
-export interface TdeeSetupItem {
-    readonly key: string;
-    readonly icon: string;
-    readonly complete: boolean;
-    readonly titleKey: string;
-    readonly textKey: string;
-}
 
 @Component({
     selector: 'fd-tdee-insight-dialog',

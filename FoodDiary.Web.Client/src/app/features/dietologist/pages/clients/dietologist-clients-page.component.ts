@@ -3,16 +3,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
+import type { ClientSummary } from '../../../../shared/models/dietologist.data';
 import { DietologistService } from '../../api/dietologist.service';
-import type { ClientSummary } from '../../models/dietologist.data';
+import type { ClientCardViewModel } from './dietologist-clients.types';
 import { DietologistClientsListComponent } from './dietologist-clients-list.component';
-
-export interface ClientCardViewModel {
-    client: ClientSummary;
-    title: string;
-    initials: string;
-    connectedDateLabel: string;
-}
 
 @Component({
     selector: 'fd-dietologist-clients-page',

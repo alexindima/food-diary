@@ -4,71 +4,17 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { isRecord } from '../../../../shared/lib/unknown-value.utils';
+import type {
+    SeoLandingContentItemKeys,
+    SeoLandingCtaKeys,
+    SeoLandingFaqItemKeys,
+    SeoLandingHeroKeys,
+    SeoLandingPageData,
+    SeoLandingTextKeys,
+    SeoPageSlug,
+} from './seo-landing.types';
 import { SeoLandingContentSectionsComponent } from './seo-landing-content-sections.component';
 import { SeoLandingFooterSectionsComponent } from './seo-landing-footer-sections.component';
-
-type SeoPageSlug =
-    | 'food-diary'
-    | 'calorie-counter'
-    | 'meal-planner'
-    | 'macro-tracker'
-    | 'intermittent-fasting'
-    | 'meal-tracker'
-    | 'weight-loss-app'
-    | 'dietologist-collaboration'
-    | 'nutrition-planner'
-    | 'weight-tracker'
-    | 'body-progress-tracker'
-    | 'shopping-list-for-meal-planning'
-    | 'nutrition-tracker'
-    | 'food-log'
-    | 'protein-tracker'
-    | 'meal-prep-planner';
-
-interface SeoLandingPageData {
-    baseKey: string;
-    featureKeys: readonly string[];
-    stepKeys: readonly string[];
-    faqKeys: readonly string[];
-    relatedPaths: readonly SeoPageSlug[];
-}
-
-export interface SeoLandingTextKeys {
-    eyebrowKey: string;
-    titleKey: string;
-    subtitleKey: string;
-}
-
-interface SeoLandingHeroKeys extends SeoLandingTextKeys {
-    primaryActionKey: string;
-    secondaryActionKey: string;
-    chipKeys: readonly string[];
-    panel: {
-        eyebrowKey: string;
-        titleKey: string;
-        textKey: string;
-        itemKeys: readonly string[];
-    };
-}
-
-export interface SeoLandingContentItemKeys {
-    key: string;
-    titleKey: string;
-    textKey: string;
-}
-
-export interface SeoLandingFaqItemKeys {
-    key: string;
-    questionKey: string;
-    answerKey: string;
-}
-
-export interface SeoLandingCtaKeys {
-    titleKey: string;
-    subtitleKey: string;
-    primaryKey: string;
-    secondaryKey: string;
-}
 
 const PAGE_LABEL_KEYS: Record<SeoPageSlug, string> = {
     'food-diary': 'SEO.FOOD_DIARY_PAGE',

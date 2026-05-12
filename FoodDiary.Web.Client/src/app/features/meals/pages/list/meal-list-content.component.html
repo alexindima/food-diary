@@ -38,8 +38,9 @@
                         <fd-meal-card
                             class="consumption-card"
                             [meal]="consumption"
+                            [favoriteLoading]="favoriteLoadingIds().has(consumption.id)"
                             (open)="mealOpened.emit(consumption)"
-                            (favoriteChanged)="mealFavoriteChanged.emit({ meal: consumption, change: $event })"
+                            (favoriteToggle)="mealFavoriteToggle.emit(consumption)"
                         />
                     }
                 </div>

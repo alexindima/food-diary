@@ -5,7 +5,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 
 import type { Meal } from '../../models/meal.data';
-import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from './meal-detail.component';
+import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from './meal-detail.types';
 import { MealDetailItemPreviewComponent } from './meal-detail-item-preview.component';
 
 @Component({

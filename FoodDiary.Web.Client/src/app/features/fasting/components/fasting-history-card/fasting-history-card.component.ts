@@ -4,7 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import type { FastingSession } from '../../models/fasting.data';
-import type { FastingHistorySessionViewModel } from '../../pages/fasting-page.component';
+import type { FastingHistorySessionViewModel } from '../../pages/fasting-page.types';
 import { FastingHistoryItemComponent } from '../fasting-history-item/fasting-history-item.component';
 
 @Component({

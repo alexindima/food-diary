@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -15,7 +14,7 @@ export class WeeklyCheckInService extends ApiService {
 
     public getData(): Observable<WeeklyCheckInData> {
         return super.get<WeeklyCheckInData>('').pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Get weekly check-in error', error, {
                     thisWeek: createEmptySummary(),
                     lastWeek: createEmptySummary(),

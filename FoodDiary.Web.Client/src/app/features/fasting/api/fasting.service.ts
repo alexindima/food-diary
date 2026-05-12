@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -28,55 +27,53 @@ export class FastingService extends ApiService {
 
     public start(payload: StartFastingPayload): Observable<FastingSession> {
         return this.post<FastingSession>('start', payload).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Start fasting error', error)),
+            catchError((error: unknown) => rethrowApiError('Start fasting error', error)),
         );
     }
 
     public end(): Observable<FastingSession> {
-        return this.put<FastingSession>('end', {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('End fasting error', error)),
-        );
+        return this.put<FastingSession>('end', {}).pipe(catchError((error: unknown) => rethrowApiError('End fasting error', error)));
     }
 
     public extend(payload: ExtendFastingPayload): Observable<FastingSession> {
         return this.put<FastingSession>('current/duration', payload).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Extend fasting error', error)),
+            catchError((error: unknown) => rethrowApiError('Extend fasting error', error)),
         );
     }
 
     public reduceTarget(payload: ReduceFastingTargetPayload): Observable<FastingSession> {
         return this.put<FastingSession>('current/duration/reduce', payload).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Reduce fasting target error', error)),
+            catchError((error: unknown) => rethrowApiError('Reduce fasting target error', error)),
         );
     }
 
     public updateCheckIn(payload: UpdateFastingCheckInPayload): Observable<FastingSession> {
         return this.put<FastingSession>('current/check-in', payload).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Update fasting check-in error', error)),
+            catchError((error: unknown) => rethrowApiError('Update fasting check-in error', error)),
         );
     }
 
     public skipCyclicDay(): Observable<FastingSession> {
         return this.put<FastingSession>('current/skip-day', {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Skip cyclic day error', error)),
+            catchError((error: unknown) => rethrowApiError('Skip cyclic day error', error)),
         );
     }
 
     public postponeCyclicDay(): Observable<FastingSession> {
         return this.put<FastingSession>('current/postpone-day', {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Postpone cyclic day error', error)),
+            catchError((error: unknown) => rethrowApiError('Postpone cyclic day error', error)),
         );
     }
 
     public getCurrent(): Observable<FastingSession | null> {
         return this.get<FastingSession | null>('current').pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get current fasting error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Get current fasting error', error, null)),
         );
     }
 
     public getOverview(): Observable<FastingOverview> {
         return this.get<FastingOverview>('overview').pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Get fasting overview error', error, {
                     currentSession: null,
                     stats: {
@@ -111,7 +108,7 @@ export class FastingService extends ApiService {
             page: query.page ?? 1,
             limit: query.limit ?? DEFAULT_HISTORY_PAGE_SIZE,
         }).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Get fasting history error', error, {
                     data: [],
                     page: query.page ?? 1,
@@ -125,7 +122,7 @@ export class FastingService extends ApiService {
 
     public getStats(): Observable<FastingStats> {
         return this.get<FastingStats>('stats').pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Get fasting stats error', error, {
                     totalCompleted: 0,
                     currentStreak: 0,
@@ -141,7 +138,7 @@ export class FastingService extends ApiService {
 
     public getInsights(): Observable<FastingInsights> {
         return this.get<FastingInsights>('insights').pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Get fasting insights error', error, {
                     alerts: [],
                     insights: [],

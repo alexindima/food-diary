@@ -7,7 +7,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
-import { LESSON_CATEGORIES, type LessonSummary } from '../../models/lesson.data';
+import { LESSON_CATEGORIES } from '../../models/lesson.data';
+import type { LessonListItem } from './lessons-list.types';
 import { LessonsListGridComponent } from './lessons-list-grid.component';
 
 const PERCENTAGE_MULTIPLIER = 100;
@@ -16,11 +17,6 @@ interface LessonCategoryOption {
     value: string | null;
     labelKey: string;
     fill: 'solid' | 'outline';
-}
-
-export interface LessonListItem extends LessonSummary {
-    categoryLabelKey: string;
-    difficultyLabelKey: string;
 }
 
 @Component({

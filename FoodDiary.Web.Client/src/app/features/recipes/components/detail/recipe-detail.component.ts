@@ -25,6 +25,7 @@ import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import type { Recipe } from '../../models/recipe.data';
+import { type IngredientPreviewItem, type MacroBlock, RecipeDetailActionResult } from './recipe-detail.types';
 import { RecipeDetailSummaryComponent } from './recipe-detail-summary.component';
 
 const MACRO_SUMMARY_LIMIT = 3;
@@ -512,28 +513,4 @@ export class RecipeDetailComponent {
                 }
             });
     }
-}
-
-export type RecipeDetailAction = 'Edit' | 'Delete' | 'Duplicate' | 'FavoriteChanged';
-
-export interface MacroBlock {
-    labelKey: string;
-    value: number;
-    unitKey: string;
-    color: string;
-    percent: number;
-}
-
-export interface IngredientPreviewItem {
-    name: string;
-    amount: number;
-    unitKey: string | null;
-}
-
-export class RecipeDetailActionResult {
-    public constructor(
-        public id: string,
-        public action: RecipeDetailAction,
-        public favoriteChanged = false,
-    ) {}
 }

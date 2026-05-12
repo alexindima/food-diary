@@ -13,10 +13,12 @@ export class GoalsService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.goals;
 
     public getGoals(): Observable<GoalsResponse | null> {
-        return this.get<GoalsResponse>('').pipe(catchError(error => fallbackApiError('Get goals error', error, null)));
+        return this.get<GoalsResponse>('').pipe(catchError((error: unknown) => fallbackApiError('Get goals error', error, null)));
     }
 
     public updateGoals(request: UpdateGoalsRequest): Observable<GoalsResponse | null> {
-        return this.patch<GoalsResponse>('', request).pipe(catchError(error => fallbackApiError('Update goals error', error, null)));
+        return this.patch<GoalsResponse>('', request).pipe(
+            catchError((error: unknown) => fallbackApiError('Update goals error', error, null)),
+        );
     }
 }

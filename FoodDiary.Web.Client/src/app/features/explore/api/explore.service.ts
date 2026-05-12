@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -36,7 +35,7 @@ export class ExploreService extends ApiService {
         addOptionalStringParam(params, 'sortBy', filters?.sortBy);
 
         return this.get<PageOf<ExploreRecipe>>('', params).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Explore recipes error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
             ),
         );

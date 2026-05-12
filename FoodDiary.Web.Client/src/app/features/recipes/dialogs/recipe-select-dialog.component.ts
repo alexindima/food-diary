@@ -15,7 +15,6 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -24,15 +23,10 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Obs
 import type { FormGroupControls } from '../../../shared/lib/common.data';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { RecipeService } from '../api/recipe.service';
-import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
 import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
 import type { Recipe, RecipeFilters } from '../models/recipe.data';
+import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content.component';
-
-export interface RecipeSelectItemViewModel {
-    recipe: Recipe;
-    imageUrl: string | undefined;
-}
 
 const SEARCH_DEBOUNCE_MS = 300;
 const PAGE_SIZE = 10;
@@ -61,7 +55,6 @@ export class RecipeSelectDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
         optional: true,
     });
-    private readonly fdDialogService = inject(FdUiDialogService);
 
     public readonly embedded = input<boolean>(false);
     public readonly recipeSelected = output<Recipe>();
@@ -163,17 +156,7 @@ export class RecipeSelectDialogComponent {
     }
 
     public onCreateRecipeClick(): void {
-        this.fdDialogService
-            .open<RecipeManageComponent, null, Recipe | null>(RecipeManageComponent, {
-                preset: 'fullscreen',
-            })
-            .afterClosed()
-            .subscribe(recipe => {
-                if (recipe === null || recipe === undefined) {
-                    return;
-                }
-                this.handleSelection(recipe);
-            });
+        this.createRecipeRequested.emit();
     }
 
     private handleSelection(recipe: Recipe): void {

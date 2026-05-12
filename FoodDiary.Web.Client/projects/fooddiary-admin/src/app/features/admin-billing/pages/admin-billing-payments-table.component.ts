@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import type { AdminBillingPaymentViewModel } from './admin-billing.component';
+import type { AdminBillingPaymentViewModel } from './admin-billing.types';
 
 @Component({
     selector: 'fd-admin-billing-payments-table',

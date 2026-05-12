@@ -1,5 +1,5 @@
 import type { NutrientBar } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
-import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
+import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.types';
 import type { CyclePredictions } from '../../cycle-tracking/models/cycle.data';
 import type { FastingSession } from '../../fasting/models/fasting.data';
 import type { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';

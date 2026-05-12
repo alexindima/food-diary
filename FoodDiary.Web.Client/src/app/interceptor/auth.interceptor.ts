@@ -1,4 +1,4 @@
-import type { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import type { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable, switchMap, throwError } from 'rxjs';
 
@@ -27,8 +27,8 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         return next.handle(request).pipe(
-            catchError((error: HttpErrorResponse) => {
-                if (error.status !== HTTP_UNAUTHORIZED || this.isAuthRequest(req.url)) {
+            catchError((error: unknown) => {
+                if (!this.isUnauthorizedError(error) || this.isAuthRequest(req.url)) {
                     return throwError(() => error);
                 }
 
@@ -55,5 +55,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
     private isAuthRequest(url: string): boolean {
         return url.toLowerCase().includes('/auth/');
+    }
+
+    private isUnauthorizedError(error: unknown): boolean {
+        return typeof error === 'object' && error !== null && 'status' in error && error.status === HTTP_UNAUTHORIZED;
     }
 }

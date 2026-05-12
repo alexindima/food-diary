@@ -3,8 +3,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 
-import type { DietologistPermissions } from '../../dietologist/models/dietologist.data';
-import type { DietologistPermissionChange } from './user-manage-dietologist-card.component';
+import type { DietologistPermissions } from '../../../shared/models/dietologist.data';
+import type { DietologistPermissionChange } from './user-manage.types';
 
 type DietologistPermissionOption = {
     controlName: keyof DietologistPermissions;

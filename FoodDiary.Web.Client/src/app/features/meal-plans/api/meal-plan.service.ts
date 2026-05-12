@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -21,22 +20,22 @@ export class MealPlanService extends ApiService {
         }
         return super
             .get<MealPlanSummary[]>('', params)
-            .pipe(catchError((error: HttpErrorResponse) => fallbackApiError('Get meal plans error', error, [])));
+            .pipe(catchError((error: unknown) => fallbackApiError('Get meal plans error', error, [])));
     }
 
     public getById(id: string): Observable<MealPlan> {
-        return super.get<MealPlan>(`/${id}`).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Get meal plan error', error)));
+        return super.get<MealPlan>(`/${id}`).pipe(catchError((error: unknown) => rethrowApiError('Get meal plan error', error)));
     }
 
     public adopt(id: string): Observable<MealPlan> {
         return super
             .post<MealPlan>(`/${id}/adopt`, {})
-            .pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Adopt meal plan error', error)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Adopt meal plan error', error)));
     }
 
     public generateShoppingList(id: string): Observable<ShoppingList> {
         return super
             .post<ShoppingList>(`/${id}/shopping-list`, {})
-            .pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Generate shopping list error', error)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Generate shopping list error', error)));
     }
 }

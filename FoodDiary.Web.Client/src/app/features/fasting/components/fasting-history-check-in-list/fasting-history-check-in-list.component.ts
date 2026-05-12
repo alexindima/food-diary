@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import type { FastingHistorySessionViewModel } from '../../pages/fasting-page.component';
+import type { FastingHistorySessionViewModel } from '../../pages/fasting-page.types';
 import { FastingHistoryCheckInEntryComponent } from '../fasting-history-check-in-entry/fasting-history-check-in-entry.component';
 
 @Component({

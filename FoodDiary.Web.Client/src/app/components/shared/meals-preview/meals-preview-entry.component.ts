@@ -3,8 +3,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 import { AiInputBarComponent } from '../ai-input-bar/ai-input-bar.component';
+import type { AiInputBarResult } from '../ai-input-bar/ai-input-bar.types';
 import { MealCardComponent, type MealCardItem } from '../meal-card/meal-card.component';
-import type { MealPreviewEntry } from './meals-preview.component';
+import type { MealPreviewEntry } from './meals-preview.types';
 
 @Component({
     selector: 'fd-meals-preview-entry',
@@ -22,5 +23,5 @@ export class MealsPreviewEntryComponent {
     public readonly open = output<MealCardItem>();
     public readonly add = output<string | null | undefined>();
     public readonly aiToggle = output<string | null | undefined>();
-    public readonly aiMealCreated = output();
+    public readonly aiMealCreateRequested = output<AiInputBarResult>();
 }

@@ -12,9 +12,10 @@
                     <fd-product-card
                         [product]="item.product"
                         [imageUrl]="item.imageUrl"
+                        [favoriteLoading]="favoriteLoadingIds().has(item.product.id)"
                         (open)="openProduct.emit(item.product)"
                         (addToMeal)="addToMeal.emit(item.product)"
-                        (favoriteChanged)="favoriteChanged.emit({ product: item.product, change: $event })"
+                        (favoriteToggle)="favoriteToggle.emit(item.product)"
                     />
                 }
             </div>
@@ -34,9 +35,10 @@
                     <fd-product-card
                         [product]="item.product"
                         [imageUrl]="item.imageUrl"
+                        [favoriteLoading]="favoriteLoadingIds().has(item.product.id)"
                         (open)="openProduct.emit(item.product)"
                         (addToMeal)="addToMeal.emit(item.product)"
-                        (favoriteChanged)="favoriteChanged.emit({ product: item.product, change: $event })"
+                        (favoriteToggle)="favoriteToggle.emit(item.product)"
                     />
                 }
             </div>

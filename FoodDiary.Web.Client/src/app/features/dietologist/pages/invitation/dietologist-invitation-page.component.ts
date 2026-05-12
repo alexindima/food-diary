@@ -9,8 +9,8 @@ import { catchError, EMPTY, finalize, type Observable, of, switchMap } from 'rxj
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
 import { DietologistService } from '../../api/dietologist.service';
-import type { DietologistInvitationForCurrentUser } from '../../models/dietologist.data';
 
 type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expired' | 'revoked' | 'error';
 

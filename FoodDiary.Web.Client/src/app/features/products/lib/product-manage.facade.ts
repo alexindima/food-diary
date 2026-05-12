@@ -14,8 +14,7 @@ import { getNumberProperty, getRecordProperty } from '../../../shared/lib/unknow
 import { ProductService } from '../api/product.service';
 import { ProductSaveSuccessDialogComponent, type ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog.component';
 import type { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
-
-export type RedirectAction = 'Home' | 'ProductList';
+import type { RedirectAction } from './product-manage.types';
 
 @Injectable({ providedIn: 'root' })
 export class ProductManageFacade {

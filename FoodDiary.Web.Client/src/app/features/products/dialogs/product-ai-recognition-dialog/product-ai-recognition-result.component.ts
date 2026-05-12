@@ -6,7 +6,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 
 import type { FoodNutritionResponse } from '../../../../shared/models/ai.data';
 import type { MeasurementUnit } from '../../models/product.data';
-import type { ProductAiRecognitionFormGroup } from './product-ai-recognition-dialog.component';
+import type { ProductAiRecognitionFormGroup } from './product-ai-recognition-dialog.types';
 
 @Component({
     selector: 'fd-product-ai-recognition-result',

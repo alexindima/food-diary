@@ -4,10 +4,10 @@ import { catchError, map, type Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
-import type { DietologistRelationship } from '../../features/dietologist/models/dietologist.data';
 import { ApiService } from '../../services/api.service';
 import type { NotificationPreferences, WebPushSubscriptionItem } from '../../services/notification.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
+import type { DietologistRelationship } from '../models/dietologist.data';
 import {
     type ChangePasswordRequest,
     type DashboardLayoutSettings,
@@ -48,7 +48,7 @@ export class UserService extends ApiService {
             tap(overview => {
                 this.userSignal.set(overview.user);
             }),
-            catchError(error => {
+            catchError((error: unknown) => {
                 this.userSignal.set(null);
                 return fallbackApiError('Get user overview error', error, null);
             }),
@@ -60,7 +60,7 @@ export class UserService extends ApiService {
             tap(user => {
                 this.userSignal.set(user);
             }),
-            catchError(error => {
+            catchError((error: unknown) => {
                 this.userSignal.set(null);
                 return fallbackApiError('Get user info error', error, null);
             }),
@@ -72,7 +72,7 @@ export class UserService extends ApiService {
             tap(user => {
                 this.userSignal.set(user);
             }),
-            catchError(error => {
+            catchError((error: unknown) => {
                 this.userSignal.set(null);
                 return fallbackApiError('Get user info error', error, null);
             }),
@@ -84,7 +84,7 @@ export class UserService extends ApiService {
             tap(user => {
                 this.userSignal.set(user);
             }),
-            catchError(error => fallbackApiError('Update user error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Update user error', error, null)),
         );
     }
 
@@ -93,7 +93,7 @@ export class UserService extends ApiService {
             tap(user => {
                 this.userSignal.set(user);
             }),
-            catchError(error => fallbackApiError('Update user theme error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Update user theme error', error, null)),
         );
     }
 
@@ -102,7 +102,7 @@ export class UserService extends ApiService {
             tap(user => {
                 this.userSignal.set(user);
             }),
-            catchError(error => fallbackApiError('Update user appearance error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Update user appearance error', error, null)),
         );
     }
 
@@ -111,14 +111,14 @@ export class UserService extends ApiService {
             tap(user => {
                 this.userSignal.set(user);
             }),
-            catchError(error => fallbackApiError('Update dashboard layout error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Update dashboard layout error', error, null)),
         );
     }
 
     public changePassword(request: ChangePasswordRequest): Observable<boolean> {
         return this.patch<void>('password', request).pipe(
             map(() => true),
-            catchError(error => fallbackApiError('Change password error', error, false)),
+            catchError((error: unknown) => fallbackApiError('Change password error', error, false)),
         );
     }
 
@@ -131,7 +131,7 @@ export class UserService extends ApiService {
                 }
             }),
             map(() => true),
-            catchError(error => fallbackApiError('Set password error', error, false)),
+            catchError((error: unknown) => fallbackApiError('Set password error', error, false)),
         );
     }
 
@@ -143,7 +143,7 @@ export class UserService extends ApiService {
                     this.userSignal.set({ ...current, aiConsentAcceptedAt: new Date().toISOString() });
                 }
             }),
-            catchError(error => rethrowApiError('Accept AI consent error', error)),
+            catchError((error: unknown) => rethrowApiError('Accept AI consent error', error)),
         );
     }
 
@@ -155,7 +155,7 @@ export class UserService extends ApiService {
                     this.userSignal.set({ ...current, aiConsentAcceptedAt: null });
                 }
             }),
-            catchError(error => rethrowApiError('Revoke AI consent error', error)),
+            catchError((error: unknown) => rethrowApiError('Revoke AI consent error', error)),
         );
     }
 
@@ -165,14 +165,14 @@ export class UserService extends ApiService {
                 this.userSignal.set(null);
             }),
             map(() => true),
-            catchError(error => fallbackApiError('Delete user error', error, false)),
+            catchError((error: unknown) => fallbackApiError('Delete user error', error, false)),
         );
     }
 
     public getDesiredWeight(): Observable<number | null> {
         return this.get<DesiredWeightResponse>('desired-weight').pipe(
             map(response => response.desiredWeight ?? null),
-            catchError(error => fallbackApiError('Get desired weight error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Get desired weight error', error, null)),
         );
     }
 
@@ -181,14 +181,14 @@ export class UserService extends ApiService {
             desiredWeight: value,
         }).pipe(
             map(response => response.desiredWeight ?? null),
-            catchError(error => rethrowApiError('Update desired weight error', error)),
+            catchError((error: unknown) => rethrowApiError('Update desired weight error', error)),
         );
     }
 
     public getDesiredWaist(): Observable<number | null> {
         return this.get<DesiredWaistResponse>('desired-waist').pipe(
             map(response => response.desiredWaist ?? null),
-            catchError(error => fallbackApiError('Get desired waist error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Get desired waist error', error, null)),
         );
     }
 
@@ -197,7 +197,7 @@ export class UserService extends ApiService {
             desiredWaist: value,
         }).pipe(
             map(response => response.desiredWaist ?? null),
-            catchError(error => rethrowApiError('Update desired waist error', error)),
+            catchError((error: unknown) => rethrowApiError('Update desired waist error', error)),
         );
     }
 }

@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import type { SeoLandingCtaKeys } from './seo-landing-page.component';
+import type { SeoLandingCtaKeys } from './seo-landing.types';
 
 interface SeoLandingRelatedPage {
     path: string;

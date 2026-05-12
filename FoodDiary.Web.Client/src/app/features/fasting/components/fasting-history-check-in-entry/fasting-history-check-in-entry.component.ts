@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import type { FastingCheckInViewModel } from '../../pages/fasting-page.component';
+import type { FastingCheckInViewModel } from '../../pages/fasting-page.types';
 
 @Component({
     selector: 'fd-fasting-history-check-in-entry',

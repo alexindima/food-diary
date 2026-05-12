@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildMealManageDtoFromAiResult } from './ai-input-bar.mapper';
+import { buildMealManageDtoFromAiResult } from './ai-meal-result.mapper';
 
 const DEFAULT_SATIETY_LEVEL = 3;
 

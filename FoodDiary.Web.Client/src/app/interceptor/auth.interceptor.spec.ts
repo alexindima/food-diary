@@ -1,11 +1,4 @@
-import {
-    HTTP_INTERCEPTORS,
-    HttpClient,
-    HttpContext,
-    type HttpErrorResponse,
-    provideHttpClient,
-    withInterceptorsFromDi,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpContext, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { type Observable, of, throwError } from 'rxjs';
@@ -13,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
+import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import { AuthInterceptor } from './auth.interceptor';
 
 const HTTP_UNAUTHORIZED = 401;
@@ -132,8 +126,11 @@ describe('AuthInterceptor refresh flow', () => {
         authServiceSpy.refreshToken.mockReturnValue(throwError(() => new Error('Refresh failed')));
 
         http.get('/api/data').subscribe({
-            error: (error: Error) => {
-                expect(error.message).toBe('Refresh failed');
+            error: (error: unknown) => {
+                expect(error).toBeInstanceOf(Error);
+                if (error instanceof Error) {
+                    expect(error.message).toBe('Refresh failed');
+                }
             },
         });
 
@@ -148,8 +145,8 @@ describe('AuthInterceptor refresh flow', () => {
         authServiceSpy.refreshToken.mockReturnValue(of(null));
 
         http.get('/api/data').subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_UNAUTHORIZED);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HTTP_UNAUTHORIZED);
             },
         });
 
@@ -165,8 +162,8 @@ describe('AuthInterceptor error handling', () => {
         authServiceSpy.getToken.mockReturnValue('some-token');
 
         http.get('/api/auth/login').subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_UNAUTHORIZED);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HTTP_UNAUTHORIZED);
             },
         });
 
@@ -181,8 +178,8 @@ describe('AuthInterceptor error handling', () => {
         authServiceSpy.getToken.mockReturnValue('test-token');
 
         http.get('/api/data').subscribe({
-            error: (error: HttpErrorResponse) => {
-                expect(error.status).toBe(HTTP_INTERNAL_SERVER_ERROR);
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HTTP_INTERNAL_SERVER_ERROR);
             },
         });
 

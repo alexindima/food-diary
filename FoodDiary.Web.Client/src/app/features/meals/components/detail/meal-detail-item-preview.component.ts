@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { MealDetailItemPreview } from './meal-detail.component';
+import type { MealDetailItemPreview } from './meal-detail.types';
 
 @Component({
     selector: 'fd-meal-detail-item-preview',

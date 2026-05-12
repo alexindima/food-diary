@@ -10,7 +10,7 @@ import type {
     DietologistPermissions,
     DietologistRelationship,
     InviteDietologistRequest,
-} from '../models/dietologist.data';
+} from '../../../shared/models/dietologist.data';
 
 @Injectable({ providedIn: 'root' })
 export class DietologistService extends ApiService {

@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -15,8 +14,6 @@ export class RecipeLookupService extends ApiService {
 
     public getById(id: string, includePublic = true): Observable<RecipeLookup> {
         const params = { includePublic };
-        return this.get<RecipeLookup>(id, params).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Get recipe lookup error', error)),
-        );
+        return this.get<RecipeLookup>(id, params).pipe(catchError((error: unknown) => rethrowApiError('Get recipe lookup error', error)));
     }
 }

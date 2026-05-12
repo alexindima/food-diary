@@ -17,7 +17,7 @@ export class AppConfigService {
             tap((config: AppConfig) => {
                 this.config = config;
             }),
-            catchError(error => rethrowApiError('Failed to load app config', error)),
+            catchError((error: unknown) => rethrowApiError('Failed to load app config', error)),
         );
     }
 

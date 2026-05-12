@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -40,7 +39,7 @@ export class RecipeService extends ApiService {
         }
 
         return this.get<PageOf<Recipe>>('', params).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Query recipes error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
             ),
         );
@@ -48,15 +47,13 @@ export class RecipeService extends ApiService {
 
     public getById(id: string, includePublic = true): Observable<Recipe | null> {
         const params = { includePublic };
-        return this.get<Recipe>(id, params).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get recipe error', error, null)),
-        );
+        return this.get<Recipe>(id, params).pipe(catchError((error: unknown) => fallbackApiError('Get recipe error', error, null)));
     }
 
     public getRecent(limit = DEFAULT_RECENT_RECIPE_LIMIT, includePublic = true): Observable<Recipe[]> {
         const params: Record<string, string | number | boolean> = { limit, includePublic };
         return this.get<Recipe[]>('recent', params).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Get recent recipes error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Get recent recipes error', error, [])),
         );
     }
 
@@ -76,7 +73,7 @@ export class RecipeService extends ApiService {
         }
 
         return this.get<RecipeOverview>('overview', params).pipe(
-            catchError((error: HttpErrorResponse) =>
+            catchError((error: unknown) =>
                 fallbackApiError('Query recipe overview error', error, {
                     recentItems: [],
                     favoriteItems: [],
@@ -88,20 +85,20 @@ export class RecipeService extends ApiService {
     }
 
     public create(data: RecipeDto): Observable<Recipe> {
-        return this.post<Recipe>('', data).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Create recipe error', error)));
+        return this.post<Recipe>('', data).pipe(catchError((error: unknown) => rethrowApiError('Create recipe error', error)));
     }
 
     public update(id: string, data: RecipeDto): Observable<Recipe> {
-        return this.patch<Recipe>(id, data).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Update recipe error', error)));
+        return this.patch<Recipe>(id, data).pipe(catchError((error: unknown) => rethrowApiError('Update recipe error', error)));
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete recipe error', error)));
+        return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete recipe error', error)));
     }
 
     public duplicate(id: string): Observable<Recipe> {
         return this.post<Recipe>(`${id}/duplicate`, {}).pipe(
-            catchError((error: HttpErrorResponse) => rethrowApiError('Duplicate recipe error', error)),
+            catchError((error: unknown) => rethrowApiError('Duplicate recipe error', error)),
         );
     }
 }

@@ -133,9 +133,10 @@
                     [recentItems]="recentProductItems()"
                     [allItems]="allProductItems()"
                     [allProductsSectionLabelKey]="allProductsSectionLabelKey()"
+                    [favoriteLoadingIds]="favoriteLoadingIds()"
                     (openProduct)="onProductClick($event)"
                     (addToMeal)="onAddToMeal($event)"
-                    (favoriteChanged)="onProductFavoriteChanged($event.product, $event.change)"
+                    (favoriteToggle)="onProductFavoriteToggle($event)"
                 />
             } @else if (isEmptyState()) {
                 <fd-product-list-empty-state state="empty" (addProduct)="onAddProductClick()" />

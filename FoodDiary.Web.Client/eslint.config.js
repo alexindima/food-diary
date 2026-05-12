@@ -8,6 +8,7 @@ import parser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import boundariesPlugin from 'eslint-plugin-boundaries';
 import prettierPlugin from 'eslint-plugin-prettier';
+import rxjsXPlugin from 'eslint-plugin-rxjs-x';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
 
@@ -349,6 +350,7 @@ export default [
             'simple-import-sort': simpleImportSortPlugin,
             boundaries: boundariesPlugin,
             sonarjs: sonarjsPlugin,
+            'rxjs-x': rxjsXPlugin,
             local: localTsPlugin,
         },
         settings: {
@@ -675,6 +677,13 @@ export default [
             'no-restricted-syntax': ['error', ...noAnyCastSyntax],
             'local/async-function-suffix': 'error',
             'local/no-nested-subscribe': 'error',
+            'rxjs-x/no-async-subscribe': 'error',
+            'rxjs-x/no-implicit-any-catch': ['error', { allowExplicitAny: false }],
+            'rxjs-x/no-nested-subscribe': 'error',
+            'rxjs-x/no-subscribe-in-pipe': 'error',
+            'rxjs-x/no-unsafe-switchmap': 'error',
+            'sonarjs/cognitive-complexity': ['error', 25],
+            'sonarjs/no-nested-functions': 'error',
         },
     },
     {
@@ -960,6 +969,16 @@ export default [
                             group: ['../**/*.routes', '../../**/*.routes', '../../../**/*.routes', '../../../../**/*.routes'],
                             message: 'Feature code should depend on feature-local API/models/components, not on route configuration files.',
                         },
+                        {
+                            group: [
+                                'src/app/features/*',
+                                '../features/*',
+                                '../../features/*',
+                                '../../../features/*',
+                                '../../../../features/*',
+                            ],
+                            message: 'Import a concrete feature layer such as models, api, components, dialogs, lib, or pages instead of a feature root.',
+                        },
                     ],
                 },
             ],
@@ -1088,6 +1107,17 @@ export default [
                         {
                             group: ['../**/*.routes', '../../**/*.routes', '../../../**/*.routes', '../../../../**/*.routes'],
                             message: 'Admin feature code should depend on feature-local API/models/components, not on route files.',
+                        },
+                        {
+                            group: [
+                                'projects/fooddiary-admin/src/app/features/*',
+                                '../features/*',
+                                '../../features/*',
+                                '../../../features/*',
+                                '../../../../features/*',
+                            ],
+                            message:
+                                'Import a concrete admin feature layer such as models, api, components, dialogs, lib, or pages instead of a feature root.',
                         },
                     ],
                 },

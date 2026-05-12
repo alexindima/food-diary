@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { IngredientPreviewItem } from './recipe-detail.component';
+import type { IngredientPreviewItem } from './recipe-detail.types';
 
 @Component({
     selector: 'fd-recipe-detail-ingredient-preview',

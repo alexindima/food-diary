@@ -16,7 +16,7 @@ export class AdminTelemetryService extends ApiService {
 
     public getFastingSummary(hours: number = DEFAULT_FASTING_SUMMARY_HOURS): Observable<FastingTelemetrySummary | null> {
         return this.get<FastingTelemetrySummary>('fasting', { hours }).pipe(
-            catchError(error => fallbackApiError('Get fasting telemetry summary error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Get fasting telemetry summary error', error, null)),
         );
     }
 }

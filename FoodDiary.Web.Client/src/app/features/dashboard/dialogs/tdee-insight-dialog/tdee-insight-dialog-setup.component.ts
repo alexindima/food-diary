@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
-import type { TdeeSetupItem } from './tdee-insight-dialog.component';
+import type { TdeeSetupItem } from './tdee-insight-dialog.types';
 
 @Component({
     selector: 'fd-tdee-insight-dialog-setup',

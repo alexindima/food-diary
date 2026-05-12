@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -29,13 +28,13 @@ export class OpenFoodFactsService extends ApiService {
 
     public searchByBarcode(barcode: string): Observable<OpenFoodFactsProduct | null> {
         return this.get<OpenFoodFactsProduct | null>(`products/${barcode}`).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Open Food Facts lookup error', error, null)),
+            catchError((error: unknown) => fallbackApiError('Open Food Facts lookup error', error, null)),
         );
     }
 
     public search(query: string, limit = DEFAULT_OPEN_FOOD_FACTS_SEARCH_LIMIT): Observable<OpenFoodFactsProduct[]> {
         return this.get<OpenFoodFactsProduct[]>('products', { search: query, limit }).pipe(
-            catchError((error: HttpErrorResponse) => fallbackApiError('Open Food Facts search error', error, [])),
+            catchError((error: unknown) => fallbackApiError('Open Food Facts search error', error, [])),
         );
     }
 }

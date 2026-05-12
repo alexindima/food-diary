@@ -1,26 +1,23 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import type { WritableSignal } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { finalize, firstValueFrom } from 'rxjs';
-import { catchError, of } from 'rxjs';
+import { catchError, firstValueFrom, of } from 'rxjs';
 
-import { MealService } from '../../../features/meals/api/meal.service';
-import type { Meal } from '../../../features/meals/models/meal.data';
 import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { UserService } from '../../../shared/api/user.service';
+import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog.component';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field.component';
 import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premium-required-dialog.component';
-import { buildMealManageDtoFromAiResult, mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
+import { mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
 import type { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
 
@@ -75,7 +72,6 @@ const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
 })
 export class AiInputBarComponent {
     private readonly aiFoodService = inject(AiFoodService);
-    private readonly mealService = inject(MealService);
     private readonly userService = inject(UserService);
     private readonly localizationService = inject(LocalizationService);
     private readonly authService = inject(AuthService);
@@ -88,7 +84,7 @@ export class AiInputBarComponent {
     public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealType = input<string | null>(null);
     public readonly mealRecognized = output<AiInputBarResult>();
-    public readonly mealCreated = output<Meal>();
+    public readonly mealCreateRequested = output<AiInputBarResult>();
 
     public readonly voiceText = signal('');
     public readonly textSubmittedQuery = signal<string | null>(null);
@@ -349,26 +345,8 @@ export class AiInputBarComponent {
             return;
         }
 
-        const mealDate = new Date(`${result.date}T${result.time}`);
-        this.isSubmittingMeal.set(true);
-        this.mealService
-            .create(buildMealManageDtoFromAiResult(result, mealDate))
-            .pipe(
-                finalize(() => {
-                    this.isSubmittingMeal.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: (meal: Meal | null) => {
-                    if (meal === null) {
-                        return;
-                    }
-
-                    this.clearState();
-                    this.mealCreated.emit(meal);
-                },
-            });
+        this.mealCreateRequested.emit(result);
+        this.clearState();
     }
 
     private runTextAnalysis(text: string): void {
@@ -505,10 +483,11 @@ export class AiInputBarComponent {
 
         request$
             .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    if (err.status === HTTP_FORBIDDEN_STATUS) {
+                catchError((err: unknown) => {
+                    const status = getNumberProperty(err, 'status');
+                    if (status === HTTP_FORBIDDEN_STATUS) {
                         state.errorKey.set(errorKeys.premium);
-                    } else if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    } else if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         state.errorKey.set(errorKeys.quota);
                     } else {
                         state.errorKey.set(errorKeys.generic);
@@ -543,8 +522,9 @@ export class AiInputBarComponent {
         this.aiFoodService
             .calculateNutrition({ items })
             .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    if (err.status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                catchError((err: unknown) => {
+                    const status = getNumberProperty(err, 'status');
+                    if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
                         state.nutritionErrorKey.set(errorKeys.quota);
                     } else {
                         state.nutritionErrorKey.set(errorKeys.generic);

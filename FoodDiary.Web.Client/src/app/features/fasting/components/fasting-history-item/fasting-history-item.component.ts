@@ -4,7 +4,7 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import type { FastingSession } from '../../models/fasting.data';
-import type { FastingHistorySessionViewModel } from '../../pages/fasting-page.component';
+import type { FastingHistorySessionViewModel } from '../../pages/fasting-page.types';
 import { FastingHistoryCheckInListComponent } from '../fasting-history-check-in-list/fasting-history-check-in-list.component';
 
 @Component({

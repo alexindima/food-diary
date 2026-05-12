@@ -1,4 +1,3 @@
-import type { HttpErrorResponse } from '@angular/common/http';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -41,6 +40,7 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
 import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../models/auth.data';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
+import type { PasswordResetFieldErrors, PasswordResetFormGroup, RegisterFieldErrors, RegisterFormGroup } from './auth.types';
 import { AuthGoogleSectionComponent } from './auth-google-section.component';
 import { AuthPasswordResetFormComponent } from './auth-password-reset-form.component';
 import { AuthRegisterFieldsComponent } from './auth-register-fields.component';
@@ -83,11 +83,7 @@ const LOGIN_AUTOFILL_CHECK_DELAYS_MS = [
 const LOGIN_AUTOFILL_FIELD_COUNT = 2;
 
 type LoginErrorField = (typeof LOGIN_ERROR_FIELDS)[number];
-type RegisterErrorField = (typeof REGISTER_ERROR_FIELDS)[number];
-type PasswordResetErrorField = (typeof PASSWORD_RESET_ERROR_FIELDS)[number];
 type LoginFieldErrors = Record<LoginErrorField, string | null>;
-export type RegisterFieldErrors = Record<RegisterErrorField, string | null>;
-export type PasswordResetFieldErrors = Record<PasswordResetErrorField, string | null>;
 
 @Component({
     selector: 'fd-auth',
@@ -320,7 +316,7 @@ export class AuthComponent {
                 this.isSubmitting.set(false);
                 this.completeAuthenticatedNavigationAndClose();
             },
-            error: (error: HttpErrorResponse) => {
+            error: (error: unknown) => {
                 this.isSubmitting.set(false);
                 this.handleLoginError(this.getApiErrorCode(error));
             },
@@ -376,7 +372,7 @@ export class AuthComponent {
                 void this.navigationService.navigateToEmailVerificationPendingAsync();
                 this.closeDialogIfAny();
             },
-            error: (error: HttpErrorResponse) => {
+            error: (error: unknown) => {
                 this.isSubmitting.set(false);
                 this.handleRegisterError(this.getApiErrorCode(error));
             },
@@ -813,8 +809,12 @@ export class AuthComponent {
         });
     }
 
-    private getApiErrorCode(error: HttpErrorResponse): string | undefined {
-        const responseBody: unknown = error.error;
+    private getApiErrorCode(error: unknown): string | undefined {
+        if (!this.isRecord(error)) {
+            return undefined;
+        }
+
+        const responseBody = error['error'];
         return this.isRecord(responseBody) && typeof responseBody['error'] === 'string' ? responseBody['error'] : undefined;
     }
 
@@ -833,20 +833,4 @@ interface LoginFormValues {
     rememberMe: boolean;
 }
 
-interface RegisterFormValues {
-    email: string;
-    password: string;
-    confirmPassword: string;
-    agreeTerms: boolean;
-}
-
 type LoginFormGroup = FormGroupControls<LoginFormValues>;
-export type RegisterFormGroup = FormGroupControls<RegisterFormValues>;
-export type RegisterForm = FormGroup<RegisterFormGroup>;
-
-interface PasswordResetFormValues {
-    email: string;
-}
-
-export type PasswordResetFormGroup = FormGroupControls<PasswordResetFormValues>;
-export type PasswordResetForm = FormGroup<PasswordResetFormGroup>;
