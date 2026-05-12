@@ -10,198 +10,37 @@
     @if (isLoading()) {
         <p>Loading users...</p>
     } @else {
-        <div class="summary fd-ui-action-text">Total users: {{ totalItems() }}</div>
-
-        <table class="users-table">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Username</th>
-                    <th>Roles</th>
-                    <th>Active</th>
-                    <th>Confirmed</th>
-                    <th>Deleted</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (user of users(); track user.id) {
-                    <tr>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.username || '-' }}</td>
-                        <td>{{ user.roles.join(', ') || '-' }}</td>
-                        <td>{{ user.isActive ? 'Yes' : 'No' }}</td>
-                        <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
-                        <td>{{ user.deletedAt ? 'Yes' : 'No' }}</td>
-                        <td class="users-table__actions fd-row fd-gap-xs fd-wrap">
-                            <fd-ui-button type="button" variant="secondary" (click)="openEdit(user)"> Edit </fd-ui-button>
-                            <fd-ui-button
-                                type="button"
-                                variant="secondary"
-                                [disabled]="user.deletedAt || user.roles.includes('Admin')"
-                                (click)="startImpersonation(user)"
-                            >
-                                Impersonate
-                            </fd-ui-button>
-                        </td>
-                    </tr>
-                } @empty {
-                    <tr>
-                        <td colspan="7">No users found.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <div class="pagination fd-row fd-gap-sm">
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
-                Previous
-            </fd-ui-button>
-            <span>Page {{ page() }} of {{ totalPages() }}</span>
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">
-                Next
-            </fd-ui-button>
-        </div>
+        <fd-admin-users-table
+            [users]="users()"
+            [totalItems]="totalItems()"
+            [page]="page()"
+            [totalPages]="totalPages()"
+            (edit)="openEdit($event)"
+            (impersonate)="startImpersonation($event)"
+            (pageChange)="goToPage($event)"
+        />
     }
 
-    <section class="admin-users__section fd-grid fd-gap-md">
-        <div class="admin-users__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
-            <div>
-                <h2 class="fd-ui-title-sm">Login activity</h2>
-                <p class="fd-ui-body-xs">Successful authentication events with masked IP and parsed client details.</p>
-            </div>
-            <fd-ui-input placeholder="Search logins" [ngModel]="loginEventsSearch()" (ngModelChange)="onLoginEventsSearchChange($event)" />
-        </div>
+    <fd-admin-login-activity-section
+        [search]="loginEventsSearch()"
+        [summaryItems]="loginSummaryItems()"
+        [isLoading]="isLoginEventsLoading()"
+        [totalItems]="loginEventsTotalItems()"
+        [events]="loginEvents()"
+        [page]="loginEventsPage()"
+        [totalPages]="loginEventsTotalPages()"
+        (searchChange)="onLoginEventsSearchChange($event)"
+        (pageChange)="goToLoginEventsPage($event)"
+    />
 
-        @if (loginSummaryItems().length) {
-            <div class="login-summary">
-                @for (item of loginSummaryItems(); track item.key) {
-                    <div class="login-summary__item">
-                        <span class="login-summary__label">{{ item.label }}</span>
-                        <strong>{{ item.count }}</strong>
-                    </div>
-                }
-            </div>
-        }
-
-        @if (isLoginEventsLoading()) {
-            <p>Loading login activity...</p>
-        } @else {
-            <div class="summary fd-ui-action-text">Total login events: {{ loginEventsTotalItems() }}</div>
-
-            <table class="users-table">
-                <thead>
-                    <tr>
-                        <th>Logged in</th>
-                        <th>User</th>
-                        <th>Provider</th>
-                        <th>Device</th>
-                        <th>Browser</th>
-                        <th>OS</th>
-                        <th>IP</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (event of loginEvents(); track event.id) {
-                        <tr>
-                            <td>{{ event.loggedInAtUtc | date: 'medium' }}</td>
-                            <td>{{ event.userEmail }}</td>
-                            <td>{{ event.authProvider }}</td>
-                            <td>{{ event.deviceType || '-' }}</td>
-                            <td>{{ event.browserName || '-' }} {{ event.browserVersion || '' }}</td>
-                            <td>{{ event.operatingSystem || '-' }}</td>
-                            <td>{{ event.maskedIpAddress || '-' }}</td>
-                        </tr>
-                    } @empty {
-                        <tr>
-                            <td colspan="7">No login activity found.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-            <div class="pagination fd-row fd-gap-sm">
-                <fd-ui-button
-                    type="button"
-                    variant="secondary"
-                    [disabled]="loginEventsPage() <= 1"
-                    (click)="goToLoginEventsPage(loginEventsPage() - 1)"
-                >
-                    Previous
-                </fd-ui-button>
-                <span>Page {{ loginEventsPage() }} of {{ loginEventsTotalPages() }}</span>
-                <fd-ui-button
-                    type="button"
-                    variant="secondary"
-                    [disabled]="loginEventsPage() >= loginEventsTotalPages()"
-                    (click)="goToLoginEventsPage(loginEventsPage() + 1)"
-                >
-                    Next
-                </fd-ui-button>
-            </div>
-        }
-    </section>
-
-    <section class="admin-users__section fd-grid fd-gap-md">
-        <div class="admin-users__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
-            <div>
-                <h2 class="fd-ui-title-sm">Impersonation sessions</h2>
-                <p class="fd-ui-body-xs">Recent admin access sessions started on behalf of users.</p>
-            </div>
-            <fd-ui-input placeholder="Search sessions" [ngModel]="sessionsSearch()" (ngModelChange)="onSessionsSearchChange($event)" />
-        </div>
-
-        @if (isSessionsLoading()) {
-            <p>Loading sessions...</p>
-        } @else {
-            <div class="summary fd-ui-action-text">Total sessions: {{ sessionsTotalItems() }}</div>
-
-            <table class="users-table">
-                <thead>
-                    <tr>
-                        <th>Started</th>
-                        <th>Admin</th>
-                        <th>Target user</th>
-                        <th>Reason</th>
-                        <th>IP</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (session of sessions(); track session.id) {
-                        <tr>
-                            <td>{{ session.startedAtUtc | date: 'medium' }}</td>
-                            <td>{{ session.actorEmail }}</td>
-                            <td>{{ session.targetEmail }}</td>
-                            <td class="users-table__reason" [title]="session.reason">{{ session.reason }}</td>
-                            <td>{{ session.actorIpAddress || '-' }}</td>
-                        </tr>
-                    } @empty {
-                        <tr>
-                            <td colspan="5">No impersonation sessions found.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-            <div class="pagination fd-row fd-gap-sm">
-                <fd-ui-button
-                    type="button"
-                    variant="secondary"
-                    [disabled]="sessionsPage() <= 1"
-                    (click)="goToSessionsPage(sessionsPage() - 1)"
-                >
-                    Previous
-                </fd-ui-button>
-                <span>Page {{ sessionsPage() }} of {{ sessionsTotalPages() }}</span>
-                <fd-ui-button
-                    type="button"
-                    variant="secondary"
-                    [disabled]="sessionsPage() >= sessionsTotalPages()"
-                    (click)="goToSessionsPage(sessionsPage() + 1)"
-                >
-                    Next
-                </fd-ui-button>
-            </div>
-        }
-    </section>
+    <fd-admin-sessions-section
+        [search]="sessionsSearch()"
+        [isLoading]="isSessionsLoading()"
+        [totalItems]="sessionsTotalItems()"
+        [sessions]="sessions()"
+        [page]="sessionsPage()"
+        [totalPages]="sessionsTotalPages()"
+        (searchChange)="onSessionsSearchChange($event)"
+        (pageChange)="goToSessionsPage($event)"
+    />
 </div>

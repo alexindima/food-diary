@@ -17,8 +17,11 @@ import {
 } from '../api/admin-users.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
+import { AdminLoginActivitySectionComponent } from './admin-login-activity-section.component';
+import { AdminSessionsSectionComponent } from './admin-sessions-section.component';
+import { AdminUsersTableComponent } from './admin-users-table.component';
 
-interface AdminUserLoginDeviceSummaryViewModel extends AdminUserLoginDeviceSummary {
+export interface AdminUserLoginDeviceSummaryViewModel extends AdminUserLoginDeviceSummary {
     label: string;
 }
 
@@ -27,7 +30,15 @@ const ADMIN_USERS_PAGE_SIZE = 20;
 @Component({
     selector: 'fd-admin-users',
     standalone: true,
-    imports: [CommonModule, FormsModule, FdUiButtonComponent, FdUiInputComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        FdUiButtonComponent,
+        FdUiInputComponent,
+        AdminUsersTableComponent,
+        AdminLoginActivitySectionComponent,
+        AdminSessionsSectionComponent,
+    ],
     templateUrl: './admin-users.component.html',
     styleUrl: './admin-users.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

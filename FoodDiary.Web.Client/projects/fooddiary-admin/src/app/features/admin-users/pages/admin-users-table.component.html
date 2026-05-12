@@ -1,0 +1,50 @@
+<div class="summary fd-ui-action-text">Total users: {{ totalItems() }}</div>
+
+<table class="users-table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Roles</th>
+            <th>Active</th>
+            <th>Confirmed</th>
+            <th>Deleted</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (user of users(); track user.id) {
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.username || '-' }}</td>
+                <td>{{ user.roles.join(', ') || '-' }}</td>
+                <td>{{ user.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
+                <td>{{ user.deletedAt ? 'Yes' : 'No' }}</td>
+                <td class="users-table__actions fd-row fd-gap-xs fd-wrap">
+                    <fd-ui-button type="button" variant="secondary" (click)="edit.emit(user)"> Edit </fd-ui-button>
+                    <fd-ui-button
+                        type="button"
+                        variant="secondary"
+                        [disabled]="user.deletedAt || user.roles.includes('Admin')"
+                        (click)="impersonate.emit(user)"
+                    >
+                        Impersonate
+                    </fd-ui-button>
+                </td>
+            </tr>
+        } @empty {
+            <tr>
+                <td colspan="7">No users found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination fd-row fd-gap-sm">
+    <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="pageChange.emit(page() - 1)"> Previous </fd-ui-button>
+    <span>Page {{ page() }} of {{ totalPages() }}</span>
+    <fd-ui-button type="button" variant="secondary" [disabled]="page() >= totalPages()" (click)="pageChange.emit(page() + 1)">
+        Next
+    </fd-ui-button>
+</div>
