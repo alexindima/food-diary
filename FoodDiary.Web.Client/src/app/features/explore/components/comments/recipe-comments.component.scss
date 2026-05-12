@@ -33,10 +33,10 @@
     p {
         margin: 0;
     }
+}
 
-    &-hint {
-        margin-top: var(--fd-space-xxs) !important;
-    }
+.comments-empty p.comments-empty-hint {
+    margin-top: var(--fd-space-xxs);
 }
 
 .comments-list {

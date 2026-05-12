@@ -3,11 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
-import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
 import { LESSON_CATEGORIES, type LessonSummary } from '../../models/lesson.data';
@@ -29,17 +26,7 @@ export interface LessonListItem extends LessonSummary {
 @Component({
     selector: 'fd-lessons-list-page',
     standalone: true,
-    imports: [
-        CommonModule,
-        TranslatePipe,
-        FdUiButtonComponent,
-        FdUiIconComponent,
-        FdUiLoaderComponent,
-        PageBodyComponent,
-        FdPageContainerDirective,
-        FdCardHoverDirective,
-        LessonsListGridComponent,
-    ],
+    imports: [CommonModule, TranslatePipe, FdUiButtonComponent, PageBodyComponent, FdPageContainerDirective, LessonsListGridComponent],
     providers: [LessonFacade],
     templateUrl: './lessons-list-page.component.html',
     styleUrl: './lessons-list-page.component.scss',

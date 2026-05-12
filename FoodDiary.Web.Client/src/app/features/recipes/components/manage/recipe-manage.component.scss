@@ -4,11 +4,11 @@
     --fd-bg-page: var(--fd-bg-body);
     margin: 0 auto;
     box-sizing: border-box;
-    padding: 0 !important;
+    padding: 0;
 
     @media #{variables.$media-desktop} {
         --fd-layout-page-content-max-width: 100%;
-        max-width: 100% !important;
+        max-width: 100%;
     }
 
     &__header {

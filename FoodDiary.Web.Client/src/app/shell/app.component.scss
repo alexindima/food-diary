@@ -7,7 +7,7 @@
     background: var(--fd-bg-primary);
     color: var(--fd-color-white);
     padding: var(--fd-space-surface-padding);
-    z-index: 10000;
+    z-index: var(--fd-z-index-skip-nav);
     text-decoration: none;
     font-weight: var(--fd-font-weight-medium);
     border-radius: var(--fd-radius-button);

@@ -11,7 +11,7 @@
 }
 
 .fd-ui-menu-panel {
-    z-index: 1000;
+    z-index: var(--fd-z-index-menu);
 }
 
 .fd-ui-menu__item {

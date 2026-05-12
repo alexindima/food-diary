@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -36,7 +36,6 @@ const PERCENT_FULL = 100;
     providers: [GoalsFacade],
     imports: [
         TranslateModule,
-        FdUiSelectComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -14,7 +13,6 @@ import { WeeklyCheckInTrendsComponent } from './weekly-check-in-trends.component
     selector: 'fd-weekly-check-in-page',
     standalone: true,
     imports: [
-        DecimalPipe,
         TranslatePipe,
         PageHeaderComponent,
         PageBodyComponent,

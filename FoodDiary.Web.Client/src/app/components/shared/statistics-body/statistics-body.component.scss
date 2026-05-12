@@ -19,8 +19,11 @@
     width: 100%;
 }
 
+/* stylelint-disable declaration-no-important -- Chart.js writes inline canvas dimensions. */
+
 .stats-body-card__chart-area canvas {
     width: 100% !important;
     height: 100% !important;
     display: block;
 }
+/* stylelint-enable declaration-no-important */

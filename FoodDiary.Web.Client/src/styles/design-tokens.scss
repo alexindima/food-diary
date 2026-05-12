@@ -1910,6 +1910,15 @@ $fd-theme-design-tokens: (
         --fd-size-fasting-ring-glow-offset-y: #{fd-token(size, fasting-ring-glow-offset-y)};
         --fd-size-fasting-ring-glow-blur: #{fd-token(size, fasting-ring-glow-blur)};
 
+        --fd-z-index-overlay-backdrop: 1000;
+        --fd-z-index-overlay-panel: 1001;
+        --fd-z-index-menu: 1000;
+        --fd-z-index-sidebar-mobile-backdrop: 1180;
+        --fd-z-index-sidebar-mobile-sheet: 1190;
+        --fd-z-index-floating-panel: 1200;
+        --fd-z-index-toast: 1300;
+        --fd-z-index-skip-nav: 10000;
+
         --fd-layout-header-height: #{fd-theme-token($theme, layout-header, height)};
         --fd-layout-header-background: #{fd-theme-token($theme, layout-header, background)};
         --fd-layout-header-text-color: #{fd-theme-token($theme, layout-header, text-color)};

@@ -9,12 +9,15 @@
     box-sizing: border-box;
 }
 
+/* stylelint-disable declaration-no-important -- Chart.js writes inline canvas dimensions. */
+
 .fasting-checkin-chart-dialog__chart canvas {
     display: block;
     width: 100% !important;
     height: auto !important;
     max-width: 100%;
 }
+/* stylelint-enable declaration-no-important */
 
 @media #{variables.$media-tablet} {
 

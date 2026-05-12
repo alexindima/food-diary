@@ -51,12 +51,15 @@
     width: 100%;
 }
 
+/* stylelint-disable declaration-no-important -- Chart.js writes inline canvas dimensions. */
+
 .stats-summary-card__trend canvas,
 .stats-summary-card__macro-trend canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
 }
+/* stylelint-enable declaration-no-important */
 
 .stats-summary-card__macro-card {
     --fd-stat-tile-padding: var(--fd-space-stat-tile-compact-padding);

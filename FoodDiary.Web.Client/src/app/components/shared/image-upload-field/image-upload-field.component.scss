@@ -15,7 +15,11 @@
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-brand-surface-soft);
         color: var(--fd-color-slate-900);
-        transition: all 160ms ease;
+        transition:
+            border-color 160ms ease,
+            background 160ms ease,
+            box-shadow 160ms ease,
+            opacity 160ms ease;
 
         &--dragging {
             border-color: var(--fd-color-primary-600);
@@ -177,7 +181,7 @@
     &__cropper-backdrop {
         position: fixed;
         inset: 0;
-        z-index: 1000;
+        z-index: var(--fd-z-index-overlay-backdrop);
         padding: var(--fd-space-md);
         background: var(--fd-bg-overlay-strong);
     }
@@ -185,7 +189,7 @@
     &__cropper {
         position: fixed;
         inset: 50% auto auto 50%;
-        z-index: 1001;
+        z-index: var(--fd-z-index-overlay-panel);
         width: min(720px, 100%);
         max-width: calc(100vw - var(--fd-space-lg));
         max-height: calc(100vh - var(--fd-space-lg));

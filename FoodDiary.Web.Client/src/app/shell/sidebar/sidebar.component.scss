@@ -360,7 +360,7 @@
     background: var(--fd-bg-surface);
     border-top: var(--fd-border-default);
     box-shadow: var(--fd-shadow-xl);
-    z-index: 1200;
+    z-index: var(--fd-z-index-floating-panel);
 
     &__progress {
         display: grid;
@@ -480,7 +480,7 @@
         background: color-mix(in srgb, var(--fd-color-slate-900) 32%, transparent);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
-        z-index: 1180;
+        z-index: var(--fd-z-index-sidebar-mobile-backdrop);
     }
 
     &__sheet {
@@ -495,7 +495,7 @@
         border: var(--fd-border-default);
         display: grid;
         gap: var(--fd-space-xxs);
-        z-index: 1190;
+        z-index: var(--fd-z-index-sidebar-mobile-sheet);
 
         &:focus-visible {
             outline: var(--fd-outline-focus-strong);
