@@ -30,6 +30,22 @@
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false,
+        "extendedDiagnostics": {
+            "defaultCategory": "error",
+            "checks": {
+                "controlFlowPreventingContentProjection": "error",
+                "deferTriggerMisconfiguration": "error",
+                "interpolatedSignalNotInvoked": "error",
+                "nullishCoalescingNotNullable": "error",
+                "optionalChainNotNullable": "error",
+                "textAttributeNotBinding": "error",
+                "uninvokedFunctionInEventBinding": "error",
+                "uninvokedFunctionInTextInterpolation": "error",
+                "uninvokedTrackFunction": "error",
+                "unusedLetDeclaration": "error",
+                "unusedStandaloneImports": "error"
+            }
+        },
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictTemplates": true
