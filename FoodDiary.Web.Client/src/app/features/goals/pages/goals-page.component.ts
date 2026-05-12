@@ -1,10 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -13,15 +10,13 @@ import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { type BodyTargetKey, GoalsFacade, type MacroKey, type MacroPresetKey } from '../lib/goals.facade';
 import { DAYS_OF_WEEK } from '../models/goals.data';
-
-type BodyTarget = {
-    key: BodyTargetKey;
-    titleKey: string;
-    value: number;
-    unit: string;
-    current?: string | null;
-    delta?: string | null;
-};
+import { GoalsBodyTargetsComponent } from './goals-body-targets.component';
+import { GoalsCalorieCardComponent } from './goals-calorie-card.component';
+import { type DayCaloriesInputChange, GoalsCyclingCardComponent } from './goals-cycling-card.component';
+import { GoalsFiberCardComponent } from './goals-fiber-card.component';
+import { GoalsMacrosCardComponent } from './goals-macros-card.component';
+import type { BodyTarget, BodyTargetInputChange, MacroInputChange } from './goals-page.models';
+import { GoalsWaterCardComponent } from './goals-water-card.component';
 
 type TimeframeOption = {
     value: 'weekly' | 'monthly' | 'yearly';
@@ -40,16 +35,19 @@ const PERCENT_FULL = 100;
     standalone: true,
     providers: [GoalsFacade],
     imports: [
-        CommonModule,
-        FormsModule,
         TranslateModule,
-        FdUiCardComponent,
         FdUiSelectComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         ErrorStateComponent,
         SkeletonCardComponent,
+        GoalsCalorieCardComponent,
+        GoalsCyclingCardComponent,
+        GoalsWaterCardComponent,
+        GoalsMacrosCardComponent,
+        GoalsFiberCardComponent,
+        GoalsBodyTargetsComponent,
     ],
     templateUrl: './goals-page.component.html',
     styleUrls: ['./goals-page.component.scss'],
@@ -128,6 +126,10 @@ export class GoalsPageComponent {
         this.facade.updateDayCalories(key, Number(target.value));
     }
 
+    protected onDayCaloriesInputChange(change: DayCaloriesInputChange): void {
+        this.onDayCaloriesInput(change.key, change.event);
+    }
+
     protected onCaloriesInput(event: Event): void {
         const target = event.target as HTMLInputElement;
         this.facade.updateCalories(Number(target.value));
@@ -139,6 +141,10 @@ export class GoalsPageComponent {
         if (clamped !== null) {
             target.value = clamped.toString();
         }
+    }
+
+    protected onBodyTargetInput(change: BodyTargetInputChange): void {
+        this.onBodyTargetChange(change.key, change.event);
     }
 
     protected onCaloriesBlur(event: Event): void {
@@ -170,12 +176,20 @@ export class GoalsPageComponent {
         this.facade.updateMacroValue(key, Number(target.value));
     }
 
+    protected onMacroSliderInput(change: MacroInputChange): void {
+        this.onMacroSliderChange(change.key, change.event);
+    }
+
     protected onMacroInputChange(key: MacroKey, event: Event): void {
         const target = event.target as HTMLInputElement;
         const clamped = this.facade.updateMacroValue(key, Number(target.value));
         if (clamped !== null) {
             target.value = clamped.toString();
         }
+    }
+
+    protected onMacroValueInput(change: MacroInputChange): void {
+        this.onMacroInputChange(change.key, change.event);
     }
 
     protected onWaterInputChange(event: Event): void {

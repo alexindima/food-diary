@@ -1,0 +1,31 @@
+<div class="goals__body-targets-row">
+    @for (target of targets(); track target.key) {
+        <fd-ui-card class="goals__card goals__card--body-target" [title]="target.titleKey | translate">
+            <div class="goals__card-inner goals__card-inner--column">
+                <div class="goals__target">
+                    <div class="goals__target-header">
+                        <div class="goals__target-value">
+                            <input
+                                type="number"
+                                class="goals__body-input fd-ui-metric-lg"
+                                [value]="target.value"
+                                (input)="targetInput.emit({ key: target.key, event: $event })"
+                            />
+                            <span class="goals__target-unit fd-ui-metric-unit">{{ target.unit }}</span>
+                        </div>
+                    </div>
+                    <div class="goals__target-meta">
+                        @if (target.current && target.delta) {
+                            <span class="goals__meta-label fd-ui-body-sm">
+                                {{ 'GOALS_PAGE.CURRENT_LABEL' | translate: { value: target.current, unit: target.unit } }}
+                            </span>
+                            <span class="goals__delta goals__delta--positive fd-ui-pill fd-ui-pill--compact fd-ui-action-text">
+                                {{ target.delta }} {{ 'GOALS_PAGE.TO_GO' | translate }}
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </fd-ui-card>
+    }
+</div>

@@ -1,0 +1,5 @@
+<fd-ui-card class="goals__card goals__card--water" [title]="'GOALS_PAGE.WATER_TITLE' | translate">
+    <div class="goals__card-inner goals__card-inner--column">
+        <fd-goals-macro-slider [macro]="water()" (valueInput)="waterInput.emit($event)" (sliderInput)="waterSlider.emit($event)" />
+    </div>
+</fd-ui-card>

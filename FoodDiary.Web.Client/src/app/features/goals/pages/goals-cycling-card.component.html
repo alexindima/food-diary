@@ -1,0 +1,30 @@
+<fd-ui-card class="goals__card goals__card--cycling" [title]="'GOALS_PAGE.CYCLING_TITLE' | translate">
+    <div class="goals__card-inner goals__card-inner--column">
+        <div class="goals__cycling-toggle">
+            <label class="goals__cycling-label fd-ui-body-sm">
+                <input type="checkbox" [checked]="enabled()" (change)="enabledToggle.emit()" />
+                <span>{{ 'GOALS_PAGE.CYCLING_ENABLE' | translate }}</span>
+            </label>
+        </div>
+        @if (enabled()) {
+            <div class="goals__cycling-days">
+                @for (day of dayControls(); track day.key) {
+                    <div class="goals__cycling-day">
+                        <label class="goals__cycling-day-label fd-ui-meta-text" [attr.for]="day.inputId">
+                            {{ day.labelKey | translate }}
+                        </label>
+                        <input
+                            type="number"
+                            class="goals__cycling-day-input"
+                            [id]="day.inputId"
+                            [min]="0"
+                            [max]="maxCalories()"
+                            [value]="dayCalories()[day.key]"
+                            (input)="dayCaloriesInput.emit({ key: day.key, event: $event })"
+                        />
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</fd-ui-card>

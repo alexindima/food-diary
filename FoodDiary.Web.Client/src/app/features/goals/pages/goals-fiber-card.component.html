@@ -1,0 +1,11 @@
+@if (fiber(); as item) {
+    <fd-ui-card class="goals__card goals__card--fiber" [title]="'GOALS_PAGE.FIBER_GROUP' | translate">
+        <div class="goals__card-inner goals__card-inner--column">
+            <fd-goals-macro-slider
+                [macro]="item"
+                (valueInput)="emitMacroInput(item, $event)"
+                (sliderInput)="emitMacroSlider(item, $event)"
+            />
+        </div>
+    </fd-ui-card>
+}

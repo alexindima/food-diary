@@ -1,0 +1,21 @@
+<fd-ui-card class="goals__card goals__card--macros" [title]="'GOALS_PAGE.CORE_MACROS' | translate">
+    <div class="goals__card-inner goals__card-inner--column">
+        <div class="goals__preset">
+            <fd-ui-select
+                class="goals__preset-select"
+                [label]="'GOALS_PAGE.MACRO_PRESET_LABEL' | translate"
+                [options]="macroPresetOptions()"
+                [ngModel]="selectedPreset()"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="presetChange.emit($event)"
+            />
+        </div>
+        @for (macro of macros(); track macro.key) {
+            <fd-goals-macro-slider
+                [macro]="macro"
+                (valueInput)="emitMacroInput(macro.key, $event)"
+                (sliderInput)="emitMacroSlider(macro.key, $event)"
+            />
+        }
+    </div>
+</fd-ui-card>

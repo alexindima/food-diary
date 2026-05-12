@@ -1,0 +1,39 @@
+@let item = macro();
+<div class="goals__macro goals__macro--slider">
+    <div class="goals__macro-header">
+        <div class="goals__macro-label">
+            <span class="fd-ui-card-title">{{ item.labelKey | translate }}</span>
+        </div>
+        <div class="goals__macro-value-block">
+            <input
+                type="number"
+                class="goals__macro-input fd-ui-stat-value"
+                [min]="0"
+                [max]="item.max"
+                [value]="item.value"
+                (input)="valueInput.emit($event)"
+            />
+            <span class="goals__macro-unit fd-ui-meta-text">{{ item.unit }}</span>
+        </div>
+    </div>
+
+    <div
+        class="goals__macro-slider"
+        [style.--macro-progress]="item.progressOffset"
+        [style.--macro-progress-ratio]="item.progressRatio"
+        [style.--macro-accent]="item.accent"
+        [style.--macro-gradient]="item.gradient"
+    >
+        <div class="goals__macro-rail"></div>
+        <div class="goals__macro-fill"></div>
+        <input
+            class="goals__macro-range"
+            type="range"
+            [aria-label]="item.labelKey | translate"
+            [min]="0"
+            [max]="item.max"
+            [value]="item.value"
+            (input)="sliderInput.emit($event)"
+        />
+    </div>
+</div>

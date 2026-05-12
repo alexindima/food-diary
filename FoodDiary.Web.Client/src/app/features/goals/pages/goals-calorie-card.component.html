@@ -1,0 +1,39 @@
+<fd-ui-card class="goals__card goals__card--calories" [title]="'GOALS_PAGE.NUTRITION_TITLE' | translate">
+    <div class="goals__card-inner goals__card-inner--center">
+        <div
+            class="goals__ring"
+            [style.--goals-progress]="ringProgressOffset()"
+            [style.--goals-accent]="accentColor()"
+            [style.--goals-angle]="ringKnobAngle()"
+            (pointerdown)="ringPointerDown.emit($event)"
+            (pointermove)="ringPointerMove.emit($event)"
+            (pointerleave)="ringPointerLeave.emit($event)"
+        >
+            <div class="goals__ring-track"></div>
+            <div class="goals__ring-center">
+                <span class="goals__ring-label fd-ui-overline">{{ 'GOALS_PAGE.DAILY_TARGET' | translate }}</span>
+                <input
+                    type="number"
+                    class="goals__calorie-input fd-ui-metric-hero"
+                    [min]="minCalories()"
+                    [max]="maxCalories()"
+                    [value]="calorieTarget()"
+                    (input)="caloriesInput.emit($event)"
+                    (blur)="caloriesBlur.emit($event)"
+                />
+                <span class="goals__ring-unit fd-ui-metric-unit">kcal</span>
+            </div>
+            <div class="goals__knob" aria-hidden="true"></div>
+            <input
+                class="goals__range"
+                type="range"
+                [aria-label]="'GOALS_PAGE.DAILY_TARGET' | translate"
+                [min]="minCalories()"
+                [max]="maxCalories()"
+                [value]="calorieTarget()"
+                (pointerdown)="ringPointerDown.emit($event)"
+                (input)="sliderInput.emit($event)"
+            />
+        </div>
+    </div>
+</fd-ui-card>

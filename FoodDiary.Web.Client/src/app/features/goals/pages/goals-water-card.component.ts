@@ -1,0 +1,20 @@
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+
+import { GoalsMacroSliderComponent } from './goals-macro-slider.component';
+import type { MacroSliderView } from './goals-page.models';
+
+@Component({
+    selector: 'fd-goals-water-card',
+    imports: [TranslatePipe, FdUiCardComponent, GoalsMacroSliderComponent],
+    templateUrl: './goals-water-card.component.html',
+    styleUrl: './goals-page.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class GoalsWaterCardComponent {
+    public readonly water = input.required<MacroSliderView>();
+
+    public readonly waterInput = output<Event>();
+    public readonly waterSlider = output<Event>();
+}
