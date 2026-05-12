@@ -1,0 +1,1382 @@
+[
+    {
+        "type": "cycle",
+        "from": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete-menu.component.ts",
+        "to": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.component.ts",
+        "unresolvedTo": "./fd-ui-autocomplete.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete-menu.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.component.ts",
+        "to": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu.component.ts",
+        "unresolvedTo": "./fd-ui-menu.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.component.ts",
+        "to": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.component.ts",
+        "unresolvedTo": "./fd-ui-radio-options.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.component.ts",
+        "to": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.component.ts",
+        "unresolvedTo": "./admin-billing.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-subscriptions-table.component.ts",
+        "to": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.component.ts",
+        "unresolvedTo": "./admin-billing.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-subscriptions-table.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-webhooks-table.component.ts",
+        "to": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.component.ts",
+        "unresolvedTo": "./admin-billing.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-webhooks-table.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.component.ts",
+        "to": "projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.component.ts",
+        "unresolvedTo": "./admin-users.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/components/shared/entity-card/entity-card-body.component.ts",
+        "to": "src/app/components/shared/entity-card/entity-card.component.ts",
+        "unresolvedTo": "./entity-card.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/components/shared/entity-card/entity-card.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/components/shared/entity-card/entity-card-body.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/components/shared/entity-card/entity-card-thumb.component.ts",
+        "to": "src/app/components/shared/entity-card/entity-card.component.ts",
+        "unresolvedTo": "./entity-card.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/components/shared/entity-card/entity-card.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/components/shared/entity-card/entity-card-thumb.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/components/shared/meals-preview/meals-preview-entry.component.ts",
+        "to": "src/app/components/shared/meals-preview/meals-preview.component.ts",
+        "unresolvedTo": "./meals-preview.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/components/shared/meals-preview/meals-preview.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/components/shared/meals-preview/meals-preview-entry.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/components/shared/notifications-dialog/notifications-dialog-item.component.ts",
+        "to": "src/app/components/shared/notifications-dialog/notifications-dialog.component.ts",
+        "unresolvedTo": "./notifications-dialog.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/components/shared/notifications-dialog/notifications-dialog.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/components/shared/notifications-dialog/notifications-dialog-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/components/shared/notifications-dialog/notifications-dialog-item.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/components/shared/notifications-dialog/notifications-dialog-list.component.ts",
+        "to": "src/app/components/shared/notifications-dialog/notifications-dialog.component.ts",
+        "unresolvedTo": "./notifications-dialog.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/components/shared/notifications-dialog/notifications-dialog.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/components/shared/notifications-dialog/notifications-dialog-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/auth/components/auth/auth-password-reset-form.component.ts",
+        "to": "src/app/features/auth/components/auth/auth.component.ts",
+        "unresolvedTo": "./auth.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/auth/components/auth/auth.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/auth/components/auth/auth-password-reset-form.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/auth/components/auth/auth-register-fields.component.ts",
+        "to": "src/app/features/auth/components/auth/auth.component.ts",
+        "unresolvedTo": "./auth.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/auth/components/auth/auth.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/auth/components/auth/auth-register-fields.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer.component.ts",
+        "to": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.component.ts",
+        "unresolvedTo": "./tdee-insight-dialog.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-setup.component.ts",
+        "to": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.component.ts",
+        "unresolvedTo": "./tdee-insight-dialog.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-setup.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/dietologist/pages/clients/dietologist-client-card.component.ts",
+        "to": "src/app/features/dietologist/pages/clients/dietologist-clients-page.component.ts",
+        "unresolvedTo": "./dietologist-clients-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/dietologist/pages/clients/dietologist-clients-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/dietologist/pages/clients/dietologist-clients-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/dietologist/pages/clients/dietologist-client-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/dietologist/pages/clients/dietologist-clients-list.component.ts",
+        "to": "src/app/features/dietologist/pages/clients/dietologist-clients-page.component.ts",
+        "unresolvedTo": "./dietologist-clients-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/dietologist/pages/clients/dietologist-clients-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/dietologist/pages/clients/dietologist-clients-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/explore/components/comments/recipe-comment-item.component.ts",
+        "to": "src/app/features/explore/components/comments/recipe-comments.component.ts",
+        "unresolvedTo": "./recipe-comments.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/explore/components/comments/recipe-comments.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/explore/components/comments/recipe-comments-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/explore/components/comments/recipe-comment-item.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/explore/components/comments/recipe-comments-list.component.ts",
+        "to": "src/app/features/explore/components/comments/recipe-comments.component.ts",
+        "unresolvedTo": "./recipe-comments.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/explore/components/comments/recipe-comments.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/explore/components/comments/recipe-comments-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.component.ts",
+        "to": "src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.component.ts",
+        "unresolvedTo": "../fasting-check-in-summary/fasting-check-in-summary.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/pages/fasting-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.component.ts",
+        "to": "src/app/features/fasting/pages/fasting-page.component.ts",
+        "unresolvedTo": "../../pages/fasting-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/fasting/pages/fasting-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/fasting/components/fasting-history-card/fasting-history-card.component.ts",
+        "to": "src/app/features/fasting/components/fasting-history-item/fasting-history-item.component.ts",
+        "unresolvedTo": "../fasting-history-item/fasting-history-item.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/fasting/components/fasting-history-item/fasting-history-item.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/pages/fasting-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-history-card/fasting-history-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/fasting/components/fasting-history-card/fasting-history-card.component.ts",
+        "to": "src/app/features/fasting/pages/fasting-page.component.ts",
+        "unresolvedTo": "../../pages/fasting-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/fasting/pages/fasting-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-history-card/fasting-history-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/fasting/components/fasting-history-check-in-list/fasting-history-check-in-list.component.ts",
+        "to": "src/app/features/fasting/components/fasting-history-check-in-entry/fasting-history-check-in-entry.component.ts",
+        "unresolvedTo": "../fasting-history-check-in-entry/fasting-history-check-in-entry.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/fasting/components/fasting-history-check-in-entry/fasting-history-check-in-entry.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/pages/fasting-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-history-card/fasting-history-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-history-item/fasting-history-item.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-history-check-in-list/fasting-history-check-in-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/fasting/components/fasting-history-item/fasting-history-item.component.ts",
+        "to": "src/app/features/fasting/components/fasting-history-check-in-list/fasting-history-check-in-list.component.ts",
+        "unresolvedTo": "../fasting-history-check-in-list/fasting-history-check-in-list.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/fasting/components/fasting-history-check-in-list/fasting-history-check-in-list.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/pages/fasting-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-history-card/fasting-history-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-history-item/fasting-history-item.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.component.ts",
+        "to": "src/app/features/fasting/pages/fasting-page.component.ts",
+        "unresolvedTo": "../../pages/fasting-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/fasting/pages/fasting-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/lessons/pages/list/lessons-list-grid.component.ts",
+        "to": "src/app/features/lessons/pages/list/lessons-list-page.component.ts",
+        "unresolvedTo": "./lessons-list-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/lessons/pages/list/lessons-list-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/lessons/pages/list/lessons-list-grid.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/meals/components/detail/meal-detail-item-preview.component.ts",
+        "to": "src/app/features/meals/components/detail/meal-detail.component.ts",
+        "unresolvedTo": "./meal-detail.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/meals/components/detail/meal-detail.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/meals/components/detail/meal-detail-summary.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/meals/components/detail/meal-detail-item-preview.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/meals/components/detail/meal-detail-summary.component.ts",
+        "to": "src/app/features/meals/components/detail/meal-detail.component.ts",
+        "unresolvedTo": "./meal-detail.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/meals/components/detail/meal-detail.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/meals/components/detail/meal-detail-summary.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/meals/pages/list/meal-list-content.component.ts",
+        "to": "src/app/features/meals/pages/list/meal-list.component.ts",
+        "unresolvedTo": "./meal-list.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/meals/pages/list/meal-list.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/meals/pages/list/meal-list-content.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/meals/pages/list/meal-list-favorites.component.ts",
+        "to": "src/app/features/meals/pages/list/meal-list.component.ts",
+        "unresolvedTo": "./meal-list.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/meals/pages/list/meal-list.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/meals/pages/list/meal-list-favorites.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/products/components/list/product-list-base.component.ts",
+        "to": "src/app/features/products/components/list/product-list-groups.component.ts",
+        "unresolvedTo": "./product-list-groups.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/products/components/list/product-list-groups.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/products/components/list/product-list-base.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/products/components/manage/base-product-manage.component.ts",
+        "to": "src/app/features/products/components/manage/product-basic-info/product-basic-info.component.ts",
+        "unresolvedTo": "./product-basic-info/product-basic-info.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/products/components/manage/product-basic-info/product-basic-info.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/products/components/manage/base-product-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/products/components/manage/base-product-manage.component.ts",
+        "to": "src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.component.ts",
+        "unresolvedTo": "./product-nutrition-editor/product-nutrition-editor.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/products/components/manage/base-product-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component.ts",
+        "to": "src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result.component.ts",
+        "unresolvedTo": "./product-ai-recognition-result.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/products/dialogs/product-list-dialog-content.component.ts",
+        "to": "src/app/features/products/dialogs/product-list-dialog.component.ts",
+        "unresolvedTo": "./product-list-dialog.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/products/dialogs/product-list-dialog.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/products/dialogs/product-list-dialog-content.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/products/dialogs/product-save-success-dialog.component.ts",
+        "to": "src/app/features/products/lib/product-manage.facade.ts",
+        "unresolvedTo": "../lib/product-manage.facade",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/products/lib/product-manage.facade.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/products/dialogs/product-save-success-dialog.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/profile/pages/user-manage-billing-card.component.ts",
+        "to": "src/app/features/profile/pages/user-manage-billing-summary.component.ts",
+        "unresolvedTo": "./user-manage-billing-summary.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/profile/pages/user-manage-billing-summary.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-billing-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/profile/pages/user-manage-billing-card.component.ts",
+        "to": "src/app/features/profile/pages/user-manage.component.ts",
+        "unresolvedTo": "./user-manage.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/profile/pages/user-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-billing-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/profile/pages/user-manage-connected-devices.component.ts",
+        "to": "src/app/features/profile/pages/user-manage.component.ts",
+        "unresolvedTo": "./user-manage.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/profile/pages/user-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-notifications-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-connected-devices.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/profile/pages/user-manage-dietologist-card.component.ts",
+        "to": "src/app/features/profile/pages/user-manage-dietologist-permissions.component.ts",
+        "unresolvedTo": "./user-manage-dietologist-permissions.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/profile/pages/user-manage-dietologist-permissions.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-dietologist-card.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/profile/pages/user-manage-dietologist-card.component.ts",
+        "to": "src/app/features/profile/pages/user-manage-dietologist-summary.component.ts",
+        "unresolvedTo": "./user-manage-dietologist-summary.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/profile/pages/user-manage-dietologist-summary.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-dietologist-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/profile/pages/user-manage-dietologist-card.component.ts",
+        "to": "src/app/features/profile/pages/user-manage.component.ts",
+        "unresolvedTo": "./user-manage.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/profile/pages/user-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-dietologist-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/profile/pages/user-manage-notifications-card.component.ts",
+        "to": "src/app/features/profile/pages/user-manage.component.ts",
+        "unresolvedTo": "./user-manage.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/profile/pages/user-manage.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/profile/pages/user-manage-notifications-card.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/public/pages/seo-landing/seo-landing-content-sections.component.ts",
+        "to": "src/app/features/public/pages/seo-landing/seo-landing-page.component.ts",
+        "unresolvedTo": "./seo-landing-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/public/pages/seo-landing/seo-landing-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/public/pages/seo-landing/seo-landing-content-sections.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/public/pages/seo-landing/seo-landing-footer-sections.component.ts",
+        "to": "src/app/features/public/pages/seo-landing/seo-landing-page.component.ts",
+        "unresolvedTo": "./seo-landing-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/public/pages/seo-landing/seo-landing-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/public/pages/seo-landing/seo-landing-footer-sections.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/recipes/components/detail/recipe-detail-ingredient-preview.component.ts",
+        "to": "src/app/features/recipes/components/detail/recipe-detail.component.ts",
+        "unresolvedTo": "./recipe-detail.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/recipes/components/detail/recipe-detail.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/components/detail/recipe-detail-summary.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/components/detail/recipe-detail-ingredient-preview.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/recipes/components/detail/recipe-detail-summary.component.ts",
+        "to": "src/app/features/recipes/components/detail/recipe-detail.component.ts",
+        "unresolvedTo": "./recipe-detail.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/recipes/components/detail/recipe-detail.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/components/detail/recipe-detail-summary.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/recipes/components/manage/recipe-manage.component.ts",
+        "to": "src/app/features/recipes/lib/recipe-manage.facade.ts",
+        "unresolvedTo": "../../lib/recipe-manage.facade",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/recipes/lib/recipe-manage.facade.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/shared/dialogs/item-select-dialog/item-select-dialog.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/components/manage/recipe-manage.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/recipes/dialogs/recipe-select-dialog-content.component.ts",
+        "to": "src/app/features/recipes/dialogs/recipe-select-dialog.component.ts",
+        "unresolvedTo": "./recipe-select-dialog.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/recipes/dialogs/recipe-select-dialog.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/dialogs/recipe-select-dialog-content.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/recipes/dialogs/recipe-select-dialog.component.ts",
+        "to": "src/app/features/recipes/components/manage/recipe-manage.component.ts",
+        "unresolvedTo": "../components/manage/recipe-manage.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/recipes/components/manage/recipe-manage.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/lib/recipe-manage.facade.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/shared/dialogs/item-select-dialog/item-select-dialog.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/dialogs/recipe-select-dialog.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/recipes/pages/list/recipe-list-results.component.ts",
+        "to": "src/app/features/recipes/pages/list/recipe-list.component.ts",
+        "unresolvedTo": "./recipe-list.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/recipes/pages/list/recipe-list.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/recipes/pages/list/recipe-list-results.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/shopping-lists/pages/shopping-list-items-panel.component.ts",
+        "to": "src/app/features/shopping-lists/pages/shopping-list-page.component.ts",
+        "unresolvedTo": "./shopping-list-page.component",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/shopping-lists/pages/shopping-list-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            },
+            {
+                "name": "src/app/features/shopping-lists/pages/shopping-list-items-panel.component.ts",
+                "dependencyTypes": ["local", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/usda/components/micronutrient-panel/micronutrient-panel.component.ts",
+        "to": "src/app/features/usda/components/micronutrient-panel/micronutrient-section.component.ts",
+        "unresolvedTo": "./micronutrient-section.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/usda/components/micronutrient-panel/micronutrient-section.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/usda/components/micronutrient-panel/micronutrient-panel.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "cycle",
+        "from": "src/app/features/weekly-check-in/pages/weekly-check-in-page.component.ts",
+        "to": "src/app/features/weekly-check-in/pages/weekly-check-in-trends.component.ts",
+        "unresolvedTo": "./weekly-check-in-trends.component",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "no-circular"
+        },
+        "cycle": [
+            {
+                "name": "src/app/features/weekly-check-in/pages/weekly-check-in-trends.component.ts",
+                "dependencyTypes": ["local", "import"]
+            },
+            {
+                "name": "src/app/features/weekly-check-in/pages/weekly-check-in-page.component.ts",
+                "dependencyTypes": ["local", "type-only", "import"]
+            }
+        ]
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/shared/api/user.service.ts",
+        "to": "src/app/features/dietologist/models/dietologist.data.ts",
+        "unresolvedTo": "../../features/dietologist/models/dietologist.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-api-must-not-import-ui-or-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/ai-input-bar/ai-input-bar.component.ts",
+        "to": "src/app/features/meals/api/meal.service.ts",
+        "unresolvedTo": "../../../features/meals/api/meal.service",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/ai-input-bar/ai-input-bar.component.ts",
+        "to": "src/app/features/meals/models/meal.data.ts",
+        "unresolvedTo": "../../../features/meals/models/meal.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/ai-input-bar/ai-input-bar.mapper.ts",
+        "to": "src/app/features/meals/models/meal.data.ts",
+        "unresolvedTo": "../../../features/meals/models/meal.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/entity-card/entity-card.component.ts",
+        "to": "src/app/features/products/models/product.data.ts",
+        "unresolvedTo": "../../../features/products/models/product.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/meal-card/meal-card.component.ts",
+        "to": "src/app/features/meals/api/favorite-meal.service.ts",
+        "unresolvedTo": "../../../features/meals/api/favorite-meal.service",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/meal-card/meal-card.component.ts",
+        "to": "src/app/features/products/models/product.data.ts",
+        "unresolvedTo": "../../../features/products/models/product.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/product-card/product-card.component.ts",
+        "to": "src/app/features/products/api/favorite-product.service.ts",
+        "unresolvedTo": "../../../features/products/api/favorite-product.service",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/product-card/product-card.component.ts",
+        "to": "src/app/features/products/models/product.data.ts",
+        "unresolvedTo": "../../../features/products/models/product.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/recipe-card/recipe-card.component.ts",
+        "to": "src/app/features/products/models/product.data.ts",
+        "unresolvedTo": "../../../features/products/models/product.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/recipe-card/recipe-card.component.ts",
+        "to": "src/app/features/recipes/api/favorite-recipe.service.ts",
+        "unresolvedTo": "../../../features/recipes/api/favorite-recipe.service",
+        "dependencyTypes": ["local", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    },
+    {
+        "type": "dependency",
+        "from": "src/app/components/shared/recipe-card/recipe-card.component.ts",
+        "to": "src/app/features/recipes/models/recipe.data.ts",
+        "unresolvedTo": "../../../features/recipes/models/recipe.data",
+        "dependencyTypes": ["local", "type-only", "import"],
+        "rule": {
+            "severity": "error",
+            "name": "shared-ui-must-not-import-features"
+        }
+    }
+]
