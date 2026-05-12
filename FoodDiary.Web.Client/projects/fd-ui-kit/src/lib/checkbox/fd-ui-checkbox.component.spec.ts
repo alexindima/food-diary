@@ -3,6 +3,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiCheckboxComponent } from './fd-ui-checkbox.component';
 
+const dispatchCheckboxChange = (checked: boolean): Event => {
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = checked;
+    const event = new Event('change');
+    input.dispatchEvent(event);
+    return event;
+};
+
 describe('FdUiCheckboxComponent', () => {
     let component: FdUiCheckboxComponent;
     let fixture: ComponentFixture<FdUiCheckboxComponent>;
@@ -62,13 +71,13 @@ describe('FdUiCheckboxComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const changeEvent = { target: { checked: true } } as unknown as Event;
+        const changeEvent = dispatchCheckboxChange(true);
         component['handleChange'](changeEvent);
 
         expect(component['checked']).toBe(true);
         expect(onChangeSpy).toHaveBeenCalledWith(true);
 
-        const uncheckEvent = { target: { checked: false } } as unknown as Event;
+        const uncheckEvent = dispatchCheckboxChange(false);
         component['handleChange'](uncheckEvent);
 
         expect(component['checked']).toBe(false);

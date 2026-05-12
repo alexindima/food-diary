@@ -33,6 +33,36 @@ interface AiInputBarChannelState {
     nutritionErrorKey: WritableSignal<string | null>;
 }
 
+interface SpeechRecognitionAlternativeLike {
+    transcript: string;
+}
+
+interface SpeechRecognitionResultEventLike {
+    results: ArrayLike<ArrayLike<SpeechRecognitionAlternativeLike>>;
+}
+
+interface SpeechRecognitionLike {
+    lang: string;
+    interimResults: boolean;
+    maxAlternatives: number;
+    onresult: (event: SpeechRecognitionResultEventLike) => void;
+    onerror: () => void;
+    onend: () => void;
+    start: () => void;
+    stop: () => void;
+}
+
+interface SpeechRecognitionConstructorLike {
+    new (): SpeechRecognitionLike;
+}
+
+declare global {
+    interface Window {
+        SpeechRecognition?: SpeechRecognitionConstructorLike;
+        webkitSpeechRecognition?: SpeechRecognitionConstructorLike;
+    }
+}
+
 const HTTP_FORBIDDEN_STATUS = 403;
 const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
 
@@ -102,10 +132,12 @@ export class AiInputBarComponent {
         this.mode() === 'create' ? 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' : 'AI_INPUT_BAR.ADD_ACTION',
     );
 
-    private speechRecognition: unknown = null;
+    private speechRecognition: SpeechRecognitionLike | null = null;
 
     public onTextInput(event: Event): void {
-        this.voiceText.set((event.target as HTMLInputElement).value);
+        if (event.target instanceof HTMLInputElement) {
+            this.voiceText.set(event.target.value);
+        }
     }
 
     public async submitTextAsync(source: AiRecognitionSource = 'Text'): Promise<void> {
@@ -143,40 +175,37 @@ export class AiInputBarComponent {
             return;
         }
 
-        const SpeechRecognitionCtor =
-            (window as unknown as Record<string, unknown>)['SpeechRecognition'] ??
-            (window as unknown as Record<string, unknown>)['webkitSpeechRecognition'];
+        const SpeechRecognitionCtor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
         if (SpeechRecognitionCtor === undefined) {
             return;
         }
 
-        const recognition = new (SpeechRecognitionCtor as { new (): Record<string, unknown> })();
+        const recognition = new SpeechRecognitionCtor();
         const lang = this.localizationService.getCurrentLanguage();
-        recognition['lang'] = lang === 'ru' ? 'ru-RU' : 'en-US';
-        recognition['interimResults'] = false;
-        recognition['maxAlternatives'] = 1;
+        recognition.lang = lang === 'ru' ? 'ru-RU' : 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
 
-        recognition['onresult'] = (event: Record<string, unknown>): void => {
-            const results = event['results'] as Record<number, Record<number, { transcript: string }>> | undefined;
-            const transcript = results?.[0]?.[0]?.transcript;
-            if (transcript !== undefined && transcript.length > 0) {
+        recognition.onresult = (event: SpeechRecognitionResultEventLike): void => {
+            const transcript = event.results[0][0].transcript;
+            if (transcript.length > 0) {
                 this.voiceText.set(transcript);
                 void this.submitTextAsync('Voice');
             }
         };
 
-        recognition['onerror'] = (): void => {
+        recognition.onerror = (): void => {
             this.isListening.set(false);
         };
 
-        recognition['onend'] = (): void => {
+        recognition.onend = (): void => {
             this.isListening.set(false);
             this.speechRecognition = null;
         };
 
         this.speechRecognition = recognition;
         this.isListening.set(true);
-        (recognition['start'] as () => void)();
+        recognition.start();
     }
 
     public onTextAddToMeal(details: AiInputBarMealDetails): void {
@@ -434,10 +463,7 @@ export class AiInputBarComponent {
 
     private stopListening(): void {
         if (this.speechRecognition !== null) {
-            const stopFn = (this.speechRecognition as Record<string, unknown>)['stop'];
-            if (typeof stopFn === 'function') {
-                stopFn.call(this.speechRecognition);
-            }
+            this.speechRecognition.stop();
             this.speechRecognition = null;
         }
         this.isListening.set(false);

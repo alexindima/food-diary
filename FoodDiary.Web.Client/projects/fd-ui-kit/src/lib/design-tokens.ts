@@ -561,7 +561,7 @@ export const getColorCssVariable = <
     palette: Palette,
     shade: Shade,
 ): string => {
-    const cssVariable = DESIGN_TOKEN_CSS_VARIABLES.color[palette][shade] as string;
+    const cssVariable = String(DESIGN_TOKEN_CSS_VARIABLES.color[palette][shade]);
 
     return `var(${cssVariable})`;
 };
@@ -575,7 +575,7 @@ export const getButtonCssVariable = <
     property: Property,
     state: State,
 ): string => {
-    const cssVariable = DESIGN_TOKEN_CSS_VARIABLES.button[variant][property][state] as string;
+    const cssVariable = String(DESIGN_TOKEN_CSS_VARIABLES.button[variant][property][state]);
 
     return `var(${cssVariable})`;
 };

@@ -1,4 +1,4 @@
-import type { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -24,7 +24,7 @@ import {
     type FdUiEmojiPickerOption,
     type FdUiEmojiPickerValue,
 } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
-import { FD_VALIDATION_ERRORS, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FD_VALIDATION_ERRORS, type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -41,6 +41,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { NavigationService } from '../../../../services/navigation.service';
 import { MEAL_TYPE_OPTIONS, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
+import { getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import type { NutrientData } from '../../../../shared/models/charts.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
@@ -79,7 +80,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         nonEmptyArray: () => 'FORM_ERRORS.NON_EMPTY_ARRAY',
         min: (error?: unknown) => ({
             key: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO',
-            params: { min: (error as { min?: number } | undefined)?.min },
+            params: { min: getNumberProperty(error, 'min') },
         }),
     }),
 };
@@ -566,8 +567,8 @@ export class BaseMealManageComponent {
         const consumptionData = this.buildConsumptionManageDto();
         const consumption = this.consumption();
         void (consumption !== null ? this.updateConsumptionAsync(consumptionData) : this.addConsumptionAsync(consumptionData)).catch(
-            error => {
-                this.handleSubmitError(error as HttpErrorResponse);
+            (error: unknown) => {
+                this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
             },
         );
     }
@@ -638,10 +639,10 @@ export class BaseMealManageComponent {
     // --- Private methods ---
 
     private resolvePresetMealType(): string | null {
-        const navigationState = this.router.currentNavigation()?.extras.state as { mealType?: unknown } | undefined;
-        const stateMealType = navigationState?.mealType;
+        const navigationState: unknown = this.router.currentNavigation()?.extras.state;
+        const stateMealType = getStringProperty(navigationState, 'mealType');
         const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
-        return normalizeMealType(typeof stateMealType === 'string' ? stateMealType : queryMealType);
+        return normalizeMealType(stateMealType ?? queryMealType);
     }
 
     private setAutoMealTypeFromDate(): void {
@@ -968,9 +969,9 @@ export class BaseMealManageComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const minError = control.getError('min') as { min?: number } | null;
+        const minError: unknown = control.getError('min');
         if (minError !== null) {
-            const min = minError.min ?? 0;
+            const min = getNumberProperty(minError, 'min') ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

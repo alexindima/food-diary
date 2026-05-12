@@ -8,13 +8,17 @@ const LUNCH_START_MINUTES = 660;
 const DINNER_START_MINUTES = 1020;
 const SNACK_START_MINUTES = 1320;
 
+export function isMealTypeOption(value: string): value is MealTypeOption {
+    return MEAL_TYPE_OPTIONS.some(option => option === value);
+}
+
 export function normalizeMealType(value: string | null | undefined): MealTypeOption | null {
     const normalized = value?.trim().toUpperCase();
     if (normalized === undefined || normalized.length === 0) {
         return null;
     }
 
-    return MEAL_TYPE_OPTIONS.includes(normalized as MealTypeOption) ? (normalized as MealTypeOption) : null;
+    return isMealTypeOption(normalized) ? normalized : null;
 }
 
 export function resolveMealTypeByTime(date: Date): MealTypeOption {

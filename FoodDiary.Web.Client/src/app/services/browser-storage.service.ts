@@ -18,14 +18,14 @@ export class BrowserStorageService {
         this.getStorage(scope)?.removeItem(key);
     }
 
-    public getJson<T>(scope: StorageScope, key: string): T | null {
+    public getJson(scope: StorageScope, key: string): unknown {
         const value = this.getItem(scope, key);
         if (value === null || value.length === 0) {
             return null;
         }
 
         try {
-            return JSON.parse(value) as T;
+            return JSON.parse(value) as unknown;
         } catch {
             this.removeItem(scope, key);
             return null;

@@ -120,7 +120,8 @@ export class StatisticsFacade {
     });
     public readonly hasBodyData = computed(() => {
         const bodyChartData = this.bodyChartData();
-        return bodyChartData !== null && (bodyChartData.datasets[0].data as Array<number | null>).some(value => value !== null);
+        const values = bodyChartData?.datasets[0].data;
+        return Array.isArray(values) && values.some(value => value !== null);
     });
 
     private readonly customRangeValue = toSignal(

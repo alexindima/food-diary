@@ -23,7 +23,7 @@ type IdleCapableGlobal = {
 @Injectable({ providedIn: 'root' })
 export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
     private readonly authService = inject(AuthService);
-    private readonly globalObject = globalThis as unknown as IdleCapableGlobal;
+    private readonly globalObject: IdleCapableGlobal = globalThis;
     private pageReadyPromise?: Promise<void>;
 
     public preload(route: Route, load: () => Observable<unknown>): Observable<unknown> {

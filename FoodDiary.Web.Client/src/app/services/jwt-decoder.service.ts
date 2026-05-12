@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { isRecord } from '../shared/lib/unknown-value.utils';
+
 const BASE64_BLOCK_SIZE = 4;
 const EXPIRATION_SECONDS_TO_MS = 1000;
 
@@ -21,7 +23,8 @@ export class JwtDecoderService {
             const decoded = atob(padded);
             const bytes = Uint8Array.from(decoded, character => character.charCodeAt(0));
             const payload = new TextDecoder().decode(bytes);
-            return JSON.parse(payload) as Record<string, unknown>;
+            const parsed: unknown = JSON.parse(payload);
+            return isRecord(parsed) ? parsed : null;
         } catch {
             return null;
         }

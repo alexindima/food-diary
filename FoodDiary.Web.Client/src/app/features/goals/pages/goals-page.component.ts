@@ -122,7 +122,11 @@ export class GoalsPageComponent {
     }
 
     protected onDayCaloriesInput(key: string, event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         this.facade.updateDayCalories(key, Number(target.value));
     }
 
@@ -131,12 +135,20 @@ export class GoalsPageComponent {
     }
 
     protected onCaloriesInput(event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         this.facade.updateCalories(Number(target.value));
     }
 
     protected onBodyTargetChange(key: BodyTargetKey, event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         const clamped = this.facade.updateBodyTarget(key, Number(target.value), BODY_TARGET_MAX_VALUE);
         if (clamped !== null) {
             target.value = clamped.toString();
@@ -148,19 +160,34 @@ export class GoalsPageComponent {
     }
 
     protected onCaloriesBlur(event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         const clamped = this.facade.normalizeCaloriesInput(Number(target.value));
         target.value = clamped.toString();
     }
 
     protected onSliderInput(event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         this.facade.updateCalories(Number(target.value));
     }
 
     protected onMacroPresetChange(event: Event): void {
-        const target = event.target as HTMLSelectElement;
-        this.facade.changeMacroPreset(target.value as MacroPresetKey);
+        if (!(event.target instanceof HTMLSelectElement)) {
+            return;
+        }
+
+        const target = event.target;
+        const preset = this.macroPresetOptions.find(option => option.value === target.value)?.value;
+        if (preset !== undefined) {
+            this.facade.changeMacroPreset(preset);
+        }
     }
 
     protected onMacroPresetModelChange(value: MacroPresetKey | null): void {
@@ -172,7 +199,11 @@ export class GoalsPageComponent {
     }
 
     protected onMacroSliderChange(key: MacroKey, event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         this.facade.updateMacroValue(key, Number(target.value));
     }
 
@@ -181,7 +212,11 @@ export class GoalsPageComponent {
     }
 
     protected onMacroInputChange(key: MacroKey, event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         const clamped = this.facade.updateMacroValue(key, Number(target.value));
         if (clamped !== null) {
             target.value = clamped.toString();
@@ -193,7 +228,11 @@ export class GoalsPageComponent {
     }
 
     protected onWaterInputChange(event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         const clamped = this.facade.updateWaterValue(Number(target.value));
         if (clamped !== null) {
             target.value = clamped.toString();
@@ -201,25 +240,32 @@ export class GoalsPageComponent {
     }
 
     protected onWaterSliderChange(event: Event): void {
-        const target = event.target as HTMLInputElement;
+        const target = this.getInputTarget(event);
+        if (target === null) {
+            return;
+        }
+
         this.facade.updateWaterValue(Number(target.value));
     }
 
     protected onRingHover(event: PointerEvent): void {
-        const ring = event.currentTarget as HTMLElement;
+        const ring = this.getCurrentElementTarget(event);
+        if (ring === null) {
+            return;
+        }
+
         const { distanceFromCenter, innerRadius, outerRadius } = this.calculateRingDistances(event, ring);
         const isInBand = distanceFromCenter >= innerRadius && distanceFromCenter <= outerRadius;
         ring.style.cursor = isInBand ? 'grab' : 'default';
     }
 
     protected onRingLeave(event: PointerEvent): void {
-        const ring = event.currentTarget as HTMLElement;
-        ring.style.cursor = 'default';
+        this.getCurrentElementTarget(event)?.style.setProperty('cursor', 'default');
     }
 
     protected startRingDrag(event: PointerEvent): void {
-        const target = event.target as HTMLElement | null;
-        const possibleRing = (event.currentTarget as HTMLElement | null)?.closest('.goals__ring');
+        const target = event.target instanceof HTMLElement ? event.target : null;
+        const possibleRing = this.getCurrentElementTarget(event)?.closest('.goals__ring');
         if (!(possibleRing instanceof HTMLElement)) {
             return;
         }
@@ -287,6 +333,14 @@ export class GoalsPageComponent {
             value: preset.key,
             label: this.translateService.instant(preset.labelKey),
         }));
+    }
+
+    private getInputTarget(event: Event): HTMLInputElement | null {
+        return event.target instanceof HTMLInputElement ? event.target : null;
+    }
+
+    private getCurrentElementTarget(event: Event): HTMLElement | null {
+        return event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
     }
 
     private withMacroProgressStyles<T extends { percent: number }>(state: T): T & { progressOffset: string; progressRatio: number } {

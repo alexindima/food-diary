@@ -43,7 +43,7 @@ export interface FdUiDialogData {
 })
 export class FdUiDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<FdUiDialogComponent>, { optional: true });
-    private readonly injectedData = inject(FD_UI_DIALOG_DATA, { optional: true }) as FdUiDialogData | null;
+    private readonly injectedData = inject<FdUiDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;

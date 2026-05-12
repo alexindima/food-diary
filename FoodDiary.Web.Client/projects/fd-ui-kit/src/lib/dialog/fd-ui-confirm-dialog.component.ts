@@ -24,7 +24,7 @@ export interface FdUiConfirmDialogData {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiConfirmDialogComponent {
-    public readonly data = inject(FD_UI_DIALOG_DATA) as FdUiConfirmDialogData;
+    public readonly data = inject<FdUiConfirmDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject(FdUiDialogRef<FdUiConfirmDialogComponent>);
 
     public onConfirm(): void {

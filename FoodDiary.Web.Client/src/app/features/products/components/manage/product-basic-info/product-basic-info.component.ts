@@ -74,10 +74,13 @@ export class ProductBasicInfoComponent {
     });
 
     public onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
-        const suggestion = option.data as ProductNameSuggestion | undefined;
-        if (suggestion !== undefined) {
-            this.nameSuggestionSelected.emit(suggestion);
+        if (this.isProductNameSuggestion(option.data)) {
+            this.nameSuggestionSelected.emit(option.data);
         }
+    }
+
+    private isProductNameSuggestion(value: unknown): value is ProductNameSuggestion {
+        return typeof value === 'object' && value !== null && 'name' in value && typeof value.name === 'string';
     }
 
     private buildFieldErrors(): FieldErrors {

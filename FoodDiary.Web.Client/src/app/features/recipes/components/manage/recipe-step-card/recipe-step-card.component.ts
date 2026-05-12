@@ -11,6 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import type { FormGroupControls } from '../../../../../shared/lib/common.data';
+import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { IngredientFormValues, StepFormData } from '../recipe-manage.types';
 
 @Component({
@@ -180,9 +181,9 @@ export class RecipeStepCardComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const minError = errors['min'] as { min?: number } | undefined;
+        const minError: unknown = errors['min'];
         if (minError !== undefined) {
-            const min = minError.min ?? 0;
+            const min = getNumberProperty(minError, 'min') ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

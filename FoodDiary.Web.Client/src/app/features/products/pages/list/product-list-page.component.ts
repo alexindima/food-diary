@@ -12,7 +12,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import type { ProductDetailActionResult } from '../../components/detail/product-detail.component';
+import { ProductDetailActionResult } from '../../components/detail/product-detail.component';
 import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
 import { ProductListEmptyStateComponent } from '../../components/list/product-list-empty-state.component';
 import { ProductListFavoritesComponent } from '../../components/list/product-list-favorites.component';
@@ -58,12 +58,11 @@ export class ProductListPageComponent extends ProductListBaseComponent {
             })
             .afterClosed()
             .subscribe(data => {
-                const result = data as ProductDetailActionResult | undefined;
-
-                if (result === undefined) {
+                if (!(data instanceof ProductDetailActionResult)) {
                     return;
                 }
 
+                const result = data;
                 if (result.action === 'FavoriteChanged') {
                     this.loadFavorites();
                     this.reloadCurrentPage();

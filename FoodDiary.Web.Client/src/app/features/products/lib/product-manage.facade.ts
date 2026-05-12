@@ -1,4 +1,4 @@
-import type { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
@@ -10,6 +10,7 @@ import {
 import { PremiumRequiredDialogComponent } from '../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
+import { getNumberProperty, getRecordProperty } from '../../../shared/lib/unknown-value.utils';
 import { ProductService } from '../api/product.service';
 import { ProductSaveSuccessDialogComponent, type ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog.component';
 import type { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
@@ -90,8 +91,19 @@ export class ProductManageFacade {
 
             return { product: savedProduct, error: null };
         } catch (error) {
-            return { product: null, error: error as HttpErrorResponse };
+            return { product: null, error: this.toHttpErrorResponse(error) };
         }
+    }
+
+    private toHttpErrorResponse(error: unknown): HttpErrorResponse {
+        if (error instanceof HttpErrorResponse) {
+            return error;
+        }
+
+        return new HttpErrorResponse({
+            error: getRecordProperty(error, 'error') ?? error,
+            status: getNumberProperty(error, 'status') ?? 0,
+        });
     }
 
     private buildUpdateProductRequest(productData: CreateProductRequest): UpdateProductRequest {

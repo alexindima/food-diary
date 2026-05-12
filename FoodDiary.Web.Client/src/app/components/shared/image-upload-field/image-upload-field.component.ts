@@ -127,7 +127,11 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     public onFileSelected(event: Event): void {
-        const target = event.target as HTMLInputElement;
+        if (!(event.target instanceof HTMLInputElement)) {
+            return;
+        }
+
+        const target = event.target;
         const file = target.files?.[0];
         if (file !== undefined) {
             this.handleIncomingFile(file);

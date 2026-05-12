@@ -18,7 +18,9 @@ export class AiConsentDialogComponent {
     public readonly isAgreed = signal(false);
 
     public onCheckboxChange(event: Event): void {
-        this.isAgreed.set((event.target as HTMLInputElement).checked);
+        if (event.target instanceof HTMLInputElement) {
+            this.isAgreed.set(event.target.checked);
+        }
     }
 
     public onAccept(): void {

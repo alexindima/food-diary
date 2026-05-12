@@ -2,6 +2,7 @@ import { computed, type Signal } from '@angular/core';
 
 import type { NutrientBar } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
+import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import type { Meal } from '../../meals/models/meal.data';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 
@@ -129,7 +130,7 @@ export function createMealPreviewSignal(meals: Signal<Meal[]>, isTodaySelected: 
             }));
         }
 
-        const result: Array<{ meal: Meal | null; slot?: MealSlot }> = [];
+        const result: Array<{ meal: Meal | null; slot?: string }> = [];
 
         for (const slot of MEAL_SLOTS) {
             const index = mealList.findIndex(m => (m.mealType ?? '').toUpperCase() === slot);
@@ -142,7 +143,7 @@ export function createMealPreviewSignal(meals: Signal<Meal[]>, isTodaySelected: 
         }
 
         for (const meal of mealList) {
-            result.push({ meal, slot: (meal.mealType ?? '').toUpperCase() as MealSlot | undefined });
+            result.push({ meal, slot: normalizeMealType(meal.mealType) ?? undefined });
         }
 
         return result.map(entry => ({

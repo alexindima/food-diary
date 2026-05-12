@@ -77,7 +77,11 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     }
 
     public onInput(event: Event): void {
-        const target = event.target as HTMLInputElement;
+        if (!(event.target instanceof HTMLInputElement)) {
+            return;
+        }
+
+        const target = event.target;
         const rawValue = target.value;
 
         if (this.type() === 'number') {

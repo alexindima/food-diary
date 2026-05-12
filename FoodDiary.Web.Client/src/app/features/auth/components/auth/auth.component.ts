@@ -26,6 +26,7 @@ import {
     FdUiFormErrorComponent,
     type FdValidationErrorConfig,
     type FdValidationErrors,
+    getNumberProperty,
 } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
@@ -53,7 +54,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         matchField: () => 'FORM_ERRORS.PASSWORD.MATCH',
         minlength: (error?: unknown) => ({
             key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
-            params: { requiredLength: (error as { requiredLength?: number } | undefined)?.requiredLength },
+            params: { requiredLength: getNumberProperty(error, 'requiredLength') },
         }),
         userExists: () => 'FORM_ERRORS.USER_EXISTS',
     }),

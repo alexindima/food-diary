@@ -9,6 +9,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
+import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
 import type { ConsumptionItemFormData, NutritionTotals } from '../base-meal-manage.types';
@@ -266,9 +267,9 @@ export class MealItemsListComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const minError = control.getError('min') as { min?: number } | null;
+        const minError: unknown = control.getError('min');
         if (minError !== null) {
-            const min = minError.min ?? 0;
+            const min = getNumberProperty(minError, 'min') ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

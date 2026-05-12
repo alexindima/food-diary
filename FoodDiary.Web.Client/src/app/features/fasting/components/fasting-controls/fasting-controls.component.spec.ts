@@ -65,11 +65,11 @@ describe('FastingControlsComponent setup controls', () => {
 
     it('delegates mode and protocol changes to the shared facade', () => {
         component.onModeChange('extended');
-        component.onProtocolChange('F36');
+        component.onProtocolChange('F36_0');
         component.onCyclicPresetChange('2:1');
 
         expect(facade.selectMode).toHaveBeenCalledWith('extended');
-        expect(facade.selectProtocol).toHaveBeenCalledWith('F36');
+        expect(facade.selectProtocol).toHaveBeenCalledWith('F36_0');
         expect(facade.setCyclicPreset).toHaveBeenCalledWith(2, 1);
     });
 

@@ -16,6 +16,7 @@ import {
     type ItemSelectDialogData,
     type ItemSelection,
 } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { MealManageFacade } from '../../../lib/meal-manage.facade';
@@ -94,9 +95,9 @@ export class MealManualItemDialogComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const minError = this.amount.getError('min') as { min?: number } | null;
+        const minError: unknown = this.amount.getError('min');
         if (minError !== null) {
-            const min = minError.min ?? MIN_AMOUNT;
+            const min = getNumberProperty(minError, 'min') ?? MIN_AMOUNT;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

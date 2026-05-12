@@ -579,16 +579,15 @@ export class GoalsFacade {
         this.macroValues.update(current => {
             const next = { ...current };
 
-            for (const key of Object.keys(targetValues) as MacroKey[]) {
-                const cfg = this.macroConfigs.find(item => item.key === key);
-                const raw = targetValues[key];
-                if (cfg === undefined || raw === undefined) {
+            for (const cfg of this.macroConfigs) {
+                const raw = targetValues[cfg.key];
+                if (raw === undefined) {
                     continue;
                 }
 
                 const clamped = this.clampValue(Math.round(raw), cfg.max);
-                if (next[key] !== clamped) {
-                    next[key] = clamped;
+                if (next[cfg.key] !== clamped) {
+                    next[cfg.key] = clamped;
                 }
             }
 

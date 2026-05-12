@@ -24,6 +24,16 @@ import { NavigationService } from './navigation.service';
 import { ThemeService } from './theme.service';
 import { TokenStorageService } from './token-storage.service';
 
+declare global {
+    interface Window {
+        Telegram?: {
+            WebApp?: {
+                initData?: string;
+            };
+        };
+    }
+}
+
 const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
 
 @Injectable({
@@ -350,7 +360,7 @@ export class AuthService extends ApiService {
     }
 
     private getTelegramInitData(): string | null {
-        const telegram = (window as { Telegram?: { WebApp?: { initData?: string } } }).Telegram;
+        const telegram = window.Telegram;
         const initData = telegram?.WebApp?.initData;
         if (typeof initData !== 'string' || initData.length === 0) {
             return null;

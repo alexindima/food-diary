@@ -11,6 +11,7 @@ import { environment } from '../../../../environments/environment';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
+import { getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { PremiumBillingService } from '../api/premium-billing.service';
 import { PaddleCheckoutService } from '../lib/paddle-checkout.service';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../models/billing.models';
@@ -349,9 +350,10 @@ export class PremiumAccessPageComponent {
 
     private getErrorMessage(error: unknown): string {
         if (error instanceof HttpErrorResponse) {
-            const payload = error.error as { message?: string } | string | null;
-            if (payload !== null && typeof payload === 'object' && typeof payload.message === 'string') {
-                const message = payload.message.trim();
+            const payload: unknown = error.error;
+            const payloadMessage = getStringProperty(payload, 'message');
+            if (payloadMessage !== undefined) {
+                const message = payloadMessage.trim();
                 if (message.length > 0) {
                     return message;
                 }

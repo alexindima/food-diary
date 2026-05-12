@@ -16,7 +16,12 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import {
+    FD_VALIDATION_ERRORS,
+    FdUiFormErrorComponent,
+    type FdValidationErrors,
+    getNumberProperty,
+} from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { catchError, debounceTime, firstValueFrom, map, of, Subject, switchMap } from 'rxjs';
@@ -35,6 +40,7 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../shared/lib/nutrition-form.utils';
+import { getRecordProperty, getStringProperty, isRecord } from '../../../../shared/lib/unknown-value.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { UsdaService } from '../../../usda/api/usda.service';
 import type { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
@@ -67,7 +73,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         required: () => 'FORM_ERRORS.REQUIRED',
         min: (error?: unknown) => ({
             key: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO',
-            params: { min: (error as { min?: number } | undefined)?.min },
+            params: { min: getNumberProperty(error, 'min') },
         }),
     }),
 };
@@ -256,12 +262,12 @@ export class BaseProductManageComponent {
     private prefillFromNavigationState(): void {
         const currentProduct = this.product();
         if (currentProduct === null || currentProduct === undefined) {
-            const navigationState = history.state as { barcode?: unknown; offProduct?: unknown } | null;
-            const offProduct = navigationState?.offProduct as OpenFoodFactsProduct | undefined;
-            if (offProduct !== undefined) {
+            const navigationState: unknown = history.state;
+            const offProduct = getRecordProperty(navigationState, 'offProduct');
+            if (this.isOpenFoodFactsProduct(offProduct)) {
                 this.prefillFromOffProduct(offProduct);
             } else {
-                const barcode = typeof navigationState?.barcode === 'string' ? navigationState.barcode : undefined;
+                const barcode = getStringProperty(navigationState, 'barcode');
                 if (barcode !== undefined && barcode.length > 0) {
                     this.productForm.controls.barcode.setValue(barcode);
                     this.lookupOpenFoodFacts(barcode);
@@ -642,10 +648,10 @@ export class BaseProductManageComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const minError = errors['min'] as { min?: number } | undefined;
-        if (minError !== undefined) {
+        const min = getNumberProperty(errors['min'], 'min');
+        if (min !== undefined) {
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min: minError.min,
+                min,
             });
         }
 
@@ -681,8 +687,8 @@ export class BaseProductManageComponent {
         const patch: Partial<ProductFormValues> = {};
         this.nutritionFields.forEach(field => {
             const control = this.productForm.controls[field];
-            const rawValue = control.value as unknown;
-            if (rawValue === null || rawValue === undefined || rawValue === '') {
+            const rawValue = control.value;
+            if (rawValue === null) {
                 return;
             }
             const value = this.getNumberValue(control);
@@ -879,6 +885,10 @@ export class BaseProductManageComponent {
                 label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.PORTION'),
             },
         ];
+    }
+
+    private isOpenFoodFactsProduct(value: unknown): value is OpenFoodFactsProduct {
+        return isRecord(value) && typeof value['barcode'] === 'string' && typeof value['name'] === 'string';
     }
 
     private async syncUsdaLinkAsync(savedProduct: Product, nextFdcId: number | null, previousFdcId: number | null): Promise<void> {

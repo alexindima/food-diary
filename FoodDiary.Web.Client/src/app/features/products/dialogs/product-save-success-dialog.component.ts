@@ -20,7 +20,7 @@ export interface ProductSaveSuccessDialogData {
 })
 export class ProductSaveSuccessDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductSaveSuccessDialogComponent, RedirectAction>);
-    private readonly data = inject(FD_UI_DIALOG_DATA) as ProductSaveSuccessDialogData;
+    private readonly data = inject<ProductSaveSuccessDialogData>(FD_UI_DIALOG_DATA);
     protected readonly titleKey = computed(() => (this.data.isEdit ? 'PRODUCT_DETAIL.EDIT_SUCCESS' : 'PRODUCT_DETAIL.CREATE_SUCCESS'));
 
     public close(action: RedirectAction): void {

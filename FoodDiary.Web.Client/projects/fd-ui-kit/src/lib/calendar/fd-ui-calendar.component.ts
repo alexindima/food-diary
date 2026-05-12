@@ -37,7 +37,7 @@ interface FdUiCalendarCell {
 })
 export class FdUiCalendarComponent {
     private readonly locale = inject(LOCALE_ID);
-    private readonly host = inject(ElementRef<HTMLElement>);
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly today = this.stripTime(new Date());
     private readonly activeDate = signal<Date>(this.today);
 
@@ -173,7 +173,7 @@ export class FdUiCalendarComponent {
     private focusCell(date: Date): void {
         queueMicrotask(() => {
             const iso = this.toIsoDate(date);
-            const host = this.host.nativeElement as HTMLElement;
+            const host = this.host.nativeElement;
             const cell = host.querySelector(`[data-date="${iso}"]`);
             if (cell instanceof HTMLElement) {
                 cell.focus();

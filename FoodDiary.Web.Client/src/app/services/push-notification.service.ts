@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
 import { firstValueFrom, take } from 'rxjs';
 
+import { getStringProperty } from '../shared/lib/unknown-value.utils';
 import { AuthService } from './auth.service';
 import { LocalizationService } from './localization.service';
 import { NotificationService, type WebPushSubscriptionRequest } from './notification.service';
@@ -40,8 +41,7 @@ export class PushNotificationService {
         });
 
         this.swPush.notificationClicks.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
-            const data = event.notification.data as { targetUrl?: string; url?: string } | undefined;
-            const targetUrl = data?.targetUrl ?? data?.url;
+            const targetUrl = getStringProperty(event.notification.data, 'targetUrl') ?? getStringProperty(event.notification.data, 'url');
             if (targetUrl !== undefined && targetUrl.length > 0) {
                 void this.router.navigateByUrl(this.toAppUrl(targetUrl));
             }

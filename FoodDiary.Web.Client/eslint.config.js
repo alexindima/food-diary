@@ -415,6 +415,7 @@ export default [
             '@typescript-eslint/no-unsafe-enum-comparison': 'error',
             '@typescript-eslint/no-unsafe-member-access': 'error',
             '@typescript-eslint/no-unsafe-return': 'error',
+            '@typescript-eslint/no-unsafe-type-assertion': 'error',
             '@typescript-eslint/only-throw-error': 'error',
             '@typescript-eslint/prefer-find': 'error',
             '@typescript-eslint/prefer-for-of': 'error',
@@ -460,6 +461,12 @@ export default [
                 },
             ],
             'local/async-function-suffix': 'error',
+        },
+    },
+    {
+        files: ['**/*.spec.ts', 'src/test-setup.ts', 'src/app/testing/**/*.ts'],
+        rules: {
+            '@typescript-eslint/no-unsafe-type-assertion': 'off',
         },
     },
     {

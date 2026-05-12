@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
+import { isRecord } from '../../../../shared/lib/unknown-value.utils';
 import { SeoLandingContentSectionsComponent } from './seo-landing-content-sections.component';
 import { SeoLandingFooterSectionsComponent } from './seo-landing-footer-sections.component';
 
@@ -97,7 +98,7 @@ const PAGE_LABEL_KEYS: Record<SeoPageSlug, string> = {
 })
 export class SeoLandingPageComponent {
     private readonly route = inject(ActivatedRoute);
-    private readonly page = this.route.snapshot.data['seoPage'] as SeoLandingPageData;
+    private readonly page = this.resolvePageData(this.route.snapshot.data['seoPage']);
 
     protected readonly baseKey = this.page.baseKey;
     protected readonly hero = this.createHeroKeys();
@@ -171,5 +172,36 @@ export class SeoLandingPageComponent {
 
     private buildKey(suffix: string): string {
         return `${this.baseKey}.${suffix}`;
+    }
+
+    private resolvePageData(value: unknown): SeoLandingPageData {
+        if (
+            isRecord(value) &&
+            typeof value['baseKey'] === 'string' &&
+            Array.isArray(value['featureKeys']) &&
+            Array.isArray(value['stepKeys']) &&
+            Array.isArray(value['faqKeys']) &&
+            Array.isArray(value['relatedPaths'])
+        ) {
+            return {
+                baseKey: value['baseKey'],
+                featureKeys: value['featureKeys'].filter(item => typeof item === 'string'),
+                stepKeys: value['stepKeys'].filter(item => typeof item === 'string'),
+                faqKeys: value['faqKeys'].filter(item => typeof item === 'string'),
+                relatedPaths: value['relatedPaths'].filter((item): item is SeoPageSlug => this.isSeoPageSlug(item)),
+            };
+        }
+
+        return {
+            baseKey: 'SEO_PAGES.FOOD_DIARY',
+            featureKeys: [],
+            stepKeys: [],
+            faqKeys: [],
+            relatedPaths: [],
+        };
+    }
+
+    private isSeoPageSlug(value: unknown): value is SeoPageSlug {
+        return typeof value === 'string' && value in PAGE_LABEL_KEYS;
     }
 }

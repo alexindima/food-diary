@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields.component';
 import { resolveProductImageUrl } from '../../../products/lib/product-image.util';
+import { normalizeProductType } from '../../../products/lib/product-type.utils';
 import { ProductType } from '../../../products/models/product.data';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
@@ -115,7 +116,7 @@ export class QuickConsumptionDrawerComponent {
     private imageFor(item: QuickMealItem): string {
         if (item.type === 'product') {
             const product = item.product;
-            const type = (product?.productType as ProductType | undefined) ?? ProductType.Unknown;
+            const type = normalizeProductType(product?.productType) ?? ProductType.Unknown;
             return resolveProductImageUrl(product?.imageUrl ?? undefined, type) ?? this.fallbackImage;
         }
 

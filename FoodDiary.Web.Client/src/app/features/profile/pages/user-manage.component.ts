@@ -25,6 +25,7 @@ import {
     FdUiFormErrorComponent,
     type FdValidationErrorConfig,
     type FdValidationErrors,
+    getNumberProperty,
 } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -96,7 +97,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         email: () => 'FORM_ERRORS.EMAIL',
         minlength: (error?: unknown) => ({
             key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
-            params: { requiredLength: (error as { requiredLength?: number } | undefined)?.requiredLength },
+            params: { requiredLength: getNumberProperty(error, 'requiredLength') },
         }),
     }),
 };
@@ -1342,7 +1343,16 @@ export class UserManageComponent {
     }
 
     private mapUserActivityLevel(value: string | null | undefined): ActivityLevelOption | null {
-        return value !== null && value !== undefined && value.length > 0 ? (value.toUpperCase() as ActivityLevelOption) : null;
+        const normalized = value?.toUpperCase();
+        if (normalized === undefined || normalized.length === 0) {
+            return null;
+        }
+
+        return this.isActivityLevelOption(normalized) ? normalized : null;
+    }
+
+    private isActivityLevelOption(value: string): value is ActivityLevelOption {
+        return this.activityLevels.some(option => option === value);
     }
 
     private mapUserProfileImage(user: User): ImageSelection | null {

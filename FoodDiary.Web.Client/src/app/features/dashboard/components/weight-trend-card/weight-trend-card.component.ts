@@ -45,15 +45,20 @@ export class WeightTrendCardComponent {
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
 
+    private readonly chartValues = computed(() => this.getOrderedValues());
+    private readonly baseYAxisOptions = {
+        display: false,
+        grid: { display: false },
+    } satisfies Partial<ScaleOptionsByType<'linear'>>;
+
     public readonly chartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
-        const ordered = [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        const values = ordered.map(point => point.value ?? null);
+        const values = this.chartValues();
         const hasValue = values.some(value => value !== null && !Number.isNaN(value));
         if (!hasValue) {
             return null;
         }
 
-        const labels = ordered.map(() => '');
+        const labels = values.map(() => '');
         const lastIndexFromEnd = [...values].reverse().findIndex(value => value !== null && !Number.isNaN(value));
         const lastIndex = lastIndexFromEnd === -1 ? -1 : values.length - 1 - lastIndexFromEnd;
 
@@ -87,8 +92,8 @@ export class WeightTrendCardComponent {
                 displayColors: false,
                 callbacks: {
                     label: context => {
-                        const value = context.raw as number | null;
-                        if (value === null) {
+                        const value = context.raw;
+                        if (typeof value !== 'number') {
                             return '';
                         }
                         return `${value.toFixed(DISPLAY_FRACTION_DIGITS)} kg`;
@@ -107,8 +112,7 @@ export class WeightTrendCardComponent {
                 ticks: { display: false },
             },
             y: {
-                display: false,
-                grid: { display: false },
+                ...this.baseYAxisOptions,
             },
         },
         elements: {
@@ -147,7 +151,7 @@ export class WeightTrendCardComponent {
     });
 
     public readonly dynamicChartOptions = computed<ChartConfiguration<'line'>['options']>(() => {
-        const values = (this.chartData()?.datasets[0].data as Array<number | null> | undefined) ?? [];
+        const values = this.chartValues();
         const numeric = values.filter(v => typeof v === 'number');
         const minVal = numeric.length > 0 ? Math.min(...numeric) : 0;
         const maxVal = numeric.length > 0 ? Math.max(...numeric) : 1;
@@ -155,19 +159,22 @@ export class WeightTrendCardComponent {
         const suggestedMin = Math.max(0, minVal - padding);
         const baseOptions = this.baseChartOptions;
         const baseScales = baseOptions?.scales;
-        const baseY = baseScales?.['y'] as ScaleOptionsByType<'linear'> | undefined;
 
         return {
             ...baseOptions,
             scales: {
                 ...baseScales,
                 y: {
-                    ...(baseY ?? {}),
+                    ...this.baseYAxisOptions,
                     min: suggestedMin,
                 },
             },
         };
     });
+
+    private getOrderedValues(): Array<number | null> {
+        return [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map(point => point.value ?? null);
+    }
 
     private getFillColor(): string {
         return `color-mix(in srgb, ${this.accentColor()} ${FILL_COLOR_PERCENT}%, transparent)`;

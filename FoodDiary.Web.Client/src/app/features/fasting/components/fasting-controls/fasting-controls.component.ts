@@ -33,6 +33,7 @@ const REDUCE_LONG_HOURS = 8;
 const MIN_FASTING_HOURS = 1;
 const EMPTY_DURATION_HOURS = 0;
 const CYCLIC_PRESET_SEPARATOR = ':';
+const FASTING_MODES: readonly FastingMode[] = ['intermittent', 'extended', 'cyclic'];
 
 @Component({
     selector: 'fd-fasting-controls',
@@ -174,11 +175,15 @@ export class FastingControlsComponent {
     }
 
     public onModeChange(mode: string): void {
-        this.facade.selectMode(mode as FastingMode);
+        if (this.isFastingMode(mode)) {
+            this.facade.selectMode(mode);
+        }
     }
 
     public onProtocolChange(protocol: string): void {
-        this.facade.selectProtocol(protocol as FastingProtocol);
+        if (this.isFastingProtocol(protocol)) {
+            this.facade.selectProtocol(protocol);
+        }
     }
 
     public onCustomHoursChange(value: string | number): void {
@@ -227,7 +232,9 @@ export class FastingControlsComponent {
     }
 
     public onCyclicEatDayProtocolChange(protocol: string): void {
-        this.facade.selectCyclicEatDayProtocol(protocol as FastingProtocol);
+        if (this.isFastingProtocol(protocol)) {
+            this.facade.selectCyclicEatDayProtocol(protocol);
+        }
     }
 
     public onCyclicEatDayFastHoursChange(value: string | number): void {
@@ -357,6 +364,14 @@ export class FastingControlsComponent {
             label: this.translateService.instant(item.labelKey),
             value: item.value,
         }));
+    }
+
+    private isFastingMode(value: string): value is FastingMode {
+        return FASTING_MODES.some(mode => mode === value);
+    }
+
+    private isFastingProtocol(value: string): value is FastingProtocol {
+        return FASTING_PROTOCOLS.some(protocol => protocol.value === value);
     }
 
     private getCyclicPresetSelectionValue(fastDays: number, eatDays: number): string {

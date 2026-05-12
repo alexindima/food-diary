@@ -18,12 +18,21 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
         email: (): string => 'FORM_ERRORS.EMAIL',
         minlength: (error?: unknown): FdValidationErrorConfig => ({
             key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
-            params: { requiredLength: (error as { requiredLength?: number } | undefined)?.requiredLength },
+            params: { requiredLength: getNumberProperty(error, 'requiredLength') },
         }),
         userExists: (): string => 'FORM_ERRORS.USER_EXISTS',
         matchField: (): string => 'FORM_ERRORS.PASSWORD.MATCH',
     }),
 });
+
+export const getNumberProperty = (value: unknown, property: string): number | undefined => {
+    if (typeof value !== 'object' || value === null) {
+        return undefined;
+    }
+
+    const propertyValue: unknown = Object.getOwnPropertyDescriptor(value, property)?.value;
+    return typeof propertyValue === 'number' ? propertyValue : undefined;
+};
 
 @Component({
     selector: 'fd-ui-form-error',

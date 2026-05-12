@@ -346,7 +346,7 @@ export class RecipeManageComponent {
     }
 
     private prepareRecipeDto(): RecipeDto {
-        const formValue = this.recipeForm.value as RecipeFormValues;
+        const formValue = this.recipeForm.getRawValue();
 
         return {
             name: formValue.name,
@@ -479,7 +479,7 @@ export class RecipeManageComponent {
             description: step.instruction,
             ingredients: step.ingredients
                 .map(ingredient => this.mapIngredientToFormValue(ingredient))
-                .filter(Boolean) as IngredientFormValues[],
+                .filter((ingredient): ingredient is IngredientFormValues => ingredient !== null),
         };
     }
 
@@ -561,8 +561,8 @@ export class RecipeManageComponent {
             return null;
         }
 
-        const rawUnit = ingredient.productBaseUnit as MeasurementUnit | string | undefined;
-        const unit = Object.values(MeasurementUnit).includes(rawUnit as MeasurementUnit) ? (rawUnit as MeasurementUnit) : MeasurementUnit.G;
+        const rawUnit = ingredient.productBaseUnit;
+        const unit = this.isMeasurementUnit(rawUnit) ? rawUnit : MeasurementUnit.G;
 
         const baseAmount = ingredient.productBaseAmount ?? DEFAULT_PRODUCT_BASE_AMOUNT;
         return {
@@ -598,6 +598,10 @@ export class RecipeManageComponent {
             fiberPerBase: ingredient.productFiberPerBase ?? 0,
             alcoholPerBase: ingredient.productAlcoholPerBase ?? 0,
         };
+    }
+
+    private isMeasurementUnit(value: string | null | undefined): value is MeasurementUnit {
+        return value === 'G' || value === 'ML' || value === 'PCS';
     }
 
     // -- Nutrition calculation --

@@ -29,7 +29,7 @@ import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
-import type { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
+import { RecipeDetailActionResult } from '../../components/detail/recipe-detail.component';
 import {
     RecipeListFiltersDialogComponent,
     type RecipeListFiltersDialogResult,
@@ -191,12 +191,11 @@ export class RecipeListComponent {
             })
             .afterClosed()
             .subscribe(result => {
-                const actionResult = result as RecipeDetailActionResult | undefined;
-
-                if (actionResult === undefined) {
+                if (!(result instanceof RecipeDetailActionResult)) {
                     return;
                 }
 
+                const actionResult = result;
                 if (actionResult.action === 'FavoriteChanged') {
                     this.loadFavorites();
                     this.reloadCurrentPage();

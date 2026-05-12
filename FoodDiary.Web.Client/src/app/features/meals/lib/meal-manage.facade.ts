@@ -21,6 +21,7 @@ import {
     type ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { calculateCalorieMismatchWarning, getControlNumericValue, roundNutrient } from '../../../shared/lib/nutrition-form.utils';
+import { isRecord } from '../../../shared/lib/unknown-value.utils';
 import type { UserAiUsageResponse } from '../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import type { Product } from '../../products/models/product.data';
@@ -30,7 +31,6 @@ import type {
     CalorieMismatchWarning,
     ConsumptionFormData,
     ConsumptionItemFormData,
-    ConsumptionItemFormValues,
     MealNutritionSummaryState,
     NutritionTotals,
 } from '../components/manage/base-meal-manage.types';
@@ -276,11 +276,18 @@ export class MealManageFacade {
 
     public createItemsValidator(getAiSessions: () => ConsumptionAiSessionManageDto[]): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
-            const value = control.value as ConsumptionItemFormValues[] | null;
-            const hasManualItems = Array.isArray(value) ? value.some(item => item.product !== null || item.recipe !== null) : false;
+            const value: unknown = control.value;
+            const hasManualItems = Array.isArray(value) ? value.some(item => this.hasSelectedSource(item)) : false;
             const hasAiItems = getAiSessions().length > 0;
             return hasManualItems || hasAiItems ? null : { nonEmptyArray: true };
         };
+    }
+
+    private hasSelectedSource(value: unknown): boolean {
+        return (
+            isRecord(value) &&
+            ((value['product'] !== null && value['product'] !== undefined) || (value['recipe'] !== null && value['recipe'] !== undefined))
+        );
     }
 
     public updateItemValidationRules(items: FormArray<FormGroup<ConsumptionItemFormData>>): void {

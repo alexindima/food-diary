@@ -231,10 +231,15 @@ export class AdminAuthService {
                 (BASE64_BLOCK_SIZE - (remainder === BASE64_REMAINDER_NONE ? BASE64_BLOCK_SIZE : remainder)) % BASE64_BLOCK_SIZE;
             const padded = normalized.padEnd(normalized.length + padLength, '=');
             const decoded = atob(padded);
-            return JSON.parse(decoded) as Record<string, unknown>;
+            const parsed: unknown = JSON.parse(decoded);
+            return this.isRecord(parsed) ? parsed : null;
         } catch {
             return null;
         }
+    }
+
+    private isRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === 'object' && value !== null && !Array.isArray(value);
     }
 }
 

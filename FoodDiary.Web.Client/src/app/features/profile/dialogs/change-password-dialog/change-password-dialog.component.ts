@@ -12,6 +12,7 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { UserService } from '../../../../shared/api/user.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 
@@ -171,12 +172,12 @@ export class ChangePasswordDialogComponent {
     }
 
     private resolveMinLengthError(control: AbstractControl): string | null {
-        const minLengthError = control.getError('minlength') as { requiredLength?: number } | null | undefined;
+        const minLengthError: unknown = control.getError('minlength');
         if (minLengthError === null || minLengthError === undefined) {
             return null;
         }
 
-        const requiredLength = minLengthError.requiredLength ?? PASSWORD_MIN_LENGTH;
+        const requiredLength = getNumberProperty(minLengthError, 'requiredLength') ?? PASSWORD_MIN_LENGTH;
         return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', { requiredLength });
     }
 }

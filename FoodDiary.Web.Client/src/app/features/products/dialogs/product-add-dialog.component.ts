@@ -33,7 +33,7 @@ import type { Product } from '../models/product.data';
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductAddDialogComponent, Product | null>);
-    private readonly initialProduct = inject(FD_UI_DIALOG_DATA, { optional: true }) as Product | null;
+    private readonly initialProduct = inject<Product | null>(FD_UI_DIALOG_DATA, { optional: true });
 
     public constructor() {
         super();

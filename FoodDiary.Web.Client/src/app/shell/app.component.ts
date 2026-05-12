@@ -13,6 +13,7 @@ import { PushNotificationService } from '../services/push-notification.service';
 import { RouteLoadingService } from '../services/route-loading.service';
 import { type SeoData, SeoService } from '../services/seo.service';
 import { ThemeService } from '../services/theme.service';
+import { isRecord } from '../shared/lib/unknown-value.utils';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 @Component({
@@ -82,9 +83,29 @@ export class AppComponent {
         const deepestRoute = this.getDeepestRoute(route);
 
         return deepestRoute.pathFromRoot.reduce<SeoData>((seo, routePart) => {
-            const routeSeo = routePart.snapshot.data['seo'] as SeoData | undefined;
-            return routeSeo === undefined ? seo : { ...seo, ...routeSeo };
+            const routeSeo = this.getSeoData(routePart.snapshot.data['seo']);
+            return routeSeo === null ? seo : { ...seo, ...routeSeo };
         }, {});
+    }
+
+    private getSeoData(value: unknown): SeoData | null {
+        if (!isRecord(value)) {
+            return null;
+        }
+
+        return {
+            ...(typeof value['titleKey'] === 'string' ? { titleKey: value['titleKey'] } : {}),
+            ...(typeof value['descriptionKey'] === 'string' ? { descriptionKey: value['descriptionKey'] } : {}),
+            ...(typeof value['path'] === 'string' ? { path: value['path'] } : {}),
+            ...(typeof value['noIndex'] === 'boolean' ? { noIndex: value['noIndex'] } : {}),
+            ...(typeof value['structuredDataBaseKey'] === 'string' ? { structuredDataBaseKey: value['structuredDataBaseKey'] } : {}),
+            ...(Array.isArray(value['structuredDataFeatureKeys'])
+                ? { structuredDataFeatureKeys: value['structuredDataFeatureKeys'].filter(item => typeof item === 'string') }
+                : {}),
+            ...(Array.isArray(value['structuredDataFaqKeys'])
+                ? { structuredDataFaqKeys: value['structuredDataFaqKeys'].filter(item => typeof item === 'string') }
+                : {}),
+        };
     }
 
     private async prepareRouteAsync(url: string): Promise<void> {

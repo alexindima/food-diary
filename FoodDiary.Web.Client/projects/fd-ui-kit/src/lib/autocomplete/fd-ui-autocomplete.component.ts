@@ -69,7 +69,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
-    private onChange: (value: T | null) => void = () => undefined;
+    private onChange: (value: T | string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
     protected readonly sizeClass = computed(() => `fd-ui-autocomplete--size-${this.size()}`);
@@ -106,7 +106,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
         this.queryText.set(this.getDisplayText(value));
     }
 
-    public registerOnChange(fn: (value: T | null) => void): void {
+    public registerOnChange(fn: (value: T | string | null) => void): void {
         this.onChange = fn;
     }
 
@@ -125,7 +125,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
         this.queryText.set(value);
         this.internalValue.set(null);
-        this.onChange(value as T);
+        this.onChange(value);
         this.queryChange.emit(value);
         this.openMenu();
     }
@@ -152,7 +152,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
         this.internalValue.set(null);
         this.queryText.set('');
-        this.onChange('' as T);
+        this.onChange('');
         this.queryChange.emit('');
         this.closeMenu();
         this.controlRef()?.nativeElement.focus();

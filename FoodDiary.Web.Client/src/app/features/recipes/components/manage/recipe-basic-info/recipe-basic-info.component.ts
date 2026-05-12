@@ -8,6 +8,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
+import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormData } from '../recipe-manage.types';
 
@@ -92,9 +93,9 @@ export class RecipeBasicInfoComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const minError = errors['min'] as { min?: number } | undefined;
+        const minError: unknown = errors['min'];
         if (minError !== undefined) {
-            const min = minError.min ?? 0;
+            const min = getNumberProperty(minError, 'min') ?? 0;
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
         }
 

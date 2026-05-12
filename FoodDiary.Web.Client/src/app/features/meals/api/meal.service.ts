@@ -296,11 +296,15 @@ export class MealService extends ApiService {
         }
 
         const normalized = unit.toString().toUpperCase();
-        if (normalized in MeasurementUnit) {
-            return normalized as MeasurementUnit;
+        if (this.isMeasurementUnit(normalized)) {
+            return normalized;
         }
 
         return MeasurementUnit.G;
+    }
+
+    private isMeasurementUnit(value: string): value is MeasurementUnit {
+        return value === 'G' || value === 'ML' || value === 'PCS';
     }
 
     private createEmptyNutritionTotals(): NutritionTotals {

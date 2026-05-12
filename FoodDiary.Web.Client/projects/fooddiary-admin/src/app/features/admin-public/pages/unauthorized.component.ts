@@ -46,8 +46,8 @@ export class UnauthorizedComponent {
     }
 
     private async tryRecoverFromSsoAsync(returnUrl: string): Promise<void> {
-        const cleanedUrl = (await this.authService.tryApplySsoFromReturnUrlAsync(returnUrl)) as string | null | undefined;
-        if (cleanedUrl === null || cleanedUrl === undefined || cleanedUrl.length === 0) {
+        const cleanedUrl: unknown = await this.authService.tryApplySsoFromReturnUrlAsync(returnUrl);
+        if (typeof cleanedUrl !== 'string' || cleanedUrl.length === 0) {
             return;
         }
 

@@ -164,7 +164,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
             return;
         }
 
-        const target = event.target as HTMLElement | null;
+        const target = event.target instanceof HTMLElement ? event.target : null;
         if (target?.closest('.fd-ui-input__suffix') !== null && target?.closest('.fd-ui-input__suffix') !== undefined) {
             return;
         }
