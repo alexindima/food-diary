@@ -20,9 +20,9 @@ export class FastingActiveBasicControlsComponent {
     public readonly isUpdatingCycle = input.required<boolean>();
     public readonly isEnding = input.required<boolean>();
 
-    public readonly skip = output<void>();
-    public readonly postpone = output<void>();
-    public readonly end = output<void>();
+    public readonly skip = output();
+    public readonly postpone = output();
+    public readonly end = output();
 
     protected readonly cyclicActionDisabled = (): boolean => this.isUpdatingCycle() || this.isEnding();
 }

@@ -16,9 +16,9 @@ export class DashboardMealsBlockComponent {
     public readonly entries = input.required<DashboardMealPreviewEntry[]>();
     public readonly previewState = input.required<DashboardMealsPreviewState>();
 
-    public readonly blockToggle = output<void>();
-    public readonly viewAll = output<void>();
-    public readonly add = output<string | null>();
-    public readonly aiMealCreated = output<void>();
+    public readonly blockToggle = output();
+    public readonly viewAll = output();
+    public readonly add = output<string | null | undefined>();
+    public readonly aiMealCreated = output();
     public readonly open = output<{ id: string }>();
 }

@@ -15,14 +15,14 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 export class ShoppingListManageControlsComponent {
     public readonly listSelectControl = input.required<FormControl<string | null>>();
     public readonly listNameControl = input.required<FormControl<string>>();
-    public readonly listOptions = input.required<readonly FdUiSelectOption<string>[]>();
+    public readonly listOptions = input.required<Array<FdUiSelectOption<string>>>();
     public readonly listsCount = input.required<number>();
     public readonly isLoading = input.required<boolean>();
     public readonly canDeleteList = input.required<boolean>();
     public readonly canClearList = input.required<boolean>();
     public readonly isMobile = input(false);
 
-    public readonly createList = output<void>();
-    public readonly deleteList = output<void>();
-    public readonly clearList = output<void>();
+    public readonly createList = output();
+    public readonly deleteList = output();
+    public readonly clearList = output();
 }

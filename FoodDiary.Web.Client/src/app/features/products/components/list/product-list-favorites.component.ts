@@ -24,8 +24,8 @@ export class ProductListFavoritesComponent {
     public readonly showLoadMore = input.required<boolean>();
     public readonly isLoadingMore = input.required<boolean>();
 
-    public readonly favoritesToggle = output<void>();
-    public readonly loadMore = output<void>();
+    public readonly favoritesToggle = output();
+    public readonly loadMore = output();
     public readonly openProduct = output<FavoriteProduct>();
     public readonly addToMeal = output<FavoriteProduct>();
     public readonly favoriteRemove = output<FavoriteProduct>();

@@ -358,7 +358,7 @@ export class ProductListBaseComponent {
         void this.handleProductClickAsync(product);
     }
 
-    protected handleProductClickAsync(_product: Product): Promise<void> {
+    protected async handleProductClickAsync(_product: Product): Promise<void> {
         return Promise.resolve();
     }
 

@@ -53,7 +53,7 @@ export class ProductListFiltersDialogComponent {
     );
     public readonly productTypeOptions = computed(() =>
         this.productTypes.map<FdUiChipSelectOption>(type => {
-            const label = this.translate.instant('PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.' + type.toUpperCase());
+            const label = this.translate.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`);
             return {
                 value: type,
                 label,

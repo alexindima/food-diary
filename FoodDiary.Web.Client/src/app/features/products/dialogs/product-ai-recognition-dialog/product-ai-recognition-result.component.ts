@@ -20,5 +20,5 @@ export class ProductAiRecognitionResultComponent {
     public readonly nutrition = input.required<FoodNutritionResponse>();
     public readonly itemNames = input.required<readonly string[]>();
     public readonly hasMultipleItems = input.required<boolean>();
-    public readonly unitOptions = input.required<FdUiSelectOption<MeasurementUnit>[]>();
+    public readonly unitOptions = input.required<Array<FdUiSelectOption<MeasurementUnit>>>();
 }

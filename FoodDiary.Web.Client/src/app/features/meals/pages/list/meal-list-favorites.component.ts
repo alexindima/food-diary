@@ -22,8 +22,8 @@ export class MealListFavoritesComponent {
     public readonly showLoadMore = input.required<boolean>();
     public readonly isLoadingMore = input.required<boolean>();
 
-    public readonly toggleRequested = output<void>();
-    public readonly loadMore = output<void>();
+    public readonly toggleRequested = output();
+    public readonly loadMore = output();
     public readonly favoriteRepeated = output<FavoriteMeal>();
     public readonly favoriteRemoved = output<FavoriteMeal>();
 }

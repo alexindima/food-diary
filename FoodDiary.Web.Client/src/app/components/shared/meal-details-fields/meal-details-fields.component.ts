@@ -38,8 +38,8 @@ export class MealDetailsFieldsComponent {
     public readonly dateChange = output<string>();
     public readonly timeChange = output<string>();
     public readonly commentChange = output<string>();
-    public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
-    public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+    public hungerEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
+    public satietyEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
     public readonly preMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('before'));
     public readonly postMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('after'));
 
@@ -72,7 +72,7 @@ export class MealDetailsFieldsComponent {
         }
     }
 
-    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): FdUiEmojiPickerOption<number>[] {
+    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): Array<FdUiEmojiPickerOption<number>> {
         return levels.map(level => {
             const label = this.translateService.instant(level.titleKey);
             const description = this.translateService.instant(level.descriptionKey);

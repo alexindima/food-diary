@@ -18,5 +18,5 @@ export class PremiumAccessBannersComponent {
     public readonly overviewCopyState = input.required<PremiumOverviewCopyState>();
     public readonly errorMessage = input.required<string | null>();
 
-    public readonly retry = output<void>();
+    public readonly retry = output();
 }

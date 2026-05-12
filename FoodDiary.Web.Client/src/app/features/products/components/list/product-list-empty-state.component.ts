@@ -16,5 +16,5 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 export class ProductListEmptyStateComponent {
     public readonly state = input.required<'empty' | 'no-results'>();
 
-    public readonly addProduct = output<void>();
+    public readonly addProduct = output();
 }

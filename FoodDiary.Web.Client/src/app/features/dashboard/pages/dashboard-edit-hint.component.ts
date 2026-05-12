@@ -14,5 +14,5 @@ import { NoticeBannerComponent } from '../../../components/shared/notice-banner/
 })
 export class DashboardEditHintComponent {
     public readonly actionLabel = input.required<string | null>();
-    public readonly save = output<void>();
+    public readonly save = output();
 }

@@ -26,5 +26,5 @@ export class DashboardTrendBlockComponent {
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
 
-    public readonly blockToggle = output<void>();
+    public readonly blockToggle = output();
 }

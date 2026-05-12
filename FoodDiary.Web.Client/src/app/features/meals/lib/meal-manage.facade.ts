@@ -86,8 +86,8 @@ export class MealManageFacade {
         consumptionData: ConsumptionManageDto,
     ): Promise<Consumption | null> {
         return consumption !== null
-            ? await firstValueFrom(this.mealService.update(consumption.id, consumptionData))
-            : await firstValueFrom(this.mealService.create(consumptionData));
+            ? firstValueFrom(this.mealService.update(consumption.id, consumptionData))
+            : firstValueFrom(this.mealService.create(consumptionData));
     }
 
     public async showSuccessRedirectAsync(isEdit: boolean): Promise<void> {

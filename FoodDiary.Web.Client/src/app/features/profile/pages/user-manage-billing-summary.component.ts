@@ -23,6 +23,6 @@ export class UserManageBillingSummaryComponent {
     public readonly billingNextAttemptLabel = input.required<string | null>();
     public readonly isOpeningBillingPortal = input.required<boolean>();
 
-    public readonly billingPortalOpen = output<void>();
-    public readonly premiumPageOpen = output<void>();
+    public readonly billingPortalOpen = output();
+    public readonly premiumPageOpen = output();
 }

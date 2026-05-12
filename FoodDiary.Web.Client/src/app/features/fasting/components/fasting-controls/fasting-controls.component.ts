@@ -341,7 +341,7 @@ export class FastingControlsComponent {
         );
     }
 
-    private buildProtocolOptions(protocols: readonly { labelKey: string; value: FastingProtocol }[]): FdUiSegmentedToggleOption[] {
+    private buildProtocolOptions(protocols: ReadonlyArray<{ labelKey: string; value: FastingProtocol }>): FdUiSegmentedToggleOption[] {
         this.currentLanguage();
 
         return protocols.map(protocol => ({
@@ -350,7 +350,7 @@ export class FastingControlsComponent {
         }));
     }
 
-    private buildSegmentedToggleOptions(items: readonly { labelKey: string; value: string }[]): FdUiSegmentedToggleOption[] {
+    private buildSegmentedToggleOptions(items: ReadonlyArray<{ labelKey: string; value: string }>): FdUiSegmentedToggleOption[] {
         this.currentLanguage();
 
         return items.map(item => ({

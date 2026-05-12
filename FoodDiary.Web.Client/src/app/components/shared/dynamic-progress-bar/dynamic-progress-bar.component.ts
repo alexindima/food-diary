@@ -37,7 +37,7 @@ export class DynamicProgressBarComponent {
         return Math.round((this.current() / maxValue) * PERCENT_MAX);
     });
 
-    public readonly progressBarWidth = computed<string>(() => Math.min(this.progress(), PERCENT_MAX) + '%');
+    public readonly progressBarWidth = computed<string>(() => `${Math.min(this.progress(), PERCENT_MAX)}%`);
 
     public readonly maxPosition = computed(() => {
         const maxValue = this.max();
@@ -63,7 +63,7 @@ export class DynamicProgressBarComponent {
             position = Math.min(this.progress() / 2, HALF_PERCENT);
         }
 
-        return position + '%';
+        return `${position}%`;
     });
     public readonly barColor = computed(() => {
         if (this.progress() <= PERCENT_MAX) {

@@ -14,7 +14,7 @@ export class FdUiMenuComponent {
     private readonly templateRefValue = viewChild.required(TemplateRef<unknown>);
     private readonly menuItems = contentChildren(FdUiMenuItemComponent, { descendants: true });
 
-    public readonly closed = output<void>();
+    public readonly closed = output();
 
     public get templateRef(): TemplateRef<unknown> {
         return this.templateRefValue();

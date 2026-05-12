@@ -22,6 +22,6 @@ export class AuthPasswordResetFormComponent {
     public readonly passwordResetSent = input.required<boolean>();
     public readonly passwordResetCooldownSeconds = input.required<number>();
 
-    public readonly passwordResetSubmit = output<void>();
-    public readonly passwordResetClose = output<void>();
+    public readonly passwordResetSubmit = output();
+    public readonly passwordResetClose = output();
 }

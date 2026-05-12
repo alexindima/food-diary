@@ -22,6 +22,6 @@ export class GoalsCyclingCardComponent {
     public readonly dayCalories = input.required<Record<string, number>>();
     public readonly maxCalories = input.required<number>();
 
-    public readonly enabledToggle = output<void>();
+    public readonly enabledToggle = output();
     public readonly dayCaloriesInput = output<DayCaloriesInputChange>();
 }

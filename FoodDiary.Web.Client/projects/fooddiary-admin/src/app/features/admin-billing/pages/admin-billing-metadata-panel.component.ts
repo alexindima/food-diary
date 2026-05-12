@@ -10,5 +10,5 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 export class AdminBillingMetadataPanelComponent {
     public readonly metadata = input.required<string>();
 
-    public readonly closePanel = output<void>();
+    public readonly closePanel = output();
 }

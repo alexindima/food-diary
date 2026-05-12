@@ -55,7 +55,7 @@ export class NavigationService {
                       queryParams: { mealType },
                   }
                 : { state: extras?.state };
-        return await this.router.navigate(['/meals/add'], navigationExtras);
+        return this.router.navigate(['/meals/add'], navigationExtras);
     }
 
     public async navigateToConsumptionEditAsync(id: string): Promise<void> {

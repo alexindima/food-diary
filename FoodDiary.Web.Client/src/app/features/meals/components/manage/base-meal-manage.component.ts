@@ -157,8 +157,8 @@ export class BaseMealManageComponent {
     public readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     public readonly selectedMealType = signal<string | null>(null);
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
-    public hungerEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
-    public satietyEmojiOptions: FdUiEmojiPickerOption<number>[] = [];
+    public hungerEmojiOptions: Array<FdUiEmojiPickerOption<number>> = [];
+    public satietyEmojiOptions: Array<FdUiEmojiPickerOption<number>> = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     public readonly preMealSatietyAriaLabel = signal('');
     public readonly postMealSatietyAriaLabel = signal('');
@@ -200,7 +200,7 @@ export class BaseMealManageComponent {
 
     public consumptionForm: FormGroup<ConsumptionFormData>;
     public readonly mealTypeOptions = MEAL_TYPE_OPTIONS;
-    public mealTypeSelectOptions: FdUiSelectOption<string>[] = [];
+    public mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
         this.consumptionForm = this.createConsumptionForm();
@@ -835,7 +835,7 @@ export class BaseMealManageComponent {
         this.satietyEmojiOptions = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
     }
 
-    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): FdUiEmojiPickerOption<number>[] {
+    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): Array<FdUiEmojiPickerOption<number>> {
         return levels.map(level => {
             const label = this.translateService.instant(level.titleKey);
             const description = this.translateService.instant(level.descriptionKey);
@@ -916,7 +916,7 @@ export class BaseMealManageComponent {
     private buildMealTypeOptions(): void {
         this.mealTypeSelectOptions = this.mealTypeOptions.map(option => ({
             value: option,
-            label: this.translateService.instant('MEAL_TYPES.' + option),
+            label: this.translateService.instant(`MEAL_TYPES.${option}`),
         }));
     }
 

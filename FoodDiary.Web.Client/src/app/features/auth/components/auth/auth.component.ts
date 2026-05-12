@@ -420,7 +420,7 @@ export class AuthComponent {
     private onGoogleCredential(credential: string): void {
         this.isSubmitting.set(true);
         const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
-        const request: GoogleLoginRequest = { credential, rememberMe: !!rememberMe };
+        const request: GoogleLoginRequest = { credential, rememberMe: Boolean(rememberMe) };
         this.authService.loginWithGoogle(request).subscribe({
             next: () => {
                 this.isSubmitting.set(false);

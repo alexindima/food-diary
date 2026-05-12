@@ -55,9 +55,9 @@ export class AdminLessonEditDialogComponent {
     public readonly contentMaxLength = CONTENT_MAX_LENGTH;
     public readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());
 
-    public readonly categoryOptions: FdUiSelectOption<string>[] = LESSON_CATEGORIES.map(c => ({ value: c, label: c }));
-    public readonly difficultyOptions: FdUiSelectOption<string>[] = LESSON_DIFFICULTIES.map(d => ({ value: d, label: d }));
-    public readonly localeOptions: FdUiSelectOption<string>[] = LESSON_LOCALES.map(l => ({ value: l, label: l }));
+    public readonly categoryOptions: Array<FdUiSelectOption<string>> = LESSON_CATEGORIES.map(c => ({ value: c, label: c }));
+    public readonly difficultyOptions: Array<FdUiSelectOption<string>> = LESSON_DIFFICULTIES.map(d => ({ value: d, label: d }));
+    public readonly localeOptions: Array<FdUiSelectOption<string>> = LESSON_LOCALES.map(l => ({ value: l, label: l }));
 
     public readonly form = new FormGroup<LessonForm>({
         title: new FormControl(this.data.title, {

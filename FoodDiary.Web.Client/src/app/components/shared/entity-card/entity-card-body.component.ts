@@ -27,7 +27,7 @@ export class EntityCardBodyComponent {
     public readonly nutrition = input.required<EntityCardNutrition>();
     public readonly quality = input<EntityCardNormalizedQuality | null>(null);
 
-    public readonly favoriteToggle = output<void>();
+    public readonly favoriteToggle = output();
 
     public handleFavoriteToggle(event: Event): void {
         event.stopPropagation();

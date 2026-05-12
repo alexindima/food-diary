@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, output } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-    public cardClick = output<void>();
+    public readonly cardClick = output();
 
     public onCardClick(): void {
         this.cardClick.emit();

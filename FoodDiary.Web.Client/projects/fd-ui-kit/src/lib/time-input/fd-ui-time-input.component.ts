@@ -127,7 +127,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     }
 
     private parseTime(value: string): { hours: number; minutes: number } | null {
-        const match = value.match(/^(\d{1,2}):?(\d{2})$/);
+        const match = /^(\d{1,2}):?(\d{2})$/.exec(value);
         if (match === null) {
             return null;
         }

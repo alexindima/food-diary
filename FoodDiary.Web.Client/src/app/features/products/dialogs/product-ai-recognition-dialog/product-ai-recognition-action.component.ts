@@ -13,6 +13,6 @@ export class ProductAiRecognitionActionComponent {
     public readonly hasAnalyzed = input.required<boolean>();
     public readonly disabled = input.required<boolean>();
 
-    public readonly analyze = output<void>();
-    public readonly reanalyze = output<void>();
+    public readonly analyze = output();
+    public readonly reanalyze = output();
 }

@@ -54,8 +54,8 @@ export class ProductCardComponent {
 
     public readonly product = input.required<ProductCardItem>();
     public readonly imageUrl = input.required<string | null | undefined>();
-    public readonly open = output<void>();
-    public readonly addToMeal = output<void>();
+    public readonly open = output();
+    public readonly addToMeal = output();
     public readonly favoriteChanged = output<ProductFavoriteChange>();
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);

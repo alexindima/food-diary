@@ -42,9 +42,9 @@ export class RecipeStepCardComponent {
     public readonly isFirst = input.required<boolean>();
     public readonly dragDisabled = input.required<boolean>();
 
-    public readonly removeStep = output<void>();
-    public readonly toggleExpanded = output<void>();
-    public readonly addIngredient = output<void>();
+    public readonly removeStep = output();
+    public readonly toggleExpanded = output();
+    public readonly addIngredient = output();
     public readonly removeIngredient = output<number>();
     public readonly selectProduct = output<number>();
 

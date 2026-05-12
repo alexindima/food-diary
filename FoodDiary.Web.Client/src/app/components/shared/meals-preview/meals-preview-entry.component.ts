@@ -22,5 +22,5 @@ export class MealsPreviewEntryComponent {
     public readonly open = output<MealCardItem>();
     public readonly add = output<string | null | undefined>();
     public readonly aiToggle = output<string | null | undefined>();
-    public readonly aiMealCreated = output<void>();
+    public readonly aiMealCreated = output();
 }

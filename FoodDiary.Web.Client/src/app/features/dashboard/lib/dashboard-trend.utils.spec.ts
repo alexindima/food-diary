@@ -47,7 +47,7 @@ function registerWeightTrendTests(): void {
         });
 
         it('should build fallback trend when points array is empty', () => {
-            const points = signal<{ startDate: string; endDate: string; averageWeight: number }[]>([]);
+            const points = signal<Array<{ startDate: string; endDate: string; averageWeight: number }>>([]);
             const latestWeight = signal<number | null>(WEIGHT_80);
             const selectedDate = signal(new Date(SELECTED_YEAR, MARCH, SELECTED_DAY));
 
@@ -59,7 +59,7 @@ function registerWeightTrendTests(): void {
         });
 
         it('should return empty array when no points and no latest weight', () => {
-            const points = signal<{ startDate: string; endDate: string; averageWeight: number }[]>([]);
+            const points = signal<Array<{ startDate: string; endDate: string; averageWeight: number }>>([]);
             const { weightTrendSeries } = createWeightTrendSignals(points, signal(null), signal(new Date()), TREND_DAYS);
             expect(weightTrendSeries()).toHaveLength(0);
         });
@@ -89,7 +89,7 @@ function registerWeightTrendTests(): void {
         });
 
         it('should fall back to latestWeight when series has no valid points', () => {
-            const points = signal<{ startDate: string; endDate: string; averageWeight: number }[]>([]);
+            const points = signal<Array<{ startDate: string; endDate: string; averageWeight: number }>>([]);
             const { weightTrendCurrent } = createWeightTrendSignals(points, signal(WEIGHT_72), signal(new Date()), TREND_DAYS);
             expect(weightTrendCurrent()).toBe(WEIGHT_72);
         });
@@ -105,7 +105,7 @@ function registerWaistTrendTests(): void {
         });
 
         it('should build fallback for empty waist points', () => {
-            const points = signal<{ startDate: string; endDate: string; averageCircumference: number }[]>([]);
+            const points = signal<Array<{ startDate: string; endDate: string; averageCircumference: number }>>([]);
             const { waistTrendSeries } = createWaistTrendSignals(
                 points,
                 signal(WAIST_90),

@@ -68,7 +68,7 @@ export const appConfig: ApplicationConfig = {
         provideAppInitializer(() => {
             inject(ThemeService).initializeTheme();
         }),
-        provideAppInitializer(() => {
+        provideAppInitializer(async () => {
             const localizationService = inject(LocalizationService);
             const authService = inject(AuthService);
             const themeService = inject(ThemeService);

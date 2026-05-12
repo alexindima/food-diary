@@ -22,5 +22,5 @@ export class FastingHistoryCardComponent {
     public readonly chartOpen = output<FastingSession>();
     public readonly historyToggle = output<string>();
     public readonly checkInsLoadMore = output<string>();
-    public readonly historyLoadMore = output<void>();
+    public readonly historyLoadMore = output();
 }

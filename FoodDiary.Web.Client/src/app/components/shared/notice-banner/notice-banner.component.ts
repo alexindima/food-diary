@@ -16,7 +16,7 @@ export class NoticeBannerComponent {
     public readonly title = input<string>('');
     public readonly message = input<string>('');
     public readonly actionLabel = input<string | null>(null);
-    public readonly action = output<void>();
+    public readonly action = output();
 
     public readonly showAction = computed(() => {
         const actionLabel = this.actionLabel();

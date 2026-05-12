@@ -57,7 +57,7 @@ describe('authGuard', () => {
         authServiceMock.isAuthenticated.set(true);
         authServiceMock.isEmailConfirmed.set(true);
 
-        const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => authGuard(route, state));
 
         expect(result).toBe(true);
         expect(authServiceMock.ensureSessionReadyAsync).toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('authGuard', () => {
         authServiceMock.isAuthenticated.set(true);
         authServiceMock.isEmailConfirmed.set(false);
 
-        const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => authGuard(route, state));
 
         expect(result).toBe(false);
         expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe('authGuard', () => {
     it('should redirect to login when not authenticated', async () => {
         authServiceMock.isAuthenticated.set(false);
 
-        const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => authGuard(route, state));
 
         expect(result).toBe(false);
         expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login', '/products');
@@ -89,7 +89,7 @@ describe('authGuard', () => {
         const stateStub = { url: '/recipes/add' };
         state = stateStub as RouterStateSnapshot;
 
-        const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => authGuard(route, state));
 
         expect(result).toBe(false);
         expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login', '/recipes/add');

@@ -128,9 +128,9 @@ export class BaseProductManageComponent {
 
     protected skipConfirmDialog = false;
     public productForm: FormGroup<ProductFormData>;
-    public unitOptions: FdUiSelectOption<MeasurementUnit>[] = [];
-    public productTypeSelectOptions: FdUiSelectOption<ProductType>[] = [];
-    public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
+    public unitOptions: Array<FdUiSelectOption<MeasurementUnit>> = [];
+    public productTypeSelectOptions: Array<FdUiSelectOption<ProductType>> = [];
+    public visibilitySelectOptions: Array<FdUiSelectOption<ProductVisibility>> = [];
     public nutritionMode: NutritionMode = 'base';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public readonly nameOptions = signal<ProductNameAutocompleteOption[]>([]);
@@ -498,8 +498,11 @@ export class BaseProductManageComponent {
         const previousUsdaFdcId = product?.usdaFdcId ?? null;
 
         try {
-            const result = await this.productManageFacade.submitProductAsync(product, productData, this.skipConfirmDialog, savedProduct =>
-                this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
+            const result = await this.productManageFacade.submitProductAsync(
+                product,
+                productData,
+                this.skipConfirmDialog,
+                async savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
             );
             if (result.error !== null) {
                 this.handleSubmitError(result.error);

@@ -77,10 +77,10 @@ export class AiPhotoResultComponent {
     public readonly nutritionErrorKey = input.required<string | null>();
     public readonly isProcessing = input.required<boolean>();
 
-    public readonly dismissed = output<void>();
+    public readonly dismissed = output();
     public readonly addToMeal = output<AiInputBarMealDetails>();
     public readonly editApplied = output<FoodVisionItem[]>();
-    public readonly reanalyzeRequested = output<void>();
+    public readonly reanalyzeRequested = output();
 
     public readonly isEditing = signal(false);
     public readonly isDetailsExpanded = signal(false);

@@ -7,9 +7,9 @@
         [attr.aria-expanded]="isOpen()"
         (click)="toggleMenu.emit(userMenuButton)"
     >
-        @if (user().profileImage) {
+        @if (user().profileImage; as profileImage) {
             <div class="sidebar__avatar sidebar__avatar--image fd-place-center">
-                <img alt="Avatar" width="40" height="40" [ngSrc]="user().profileImage" />
+                <img alt="Avatar" width="40" height="40" [ngSrc]="profileImage" />
             </div>
         } @else {
             <div class="sidebar__avatar fd-place-center">

@@ -16,7 +16,7 @@ export class EntityCardActionsComponent {
     public readonly actionIcon = input.required<string>();
     public readonly actionAriaLabel = input<string | null>(null);
 
-    public readonly action = output<void>();
+    public readonly action = output();
 
     public handleAction(event: Event): void {
         event.stopPropagation();

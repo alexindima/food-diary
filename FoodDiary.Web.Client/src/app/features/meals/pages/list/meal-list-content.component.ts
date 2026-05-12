@@ -35,8 +35,8 @@ export class MealListContentComponent {
     public readonly totalItems = input.required<number>();
     public readonly currentPageIndex = input.required<number>();
 
-    public readonly retry = output<void>();
-    public readonly mealAdd = output<void>();
+    public readonly retry = output();
+    public readonly mealAdd = output();
     public readonly mealOpened = output<Meal>();
     public readonly mealFavoriteChanged = output<{ meal: Meal; change: MealFavoriteChange }>();
     public readonly pageIndexChange = output<number>();

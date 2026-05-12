@@ -46,7 +46,7 @@ describe('loggedInGuard', () => {
     it('should allow access when not authenticated', async () => {
         authServiceMock.isAuthenticated.set(false);
 
-        const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
 
         expect(result).toBe(true);
         expect(authServiceMock.ensureSessionReadyAsync).toHaveBeenCalled();
@@ -56,7 +56,7 @@ describe('loggedInGuard', () => {
     it('should redirect to dashboard when authenticated', async () => {
         authServiceMock.isAuthenticated.set(true);
 
-        const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
 
         expect(result).toBe(false);
         expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('loggedInGuard', () => {
         const adminRedirectState = { url: '/auth/login?adminReturnUrl=%2F' };
         state = adminRedirectState as RouterStateSnapshot;
 
-        const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
 
         expect(result).toBe(true);
         expect(navigationServiceMock.navigateToHomeAsync).not.toHaveBeenCalled();

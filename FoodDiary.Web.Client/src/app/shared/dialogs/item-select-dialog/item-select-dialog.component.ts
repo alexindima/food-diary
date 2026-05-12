@@ -45,7 +45,7 @@ export class ItemSelectDialogComponent {
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();
     public readonly recipeSelected = output<Recipe>();
-    public readonly createRecipeRequested = output<void>();
+    public readonly createRecipeRequested = output();
     public readonly tabs: FdUiTab[] = [
         {
             value: 'Product',

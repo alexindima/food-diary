@@ -129,7 +129,7 @@ export function createMealPreviewSignal(meals: Signal<Meal[]>, isTodaySelected: 
             }));
         }
 
-        const result: { meal: Meal | null; slot?: MealSlot }[] = [];
+        const result: Array<{ meal: Meal | null; slot?: MealSlot }> = [];
 
         for (const slot of MEAL_SLOTS) {
             const index = mealList.findIndex(m => (m.mealType ?? '').toUpperCase() === slot);

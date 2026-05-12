@@ -20,6 +20,6 @@ export class MealPhotoResultActionsComponent {
     public readonly isEditing = input.required<boolean>();
     public readonly editActionState = input.required<PhotoAiEditActionState>();
 
-    public readonly reanalyze = output<void>();
-    public readonly editAction = output<void>();
+    public readonly reanalyze = output();
+    public readonly editAction = output();
 }

@@ -71,7 +71,7 @@ export class DashboardSummaryCardComponent {
         '--fd-color-orange-500': '#f97316',
         '--fd-color-danger': '#ef4444',
     };
-    public readonly goalAction = output<void>();
+    public readonly goalAction = output();
     public readonly dailyGoal = input.required<number>();
     public readonly dailyConsumed = input.required<number>();
     public readonly weeklyConsumed = input.required<number>();

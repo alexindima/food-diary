@@ -56,7 +56,7 @@ export class EntityCardComponent {
     private readonly languageVersion = signal(0);
 
     public readonly imageUrl = input<string | null | undefined>(null);
-    public readonly collageImages = input<ReadonlyArray<EntityCardCollageImage>>([]);
+    public readonly collageImages = input<readonly EntityCardCollageImage[]>([]);
     public readonly imageAlt = input.required<string>();
     public readonly imageIcon = input('restaurant');
     public readonly previewable = input(false);
@@ -80,10 +80,10 @@ export class EntityCardComponent {
     public readonly actionIcon = input('add');
     public readonly actionAriaLabel = input<string | null>(null);
 
-    public readonly open = output<void>();
-    public readonly preview = output<void>();
-    public readonly favoriteToggle = output<void>();
-    public readonly action = output<void>();
+    public readonly open = output();
+    public readonly preview = output();
+    public readonly favoriteToggle = output();
+    public readonly action = output();
 
     public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
     public readonly normalizedQuality = computed<EntityCardNormalizedQuality | null>(() => {

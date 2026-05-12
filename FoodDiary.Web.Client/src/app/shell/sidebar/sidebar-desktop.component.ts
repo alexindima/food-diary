@@ -36,12 +36,12 @@ export class SidebarDesktopComponent {
     public readonly userPlanLabelKey = input.required<string>();
     public readonly isUserMenuOpen = input.required<boolean>();
 
-    public readonly notificationsOpen = output<void>();
+    public readonly notificationsOpen = output();
     public readonly routeSelected = output<SidebarRouteItem>();
     public readonly primaryAction = output<SidebarActionId>();
-    public readonly foodTrackingToggle = output<void>();
-    public readonly bodyTrackingToggle = output<void>();
+    public readonly foodTrackingToggle = output();
+    public readonly bodyTrackingToggle = output();
     public readonly userMenuToggle = output<HTMLElement>();
     public readonly directRouteClick = output<SidebarDirectRouteRequest>();
-    public readonly logout = output<void>();
+    public readonly logout = output();
 }

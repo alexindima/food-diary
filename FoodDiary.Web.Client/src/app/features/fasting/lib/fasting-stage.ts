@@ -71,7 +71,7 @@ export function resolveFastingStage(elapsedMs: number, plannedDurationHours: num
     }
 
     const currentStage = applicableStages[currentIndex];
-    const nextStage = (applicableStages as readonly (FastingStageDefinition | undefined)[])[currentIndex + 1] ?? null;
+    const nextStage = (applicableStages as ReadonlyArray<FastingStageDefinition | undefined>)[currentIndex + 1] ?? null;
     const nextStageStartsAtMs = nextStage?.startsAtHours === undefined ? null : nextStage.startsAtHours * MS_PER_HOUR;
 
     return {

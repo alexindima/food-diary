@@ -17,7 +17,7 @@ export class ManageHeaderComponent {
     public readonly subtitle = input<string | null>(null);
     public readonly mobileBackOnly = input(true, { transform: booleanAttribute });
     public readonly backAriaLabel = input('Back');
-    public readonly back = output<void>();
+    public readonly back = output();
 
     public onBackClick(): void {
         this.back.emit();

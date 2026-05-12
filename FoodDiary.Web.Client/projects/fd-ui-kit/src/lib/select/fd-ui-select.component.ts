@@ -45,7 +45,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
-    public readonly options = input<FdUiSelectOption<T>[]>([]);
+    public readonly options = input<Array<FdUiSelectOption<T>>>([]);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
 

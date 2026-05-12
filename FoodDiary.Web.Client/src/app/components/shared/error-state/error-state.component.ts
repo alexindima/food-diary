@@ -17,7 +17,7 @@ export class ErrorStateComponent {
     public readonly showRetry = input<boolean>(true);
     public readonly retryKey = input<string>('ERRORS.RETRY');
 
-    public readonly retry = output<void>();
+    public readonly retry = output();
 
     public onRetry(): void {
         this.retry.emit();

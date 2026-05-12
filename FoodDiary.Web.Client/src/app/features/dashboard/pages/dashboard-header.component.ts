@@ -19,7 +19,7 @@ export class DashboardHeaderComponent {
     public readonly isEditingLayout = input.required<boolean>();
 
     public readonly dateChange = output<Date | null>();
-    public readonly appearanceOpen = output<void>();
-    public readonly notificationSettingsOpen = output<void>();
-    public readonly settingsOpen = output<void>();
+    public readonly appearanceOpen = output();
+    public readonly notificationSettingsOpen = output();
+    public readonly settingsOpen = output();
 }

@@ -42,7 +42,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
         );
     }
 
-    private waitForPageReadyAsync(): Promise<void> {
+    private async waitForPageReadyAsync(): Promise<void> {
         this.pageReadyPromise ??= new Promise(resolve => {
             const documentReadyState = this.globalObject.document?.readyState;
             if (documentReadyState === 'complete') {
@@ -77,7 +77,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
         return this.pageReadyPromise;
     }
 
-    private waitForIdleAsync(): Promise<void> {
+    private async waitForIdleAsync(): Promise<void> {
         return new Promise(resolve => {
             if (typeof this.globalObject.requestIdleCallback === 'function') {
                 this.globalObject.requestIdleCallback(

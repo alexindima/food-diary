@@ -24,7 +24,7 @@ export class AiPhotoEditListComponent {
     public readonly itemDropped = output<AiEditItemDrop>();
     public readonly itemUpdated = output<AiEditItemUpdate>();
     public readonly itemRemoved = output<number>();
-    public readonly itemAdded = output<void>();
+    public readonly itemAdded = output();
 
     protected onDrop(event: CdkDragDrop<EditableAiItem[]>): void {
         this.itemDropped.emit({

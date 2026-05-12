@@ -158,11 +158,11 @@ export class UserManageComponent {
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
     public languageCodes: string[] = ['en', 'ru'];
-    public genderOptions: FdUiSelectOption<Gender | null>[] = [];
-    public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
-    public languageOptions: FdUiSelectOption<string | null>[] = [];
-    public themeOptions: FdUiSelectOption<AppThemeName | null>[] = [];
-    public uiStyleOptions: FdUiSelectOption<AppUiStyleName | null>[] = [];
+    public genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
+    public activityLevelOptions: Array<FdUiSelectOption<ActivityLevelOption | null>> = [];
+    public languageOptions: Array<FdUiSelectOption<string | null>> = [];
+    public themeOptions: Array<FdUiSelectOption<AppThemeName | null>> = [];
+    public uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
     public userForm: FormGroup<UserFormData>;
     public dietologistForm: FormGroup<DietologistFormData>;
     public readonly globalError = this.facade.globalError;

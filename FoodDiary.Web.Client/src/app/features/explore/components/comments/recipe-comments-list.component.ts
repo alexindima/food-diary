@@ -22,5 +22,5 @@ export class RecipeCommentsListComponent {
 
     public readonly edit = output<RecipeComment>();
     public readonly delete = output<RecipeComment>();
-    public readonly loadMore = output<void>();
+    public readonly loadMore = output();
 }

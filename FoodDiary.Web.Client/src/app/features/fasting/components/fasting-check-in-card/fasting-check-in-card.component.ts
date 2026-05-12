@@ -31,9 +31,9 @@ export class FastingCheckInCardComponent {
     public readonly isExpanded = input.required<boolean>();
     public readonly latestCheckIn = input.required<FastingCheckInViewModel | null>();
     public readonly ctaKey = input.required<string>();
-    public readonly hungerOptions = input.required<FdUiEmojiPickerOption<number>[]>();
-    public readonly energyOptions = input.required<FdUiEmojiPickerOption<number>[]>();
-    public readonly moodOptions = input.required<FdUiEmojiPickerOption<number>[]>();
+    public readonly hungerOptions = input.required<Array<FdUiEmojiPickerOption<number>>>();
+    public readonly energyOptions = input.required<Array<FdUiEmojiPickerOption<number>>>();
+    public readonly moodOptions = input.required<Array<FdUiEmojiPickerOption<number>>>();
     public readonly symptomOptions = input.required<FdUiChipSelectOption[]>();
     public readonly hungerLevel = input.required<WritableSignal<number>>();
     public readonly energyLevel = input.required<WritableSignal<number>>();
@@ -41,9 +41,9 @@ export class FastingCheckInCardComponent {
     public readonly selectedSymptoms = input.required<WritableSignal<string[]>>();
     public readonly notes = input.required<WritableSignal<string>>();
 
-    public readonly formOpen = output<void>();
-    public readonly formClose = output<void>();
-    public readonly save = output<void>();
+    public readonly formOpen = output();
+    public readonly formClose = output();
+    public readonly save = output();
 
     protected readonly draftDisabled = (): boolean => this.isSaving() || this.isEnding() || this.isUpdatingCycle();
 

@@ -50,7 +50,7 @@ export class ProductAddDialogComponent extends BaseProductManageComponent {
         return product;
     }
 
-    public override onCancelAsync(): Promise<void> {
+    public override async onCancelAsync(): Promise<void> {
         this.dialogRef.close(this.initialProduct ?? null);
 
         return Promise.resolve();

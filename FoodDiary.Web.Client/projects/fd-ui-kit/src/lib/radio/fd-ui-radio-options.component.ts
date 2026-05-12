@@ -17,12 +17,12 @@ export class FdUiRadioOptionsComponent<T = unknown> {
     protected readonly isEqual = Object.is;
 
     public readonly id = input.required<string>();
-    public readonly options = input.required<FdUiRadioOption<T>[]>();
+    public readonly options = input.required<Array<FdUiRadioOption<T>>>();
     public readonly disabled = input.required<boolean>();
     public readonly value = input.required<T | null>();
 
     public readonly optionSelected = output<FdUiRadioOption<T>>();
-    public readonly optionBlur = output<void>();
+    public readonly optionBlur = output();
     public readonly optionKeydown = output<FdUiRadioOptionKeydownEvent>();
 
     protected trackByValue(_: number, option: FdUiRadioOption<T>): unknown {

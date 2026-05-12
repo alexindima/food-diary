@@ -18,7 +18,7 @@ export class WeightSummaryCardComponent {
     public readonly latest = input<number | null>(null);
     public readonly previous = input<number | null>(null);
     public readonly desired = input<number | null>(null);
-    public readonly cardClick = output<void>();
+    public readonly cardClick = output();
 
     private readonly translateService = inject(TranslateService);
 

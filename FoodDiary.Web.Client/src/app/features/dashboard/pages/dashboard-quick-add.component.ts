@@ -12,6 +12,6 @@ import { AiInputBarComponent } from '../../../components/shared/ai-input-bar/ai-
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardQuickAddComponent {
-    public readonly mealCreated = output<void>();
-    public readonly manualAdd = output<void>();
+    public readonly mealCreated = output();
+    public readonly manualAdd = output();
 }

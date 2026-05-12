@@ -22,7 +22,7 @@ export class MealPhotoEditListComponent {
     public readonly itemDropped = output<PhotoAiEditItemDrop>();
     public readonly itemUpdated = output<PhotoAiEditItemUpdate>();
     public readonly itemRemoved = output<number>();
-    public readonly itemAdded = output<void>();
+    public readonly itemAdded = output();
 
     protected onDrop(event: CdkDragDrop<EditableAiItem[]>): void {
         this.itemDropped.emit({

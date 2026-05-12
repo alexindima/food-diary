@@ -22,7 +22,7 @@ export class SidebarUserMenuComponent {
 
     public readonly toggleMenu = output<HTMLElement>();
     public readonly directRouteClick = output<SidebarDirectRouteRequest>();
-    public readonly logout = output<void>();
+    public readonly logout = output();
 
     private readonly userMenuRef = viewChild<ElementRef<HTMLElement>>('userMenu');
 

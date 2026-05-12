@@ -16,5 +16,5 @@ export class FdUiSectionErrorStateComponent {
     public readonly errorMessage = input.required<string>();
     public readonly retryLabel = input<string | null>(null);
 
-    public readonly retry = output<void>();
+    public readonly retry = output();
 }

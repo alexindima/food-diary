@@ -23,5 +23,5 @@ export class PremiumOverviewCardComponent {
     public readonly currentPeriodEndLabel = input.required<string | null>();
     public readonly overviewHintKey = input.required<string>();
 
-    public readonly manageBilling = output<void>();
+    public readonly manageBilling = output();
 }

@@ -19,7 +19,7 @@ export class DashboardHydrationBlockComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly canAdd = input.required<boolean>();
 
-    public readonly blockToggle = output<void>();
+    public readonly blockToggle = output();
     public readonly addClick = output<number>();
-    public readonly goalAction = output<void>();
+    public readonly goalAction = output();
 }

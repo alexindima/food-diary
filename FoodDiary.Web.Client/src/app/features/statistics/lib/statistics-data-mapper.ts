@@ -275,7 +275,7 @@ export function buildBodyChartData<T extends { startDate: string }>(
     }
 
     const labels: string[] = [];
-    const data: (number | null)[] = [];
+    const data: Array<number | null> = [];
 
     points.forEach(point => {
         labels.push(formatLabel(point.startDate));
@@ -313,7 +313,7 @@ export function buildBodyChartData<T extends { startDate: string }>(
     };
 }
 
-function interpolateMissingBodyValues(data: (number | null)[]): (number | null)[] {
+function interpolateMissingBodyValues(data: Array<number | null>): Array<number | null> {
     const result = [...data];
     const knownIndexes = result.reduce<number[]>((indexes, value, index) => {
         if (value !== null) {

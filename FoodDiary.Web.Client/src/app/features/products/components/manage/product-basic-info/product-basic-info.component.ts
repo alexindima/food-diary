@@ -41,18 +41,18 @@ export class ProductBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly formGroup = input.required<FormGroup<ProductFormData>>();
-    public readonly unitOptions = input.required<FdUiSelectOption<MeasurementUnit>[]>();
-    public readonly productTypeOptions = input.required<FdUiSelectOption<ProductType>[]>();
-    public readonly visibilityOptions = input.required<FdUiSelectOption<ProductVisibility>[]>();
+    public readonly unitOptions = input.required<Array<FdUiSelectOption<MeasurementUnit>>>();
+    public readonly productTypeOptions = input.required<Array<FdUiSelectOption<ProductType>>>();
+    public readonly visibilityOptions = input.required<Array<FdUiSelectOption<ProductVisibility>>>();
     public readonly nameOptions = input.required<ProductNameAutocompleteOption[]>();
     public readonly isNameSearchLoading = input.required<boolean>();
     public readonly getControlError = input.required<(controlName: keyof ProductFormData) => string | null>();
     public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
 
-    public openBarcodeScanner = output<void>();
-    public openAiRecognition = output<void>();
-    public nameQueryChange = output<string>();
-    public nameSuggestionSelected = output<ProductNameSuggestion>();
+    public readonly openBarcodeScanner = output();
+    public readonly openAiRecognition = output();
+    public readonly nameQueryChange = output<string>();
+    public readonly nameSuggestionSelected = output<ProductNameSuggestion>();
 
     public readonly displayNameValue = (value: string | null): string => value ?? '';
 

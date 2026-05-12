@@ -49,7 +49,7 @@ export class ExportService extends ApiService {
             return null;
         }
 
-        const match = contentDisposition.match(/filename\*?=(?:UTF-8''|"?)([^";]+)/i);
+        const match = /filename\*?=(?:UTF-8''|"?)([^";]+)/i.exec(contentDisposition);
         return match?.[1]?.replace(/"/g, '') ?? null;
     }
 }

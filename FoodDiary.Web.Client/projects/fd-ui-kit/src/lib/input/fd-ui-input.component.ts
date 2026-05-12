@@ -60,7 +60,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     public readonly fillColor = input<string | null>(null);
     public readonly appearance = input<FdUiInputAppearance>('default');
 
-    public readonly suffixButtonClicked = output<void>();
+    public readonly suffixButtonClicked = output();
 
     protected readonly internalValue = signal<string | number>('');
     protected readonly disabled = signal(false);

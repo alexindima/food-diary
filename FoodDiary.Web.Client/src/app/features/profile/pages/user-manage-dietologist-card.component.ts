@@ -42,8 +42,8 @@ export class UserManageDietologistCardComponent {
     public readonly isDietologistPending = input.required<boolean>();
     public readonly isDietologistConnected = input.required<boolean>();
 
-    public readonly dietologistInvite = output<void>();
-    public readonly dietologistRevoke = output<void>();
+    public readonly dietologistInvite = output();
+    public readonly dietologistRevoke = output();
     public readonly dietologistProfileToggle = output<boolean>();
     public readonly dietologistPermissionChange = output<DietologistPermissionChange>();
 

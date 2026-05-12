@@ -20,7 +20,7 @@ export class EntityCardThumbComponent {
     public readonly hasPreviewImage = input.required<boolean>();
     public readonly previewInteraction = input.required<EntityCardPreviewInteractionState>();
 
-    public readonly preview = output<void>();
+    public readonly preview = output();
 
     public handlePreview(event: Event): void {
         event.stopPropagation();

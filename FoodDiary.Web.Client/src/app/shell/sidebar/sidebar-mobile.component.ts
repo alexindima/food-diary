@@ -31,7 +31,7 @@ export class SidebarMobileComponent {
     public readonly activeRouteItems = input.required<SidebarRouteItem[]>();
 
     public readonly directRouteClick = output<SidebarDirectRouteRequest>();
-    public readonly closeMenus = output<void>();
+    public readonly closeMenus = output();
     public readonly foodToggle = output<HTMLElement>();
     public readonly bodyToggle = output<HTMLElement>();
     public readonly reportsToggle = output<HTMLElement>();

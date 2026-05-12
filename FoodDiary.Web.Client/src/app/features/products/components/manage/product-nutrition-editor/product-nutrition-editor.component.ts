@@ -42,6 +42,6 @@ export class ProductNutritionEditorComponent {
     public readonly macrosError = input.required<string | null>();
     public readonly nutritionControlNames = input.required<NutritionControlNames>();
 
-    public nutritionModeChange = output<string>();
-    public openAiRecognition = output<void>();
+    public readonly nutritionModeChange = output<string>();
+    public readonly openAiRecognition = output();
 }

@@ -147,7 +147,7 @@ export class WeightTrendCardComponent {
     });
 
     public readonly dynamicChartOptions = computed<ChartConfiguration<'line'>['options']>(() => {
-        const values = (this.chartData()?.datasets[0].data as (number | null)[] | undefined) ?? [];
+        const values = (this.chartData()?.datasets[0].data as Array<number | null> | undefined) ?? [];
         const numeric = values.filter(v => typeof v === 'number');
         const minVal = numeric.length > 0 ? Math.min(...numeric) : 0;
         const maxVal = numeric.length > 0 ? Math.max(...numeric) : 1;

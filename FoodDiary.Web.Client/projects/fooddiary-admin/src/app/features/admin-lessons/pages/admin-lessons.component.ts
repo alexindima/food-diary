@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import { AdminLessonsService } from '../api/admin-lessons.service';
@@ -96,17 +97,31 @@ export class AdminLessonsComponent {
     }
 
     public deleteLesson(lesson: AdminLesson): void {
-        if (!confirm(`Delete "${lesson.title}"?`)) {
-            return;
-        }
-
-        this.lessonsService
-            .delete(lesson.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.loadLessons();
+        this.dialogService
+            .open(FdUiConfirmDialogComponent, {
+                size: 'sm',
+                data: {
+                    title: 'Delete lesson',
+                    message: `Delete "${lesson.title}"?`,
+                    confirmLabel: 'Delete',
+                    danger: true,
                 },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(confirmed => {
+                if (confirmed !== true) {
+                    return;
+                }
+
+                this.lessonsService
+                    .delete(lesson.id)
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe({
+                        next: () => {
+                            this.loadLessons();
+                        },
+                    });
             });
     }
 

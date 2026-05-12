@@ -10,15 +10,15 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                loadComponent: () => import('./pages/list/recipe-list.component').then(m => m.RecipeListComponent),
+                loadComponent: async () => import('./pages/list/recipe-list.component').then(m => m.RecipeListComponent),
             },
             {
                 path: 'add',
-                loadComponent: () => import('./pages/manage/recipe-add.component').then(m => m.RecipeAddComponent),
+                loadComponent: async () => import('./pages/manage/recipe-add.component').then(m => m.RecipeAddComponent),
             },
             {
                 path: ':id/edit',
-                loadComponent: () => import('./pages/manage/recipe-edit.component').then(m => m.RecipeEditComponent),
+                loadComponent: async () => import('./pages/manage/recipe-edit.component').then(m => m.RecipeEditComponent),
                 resolve: { recipe: recipeResolver },
             },
         ],

@@ -27,6 +27,6 @@ export class AdminBillingFiltersComponent {
     public readonly kindChange = output<string>();
     public readonly fromDateChange = output<string>();
     public readonly toDateChange = output<string>();
-    public readonly filtersApply = output<void>();
-    public readonly filtersReset = output<void>();
+    public readonly filtersApply = output();
+    public readonly filtersReset = output();
 }

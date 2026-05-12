@@ -31,9 +31,9 @@ export class MealsPreviewComponent {
     public readonly showEmptyState = input<boolean>(true);
     public readonly entries = input.required<MealPreviewEntry[]>();
 
-    public readonly viewAll = output<void>();
+    public readonly viewAll = output();
     public readonly add = output<string | null | undefined>();
-    public readonly aiMealCreated = output<void>();
+    public readonly aiMealCreated = output();
     public readonly open = output<MealCardItem>();
     public readonly expandedAiSlot = signal<string | null>(null);
 

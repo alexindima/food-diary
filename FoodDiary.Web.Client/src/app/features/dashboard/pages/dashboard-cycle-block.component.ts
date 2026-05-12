@@ -19,6 +19,6 @@ export class DashboardCycleBlockComponent {
     public readonly referenceDate = input.required<Date>();
     public readonly isLoading = input.required<boolean>();
 
-    public readonly blockToggle = output<void>();
-    public readonly setupAction = output<void>();
+    public readonly blockToggle = output();
+    public readonly setupAction = output();
 }

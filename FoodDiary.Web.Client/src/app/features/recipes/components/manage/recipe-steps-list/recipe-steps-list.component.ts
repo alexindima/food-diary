@@ -25,7 +25,7 @@ export class RecipeStepsListComponent {
     public readonly stepsFormArray = input.required<FormArray<FormGroup<FormGroupControls<StepFormValues>>>>();
     public readonly expandedSteps = input.required<Set<number>>();
 
-    public readonly addStep = output<void>();
+    public readonly addStep = output();
     public readonly removeStep = output<number>();
     public readonly addIngredient = output<number>();
     public readonly removeIngredient = output<StepIngredientEvent>();
@@ -44,7 +44,7 @@ export class RecipeStepsListComponent {
         }
     }
 
-    public onStepDrop(event: CdkDragDrop<FormGroup<StepFormData>[]>): void {
+    public onStepDrop(event: CdkDragDrop<Array<FormGroup<StepFormData>>>): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }

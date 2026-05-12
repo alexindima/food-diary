@@ -33,9 +33,9 @@ export class FdUiInlineAlertComponent {
     public readonly secondaryActionLabel = input<string | null>(null);
     public readonly dismissible = input(false, { transform: booleanAttribute });
 
-    public readonly primaryAction = output<void>();
-    public readonly secondaryAction = output<void>();
-    public readonly dismiss = output<void>();
+    public readonly primaryAction = output();
+    public readonly secondaryAction = output();
+    public readonly dismiss = output();
 
     public readonly iconName = computed(() => {
         switch (this.severity()) {

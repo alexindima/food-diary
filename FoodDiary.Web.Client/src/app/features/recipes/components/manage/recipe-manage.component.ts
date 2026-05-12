@@ -118,7 +118,7 @@ export class RecipeManageComponent {
     });
 
     public recipeForm: FormGroup<RecipeFormData>;
-    public visibilitySelectOptions: FdUiSelectOption<RecipeVisibility>[] = [];
+    public visibilitySelectOptions: Array<FdUiSelectOption<RecipeVisibility>> = [];
     public readonly nutritionMode = signal<NutritionMode>('auto');
     public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());

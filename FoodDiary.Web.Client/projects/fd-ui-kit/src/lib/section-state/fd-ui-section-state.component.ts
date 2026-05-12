@@ -34,7 +34,7 @@ export class FdUiSectionStateComponent {
     public readonly errorIcon = input<string>('error_outline');
     public readonly retryLabel = input<string | null>(null);
 
-    public readonly retry = output<void>();
+    public readonly retry = output();
 
     protected readonly emptyAppearance = computed<FdUiEmptyStateAppearance>(() =>
         this.appearance() === 'compact' ? 'compact' : 'default',

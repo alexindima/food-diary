@@ -15,7 +15,7 @@ export class FdUiAutocompleteMenuComponent<T = unknown> {
 
     public readonly id = input.required<string>();
     public readonly loading = input.required<boolean>();
-    public readonly options = input.required<FdUiAutocompleteOption<T>[]>();
+    public readonly options = input.required<Array<FdUiAutocompleteOption<T>>>();
     public readonly emptyText = input<string>();
     public readonly activeIndex = input.required<number>();
     public readonly selectedValue = input.required<T | null>();

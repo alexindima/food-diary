@@ -157,7 +157,7 @@ export class AiInputBarComponent {
         recognition['maxAlternatives'] = 1;
 
         recognition['onresult'] = (event: Record<string, unknown>): void => {
-            const results = event['results'] as { [key: number]: { [key: number]: { transcript: string } } } | undefined;
+            const results = event['results'] as Record<number, Record<number, { transcript: string }>> | undefined;
             const transcript = results?.[0]?.[0]?.transcript;
             if (transcript !== undefined && transcript.length > 0) {
                 this.voiceText.set(transcript);

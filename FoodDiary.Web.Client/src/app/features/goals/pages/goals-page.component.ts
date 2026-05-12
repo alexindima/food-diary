@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -77,7 +77,7 @@ export class GoalsPageComponent {
     protected readonly calorieCyclingEnabled = this.facade.calorieCyclingEnabled;
     protected readonly dayCalories = this.facade.dayCalories;
     protected readonly daysOfWeek = DAYS_OF_WEEK;
-    protected macroPresetOptions: FdUiSelectOption<MacroPresetKey>[] = [];
+    protected macroPresetOptions: Array<FdUiSelectOption<MacroPresetKey>> = [];
     private activeRingElement: HTMLElement | null = null;
 
     public constructor() {

@@ -53,12 +53,12 @@ export class UserManageNotificationsCardComponent {
     public readonly connectedDeviceItems = input.required<ConnectedDeviceViewModel[]>();
     public readonly removingConnectedDeviceEndpoint = input.required<string | null>();
 
-    public readonly pushNotificationsToggle = output<void>();
-    public readonly fastingPushNotificationsToggle = output<void>();
-    public readonly socialPushNotificationsToggle = output<void>();
+    public readonly pushNotificationsToggle = output();
+    public readonly fastingPushNotificationsToggle = output();
+    public readonly socialPushNotificationsToggle = output();
     public readonly fastingReminderPresetApply = output<FastingReminderPreset>();
     public readonly fastingReminderHoursChange = output<FastingReminderHoursChange>();
-    public readonly fastingReminderHoursSave = output<void>();
-    public readonly testNotificationSchedule = output<void>();
+    public readonly fastingReminderHoursSave = output();
+    public readonly testNotificationSchedule = output();
     public readonly connectedDeviceRemove = output<WebPushSubscriptionItem>();
 }

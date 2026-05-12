@@ -192,7 +192,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
             return null;
         }
 
-        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
         if (match !== null) {
             const year = Number(match[DATE_MATCH_YEAR_INDEX]);
             const month = Number(match[DATE_MATCH_MONTH_INDEX]);

@@ -54,5 +54,5 @@ export class FastingSetupControlsComponent {
     public readonly cyclicEatDaysChange = output<string | number>();
     public readonly cyclicEatDayProtocolChange = output<string>();
     public readonly cyclicEatDayFastHoursChange = output<string | number>();
-    public readonly startFasting = output<void>();
+    public readonly startFasting = output();
 }

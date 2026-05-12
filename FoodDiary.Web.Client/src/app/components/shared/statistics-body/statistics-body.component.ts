@@ -27,7 +27,7 @@ export class StatisticsBodyComponent {
     public readonly loadErrorKey = input<string>('ERRORS.LOAD_FAILED_MESSAGE');
 
     public readonly selectedTabChange = output<string>();
-    public readonly retry = output<void>();
+    public readonly retry = output();
     public readonly sectionState = computed<'loading' | 'error' | 'content' | 'empty'>(() => {
         if (this.isLoading()) {
             return 'loading';

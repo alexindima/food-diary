@@ -15,7 +15,7 @@ import { EntityCardComponent } from '../entity-card/entity-card.component';
 const QUALITY_SCORE_MAX = 100;
 
 export interface RecipeCardStep {
-    ingredients?: Array<unknown> | null;
+    ingredients?: unknown[] | null;
 }
 
 export interface RecipeCardItem {
@@ -61,8 +61,8 @@ export class RecipeCardComponent {
 
     public readonly recipe = input.required<RecipeCardItem>();
     public readonly imageUrl = input.required<string | null | undefined>();
-    public readonly open = output<void>();
-    public readonly addToMeal = output<void>();
+    public readonly open = output();
+    public readonly addToMeal = output();
     public readonly favoriteChanged = output<RecipeFavoriteChange>();
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);

@@ -28,8 +28,8 @@ export class AiPhotoDetailsPanelComponent {
     public readonly preMealSatietyLevel = input.required<number | null>();
     public readonly postMealSatietyLevel = input.required<number | null>();
 
-    public readonly detailsToggle = output<void>();
-    public readonly mealSubmit = output<void>();
+    public readonly detailsToggle = output();
+    public readonly mealSubmit = output();
     public readonly dateChange = output<string>();
     public readonly timeChange = output<string>();
     public readonly commentChange = output<string>();

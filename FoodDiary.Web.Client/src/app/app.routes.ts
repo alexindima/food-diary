@@ -29,7 +29,7 @@ const publicSeoLanding = ({
     relatedPaths,
 }: PublicSeoLandingRouteConfig): Route => ({
     path,
-    loadComponent: (): Promise<Type<unknown>> =>
+    loadComponent: async (): Promise<Type<unknown>> =>
         import('./features/public/pages/seo-landing/seo-landing-page.component').then(m => m.SeoLandingPageComponent),
     data: {
         seo: {
@@ -52,7 +52,7 @@ const publicSeoLanding = ({
 export const routes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./features/public/pages/landing/main.component').then(m => m.MainComponent),
+        loadComponent: async () => import('./features/public/pages/landing/main.component').then(m => m.MainComponent),
         canActivate: [loggedInGuard],
         canDeactivate: [unsavedChangesGuard],
         data: { seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
@@ -265,121 +265,121 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         canActivate: [authGuard],
-        loadComponent: () => import('./features/dashboard/pages/dashboard.component').then(m => m.DashboardComponent),
+        loadComponent: async () => import('./features/dashboard/pages/dashboard.component').then(m => m.DashboardComponent),
         data: { preload: true, seo: { titleKey: 'SEO.DASHBOARD', descriptionKey: 'SEO.DASHBOARD_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'products',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/products/product.routes'),
+        loadChildren: async () => import('./features/products/product.routes'),
         data: { preload: true, seo: { titleKey: 'SEO.PRODUCTS', descriptionKey: 'SEO.PRODUCTS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'meals',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/meals/meals.routes'),
+        loadChildren: async () => import('./features/meals/meals.routes'),
         data: { preload: true, seo: { titleKey: 'SEO.MEALS', descriptionKey: 'SEO.MEALS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'recipes',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/recipes/recipe.routes'),
+        loadChildren: async () => import('./features/recipes/recipe.routes'),
         data: { seo: { titleKey: 'SEO.RECIPES', descriptionKey: 'SEO.RECIPES_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'explore',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/explore/explore.routes'),
+        loadChildren: async () => import('./features/explore/explore.routes'),
         data: { seo: { titleKey: 'SEO.EXPLORE', descriptionKey: 'SEO.EXPLORE_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'shopping-lists',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/shopping-lists/shopping-list.routes'),
+        loadChildren: async () => import('./features/shopping-lists/shopping-list.routes'),
         data: { seo: { titleKey: 'SEO.SHOPPING_LISTS', descriptionKey: 'SEO.SHOPPING_LISTS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'goals',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/goals/goals.routes'),
+        loadChildren: async () => import('./features/goals/goals.routes'),
         data: { seo: { titleKey: 'SEO.GOALS', descriptionKey: 'SEO.GOALS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'statistics',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/statistics/statistics.routes'),
+        loadChildren: async () => import('./features/statistics/statistics.routes'),
         data: { seo: { titleKey: 'SEO.STATISTICS', descriptionKey: 'SEO.STATISTICS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'weight-history',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/weight-history/weight-history.routes'),
+        loadChildren: async () => import('./features/weight-history/weight-history.routes'),
         data: { seo: { titleKey: 'SEO.WEIGHT_HISTORY', descriptionKey: 'SEO.WEIGHT_HISTORY_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'waist-history',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/waist-history/waist-history.routes'),
+        loadChildren: async () => import('./features/waist-history/waist-history.routes'),
         data: { seo: { titleKey: 'SEO.WAIST_HISTORY', descriptionKey: 'SEO.WAIST_HISTORY_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'cycle-tracking',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/cycle-tracking/cycle-tracking.routes'),
+        loadChildren: async () => import('./features/cycle-tracking/cycle-tracking.routes'),
         data: { seo: { titleKey: 'SEO.CYCLE_TRACKING', descriptionKey: 'SEO.CYCLE_TRACKING_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'meal-plans',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/meal-plans/meal-plan.routes'),
+        loadChildren: async () => import('./features/meal-plans/meal-plan.routes'),
         data: { seo: { titleKey: 'SEO.MEAL_PLANS', descriptionKey: 'SEO.MEAL_PLANS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'weekly-check-in',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/weekly-check-in/weekly-check-in.routes'),
+        loadChildren: async () => import('./features/weekly-check-in/weekly-check-in.routes'),
         data: { seo: { titleKey: 'SEO.WEEKLY_CHECK_IN', descriptionKey: 'SEO.WEEKLY_CHECK_IN_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'lessons',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/lessons/lesson.routes'),
+        loadChildren: async () => import('./features/lessons/lesson.routes'),
         data: { seo: { titleKey: 'SEO.LESSONS', descriptionKey: 'SEO.LESSONS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'gamification',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/gamification/gamification.routes'),
+        loadChildren: async () => import('./features/gamification/gamification.routes'),
         data: { seo: { titleKey: 'SEO.GAMIFICATION', descriptionKey: 'SEO.GAMIFICATION_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'fasting',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/fasting/fasting.routes'),
+        loadChildren: async () => import('./features/fasting/fasting.routes'),
         data: { seo: { titleKey: 'SEO.FASTING', descriptionKey: 'SEO.FASTING_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'premium',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/premium/premium.routes'),
+        loadChildren: async () => import('./features/premium/premium.routes'),
         data: { seo: { titleKey: 'SEO.PREMIUM', descriptionKey: 'SEO.PREMIUM_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'profile',
         canActivate: [authGuard],
-        loadChildren: () => import('./features/profile/profile.routes'),
+        loadChildren: async () => import('./features/profile/profile.routes'),
         data: { preload: true, seo: { titleKey: 'SEO.PROFILE', descriptionKey: 'SEO.PROFILE_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'dietologist',
         canActivate: [dietologistGuard],
-        loadChildren: () => import('./features/dietologist/dietologist.routes').then(m => m.dietologistRoutes),
+        loadChildren: async () => import('./features/dietologist/dietologist.routes').then(m => m.dietologistRoutes),
         data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
     },
     {
         path: 'dietologist-invitations/:invitationId',
         canActivate: [authGuard],
-        loadComponent: () =>
+        loadComponent: async () =>
             import('./features/dietologist/pages/invitation/dietologist-invitation-page.component').then(
                 m => m.DietologistInvitationPageComponent,
             ),
@@ -387,12 +387,13 @@ export const routes: Routes = [
     },
     {
         path: 'privacy-policy',
-        loadComponent: () => import('./features/public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
+        loadComponent: async () =>
+            import('./features/public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
         data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
     },
     {
         path: '**',
-        loadComponent: () => import('./features/public/pages/not-found/not-found.component').then(m => m.NotFoundComponent),
+        loadComponent: async () => import('./features/public/pages/not-found/not-found.component').then(m => m.NotFoundComponent),
         data: { seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
     },
 ];

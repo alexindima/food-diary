@@ -6,7 +6,7 @@ interface DetectedBarcode {
     rawValue: string;
     format: string;
     boundingBox: DOMRectReadOnly;
-    cornerPoints: { x: number; y: number }[];
+    cornerPoints: Array<{ x: number; y: number }>;
 }
 
 declare class BarcodeDetector {

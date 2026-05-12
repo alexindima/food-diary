@@ -21,7 +21,7 @@ export class SidebarMobileSheetComponent {
     public readonly activeRouteItems = input.required<SidebarRouteItem[]>();
 
     public readonly directRouteClick = output<SidebarDirectRouteRequest>();
-    public readonly closeMenus = output<void>();
+    public readonly closeMenus = output();
     public readonly mobileAction = output<SidebarActionId>();
     public readonly routeSelected = output<SidebarRouteItem>();
 }

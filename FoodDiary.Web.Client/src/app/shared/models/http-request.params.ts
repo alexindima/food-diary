@@ -1,3 +1,1 @@
-export type HttpRequestParams = {
-    [param: string]: string | number | boolean | Date | null | undefined;
-};
+export type HttpRequestParams = Record<string, string | number | boolean | Date | null | undefined>;

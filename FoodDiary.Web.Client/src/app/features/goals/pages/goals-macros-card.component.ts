@@ -16,7 +16,7 @@ import type { MacroInputChange, MacroSliderView } from './goals-page.models';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsMacrosCardComponent {
-    public readonly macroPresetOptions = input.required<FdUiSelectOption<MacroPresetKey>[]>();
+    public readonly macroPresetOptions = input.required<Array<FdUiSelectOption<MacroPresetKey>>>();
     public readonly selectedPreset = input.required<MacroPresetKey>();
     public readonly macros = input.required<MacroSliderView[]>();
 

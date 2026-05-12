@@ -18,5 +18,5 @@ export class DashboardFastingBlockComponent {
     public readonly isEditingLayout = input.required<boolean>();
     public readonly session = input.required<DashboardFastingSession>();
 
-    public readonly blockClick = output<void>();
+    public readonly blockClick = output();
 }

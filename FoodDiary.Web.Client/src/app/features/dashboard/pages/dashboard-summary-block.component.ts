@@ -19,6 +19,6 @@ export class DashboardSummaryBlockComponent {
     public readonly data = input.required<DashboardSummaryData>();
     public readonly caloriesBurned = input.required<number>();
 
-    public readonly blockToggle = output<void>();
-    public readonly goalAction = output<void>();
+    public readonly blockToggle = output();
+    public readonly goalAction = output();
 }

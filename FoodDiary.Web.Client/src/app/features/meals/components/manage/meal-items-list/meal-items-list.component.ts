@@ -102,7 +102,7 @@ export class MealItemsListComponent {
     public getAmountUnitLabel(index: number): string | null {
         if (this.isProductItem(index)) {
             const unit = this.formArray().at(index).controls.product.value?.baseUnit;
-            return unit !== undefined ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase()) : null;
+            return unit !== undefined ? this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`) : null;
         }
 
         if (this.isRecipeItem(index)) {

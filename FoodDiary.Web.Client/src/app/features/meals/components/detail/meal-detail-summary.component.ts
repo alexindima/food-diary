@@ -29,5 +29,5 @@ export class MealDetailSummaryComponent {
     public readonly hiddenItemPreviewCount = input.required<number>();
     public readonly isItemPreviewExpanded = input.required<boolean>();
 
-    public readonly itemPreviewExpandedToggle = output<void>();
+    public readonly itemPreviewExpandedToggle = output();
 }

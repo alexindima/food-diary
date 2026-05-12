@@ -50,7 +50,7 @@ describe('adminAuthGuard', () => {
         authService.isAuthenticated.mockReturnValue(true);
         authService.isAdmin.mockReturnValue(true);
 
-        const result = await TestBed.runInInjectionContext(() => adminAuthGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
 
         expect(result).toBe(true);
         expect(authService.applySsoFromQueryAsync).toHaveBeenCalled();
@@ -60,7 +60,7 @@ describe('adminAuthGuard', () => {
     it('should redirect unauthenticated user to unauthorized page', async () => {
         authService.isAuthenticated.mockReturnValue(false);
 
-        const result = await TestBed.runInInjectionContext(() => adminAuthGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
 
         expect(router.createUrlTree).toHaveBeenCalledWith(['/unauthorized'], {
             queryParams: { reason: 'unauthenticated', returnUrl: '/users?page=2' },
@@ -76,7 +76,7 @@ describe('adminAuthGuard', () => {
         authService.isAdmin.mockReturnValueOnce(false).mockReturnValueOnce(true);
         authService.tryUpgradeToAdminAsync.mockResolvedValue(true);
 
-        const result = await TestBed.runInInjectionContext(() => adminAuthGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
 
         expect(authService.tryUpgradeToAdminAsync).toHaveBeenCalled();
         expect(authService.refreshTokenState).toHaveBeenCalledTimes(2);
@@ -88,7 +88,7 @@ describe('adminAuthGuard', () => {
         authService.isAdmin.mockReturnValue(false);
         authService.tryUpgradeToAdminAsync.mockResolvedValue(false);
 
-        const result = await TestBed.runInInjectionContext(() => adminAuthGuard(route, state));
+        const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
 
         expect(router.createUrlTree).toHaveBeenCalledWith(['/unauthorized'], {
             queryParams: { reason: 'forbidden', returnUrl: '/users?page=2' },

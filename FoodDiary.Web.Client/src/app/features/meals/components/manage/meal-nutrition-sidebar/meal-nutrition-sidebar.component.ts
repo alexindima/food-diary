@@ -43,7 +43,7 @@ export class MealNutritionSidebarComponent {
     public readonly globalError = input.required<string | null>();
 
     public readonly nutritionModeChange = output<string>();
-    public readonly cancelRequested = output<void>();
+    public readonly cancelRequested = output();
     public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
 

@@ -98,13 +98,13 @@ export class ProductDetailComponent {
 
         return this.product.isOwnedByCurrentUser ? 'PRODUCT_DETAIL.WARNING_MESSAGE' : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     });
-    public readonly macroBlocks: {
+    public readonly macroBlocks: Array<{
         labelKey: string;
         value: number;
         unitKey: string;
         color: string;
         percent: number;
-    }[];
+    }>;
     public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',

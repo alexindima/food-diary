@@ -44,8 +44,8 @@ export class DailyProgressCardComponent {
     public readonly date = input.required<Date>();
     public readonly consumed = input<number>(0);
     public readonly goal = input<number>(0);
-    public readonly settingsClick = output<void>();
-    public readonly setGoalClick = output<void>();
+    public readonly settingsClick = output();
+    public readonly setGoalClick = output();
 
     public readonly hasGoal = computed(() => this.goal() > 0);
 

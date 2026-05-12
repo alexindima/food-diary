@@ -212,13 +212,13 @@ export class FastingCheckInChartDialogComponent {
         });
     }
 
-    private getTooltipPoint(items: readonly { dataIndex: number }[]): FastingCheckInChartPoint | undefined {
-        const tooltipItem = (items as readonly ({ dataIndex: number } | undefined)[])[0];
+    private getTooltipPoint(items: ReadonlyArray<{ dataIndex: number }>): FastingCheckInChartPoint | undefined {
+        const tooltipItem = (items as ReadonlyArray<{ dataIndex: number } | undefined>)[0];
         if (tooltipItem === undefined) {
             return undefined;
         }
 
-        return (this.points() as readonly (FastingCheckInChartPoint | undefined)[])[tooltipItem.dataIndex];
+        return (this.points() as ReadonlyArray<FastingCheckInChartPoint | undefined>)[tooltipItem.dataIndex];
     }
 
     private formatAxisLabel(value: string): string {

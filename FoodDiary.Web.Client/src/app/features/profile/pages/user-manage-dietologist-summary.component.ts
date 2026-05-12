@@ -34,8 +34,8 @@ export class UserManageDietologistSummaryComponent {
     public readonly isDietologistPending = input.required<boolean>();
     public readonly isDietologistConnected = input.required<boolean>();
 
-    public readonly dietologistInvite = output<void>();
-    public readonly dietologistRevoke = output<void>();
+    public readonly dietologistInvite = output();
+    public readonly dietologistRevoke = output();
 
     protected readonly labelView = computed(() => {
         if (this.isDietologistConnected()) {

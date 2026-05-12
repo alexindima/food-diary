@@ -20,8 +20,8 @@ export class RecipeListFavoritesComponent {
     public readonly hasMoreFavorites = input.required<boolean>();
     public readonly isFavoritesLoadingMore = input.required<boolean>();
 
-    public readonly favoritesToggle = output<void>();
-    public readonly favoritesLoadMore = output<void>();
+    public readonly favoritesToggle = output();
+    public readonly favoritesLoadMore = output();
     public readonly favoriteOpen = output<FavoriteRecipe>();
     public readonly favoriteAddToMeal = output<FavoriteRecipe>();
     public readonly favoriteRemove = output<FavoriteRecipe>();

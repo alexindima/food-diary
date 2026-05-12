@@ -73,7 +73,7 @@ export class ShoppingListPageComponent {
     public readonly listSelectControl = new FormControl<string | null>(null);
     public readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
     public readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
-    public unitOptions: FdUiSelectOption<MeasurementUnit>[] = [];
+    public unitOptions: Array<FdUiSelectOption<MeasurementUnit>> = [];
 
     private readonly unitValues = Object.values(MeasurementUnit) as MeasurementUnit[];
     private readonly isMobileManageOpen = signal(false);

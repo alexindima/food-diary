@@ -27,7 +27,7 @@ export class HydrationCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly canAdd = input.required<boolean>();
     public readonly addClick = output<number>();
-    public readonly goalAction = output<void>();
+    public readonly goalAction = output();
 
     public readonly addAmount = computed(() => Math.max(1, this.addStep));
     public readonly hasGoal = computed(() => {

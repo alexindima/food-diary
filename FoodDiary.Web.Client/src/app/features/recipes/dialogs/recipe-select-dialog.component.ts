@@ -65,7 +65,7 @@ export class RecipeSelectDialogComponent {
 
     public readonly embedded = input<boolean>(false);
     public readonly recipeSelected = output<Recipe>();
-    public readonly createRecipeRequested = output<void>();
+    public readonly createRecipeRequested = output();
     public readonly searchValue = signal<string | null>(null);
     public readonly onlyMineFilter = signal(false);
     public readonly searchSuffixIcon = computed(() => {

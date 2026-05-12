@@ -10,6 +10,6 @@ export class FdUiInlineAlertActionsComponent {
     public readonly primaryActionLabel = input<string | null>(null);
     public readonly secondaryActionLabel = input<string | null>(null);
 
-    public readonly primaryAction = output<void>();
-    public readonly secondaryAction = output<void>();
+    public readonly primaryAction = output();
+    public readonly secondaryAction = output();
 }

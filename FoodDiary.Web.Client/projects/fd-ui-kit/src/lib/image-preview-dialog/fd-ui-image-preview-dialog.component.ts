@@ -8,7 +8,7 @@ import { FdUiDialogRef } from '../dialog/fd-ui-dialog-ref';
 
 export interface FdUiImagePreviewDialogData {
     imageUrl?: string;
-    collageImages?: ReadonlyArray<FdUiImagePreviewDialogCollageImage>;
+    collageImages?: readonly FdUiImagePreviewDialogCollageImage[];
     alt?: string;
     title?: string;
 }

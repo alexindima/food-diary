@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { FdUiRadioGroupComponent, type FdUiRadioOption } from './fd-ui-radio-group.component';
 
 const OPTION_COUNT = 3;
-const TEST_OPTIONS: FdUiRadioOption<string>[] = [
+const TEST_OPTIONS: Array<FdUiRadioOption<string>> = [
     { value: 'a', label: 'Option A' },
     { value: 'b', label: 'Option B', description: 'Description B' },
     { value: 'c', label: 'Option C' },

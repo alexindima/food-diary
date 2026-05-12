@@ -104,7 +104,7 @@ export class ProductAiRecognitionDialogComponent {
         alcoholPerBase: new FormControl(0, { nonNullable: true }),
     });
 
-    public readonly unitOptions: FdUiSelectOption<MeasurementUnit>[] = Object.values(MeasurementUnit).map(unit => ({
+    public readonly unitOptions: Array<FdUiSelectOption<MeasurementUnit>> = Object.values(MeasurementUnit).map(unit => ({
         value: unit,
         label: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${MeasurementUnit[unit]}`),
     }));

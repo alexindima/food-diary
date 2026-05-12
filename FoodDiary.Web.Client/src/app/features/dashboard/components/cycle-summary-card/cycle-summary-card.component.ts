@@ -21,7 +21,7 @@ export class CycleSummaryCardComponent {
     public readonly predictions = input.required<CyclePredictions | null>();
     public readonly referenceDate = input.required<Date | string | null>();
     public readonly isLoading = input.required<boolean>();
-    public readonly setupAction = output<void>();
+    public readonly setupAction = output();
 
     private readonly normalizedStart = computed(() => this.normalizeDate(this.startDate()));
     private readonly normalizedReference = computed(() => this.normalizeDate(this.referenceDate()));

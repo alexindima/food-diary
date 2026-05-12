@@ -19,7 +19,7 @@ export class AiPhotoResultActionsComponent {
     public readonly isEditing = input.required<boolean>();
     public readonly editActionView = input.required<AiEditActionView>();
 
-    public readonly reanalyze = output<void>();
-    public readonly editAction = output<void>();
-    public readonly editCancel = output<void>();
+    public readonly reanalyze = output();
+    public readonly editAction = output();
+    public readonly editCancel = output();
 }

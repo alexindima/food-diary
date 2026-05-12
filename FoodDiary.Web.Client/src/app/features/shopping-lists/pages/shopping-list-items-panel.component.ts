@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { type FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -29,11 +29,11 @@ import type { ShoppingListItemFormGroup, ShoppingListItemViewModel } from './sho
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingListItemsPanelComponent {
-    public readonly itemForm = input.required<ShoppingListItemFormGroup>();
-    public readonly unitOptions = input.required<readonly FdUiSelectOption<MeasurementUnit>[]>();
+    public readonly itemForm = input.required<FormGroup<ShoppingListItemFormGroup>>();
+    public readonly unitOptions = input.required<Array<FdUiSelectOption<MeasurementUnit>>>();
     public readonly items = input.required<readonly ShoppingListItemViewModel[]>();
 
-    public readonly itemAdd = output<void>();
+    public readonly itemAdd = output();
     public readonly itemRemove = output<string>();
     public readonly itemCheckedChange = output<{ item: ShoppingListItemViewModel; checked: boolean }>();
 }

@@ -18,6 +18,6 @@ export class WeightHistoryFormCardComponent {
     public readonly isSaving = input.required<boolean>();
     public readonly isEditing = input.required<boolean>();
 
-    public readonly formSubmit = output<void>();
-    public readonly editCancel = output<void>();
+    public readonly formSubmit = output();
+    public readonly editCancel = output();
 }

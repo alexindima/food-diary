@@ -436,7 +436,7 @@ export class FastingPageComponent {
         return `fasting-history-checkins-${sessionId}`;
     }
 
-    private buildEmojiPickerOptions(labelKey: string, scale: FastingEmojiScaleOption[]): FdUiEmojiPickerOption<number>[] {
+    private buildEmojiPickerOptions(labelKey: string, scale: FastingEmojiScaleOption[]): Array<FdUiEmojiPickerOption<number>> {
         this.currentLanguage();
 
         const label = this.translateService.instant(labelKey);

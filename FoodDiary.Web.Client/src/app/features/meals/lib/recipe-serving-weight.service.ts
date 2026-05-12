@@ -4,7 +4,6 @@ import { catchError, map } from 'rxjs/operators';
 
 import { RecipeLookupService } from '../../../shared/api/recipe-lookup.service';
 import type { RecipeLookup, RecipeLookupIngredient } from '../../../shared/models/recipe-lookup.data';
-import { MeasurementUnit } from '../../products/models/product.data';
 import type { Recipe, RecipeIngredient } from '../../recipes/models/recipe.data';
 
 @Injectable({
@@ -94,7 +93,7 @@ export class RecipeServingWeightService {
             return null;
         }
 
-        if (unitRaw === MeasurementUnit.G || unitRaw === MeasurementUnit.ML) {
+        if (unitRaw === 'G' || unitRaw === 'ML') {
             return amount;
         }
 

@@ -40,7 +40,7 @@ export interface MealPlanMeal {
 
 export type DietType = 'Balanced' | 'HighProtein' | 'LowCarb' | 'Keto' | 'Mediterranean' | 'Vegan' | 'Vegetarian';
 
-export const DIET_TYPES: { value: DietType; labelKey: string }[] = [
+export const DIET_TYPES: Array<{ value: DietType; labelKey: string }> = [
     { value: 'Balanced', labelKey: 'MEAL_PLANS.DIET_TYPE.BALANCED' },
     { value: 'HighProtein', labelKey: 'MEAL_PLANS.DIET_TYPE.HIGH_PROTEIN' },
     { value: 'LowCarb', labelKey: 'MEAL_PLANS.DIET_TYPE.LOW_CARB' },

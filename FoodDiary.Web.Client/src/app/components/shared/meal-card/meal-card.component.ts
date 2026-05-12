@@ -32,7 +32,7 @@ export interface MealCardItem {
         product?: { imageUrl?: string | null; name?: string | null } | null;
         recipe?: { imageUrl?: string | null; name?: string | null } | null;
     } | null> | null;
-    aiSessions?: Array<{ imageUrl?: string | null; notes?: string | null; items?: Array<unknown> | null } | null> | null;
+    aiSessions?: Array<{ imageUrl?: string | null; notes?: string | null; items?: unknown[] | null } | null> | null;
 }
 
 export interface MealFavoriteChange {
@@ -62,7 +62,7 @@ export class MealCardComponent {
     private readonly locale = inject(LOCALE_ID);
 
     public readonly meal = input.required<MealCardItem>();
-    public readonly open = output<void>();
+    public readonly open = output();
     public readonly favoriteChanged = output<MealFavoriteChange>();
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
@@ -109,7 +109,7 @@ export class MealCardComponent {
 
         return resolved ?? this.fallbackMealImage;
     });
-    public readonly collageImages = computed<ReadonlyArray<EntityCardCollageImage>>(() => {
+    public readonly collageImages = computed<readonly EntityCardCollageImage[]>(() => {
         if (this.resolvePreviewImage() !== undefined) {
             return [];
         }

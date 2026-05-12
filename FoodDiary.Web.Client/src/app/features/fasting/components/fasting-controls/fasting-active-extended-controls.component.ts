@@ -34,19 +34,19 @@ export class FastingActiveExtendedControlsComponent {
     public readonly isUpdatingCycle = input.required<boolean>();
     public readonly endActionLabelKey = input.required<string>();
 
-    public readonly extendPanelToggle = output<void>();
-    public readonly reducePanelToggle = output<void>();
-    public readonly extendDay = output<void>();
-    public readonly extend36Hours = output<void>();
-    public readonly customExtendShow = output<void>();
+    public readonly extendPanelToggle = output();
+    public readonly reducePanelToggle = output();
+    public readonly extendDay = output();
+    public readonly extend36Hours = output();
+    public readonly customExtendShow = output();
     public readonly extendHoursChange = output<string | number>();
-    public readonly extendCustom = output<void>();
-    public readonly reduce4Hours = output<void>();
-    public readonly reduce8Hours = output<void>();
-    public readonly customReduceShow = output<void>();
+    public readonly extendCustom = output();
+    public readonly reduce4Hours = output();
+    public readonly reduce8Hours = output();
+    public readonly customReduceShow = output();
     public readonly reduceHoursChange = output<string | number>();
-    public readonly reduceCustom = output<void>();
-    public readonly end = output<void>();
+    public readonly reduceCustom = output();
+    public readonly end = output();
 
     protected readonly extendActionsDisabled = (): boolean => this.isExtending() || this.isReducing() || this.isEnding();
     protected readonly reduceActionsDisabled = (): boolean => this.isReducing() || this.isExtending() || this.isEnding();

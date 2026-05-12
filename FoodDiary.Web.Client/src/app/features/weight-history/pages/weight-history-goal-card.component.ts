@@ -13,8 +13,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryGoalCardComponent {
-    public readonly control = input.required<FormControl<string>>();
+    public readonly control = input.required<FormControl<string | null>>();
     public readonly isSaving = input.required<boolean>();
 
-    public readonly saveGoal = output<void>();
+    public readonly saveGoal = output();
 }

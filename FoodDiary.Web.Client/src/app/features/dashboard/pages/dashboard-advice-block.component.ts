@@ -18,5 +18,5 @@ export class DashboardAdviceBlockComponent {
     public readonly advice = input.required<DashboardDailyAdvice>();
     public readonly isLoading = input.required<boolean>();
 
-    public readonly blockToggle = output<void>();
+    public readonly blockToggle = output();
 }

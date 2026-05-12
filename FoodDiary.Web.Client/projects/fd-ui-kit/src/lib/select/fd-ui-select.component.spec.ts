@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiSelectComponent, type FdUiSelectOption } from './fd-ui-select.component';
 
-const TEST_OPTIONS: FdUiSelectOption<string>[] = [
+const TEST_OPTIONS: Array<FdUiSelectOption<string>> = [
     { value: 'apple', label: 'Apple' },
     { value: 'banana', label: 'Banana' },
     { value: 'cherry', label: 'Cherry' },

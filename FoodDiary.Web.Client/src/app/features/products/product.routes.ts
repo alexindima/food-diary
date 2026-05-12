@@ -10,15 +10,15 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                loadComponent: () => import('./pages/list/product-list-page.component').then(m => m.ProductListPageComponent),
+                loadComponent: async () => import('./pages/list/product-list-page.component').then(m => m.ProductListPageComponent),
             },
             {
                 path: 'add',
-                loadComponent: () => import('./pages/manage/product-add.component').then(m => m.ProductAddComponent),
+                loadComponent: async () => import('./pages/manage/product-add.component').then(m => m.ProductAddComponent),
             },
             {
                 path: ':id/edit',
-                loadComponent: () => import('./pages/manage/product-edit.component').then(m => m.ProductEditComponent),
+                loadComponent: async () => import('./pages/manage/product-edit.component').then(m => m.ProductEditComponent),
                 resolve: { product: productResolver },
             },
         ],

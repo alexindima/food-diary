@@ -16,5 +16,5 @@ export class TdeeInsightDialogFooterComponent {
     public readonly showSuggestion = input.required<boolean>();
 
     public readonly dialogClose = output<TdeeInsightDialogAction>();
-    public readonly suggestionApply = output<void>();
+    public readonly suggestionApply = output();
 }

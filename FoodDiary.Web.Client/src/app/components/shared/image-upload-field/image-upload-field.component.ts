@@ -303,7 +303,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         return ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
     }
 
-    private loadImageAsync(file: File): Promise<HTMLImageElement> {
+    private async loadImageAsync(file: File): Promise<HTMLImageElement> {
         return new Promise((resolve, reject) => {
             const url = URL.createObjectURL(file);
             const image = new Image();
@@ -319,7 +319,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         });
     }
 
-    private canvasToBlobAsync(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
+    private async canvasToBlobAsync(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
         return new Promise((resolve, reject) => {
             canvas.toBlob(
                 blob => {

@@ -30,5 +30,5 @@ export class RecipeListResultsComponent {
     public readonly recipeOpen = output<Recipe>();
     public readonly recipeAddToMeal = output<Recipe>();
     public readonly recipeFavoriteChanged = output<RecipeFavoriteChangeRequest>();
-    public readonly recipeAdd = output<void>();
+    public readonly recipeAdd = output();
 }

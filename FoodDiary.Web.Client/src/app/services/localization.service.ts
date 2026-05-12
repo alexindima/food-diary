@@ -40,7 +40,7 @@ export class LocalizationService {
             });
     }
 
-    public initializeLocalizationAsync(): Promise<void> {
+    public async initializeLocalizationAsync(): Promise<void> {
         this.translateService.addLangs(['en', 'ru']);
 
         const browserLang = this.translateService.getBrowserLang();
@@ -51,7 +51,7 @@ export class LocalizationService {
         return firstValueFrom(this.translateService.use(normalizedLang)).then(() => void 0);
     }
 
-    public applyLanguagePreferenceAsync(language: string | null | undefined): Promise<void> {
+    public async applyLanguagePreferenceAsync(language: string | null | undefined): Promise<void> {
         const normalized = this.normalizeLanguage(language);
         if (normalized.length === 0) {
             return Promise.resolve();
@@ -76,7 +76,7 @@ export class LocalizationService {
         return this.normalizeLanguage(current);
     }
 
-    public loadApplicationTranslationsAsync(): Promise<void> {
+    public async loadApplicationTranslationsAsync(): Promise<void> {
         const currentLang = this.getCurrentLanguage();
         if (this.applicationTranslationLanguages.has(currentLang)) {
             return Promise.resolve();
@@ -88,13 +88,13 @@ export class LocalizationService {
         });
     }
 
-    public loadTranslationsForRouteAsync(pathname: string): Promise<void> {
+    public async loadTranslationsForRouteAsync(pathname: string): Promise<void> {
         return this.translationLoader.isPublicRoute(pathname)
             ? this.loadRouteTranslationsAsync(pathname)
             : this.loadApplicationTranslationsAsync();
     }
 
-    public loadRouteTranslationsAsync(pathname: string): Promise<void> {
+    public async loadRouteTranslationsAsync(pathname: string): Promise<void> {
         const currentLang = this.getCurrentLanguage();
         const normalizedPath = this.normalizeRouteKey(pathname);
         const cacheKey = `${currentLang}:${normalizedPath}`;
