@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { filter, switchMap } from 'rxjs';
 
 import { AdminLessonsService } from '../api/admin-lessons.service';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog.component';
@@ -108,20 +109,15 @@ export class AdminLessonsComponent {
                 },
             })
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(confirmed => {
-                if (confirmed !== true) {
-                    return;
-                }
-
-                this.lessonsService
-                    .delete(lesson.id)
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe({
-                        next: () => {
-                            this.loadLessons();
-                        },
-                    });
+            .pipe(
+                filter((confirmed): confirmed is true => confirmed === true),
+                switchMap(() => this.lessonsService.delete(lesson.id)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: () => {
+                    this.loadLessons();
+                },
             });
     }
 

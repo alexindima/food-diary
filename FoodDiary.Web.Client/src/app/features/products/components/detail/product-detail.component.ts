@@ -11,6 +11,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { of, switchMap } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -307,29 +308,24 @@ export class ProductDetailComponent {
                 return;
             }
 
-            this.favoriteProductService.getAll().subscribe({
-                next: favorites => {
-                    const match = favorites.find(f => f.productId === this.product.id);
-                    if (match !== undefined) {
-                        this.favoriteProductService.remove(match.id).subscribe({
-                            next: () => {
-                                this.isFavorite.set(false);
-                                this.favoriteProductId = null;
-                                this.isFavoriteLoading.set(false);
-                            },
-                            error: () => {
-                                this.isFavoriteLoading.set(false);
-                            },
-                        });
-                    } else {
+            this.favoriteProductService
+                .getAll()
+                .pipe(
+                    switchMap(favorites => {
+                        const match = favorites.find(f => f.productId === this.product.id);
+                        return match === undefined ? of(null) : this.favoriteProductService.remove(match.id);
+                    }),
+                )
+                .subscribe({
+                    next: () => {
                         this.isFavorite.set(false);
+                        this.favoriteProductId = null;
                         this.isFavoriteLoading.set(false);
-                    }
-                },
-                error: () => {
-                    this.isFavoriteLoading.set(false);
-                },
-            });
+                    },
+                    error: () => {
+                        this.isFavoriteLoading.set(false);
+                    },
+                });
         } else {
             this.favoriteProductService.add(this.product.id).subscribe({
                 next: favorite => {

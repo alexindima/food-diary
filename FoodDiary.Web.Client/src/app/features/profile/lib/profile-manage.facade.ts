@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { finalize, firstValueFrom } from 'rxjs';
+import { filter, finalize, firstValueFrom, switchMap, tap } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -117,34 +117,34 @@ export class ProfileManageFacade {
                 data,
             })
             .afterClosed()
-            .subscribe(confirmed => {
-                if (confirmed !== true || this.isDeleting()) {
-                    return;
-                }
-
-                this.isDeleting.set(true);
-                this.userService
-                    .deleteCurrentUser()
-                    .pipe(
+            .pipe(
+                filter((confirmed): confirmed is true => confirmed === true),
+                filter(() => !this.isDeleting()),
+                tap(() => {
+                    this.isDeleting.set(true);
+                }),
+                switchMap(() =>
+                    this.userService.deleteCurrentUser().pipe(
                         finalize(() => {
                             this.isDeleting.set(false);
                         }),
-                    )
-                    .subscribe({
-                        next: success => {
-                            if (success !== true) {
-                                this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
-                                return;
-                            }
+                    ),
+                ),
+            )
+            .subscribe({
+                next: success => {
+                    if (success !== true) {
+                        this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
+                        return;
+                    }
 
-                            this.user.set(null);
-                            this.clearGlobalError();
-                            void this.authService.onLogoutAsync(true);
-                        },
-                        error: () => {
-                            this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
-                        },
-                    });
+                    this.user.set(null);
+                    this.clearGlobalError();
+                    void this.authService.onLogoutAsync(true);
+                },
+                error: () => {
+                    this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
+                },
             });
     }
 

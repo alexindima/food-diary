@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
-import { finalize } from 'rxjs';
+import { filter, finalize, switchMap } from 'rxjs';
 
 import { CommentService } from '../../api/comment.service';
 import type { RecipeComment } from '../../models/comment.data';
@@ -122,15 +122,13 @@ export class RecipeCommentsComponent {
                 },
             })
             .afterClosed()
-            .subscribe(confirmed => {
-                if (confirmed === true) {
-                    this.commentService
-                        .deleteComment(this.recipeId(), comment.id)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.loadComments();
-                        });
-                }
+            .pipe(
+                filter((confirmed): confirmed is true => confirmed === true),
+                switchMap(() => this.commentService.deleteComment(this.recipeId(), comment.id)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.loadComments();
             });
     }
 

@@ -5,7 +5,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize } from 'rxjs';
+import { EMPTY, finalize, switchMap } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
@@ -57,41 +57,46 @@ export class ProductListPageComponent extends ProductListBaseComponent {
                 data: product,
             })
             .afterClosed()
-            .subscribe(data => {
-                if (!(data instanceof ProductDetailActionResult)) {
-                    return;
-                }
+            .pipe(
+                switchMap(data => {
+                    if (!(data instanceof ProductDetailActionResult)) {
+                        return EMPTY;
+                    }
 
-                const result = data;
-                if (result.action === 'FavoriteChanged') {
-                    this.loadFavorites();
-                    this.reloadCurrentPage();
-                    return;
-                }
+                    const result = data;
+                    if (result.action === 'FavoriteChanged') {
+                        this.loadFavorites();
+                        this.reloadCurrentPage();
+                        return EMPTY;
+                    }
 
-                if (result.action === 'Edit' || result.action === 'Duplicate') {
-                    void this.navigationService.navigateToProductEditAsync(result.id);
-                    return;
-                }
+                    if (result.action === 'Edit' || result.action === 'Duplicate') {
+                        void this.navigationService.navigateToProductEditAsync(result.id);
+                        return EMPTY;
+                    }
 
-                if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
-                    return;
-                }
-                this.isDeleteInProgress = true;
-                this.productData.setLoading(true);
-                this.productService
-                    .deleteById(result.id)
-                    .pipe(finalize(() => (this.isDeleteInProgress = false)))
-                    .subscribe({
-                        next: () => {
+                    if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
+                        return EMPTY;
+                    }
+
+                    this.isDeleteInProgress = true;
+                    this.productData.setLoading(true);
+                    return this.productService.deleteById(result.id).pipe(
+                        switchMap(() => {
                             this.scrollToTop();
-                            this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
-                        },
-                        error: () => {
-                            this.productData.setLoading(false);
-                            this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
-                        },
-                    });
+                            return this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value);
+                        }),
+                        finalize(() => {
+                            this.isDeleteInProgress = false;
+                        }),
+                    );
+                }),
+            )
+            .subscribe({
+                error: () => {
+                    this.productData.setLoading(false);
+                    this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
+                },
             });
     }
 }

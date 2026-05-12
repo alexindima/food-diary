@@ -7,7 +7,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
@@ -235,30 +235,34 @@ export class ProductListBaseComponent {
                 },
             })
             .afterClosed()
-            .subscribe(result => {
-                if (result === null || result === undefined) {
-                    return;
-                }
+            .pipe(
+                switchMap(result => {
+                    if (result === null || result === undefined) {
+                        return EMPTY;
+                    }
 
-                const normalizedTypes = this.normalizeProductTypes(result.productTypes);
-                const onlyMineChanged = currentOnlyMine !== result.onlyMine;
-                const typesChanged = !this.areProductTypesEqual(currentTypes, normalizedTypes);
+                    const normalizedTypes = this.normalizeProductTypes(result.productTypes);
+                    const onlyMineChanged = currentOnlyMine !== result.onlyMine;
+                    const typesChanged = !this.areProductTypesEqual(currentTypes, normalizedTypes);
 
-                if (!onlyMineChanged && !typesChanged) {
-                    return;
-                }
+                    if (!onlyMineChanged && !typesChanged) {
+                        return EMPTY;
+                    }
 
-                if (typesChanged) {
-                    this.selectedProductTypes.set(normalizedTypes);
-                }
+                    if (typesChanged) {
+                        this.selectedProductTypes.set(normalizedTypes);
+                    }
 
-                if (onlyMineChanged) {
-                    this.searchForm.controls.onlyMine.setValue(result.onlyMine);
-                    return;
-                }
+                    if (onlyMineChanged) {
+                        this.searchForm.controls.onlyMine.setValue(result.onlyMine);
+                        return EMPTY;
+                    }
 
-                this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
-            });
+                    return this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {

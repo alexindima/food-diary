@@ -10,6 +10,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { of, switchMap } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -451,29 +452,24 @@ export class RecipeDetailComponent {
                 return;
             }
 
-            this.favoriteRecipeService.getAll().subscribe({
-                next: favorites => {
-                    const match = favorites.find(f => f.recipeId === this.recipe.id);
-                    if (match !== undefined) {
-                        this.favoriteRecipeService.remove(match.id).subscribe({
-                            next: () => {
-                                this.isFavorite.set(false);
-                                this.favoriteRecipeId = null;
-                                this.isFavoriteLoading.set(false);
-                            },
-                            error: () => {
-                                this.isFavoriteLoading.set(false);
-                            },
-                        });
-                    } else {
+            this.favoriteRecipeService
+                .getAll()
+                .pipe(
+                    switchMap(favorites => {
+                        const match = favorites.find(f => f.recipeId === this.recipe.id);
+                        return match === undefined ? of(null) : this.favoriteRecipeService.remove(match.id);
+                    }),
+                )
+                .subscribe({
+                    next: () => {
                         this.isFavorite.set(false);
+                        this.favoriteRecipeId = null;
                         this.isFavoriteLoading.set(false);
-                    }
-                },
-                error: () => {
-                    this.isFavoriteLoading.set(false);
-                },
-            });
+                    },
+                    error: () => {
+                        this.isFavoriteLoading.set(false);
+                    },
+                });
         } else {
             this.favoriteRecipeService.add(this.recipe.id).subscribe({
                 next: favorite => {

@@ -12,6 +12,7 @@ import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { of, switchMap } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -331,29 +332,24 @@ export class MealDetailComponent {
                     },
                 });
             } else {
-                this.favoriteMealService.getAll().subscribe({
-                    next: favorites => {
-                        const match = favorites.find(f => f.mealId === this.consumption.id);
-                        if (match !== undefined) {
-                            this.favoriteMealService.remove(match.id).subscribe({
-                                next: () => {
-                                    this.isFavorite.set(false);
-                                    this.favoriteMealId = null;
-                                    this.isFavoriteLoading.set(false);
-                                },
-                                error: () => {
-                                    this.isFavoriteLoading.set(false);
-                                },
-                            });
-                        } else {
+                this.favoriteMealService
+                    .getAll()
+                    .pipe(
+                        switchMap(favorites => {
+                            const match = favorites.find(f => f.mealId === this.consumption.id);
+                            return match === undefined ? of(null) : this.favoriteMealService.remove(match.id);
+                        }),
+                    )
+                    .subscribe({
+                        next: () => {
                             this.isFavorite.set(false);
+                            this.favoriteMealId = null;
                             this.isFavoriteLoading.set(false);
-                        }
-                    },
-                    error: () => {
-                        this.isFavoriteLoading.set(false);
-                    },
-                });
+                        },
+                        error: () => {
+                            this.isFavoriteLoading.set(false);
+                        },
+                    });
             }
         } else {
             this.favoriteMealService.add(this.consumption.id).subscribe({

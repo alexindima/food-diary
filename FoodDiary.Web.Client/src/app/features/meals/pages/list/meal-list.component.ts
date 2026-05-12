@@ -6,7 +6,7 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { debounceTime, type Observable, switchMap } from 'rxjs';
+import { debounceTime, EMPTY, type Observable, switchMap } from 'rxjs';
 
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import type { MealFavoriteChange } from '../../../../components/shared/meal-card/meal-card.component';
@@ -171,36 +171,40 @@ export class MealListComponent {
                 data: consumption,
             })
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(data => {
-                if (data === undefined) {
-                    return;
-                }
+            .pipe(
+                switchMap(data => {
+                    if (data === undefined) {
+                        return EMPTY;
+                    }
 
-                if (data.action === 'FavoriteChanged') {
-                    this.loadFavorites();
-                    this.reloadCurrentPage();
-                } else if (data.action === 'Edit') {
-                    void this.navigationService.navigateToConsumptionEditAsync(data.id);
-                } else if (data.action === 'Repeat') {
-                    const targetDate = new Date();
-                    this.mealListFacade
-                        .repeatMeal(data.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate), this.dateRange)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(repeated => {
-                            if (repeated) {
-                                this.scrollToTop();
-                            }
-                        });
-                } else {
-                    this.mealListFacade
-                        .deleteMeal(data.id, this.dateRange)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(deleted => {
-                            if (deleted) {
-                                this.scrollToTop();
-                            }
-                        });
+                    if (data.action === 'FavoriteChanged') {
+                        this.loadFavorites();
+                        this.reloadCurrentPage();
+                        return EMPTY;
+                    }
+
+                    if (data.action === 'Edit') {
+                        void this.navigationService.navigateToConsumptionEditAsync(data.id);
+                        return EMPTY;
+                    }
+
+                    if (data.action === 'Repeat') {
+                        const targetDate = new Date();
+                        return this.mealListFacade.repeatMeal(
+                            data.id,
+                            targetDate.toISOString(),
+                            resolveMealTypeByTime(targetDate),
+                            this.dateRange,
+                        );
+                    }
+
+                    return this.mealListFacade.deleteMeal(data.id, this.dateRange);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(changed => {
+                if (changed) {
+                    this.scrollToTop();
                 }
             });
     }

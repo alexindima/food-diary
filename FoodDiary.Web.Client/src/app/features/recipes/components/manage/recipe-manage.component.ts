@@ -657,6 +657,14 @@ export class RecipeManageComponent {
     }
 
     private populateManualNutritionFromCurrentSummary(): void {
+        this.patchManualNutritionFromCurrentSummary();
+    }
+
+    private syncManualControlsWithSummary(): void {
+        this.patchManualNutritionFromCurrentSummary();
+    }
+
+    private patchManualNutritionFromCurrentSummary(): void {
         this.recipeForm.patchValue(
             {
                 manualCalories: this.fromRecipeTotal(this.totalCalories()),
@@ -688,20 +696,6 @@ export class RecipeManageComponent {
         if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
             this.syncManualControlsWithSummary();
         }
-    }
-
-    private syncManualControlsWithSummary(): void {
-        this.recipeForm.patchValue(
-            {
-                manualCalories: this.fromRecipeTotal(this.totalCalories()),
-                manualProteins: this.fromRecipeTotal(this.nutrientChartData().proteins),
-                manualFats: this.fromRecipeTotal(this.nutrientChartData().fats),
-                manualCarbs: this.fromRecipeTotal(this.nutrientChartData().carbs),
-                manualFiber: this.fromRecipeTotal(this.totalFiber()),
-                manualAlcohol: this.fromRecipeTotal(this.totalAlcohol()),
-            },
-            { emitEvent: false },
-        );
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {

@@ -134,12 +134,7 @@ export class GoalsPageComponent {
     }
 
     protected onCaloriesInput(event: Event): void {
-        const target = this.getInputTarget(event);
-        if (target === null) {
-            return;
-        }
-
-        this.facade.updateCalories(Number(target.value));
+        this.updateCaloriesFromEvent(event);
     }
 
     protected onBodyTargetChange(key: BodyTargetKey, event: Event): void {
@@ -169,6 +164,10 @@ export class GoalsPageComponent {
     }
 
     protected onSliderInput(event: Event): void {
+        this.updateCaloriesFromEvent(event);
+    }
+
+    private updateCaloriesFromEvent(event: Event): void {
         const target = this.getInputTarget(event);
         if (target === null) {
             return;

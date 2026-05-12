@@ -161,7 +161,7 @@ const normalizeActivityLevel = (value: ActivityLevelOption | null | undefined): 
     return lower.charAt(0).toUpperCase() + lower.slice(1);
 };
 
-const normalizeLanguage = (value: string | null | undefined): string | undefined => {
+const normalizeLowercaseString = (value: string | null | undefined): string | undefined => {
     if (value === null || value === undefined) {
         return undefined;
     }
@@ -170,23 +170,9 @@ const normalizeLanguage = (value: string | null | undefined): string | undefined
     return normalized.length > 0 ? normalized : undefined;
 };
 
-const normalizeTheme = (value: string | null | undefined): string | undefined => {
-    if (value === null || value === undefined) {
-        return undefined;
-    }
-
-    const normalized = value.trim().toLowerCase();
-    return normalized.length > 0 ? normalized : undefined;
-};
-
-const normalizeUiStyle = (value: string | null | undefined): string | undefined => {
-    if (value === null || value === undefined) {
-        return undefined;
-    }
-
-    const normalized = value.trim().toLowerCase();
-    return normalized.length > 0 ? normalized : undefined;
-};
+const normalizeLanguage = normalizeLowercaseString;
+const normalizeTheme = normalizeLowercaseString;
+const normalizeUiStyle = normalizeLowercaseString;
 
 const normalizeBoolean = (value: boolean | null | undefined): boolean | undefined => value ?? undefined;
 

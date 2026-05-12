@@ -11,7 +11,7 @@ import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-en
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
-import { type MappedStatistics, StatisticsMapper } from '../models/statistics.data';
+import { type MappedStatistics, mapStatistics } from '../models/statistics.data';
 import {
     type BodyChartTab,
     buildBodyChartData,
@@ -231,7 +231,7 @@ export class StatisticsFacade {
             )
             .subscribe({
                 next: data => {
-                    this.chartStatisticsData.set(StatisticsMapper.mapStatistics(data));
+                    this.chartStatisticsData.set(mapStatistics(data));
                     this.hasLoadError.set(false);
                 },
                 error: () => {

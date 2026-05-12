@@ -8,10 +8,22 @@ import parser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
+import sonarjsPlugin from 'eslint-plugin-sonarjs';
 
 const getTemplateAttributes = node => [...(node.attributes ?? []), ...(node.inputs ?? [])];
 
 const hasTemplateAttribute = (node, name) => getTemplateAttributes(node).some(attribute => attribute.name === name);
+
+const noAnyCastSyntax = [
+    {
+        selector: 'TSAsExpression[typeAnnotation.type="TSAnyKeyword"]',
+        message: 'Do not cast to any. Fix the type or narrow the value instead.',
+    },
+    {
+        selector: 'TSTypeAssertion[typeAnnotation.type="TSAnyKeyword"]',
+        message: 'Do not cast to any. Fix the type or narrow the value instead.',
+    },
+];
 
 const isAriaHidden = node =>
     getTemplateAttributes(node).some(
@@ -142,6 +154,11 @@ const getPropertyName = key => {
     return null;
 };
 
+const isSubscribeCall = node =>
+    node.type === 'CallExpression' &&
+    node.callee.type === 'MemberExpression' &&
+    getPropertyName(node.callee.property) === 'subscribe';
+
 const isThenableType = (checker, type) => {
     if (checker.getPromisedTypeOfPromise(type)) {
         return true;
@@ -230,6 +247,43 @@ const localTsPlugin = {
                 };
             },
         },
+        'no-nested-subscribe': {
+            meta: {
+                type: 'problem',
+                docs: {
+                    description: 'Disallow subscribe() calls inside another subscribe() callback.',
+                },
+                messages: {
+                    nestedSubscribe: 'Avoid nested subscribe(). Compose observables with switchMap, concatMap, mergeMap, or exhaustMap.',
+                },
+                schema: [],
+            },
+            create(context) {
+                let subscribeDepth = 0;
+
+                return {
+                    CallExpression(node) {
+                        if (!isSubscribeCall(node)) {
+                            return;
+                        }
+
+                        if (subscribeDepth > 0) {
+                            context.report({
+                                node,
+                                messageId: 'nestedSubscribe',
+                            });
+                        }
+
+                        subscribeDepth += 1;
+                    },
+                    'CallExpression:exit'(node) {
+                        if (isSubscribeCall(node)) {
+                            subscribeDepth -= 1;
+                        }
+                    },
+                };
+            },
+        },
     },
 };
 
@@ -256,6 +310,7 @@ export default [
             'eslint-comments': eslintCommentsPlugin,
             prettier: prettierPlugin,
             'simple-import-sort': simpleImportSortPlugin,
+            sonarjs: sonarjsPlugin,
             local: localTsPlugin,
         },
         rules: {
@@ -291,6 +346,12 @@ export default [
             'no-unreachable': 'error',
             'simple-import-sort/imports': 'error',
             'simple-import-sort/exports': 'error',
+            'sonarjs/no-duplicated-branches': 'error',
+            'sonarjs/no-identical-functions': 'error',
+            'sonarjs/no-nested-switch': 'error',
+            'sonarjs/no-redundant-boolean': 'error',
+            'sonarjs/no-small-switch': 'error',
+            'sonarjs/prefer-single-boolean-return': 'error',
             '@typescript-eslint/explicit-member-accessibility': [
                 'error',
                 {
@@ -388,6 +449,12 @@ export default [
             '@typescript-eslint/no-duplicate-type-constituents': 'error',
             '@typescript-eslint/no-dynamic-delete': 'error',
             '@typescript-eslint/no-empty-object-type': 'error',
+            '@typescript-eslint/no-extraneous-class': [
+                'error',
+                {
+                    allowWithDecorator: true,
+                },
+            ],
             '@typescript-eslint/no-magic-numbers': [
                 'error',
                 {
@@ -416,6 +483,7 @@ export default [
             '@typescript-eslint/no-unsafe-member-access': 'error',
             '@typescript-eslint/no-unsafe-return': 'error',
             '@typescript-eslint/no-unsafe-type-assertion': 'error',
+            '@typescript-eslint/no-wrapper-object-types': 'error',
             '@typescript-eslint/only-throw-error': 'error',
             '@typescript-eslint/prefer-find': 'error',
             '@typescript-eslint/prefer-for-of': 'error',
@@ -460,7 +528,9 @@ export default [
                     ignoreStatic: true,
                 },
             ],
+            'no-restricted-syntax': ['error', ...noAnyCastSyntax],
             'local/async-function-suffix': 'error',
+            'local/no-nested-subscribe': 'error',
         },
     },
     {
@@ -506,6 +576,7 @@ export default [
             '@angular-eslint/use-component-view-encapsulation': 'error',
             'no-restricted-syntax': [
                 'error',
+                ...noAnyCastSyntax,
                 {
                     selector: 'Decorator[expression.callee.name="HostListener"]',
                     message:

@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { EMPTY, finalize, type Observable } from 'rxjs';
+import { catchError, EMPTY, finalize, type Observable, of, switchMap } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -72,6 +72,7 @@ export class DietologistInvitationPageComponent {
         this.dietologistService
             .acceptInvitationForCurrentUser(invitationId)
             .pipe(
+                switchMap(() => this.authService.refreshToken().pipe(catchError(() => of(null)))),
                 finalize(() => {
                     this.isSubmitting.set(false);
                 }),
@@ -79,17 +80,7 @@ export class DietologistInvitationPageComponent {
             )
             .subscribe({
                 next: () => {
-                    this.authService
-                        .refreshToken()
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe({
-                            next: () => {
-                                this.state.set('accepted');
-                            },
-                            error: () => {
-                                this.state.set('accepted');
-                            },
-                        });
+                    this.state.set('accepted');
                 },
                 error: () => {
                     this.state.set('error');

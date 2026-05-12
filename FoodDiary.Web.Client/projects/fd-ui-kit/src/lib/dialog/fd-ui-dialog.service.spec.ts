@@ -1,10 +1,14 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { type GlobalPositionStrategy, Overlay } from '@angular/cdk/overlay';
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiDialogService } from './fd-ui-dialog.service';
 
+@Component({
+    template: '',
+})
 class DummyDialogComponent {}
 
 type DialogOpenMock = ReturnType<typeof vi.fn<Dialog['open']>>;
