@@ -98,12 +98,12 @@
 
 @container fd-ui-segmented-toggle (max-width: 34rem) {
 
-    .fd-ui-segmented-toggle {
+    .fd-ui-segmented-toggle--stack-on-narrow {
         flex-direction: column;
         width: 100%;
     }
 
-    .fd-ui-segmented-toggle__item {
+    .fd-ui-segmented-toggle--stack-on-narrow .fd-ui-segmented-toggle__item {
         width: 100%;
     }
 }

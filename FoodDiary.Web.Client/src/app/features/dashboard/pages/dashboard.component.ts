@@ -54,6 +54,9 @@ const LANGUAGE_VERSION_INCREMENT = 1;
 @Component({
     selector: 'fd-dashboard',
     standalone: true,
+    host: {
+        class: 'dashboard-host',
+    },
     imports: [
         PageBodyComponent,
         FdPageContainerDirective,

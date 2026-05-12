@@ -28,6 +28,7 @@ export class FdUiSegmentedToggleComponent {
     public readonly size = input<FdUiSegmentedToggleSize>('md');
     public readonly fullWidth = input(false);
     public readonly shrinkItems = input(false);
+    public readonly stackOnNarrow = input(true);
 
     protected readonly containerClass = computed(() => {
         const classes = [
@@ -40,6 +41,9 @@ export class FdUiSegmentedToggleComponent {
         }
         if (this.shrinkItems()) {
             classes.push('fd-ui-segmented-toggle--shrink-items');
+        }
+        if (this.stackOnNarrow()) {
+            classes.push('fd-ui-segmented-toggle--stack-on-narrow');
         }
         return classes.join(' ');
     });

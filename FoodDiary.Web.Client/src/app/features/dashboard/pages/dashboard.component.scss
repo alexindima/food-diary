@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 @use './dashboard-shell' as dashboard-shell;
 
-:host {
+:host(.dashboard-host) {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;

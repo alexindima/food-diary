@@ -4,16 +4,15 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from './fd-ui-segmented-toggle.component';
 
 const OPTION_COUNT = 3;
+const testOptions: FdUiSegmentedToggleOption[] = [
+    { value: 'day', label: 'Day' },
+    { value: 'week', label: 'Week' },
+    { value: 'month', label: 'Month' },
+];
 
 describe('FdUiSegmentedToggleComponent', () => {
     let component: FdUiSegmentedToggleComponent;
     let fixture: ComponentFixture<FdUiSegmentedToggleComponent>;
-
-    const testOptions: FdUiSegmentedToggleOption[] = [
-        { value: 'day', label: 'Day' },
-        { value: 'week', label: 'Week' },
-        { value: 'month', label: 'Month' },
-    ];
 
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
     const radioButtons = (): HTMLButtonElement[] => Array.from(host().querySelectorAll<HTMLButtonElement>('[role="radio"]'));
@@ -82,6 +81,15 @@ describe('FdUiSegmentedToggleComponent', () => {
 
         const container = requireElement<HTMLElement>('.fd-ui-segmented-toggle');
         expect(container.classList).toContain('fd-ui-segmented-toggle--size-sm');
+    });
+
+    it('should control narrow stacking class', () => {
+        const container = requireElement<HTMLElement>('.fd-ui-segmented-toggle');
+        expect(container.classList).toContain('fd-ui-segmented-toggle--stack-on-narrow');
+
+        fixture.componentRef.setInput('stackOnNarrow', false);
+        fixture.detectChanges();
+        expect(container.classList).not.toContain('fd-ui-segmented-toggle--stack-on-narrow');
     });
 
     it('should emit selectedValue change', () => {

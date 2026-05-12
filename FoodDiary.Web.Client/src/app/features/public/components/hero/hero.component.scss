@@ -23,6 +23,11 @@
 
     &__language-toggle {
         max-width: 100%;
+        width: 8rem;
+        min-width: 0;
+        --fd-segmented-toggle-active-background: var(--fd-color-primary-500);
+        --fd-segmented-toggle-active-color: var(--fd-color-white);
+        --fd-segmented-toggle-active-shadow: var(--fd-shadow-md);
     }
 
     &__grid {
