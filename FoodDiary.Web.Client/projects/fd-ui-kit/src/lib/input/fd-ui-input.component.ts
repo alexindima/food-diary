@@ -79,9 +79,14 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     protected readonly sizeClass = computed(() => `fd-ui-input--size-${this.size()}`);
     protected readonly appearanceClass = computed(() => `fd-ui-input--appearance-${this.appearance()}`);
+    protected readonly hasError = computed(() => {
+        const error = this.error();
+
+        return error !== null && error !== undefined && error.trim().length > 0;
+    });
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-input ${this.sizeClass()} ${this.appearanceClass()}${this.error() !== null ? ' fd-ui-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-input--floating' : ''}`,
+            `fd-ui-input ${this.sizeClass()} ${this.appearanceClass()}${this.hasError() ? ' fd-ui-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-input--floating' : ''}`,
     );
     protected readonly isDateInput = computed(() => {
         const type = this.type();

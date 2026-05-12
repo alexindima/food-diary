@@ -11,7 +11,7 @@
                 >
                     <div class="product-select__thumb fd-place-center">
                         @if (item.imageUrl) {
-                            <img width="64" height="64" [ngSrc]="item.imageUrl" [alt]="item.product.name" />
+                            <img width="64" height="64" [attr.src]="item.imageUrl" [alt]="item.product.name" />
                         } @else {
                             <fd-ui-icon name="restaurant" />
                         }

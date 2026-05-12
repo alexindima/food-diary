@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -11,7 +10,7 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
 
 @Component({
     selector: 'fd-recipe-select-dialog-content',
-    imports: [NgOptimizedImage, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, FdUiLoaderComponent],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, FdUiLoaderComponent],
     templateUrl: './recipe-select-dialog-content.component.html',
     styleUrl: './recipe-select-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -46,6 +46,9 @@ export class NutritionEditorComponent {
     public readonly showManualHint = input(false);
     public readonly manualHintKey = input('');
     public readonly warning = input<NutritionMismatchWarning | null>(null);
+    protected readonly hasCaloriesError = computed(() => this.hasText(this.caloriesError()));
+    protected readonly hasMacrosError = computed(() => this.hasText(this.macrosError()));
+    protected readonly hasManualHint = computed(() => this.showManualHint() && this.manualHintKey().trim().length > 0);
 
     public readonly nutrientFillColors = {
         calories: 'var(--fd-color-nutrition-calories-fill)',
@@ -73,6 +76,10 @@ export class NutritionEditorComponent {
             })),
         };
     });
+
+    private hasText(value: string | null): boolean {
+        return value !== null && value.trim().length > 0;
+    }
 }
 
 type NutritionMacroBarViewModel = {

@@ -1,4 +1,4 @@
-import { DecimalPipe, NgOptimizedImage } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
@@ -8,7 +8,7 @@ import type { OpenFoodFactsProduct } from '../../api/open-food-facts.service';
 
 @Component({
     selector: 'fd-product-list-off-section',
-    imports: [DecimalPipe, NgOptimizedImage, TranslatePipe, FdUiIconComponent, SkeletonCardComponent],
+    imports: [DecimalPipe, TranslatePipe, FdUiIconComponent, SkeletonCardComponent],
     templateUrl: './product-list-off-section.component.html',
     styleUrl: './product-list-base.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

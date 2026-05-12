@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import type { FormGroup } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -38,7 +38,7 @@ type QuickConsumptionToggleView = {
 @Component({
     selector: 'fd-quick-consumption-drawer',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, NgOptimizedImage, MealDetailsFieldsComponent],
+    imports: [CommonModule, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, MealDetailsFieldsComponent],
     templateUrl: './quick-consumption-drawer.component.html',
     styleUrls: ['./quick-consumption-drawer.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

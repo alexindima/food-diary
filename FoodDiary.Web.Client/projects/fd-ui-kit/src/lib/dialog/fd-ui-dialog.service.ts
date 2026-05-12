@@ -47,7 +47,7 @@ export class FdUiDialogService {
 
         const dialogConfig: DialogConfig<D, DialogRef<R, T>> = {
             ...config,
-            width: config.width ?? (layout.isEdgeMobile ? '100vw' : undefined),
+            width: config.width ?? this.resolveDialogWidth(layout, size),
             maxWidth: config.maxWidth ?? (layout.isEdgeMobile ? '100vw' : undefined),
             positionStrategy,
             panelClass: this.withSizeClass(layout.panelClass, size),
@@ -89,6 +89,18 @@ export class FdUiDialogService {
 
     private withSizeClass(panelClass: string[], size: FdUiDialogSize): string[] {
         return [...panelClass, `fd-ui-dialog-panel--${size}`];
+    }
+
+    private resolveDialogWidth(layout: ResolvedDialogLayout, size: FdUiDialogSize): string | undefined {
+        if (layout.isFullscreen) {
+            return undefined;
+        }
+
+        if (layout.isEdgeMobile) {
+            return '100vw';
+        }
+
+        return `min(calc(100vw - var(--fd-size-dialog-panel-width-offset)), var(--fd-size-dialog-panel-width-${size}))`;
     }
 
     private resolvePositionStrategy(layout: ResolvedDialogLayout): DialogConfig['positionStrategy'] {

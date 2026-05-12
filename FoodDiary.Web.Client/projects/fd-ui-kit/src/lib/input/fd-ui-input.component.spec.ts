@@ -106,9 +106,31 @@ describe('FdUiInputComponent rendering', () => {
         fixture.componentRef.setInput('error', 'Field is required');
         fixture.detectChanges();
 
+        const wrapper = el.querySelector('.fd-ui-input');
         const errorEl = el.querySelector('.fd-ui-input__error');
+        expect(wrapper?.classList).toContain('fd-ui-input--has-error');
         expect(errorEl).toBeTruthy();
         expect(errorEl?.textContent).toBe('Field is required');
+    });
+
+    it('should not apply error state when error is omitted', async () => {
+        const { el } = await setupInputAsync();
+
+        const wrapper = el.querySelector('.fd-ui-input');
+        const errorEl = el.querySelector('.fd-ui-input__error');
+        expect(wrapper?.classList).not.toContain('fd-ui-input--has-error');
+        expect(errorEl).toBeNull();
+    });
+
+    it('should not apply error state for blank error text', async () => {
+        const { el, fixture } = await setupInputAsync();
+        fixture.componentRef.setInput('error', '   ');
+        fixture.detectChanges();
+
+        const wrapper = el.querySelector('.fd-ui-input');
+        const errorEl = el.querySelector('.fd-ui-input__error');
+        expect(wrapper?.classList).not.toContain('fd-ui-input--has-error');
+        expect(errorEl).toBeNull();
     });
 });
 

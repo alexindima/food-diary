@@ -277,7 +277,7 @@ export class BaseProductManageComponent {
         return currentProduct?.isOwnedByCurrentUser === true;
     });
     public readonly manageHeaderState = computed<ProductManageHeaderState>(() => {
-        const isEdit = this.product() !== null;
+        const isEdit = this.product() !== null && this.product() !== undefined;
 
         return {
             titleKey: isEdit ? 'PRODUCT_MANAGE.EDIT_TITLE' : 'PRODUCT_MANAGE.ADD_TITLE',

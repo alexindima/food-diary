@@ -1,7 +1,7 @@
 <fd-ui-card class="fd-ui-entity-card" [appearance]="appearance()">
     <div class="fd-ui-entity-card__body">
         <div class="fd-ui-entity-card__media">
-            <img width="96" height="96" [ngSrc]="resolvedImage()" [alt]="title() || 'entity image'" (error)="handleImageError()" />
+            <img width="96" height="96" [attr.src]="resolvedImage()" [alt]="title() || 'entity image'" (error)="handleImageError()" />
         </div>
         <div class="fd-ui-entity-card__content">
             @if (title() || meta() || headerTemplate()) {

@@ -33,8 +33,8 @@
             [attr.placeholder]="placeholderAttribute()"
             [attr.maxlength]="maxLength() ?? null"
             [attr.step]="step() ?? null"
-            [attr.aria-describedby]="error() ? `${id()}-error` : null"
-            [attr.aria-invalid]="error() ? 'true' : null"
+            [attr.aria-describedby]="hasError() ? `${id()}-error` : null"
+            [attr.aria-invalid]="hasError() ? 'true' : null"
             (animationstart)="onAnimationStart($event, control.value)"
             (input)="onInput(control.value)"
             (focus)="onFocus()"
@@ -54,7 +54,7 @@
         }
     </div>
 
-    @if (error()) {
+    @if (hasError()) {
         <div class="fd-ui-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

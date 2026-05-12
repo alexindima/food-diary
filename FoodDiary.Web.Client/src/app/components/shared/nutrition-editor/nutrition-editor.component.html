@@ -15,9 +15,11 @@
         [tintColor]="nutrientFillColors.calories"
         [textColor]="nutrientTextColors.calories"
     />
-    <div class="nutrition-editor__errors fd-ui-error-text" [hidden]="caloriesError() === null">
-        {{ caloriesError() }}
-    </div>
+    @if (hasCaloriesError()) {
+        <div class="nutrition-editor__errors fd-ui-error-text">
+            {{ caloriesError() }}
+        </div>
+    }
 
     <div class="nutrition-editor__grid fd-grid fd-gap-card-header">
         <fd-ui-nutrient-input
@@ -100,13 +102,17 @@
         />
     </div>
 
-    <div class="nutrition-editor__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text" [hidden]="macrosError() === null">
-        {{ macrosError() }}
-    </div>
+    @if (hasMacrosError()) {
+        <div class="nutrition-editor__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text">
+            {{ macrosError() }}
+        </div>
+    }
 
-    <p class="nutrition-editor__hint fd-ui-body-sm" [hidden]="!showManualHint() || !manualHintKey()">
-        {{ manualHintKey() | translate }}
-    </p>
+    @if (hasManualHint()) {
+        <p class="nutrition-editor__hint fd-ui-body-sm">
+            {{ manualHintKey() | translate }}
+        </p>
+    }
 
     @if (warning(); as warningData) {
         <div class="nutrition-editor__warning fd-ui-body-sm">

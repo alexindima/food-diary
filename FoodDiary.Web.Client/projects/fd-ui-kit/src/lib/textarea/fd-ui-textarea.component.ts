@@ -43,9 +43,14 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
 
     protected readonly sizeClass = computed(() => `fd-ui-textarea--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
+    protected readonly hasError = computed(() => {
+        const error = this.error();
+
+        return error !== null && error !== undefined && error.trim().length > 0;
+    });
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-textarea ${this.sizeClass()}${this.error() !== null ? ' fd-ui-textarea--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-textarea--floating' : ''}`,
+            `fd-ui-textarea ${this.sizeClass()}${this.hasError() ? ' fd-ui-textarea--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-textarea--floating' : ''}`,
     );
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));

@@ -87,6 +87,7 @@ export class MainComponent {
 
         this.fdDialogService.open(AuthDialogComponent, {
             preset: 'form',
+            autoFocus: mode === 'login' ? '#auth-login-email' : '#auth-register-email',
             data: { mode, returnUrl, adminReturnUrl },
         });
     }

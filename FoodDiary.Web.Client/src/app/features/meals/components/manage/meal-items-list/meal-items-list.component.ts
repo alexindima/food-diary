@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -22,7 +21,6 @@ const NUTRITION_FRACTION_THRESHOLD = 0.01;
     styleUrls: ['../base-meal-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgOptimizedImage,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,

@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
@@ -7,7 +6,7 @@ import type { EntityCardCollageState, EntityCardPreviewInteractionState } from '
 
 @Component({
     selector: 'fd-entity-card-thumb',
-    imports: [NgOptimizedImage, FdUiHintDirective, FdUiIconComponent],
+    imports: [FdUiHintDirective, FdUiIconComponent],
     templateUrl: './entity-card-thumb.component.html',
     styleUrl: './entity-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

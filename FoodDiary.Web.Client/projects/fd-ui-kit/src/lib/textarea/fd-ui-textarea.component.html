@@ -19,15 +19,15 @@
             [attr.placeholder]="placeholderAttribute()"
             [attr.maxlength]="maxLength() ?? null"
             [attr.rows]="rows()"
-            [attr.aria-describedby]="error() ? `${id()}-error` : null"
-            [attr.aria-invalid]="error() ? 'true' : null"
+            [attr.aria-describedby]="hasError() ? `${id()}-error` : null"
+            [attr.aria-invalid]="hasError() ? 'true' : null"
             (input)="onInput(control.value)"
             (focus)="onFocus()"
             (blur)="onBlur()"
         ></textarea>
     </div>
 
-    @if (error()) {
+    @if (hasError()) {
         <div class="fd-ui-textarea__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

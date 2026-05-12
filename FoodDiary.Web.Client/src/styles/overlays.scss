@@ -1,0 +1,17 @@
+.fd-ui-dialog-panel {
+
+    &:focus,
+    &:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+.fd-ui-dialog-panel .cdk-dialog-container {
+
+    &:focus,
+    &:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+}

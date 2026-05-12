@@ -16,7 +16,13 @@
                     (keydown.enter)="productOpen.emit(offProduct)"
                 >
                     @if (offProduct.imageUrl) {
-                        <img class="product-list__off-image" width="64" height="64" [ngSrc]="offProduct.imageUrl" [alt]="offProduct.name" />
+                        <img
+                            class="product-list__off-image"
+                            width="64"
+                            height="64"
+                            [attr.src]="offProduct.imageUrl"
+                            [alt]="offProduct.name"
+                        />
                     } @else {
                         <div class="product-list__off-image-placeholder fd-center">
                             <fd-ui-icon name="inventory_2" size="md" />

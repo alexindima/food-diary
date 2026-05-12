@@ -127,6 +127,24 @@ describe('FdUiDialogService options', () => {
         expect(open).toHaveBeenCalledTimes(1);
         expect(latestConfig(open).autoFocus).toBe('first-tabbable');
     });
+
+    it('sets desktop panel width from the resolved dialog size', () => {
+        const { open, service } = setupDialogService(false);
+        service.open(DummyDialogComponent, { preset: 'form' });
+
+        expect(open).toHaveBeenCalledTimes(1);
+        expect(latestConfig(open).width).toBe(
+            'min(calc(100vw - var(--fd-size-dialog-panel-width-offset)), var(--fd-size-dialog-panel-width-md))',
+        );
+    });
+
+    it('preserves an explicitly configured width', () => {
+        const { open, service } = setupDialogService(false);
+        service.open(DummyDialogComponent, { width: '720px' });
+
+        expect(open).toHaveBeenCalledTimes(1);
+        expect(latestConfig(open).width).toBe('720px');
+    });
 });
 
 describe('FdUiDialogService positioning', () => {

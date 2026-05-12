@@ -12,11 +12,11 @@
     (keydown.space)="handlePreview($event); $event.preventDefault()"
 >
     @if (imageUrl(); as imageSrc) {
-        <img width="96" height="96" [ngSrc]="imageSrc" [alt]="imageAlt()" />
+        <img width="96" height="96" [attr.src]="imageSrc" [alt]="imageAlt()" />
     } @else if (collage().hasImages) {
         <div [class]="`entity-card__collage entity-card__collage--count-${collage().count}`">
             @for (image of collage().images; track image.url) {
-                <img class="entity-card__collage-image" width="96" height="96" [ngSrc]="image.url" [alt]="image.alt" />
+                <img class="entity-card__collage-image" width="96" height="96" [attr.src]="image.url" [alt]="image.alt" />
             }
         </div>
     } @else {

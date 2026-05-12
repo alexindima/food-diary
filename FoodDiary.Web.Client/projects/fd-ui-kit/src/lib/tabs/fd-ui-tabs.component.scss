@@ -16,6 +16,8 @@
     --fd-tabs-color-hover: var(--fd-color-text);
     --fd-tabs-color-active: var(--fd-color-primary-600);
     --fd-tabs-active-border-color: var(--fd-color-primary-600);
+    --fd-tabs-focus-background: var(--fd-bg-brand-soft);
+    --fd-tabs-focus-shadow: var(--fd-shadow-focus);
     --fd-tabs-label-white-space: nowrap;
     --fd-tabs-label-text-align: center;
     display: flex;
@@ -40,6 +42,8 @@
     color: var(--fd-tabs-color);
     cursor: pointer;
     transition:
+        background-color 140ms ease,
+        box-shadow 140ms ease,
         color 140ms ease,
         border-color 140ms ease,
         opacity 140ms ease;
@@ -51,8 +55,9 @@
 }
 
 .fd-ui-tabs__tab:focus-visible {
-    outline: var(--fd-outline-focus);
-    outline-offset: -2px;
+    outline: none;
+    background: var(--fd-tabs-focus-background);
+    box-shadow: var(--fd-tabs-focus-shadow);
     border-radius: var(--fd-radius-button) var(--fd-radius-button) 0 0;
 }
 

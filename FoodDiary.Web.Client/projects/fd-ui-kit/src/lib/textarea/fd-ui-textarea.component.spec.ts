@@ -100,9 +100,31 @@ describe('FdUiTextareaComponent rendering', () => {
         fixture.componentRef.setInput('error', 'Too short');
         fixture.detectChanges();
 
+        const wrapper = el.querySelector('.fd-ui-textarea');
         const errorEl = el.querySelector('.fd-ui-textarea__error');
+        expect(wrapper?.classList).toContain('fd-ui-textarea--has-error');
         expect(errorEl).toBeTruthy();
         expect(errorEl?.textContent).toBe('Too short');
+    });
+
+    it('should not apply error state when error is omitted', async () => {
+        const { el } = await setupTextareaAsync();
+
+        const wrapper = el.querySelector('.fd-ui-textarea');
+        const errorEl = el.querySelector('.fd-ui-textarea__error');
+        expect(wrapper?.classList).not.toContain('fd-ui-textarea--has-error');
+        expect(errorEl).toBeNull();
+    });
+
+    it('should not apply error state for blank error text', async () => {
+        const { el, fixture } = await setupTextareaAsync();
+        fixture.componentRef.setInput('error', '   ');
+        fixture.detectChanges();
+
+        const wrapper = el.querySelector('.fd-ui-textarea');
+        const errorEl = el.querySelector('.fd-ui-textarea__error');
+        expect(wrapper?.classList).not.toContain('fd-ui-textarea--has-error');
+        expect(errorEl).toBeNull();
     });
 });
 

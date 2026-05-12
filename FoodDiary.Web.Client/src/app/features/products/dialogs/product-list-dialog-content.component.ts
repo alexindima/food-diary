@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -11,7 +10,7 @@ import type { ProductSelectItemViewModel } from './product-list-dialog.types';
 
 @Component({
     selector: 'fd-product-list-dialog-content',
-    imports: [NgOptimizedImage, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, FdUiLoaderComponent],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, FdUiLoaderComponent],
     templateUrl: './product-list-dialog-content.component.html',
     styleUrl: './product-list-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
