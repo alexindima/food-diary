@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpStatusCode, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -57,7 +57,7 @@ describe('FrontendObservabilityInterceptor', () => {
         });
 
         const req = httpTesting.expectOne('/api/v1/products');
-        req.flush(null, { status: 500, statusText: 'Internal Server Error' });
+        req.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
 
         expect(observabilitySpy.recordHttpRequest).toHaveBeenCalledWith(
             expect.objectContaining({

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -115,7 +115,7 @@ describe('ShoppingListService failures', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/current`);
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
     it('should return empty array on getAll failure', () => {
@@ -124,7 +124,7 @@ describe('ShoppingListService failures', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
-        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
     it('should return null on getById failure', () => {

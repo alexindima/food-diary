@@ -10,13 +10,13 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { merge } from 'rxjs';
 
 import { type AdminImpersonationStart, type AdminUser, AdminUsersService } from '../api/admin-users.service';
+import { ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH } from '../lib/admin-user.constants';
 
 type AdminUserImpersonationForm = {
     reason: FormControl<string>;
 };
 
 const REASON_MIN_LENGTH = 10;
-const REASON_MAX_LENGTH = 500;
 
 @Component({
     selector: 'fd-admin-user-impersonation-dialog',
@@ -41,7 +41,7 @@ export class AdminUserImpersonationDialogComponent {
         reason: this.fb.nonNullable.control('', [
             Validators.required,
             Validators.minLength(REASON_MIN_LENGTH),
-            Validators.maxLength(REASON_MAX_LENGTH),
+            Validators.maxLength(ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH),
         ]),
     });
     private readonly reasonValidationVersion = signal(0);

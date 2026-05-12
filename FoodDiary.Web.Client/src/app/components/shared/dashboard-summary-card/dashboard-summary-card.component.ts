@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { PERCENT_MULTIPLIER as PERCENT_MAX } from '../../../shared/lib/nutrition.constants';
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
 
@@ -13,7 +14,6 @@ const RANDOM_ID_RADIX = 36;
 const RANDOM_ID_START = 2;
 const RANDOM_ID_END = 9;
 const WEEK_DAYS = 7;
-const PERCENT_MAX = 100;
 const PROGRESS_CLAMP_MAX = 120;
 const GRADIENT_START_WHITE_MIX = 0.05;
 const GRADIENT_END_WHITE_MIX = 0.15;

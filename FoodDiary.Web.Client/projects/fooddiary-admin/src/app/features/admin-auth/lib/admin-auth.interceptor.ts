@@ -1,10 +1,7 @@
-import { HttpErrorResponse, type HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, type HttpInterceptorFn, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
-
-const HTTP_UNAUTHORIZED = 401;
-const HTTP_FORBIDDEN = 403;
 
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
@@ -27,12 +24,12 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
 
             const status = error instanceof HttpErrorResponse ? error.status : undefined;
 
-            if (status === HTTP_UNAUTHORIZED || status === HTTP_FORBIDDEN) {
+            if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('refreshToken');
                 sessionStorage.removeItem('authToken');
 
-                const reason = status === HTTP_FORBIDDEN ? 'forbidden' : 'unauthenticated';
+                const reason = status === HttpStatusCode.Forbidden ? 'forbidden' : 'unauthenticated';
                 const returnUrl = router.url;
                 void router.navigate(['/unauthorized'], {
                     queryParams: { reason, returnUrl },

@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import type { WritableSignal } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -60,8 +61,8 @@ declare global {
     }
 }
 
-const HTTP_FORBIDDEN_STATUS = 403;
-const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
+const HTTP_FORBIDDEN_STATUS: number = HttpStatusCode.Forbidden;
+const HTTP_TOO_MANY_REQUESTS_STATUS: number = HttpStatusCode.TooManyRequests;
 
 @Component({
     selector: 'fd-ai-input-bar',

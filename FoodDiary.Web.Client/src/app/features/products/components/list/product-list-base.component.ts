@@ -13,6 +13,7 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
+import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
@@ -34,7 +35,6 @@ import { ProductListOffSectionComponent } from './product-list-off-section.compo
 import { ProductListPaginationComponent } from './product-list-pagination.component';
 
 const DEFAULT_PAGE_SIZE = 10;
-const SEARCH_DEBOUNCE_MS = 300;
 const OFF_SEARCH_LIMIT = 5;
 
 @Component({
@@ -71,6 +71,7 @@ export class ProductListBaseComponent {
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
+    private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
 
     private readonly header = viewChild.required<PageHeaderComponent, ElementRef<HTMLElement>>(PageHeaderComponent, { read: ElementRef });
 
@@ -147,7 +148,7 @@ export class ProductListBaseComponent {
                 tap(value => {
                     this.searchValue.set(value);
                 }),
-                debounceTime(SEARCH_DEBOUNCE_MS),
+                debounceTime(this.searchDebounceMs),
                 switchMap(value => this.loadProducts(1, this.pageSize, value)),
                 takeUntilDestroyed(this.destroyRef),
             )

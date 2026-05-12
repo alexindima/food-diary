@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -14,6 +15,7 @@ import { ImageUploadFieldComponent } from '../../../../components/shared/image-u
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { ImageUploadService } from '../../../../shared/api/image-upload.service';
+import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../shared/lib/nutrition.constants';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
@@ -22,9 +24,8 @@ import { ProductAiRecognitionActionComponent } from './product-ai-recognition-ac
 import type { ProductAiDialogData, ProductAiRecognitionFormGroup, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result.component';
 
-const DEFAULT_BASE_AMOUNT = 100;
-const HTTP_FORBIDDEN_STATUS = 403;
-const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
+const HTTP_FORBIDDEN_STATUS: number = HttpStatusCode.Forbidden;
+const HTTP_TOO_MANY_REQUESTS_STATUS: number = HttpStatusCode.TooManyRequests;
 
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
@@ -65,7 +66,7 @@ export class ProductAiRecognitionDialogComponent {
     public readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
     public readonly resultForm: ProductAiRecognitionFormGroup = new FormGroup({
         name: new FormControl('', { nonNullable: true }),
-        portionAmount: new FormControl(DEFAULT_BASE_AMOUNT, { nonNullable: true }),
+        portionAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, { nonNullable: true }),
         baseUnit: new FormControl<MeasurementUnit>(MeasurementUnit.G, { nonNullable: true }),
         caloriesPerBase: new FormControl(0, { nonNullable: true }),
         proteinsPerBase: new FormControl(0, { nonNullable: true }),
@@ -280,7 +281,7 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private getDefaultBaseAmount(unit: MeasurementUnit): number {
-        return unit === MeasurementUnit.PCS ? 1 : DEFAULT_BASE_AMOUNT;
+        return unit === MeasurementUnit.PCS ? 1 : DEFAULT_NUTRITION_BASE_AMOUNT;
     }
 
     private getRecognizedAmount(unit: MeasurementUnit): number {

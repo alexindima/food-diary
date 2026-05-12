@@ -1,3 +1,13 @@
+import {
+    ALCOHOL_CALORIES_PER_GRAM,
+    CARB_CALORIES_PER_GRAM,
+    DEFAULT_CALORIE_MISMATCH_THRESHOLD,
+    FAT_CALORIES_PER_GRAM,
+    NUTRIENT_ROUNDING_FACTOR,
+    PERCENT_MULTIPLIER,
+    PROTEIN_CALORIES_PER_GRAM,
+} from './nutrition.constants';
+
 export type MacroKey = 'proteins' | 'fats' | 'carbs';
 
 export type MacroBarSegment = {
@@ -25,14 +35,6 @@ export type CalorieMismatchWarningInput = {
 };
 
 export type NutritionMode = 'auto' | 'manual';
-
-const PROTEIN_CALORIES_PER_GRAM = 4;
-const FAT_CALORIES_PER_GRAM = 9;
-const CARB_CALORIES_PER_GRAM = 4;
-const ALCOHOL_CALORIES_PER_GRAM = 7;
-const DEFAULT_CALORIE_MISMATCH_THRESHOLD = 0.2;
-const PERCENT_MULTIPLIER = 100;
-const NUTRIENT_ROUNDING_FACTOR = 100;
 
 /**
  * Calculate expected calories from macronutrient grams.

@@ -1,14 +1,12 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
-const DEFAULT_SHOW_DELAY_MS = 500;
-const DEFAULT_MIN_VISIBLE_MS = 300;
+import { GLOBAL_LOADING_TIMING } from '../config/runtime-ui.tokens';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GlobalLoadingService {
-    private static readonly showDelayMs = DEFAULT_SHOW_DELAY_MS;
-    private static readonly minVisibleMs = DEFAULT_MIN_VISIBLE_MS;
+    private readonly timing = inject(GLOBAL_LOADING_TIMING);
 
     private activeRequests = 0;
     private visibleSince = 0;
@@ -50,7 +48,7 @@ export class GlobalLoadingService {
             return;
         }
 
-        const remainingVisibleMs = Math.max(0, GlobalLoadingService.minVisibleMs - (Date.now() - this.visibleSince));
+        const remainingVisibleMs = Math.max(0, this.timing.minVisibleMs - (Date.now() - this.visibleSince));
         if (remainingVisibleMs === 0) {
             this.hideNow();
             return;
@@ -76,7 +74,7 @@ export class GlobalLoadingService {
 
             this.visibleSince = Date.now();
             this.isVisible.set(true);
-        }, GlobalLoadingService.showDelayMs);
+        }, this.timing.showDelayMs);
     }
 
     private hideNow(): void {

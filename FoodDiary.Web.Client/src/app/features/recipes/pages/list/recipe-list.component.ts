@@ -23,6 +23,7 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
+import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
@@ -39,8 +40,6 @@ import type { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/reci
 import type { RecipeCardViewModel } from './recipe-list.types';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites.component';
 import { RecipeListResultsComponent } from './recipe-list-results.component';
-
-const SEARCH_DEBOUNCE_MS = 300;
 
 @Component({
     selector: 'fd-recipe-list',
@@ -72,6 +71,7 @@ export class RecipeListComponent {
     private readonly recipeListFacade = inject(RecipeListFacade);
     private readonly favoriteRecipeService = inject(FavoriteRecipeService);
     private readonly recipeService = inject(RecipeService);
+    private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -138,7 +138,7 @@ export class RecipeListComponent {
 
         this.searchForm.controls.search.valueChanges
             .pipe(
-                debounceTime(SEARCH_DEBOUNCE_MS),
+                debounceTime(this.searchDebounceMs),
                 switchMap(value => this.recipeListFacade.loadRecipes(1, this.pageSize, value, this.searchForm.controls.onlyMine.value)),
                 takeUntilDestroyed(this.destroyRef),
             )

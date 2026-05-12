@@ -1,4 +1,5 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -39,8 +40,8 @@ const UNIT_OPTIONS: readonly UnitOptionView[] = [
     { value: 'ml', labelKey: 'GENERAL.UNITS.ML' },
     { value: 'pcs', labelKey: 'GENERAL.UNITS.PCS' },
 ];
-const HTTP_FORBIDDEN_STATUS = 403;
-const HTTP_TOO_MANY_REQUESTS_STATUS = 429;
+const HTTP_FORBIDDEN_STATUS: number = HttpStatusCode.Forbidden;
+const HTTP_TOO_MANY_REQUESTS_STATUS: number = HttpStatusCode.TooManyRequests;
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
 @Component({

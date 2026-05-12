@@ -5,6 +5,7 @@ import type { StaticProvider } from '@angular/core';
 import { inject, Injectable } from '@angular/core';
 
 import type { FdUiDialogSize } from './fd-ui-dialog.component';
+import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';
@@ -36,6 +37,7 @@ type ResolvedDialogLayout = {
 export class FdUiDialogService {
     private readonly dialog = inject(Dialog);
     private readonly overlay = inject(Overlay);
+    private readonly compactViewportQuery = inject(FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY);
 
     public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
         const layout = this.resolveDialogLayout(config);
@@ -140,6 +142,6 @@ export class FdUiDialogService {
     }
 
     private isCompactMobile(): boolean {
-        return typeof window !== 'undefined' && window.matchMedia('(max-width: 420px)').matches;
+        return typeof window !== 'undefined' && window.matchMedia(this.compactViewportQuery).matches;
     }
 }

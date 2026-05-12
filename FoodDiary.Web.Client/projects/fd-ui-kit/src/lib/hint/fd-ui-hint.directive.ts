@@ -3,12 +3,12 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, TemplateRef } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 
+import { FD_UI_HINT_SHOW_DELAY_MS } from './fd-ui-hint.tokens';
 import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay.component';
 
 type HintContent = string | TemplateRef<unknown> | null;
 type HintPosition = 'top' | 'bottom' | 'left' | 'right';
 
-const DEFAULT_HINT_SHOW_DELAY_MS = 500;
 const OVERLAY_VIEWPORT_MARGIN = 8;
 const OVERLAY_POSITION_OFFSET = 6;
 
@@ -27,10 +27,12 @@ let nextHintId = 0;
     },
 })
 export class FdUiHintDirective {
+    private readonly defaultShowDelayMs = inject(FD_UI_HINT_SHOW_DELAY_MS);
+
     public readonly fdUiHint = input<HintContent>(null);
     public readonly fdUiHintHtml = input(false);
     public readonly fdUiHintContext = input<Record<string, unknown> | null>(null);
-    public readonly fdUiHintShowDelay = input(DEFAULT_HINT_SHOW_DELAY_MS);
+    public readonly fdUiHintShowDelay = input(this.defaultShowDelayMs);
     public readonly fdUiHintFocusShowDelay = input(0);
     public readonly fdUiHintHideDelay = input(0);
     public readonly fdUiHintPosition = input<HintPosition>('bottom');

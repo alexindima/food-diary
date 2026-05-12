@@ -1,8 +1,9 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import {
     type CreateProductRequest,
@@ -15,7 +16,6 @@ import {
 import { ProductService } from './product.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/products';
-const BASE_AMOUNT_GRAMS = 100;
 const CHICKEN_CALORIES = 165;
 const CHICKEN_PROTEINS = 31;
 const CHICKEN_FATS = 3.6;
@@ -27,8 +27,8 @@ const NEW_PRODUCT_CALORIES = 100;
 const NEW_PRODUCT_PROTEINS = 10;
 const NEW_PRODUCT_FATS = 2;
 const NEW_PRODUCT_CARBS = 12;
-const HTTP_INTERNAL_SERVER_ERROR = 500;
-const HTTP_NOT_FOUND = 404;
+const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
+const HTTP_NOT_FOUND: number = HttpStatusCode.NotFound;
 const MOCK_PRODUCT: Product = {
     id: 'p1',
     name: 'Chicken Breast',
@@ -41,8 +41,8 @@ const MOCK_PRODUCT: Product = {
     imageUrl: null,
     imageAssetId: null,
     baseUnit: MeasurementUnit.G,
-    baseAmount: BASE_AMOUNT_GRAMS,
-    defaultPortionAmount: BASE_AMOUNT_GRAMS,
+    baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+    defaultPortionAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
     caloriesPerBase: CHICKEN_CALORIES,
     proteinsPerBase: CHICKEN_PROTEINS,
     fatsPerBase: CHICKEN_FATS,
@@ -238,8 +238,8 @@ function createProductRequest(): CreateProductRequest {
         name: 'New Product',
         productType: ProductType.Other,
         baseUnit: MeasurementUnit.G,
-        baseAmount: BASE_AMOUNT_GRAMS,
-        defaultPortionAmount: BASE_AMOUNT_GRAMS,
+        baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+        defaultPortionAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
         caloriesPerBase: NEW_PRODUCT_CALORIES,
         proteinsPerBase: NEW_PRODUCT_PROTEINS,
         fatsPerBase: NEW_PRODUCT_FATS,

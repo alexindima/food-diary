@@ -6,9 +6,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.directive';
 
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { DynamicProgressBarComponent } from '../dynamic-progress-bar/dynamic-progress-bar.component';
-
-const PERCENT_MULTIPLIER = 100;
 
 const MOTIVATION_THRESHOLDS: ReadonlyArray<{ maxPercent: number; key: string }> = [
     { maxPercent: 10, key: 'DAILY_PROGRESS_CARD.MOTIVATION.P0_10' },

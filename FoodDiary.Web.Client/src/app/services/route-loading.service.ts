@@ -1,14 +1,12 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
-const DEFAULT_SHOW_DELAY_MS = 150;
-const DEFAULT_MIN_VISIBLE_MS = 250;
+import { ROUTE_LOADING_TIMING } from '../config/runtime-ui.tokens';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RouteLoadingService {
-    private static readonly showDelayMs = DEFAULT_SHOW_DELAY_MS;
-    private static readonly minVisibleMs = DEFAULT_MIN_VISIBLE_MS;
+    private readonly timing = inject(ROUTE_LOADING_TIMING);
 
     private activeLoads = 0;
     private visibleSince = 0;
@@ -39,7 +37,7 @@ export class RouteLoadingService {
             return;
         }
 
-        const remainingVisibleMs = Math.max(0, RouteLoadingService.minVisibleMs - (Date.now() - this.visibleSince));
+        const remainingVisibleMs = Math.max(0, this.timing.minVisibleMs - (Date.now() - this.visibleSince));
         if (remainingVisibleMs === 0) {
             this.hideNow();
             return;
@@ -65,7 +63,7 @@ export class RouteLoadingService {
 
             this.visibleSince = Date.now();
             this.isVisible.set(true);
-        }, RouteLoadingService.showDelayMs);
+        }, this.timing.showDelayMs);
     }
 
     private hideNow(): void {

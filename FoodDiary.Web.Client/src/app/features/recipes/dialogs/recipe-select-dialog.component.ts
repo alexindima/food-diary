@@ -20,6 +20,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
+import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
 import type { FormGroupControls } from '../../../shared/lib/common.data';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { RecipeService } from '../api/recipe.service';
@@ -28,7 +29,6 @@ import type { Recipe, RecipeFilters } from '../models/recipe.data';
 import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content.component';
 
-const SEARCH_DEBOUNCE_MS = 300;
 const PAGE_SIZE = 10;
 const FIRST_PAGE = 1;
 const NEXT_PAGE_OFFSET = 1;
@@ -52,6 +52,7 @@ const NEXT_PAGE_OFFSET = 1;
 export class RecipeSelectDialogComponent {
     private readonly recipeService = inject(RecipeService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
         optional: true,
     });
@@ -93,7 +94,7 @@ export class RecipeSelectDialogComponent {
                 tap(value => {
                     this.searchValue.set(value);
                 }),
-                debounceTime(SEARCH_DEBOUNCE_MS),
+                debounceTime(this.searchDebounceMs),
                 switchMap(() => this.loadRecipes(FIRST_PAGE)),
             )
             .subscribe();

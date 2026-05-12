@@ -15,6 +15,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizationService } from '../../../services/localization.service';
+import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../shared/lib/time.constants';
 import { FastingCheckInCardComponent } from '../components/fasting-check-in-card/fasting-check-in-card.component';
 import {
     FastingCheckInChartDialogComponent,
@@ -52,9 +53,6 @@ const DEFAULT_CYCLIC_FAST_DAYS = 1;
 const DEFAULT_CYCLIC_EAT_DAYS = 1;
 const DEFAULT_CYCLIC_EAT_WINDOW_HOURS = 8;
 const DEFAULT_CYCLIC_EAT_FAST_HOURS = 16;
-const HOURS_PER_DAY = 24;
-const MS_PER_MINUTE = 60_000;
-const MINUTES_PER_HOUR = 60;
 
 @Component({
     selector: 'fd-fasting-page',

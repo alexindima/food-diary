@@ -1,19 +1,15 @@
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
+import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from '../../../shared/lib/time.constants';
 import { FASTING_PROTOCOLS, type FastingOccurrenceKind, type FastingSession } from '../models/fasting.data';
 import { type FastingStagePresentation, resolveFastingStage } from './fasting-stage';
 
 type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
 
-const MS_PER_HOUR = 3_600_000;
-const MS_PER_SECOND = 1_000;
 const SECONDS_PER_HOUR = 3_600;
-const SECONDS_PER_MINUTE = 60;
-const MINUTES_PER_HOUR = 60;
-const HOURS_PER_DAY = 24;
 const DEFAULT_CYCLIC_EAT_WINDOW_HOURS = 8;
 const DEFAULT_CYCLIC_FAST_HOURS = 16;
 const MIN_INTERMITTENT_FAST_HOURS = 1;
 const MAX_INTERMITTENT_FAST_HOURS = 23;
-const PERCENT_FULL = 100;
 const TIME_PAD_LENGTH = 2;
 
 export type FastingTimerCardComputedState = {
@@ -60,7 +56,7 @@ type FastingFallbackStateInput = {
 function buildFastingFallbackState(input: FastingFallbackStateInput): FastingTimerCardComputedState {
     const { session, elapsedMs, translate, baseStage, totalMs, remainingMs } = input;
     return {
-        progressPercent: totalMs > 0 ? Math.min((elapsedMs / totalMs) * PERCENT_FULL, PERCENT_FULL) : 0,
+        progressPercent: totalMs > 0 ? Math.min((elapsedMs / totalMs) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER) : 0,
         elapsedFormatted: formatFastingDuration(elapsedMs),
         remainingFormatted: formatFastingDuration(remainingMs),
         remainingLabelKey: 'FASTING.REMAINING',
@@ -114,7 +110,7 @@ function buildIntermittentFastWindowState(input: {
     const { session, elapsedMs, translate, cycleDay, fastWindowMs, fastHours } = input;
     const stage = resolveFastingStage(elapsedMs, fastHours);
     return {
-        progressPercent: Math.min((elapsedMs / fastWindowMs) * PERCENT_FULL, PERCENT_FULL),
+        progressPercent: Math.min((elapsedMs / fastWindowMs) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER),
         elapsedFormatted: formatFastingDuration(elapsedMs),
         remainingFormatted: formatFastingDuration(Math.max(0, fastWindowMs - elapsedMs)),
         remainingLabelKey: 'FASTING.UNTIL_EATING_WINDOW',
@@ -138,7 +134,7 @@ function buildIntermittentEatingWindowState(input: {
 }): FastingTimerCardComputedState {
     const { session, elapsedMs, translate, cycleDay, eatingWindowMs } = input;
     return {
-        progressPercent: Math.min((elapsedMs / eatingWindowMs) * PERCENT_FULL, PERCENT_FULL),
+        progressPercent: Math.min((elapsedMs / eatingWindowMs) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER),
         elapsedFormatted: formatFastingDuration(elapsedMs),
         remainingFormatted: formatFastingDuration(Math.max(0, eatingWindowMs - elapsedMs)),
         remainingLabelKey: 'FASTING.NEXT_FAST',

@@ -6,13 +6,13 @@ import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
+import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormData, StepFormData } from '../components/manage/recipe-manage.types';
 import { RecipeVisibility } from '../models/recipe.data';
 import { RecipeManageFacade } from './recipe-manage.facade';
 
-const PRODUCT_BASE_AMOUNT = 100;
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 150;
 const APPLE_CALORIES = 52;
 const APPLE_PROTEINS = 0.3;
@@ -164,7 +164,7 @@ describe('RecipeManageFacade selection', () => {
                 id: 'product-1',
                 name: 'Apple',
                 baseUnit: MeasurementUnit.G,
-                baseAmount: PRODUCT_BASE_AMOUNT,
+                baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
                 defaultPortionAmount: PRODUCT_DEFAULT_PORTION_AMOUNT,
                 productType: ProductType.Fruit,
                 barcode: null,
@@ -203,7 +203,7 @@ describe('RecipeManageFacade nutrition summary', () => {
                 ingredients: new FormArray([
                     new FormGroup({
                         food: new FormControl({
-                            baseAmount: PRODUCT_BASE_AMOUNT,
+                            baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
                             caloriesPerBase: 200,
                             proteinsPerBase: 10,
                             fatsPerBase: 5,

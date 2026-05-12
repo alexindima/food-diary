@@ -22,6 +22,8 @@ import {
     type NutritionMacroState,
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
+import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
+import { normalizeQualityScore } from '../../../../shared/lib/quality-score.utils';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import type { Recipe } from '../../models/recipe.data';
@@ -29,13 +31,8 @@ import { type IngredientPreviewItem, type MacroBlock, RecipeDetailActionResult }
 import { RecipeDetailSummaryComponent } from './recipe-detail-summary.component';
 
 const MACRO_SUMMARY_LIMIT = 3;
-const QUALITY_SCORE_MIN = 0;
-const QUALITY_SCORE_MAX = 100;
-const DEFAULT_QUALITY_SCORE = 50;
-const PERCENT_FULL = 100;
 const MIN_MACRO_BAR_PERCENT = 4;
 const INGREDIENT_PREVIEW_LIMIT = 6;
-const NUTRIENT_ROUNDING_FACTOR = 100;
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -120,9 +117,7 @@ export class RecipeDetailComponent {
         this.carbs = this.resolveNutrientValue(data.totalCarbs, data.manualCarbs);
         this.fiber = this.resolveFiberValue();
         this.alcohol = this.resolveAlcoholValue();
-        this.qualityScore = Math.round(
-            Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, data.qualityScore ?? DEFAULT_QUALITY_SCORE)),
-        );
+        this.qualityScore = normalizeQualityScore(data.qualityScore);
         this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
         this.totalTime = this.calculateTotalPreparationTime();
@@ -228,16 +223,16 @@ export class RecipeDetailComponent {
         return {
             isEmpty: total <= 0,
             segments: [
-                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_FULL : 0 },
-                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_FULL : 0 },
-                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_FULL : 0 },
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_MULTIPLIER : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_MULTIPLIER : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_MULTIPLIER : 0 },
             ],
         };
     }
 
     private resolveMacroPercent(value: number, values: number[]): number {
         const max = Math.max(...values, value, 1);
-        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_FULL));
+        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_MULTIPLIER));
     }
 
     private buildIngredientPreview(): IngredientPreviewItem[] {

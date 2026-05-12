@@ -12,11 +12,13 @@ import {
     UnsavedChangesDialogComponent,
     type UnsavedChangesDialogResult,
 } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { SIDEBAR_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UserService } from '../../shared/api/user.service';
+import { PERCENT_MULTIPLIER } from '../../shared/lib/nutrition.constants';
 import type {
     DesktopSectionId,
     MobileSheetId,
@@ -58,7 +60,6 @@ const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
     { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
 ];
 
-const PERCENT_FULL = 100;
 const ADMIN_LOADING_URL_TTL_MS = 30_000;
 
 @Component({
@@ -80,6 +81,7 @@ export class SidebarComponent {
     private readonly dashboardService = inject(DashboardService);
     private readonly notificationService = inject(NotificationService);
     private readonly router = inject(Router);
+    private readonly mobileViewportQuery = inject(SIDEBAR_MOBILE_VIEWPORT_QUERY);
 
     public isAuthenticated = this.authService.isAuthenticated;
     public isPremium = this.authService.isPremium;
@@ -179,7 +181,7 @@ export class SidebarComponent {
             return 0;
         }
 
-        return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * PERCENT_FULL, PERCENT_FULL));
+        return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER));
     });
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
@@ -210,7 +212,7 @@ export class SidebarComponent {
         }
     });
     public constructor() {
-        const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia('(max-width: 767px)');
+        const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia(this.mobileViewportQuery);
         const updateMobileViewport = (): void => {
             this.isMobileViewport.set(this.getIsMobileViewport());
         };
@@ -290,7 +292,7 @@ export class SidebarComponent {
             return false;
         }
 
-        return window.matchMedia('(max-width: 767px)').matches;
+        return window.matchMedia(this.mobileViewportQuery).matches;
     }
 
     private getCurrentPath(url = this.router.url): string {

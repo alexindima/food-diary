@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -28,8 +29,10 @@ import { catchError, debounceTime, firstValueFrom, map, of, Subject, switchMap }
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import type { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
+import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../shared/lib/nutrition.constants';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
     calculateCalorieMismatchWarning,
@@ -75,11 +78,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     }),
 };
 
-const CALORIE_MISMATCH_THRESHOLD = 0.2;
-const NAME_SEARCH_DEBOUNCE_MS = 600;
 const NAME_SEARCH_MIN_LENGTH = 3;
 const NAME_SEARCH_SUGGESTION_LIMIT = 5;
-const DEFAULT_BASE_AMOUNT = 100;
 const MIN_PRODUCT_AMOUNT = 0.001;
 const NUTRIENT_ROUNDING_FACTOR = 10;
 const KJ_TO_KCAL_FACTOR = 0.239005736;
@@ -89,8 +89,6 @@ const USDA_FAT_NUTRIENT_ID = 1004;
 const USDA_CARBS_NUTRIENT_ID = 1005;
 const USDA_FIBER_NUTRIENT_ID = 1079;
 const USDA_ALCOHOL_NUTRIENT_ID = 1018;
-const HTTP_STATUS_UNAUTHORIZED = 401;
-const HTTP_STATUS_BAD_REQUEST = 400;
 
 @Component({
     selector: 'fd-base-product-manage',
@@ -120,6 +118,7 @@ export class BaseProductManageComponent {
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
     private readonly productService = inject(ProductService);
     private readonly usdaService = inject(UsdaService);
+    private readonly nameSearchDebounceMs = inject(NAME_SEARCH_DEBOUNCE_MS_TOKEN);
 
     public readonly product = input<Product | null>();
     public readonly globalError = signal<string | null>(null);
@@ -177,11 +176,11 @@ export class BaseProductManageComponent {
             description: new FormControl(null),
             comment: new FormControl(null),
             imageUrl: new FormControl<ImageSelection | null>(null),
-            baseAmount: new FormControl(DEFAULT_BASE_AMOUNT, {
+            baseAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, {
                 nonNullable: true,
                 validators: [Validators.required, Validators.min(MIN_PRODUCT_AMOUNT)],
             }),
-            defaultPortionAmount: new FormControl(DEFAULT_BASE_AMOUNT, {
+            defaultPortionAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, {
                 nonNullable: true,
                 validators: [Validators.required, Validators.min(MIN_PRODUCT_AMOUNT)],
             }),
@@ -233,7 +232,7 @@ export class BaseProductManageComponent {
     private bindNameSearch(): void {
         this.nameQuery$
             .pipe(
-                debounceTime(NAME_SEARCH_DEBOUNCE_MS),
+                debounceTime(this.nameSearchDebounceMs),
                 switchMap(query => {
                     const trimmed = query.trim();
                     if (trimmed.length < NAME_SEARCH_MIN_LENGTH) {
@@ -381,7 +380,7 @@ export class BaseProductManageComponent {
         controls.name.setValue(detail.description);
         controls.usdaFdcId.setValue(detail.fdcId);
         controls.baseUnit.setValue(MeasurementUnit.G);
-        controls.baseAmount.setValue(DEFAULT_BASE_AMOUNT);
+        controls.baseAmount.setValue(DEFAULT_NUTRITION_BASE_AMOUNT);
 
         if (calories !== null) {
             controls.caloriesPerBase.setValue(Math.round(calories));
@@ -668,7 +667,7 @@ export class BaseProductManageComponent {
                 fats,
                 carbs,
                 alcohol,
-                threshold: CALORIE_MISMATCH_THRESHOLD,
+                threshold: DEFAULT_CALORIE_MISMATCH_THRESHOLD,
             }),
         );
     }
@@ -737,7 +736,7 @@ export class BaseProductManageComponent {
     }
 
     private getDefaultBaseAmount(unit: MeasurementUnit): number {
-        return unit === MeasurementUnit.PCS ? 1 : DEFAULT_BASE_AMOUNT;
+        return unit === MeasurementUnit.PCS ? 1 : DEFAULT_NUTRITION_BASE_AMOUNT;
     }
 
     private getNumberValue(control: FormControl<number | string | null>): number {
@@ -823,9 +822,9 @@ export class BaseProductManageComponent {
 
     private handleSubmitError(error: unknown): void {
         const status = getRecordProperty(error, 'status');
-        if (status === HTTP_STATUS_UNAUTHORIZED) {
+        if (status === HttpStatusCode.Unauthorized) {
             this.setGlobalError('FORM_ERRORS.UNAUTHORIZED');
-        } else if (status === HTTP_STATUS_BAD_REQUEST) {
+        } else if (status === HttpStatusCode.BadRequest) {
             this.setGlobalError('FORM_ERRORS.INVALID_DATA');
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');

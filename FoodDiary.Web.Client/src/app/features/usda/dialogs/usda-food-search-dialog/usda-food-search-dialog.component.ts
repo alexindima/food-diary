@@ -10,10 +10,9 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 
+import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { UsdaService } from '../../api/usda.service';
 import type { UsdaFood } from '../../models/usda.data';
-
-const SEARCH_DEBOUNCE_MS = 300;
 
 @Component({
     selector: 'fd-usda-food-search-dialog',
@@ -35,6 +34,7 @@ export class UsdaFoodSearchDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<UsdaFoodSearchDialogComponent, UsdaFood | null>);
     private readonly usdaService = inject(UsdaService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
 
     public readonly searchQuery = signal('');
     public readonly results = signal<UsdaFood[]>([]);
@@ -44,7 +44,7 @@ export class UsdaFoodSearchDialogComponent {
     public constructor() {
         toObservable(this.searchQuery)
             .pipe(
-                debounceTime(SEARCH_DEBOUNCE_MS),
+                debounceTime(this.searchDebounceMs),
                 distinctUntilChanged(),
                 switchMap(query => {
                     if (query.length < 2) {

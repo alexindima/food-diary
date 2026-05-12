@@ -1,11 +1,9 @@
-import type { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable, switchMap, throwError } from 'rxjs';
 
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
-
-const HTTP_UNAUTHORIZED = 401;
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -58,6 +56,6 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     private isUnauthorizedError(error: unknown): boolean {
-        return typeof error === 'object' && error !== null && 'status' in error && error.status === HTTP_UNAUTHORIZED;
+        return typeof error === 'object' && error !== null && 'status' in error && error.status === HttpStatusCode.Unauthorized;
     }
 }

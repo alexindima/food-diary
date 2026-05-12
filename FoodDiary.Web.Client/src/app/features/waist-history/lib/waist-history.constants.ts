@@ -1,0 +1,5 @@
+export const MIN_WAIST_CM = 1;
+export const MAX_WAIST_CM = 300;
+export const MAX_DESIRED_WAIST_CM = 400;
+export const WAIST_HISTORY_RATIO_ROUNDING_FACTOR = 100;
+export const WAIST_HISTORY_ENTRIES_LIMIT_MAX = 500;

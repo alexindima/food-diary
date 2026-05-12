@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -8,7 +8,7 @@ import type { HydrationDaily, HydrationEntry } from '../models/hydration.data';
 import { HydrationService } from './hydration.service';
 
 const ENTRY_AMOUNT_ML = 250;
-const HTTP_INTERNAL_SERVER_ERROR = 500;
+const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 
 describe('HydrationService', () => {
     let service: HydrationService;

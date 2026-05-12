@@ -13,6 +13,7 @@ import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
+import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail.component';
@@ -22,7 +23,6 @@ import { ExploreService } from '../../api/explore.service';
 import type { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
 
 const EXPLORE_PAGE_SIZE = 20;
-const SEARCH_DEBOUNCE_MS = 400;
 
 @Component({
     selector: 'fd-explore-page',
@@ -47,6 +47,7 @@ export class ExplorePageComponent {
     private readonly exploreService = inject(ExploreService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly searchDebounceMs = inject(EXPLORE_SEARCH_DEBOUNCE_MS);
 
     public readonly searchControl = new FormControl('');
     public readonly sortBy = signal<'newest' | 'popular'>('newest');
@@ -68,7 +69,7 @@ export class ExplorePageComponent {
         this.loadRecipes();
 
         this.searchControl.valueChanges
-            .pipe(debounceTime(SEARCH_DEBOUNCE_MS), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .pipe(debounceTime(this.searchDebounceMs), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.currentPageIndex.set(0);
                 this.loadRecipes();

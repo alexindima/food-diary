@@ -1,11 +1,11 @@
 import { computed, inject, Injectable, resource } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { GamificationService } from '../api/gamification.service';
 import type { Badge, GamificationData } from '../models/gamification.data';
 
 const HEALTH_SCORE_RING_RADIUS = 90;
-const PERCENTAGE_MULTIPLIER = 100;
 
 export type BadgeDisplay = {
     icon: string;
@@ -27,11 +27,11 @@ export class GamificationFacade {
     public readonly longestStreak = computed(() => this.data()?.longestStreak ?? 0);
     public readonly totalMealsLogged = computed(() => this.data()?.totalMealsLogged ?? 0);
     public readonly healthScore = computed(() => this.data()?.healthScore ?? 0);
-    public readonly weeklyAdherence = computed(() => Math.round((this.data()?.weeklyAdherence ?? 0) * PERCENTAGE_MULTIPLIER));
+    public readonly weeklyAdherence = computed(() => Math.round((this.data()?.weeklyAdherence ?? 0) * PERCENT_MULTIPLIER));
     public readonly badges = computed(() => this.data()?.badges ?? []);
     public readonly healthScoreRing = computed(() => ({
         strokeDasharray: this.healthScoreCircleCircumference,
-        strokeDashoffset: this.healthScoreCircleCircumference * (1 - this.healthScore() / PERCENTAGE_MULTIPLIER),
+        strokeDashoffset: this.healthScoreCircleCircumference * (1 - this.healthScore() / PERCENT_MULTIPLIER),
     }));
     public readonly badgeDisplays = computed(() => this.badges().map(badge => this.toBadgeDisplay(badge)));
     public readonly earnedBadges = computed(() => this.badgeDisplays().filter(badge => badge.isEarned));

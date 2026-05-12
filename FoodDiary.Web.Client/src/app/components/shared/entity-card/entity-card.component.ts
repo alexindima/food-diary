@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
+import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import { MediaCardComponent } from '../media-card/media-card.component';
 import type {
     EntityCardCollageImage,
@@ -16,8 +17,6 @@ import { EntityCardActionsComponent } from './entity-card-actions.component';
 import { EntityCardBodyComponent } from './entity-card-body.component';
 import { EntityCardThumbComponent } from './entity-card-thumb.component';
 
-const QUALITY_SCORE_MIN = 0;
-const QUALITY_SCORE_MAX = 100;
 const COLLAGE_VISIBLE_LIMIT = 4;
 
 @Component({
@@ -72,7 +71,7 @@ export class EntityCardComponent {
 
         return {
             ...quality,
-            score: Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, quality.score))),
+            score: normalizeQualityScore(quality.score),
             hintKey: `QUALITY.${quality.grade.toUpperCase()}`,
         };
     });

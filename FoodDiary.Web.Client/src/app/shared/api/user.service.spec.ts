@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -14,8 +14,8 @@ const FASTING_CHECK_IN_REMINDER_HOURS = 12;
 const FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
 const DESIRED_WEIGHT = 75;
 const UPDATED_DESIRED_WEIGHT = 70;
-const HTTP_BAD_REQUEST = 400;
-const HTTP_INTERNAL_SERVER_ERROR = 500;
+const HTTP_BAD_REQUEST: number = HttpStatusCode.BadRequest;
+const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 const MOCK_USER: User = {
     id: 'user-1',
     email: 'test@example.com',

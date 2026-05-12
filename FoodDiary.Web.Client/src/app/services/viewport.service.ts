@@ -4,7 +4,7 @@ import { computed, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
 
-export const MOBILE_VIEWPORT_QUERY = '(max-width: 768px)';
+import { APP_MOBILE_VIEWPORT_QUERY } from '../config/runtime-ui.tokens';
 
 @Injectable({
     providedIn: 'root',
@@ -12,8 +12,9 @@ export const MOBILE_VIEWPORT_QUERY = '(max-width: 768px)';
 export class ViewportService {
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly platformId = inject(PLATFORM_ID);
+    private readonly mobileViewportQuery = inject(APP_MOBILE_VIEWPORT_QUERY);
     private readonly mobileMatch = toSignal(
-        this.breakpointObserver.observe(MOBILE_VIEWPORT_QUERY).pipe(
+        this.breakpointObserver.observe(this.mobileViewportQuery).pipe(
             map(result => result.matches),
             distinctUntilChanged(),
         ),
@@ -27,6 +28,6 @@ export class ViewportService {
             return false;
         }
 
-        return window.matchMedia(MOBILE_VIEWPORT_QUERY).matches;
+        return window.matchMedia(this.mobileViewportQuery).matches;
     }
 }

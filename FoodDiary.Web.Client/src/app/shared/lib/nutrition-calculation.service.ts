@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 
-const CALORIES_PER_PROTEIN_GRAM = 4;
-const CALORIES_PER_FAT_GRAM = 9;
-const CALORIES_PER_CARB_GRAM = 4;
-const CALORIES_PER_ALCOHOL_GRAM = 7;
+import { ALCOHOL_CALORIES_PER_GRAM, CARB_CALORIES_PER_GRAM, FAT_CALORIES_PER_GRAM, PROTEIN_CALORIES_PER_GRAM } from './nutrition.constants';
 
 @Injectable({
     providedIn: 'root',
@@ -21,10 +18,10 @@ export class NutritionCalculationService {
         const alcoholValue = this.normalizeMacroValue(alcohol);
 
         return (
-            proteinValue * CALORIES_PER_PROTEIN_GRAM +
-            fatValue * CALORIES_PER_FAT_GRAM +
-            carbValue * CALORIES_PER_CARB_GRAM +
-            alcoholValue * CALORIES_PER_ALCOHOL_GRAM
+            proteinValue * PROTEIN_CALORIES_PER_GRAM +
+            fatValue * FAT_CALORIES_PER_GRAM +
+            carbValue * CARB_CALORIES_PER_GRAM +
+            alcoholValue * ALCOHOL_CALORIES_PER_GRAM
         );
     }
 

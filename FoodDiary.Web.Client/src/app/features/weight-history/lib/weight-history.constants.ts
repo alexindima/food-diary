@@ -1,0 +1,4 @@
+export const MIN_WEIGHT_KG = 1;
+export const MAX_WEIGHT_KG = 500;
+export const WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR = 10;
+export const WEIGHT_HISTORY_ENTRIES_LIMIT_MAX = 500;

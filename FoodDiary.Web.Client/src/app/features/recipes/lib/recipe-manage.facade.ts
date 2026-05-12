@@ -11,6 +11,7 @@ import {
     type ItemSelectDialogData,
     type ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constants';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormData, NutritionScaleMode, StepFormData } from '../components/manage/recipe-manage.types';
 import type { Recipe, RecipeDto } from '../models/recipe.data';
@@ -23,8 +24,6 @@ export type RecipeNutritionSummary = {
     fiber: number;
     alcohol: number;
 };
-
-const NUTRIENT_ROUNDING_FACTOR = 100;
 
 @Injectable({ providedIn: 'root' })
 export class RecipeManageFacade {

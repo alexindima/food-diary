@@ -8,10 +8,7 @@ import {
 } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
-const DEFAULT_SATIETY_LEVEL = 3;
-const MAX_SATIETY_LEVEL = 5;
-const MIN_SATIETY_LEVEL = 1;
-const LEGACY_SATIETY_SCALE_FACTOR = 2;
+import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 
 @Component({
     selector: 'fd-meal-details-fields',
@@ -64,7 +61,7 @@ export class MealDetailsFieldsComponent {
             return;
         }
 
-        const normalized = this.normalizeSatietyLevel(value);
+        const normalized = normalizeSatietyLevel(value);
         if (kind === 'before') {
             this.preMealSatietyLevel.set(normalized);
         } else {
@@ -88,24 +85,12 @@ export class MealDetailsFieldsComponent {
     }
 
     private getSatietyLevelMeta(kind: 'before' | 'after', value: number | null): { label: string; description: string } {
-        const normalizedValue = this.normalizeSatietyLevel(value);
+        const normalizedValue = normalizeSatietyLevel(value);
         const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
         const config = levels.find(level => level.value === normalizedValue);
         return {
             label: this.translateService.instant(config?.titleKey ?? ''),
             description: this.translateService.instant(config?.descriptionKey ?? ''),
         };
-    }
-
-    private normalizeSatietyLevel(value: number | null): number {
-        if (value === null || !Number.isFinite(value) || value <= 0) {
-            return DEFAULT_SATIETY_LEVEL;
-        }
-
-        if (value > MAX_SATIETY_LEVEL) {
-            return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / LEGACY_SATIETY_SCALE_FACTOR)));
-        }
-
-        return Math.max(MIN_SATIETY_LEVEL, value);
     }
 }

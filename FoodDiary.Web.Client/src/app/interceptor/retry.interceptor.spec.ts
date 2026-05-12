@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpStatusCode, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -6,9 +6,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import { RetryInterceptor } from './retry.interceptor';
 
-const HTTP_BAD_REQUEST = 400;
-const HTTP_NOT_FOUND = 404;
-const HTTP_INTERNAL_SERVER_ERROR = 500;
+const HTTP_BAD_REQUEST: number = HttpStatusCode.BadRequest;
+const HTTP_NOT_FOUND: number = HttpStatusCode.NotFound;
+const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 
 describe('RetryInterceptor', () => {
     let http: HttpClient;

@@ -24,6 +24,9 @@ import {
     type NutritionMacroState,
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
+import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
+import { normalizeQualityScore } from '../../../../shared/lib/quality-score.utils';
+import { normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import type { ConsumptionAiItem, Meal } from '../../models/meal.data';
 import { MealDetailActionResult, type MealDetailItemPreview, type MealMacroBlock, type MealSatietyMeta } from './meal-detail.types';
@@ -31,13 +34,7 @@ import { MealDetailSummaryComponent } from './meal-detail-summary.component';
 
 const MACRO_SUMMARY_LIMIT = 3;
 const ITEM_PREVIEW_MAX_ITEMS = 2;
-const QUALITY_SCORE_MIN = 0;
-const QUALITY_SCORE_MAX = 100;
-const DEFAULT_QUALITY_SCORE = 50;
-const PERCENT_FULL = 100;
 const MIN_MACRO_BAR_PERCENT = 4;
-const MIN_SATIETY_LEVEL = 1;
-const MAX_SATIETY_LEVEL = 5;
 
 @Component({
     selector: 'fd-meal-detail',
@@ -127,9 +124,7 @@ export class MealDetailComponent {
         this.carbs = data.totalCarbs;
         this.fiber = data.totalFiber;
         this.alcohol = data.totalAlcohol;
-        this.qualityScore = Math.round(
-            Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, data.qualityScore ?? DEFAULT_QUALITY_SCORE)),
-        );
+        this.qualityScore = normalizeQualityScore(data.qualityScore);
         this.qualityGrade = data.qualityGrade ?? 'yellow';
         this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
         this.itemsCount = this.getTotalItemsCount(data);
@@ -219,16 +214,16 @@ export class MealDetailComponent {
         return {
             isEmpty: total <= 0,
             segments: [
-                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_FULL : 0 },
-                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_FULL : 0 },
-                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_FULL : 0 },
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_MULTIPLIER : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_MULTIPLIER : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_MULTIPLIER : 0 },
             ],
         };
     }
 
     private resolveMacroPercent(value: number, values: number[]): number {
         const max = Math.max(...values, value, 1);
-        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_FULL));
+        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_MULTIPLIER));
     }
 
     private buildItemPreview(): MealDetailItemPreview[] {
@@ -293,7 +288,7 @@ export class MealDetailComponent {
             };
         }
 
-        const normalizedValue = Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value)));
+        const normalizedValue = normalizeSatietyLevel(Math.round(value));
         const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
         const level = levels.find(item => item.value === normalizedValue);
 

@@ -1,7 +1,7 @@
-const END_OF_DAY_HOUR = 23;
-const END_OF_DAY_MINUTE = 59;
-const END_OF_DAY_SECOND = 59;
-const END_OF_DAY_MILLISECOND = 999;
+export const END_OF_DAY_HOUR = 23;
+export const END_OF_DAY_MINUTE = 59;
+export const END_OF_DAY_SECOND = 59;
+export const END_OF_DAY_MILLISECOND = 999;
 
 export function normalizeStartOfLocalDay(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);

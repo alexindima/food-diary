@@ -8,13 +8,13 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiSatietyScaleComponent } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
+import { DEFAULT_SATIETY_LEVEL } from '../../../../shared/lib/satiety-level.utils';
+
 export type SatietyLevelDialogData = {
     titleKey: string;
     subtitleKey?: string;
     value: number | null;
 };
-
-const DEFAULT_SATIETY_LEVEL = 3;
 
 @Component({
     selector: 'fd-meal-satiety-level-dialog',

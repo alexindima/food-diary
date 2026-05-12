@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, throwError } from 'rxjs';
@@ -9,7 +10,7 @@ import { ProductService } from '../api/product.service';
 import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../models/product.data';
 import { ProductManageFacade } from './product-manage.facade';
 
-const HTTP_BAD_REQUEST = 400;
+const HTTP_BAD_REQUEST: number = HttpStatusCode.BadRequest;
 
 const product: Product = {
     id: 'p1',

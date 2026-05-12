@@ -1,12 +1,10 @@
+import { END_OF_DAY_HOUR, END_OF_DAY_MILLISECOND, END_OF_DAY_MINUTE, END_OF_DAY_SECOND } from '../../../shared/lib/local-date.utils';
+
 const START_OF_DAY_HOUR = 0;
 const START_OF_DAY_MINUTE = 0;
 const START_OF_DAY_SECOND = 0;
 const START_OF_DAY_MS = 0;
 const HYDRATION_DAY_HOUR = 12;
-const END_OF_DAY_HOUR = 23;
-const END_OF_DAY_MINUTE = 59;
-const END_OF_DAY_SECOND = 59;
-const END_OF_DAY_MS = 999;
 
 export function normalizeDate(date: Date): Date {
     const normalized = new Date(date);
@@ -30,7 +28,15 @@ export function normalizeStartOfDayUtc(date: Date): Date {
 
 export function normalizeEndOfDayUtc(date: Date): Date {
     return new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), END_OF_DAY_HOUR, END_OF_DAY_MINUTE, END_OF_DAY_SECOND, END_OF_DAY_MS),
+        Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            END_OF_DAY_HOUR,
+            END_OF_DAY_MINUTE,
+            END_OF_DAY_SECOND,
+            END_OF_DAY_MILLISECOND,
+        ),
     );
 }
 

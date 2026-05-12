@@ -8,6 +8,8 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
+import { MAX_BODY_TARGET } from '../lib/goals.constants';
 import { type BodyTargetKey, GoalsFacade, type MacroKey, type MacroPresetKey } from '../lib/goals.facade';
 import { DAYS_OF_WEEK } from '../models/goals.data';
 import { GoalsBodyTargetsComponent } from './goals-body-targets.component';
@@ -23,12 +25,10 @@ type TimeframeOption = {
     labelKey: string;
 };
 
-const BODY_TARGET_MAX_VALUE = 400;
 const HALF_CIRCLE_DEGREES = 180;
 const RING_START_ANGLE_OFFSET_DEGREES = 450;
 const FULL_CIRCLE_DEGREES = 360;
 const RING_THICKNESS_PX = 30;
-const PERCENT_FULL = 100;
 
 @Component({
     selector: 'fd-goals-page',
@@ -143,7 +143,7 @@ export class GoalsPageComponent {
             return;
         }
 
-        const clamped = this.facade.updateBodyTarget(key, Number(target.value), BODY_TARGET_MAX_VALUE);
+        const clamped = this.facade.updateBodyTarget(key, Number(target.value), MAX_BODY_TARGET);
         if (clamped !== null) {
             target.value = clamped.toString();
         }
@@ -345,7 +345,7 @@ export class GoalsPageComponent {
         return {
             ...state,
             progressOffset: `${state.percent}%`,
-            progressRatio: state.percent / PERCENT_FULL,
+            progressRatio: state.percent / PERCENT_MULTIPLIER,
         };
     }
 

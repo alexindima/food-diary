@@ -23,6 +23,8 @@ import {
     type NutritionMacroState,
 } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../constants/chart-colors';
+import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
+import { normalizeQualityScore } from '../../../../shared/lib/quality-score.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductService } from '../../api/product.service';
@@ -30,9 +32,6 @@ import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
 import type { Product } from '../../models/product.data';
 
 const MACRO_SUMMARY_LIMIT = 3;
-const QUALITY_SCORE_MIN = 0;
-const QUALITY_SCORE_MAX = 100;
-const PERCENT_FULL = 100;
 const MIN_MACRO_BAR_PERCENT = 4;
 const MIN_MACRO_REFERENCE_VALUE = 1;
 
@@ -128,7 +127,7 @@ export class ProductDetailComponent {
         this.favoriteProductId = this.product.favoriteProductId ?? null;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
         this.baseUnitKey = `GENERAL.UNITS.${this.product.baseUnit}`;
-        this.qualityScore = Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, this.product.qualityScore)));
+        this.qualityScore = normalizeQualityScore(this.product.qualityScore);
         this.qualityGrade = this.product.qualityGrade;
         this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
 
@@ -215,16 +214,16 @@ export class ProductDetailComponent {
         return {
             isEmpty: total <= 0,
             segments: [
-                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_FULL : 0 },
-                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_FULL : 0 },
-                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_FULL : 0 },
+                { key: 'proteins', percent: total > 0 ? (values[0] / total) * PERCENT_MULTIPLIER : 0 },
+                { key: 'fats', percent: total > 0 ? (values[1] / total) * PERCENT_MULTIPLIER : 0 },
+                { key: 'carbs', percent: total > 0 ? (values[2] / total) * PERCENT_MULTIPLIER : 0 },
             ],
         };
     }
 
     private resolveMacroPercent(value: number, values: number[]): number {
         const max = Math.max(...values, value, MIN_MACRO_REFERENCE_VALUE);
-        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_FULL));
+        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_MULTIPLIER));
     }
 
     public close(): void {

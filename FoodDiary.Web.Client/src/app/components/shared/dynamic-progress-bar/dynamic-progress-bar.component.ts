@@ -1,7 +1,8 @@
 import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-const PERCENT_MAX = 100;
+import { PERCENT_MULTIPLIER as PERCENT_MAX } from '../../../shared/lib/nutrition.constants';
+
 const HALF_PERCENT = 50;
 const DOUBLE_PERCENT = 200;
 const WARNING_PROGRESS_MAX = 125;

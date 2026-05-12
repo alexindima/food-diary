@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
+import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, type Product } from '../../products/models/product.data';
 import type { Recipe } from '../../recipes/models/recipe.data';
@@ -26,10 +27,6 @@ import {
 } from '../models/meal.data';
 
 const DEFAULT_FAVORITE_LIMIT = 10;
-const DEFAULT_SATIETY_LEVEL = 3;
-const MIN_SATIETY_LEVEL = 1;
-const MAX_SATIETY_LEVEL = 5;
-const SATIETY_NORMALIZATION_DIVISOR = 2;
 const NUTRITION_CLOSE_TOLERANCE = 0.000001;
 const DEFAULT_ITEM_AMOUNT = 1;
 const EMPTY_NUTRITION_VALUE = 0;
@@ -130,8 +127,8 @@ export class MealService extends ApiService {
             manualCarbs: this.toNullable(response.manualCarbs),
             manualFiber: this.toNullable(response.manualFiber),
             manualAlcohol: this.toNullable(response.manualAlcohol),
-            preMealSatietyLevel: this.normalizeSatietyLevel(response.preMealSatietyLevel),
-            postMealSatietyLevel: this.normalizeSatietyLevel(response.postMealSatietyLevel),
+            preMealSatietyLevel: normalizeSatietyLevel(response.preMealSatietyLevel),
+            postMealSatietyLevel: normalizeSatietyLevel(response.postMealSatietyLevel),
             qualityScore: this.toNullable(response.qualityScore),
             qualityGrade: this.toNullable(response.qualityGrade),
             isFavorite: this.withDefault(response.isFavorite, false),
@@ -166,18 +163,6 @@ export class MealService extends ApiService {
         };
 
         return nutrition[field];
-    }
-
-    private normalizeSatietyLevel(value: number | null | undefined): number {
-        if (value === null || value === undefined || value <= 0 || Number.isNaN(value)) {
-            return DEFAULT_SATIETY_LEVEL;
-        }
-
-        if (value > MAX_SATIETY_LEVEL) {
-            return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / SATIETY_NORMALIZATION_DIVISOR)));
-        }
-
-        return Math.max(MIN_SATIETY_LEVEL, value);
     }
 
     private hasAiItems(response: ConsumptionResponseDto): boolean {

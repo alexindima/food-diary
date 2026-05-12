@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -19,8 +19,8 @@ const RECENT_RECIPES_LIMIT = 5;
 const NEW_RECIPE_PREP_MINUTES = 10;
 const NEW_RECIPE_COOK_MINUTES = 20;
 const NEW_RECIPE_SERVINGS = 4;
-const HTTP_INTERNAL_SERVER_ERROR = 500;
-const HTTP_NOT_FOUND = 404;
+const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
+const HTTP_NOT_FOUND: number = HttpStatusCode.NotFound;
 const MOCK_RECIPE: Recipe = {
     id: 'r1',
     name: 'Grilled Chicken Salad',

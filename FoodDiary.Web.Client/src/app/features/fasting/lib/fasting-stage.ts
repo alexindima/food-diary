@@ -1,3 +1,5 @@
+import { MS_PER_HOUR } from '../../../shared/lib/time.constants';
+
 export type FastingStagePresentation = {
     index: number;
     total: number;
@@ -16,8 +18,6 @@ type FastingStageDefinition = {
     color: string;
     glowColor: string;
 };
-
-const MS_PER_HOUR = 3_600_000;
 
 const FASTING_STAGE_DEFINITIONS: readonly FastingStageDefinition[] = [
     {

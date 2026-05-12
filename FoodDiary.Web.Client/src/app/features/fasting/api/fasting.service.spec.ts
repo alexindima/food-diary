@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -72,7 +72,7 @@ describe('FastingService overview', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/overview`);
-        req.flush({ message: 'failed' }, { status: 500, statusText: 'Server Error' });
+        req.flush({ message: 'failed' }, { status: HttpStatusCode.InternalServerError, statusText: 'Server Error' });
     });
 });
 

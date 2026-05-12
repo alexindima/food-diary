@@ -8,6 +8,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { WaistHistoryFacade } from '../lib/waist-history.facade';
 import type { WaistEntry } from '../models/waist-entry.data';
 import { WaistHistoryChartCardComponent } from './waist-history-chart-card.component';
@@ -21,7 +22,6 @@ const WHT_SCALE_MAX = 0.8;
 const WHT_UNDER_MAX = 0.4;
 const WHT_NORMAL_MAX = 0.5;
 const WHT_ELEVATED_MAX = 0.6;
-const PERCENT_FULL = 100;
 
 @Component({
     selector: 'fd-waist-history-page',
@@ -157,7 +157,7 @@ export class WaistHistoryPageComponent {
     private createWhtSegment(labelKey: string, from: number, to: number, className: string): WhtSegment {
         return {
             labelKey,
-            width: `${((to - from) / this.whtScaleMax) * PERCENT_FULL}%`,
+            width: `${((to - from) / this.whtScaleMax) * PERCENT_MULTIPLIER}%`,
             class: className,
         };
     }

@@ -5,6 +5,7 @@ import {
     type HttpInterceptor,
     type HttpRequest,
     HttpResponse,
+    HttpStatusCode,
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { type Observable, tap } from 'rxjs';
@@ -13,8 +14,8 @@ import { environment } from '../../environments/environment';
 import { SKIP_OBSERVABILITY } from '../constants/observability-context.tokens';
 import { FrontendObservabilityService } from '../services/frontend-observability.service';
 
-const HTTP_CLIENT_ERROR_MIN = 400;
-const HTTP_SERVER_ERROR_MIN = 500;
+const HTTP_CLIENT_ERROR_MIN: number = HttpStatusCode.BadRequest;
+const HTTP_SERVER_ERROR_MIN: number = HttpStatusCode.InternalServerError;
 
 @Injectable()
 export class FrontendObservabilityInterceptor implements HttpInterceptor {

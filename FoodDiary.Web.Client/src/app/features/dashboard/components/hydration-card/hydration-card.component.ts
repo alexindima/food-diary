@@ -5,9 +5,9 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
+import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 
 const ADD_STEP_ML = 250;
-const PERCENT_MULTIPLIER = 100;
 const MAX_PERCENT = 200;
 const TRACK_WIDTH_MAX_PERCENT = 130;
 

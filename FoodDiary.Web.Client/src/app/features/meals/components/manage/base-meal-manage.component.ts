@@ -40,7 +40,9 @@ import { ManageHeaderComponent } from '../../../../components/shared/manage-head
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { MEAL_TYPE_OPTIONS, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
+import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
+import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import type { NutrientData } from '../../../../shared/models/charts.data';
@@ -86,11 +88,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
-const CALORIE_MISMATCH_THRESHOLD = 0.2;
-const PERCENT_FULL = 100;
-const DEFAULT_SATIETY_LEVEL = 3;
-const MAX_LEGACY_SATIETY_LEVEL = 5;
-const LEGACY_SATIETY_SCALE_FACTOR = 2;
 const TIME_PAD_LENGTH = 2;
 
 type GeneralErrorField = (typeof GENERAL_ERROR_FIELDS)[number];
@@ -129,7 +126,7 @@ export class BaseMealManageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly calorieMismatchThreshold = CALORIE_MISMATCH_THRESHOLD;
+    private readonly calorieMismatchThreshold = DEFAULT_CALORIE_MISMATCH_THRESHOLD;
 
     public readonly nutritionControlNames = {
         calories: 'manualCalories',
@@ -186,7 +183,7 @@ export class BaseMealManageComponent {
             isEmpty: false,
             segments: positive.map(entry => ({
                 key: entry.key,
-                percent: (entry.value / total) * PERCENT_FULL,
+                percent: (entry.value / total) * PERCENT_MULTIPLIER,
             })),
         };
     });
@@ -491,7 +488,7 @@ export class BaseMealManageComponent {
         controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel',
         value: number | null,
     ): { emoji: string; label: string; description: string; gradient: string } {
-        const normalizedValue = this.normalizeSatietyLevel(value);
+        const normalizedValue = normalizeSatietyLevel(value);
         const levels = controlName === 'preMealSatietyLevel' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
         const config = levels.find(level => level.value === normalizedValue);
         return {
@@ -522,7 +519,7 @@ export class BaseMealManageComponent {
         }
 
         const control = this.consumptionForm.controls[controlName];
-        control.setValue(this.normalizeSatietyLevel(value));
+        control.setValue(normalizeSatietyLevel(value));
         control.markAsDirty();
         control.markAsTouched();
     }
@@ -588,8 +585,8 @@ export class BaseMealManageComponent {
             aiSessions: this.aiSessions(),
             isNutritionAutoCalculated,
             ...this.buildManualNutritionPayload(isNutritionAutoCalculated, manualTotals),
-            preMealSatietyLevel: this.normalizeSatietyLevel(this.consumptionForm.controls.preMealSatietyLevel.value),
-            postMealSatietyLevel: this.normalizeSatietyLevel(this.consumptionForm.controls.postMealSatietyLevel.value),
+            preMealSatietyLevel: normalizeSatietyLevel(this.consumptionForm.controls.preMealSatietyLevel.value),
+            postMealSatietyLevel: normalizeSatietyLevel(this.consumptionForm.controls.postMealSatietyLevel.value),
         };
     }
 
@@ -710,8 +707,8 @@ export class BaseMealManageComponent {
             },
             isNutritionAutoCalculated: consumption.isNutritionAutoCalculated,
             ...this.buildConsumptionManualNutritionPatchValue(consumption),
-            preMealSatietyLevel: this.normalizeSatietyLevel(this.toNullable(consumption.preMealSatietyLevel)),
-            postMealSatietyLevel: this.normalizeSatietyLevel(this.toNullable(consumption.postMealSatietyLevel)),
+            preMealSatietyLevel: normalizeSatietyLevel(this.toNullable(consumption.preMealSatietyLevel)),
+            postMealSatietyLevel: normalizeSatietyLevel(this.toNullable(consumption.postMealSatietyLevel)),
         };
     }
 
@@ -932,18 +929,6 @@ export class BaseMealManageComponent {
         const hours = this.padNumber(date.getHours());
         const minutes = this.padNumber(date.getMinutes());
         return `${hours}:${minutes}`;
-    }
-
-    private normalizeSatietyLevel(value: number | null): number {
-        if (value === null || value === 0) {
-            return DEFAULT_SATIETY_LEVEL;
-        }
-
-        if (value > MAX_LEGACY_SATIETY_LEVEL) {
-            return Math.min(MAX_LEGACY_SATIETY_LEVEL, Math.max(1, Math.round(value / LEGACY_SATIETY_SCALE_FACTOR)));
-        }
-
-        return Math.max(1, value);
     }
 
     private buildDateTime(): Date {

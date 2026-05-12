@@ -12,6 +12,11 @@ import { ManageHeaderComponent } from '../../../../components/shared/manage-head
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import {
+    DEFAULT_CALORIE_MISMATCH_THRESHOLD,
+    DEFAULT_NUTRITION_BASE_AMOUNT,
+    PERCENT_MULTIPLIER,
+} from '../../../../shared/lib/nutrition.constants';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import { calculateCalorieMismatchWarning, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
@@ -36,12 +41,9 @@ import type {
 } from './recipe-manage.types';
 import { RecipeStepsListComponent, type StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
 
-const CALORIE_MISMATCH_THRESHOLD = 0.2;
-const PERCENT_FULL = 100;
 const LONG_TEXT_MAX_LENGTH = 1_000;
 const STEP_TITLE_MAX_LENGTH = 120;
 const MIN_INGREDIENT_AMOUNT = 0.01;
-const DEFAULT_PRODUCT_BASE_AMOUNT = 100;
 const DEFAULT_PRODUCT_QUALITY_SCORE = 50;
 
 @Component({
@@ -79,7 +81,7 @@ export class RecipeManageComponent {
         fiber: 'manualFiber',
         alcohol: 'manualAlcohol',
     };
-    private readonly calorieMismatchThreshold = CALORIE_MISMATCH_THRESHOLD;
+    private readonly calorieMismatchThreshold = DEFAULT_CALORIE_MISMATCH_THRESHOLD;
     private readonly recipeManageFacade = inject(RecipeManageFacade);
 
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
@@ -112,7 +114,7 @@ export class RecipeManageComponent {
             isEmpty: false,
             segments: positive.map(entry => ({
                 key: entry.key,
-                percent: (entry.value / total) * PERCENT_FULL,
+                percent: (entry.value / total) * PERCENT_MULTIPLIER,
             })),
         };
     });
@@ -564,7 +566,7 @@ export class RecipeManageComponent {
         const rawUnit = ingredient.productBaseUnit;
         const unit = this.isMeasurementUnit(rawUnit) ? rawUnit : MeasurementUnit.G;
 
-        const baseAmount = ingredient.productBaseAmount ?? DEFAULT_PRODUCT_BASE_AMOUNT;
+        const baseAmount = ingredient.productBaseAmount ?? DEFAULT_NUTRITION_BASE_AMOUNT;
         return {
             id: ingredient.productId,
             name: ingredient.productName ?? this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),

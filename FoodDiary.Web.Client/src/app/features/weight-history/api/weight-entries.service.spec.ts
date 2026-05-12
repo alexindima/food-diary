@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -62,7 +62,7 @@ describe('WeightEntriesService list', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
-        req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
+        req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 

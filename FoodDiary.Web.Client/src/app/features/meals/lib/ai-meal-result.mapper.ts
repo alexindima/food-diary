@@ -1,11 +1,7 @@
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../shared/lib/meal-type.util';
+import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 import type { MealManageDto } from '../models/meal.data';
-
-const DEFAULT_SATIETY_LEVEL = 3;
-const MAX_SATIETY_LEVEL = 5;
-const MIN_SATIETY_LEVEL = 1;
-const AI_SATIETY_SCALE_FACTOR = 2;
 
 export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDate?: Date): MealManageDto {
     const resultDate = result.date ?? '';
@@ -35,16 +31,4 @@ export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDat
             },
         ],
     };
-}
-
-function normalizeSatietyLevel(value: number | null | undefined): number {
-    if (value === null || value === undefined || Number.isNaN(value)) {
-        return DEFAULT_SATIETY_LEVEL;
-    }
-
-    if (value > MAX_SATIETY_LEVEL) {
-        return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / AI_SATIETY_SCALE_FACTOR)));
-    }
-
-    return Math.max(MIN_SATIETY_LEVEL, value);
 }

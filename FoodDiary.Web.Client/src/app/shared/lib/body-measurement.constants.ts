@@ -1,0 +1,2 @@
+export const CENTIMETERS_PER_METER = 100;
+export const DEFAULT_BODY_TARGET_MAX = 400;

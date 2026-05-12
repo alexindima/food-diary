@@ -6,6 +6,7 @@ import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/
 
 import { AuthService } from '../../../services/auth.service';
 import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
+import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 import type { EntityCardCollageImage } from '../entity-card/entity-card.types';
@@ -32,8 +33,6 @@ export type MealCardItem = {
     aiSessions?: Array<{ imageUrl?: string | null; notes?: string | null; items?: unknown[] | null } | null> | null;
 };
 
-const QUALITY_SCORE_MIN = 0;
-const QUALITY_SCORE_MAX = 100;
 const COLLAGE_IMAGE_LIMIT = 4;
 
 @Component({
@@ -78,7 +77,7 @@ export class MealCardComponent {
             return null;
         }
 
-        return Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(QUALITY_SCORE_MIN, score)));
+        return normalizeQualityScore(score);
     });
     private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
 

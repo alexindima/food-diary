@@ -8,6 +8,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { WeightHistoryFacade } from '../lib/weight-history.facade';
 import type { WeightEntry } from '../models/weight-entry.data';
 import { WeightHistoryBmiCardComponent } from './weight-history-bmi-card.component';
@@ -18,7 +19,6 @@ import { WeightHistoryGoalCardComponent } from './weight-history-goal-card.compo
 import type { BmiSegmentViewModel, WeightEntryViewModel } from './weight-history-page.types';
 
 const BMI_SCALE_MAX = 40;
-const PERCENTAGE_MULTIPLIER = 100;
 
 @Component({
     selector: 'fd-weight-history-page',
@@ -107,7 +107,7 @@ export class WeightHistoryPageComponent {
     public readonly bmiSegments = computed<BmiSegmentViewModel[]>(() =>
         this.bmiSegmentDefinitions.map(segment => ({
             ...segment,
-            width: `${((segment.to - segment.from) / this.bmiScaleMax) * PERCENTAGE_MULTIPLIER}%`,
+            width: `${((segment.to - segment.from) / this.bmiScaleMax) * PERCENT_MULTIPLIER}%`,
         })),
     );
 

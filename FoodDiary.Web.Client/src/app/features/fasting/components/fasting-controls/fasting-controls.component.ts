@@ -7,6 +7,7 @@ import { EMPTY, type Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../services/localization.service';
 import { parseIntegerInput } from '../../../../shared/lib/number.utils';
+import { HOURS_PER_DAY } from '../../../../shared/lib/time.constants';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FASTING_HARD_STOP_THRESHOLD_HOURS, FASTING_WARNING_THRESHOLD_HOURS } from '../../lib/fasting-page.constants';
 import { CYCLIC_PRESETS, FASTING_PROTOCOLS, type FastingMode, type FastingProtocol, type FastingSession } from '../../models/fasting.data';
@@ -25,7 +26,6 @@ import { FastingActiveExtendedControlsComponent } from './fasting-active-extende
 import type { FastingCustomActionState } from './fasting-controls.types';
 import { FastingSetupControlsComponent } from './fasting-setup-controls.component';
 
-const HOURS_PER_DAY = 24;
 const EXTEND_DAY_HOURS = 24;
 const EXTEND_DAY_AND_HALF_HOURS = 36;
 const REDUCE_SHORT_HOURS = 4;

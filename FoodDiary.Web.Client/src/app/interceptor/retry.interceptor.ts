@@ -1,10 +1,17 @@
-import { HttpErrorResponse, type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest } from '@angular/common/http';
+import {
+    HttpErrorResponse,
+    type HttpEvent,
+    type HttpHandler,
+    type HttpInterceptor,
+    type HttpRequest,
+    HttpStatusCode,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { type Observable, retry, throwError, timer } from 'rxjs';
 
 const RETRY_ATTEMPT_COUNT = 3;
-const HTTP_CLIENT_ERROR_MIN = 400;
-const HTTP_SERVER_ERROR_MIN = 500;
+const HTTP_CLIENT_ERROR_MIN: number = HttpStatusCode.BadRequest;
+const HTTP_SERVER_ERROR_MIN: number = HttpStatusCode.InternalServerError;
 const RETRY_BASE_DELAY_MS = 1000;
 
 @Injectable()

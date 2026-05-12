@@ -5,7 +5,9 @@ import type { Observable } from 'rxjs';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
+import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from '../../../shared/lib/time.constants';
 import { FastingService } from '../api/fasting.service';
 import {
     FASTING_PROTOCOLS,
@@ -31,12 +33,7 @@ const MAX_FASTING_HOURS = 168;
 const MAX_INTERMITTENT_FAST_HOURS = 23;
 const MAX_CYCLIC_DAYS = 30;
 const MAX_CHECK_IN_LEVEL = 5;
-const HOURS_PER_DAY = 24;
-const MILLISECONDS_PER_SECOND = 1000;
 const SECONDS_PER_HOUR = 3600;
-const SECONDS_PER_MINUTE = 60;
-const MILLISECONDS_PER_HOUR = 3_600_000;
-const PERCENT_MAX = 100;
 const DURATION_PART_LENGTH = 2;
 const DURATION_PART_PAD = '0';
 const DURATION_ROUNDING_FACTOR = 10;
@@ -122,9 +119,9 @@ export class FastingFacade {
     public readonly totalMs = computed(() => {
         const session = this.currentSession();
         if (session === null) {
-            return this.plannedDurationHours() * MILLISECONDS_PER_HOUR;
+            return this.plannedDurationHours() * MS_PER_HOUR;
         }
-        return session.plannedDurationHours * MILLISECONDS_PER_HOUR;
+        return session.plannedDurationHours * MS_PER_HOUR;
     });
 
     public readonly progressPercent = computed(() => {
@@ -132,7 +129,7 @@ export class FastingFacade {
         if (total <= 0) {
             return 0;
         }
-        return Math.min((this.elapsedMs() / total) * PERCENT_MAX, PERCENT_MAX);
+        return Math.min((this.elapsedMs() / total) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER);
     });
 
     public readonly elapsedFormatted = computed(() => this.formatDuration(this.elapsedMs()));
@@ -405,7 +402,7 @@ export class FastingFacade {
             return;
         }
 
-        const snoozedUntilUtc = new Date(this.now().getTime() + PROMPT_SNOOZE_HOURS * MILLISECONDS_PER_HOUR).toISOString();
+        const snoozedUntilUtc = new Date(this.now().getTime() + PROMPT_SNOOZE_HOURS * MS_PER_HOUR).toISOString();
         this.updatePromptState(this.getPromptStateKey(session.id, promptId), { snoozedUntilUtc });
     }
 
@@ -426,7 +423,7 @@ export class FastingFacade {
         this.now.set(new Date());
         this.timerInterval = setInterval(() => {
             this.now.set(new Date());
-        }, MILLISECONDS_PER_SECOND);
+        }, MS_PER_SECOND);
         this.destroyRef.onDestroy(() => {
             this.stopTimer();
         });
@@ -544,7 +541,7 @@ export class FastingFacade {
     }
 
     private formatDuration(ms: number): string {
-        const totalSeconds = Math.floor(ms / MILLISECONDS_PER_SECOND);
+        const totalSeconds = Math.floor(ms / MS_PER_SECOND);
         const hours = Math.floor(totalSeconds / SECONDS_PER_HOUR);
         const minutes = Math.floor((totalSeconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
         const seconds = totalSeconds % SECONDS_PER_MINUTE;
@@ -567,7 +564,7 @@ export class FastingFacade {
             return 0;
         }
 
-        return Math.round(((endedAtMs - startedAtMs) / MILLISECONDS_PER_HOUR) * DURATION_ROUNDING_FACTOR) / DURATION_ROUNDING_FACTOR;
+        return Math.round(((endedAtMs - startedAtMs) / MS_PER_HOUR) * DURATION_ROUNDING_FACTOR) / DURATION_ROUNDING_FACTOR;
     }
 
     private getReminderTelemetryDetails(): Record<string, unknown> {

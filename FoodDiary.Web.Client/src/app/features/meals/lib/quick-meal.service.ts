@@ -2,16 +2,13 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
+import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 import type { Product } from '../../products/models/product.data';
 import type { Recipe } from '../../recipes/models/recipe.data';
 import { MealService } from '../api/meal.service';
 import type { ConsumptionItemManageDto, MealManageDto } from '../models/meal.data';
 
 const DEFAULT_ITEM_AMOUNT = 1;
-const DEFAULT_SATIETY_LEVEL = 3;
-const MIN_SATIETY_LEVEL = 1;
-const MAX_SATIETY_LEVEL = 5;
-const SATIETY_NORMALIZATION_DIVISOR = 2;
 const NEXT_MONTH_OFFSET = 1;
 const PADDED_DATE_PART_LENGTH = 2;
 
@@ -256,8 +253,8 @@ export class QuickMealService {
             imageAssetId: undefined,
             items: mappedItems,
             isNutritionAutoCalculated: true,
-            preMealSatietyLevel: this.normalizeSatietyLevel(this.detailsSignal().preMealSatietyLevel),
-            postMealSatietyLevel: this.normalizeSatietyLevel(this.detailsSignal().postMealSatietyLevel),
+            preMealSatietyLevel: normalizeSatietyLevel(this.detailsSignal().preMealSatietyLevel),
+            postMealSatietyLevel: normalizeSatietyLevel(this.detailsSignal().postMealSatietyLevel),
         };
     }
 
@@ -289,18 +286,6 @@ export class QuickMealService {
         const details = this.detailsSignal();
         const parsed = new Date(`${details.date}T${details.time}`);
         return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
-    }
-
-    private normalizeSatietyLevel(value: number | null): number {
-        if (value === null || value <= 0 || Number.isNaN(value)) {
-            return DEFAULT_SATIETY_LEVEL;
-        }
-
-        if (value > MAX_SATIETY_LEVEL) {
-            return Math.min(MAX_SATIETY_LEVEL, Math.max(MIN_SATIETY_LEVEL, Math.round(value / SATIETY_NORMALIZATION_DIVISOR)));
-        }
-
-        return Math.max(MIN_SATIETY_LEVEL, value);
     }
 
     private resolveComment(): string | undefined {

@@ -12,6 +12,7 @@ import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { APP_FILTER_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
@@ -27,8 +28,6 @@ import type { FavoriteMealView, MealDateGroupView } from './meal-list.types';
 import { MealListContentComponent } from './meal-list-content.component';
 import { MealListFavoritesComponent } from './meal-list-favorites.component';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
-
-const FILTER_CHANGE_DEBOUNCE_MS = 300;
 
 @Component({
     selector: 'fd-meal-list',
@@ -57,6 +56,7 @@ export class MealListComponent {
     private readonly viewportService = inject(ViewportService);
     private readonly translateService = inject(TranslateService);
     private readonly mealService = inject(MealService);
+    private readonly filterDebounceMs = inject(APP_FILTER_DEBOUNCE_MS);
     private readonly languageVersion = signal(0);
 
     public searchForm: FormGroup<SearchFormGroup>;
@@ -102,7 +102,7 @@ export class MealListComponent {
         this.searchForm.valueChanges
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                debounceTime(FILTER_CHANGE_DEBOUNCE_MS),
+                debounceTime(this.filterDebounceMs),
                 switchMap(() => this.loadConsumptions(1)),
             )
             .subscribe();

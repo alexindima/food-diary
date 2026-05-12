@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -11,7 +11,7 @@ import { MealService } from './meal.service';
 const BASE_URL = 'http://localhost:5300/api/v1/consumptions';
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
-const SERVER_ERROR_STATUS = 500;
+const SERVER_ERROR_STATUS: number = HttpStatusCode.InternalServerError;
 const TOTAL_CALORIES = 500;
 const PRE_MEAL_SATIETY_LEVEL = 3;
 const POST_MEAL_SATIETY_LEVEL = 4;

@@ -1,11 +1,9 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { DASHBOARD_LAYOUT_CONFIG } from '../../../config/runtime-ui.tokens';
 import { UserService } from '../../../shared/api/user.service';
 import type { DashboardLayoutSettings } from '../../../shared/models/user.data';
-
-const DEFAULT_VIEWPORT_WIDTH = 1024;
-const MOBILE_LAYOUT_BREAKPOINT = 768;
 
 const DEFAULT_LAYOUT: DashboardLayoutSettings = {
     web: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
@@ -16,10 +14,11 @@ const DEFAULT_LAYOUT: DashboardLayoutSettings = {
 export class DashboardLayoutService {
     private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly config = inject(DASHBOARD_LAYOUT_CONFIG);
 
     private readonly layoutInitialized = signal<boolean>(false);
     private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
-    private readonly viewportWidth = signal<number>(typeof window === 'undefined' ? DEFAULT_VIEWPORT_WIDTH : window.innerWidth);
+    private readonly viewportWidth = signal<number>(typeof window === 'undefined' ? this.config.defaultViewportWidth : window.innerWidth);
 
     public readonly layoutSettings = signal<DashboardLayoutSettings>({
         web: [...(DEFAULT_LAYOUT.web ?? [])],
@@ -28,7 +27,9 @@ export class DashboardLayoutService {
 
     public readonly isEditingLayout = signal<boolean>(false);
 
-    public readonly layoutKey = computed<'web' | 'mobile'>(() => (this.viewportWidth() < MOBILE_LAYOUT_BREAKPOINT ? 'mobile' : 'web'));
+    public readonly layoutKey = computed<'web' | 'mobile'>(() =>
+        this.viewportWidth() < this.config.mobileBreakpointPx ? 'mobile' : 'web',
+    );
 
     public readonly visibleBlocks = computed(() => this.getLayoutForKey(this.layoutKey()));
 

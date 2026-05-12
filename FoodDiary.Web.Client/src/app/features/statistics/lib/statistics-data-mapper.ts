@@ -3,6 +3,7 @@ import type { ChartConfiguration } from 'chart.js';
 import type { SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { normalizeEndOfLocalDay, normalizeStartOfLocalDay } from '../../../shared/lib/local-date.utils';
+import { MS_PER_DAY } from '../../../shared/lib/time.constants';
 import type { MappedStatistics } from '../models/statistics.data';
 import { applyAlpha } from './statistics-chart-config';
 
@@ -34,11 +35,6 @@ export function isBodyTab(value: unknown): value is BodyChartTab {
 
 // ── Date range helpers ─────────────────────────────────────────────────
 
-const HOURS_PER_DAY = 24;
-const MINUTES_PER_HOUR = 60;
-const SECONDS_PER_MINUTE = 60;
-const MS_PER_SECOND = 1_000;
-const MS_IN_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
 const HALF_YEAR_DAYS = 180;
 const LONG_RANGE_QUANTIZATION_DAYS = 30;
 const FOUR_MONTH_DAYS = 120;
@@ -56,7 +52,7 @@ const DEFAULT_FILL_ALPHA = 0.16;
 const MACRO_SPARKLINE_FILL_ALPHA = 0.18;
 
 export function getQuantizationDays(start: Date, end: Date): number {
-    const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / MS_IN_DAY));
+    const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / MS_PER_DAY));
 
     if (totalDays > HALF_YEAR_DAYS) {
         return LONG_RANGE_QUANTIZATION_DAYS;

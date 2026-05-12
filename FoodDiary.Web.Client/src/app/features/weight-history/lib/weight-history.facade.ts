@@ -6,6 +6,10 @@ import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
+import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
+import { END_OF_DAY_HOUR, END_OF_DAY_MILLISECOND, END_OF_DAY_MINUTE, END_OF_DAY_SECOND } from '../../../shared/lib/local-date.utils';
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
+import { MS_PER_DAY } from '../../../shared/lib/time.constants';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import type {
     CreateWeightEntryPayload,
@@ -14,37 +18,28 @@ import type {
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
+import {
+    MAX_WEIGHT_KG,
+    MIN_WEIGHT_KG,
+    WEIGHT_HISTORY_ENTRIES_LIMIT_MAX,
+    WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR,
+} from './weight-history.constants';
 
 export type WeightHistoryRange = 'week' | 'month' | 'year' | 'custom';
 
 const BMI_SCALE_MAX = 40;
 const BMI_POINTER_PADDING_PERCENT = 1;
-const MIN_WEIGHT_KG = 1;
-const MAX_WEIGHT_KG = 500;
-const CENTIMETERS_PER_METER = 100;
-const ROUNDING_FACTOR = 10;
-const PERCENT_MAX = 100;
 const BMI_UNDERWEIGHT_MAX = 18.5;
 const BMI_NORMAL_MAX = 25;
 const BMI_OVERWEIGHT_MAX = 30;
 const DEFAULT_MONTH_OFFSET = 1;
 const WEEK_DAYS = 7;
-const ENTRIES_LIMIT_MAX = 500;
 const ENTRIES_LIMIT_PER_DAY = 5;
 const MONTH_QUANTIZATION_DAYS = 3;
 const YEAR_QUANTIZATION_DAYS = 14;
 const CUSTOM_QUANTIZATION_DIVISOR = 12;
-const END_OF_DAY_HOURS = 23;
-const END_OF_DAY_MINUTES = 59;
-const END_OF_DAY_SECONDS = 59;
-const END_OF_DAY_MS = 999;
 const DATE_PART_PAD_LENGTH = 2;
 const DATE_PART_PAD = '0';
-const HOURS_PER_DAY = 24;
-const MINUTES_PER_HOUR = 60;
-const SECONDS_PER_MINUTE = 60;
-const MS_PER_SECOND = 1000;
-const MS_IN_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
 
 export type BmiStatusInfo = {
     labelKey: string;
@@ -126,7 +121,7 @@ export class WeightHistoryFacade {
 
         const heightMeters = heightCm / CENTIMETERS_PER_METER;
         const bmi = latest / (heightMeters * heightMeters);
-        return Math.round(bmi * ROUNDING_FACTOR) / ROUNDING_FACTOR;
+        return Math.round(bmi * WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR) / WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR;
     });
 
     public readonly bmiPointerPosition = computed(() => {
@@ -135,8 +130,8 @@ export class WeightHistoryFacade {
             return '0%';
         }
 
-        const rawPercent = (bmi / BMI_SCALE_MAX) * PERCENT_MAX;
-        const percent = Math.max(BMI_POINTER_PADDING_PERCENT, Math.min(PERCENT_MAX - BMI_POINTER_PADDING_PERCENT, rawPercent));
+        const rawPercent = (bmi / BMI_SCALE_MAX) * PERCENT_MULTIPLIER;
+        const percent = Math.max(BMI_POINTER_PADDING_PERCENT, Math.min(PERCENT_MULTIPLIER - BMI_POINTER_PADDING_PERCENT, rawPercent));
         return `${percent}%`;
     });
 
@@ -446,9 +441,9 @@ export class WeightHistoryFacade {
         const { start, end } = this.calculateRangeDates(range);
         const normalizedStart = this.normalizeStartOfDay(start);
         const normalizedEnd = this.normalizeEndOfDay(end);
-        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
+        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_PER_DAY));
         const quantizationDays = this.getQuantizationDays(range, totalDays);
-        const limit = Math.min(ENTRIES_LIMIT_MAX, totalDays * ENTRIES_LIMIT_PER_DAY);
+        const limit = Math.min(WEIGHT_HISTORY_ENTRIES_LIMIT_MAX, totalDays * ENTRIES_LIMIT_PER_DAY);
         const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
 
         return {
@@ -504,10 +499,10 @@ export class WeightHistoryFacade {
                 date.getFullYear(),
                 date.getMonth(),
                 date.getDate(),
-                END_OF_DAY_HOURS,
-                END_OF_DAY_MINUTES,
-                END_OF_DAY_SECONDS,
-                END_OF_DAY_MS,
+                END_OF_DAY_HOUR,
+                END_OF_DAY_MINUTE,
+                END_OF_DAY_SECOND,
+                END_OF_DAY_MILLISECOND,
             ),
         );
     }

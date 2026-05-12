@@ -6,6 +6,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { LocalizationService } from '../../../../services/localization.service';
+import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
+import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
 import type { FastingOccurrenceKind, FastingSession } from '../../models/fasting.data';
@@ -39,8 +41,6 @@ type FastingTimerCardState = {
 
 const RING_RADIUS = 90;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
-const PERCENT_FULL = 100;
-const TIMER_TICK_MS = 1000;
 const EMPTY_DURATION_MS = 0;
 
 @Component({
@@ -79,10 +79,12 @@ export class FastingTimerCardComponent {
     });
     protected readonly normalizedProgressPercent = computed(() => {
         const progress = this.viewState().progressPercent;
-        return Number.isFinite(progress) ? Math.max(EMPTY_DURATION_MS, Math.min(progress, PERCENT_FULL)) : EMPTY_DURATION_MS;
+        return Number.isFinite(progress) ? Math.max(EMPTY_DURATION_MS, Math.min(progress, PERCENT_MULTIPLIER)) : EMPTY_DURATION_MS;
     });
     protected readonly ringStrokeDasharray = RING_CIRCUMFERENCE;
-    protected readonly ringStrokeDashoffset = computed(() => RING_CIRCUMFERENCE * (1 - this.normalizedProgressPercent() / PERCENT_FULL));
+    protected readonly ringStrokeDashoffset = computed(
+        () => RING_CIRCUMFERENCE * (1 - this.normalizedProgressPercent() / PERCENT_MULTIPLIER),
+    );
     public readonly layout = input<'dashboard' | 'page'>('page');
     public readonly session = input<FastingSession | null>(null);
     private readonly usesFacadeTimer = computed(() => this.layout() === 'page' && this.facade !== null);
@@ -479,7 +481,7 @@ export class FastingTimerCardComponent {
         this.now.set(new Date());
         this.timerInterval = setInterval(() => {
             this.now.set(new Date());
-        }, TIMER_TICK_MS);
+        }, MS_PER_SECOND);
     }
 
     private stopTimer(): void {

@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -117,7 +118,7 @@ describe('RecipeListFacade overview', () => {
     });
 
     it('sets load error state when overview query fails', () => {
-        recipeService.queryOverview.mockReturnValueOnce(throwError(() => ({ status: 500 })));
+        recipeService.queryOverview.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.InternalServerError })));
 
         facade.loadInitialOverview(1, PAGE_LIMIT, ' soup ', false).subscribe();
 
@@ -137,7 +138,7 @@ describe('RecipeListFacade actions', () => {
     });
 
     it('handles delete failure with toast', () => {
-        recipeService.deleteById.mockReturnValueOnce(throwError(() => ({ status: 400 })));
+        recipeService.deleteById.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.BadRequest })));
 
         facade.deleteRecipe(recipe, null, false).subscribe();
 

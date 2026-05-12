@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -17,7 +17,7 @@ const INPUT_LIMIT = 10000;
 const OUTPUT_LIMIT = 5000;
 const INPUT_USED = 2500;
 const OUTPUT_USED = 1200;
-const HTTP_INTERNAL_SERVER_ERROR = 500;
+const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 
 let service: AiFoodService;
 let httpMock: HttpTestingController;

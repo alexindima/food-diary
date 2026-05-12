@@ -4,10 +4,9 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog.component';
 
 import { AuthService } from '../../../services/auth.service';
+import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
-
-const QUALITY_SCORE_MAX = 100;
 
 export type ProductCardItem = {
     id?: string;
@@ -71,7 +70,7 @@ export class ProductCardComponent {
             return null;
         }
 
-        return Math.round(Math.min(QUALITY_SCORE_MAX, Math.max(0, score)));
+        return normalizeQualityScore(score);
     });
     public readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
     public handleOpen(): void {

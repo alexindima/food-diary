@@ -6,12 +6,11 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { LessonFacade } from '../../lib/lesson.facade';
 import { LESSON_CATEGORIES } from '../../models/lesson.data';
 import type { LessonListItem } from './lessons-list.types';
 import { LessonsListGridComponent } from './lessons-list-grid.component';
-
-const PERCENTAGE_MULTIPLIER = 100;
 
 type LessonCategoryOption = {
     value: string | null;
@@ -49,7 +48,7 @@ export class LessonsListPageComponent {
             return null;
         }
         const read = all.filter(l => l.isRead).length;
-        return { read, total: all.length, percent: Math.round((read / all.length) * PERCENTAGE_MULTIPLIER) };
+        return { read, total: all.length, percent: Math.round((read / all.length) * PERCENT_MULTIPLIER) };
     });
     public readonly categoryFilterOptions = computed<LessonCategoryOption[]>(() => {
         const selectedCategory = this.facade.categoryFilter();

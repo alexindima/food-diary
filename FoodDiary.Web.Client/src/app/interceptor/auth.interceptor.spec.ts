@@ -1,4 +1,11 @@
-import { HTTP_INTERCEPTORS, HttpClient, HttpContext, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+    HTTP_INTERCEPTORS,
+    HttpClient,
+    HttpContext,
+    HttpStatusCode,
+    provideHttpClient,
+    withInterceptorsFromDi,
+} from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { type Observable, of, throwError } from 'rxjs';
@@ -9,8 +16,8 @@ import { AuthService } from '../services/auth.service';
 import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import { AuthInterceptor } from './auth.interceptor';
 
-const HTTP_UNAUTHORIZED = 401;
-const HTTP_INTERNAL_SERVER_ERROR = 500;
+const HTTP_UNAUTHORIZED: number = HttpStatusCode.Unauthorized;
+const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 
 type AuthServiceMock = {
     getToken: ReturnType<typeof vi.fn<() => string | null>>;
@@ -135,7 +142,7 @@ describe('AuthInterceptor refresh flow', () => {
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: 401, statusText: 'Unauthorized' });
+        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
     });

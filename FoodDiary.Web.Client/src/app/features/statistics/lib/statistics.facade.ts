@@ -6,6 +6,7 @@ import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
+import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
@@ -31,8 +32,6 @@ import {
     type NutritionChartTab,
     type StatisticsRange,
 } from './statistics-data-mapper';
-
-const CENTIMETERS_PER_METER = 100;
 
 @Injectable({ providedIn: 'root' })
 export class StatisticsFacade {

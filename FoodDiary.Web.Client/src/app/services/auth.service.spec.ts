@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -397,7 +397,7 @@ describe('refreshToken', () => {
         });
 
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+        req.flush('Unauthorized', { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
     });

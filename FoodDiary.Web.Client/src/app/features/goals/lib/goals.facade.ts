@@ -4,8 +4,15 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
 
 import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import {
+    CARB_CALORIES_PER_GRAM,
+    FAT_CALORIES_PER_GRAM,
+    PERCENT_MULTIPLIER,
+    PROTEIN_CALORIES_PER_GRAM,
+} from '../../../shared/lib/nutrition.constants';
 import { GoalsService } from '../api/goals.service';
 import { DAYS_OF_WEEK, type GoalsResponse, type UpdateGoalsRequest } from '../models/goals.data';
+import { MAX_BODY_TARGET } from './goals.constants';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 
@@ -51,17 +58,12 @@ type SliderConfig = {
 export type BodyTargetKey = 'weight' | 'waist';
 
 const MAX_CALORIES = 5000;
-const MAX_BODY_TARGET = 400;
-const PERCENT_FULL = 100;
 const CIRCLE_DEGREES = 360;
 const AUTOSAVE_DEBOUNCE_MS = 700;
 const LOW_CALORIE_THRESHOLD = 1000;
 const NORMAL_CALORIE_THRESHOLD = 3500;
 const HIGH_CALORIE_THRESHOLD = 4500;
 const DEFAULT_ZONE_ALPHA = 0.16;
-const PROTEIN_CALORIES_PER_GRAM = 4;
-const FAT_CALORIES_PER_GRAM = 9;
-const CARB_CALORIES_PER_GRAM = 4;
 
 @Injectable({ providedIn: 'root' })
 export class GoalsFacade {
@@ -233,7 +235,7 @@ export class GoalsFacade {
         this.macroConfigs.map(cfg => {
             const rawValue = this.macroValues()[cfg.key];
             const value = this.clampValue(rawValue, cfg.max);
-            const percent = Math.min(PERCENT_FULL, Math.max(0, Math.round((value / cfg.max) * PERCENT_FULL)));
+            const percent = Math.min(PERCENT_MULTIPLIER, Math.max(0, Math.round((value / cfg.max) * PERCENT_MULTIPLIER)));
             const accent = this.pickZoneColor(cfg, value);
             const gradient = this.buildZoneGradient(cfg);
             const shortfall = Math.max(0, Math.ceil(cfg.greenFrom - value));
@@ -246,7 +248,7 @@ export class GoalsFacade {
     public readonly waterState = computed(() => {
         const rawValue = this.waterValue();
         const value = this.clampValue(rawValue, this.waterConfig.max);
-        const percent = Math.min(PERCENT_FULL, Math.max(0, Math.round((value / this.waterConfig.max) * PERCENT_FULL)));
+        const percent = Math.min(PERCENT_MULTIPLIER, Math.max(0, Math.round((value / this.waterConfig.max) * PERCENT_MULTIPLIER)));
         const accent = this.pickZoneColor(this.waterConfig, value);
         const gradient = this.buildZoneGradient(this.waterConfig);
         const shortfall = Math.max(0, Math.ceil(this.waterConfig.greenFrom - value));
@@ -260,9 +262,9 @@ export class GoalsFacade {
     public readonly progressPercent = computed(() => {
         const span = this.maxCalories - this.minCalories;
         const normalized = Math.min(Math.max(this.calorieTarget() - this.minCalories, 0), span);
-        return Math.round((normalized / span) * PERCENT_FULL);
+        return Math.round((normalized / span) * PERCENT_MULTIPLIER);
     });
-    public readonly knobAngle = computed(() => (this.progressPercent() / PERCENT_FULL) * CIRCLE_DEGREES);
+    public readonly knobAngle = computed(() => (this.progressPercent() / PERCENT_MULTIPLIER) * CIRCLE_DEGREES);
     public readonly accentColor = computed(() => {
         const value = this.calorieTarget();
         if (value < LOW_CALORIE_THRESHOLD) {
@@ -557,15 +559,15 @@ export class GoalsFacade {
 
     private buildZoneGradient(cfg: SliderConfig | MacroItem): string {
         const parts = cfg.zones.map(zone => {
-            const start = Math.max(0, Math.min(PERCENT_FULL, (zone.from / cfg.max) * PERCENT_FULL));
-            const end = Math.max(0, Math.min(PERCENT_FULL, (zone.to / cfg.max) * PERCENT_FULL));
+            const start = Math.max(0, Math.min(PERCENT_MULTIPLIER, (zone.from / cfg.max) * PERCENT_MULTIPLIER));
+            const end = Math.max(0, Math.min(PERCENT_MULTIPLIER, (zone.to / cfg.max) * PERCENT_MULTIPLIER));
             return `${this.withAlpha(zone.color, DEFAULT_ZONE_ALPHA)} ${start}% ${end}%`;
         });
         return `linear-gradient(90deg, ${parts.join(', ')})`;
     }
 
     private withAlpha(color: string, alpha: number): string {
-        return `color-mix(in srgb, ${color} ${Math.round(alpha * PERCENT_FULL)}%, transparent)`;
+        return `color-mix(in srgb, ${color} ${Math.round(alpha * PERCENT_MULTIPLIER)}%, transparent)`;
     }
 
     private applyPresetPercent(percent: MacroPercent): void {

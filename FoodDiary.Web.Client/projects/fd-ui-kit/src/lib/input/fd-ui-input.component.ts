@@ -7,19 +7,7 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
-
-const AUTOFILL_SYNC_FAST_DELAY_MS = 100;
-const AUTOFILL_SYNC_SHORT_DELAY_MS = 500;
-const AUTOFILL_SYNC_MEDIUM_DELAY_MS = 1000;
-const AUTOFILL_SYNC_LONG_DELAY_MS = 2500;
-const AUTOFILL_SYNC_FINAL_DELAY_MS = 5000;
-const AUTOFILL_SYNC_DELAYS_MS = [
-    AUTOFILL_SYNC_FAST_DELAY_MS,
-    AUTOFILL_SYNC_SHORT_DELAY_MS,
-    AUTOFILL_SYNC_MEDIUM_DELAY_MS,
-    AUTOFILL_SYNC_LONG_DELAY_MS,
-    AUTOFILL_SYNC_FINAL_DELAY_MS,
-] as const;
+import { FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS } from './fd-ui-input.tokens';
 
 let uniqueId = 0;
 export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
@@ -42,6 +30,7 @@ export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
 export class FdUiInputComponent implements ControlValueAccessor {
     private readonly destroyRef = inject(DestroyRef);
     private readonly autofillMonitor = inject(AutofillMonitor);
+    private readonly autofillSyncDelaysMs = inject(FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS);
     private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
@@ -74,7 +63,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
         afterNextRender(() => {
             this.monitorAutofill();
             this.syncNativeValue();
-            this.autofillSyncTimers = AUTOFILL_SYNC_DELAYS_MS.map(delay =>
+            this.autofillSyncTimers = this.autofillSyncDelaysMs.map(delay =>
                 setTimeout(() => {
                     this.syncNativeValue();
                 }, delay),

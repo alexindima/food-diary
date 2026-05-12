@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
+import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { AiInputBarMealDetails } from '../ai-input-bar.types';
 import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel.component';
@@ -35,9 +36,6 @@ type EditChangeSummary = {
     amountChanges: AmountChange[];
 };
 
-const DEFAULT_SATIETY_LEVEL = 3;
-const MAX_LEGACY_SATIETY_LEVEL = 5;
-const LEGACY_SATIETY_SCALE_FACTOR = 2;
 const TIME_PAD_LENGTH = 2;
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
@@ -303,8 +301,8 @@ export class AiPhotoResultComponent {
             date: this.detailsDate(),
             time: this.detailsTime(),
             comment: this.detailsComment().trim().length > 0 ? this.detailsComment().trim() : null,
-            preMealSatietyLevel: this.normalizeSatietyLevel(this.preMealSatietyLevel()),
-            postMealSatietyLevel: this.normalizeSatietyLevel(this.postMealSatietyLevel()),
+            preMealSatietyLevel: normalizeSatietyLevel(this.preMealSatietyLevel()),
+            postMealSatietyLevel: normalizeSatietyLevel(this.postMealSatietyLevel()),
         });
     }
 
@@ -361,18 +359,6 @@ export class AiPhotoResultComponent {
         const hours = date.getHours().toString().padStart(TIME_PAD_LENGTH, '0');
         const minutes = date.getMinutes().toString().padStart(TIME_PAD_LENGTH, '0');
         return `${hours}:${minutes}`;
-    }
-
-    private normalizeSatietyLevel(value: number | null): number {
-        if (value === null || value === 0) {
-            return DEFAULT_SATIETY_LEVEL;
-        }
-
-        if (value > MAX_LEGACY_SATIETY_LEVEL) {
-            return Math.min(MAX_LEGACY_SATIETY_LEVEL, Math.max(1, Math.round(value / LEGACY_SATIETY_SCALE_FACTOR)));
-        }
-
-        return Math.max(1, value);
     }
 
     private analyzeEditChanges(source: EditableAiItem[], edited: EditableAiItem[]): EditChangeSummary {
