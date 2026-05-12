@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import type { ChartConfiguration } from 'chart.js';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
@@ -8,6 +8,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { WaistHistoryFacade } from '../lib/waist-history.facade';
 import type { WaistEntry } from '../models/waist-entry.data';
@@ -46,6 +47,7 @@ const WHT_ELEVATED_MAX = 0.6;
 export class WaistHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WaistHistoryFacade);
+    private readonly translateService = inject(TranslateService);
 
     private readonly whtScaleMax = WHT_SCALE_MAX;
 
@@ -168,7 +170,7 @@ export class WaistHistoryPageComponent {
             return value;
         }
 
-        return new Intl.DateTimeFormat('ru-RU', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',

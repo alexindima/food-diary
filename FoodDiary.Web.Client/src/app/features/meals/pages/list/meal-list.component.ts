@@ -17,6 +17,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { MealService } from '../../api/meal.service';
 import type { MealDetailComponent } from '../../components/detail/meal-detail.component';
@@ -302,7 +303,7 @@ export class MealListComponent {
     }
 
     private formatGroupDate(date: Date): string {
-        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             day: 'numeric',
             month: 'long',
             year: 'numeric',

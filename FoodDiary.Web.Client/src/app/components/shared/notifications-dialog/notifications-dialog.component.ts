@@ -8,6 +8,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { type NotificationItem, NotificationService } from '../../../services/notification.service';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { NotificationViewModel } from './notifications-dialog.types';
 import { NotificationsDialogListComponent } from './notifications-dialog-list.component';
 
@@ -137,6 +138,6 @@ export class NotificationsDialogComponent {
     }
 
     private resolveLocale(): string {
-        return this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US';
+        return resolveAppLocale(this.translateService.getCurrentLang());
     }
 }

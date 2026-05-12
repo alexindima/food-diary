@@ -9,6 +9,7 @@ import { catchError, EMPTY, finalize, type Observable, of, switchMap } from 'rxj
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
 import { DietologistService } from '../../api/dietologist.service';
 
@@ -168,7 +169,7 @@ export class DietologistInvitationPageComponent {
             return value;
         }
 
-        return new Intl.DateTimeFormat(this.currentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.currentLanguage()), {
             dateStyle: 'medium',
         }).format(date);
     }

@@ -14,11 +14,11 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
 type ResetState = 'ready' | 'invalid' | 'error';
 const ERROR_FIELDS = ['password', 'confirmPassword'] as const;
-const PASSWORD_MIN_LENGTH = 6;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
 
@@ -55,7 +55,7 @@ export class PasswordResetComponent {
     public readonly form = new FormGroup<PasswordResetFormGroup>({
         password: new FormControl<string>('', {
             nonNullable: true,
-            validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
+            validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
         }),
         confirmPassword: new FormControl<string>('', {
             nonNullable: true,

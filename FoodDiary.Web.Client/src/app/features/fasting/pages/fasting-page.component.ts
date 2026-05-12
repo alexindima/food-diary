@@ -15,6 +15,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { LocalizationService } from '../../../services/localization.service';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../shared/lib/time.constants';
 import { FastingCheckInCardComponent } from '../components/fasting-check-in-card/fasting-check-in-card.component';
 import {
@@ -24,6 +25,13 @@ import {
 import { FastingHistoryCardComponent } from '../components/fasting-history-card/fasting-history-card.component';
 import { FastingInsightsSectionComponent } from '../components/fasting-insights-section/fasting-insights-section.component';
 import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
+import {
+    CURRENT_SESSION_RECENT_CHECK_INS_LIMIT,
+    DEFAULT_CYCLIC_EAT_DAYS,
+    DEFAULT_CYCLIC_EAT_FAST_HOURS,
+    DEFAULT_CYCLIC_EAT_WINDOW_HOURS,
+    DEFAULT_CYCLIC_FAST_DAYS,
+} from '../lib/fasting.constants';
 import { FastingFacade } from '../lib/fasting.facade';
 import {
     FASTING_ENERGY_EMOJI_SCALE,
@@ -47,12 +55,6 @@ import type {
     FastingMessageViewModel,
     FastingStatsViewModel,
 } from './fasting-page.types';
-
-const CURRENT_SESSION_RECENT_CHECK_INS_LIMIT = 3;
-const DEFAULT_CYCLIC_FAST_DAYS = 1;
-const DEFAULT_CYCLIC_EAT_DAYS = 1;
-const DEFAULT_CYCLIC_EAT_WINDOW_HOURS = 8;
-const DEFAULT_CYCLIC_EAT_FAST_HOURS = 16;
 
 @Component({
     selector: 'fd-fasting-page',
@@ -538,7 +540,7 @@ export class FastingPageComponent {
     }
 
     private formatSessionDateLabel(value: string): string {
-        return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.localizationService.getCurrentLanguage()), {
             day: 'numeric',
             month: 'short',
             year: 'numeric',
@@ -587,7 +589,7 @@ export class FastingPageComponent {
 
         const diffMs = timestamp - Date.now();
         const diffMinutes = Math.round(diffMs / MS_PER_MINUTE);
-        const locale = this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US';
+        const locale = resolveAppLocale(this.localizationService.getCurrentLanguage());
         const formatter = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
 
         if (Math.abs(diffMinutes) < MINUTES_PER_HOUR) {

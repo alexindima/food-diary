@@ -12,7 +12,7 @@ import {
     UnsavedChangesDialogComponent,
     type UnsavedChangesDialogResult,
 } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
-import { SIDEBAR_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
+import { ADMIN_LOADING_URL_TTL_MS, SIDEBAR_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
@@ -60,8 +60,6 @@ const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
     { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
 ];
 
-const ADMIN_LOADING_URL_TTL_MS = 30_000;
-
 @Component({
     selector: 'fd-sidebar',
     imports: [SidebarDesktopComponent, SidebarMobileComponent],
@@ -82,6 +80,7 @@ export class SidebarComponent {
     private readonly notificationService = inject(NotificationService);
     private readonly router = inject(Router);
     private readonly mobileViewportQuery = inject(SIDEBAR_MOBILE_VIEWPORT_QUERY);
+    private readonly adminLoadingUrlTtlMs = inject(ADMIN_LOADING_URL_TTL_MS);
 
     public isAuthenticated = this.authService.isAuthenticated;
     public isPremium = this.authService.isPremium;
@@ -366,7 +365,7 @@ export class SidebarComponent {
         const adminWindow = window.open(loadingUrl, '_blank');
         window.setTimeout(() => {
             URL.revokeObjectURL(loadingUrl);
-        }, ADMIN_LOADING_URL_TTL_MS);
+        }, this.adminLoadingUrlTtlMs);
 
         this.authService.startAdminSso().subscribe({
             next: response => {

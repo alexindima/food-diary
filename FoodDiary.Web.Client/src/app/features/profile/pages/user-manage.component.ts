@@ -48,6 +48,7 @@ import {
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../shared/lib/fasting-reminder-presets';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { parseIntegerInput } from '../../../shared/lib/number.utils';
 import type { DietologistPermissions, DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
@@ -1448,7 +1449,7 @@ export class UserManageComponent {
             return null;
         }
 
-        return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.localizationService.getCurrentLanguage()), {
             dateStyle: 'medium',
             timeStyle: 'short',
         }).format(date);
@@ -1464,7 +1465,7 @@ export class UserManageComponent {
             return null;
         }
 
-        return new Intl.DateTimeFormat(this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.localizationService.getCurrentLanguage()), {
             dateStyle: 'medium',
         }).format(date);
     }

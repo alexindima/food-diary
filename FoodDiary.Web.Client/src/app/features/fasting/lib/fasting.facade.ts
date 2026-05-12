@@ -20,27 +20,29 @@ import {
     type FastingSession,
     type FastingStats,
 } from '../models/fasting.data';
+import {
+    DEFAULT_CHECK_IN_LEVEL,
+    DEFAULT_EXTEND_HOURS,
+    DEFAULT_FIRST_REMINDER_HOURS,
+    DEFAULT_FOLLOW_UP_REMINDER_HOURS,
+    DEFAULT_INTERMITTENT_FAST_HOURS,
+    DEFAULT_REDUCE_HOURS,
+    FASTING_HISTORY_PAGE_SIZE,
+    FASTING_PROMPT_SNOOZE_HOURS,
+    MAX_CHECK_IN_LEVEL,
+    MAX_CYCLIC_DAYS,
+    MAX_FASTING_HOURS,
+    MAX_INTERMITTENT_FAST_HOURS,
+    MIN_FASTING_HOURS,
+} from './fasting.constants';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
 
-const PROMPT_SNOOZE_HOURS = 4;
-const HISTORY_PAGE_SIZE = 10;
-const DEFAULT_INTERMITTENT_FAST_HOURS = 16;
-const DEFAULT_EXTEND_HOURS = 24;
-const DEFAULT_REDUCE_HOURS = 4;
-const DEFAULT_CHECK_IN_LEVEL = 3;
-const MIN_FASTING_HOURS = 1;
-const MAX_FASTING_HOURS = 168;
-const MAX_INTERMITTENT_FAST_HOURS = 23;
-const MAX_CYCLIC_DAYS = 30;
-const MAX_CHECK_IN_LEVEL = 5;
 const SECONDS_PER_HOUR = 3600;
 const DURATION_PART_LENGTH = 2;
 const DURATION_PART_PAD = '0';
 const DURATION_ROUNDING_FACTOR = 10;
 const HISTORY_FROM_MONTH_OFFSET = 1;
 const HISTORY_TO_MONTH_OFFSET = 2;
-const DEFAULT_FIRST_REMINDER_HOURS = 12;
-const DEFAULT_FOLLOW_UP_REMINDER_HOURS = 20;
 
 type FastingPromptState = {
     dismissed?: boolean;
@@ -163,7 +165,7 @@ export class FastingFacade {
                 from: range.from,
                 to: range.to,
                 page: this.historyPage() + 1,
-                limit: HISTORY_PAGE_SIZE,
+                limit: FASTING_HISTORY_PAGE_SIZE,
             }),
             history => {
                 this.history.update(current => [...current, ...history.data]);
@@ -402,7 +404,7 @@ export class FastingFacade {
             return;
         }
 
-        const snoozedUntilUtc = new Date(this.now().getTime() + PROMPT_SNOOZE_HOURS * MS_PER_HOUR).toISOString();
+        const snoozedUntilUtc = new Date(this.now().getTime() + FASTING_PROMPT_SNOOZE_HOURS * MS_PER_HOUR).toISOString();
         this.updatePromptState(this.getPromptStateKey(session.id, promptId), { snoozedUntilUtc });
     }
 

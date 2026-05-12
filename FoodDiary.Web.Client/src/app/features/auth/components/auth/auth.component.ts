@@ -32,11 +32,14 @@ import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.compo
 import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
+import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { AUTH_LOGIN_AUTOFILL_FIELD_COUNT, AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
 import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../models/auth.data';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
@@ -63,24 +66,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 const LOGIN_ERROR_FIELDS = ['email', 'password'] as const;
 const REGISTER_ERROR_FIELDS = ['email', 'password', 'confirmPassword'] as const;
 const PASSWORD_RESET_ERROR_FIELDS = ['email'] as const;
-const PASSWORD_MIN_LENGTH = 6;
-const PASSWORD_RESET_COOLDOWN_SECONDS = 60;
-const MS_PER_SECOND = 1_000;
-const LOGIN_AUTOFILL_CHECK_DELAY_SHORT_MS = 100;
-const LOGIN_AUTOFILL_CHECK_DELAY_MEDIUM_MS = 300;
-const LOGIN_AUTOFILL_CHECK_DELAY_LONG_MS = 700;
-const LOGIN_AUTOFILL_CHECK_DELAY_EXTENDED_MS = 1_500;
-const LOGIN_AUTOFILL_CHECK_DELAY_SLOW_MS = 3_000;
-const LOGIN_AUTOFILL_CHECK_DELAY_FINAL_MS = 5_000;
-const LOGIN_AUTOFILL_CHECK_DELAYS_MS = [
-    LOGIN_AUTOFILL_CHECK_DELAY_SHORT_MS,
-    LOGIN_AUTOFILL_CHECK_DELAY_MEDIUM_MS,
-    LOGIN_AUTOFILL_CHECK_DELAY_LONG_MS,
-    LOGIN_AUTOFILL_CHECK_DELAY_EXTENDED_MS,
-    LOGIN_AUTOFILL_CHECK_DELAY_SLOW_MS,
-    LOGIN_AUTOFILL_CHECK_DELAY_FINAL_MS,
-] as const;
-const LOGIN_AUTOFILL_FIELD_COUNT = 2;
 
 type LoginErrorField = (typeof LOGIN_ERROR_FIELDS)[number];
 type LoginFieldErrors = Record<LoginErrorField, string | null>;
@@ -124,6 +109,8 @@ export class AuthComponent {
     private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject(FdUiDialogRef<AuthComponent>, { optional: true });
+    private readonly passwordResetCooldownSecondsDefault = inject(AUTH_PASSWORD_RESET_COOLDOWN_SECONDS);
+    private readonly loginAutofillCheckDelaysMs = inject(AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS);
 
     public authMode: 'login' | 'register' = 'login';
 
@@ -173,7 +160,7 @@ export class AuthComponent {
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
             password: new FormControl<string>('', {
                 nonNullable: true,
-                validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
+                validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
             }),
             rememberMe: new FormControl<boolean>(false, { nonNullable: true }),
         });
@@ -182,7 +169,7 @@ export class AuthComponent {
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
             password: new FormControl<string>('', {
                 nonNullable: true,
-                validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
+                validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
             }),
             confirmPassword: new FormControl<string>('', {
                 nonNullable: true,
@@ -472,7 +459,7 @@ export class AuthComponent {
         });
     }
 
-    private startPasswordResetCooldown(seconds = PASSWORD_RESET_COOLDOWN_SECONDS): void {
+    private startPasswordResetCooldown(seconds = this.passwordResetCooldownSecondsDefault): void {
         this.passwordResetCooldownSeconds.set(seconds);
         if (this.passwordResetCooldownTimerId !== null) {
             window.clearInterval(this.passwordResetCooldownTimerId);
@@ -651,7 +638,7 @@ export class AuthComponent {
 
     private startLoginAutofillDetection(): void {
         this.updateLoginAutofillState();
-        this.loginAutofillCheckTimerIds = LOGIN_AUTOFILL_CHECK_DELAYS_MS.map(delay =>
+        this.loginAutofillCheckTimerIds = this.loginAutofillCheckDelaysMs.map(delay =>
             window.setTimeout(() => {
                 this.updateLoginAutofillState();
             }, delay),
@@ -711,7 +698,7 @@ export class AuthComponent {
 
     private hasDetectedLoginWebkitAutofill(form: HTMLFormElement): boolean {
         try {
-            return form.querySelectorAll('input:-webkit-autofill').length >= LOGIN_AUTOFILL_FIELD_COUNT;
+            return form.querySelectorAll('input:-webkit-autofill').length >= AUTH_LOGIN_AUTOFILL_FIELD_COUNT;
         } catch {
             return false;
         }

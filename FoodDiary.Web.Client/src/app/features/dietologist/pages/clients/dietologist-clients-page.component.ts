@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { ClientSummary } from '../../../../shared/models/dietologist.data';
 import { DietologistService } from '../../api/dietologist.service';
 import type { ClientCardViewModel } from './dietologist-clients.types';
@@ -79,7 +80,7 @@ export class DietologistClientsPageComponent {
             return value;
         }
 
-        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             dateStyle: 'medium',
         }).format(date);
     }

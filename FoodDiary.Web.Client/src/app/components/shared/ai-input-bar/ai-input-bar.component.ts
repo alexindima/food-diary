@@ -12,6 +12,7 @@ import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { UserService } from '../../../shared/api/user.service';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
@@ -178,8 +179,7 @@ export class AiInputBarComponent {
         }
 
         const recognition = new SpeechRecognitionCtor();
-        const lang = this.localizationService.getCurrentLanguage();
-        recognition.lang = lang === 'ru' ? 'ru-RU' : 'en-US';
+        recognition.lang = resolveAppLocale(this.localizationService.getCurrentLanguage());
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 

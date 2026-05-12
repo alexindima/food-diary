@@ -11,6 +11,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
 import { CycleCurrentCardComponent } from './cycle-current-card.component';
 import { CycleDaysCardComponent } from './cycle-days-card.component';
@@ -132,7 +133,7 @@ export class CycleTrackingPageComponent {
             return value;
         }
 
-        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             ...options,
             timeZone,
         }).format(date);

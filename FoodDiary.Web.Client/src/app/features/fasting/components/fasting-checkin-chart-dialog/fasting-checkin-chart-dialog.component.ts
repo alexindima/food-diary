@@ -8,6 +8,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { LocalizationService } from '../../../../services/localization.service';
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { FastingCheckIn } from '../../models/fasting.data';
 
 const INITIAL_CHART_RESIZE_DELAY_MS = 180;
@@ -252,7 +253,7 @@ export class FastingCheckInChartDialogComponent {
     }
 
     private getLocale(): string {
-        return this.localizationService.getCurrentLanguage() === 'ru' ? 'ru-RU' : 'en-US';
+        return resolveAppLocale(this.localizationService.getCurrentLanguage());
     }
 
     private getSymptomLabel(symptom: string): string {

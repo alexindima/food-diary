@@ -2,12 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import type { PreloadingStrategy, Route } from '@angular/router';
 import { EMPTY, from, type Observable, switchMap } from 'rxjs';
 
+import { IDLE_PRELOADING_TIMING_CONFIG } from '../config/runtime-ui.tokens';
 import { AuthService } from './auth.service';
-
-const PAGE_READY_FALLBACK_MS = 1500;
-const LOAD_EVENT_FALLBACK_MS = 3000;
-const IDLE_TIMEOUT_MS = 2000;
-const IDLE_FALLBACK_MS = 1200;
 
 type IdleCapableGlobal = {
     addEventListener?: (type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void;
@@ -23,6 +19,7 @@ type IdleCapableGlobal = {
 @Injectable({ providedIn: 'root' })
 export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
     private readonly authService = inject(AuthService);
+    private readonly timingConfig = inject(IDLE_PRELOADING_TIMING_CONFIG);
     private readonly globalObject: IdleCapableGlobal = globalThis;
     private pageReadyPromise?: Promise<void>;
 
@@ -53,7 +50,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
             if (typeof this.globalObject.addEventListener !== 'function' || typeof this.globalObject.removeEventListener !== 'function') {
                 this.globalObject.setTimeout(() => {
                     resolve();
-                }, PAGE_READY_FALLBACK_MS);
+                }, this.timingConfig.pageReadyFallbackMs);
                 return;
             }
 
@@ -71,7 +68,7 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
             this.globalObject.setTimeout(() => {
                 removeEventListener('load', onLoad);
                 resolve();
-            }, LOAD_EVENT_FALLBACK_MS);
+            }, this.timingConfig.loadEventFallbackMs);
         });
 
         return this.pageReadyPromise;
@@ -84,14 +81,14 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
                     () => {
                         resolve();
                     },
-                    { timeout: IDLE_TIMEOUT_MS },
+                    { timeout: this.timingConfig.idleTimeoutMs },
                 );
                 return;
             }
 
             this.globalObject.setTimeout(() => {
                 resolve();
-            }, IDLE_FALLBACK_MS);
+            }, this.timingConfig.idleFallbackMs);
         });
     }
 }

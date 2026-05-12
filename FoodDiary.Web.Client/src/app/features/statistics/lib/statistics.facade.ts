@@ -7,6 +7,7 @@ import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
@@ -314,11 +315,11 @@ export class StatisticsFacade {
     private getCurrentLocale(): string {
         const currentLang = this.translateService.getCurrentLang();
         if (currentLang.length > 0) {
-            return currentLang;
+            return resolveAppLocale(currentLang);
         }
 
         const fallbackLang = this.translateService.getFallbackLang();
-        return fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en-US';
+        return resolveAppLocale(fallbackLang);
     }
 
     private formatSummaryLabel(dateString: string): string {

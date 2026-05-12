@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import type { ChartConfiguration } from 'chart.js';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
@@ -8,6 +8,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { WeightHistoryFacade } from '../lib/weight-history.facade';
 import type { WeightEntry } from '../models/weight-entry.data';
@@ -43,6 +44,7 @@ const BMI_SCALE_MAX = 40;
 export class WeightHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WeightHistoryFacade);
+    private readonly translateService = inject(TranslateService);
 
     private readonly bmiScaleMax = BMI_SCALE_MAX;
     public readonly selectedRange = this.facade.selectedRange;
@@ -149,7 +151,7 @@ export class WeightHistoryPageComponent {
             return value;
         }
 
-        return new Intl.DateTimeFormat('ru-RU', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',

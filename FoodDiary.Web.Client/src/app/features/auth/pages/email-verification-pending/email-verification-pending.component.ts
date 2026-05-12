@@ -5,13 +5,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
+import { AUTH_EMAIL_RESEND_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { UserService } from '../../../../shared/api/user.service';
+import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
-
-const RESEND_COOLDOWN_SECONDS = 60;
-const SECOND_MS = 1000;
 
 @Component({
     selector: 'fd-email-verification-pending',
@@ -28,6 +27,7 @@ export class EmailVerificationPendingComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly realtimeService = inject(EmailVerificationRealtimeService);
     private readonly route = inject(ActivatedRoute);
+    private readonly resendCooldownSecondsDefault = inject(AUTH_EMAIL_RESEND_COOLDOWN_SECONDS);
     private readonly shouldAutoResend = this.route.snapshot.queryParamMap.get('autoResend') === 'true';
     private autoResendAttempted = false;
 
@@ -105,7 +105,7 @@ export class EmailVerificationPendingComponent {
         this.sendVerificationEmail(true);
     }
 
-    private startResendCooldown(seconds = RESEND_COOLDOWN_SECONDS): void {
+    private startResendCooldown(seconds = this.resendCooldownSecondsDefault): void {
         this.resendCooldownSeconds.set(seconds);
         const intervalId = window.setInterval(() => {
             const remaining = this.resendCooldownSeconds();
@@ -115,7 +115,7 @@ export class EmailVerificationPendingComponent {
                 return;
             }
             this.resendCooldownSeconds.set(remaining - 1);
-        }, SECOND_MS);
+        }, MS_PER_SECOND);
 
         this.destroyRef.onDestroy(() => {
             window.clearInterval(intervalId);

@@ -1,15 +1,17 @@
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from '../../../shared/lib/time.constants';
 import { FASTING_PROTOCOLS, type FastingOccurrenceKind, type FastingSession } from '../models/fasting.data';
+import {
+    DEFAULT_CYCLIC_EAT_FAST_HOURS,
+    DEFAULT_CYCLIC_EAT_WINDOW_HOURS,
+    MAX_INTERMITTENT_FAST_HOURS,
+    MIN_FASTING_HOURS,
+} from './fasting.constants';
 import { type FastingStagePresentation, resolveFastingStage } from './fasting-stage';
 
 type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
 
 const SECONDS_PER_HOUR = 3_600;
-const DEFAULT_CYCLIC_EAT_WINDOW_HOURS = 8;
-const DEFAULT_CYCLIC_FAST_HOURS = 16;
-const MIN_INTERMITTENT_FAST_HOURS = 1;
-const MAX_INTERMITTENT_FAST_HOURS = 23;
 const TIME_PAD_LENGTH = 2;
 
 export type FastingTimerCardComputedState = {
@@ -181,7 +183,7 @@ export function getFastingProtocolBaseLabel(translate: TranslateFn, session: Fas
                 ? `${session.cyclicFastDays}:${session.cyclicEatDays}`
                 : '1:1';
         const eatWindowHours = session.cyclicEatDayEatingWindowHours ?? DEFAULT_CYCLIC_EAT_WINDOW_HOURS;
-        const eatFastHours = session.cyclicEatDayFastHours ?? DEFAULT_CYCLIC_FAST_HOURS;
+        const eatFastHours = session.cyclicEatDayFastHours ?? DEFAULT_CYCLIC_EAT_FAST_HOURS;
         return `${cycleLabel} (${eatFastHours}:${eatWindowHours})`;
     }
 
@@ -245,7 +247,7 @@ function formatFastingHours(baseHours: number, addedHours: number, hoursLabel: s
 }
 
 function getIntermittentRatioLabel(fastHours: number): string {
-    const normalizedFastHours = Math.max(MIN_INTERMITTENT_FAST_HOURS, Math.min(MAX_INTERMITTENT_FAST_HOURS, fastHours));
-    const eatingWindowHours = Math.max(MIN_INTERMITTENT_FAST_HOURS, HOURS_PER_DAY - normalizedFastHours);
+    const normalizedFastHours = Math.max(MIN_FASTING_HOURS, Math.min(MAX_INTERMITTENT_FAST_HOURS, fastHours));
+    const eatingWindowHours = Math.max(MIN_FASTING_HOURS, HOURS_PER_DAY - normalizedFastHours);
     return `${normalizedFastHours}:${eatingWindowHours}`;
 }

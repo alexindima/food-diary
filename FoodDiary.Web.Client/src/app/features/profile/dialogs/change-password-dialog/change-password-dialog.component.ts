@@ -15,13 +15,13 @@ import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { AUTH_PASSWORD_MIN_LENGTH } from '../../../auth/lib/auth.constants';
 
 export type ChangePasswordDialogData = {
     hasPassword?: boolean;
 };
 
 const ERROR_FIELDS = ['currentPassword', 'newPassword', 'confirmPassword'] as const;
-const PASSWORD_MIN_LENGTH = 6;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
 
@@ -55,7 +55,7 @@ export class ChangePasswordDialogComponent {
         }),
         newPassword: new FormControl<string>('', {
             nonNullable: true,
-            validators: [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)],
+            validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
         }),
         confirmPassword: new FormControl<string>('', {
             nonNullable: true,
@@ -177,7 +177,7 @@ export class ChangePasswordDialogComponent {
             return null;
         }
 
-        const requiredLength = getNumberProperty(minLengthError, 'requiredLength') ?? PASSWORD_MIN_LENGTH;
+        const requiredLength = getNumberProperty(minLengthError, 'requiredLength') ?? AUTH_PASSWORD_MIN_LENGTH;
         return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', { requiredLength });
     }
 }

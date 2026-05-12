@@ -12,7 +12,15 @@ import {
 } from '../../../shared/lib/nutrition.constants';
 import { GoalsService } from '../api/goals.service';
 import { DAYS_OF_WEEK, type GoalsResponse, type UpdateGoalsRequest } from '../models/goals.data';
-import { MAX_BODY_TARGET } from './goals.constants';
+import {
+    GOALS_AUTOSAVE_DEBOUNCE_MS,
+    GOALS_DEFAULT_ZONE_ALPHA,
+    GOALS_HIGH_CALORIE_THRESHOLD,
+    GOALS_LOW_CALORIE_THRESHOLD,
+    GOALS_MAX_CALORIES,
+    GOALS_NORMAL_CALORIE_THRESHOLD,
+    MAX_BODY_TARGET,
+} from './goals.constants';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 
@@ -57,13 +65,7 @@ type SliderConfig = {
 
 export type BodyTargetKey = 'weight' | 'waist';
 
-const MAX_CALORIES = 5000;
 const CIRCLE_DEGREES = 360;
-const AUTOSAVE_DEBOUNCE_MS = 700;
-const LOW_CALORIE_THRESHOLD = 1000;
-const NORMAL_CALORIE_THRESHOLD = 3500;
-const HIGH_CALORIE_THRESHOLD = 4500;
-const DEFAULT_ZONE_ALPHA = 0.16;
 
 @Injectable({ providedIn: 'root' })
 export class GoalsFacade {
@@ -138,19 +140,19 @@ export class GoalsFacade {
     private readonly waterConfig: SliderConfig = {
         labelKey: 'GOALS_PAGE.WATER_LABEL',
         unit: 'ml',
-        max: MAX_CALORIES,
+        max: GOALS_MAX_CALORIES,
         greenFrom: 1200,
         greenTo: 2500,
         zones: [
             { from: 0, to: 1200, color: this.colorBlue },
             { from: 1200, to: 2500, color: this.colorGreen },
             { from: 2500, to: 3500, color: this.colorOrange },
-            { from: 3500, to: MAX_CALORIES, color: this.colorRed },
+            { from: 3500, to: GOALS_MAX_CALORIES, color: this.colorRed },
         ],
     };
 
     private readonly autosaveQueue: AutosaveQueue<UpdateGoalsRequest> = createAutosaveQueue({
-        debounceMs: AUTOSAVE_DEBOUNCE_MS,
+        debounceMs: GOALS_AUTOSAVE_DEBOUNCE_MS,
         isBusy: () => this.isSavingGoals(),
         persist: request => {
             this.persistGoals(request);
@@ -158,7 +160,7 @@ export class GoalsFacade {
     });
 
     public readonly minCalories = 0;
-    public readonly maxCalories = MAX_CALORIES;
+    public readonly maxCalories = GOALS_MAX_CALORIES;
     public readonly calorieTarget = signal(0);
     public readonly calorieCyclingEnabled = signal(false);
     public readonly dayCalories = signal<Record<string, number>>({
@@ -267,13 +269,13 @@ export class GoalsFacade {
     public readonly knobAngle = computed(() => (this.progressPercent() / PERCENT_MULTIPLIER) * CIRCLE_DEGREES);
     public readonly accentColor = computed(() => {
         const value = this.calorieTarget();
-        if (value < LOW_CALORIE_THRESHOLD) {
+        if (value < GOALS_LOW_CALORIE_THRESHOLD) {
             return this.colorBlue;
         }
-        if (value <= NORMAL_CALORIE_THRESHOLD) {
+        if (value <= GOALS_NORMAL_CALORIE_THRESHOLD) {
             return this.colorGreen;
         }
-        if (value <= HIGH_CALORIE_THRESHOLD) {
+        if (value <= GOALS_HIGH_CALORIE_THRESHOLD) {
             return this.colorOrange;
         }
         return this.colorRed;
@@ -561,7 +563,7 @@ export class GoalsFacade {
         const parts = cfg.zones.map(zone => {
             const start = Math.max(0, Math.min(PERCENT_MULTIPLIER, (zone.from / cfg.max) * PERCENT_MULTIPLIER));
             const end = Math.max(0, Math.min(PERCENT_MULTIPLIER, (zone.to / cfg.max) * PERCENT_MULTIPLIER));
-            return `${this.withAlpha(zone.color, DEFAULT_ZONE_ALPHA)} ${start}% ${end}%`;
+            return `${this.withAlpha(zone.color, GOALS_DEFAULT_ZONE_ALPHA)} ${start}% ${end}%`;
         });
         return `linear-gradient(90deg, ${parts.join(', ')})`;
     }

@@ -11,6 +11,7 @@ import { environment } from '../../../../environments/environment';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { PremiumBillingService } from '../api/premium-billing.service';
 import { PaddleCheckoutService } from '../lib/paddle-checkout.service';
@@ -246,7 +247,7 @@ export class PremiumAccessPageComponent {
             return null;
         }
 
-        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             dateStyle: 'medium',
         }).format(date);
     }

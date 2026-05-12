@@ -8,6 +8,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { filter, finalize, switchMap } from 'rxjs';
 
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { CommentService } from '../../api/comment.service';
 import type { RecipeComment } from '../../models/comment.data';
 import type { RecipeCommentViewModel } from './recipe-comments.types';
@@ -159,7 +160,7 @@ export class RecipeCommentsComponent {
             return value;
         }
 
-        return new Intl.DateTimeFormat(this.translateService.getCurrentLang() === 'ru' ? 'ru-RU' : 'en-US', {
+        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             dateStyle: 'short',
             timeStyle: 'short',
         }).format(date);

@@ -8,6 +8,14 @@ import { EMPTY, type Observable } from 'rxjs';
 import { LocalizationService } from '../../../../services/localization.service';
 import { parseIntegerInput } from '../../../../shared/lib/number.utils';
 import { HOURS_PER_DAY } from '../../../../shared/lib/time.constants';
+import {
+    EMPTY_FASTING_DURATION_HOURS,
+    EXTEND_DAY_AND_HALF_HOURS,
+    EXTEND_DAY_HOURS,
+    MIN_FASTING_HOURS,
+    REDUCE_LONG_HOURS,
+    REDUCE_SHORT_HOURS,
+} from '../../lib/fasting.constants';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FASTING_HARD_STOP_THRESHOLD_HOURS, FASTING_WARNING_THRESHOLD_HOURS } from '../../lib/fasting-page.constants';
 import { CYCLIC_PRESETS, FASTING_PROTOCOLS, type FastingMode, type FastingProtocol, type FastingSession } from '../../models/fasting.data';
@@ -26,12 +34,6 @@ import { FastingActiveExtendedControlsComponent } from './fasting-active-extende
 import type { FastingCustomActionState } from './fasting-controls.types';
 import { FastingSetupControlsComponent } from './fasting-setup-controls.component';
 
-const EXTEND_DAY_HOURS = 24;
-const EXTEND_DAY_AND_HALF_HOURS = 36;
-const REDUCE_SHORT_HOURS = 4;
-const REDUCE_LONG_HOURS = 8;
-const MIN_FASTING_HOURS = 1;
-const EMPTY_DURATION_HOURS = 0;
 const CYCLIC_PRESET_SEPARATOR = ':';
 const FASTING_MODES: readonly FastingMode[] = ['intermittent', 'extended', 'cyclic'];
 
@@ -446,7 +448,7 @@ export class FastingControlsComponent {
     private requestExtendByHours(additionalHours: number): void {
         const normalizedHours = Math.max(MIN_FASTING_HOURS, Math.min(FASTING_HARD_STOP_THRESHOLD_HOURS, additionalHours));
         const currentSession = this.currentSession();
-        const currentDuration = currentSession?.plannedDurationHours ?? EMPTY_DURATION_HOURS;
+        const currentDuration = currentSession?.plannedDurationHours ?? EMPTY_FASTING_DURATION_HOURS;
         const targetDuration = currentDuration + normalizedHours;
 
         if (targetDuration > FASTING_HARD_STOP_THRESHOLD_HOURS) {
@@ -485,9 +487,9 @@ export class FastingControlsComponent {
             return;
         }
 
-        const maxReducibleHours = Math.max(EMPTY_DURATION_HOURS, session.plannedDurationHours - MIN_FASTING_HOURS);
+        const maxReducibleHours = Math.max(EMPTY_FASTING_DURATION_HOURS, session.plannedDurationHours - MIN_FASTING_HOURS);
         const normalizedHours = Math.max(MIN_FASTING_HOURS, Math.min(maxReducibleHours, reducedHours));
-        if (normalizedHours <= EMPTY_DURATION_HOURS) {
+        if (normalizedHours <= EMPTY_FASTING_DURATION_HOURS) {
             return;
         }
 
