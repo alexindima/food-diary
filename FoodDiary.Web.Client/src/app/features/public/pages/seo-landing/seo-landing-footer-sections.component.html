@@ -1,0 +1,44 @@
+<section class="seo-landing__section seo-landing__section--trust">
+    <div class="seo-landing__container">
+        <article class="seo-landing__trust-panel">
+            <span class="seo-landing__eyebrow">{{ 'SEO_PAGE.TRUST_EYEBROW' | translate }}</span>
+            <h2 class="seo-landing__section-title">{{ 'SEO_PAGE.TRUST_TITLE' | translate }}</h2>
+            <p class="seo-landing__section-subtitle">{{ 'SEO_PAGE.TRUST_TEXT' | translate }}</p>
+        </article>
+    </div>
+</section>
+
+<section class="seo-landing__section seo-landing__section--related">
+    <div class="seo-landing__container">
+        <div class="seo-landing__section-copy">
+            <span class="seo-landing__eyebrow">{{ 'SEO_PAGE.RELATED_EYEBROW' | translate }}</span>
+            <h2 class="seo-landing__section-title">{{ 'SEO_PAGE.RELATED_TITLE' | translate }}</h2>
+            <p class="seo-landing__section-subtitle">{{ 'SEO_PAGE.RELATED_SUBTITLE' | translate }}</p>
+        </div>
+        <div class="seo-landing__related-grid">
+            @for (page of relatedPages(); track page.path) {
+                <a class="seo-landing__related-card" [routerLink]="page.path">
+                    <span class="seo-landing__related-label">{{ page.labelKey | translate }}</span>
+                    <span class="seo-landing__related-arrow">{{ 'SEO_PAGE.RELATED_CTA' | translate }}</span>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="seo-landing__section seo-landing__section--cta">
+    <div class="seo-landing__container seo-landing__container--cta">
+        <div>
+            <h2 class="seo-landing__section-title">{{ cta().titleKey | translate }}</h2>
+            <p class="seo-landing__section-subtitle">{{ cta().subtitleKey | translate }}</p>
+        </div>
+        <div class="seo-landing__actions">
+            <fd-ui-button routerLink="/auth/register" variant="primary" size="lg">
+                {{ cta().primaryKey | translate }}
+            </fd-ui-button>
+            <fd-ui-button routerLink="/" variant="secondary" fill="outline" size="lg">
+                {{ cta().secondaryKey | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</section>

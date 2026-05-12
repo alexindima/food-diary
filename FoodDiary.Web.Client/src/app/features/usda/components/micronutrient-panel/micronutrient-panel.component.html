@@ -1,53 +1,8 @@
 <div class="micronutrient-panel">
     <h3 class="panel-title fd-ui-card-title">{{ 'MICRONUTRIENTS.TITLE' | translate }}</h3>
 
-    @if (vitamins().length > 0) {
-        <div class="section">
-            <h4 class="section-title fd-ui-overline">{{ 'MICRONUTRIENTS.VITAMINS' | translate }}</h4>
-            @for (nutrient of vitamins(); track nutrient.nutrientId) {
-                <div class="nutrient-row fd-grid fd-gap-xs fd-align-center">
-                    <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
-                    <span class="nutrient-amount fd-ui-caption">{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span>
-                    @if (nutrient.percentDailyValue !== null) {
-                        <div class="dv-bar-container">
-                            <div
-                                class="dv-bar"
-                                [style.width.%]="nutrient.percentDailyValueWidth"
-                                [class.dv-low]="nutrient.percentDailyValue < 15"
-                                [class.dv-good]="nutrient.percentDailyValue >= 15 && nutrient.percentDailyValue <= 100"
-                                [class.dv-high]="nutrient.percentDailyValue > 100"
-                            ></div>
-                        </div>
-                        <span class="dv-percent fd-ui-caption">{{ nutrient.percentDailyValue }}%</span>
-                    }
-                </div>
-            }
-        </div>
-    }
-
-    @if (minerals().length > 0) {
-        <div class="section">
-            <h4 class="section-title fd-ui-overline">{{ 'MICRONUTRIENTS.MINERALS' | translate }}</h4>
-            @for (nutrient of minerals(); track nutrient.nutrientId) {
-                <div class="nutrient-row fd-grid fd-gap-xs fd-align-center">
-                    <span class="nutrient-name fd-ui-stat-label">{{ nutrient.name }}</span>
-                    <span class="nutrient-amount fd-ui-caption">{{ nutrient.amountPer100g | number: '1.1-1' }} {{ nutrient.unit }}</span>
-                    @if (nutrient.percentDailyValue !== null) {
-                        <div class="dv-bar-container">
-                            <div
-                                class="dv-bar"
-                                [style.width.%]="nutrient.percentDailyValueWidth"
-                                [class.dv-low]="nutrient.percentDailyValue < 15"
-                                [class.dv-good]="nutrient.percentDailyValue >= 15 && nutrient.percentDailyValue <= 100"
-                                [class.dv-high]="nutrient.percentDailyValue > 100"
-                            ></div>
-                        </div>
-                        <span class="dv-percent fd-ui-caption">{{ nutrient.percentDailyValue }}%</span>
-                    }
-                </div>
-            }
-        </div>
-    }
+    <fd-micronutrient-section titleKey="MICRONUTRIENTS.VITAMINS" [nutrients]="vitamins()" />
+    <fd-micronutrient-section titleKey="MICRONUTRIENTS.MINERALS" [nutrients]="minerals()" />
 
     @if (vitamins().length === 0 && minerals().length === 0) {
         <p class="empty-state fd-ui-body-sm">{{ 'MICRONUTRIENTS.NO_DATA' | translate }}</p>

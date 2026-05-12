@@ -1,0 +1,13 @@
+<div class="fd-ui-inline-alert__actions">
+    @if (primaryActionLabel()) {
+        <button type="button" class="fd-ui-inline-alert__action fd-ui-action-text" (click)="primaryAction.emit()">
+            {{ primaryActionLabel() }}
+        </button>
+    }
+
+    @if (secondaryActionLabel()) {
+        <button type="button" class="fd-ui-inline-alert__action fd-ui-action-text" (click)="secondaryAction.emit()">
+            {{ secondaryActionLabel() }}
+        </button>
+    }
+</div>

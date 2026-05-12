@@ -1,0 +1,42 @@
+<div class="fd-stack fd-gap-md" [formGroup]="form()">
+    <div class="auth__field fd-stack fd-gap-xs">
+        <fd-ui-input
+            appearance="auth"
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            [label]="'AUTH.REGISTER.EMAIL' | translate"
+            [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
+            [error]="errors().email"
+        />
+    </div>
+    <div class="auth__field fd-stack fd-gap-xs">
+        <fd-ui-input
+            appearance="auth"
+            formControlName="password"
+            type="password"
+            autocomplete="new-password"
+            [label]="'AUTH.REGISTER.PASSWORD' | translate"
+            [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
+            [error]="errors().password"
+        />
+    </div>
+    <div class="auth__field fd-stack fd-gap-xs">
+        <fd-ui-input
+            appearance="auth"
+            formControlName="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
+            [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
+            [error]="errors().confirmPassword"
+        />
+    </div>
+
+    <fd-ui-checkbox class="auth__terms" formControlName="agreeTerms" label="">
+        <span
+            class="auth__checkbox-text fd-ui-body-sm"
+            [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy' }"
+        ></span>
+    </fd-ui-checkbox>
+</div>

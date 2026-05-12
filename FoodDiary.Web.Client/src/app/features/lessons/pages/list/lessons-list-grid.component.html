@@ -1,0 +1,39 @@
+@if (isLoading()) {
+    <fd-ui-loader />
+} @else if (lessons().length === 0) {
+    <div class="lessons-list__empty fd-stack fd-align-center fd-gap-sm">
+        <fd-ui-icon name="school" size="xl" />
+        <span>{{ 'LESSONS.EMPTY' | translate }}</span>
+    </div>
+} @else {
+    <div class="lessons-list__grid fd-grid fd-gap-lg">
+        @for (lesson of lessons(); track lesson.id) {
+            <div
+                class="lesson-card fd-stack fd-gap-xs"
+                fdCardHover
+                role="button"
+                tabindex="0"
+                [class.lesson-card--read]="lesson.isRead"
+                (click)="lessonOpen.emit(lesson.id)"
+                (keydown.enter)="lessonOpen.emit(lesson.id)"
+            >
+                <div class="lesson-card__top fd-row fd-justify-between">
+                    <span class="lesson-card__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                        {{ lesson.categoryLabelKey | translate }}
+                    </span>
+                    @if (lesson.isRead) {
+                        <fd-ui-icon class="lesson-card__check" name="check_circle" />
+                    }
+                </div>
+                <h3 class="lesson-card__title fd-ui-section-title">{{ lesson.title }}</h3>
+                @if (lesson.summary) {
+                    <p class="lesson-card__summary fd-ui-caption">{{ lesson.summary }}</p>
+                }
+                <div class="lesson-card__meta fd-row fd-gap-sm fd-ui-field-label--floating">
+                    <span>{{ lesson.difficultyLabelKey | translate }}</span>
+                    <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                </div>
+            </div>
+        }
+    </div>
+}

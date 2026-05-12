@@ -1,12 +1,6 @@
 @switch (state()) {
     @case ('loading') {
-        <div class="fd-ui-section-state__surface fd-ui-section-state__surface--loading" role="status" aria-live="polite">
-            <fd-ui-loader />
-
-            @if (loadingLabel()) {
-                <div class="fd-ui-section-state__loading-label">{{ loadingLabel() }}</div>
-            }
-        </div>
+        <fd-ui-section-loading-state [loadingLabel]="loadingLabel()" />
     }
 
     @case ('empty') {
@@ -16,17 +10,13 @@
     }
 
     @case ('error') {
-        <div class="fd-ui-section-state__surface fd-ui-section-state__surface--error" role="alert">
-            <fd-ui-icon class="fd-ui-section-state__error-icon" [name]="errorIcon()" />
-            <div class="fd-ui-section-state__error-title">{{ errorTitle() }}</div>
-            <div class="fd-ui-section-state__error-message">{{ errorMessage() }}</div>
-
-            @if (retryLabel()) {
-                <fd-ui-button size="sm" (click)="onRetry()">
-                    {{ retryLabel() }}
-                </fd-ui-button>
-            }
-        </div>
+        <fd-ui-section-error-state
+            [errorIcon]="errorIcon()"
+            [errorTitle]="errorTitle()"
+            [errorMessage]="errorMessage()"
+            [retryLabel]="retryLabel()"
+            (retry)="onRetry()"
+        />
     }
 
     @default {

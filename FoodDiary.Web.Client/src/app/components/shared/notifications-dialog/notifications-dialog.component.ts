@@ -8,8 +8,9 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { type NotificationItem, NotificationService } from '../../../services/notification.service';
+import { NotificationsDialogListComponent } from './notifications-dialog-list.component';
 
-interface NotificationViewModel {
+export interface NotificationViewModel {
     notification: NotificationItem;
     isPasswordSetupSuggestion: boolean;
     isDietologistInvitation: boolean;
@@ -24,7 +25,14 @@ interface NotificationViewModel {
 @Component({
     selector: 'fd-notifications-dialog',
     standalone: true,
-    imports: [TranslateModule, FdUiButtonComponent, FdUiIconComponent, FdUiDialogFooterDirective, FdUiDialogComponent],
+    imports: [
+        TranslateModule,
+        FdUiButtonComponent,
+        FdUiIconComponent,
+        FdUiDialogFooterDirective,
+        FdUiDialogComponent,
+        NotificationsDialogListComponent,
+    ],
     templateUrl: './notifications-dialog.component.html',
     styleUrl: './notifications-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

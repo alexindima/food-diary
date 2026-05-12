@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
+import { FdUiInlineAlertActionsComponent } from './fd-ui-inline-alert-actions.component';
 
 export type FdUiInlineAlertSeverity = 'info' | 'warning' | 'success' | 'danger';
 export type FdUiInlineAlertAppearance = 'alert' | 'notice';
@@ -9,7 +10,7 @@ export type FdUiInlineAlertAppearance = 'alert' | 'notice';
 @Component({
     selector: 'fd-ui-inline-alert',
     standalone: true,
-    imports: [CommonModule, FdUiIconComponent],
+    imports: [CommonModule, FdUiIconComponent, FdUiInlineAlertActionsComponent],
     templateUrl: './fd-ui-inline-alert.component.html',
     styleUrls: ['./fd-ui-inline-alert.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

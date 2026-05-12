@@ -947,7 +947,7 @@ export default [
             '@angular-eslint/template/eqeqeq': 'error',
             '@angular-eslint/template/banana-in-box': 'error',
             '@angular-eslint/template/button-has-type': 'error',
-            '@angular-eslint/template/cyclomatic-complexity': ['warn', { maxComplexity: 5 }],
+            '@angular-eslint/template/cyclomatic-complexity': ['error', { maxComplexity: 5 }],
             '@angular-eslint/template/mouse-events-have-key-events': 'error',
             '@angular-eslint/template/no-any': 'error',
             // Disabled after auditing all existing matches: Angular signal, input, model,

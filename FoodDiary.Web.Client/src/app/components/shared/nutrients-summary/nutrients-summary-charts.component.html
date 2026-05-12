@@ -1,0 +1,34 @@
+<div
+    class="charts-wrapper fd-row fd-justify-center fd-wrap fd-gap-md"
+    [ngStyle]="chartsWrapperStyles()"
+    [class.column-layout]="isColumnLayout()"
+>
+    @if (showPieChart()) {
+        <div class="chart fd-center" [ngStyle]="chartStyles()">
+            <canvas
+                baseChart
+                type="pie"
+                [style.width.px]="chartsBlockSize()"
+                [style.height.px]="chartsBlockSize()"
+                [ngStyle]="chartCanvasStyles()"
+                [data]="pieChartData()"
+                [options]="pieChartOptions()"
+                [legend]="false"
+            ></canvas>
+        </div>
+    }
+    @if (showBarChart()) {
+        <div class="chart fd-center" [ngStyle]="chartStyles()">
+            <canvas
+                baseChart
+                type="bar"
+                [style.width.px]="chartsBlockSize()"
+                [style.height.px]="chartsBlockSize()"
+                [ngStyle]="chartCanvasStyles()"
+                [data]="barChartData()"
+                [options]="barChartOptions()"
+                [legend]="false"
+            ></canvas>
+        </div>
+    }
+</div>

@@ -70,36 +70,15 @@
             (detach)="closeMenu()"
         >
             <div #listbox class="fd-ui-autocomplete__menu" role="listbox" [id]="`${id()}-listbox`">
-                @if (loading()) {
-                    <div class="fd-ui-autocomplete__state">
-                        <fd-ui-loader />
-                    </div>
-                } @else if (options().length > 0) {
-                    @for (option of options(); track getOptionTrack(option, $index)) {
-                        <button
-                            type="button"
-                            class="fd-ui-autocomplete__menu-item"
-                            role="option"
-                            tabindex="-1"
-                            [id]="getOptionId($index)"
-                            [class.fd-ui-autocomplete__menu-item--active]="$index === activeIndex()"
-                            [attr.aria-selected]="isEqual(option.value, internalValue())"
-                            (click)="selectOption(option)"
-                        >
-                            <span class="fd-ui-autocomplete__option-main">
-                                <span class="fd-ui-autocomplete__option-label">{{ option.label }}</span>
-                                @if (option.badge) {
-                                    <span class="fd-ui-autocomplete__option-badge">{{ option.badge }}</span>
-                                }
-                            </span>
-                            @if (option.hint) {
-                                <span class="fd-ui-autocomplete__option-hint">{{ option.hint }}</span>
-                            }
-                        </button>
-                    }
-                } @else if (emptyText()) {
-                    <div class="fd-ui-autocomplete__state">{{ emptyText() }}</div>
-                }
+                <fd-ui-autocomplete-menu
+                    [id]="id()"
+                    [loading]="loading()"
+                    [options]="options()"
+                    [emptyText]="emptyText()"
+                    [activeIndex]="activeIndex()"
+                    [selectedValue]="internalValue()"
+                    (optionSelected)="selectOption($event)"
+                />
             </div>
         </ng-template>
     </div>

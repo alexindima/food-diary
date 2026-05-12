@@ -1,0 +1,8 @@
+<div class="auth__social fd-stack fd-gap-xs">
+    <ng-content />
+    @if (!isReady()) {
+        <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
+            {{ unavailableKey() | translate }}
+        </div>
+    }
+</div>

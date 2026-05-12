@@ -1,0 +1,5 @@
+<div class="notifications-dialog__list fd-grid fd-gap-sm" role="list" aria-live="polite">
+    @for (item of items(); track item.notification.id) {
+        <fd-notifications-dialog-item [item]="item" (notificationOpen)="notificationOpen.emit($event)" />
+    }
+</div>

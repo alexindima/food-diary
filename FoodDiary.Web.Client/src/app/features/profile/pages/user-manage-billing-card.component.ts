@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 
 import type { BillingViewModel } from './user-manage.component';
+import { UserManageBillingSummaryComponent } from './user-manage-billing-summary.component';
 
 @Component({
     selector: 'fd-user-manage-billing-card',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiStatusBadgeComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent, UserManageBillingSummaryComponent],
     templateUrl: './user-manage-billing-card.component.html',
     styleUrl: './user-manage.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

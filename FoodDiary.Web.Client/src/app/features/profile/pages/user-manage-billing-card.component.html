@@ -21,68 +21,18 @@
             </fd-ui-button>
         </div>
     } @else if (billingView(); as billing) {
-        <div class="user-manage__billing-summary fd-stack fd-gap-md">
-            <div class="user-manage__billing-primary fd-row fd-wrap fd-gap-sm fd-justify-between">
-                <div class="user-manage__billing-plan">{{ billingPlanLabelKey() | translate }}</div>
-                <fd-ui-status-badge [tone]="billing.statusTone">
-                    {{ billingStatusLabelKey() | translate }}
-                </fd-ui-status-badge>
-            </div>
-
-            <div class="user-manage__billing-grid fd-grid fd-gap-sm">
-                <div class="user-manage__billing-item fd-stack fd-gap-xxs">
-                    <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_PROVIDER' | translate }}</span>
-                    <strong>{{ billingProviderLabel() }}</strong>
-                </div>
-                <div class="user-manage__billing-item fd-stack fd-gap-xxs">
-                    <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_RENEWAL' | translate }}</span>
-                    <strong>{{ billingRenewalLabelKey() | translate }}</strong>
-                </div>
-                @if (billingCurrentPeriodStartLabel(); as startDate) {
-                    <div class="user-manage__billing-item fd-stack fd-gap-xxs">
-                        <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_PERIOD_START' | translate }}</span>
-                        <strong>{{ startDate }}</strong>
-                    </div>
-                }
-                @if (billingCurrentPeriodEndLabel(); as endDate) {
-                    <div class="user-manage__billing-item fd-stack fd-gap-xxs">
-                        <span class="user-manage__billing-label">
-                            {{ billing.endLabelKey | translate }}
-                        </span>
-                        <strong>{{ endDate }}</strong>
-                    </div>
-                }
-                @if (billing.showNextAttempt && billingNextAttemptLabel(); as nextAttemptDate) {
-                    <div class="user-manage__billing-item fd-stack fd-gap-xxs">
-                        <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_NEXT_CHARGE' | translate }}</span>
-                        <strong>{{ nextAttemptDate }}</strong>
-                    </div>
-                }
-            </div>
-
-            <div class="user-manage__billing-actions fd-row fd-wrap fd-gap-xs">
-                @if (billing.overview.manageBillingAvailable) {
-                    <fd-ui-button
-                        type="button"
-                        variant="secondary"
-                        fill="outline"
-                        [loading]="isOpeningBillingPortal()"
-                        [disabled]="isOpeningBillingPortal()"
-                        (click)="billingPortalOpen.emit()"
-                    >
-                        {{ 'USER_MANAGE.BILLING_MANAGE' | translate }}
-                    </fd-ui-button>
-                }
-                <fd-ui-button type="button" [variant]="billing.premiumActionVariant" (click)="premiumPageOpen.emit()">
-                    {{ billing.premiumActionLabelKey | translate }}
-                </fd-ui-button>
-            </div>
-
-            @if (billing.showManagedSupportNote) {
-                <div class="user-manage__billing-note fd-ui-body-sm">
-                    {{ 'USER_MANAGE.BILLING_SUPPORT_MANAGED' | translate }}
-                </div>
-            }
-        </div>
+        <fd-user-manage-billing-summary
+            [billing]="billing"
+            [billingPlanLabelKey]="billingPlanLabelKey()"
+            [billingStatusLabelKey]="billingStatusLabelKey()"
+            [billingProviderLabel]="billingProviderLabel()"
+            [billingRenewalLabelKey]="billingRenewalLabelKey()"
+            [billingCurrentPeriodStartLabel]="billingCurrentPeriodStartLabel()"
+            [billingCurrentPeriodEndLabel]="billingCurrentPeriodEndLabel()"
+            [billingNextAttemptLabel]="billingNextAttemptLabel()"
+            [isOpeningBillingPortal]="isOpeningBillingPortal()"
+            (billingPortalOpen)="billingPortalOpen.emit()"
+            (premiumPageOpen)="premiumPageOpen.emit()"
+        />
     }
 </fd-ui-card>

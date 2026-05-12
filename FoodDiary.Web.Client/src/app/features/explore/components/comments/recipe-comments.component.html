@@ -21,63 +21,13 @@
         </div>
     </div>
 
-    @if (isLoading() && comments().length === 0) {
-        <div class="comments-loader">
-            <fd-ui-loader />
-        </div>
-    } @else if (comments().length === 0) {
-        <div class="comments-empty">
-            <p class="fd-ui-body-sm">{{ 'COMMENTS.NO_COMMENTS' | translate }}</p>
-            <p class="comments-empty-hint fd-ui-caption">{{ 'COMMENTS.NO_COMMENTS_MESSAGE' | translate }}</p>
-        </div>
-    } @else {
-        <div class="comments-list">
-            @for (item of commentItems(); track item.comment.id) {
-                <div class="comment-item">
-                    <div class="comment-header">
-                        <span class="comment-author fd-ui-caption">
-                            {{ item.authorLabel }}
-                        </span>
-                        <span class="comment-date fd-ui-caption">
-                            {{ item.dateLabel }}
-                            @if (item.comment.modifiedAtUtc) {
-                                <span class="comment-edited fd-ui-caption">({{ 'COMMENTS.EDITED' | translate }})</span>
-                            }
-                        </span>
-                    </div>
-                    <p class="comment-text fd-ui-body-sm">{{ item.comment.text }}</p>
-                    @if (item.comment.isOwnedByCurrentUser) {
-                        <div class="comment-actions">
-                            <fd-ui-button
-                                class="comment-action"
-                                variant="secondary"
-                                fill="text"
-                                size="sm"
-                                icon="edit"
-                                (click)="onEdit(item.comment)"
-                            >
-                                {{ 'COMMENTS.EDIT' | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button
-                                class="comment-action comment-action--delete"
-                                variant="danger"
-                                fill="text"
-                                size="sm"
-                                icon="delete"
-                                (click)="onDelete(item.comment)"
-                            >
-                                {{ 'COMMENTS.DELETE' | translate }}
-                            </fd-ui-button>
-                        </div>
-                    }
-                </div>
-            }
-
-            @if (hasMore()) {
-                <fd-ui-button variant="outline" size="sm" [disabled]="isLoading()" [loading]="isLoading()" (click)="onLoadMore()">
-                    {{ 'COMMENTS.LOAD_MORE' | translate }}
-                </fd-ui-button>
-            }
-        </div>
-    }
+    <fd-recipe-comments-list
+        [isLoading]="isLoading()"
+        [commentsCount]="comments().length"
+        [items]="commentItems()"
+        [hasMore]="hasMore()"
+        (edit)="onEdit($event)"
+        (delete)="onDelete($event)"
+        (loadMore)="onLoadMore()"
+    />
 </div>

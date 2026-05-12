@@ -5,14 +5,14 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { finalize } from 'rxjs';
 
 import { CommentService } from '../../api/comment.service';
 import type { RecipeComment } from '../../models/comment.data';
+import { RecipeCommentsListComponent } from './recipe-comments-list.component';
 
-interface RecipeCommentViewModel {
+export interface RecipeCommentViewModel {
     comment: RecipeComment;
     authorLabel: string;
     dateLabel: string;
@@ -26,7 +26,7 @@ const COMMENT_MAX_LENGTH = 2_000;
     templateUrl: './recipe-comments.component.html',
     styleUrls: ['./recipe-comments.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, FdUiLoaderComponent],
+    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, RecipeCommentsListComponent],
 })
 export class RecipeCommentsComponent {
     private readonly commentService = inject(CommentService);

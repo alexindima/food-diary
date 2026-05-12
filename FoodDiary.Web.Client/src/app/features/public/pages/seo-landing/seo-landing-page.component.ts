@@ -3,6 +3,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
+import { SeoLandingContentSectionsComponent } from './seo-landing-content-sections.component';
+import { SeoLandingFooterSectionsComponent } from './seo-landing-footer-sections.component';
+
 type SeoPageSlug =
     | 'food-diary'
     | 'calorie-counter'
@@ -29,7 +32,7 @@ interface SeoLandingPageData {
     relatedPaths: readonly SeoPageSlug[];
 }
 
-interface SeoLandingTextKeys {
+export interface SeoLandingTextKeys {
     eyebrowKey: string;
     titleKey: string;
     subtitleKey: string;
@@ -47,19 +50,19 @@ interface SeoLandingHeroKeys extends SeoLandingTextKeys {
     };
 }
 
-interface SeoLandingContentItemKeys {
+export interface SeoLandingContentItemKeys {
     key: string;
     titleKey: string;
     textKey: string;
 }
 
-interface SeoLandingFaqItemKeys {
+export interface SeoLandingFaqItemKeys {
     key: string;
     questionKey: string;
     answerKey: string;
 }
 
-interface SeoLandingCtaKeys {
+export interface SeoLandingCtaKeys {
     titleKey: string;
     subtitleKey: string;
     primaryKey: string;
@@ -87,7 +90,7 @@ const PAGE_LABEL_KEYS: Record<SeoPageSlug, string> = {
 
 @Component({
     selector: 'fd-seo-landing-page',
-    imports: [RouterLink, TranslatePipe, FdUiButtonComponent],
+    imports: [RouterLink, TranslatePipe, FdUiButtonComponent, SeoLandingContentSectionsComponent, SeoLandingFooterSectionsComponent],
     templateUrl: './seo-landing-page.component.html',
     styleUrl: './seo-landing-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

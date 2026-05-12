@@ -43,40 +43,19 @@
             </ul>
         </div>
         @if (hasNutrientData()) {
-            <div
-                class="charts-wrapper fd-row fd-justify-center fd-wrap fd-gap-md"
-                [ngStyle]="chartsWrapperStyles()"
-                [class.column-layout]="isColumnLayout()"
-            >
-                @if (!mergedConfig().content.hidePieChart) {
-                    <div class="chart fd-center" [ngStyle]="chartStyles()">
-                        <canvas
-                            baseChart
-                            type="pie"
-                            [style.width.px]="chartsBlockSize()"
-                            [style.height.px]="chartsBlockSize()"
-                            [ngStyle]="chartCanvasStyles()"
-                            [data]="nutrientsPieChartData()"
-                            [options]="pieChartOptions"
-                            [legend]="false"
-                        ></canvas>
-                    </div>
-                }
-                @if (showBarChart()) {
-                    <div class="chart fd-center" [ngStyle]="chartStyles()">
-                        <canvas
-                            baseChart
-                            type="bar"
-                            [style.width.px]="chartsBlockSize()"
-                            [style.height.px]="chartsBlockSize()"
-                            [ngStyle]="chartCanvasStyles()"
-                            [data]="nutrientsBarChartData()"
-                            [options]="barChartOptions"
-                            [legend]="false"
-                        ></canvas>
-                    </div>
-                }
-            </div>
+            <fd-nutrients-summary-charts
+                [showPieChart]="!mergedConfig().content.hidePieChart"
+                [showBarChart]="showBarChart()"
+                [isColumnLayout]="isColumnLayout()"
+                [chartsBlockSize]="chartsBlockSize()"
+                [chartsWrapperStyles]="chartsWrapperStyles()"
+                [chartStyles]="chartStyles()"
+                [chartCanvasStyles]="chartCanvasStyles()"
+                [pieChartData]="nutrientsPieChartData()"
+                [barChartData]="nutrientsBarChartData()"
+                [pieChartOptions]="pieChartOptions"
+                [barChartOptions]="barChartOptions"
+            />
         }
     </div>
 </ng-template>

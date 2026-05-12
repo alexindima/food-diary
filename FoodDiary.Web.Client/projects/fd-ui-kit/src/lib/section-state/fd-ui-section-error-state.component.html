@@ -1,0 +1,11 @@
+<div class="fd-ui-section-state__surface fd-ui-section-state__surface--error" role="alert">
+    <fd-ui-icon class="fd-ui-section-state__error-icon" [name]="errorIcon()" />
+    <div class="fd-ui-section-state__error-title">{{ errorTitle() }}</div>
+    <div class="fd-ui-section-state__error-message">{{ errorMessage() }}</div>
+
+    @if (retryLabel()) {
+        <fd-ui-button size="sm" (click)="retry.emit()">
+            {{ retryLabel() }}
+        </fd-ui-button>
+    }
+</div>

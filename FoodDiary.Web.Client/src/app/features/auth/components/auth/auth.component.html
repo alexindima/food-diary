@@ -12,58 +12,16 @@
     <div class="auth__content fd-stack fd-gap-md">
         @if (authMode === 'login') {
             @if (showPasswordReset()) {
-                <form
-                    class="auth__form fd-stack fd-gap-md"
-                    [formGroup]="passwordResetForm"
-                    [attr.aria-busy]="isPasswordResetting()"
-                    (ngSubmit)="onPasswordResetSubmit()"
-                >
-                    @let passwordResetErrors = passwordResetFieldErrors();
-                    <div class="auth__field fd-stack fd-gap-xs">
-                        <fd-ui-input
-                            appearance="auth"
-                            formControlName="email"
-                            type="email"
-                            autocomplete="email"
-                            [label]="'AUTH.RESET.EMAIL' | translate"
-                            [placeholder]="'AUTH.RESET.EMAIL_PLACEHOLDER' | translate"
-                            [error]="passwordResetErrors.email"
-                        />
-                    </div>
-
-                    <div class="auth__actions fd-stack fd-gap-sm">
-                        <fd-ui-button
-                            type="submit"
-                            appearance="brand-action"
-                            size="lg"
-                            variant="primary"
-                            [disabled]="passwordResetForm.invalid || isPasswordResetting() || passwordResetCooldownSeconds() > 0"
-                            [loading]="isPasswordResetting()"
-                            [fullWidth]="true"
-                        >
-                            {{ 'AUTH.RESET.SEND' | translate }}
-                        </fd-ui-button>
-                        <fd-ui-form-error [error]="globalError()" />
-                        @if (passwordResetSent()) {
-                            <p class="auth__hint fd-ui-body-sm" role="status" aria-live="polite">{{ 'AUTH.RESET.SENT' | translate }}</p>
-                        }
-                        @if (passwordResetCooldownSeconds() > 0) {
-                            <p class="auth__hint fd-ui-body-sm" role="status" aria-live="polite">
-                                {{ 'AUTH.RESET.RESEND_COOLDOWN' | translate: { seconds: passwordResetCooldownSeconds() } }}
-                            </p>
-                        }
-                        <fd-ui-button
-                            type="button"
-                            size="lg"
-                            variant="secondary"
-                            fill="outline"
-                            [fullWidth]="true"
-                            (click)="onPasswordResetClose()"
-                        >
-                            {{ 'AUTH.RESET.BACK' | translate }}
-                        </fd-ui-button>
-                    </div>
-                </form>
+                <fd-auth-password-reset-form
+                    [form]="passwordResetForm"
+                    [errors]="passwordResetFieldErrors()"
+                    [globalError]="globalError()"
+                    [isPasswordResetting]="isPasswordResetting()"
+                    [passwordResetSent]="passwordResetSent()"
+                    [passwordResetCooldownSeconds]="passwordResetCooldownSeconds()"
+                    (passwordResetSubmit)="onPasswordResetSubmit()"
+                    (passwordResetClose)="onPasswordResetClose()"
+                />
             } @else {
                 <form
                     #loginFormElement
@@ -137,14 +95,9 @@
                         <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
                     </div>
 
-                    <div class="auth__social fd-stack fd-gap-xs">
+                    <fd-auth-google-section unavailableKey="AUTH.GOOGLE.UNAVAILABLE" [isReady]="googleReady()">
                         <div #googleLoginButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.LOGIN_BUTTON' | translate"></div>
-                        @if (!googleReady()) {
-                            <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
-                                {{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}
-                            </div>
-                        }
-                    </div>
+                    </fd-auth-google-section>
                 </form>
             }
         } @else {
@@ -155,46 +108,7 @@
                 (ngSubmit)="onRegisterSubmit()"
             >
                 @let registerErrors = registerFieldErrors();
-                <div class="auth__field fd-stack fd-gap-xs">
-                    <fd-ui-input
-                        appearance="auth"
-                        formControlName="email"
-                        type="email"
-                        autocomplete="email"
-                        [label]="'AUTH.REGISTER.EMAIL' | translate"
-                        [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
-                        [error]="registerErrors.email"
-                    />
-                </div>
-                <div class="auth__field fd-stack fd-gap-xs">
-                    <fd-ui-input
-                        appearance="auth"
-                        formControlName="password"
-                        type="password"
-                        autocomplete="new-password"
-                        [label]="'AUTH.REGISTER.PASSWORD' | translate"
-                        [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
-                        [error]="registerErrors.password"
-                    />
-                </div>
-                <div class="auth__field fd-stack fd-gap-xs">
-                    <fd-ui-input
-                        appearance="auth"
-                        formControlName="confirmPassword"
-                        type="password"
-                        autocomplete="new-password"
-                        [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
-                        [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
-                        [error]="registerErrors.confirmPassword"
-                    />
-                </div>
-
-                <fd-ui-checkbox class="auth__terms" formControlName="agreeTerms" label="">
-                    <span
-                        class="auth__checkbox-text fd-ui-body-sm"
-                        [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy' }"
-                    ></span>
-                </fd-ui-checkbox>
+                <fd-auth-register-fields [form]="registerForm" [errors]="registerErrors" />
 
                 <div class="auth__actions fd-stack fd-gap-sm">
                     <fd-ui-button
@@ -215,14 +129,9 @@
                     <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
                 </div>
 
-                <div class="auth__social fd-stack fd-gap-xs">
+                <fd-auth-google-section unavailableKey="AUTH.GOOGLE.UNAVAILABLE" [isReady]="googleReady()">
                     <div #googleRegisterButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.REGISTER_BUTTON' | translate"></div>
-                    @if (!googleReady()) {
-                        <div class="auth__google-hint fd-ui-caption" role="status" aria-live="polite">
-                            {{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}
-                        </div>
-                    }
-                </div>
+                </fd-auth-google-section>
             </form>
         }
     </div>

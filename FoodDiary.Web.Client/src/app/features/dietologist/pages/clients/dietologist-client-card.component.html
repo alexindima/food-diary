@@ -1,0 +1,40 @@
+@let itemView = item();
+
+<fd-ui-card class="dietologist-clients__card" (click)="clientOpen.emit(itemView.client)">
+    <div class="dietologist-clients__card-content fd-row fd-justify-between fd-gap-md">
+        <div
+            class="dietologist-clients__avatar fd-inline-center"
+            [class.dietologist-clients__avatar--image]="!!itemView.client.profileImage"
+        >
+            @if (itemView.client.profileImage) {
+                <img width="64" height="64" [ngSrc]="itemView.client.profileImage" [alt]="itemView.title" />
+            } @else {
+                <span>{{ itemView.initials }}</span>
+            }
+        </div>
+        <div class="dietologist-clients__info fd-stack fd-gap-xxs">
+            <span class="dietologist-clients__name fd-ui-action-text">{{ itemView.title }}</span>
+            <span class="dietologist-clients__email fd-ui-caption">{{ itemView.client.email }}</span>
+            @if (itemView.client.permissions.shareProfile) {
+                <div class="dietologist-clients__meta fd-row fd-wrap fd-gap-xs">
+                    @if (itemView.client.height) {
+                        <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                            {{ itemView.client.height }} cm
+                        </span>
+                    }
+                    @if (itemView.client.gender) {
+                        <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                            {{ itemView.client.gender }}
+                        </span>
+                    }
+                    @if (itemView.client.activityLevel) {
+                        <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
+                            {{ itemView.client.activityLevel }}
+                        </span>
+                    }
+                </div>
+            }
+        </div>
+        <span class="dietologist-clients__date fd-ui-caption"> Connected {{ itemView.connectedDateLabel }} </span>
+    </div>
+</fd-ui-card>

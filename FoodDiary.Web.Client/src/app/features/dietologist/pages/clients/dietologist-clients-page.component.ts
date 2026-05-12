@@ -1,14 +1,13 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { DietologistService } from '../../api/dietologist.service';
 import type { ClientSummary } from '../../models/dietologist.data';
+import { DietologistClientsListComponent } from './dietologist-clients-list.component';
 
-interface ClientCardViewModel {
+export interface ClientCardViewModel {
     client: ClientSummary;
     title: string;
     initials: string;
@@ -19,7 +18,7 @@ interface ClientCardViewModel {
     selector: 'fd-dietologist-clients-page',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgOptimizedImage, FdUiCardComponent],
+    imports: [DietologistClientsListComponent],
     templateUrl: './dietologist-clients-page.component.html',
     styleUrls: ['./dietologist-clients-page.component.scss'],
 })

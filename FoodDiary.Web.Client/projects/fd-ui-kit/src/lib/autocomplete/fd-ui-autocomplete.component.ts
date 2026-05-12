@@ -4,8 +4,8 @@ import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, o
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
-import { FdUiLoaderComponent } from '../loader/fd-ui-loader.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
+import { FdUiAutocompleteMenuComponent } from './fd-ui-autocomplete-menu.component';
 
 const NO_ACTIVE_OPTION_INDEX = -1;
 const FIRST_OPTION_INDEX = 0;
@@ -27,7 +27,7 @@ export interface FdUiAutocompleteOption<T = unknown> {
 @Component({
     selector: 'fd-ui-autocomplete',
     standalone: true,
-    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiIconComponent, FdUiLoaderComponent],
+    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiIconComponent, FdUiAutocompleteMenuComponent],
     templateUrl: './fd-ui-autocomplete.component.html',
     styleUrls: ['./fd-ui-autocomplete.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

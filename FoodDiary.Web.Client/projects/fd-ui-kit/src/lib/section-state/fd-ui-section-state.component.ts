@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
-import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 import { type FdUiEmptyStateAppearance, FdUiEmptyStateComponent } from '../empty-state/fd-ui-empty-state.component';
-import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
-import { FdUiLoaderComponent } from '../loader/fd-ui-loader.component';
+import { FdUiSectionErrorStateComponent } from './fd-ui-section-error-state.component';
+import { FdUiSectionLoadingStateComponent } from './fd-ui-section-loading-state.component';
 
 export type FdUiSectionState = 'content' | 'loading' | 'empty' | 'error';
 export type FdUiSectionStateAppearance = 'default' | 'compact';
@@ -11,7 +10,7 @@ export type FdUiSectionStateAppearance = 'default' | 'compact';
 @Component({
     selector: 'fd-ui-section-state',
     standalone: true,
-    imports: [FdUiButtonComponent, FdUiEmptyStateComponent, FdUiIconComponent, FdUiLoaderComponent],
+    imports: [FdUiEmptyStateComponent, FdUiSectionLoadingStateComponent, FdUiSectionErrorStateComponent],
     templateUrl: './fd-ui-section-state.component.html',
     styleUrl: './fd-ui-section-state.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

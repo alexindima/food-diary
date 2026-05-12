@@ -1,0 +1,72 @@
+<section class="seo-landing__section seo-landing__section--audience">
+    <div class="seo-landing__container">
+        <div class="seo-landing__section-copy">
+            <span class="seo-landing__eyebrow">{{ audience().eyebrowKey | translate }}</span>
+            <h2 class="seo-landing__section-title">{{ audience().titleKey | translate }}</h2>
+            <p class="seo-landing__section-subtitle">{{ audience().subtitleKey | translate }}</p>
+        </div>
+        <div class="seo-landing__audience-grid">
+            @for (item of audience().items; track item.key) {
+                <article class="seo-landing__audience-card">
+                    <h3 class="seo-landing__feature-title">{{ item.titleKey | translate }}</h3>
+                    <p class="seo-landing__feature-text">{{ item.textKey | translate }}</p>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="seo-landing__section">
+    <div class="seo-landing__container">
+        <div class="seo-landing__section-copy">
+            <span class="seo-landing__eyebrow">{{ features().eyebrowKey | translate }}</span>
+            <h2 class="seo-landing__section-title">{{ features().titleKey | translate }}</h2>
+            <p class="seo-landing__section-subtitle">{{ features().subtitleKey | translate }}</p>
+        </div>
+        <div class="seo-landing__feature-grid">
+            @for (feature of features().items; track feature.key) {
+                <article class="seo-landing__feature-card">
+                    <h3 class="seo-landing__feature-title">{{ feature.titleKey | translate }}</h3>
+                    <p class="seo-landing__feature-text">{{ feature.textKey | translate }}</p>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="seo-landing__section seo-landing__section--steps">
+    <div class="seo-landing__container">
+        <div class="seo-landing__section-copy">
+            <span class="seo-landing__eyebrow">{{ steps().eyebrowKey | translate }}</span>
+            <h2 class="seo-landing__section-title">{{ steps().titleKey | translate }}</h2>
+            <p class="seo-landing__section-subtitle">{{ steps().subtitleKey | translate }}</p>
+        </div>
+        <div class="seo-landing__steps">
+            @for (step of steps().items; track step.key) {
+                <article class="seo-landing__step-card">
+                    <div class="seo-landing__step-index">{{ $index + 1 }}</div>
+                    <h3 class="seo-landing__step-title">{{ step.titleKey | translate }}</h3>
+                    <p class="seo-landing__step-text">{{ step.textKey | translate }}</p>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="seo-landing__section seo-landing__section--faq">
+    <div class="seo-landing__container">
+        <div class="seo-landing__section-copy">
+            <span class="seo-landing__eyebrow">{{ faq().eyebrowKey | translate }}</span>
+            <h2 class="seo-landing__section-title">{{ faq().titleKey | translate }}</h2>
+            <p class="seo-landing__section-subtitle">{{ faq().subtitleKey | translate }}</p>
+        </div>
+        <div class="seo-landing__faq">
+            @for (item of faq().items; track item.key) {
+                <details class="seo-landing__faq-item">
+                    <summary class="seo-landing__faq-question">{{ item.questionKey | translate }}</summary>
+                    <p class="seo-landing__faq-answer">{{ item.answerKey | translate }}</p>
+                </details>
+            }
+        </div>
+    </div>
+</section>

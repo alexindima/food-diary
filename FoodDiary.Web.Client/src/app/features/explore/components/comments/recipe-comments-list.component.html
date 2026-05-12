@@ -1,0 +1,22 @@
+@if (isLoading() && commentsCount() === 0) {
+    <div class="comments-loader">
+        <fd-ui-loader />
+    </div>
+} @else if (commentsCount() === 0) {
+    <div class="comments-empty">
+        <p class="fd-ui-body-sm">{{ 'COMMENTS.NO_COMMENTS' | translate }}</p>
+        <p class="comments-empty-hint fd-ui-caption">{{ 'COMMENTS.NO_COMMENTS_MESSAGE' | translate }}</p>
+    </div>
+} @else {
+    <div class="comments-list">
+        @for (item of items(); track item.comment.id) {
+            <fd-recipe-comment-item [item]="item" (edit)="edit.emit($event)" (delete)="delete.emit($event)" />
+        }
+
+        @if (hasMore()) {
+            <fd-ui-button variant="outline" size="sm" [disabled]="isLoading()" [loading]="isLoading()" (click)="loadMore.emit()">
+                {{ 'COMMENTS.LOAD_MORE' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+}

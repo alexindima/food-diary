@@ -3,8 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { Micronutrient } from '../../models/usda.data';
+import { MicronutrientSectionComponent } from './micronutrient-section.component';
 
-type MicronutrientView = Micronutrient & {
+export type MicronutrientView = Micronutrient & {
     percentDailyValueWidth: number | null;
 };
 
@@ -35,7 +36,7 @@ const MAX_PERCENT_DAILY_VALUE = 100;
 @Component({
     selector: 'fd-micronutrient-panel',
     standalone: true,
-    imports: [CommonModule, TranslatePipe],
+    imports: [CommonModule, TranslatePipe, MicronutrientSectionComponent],
     templateUrl: './micronutrient-panel.component.html',
     styleUrls: ['./micronutrient-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

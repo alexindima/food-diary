@@ -1,0 +1,40 @@
+@let itemView = item();
+
+<div class="comment-item">
+    <div class="comment-header">
+        <span class="comment-author fd-ui-caption">
+            {{ itemView.authorLabel }}
+        </span>
+        <span class="comment-date fd-ui-caption">
+            {{ itemView.dateLabel }}
+            @if (itemView.comment.modifiedAtUtc) {
+                <span class="comment-edited fd-ui-caption">({{ 'COMMENTS.EDITED' | translate }})</span>
+            }
+        </span>
+    </div>
+    <p class="comment-text fd-ui-body-sm">{{ itemView.comment.text }}</p>
+    @if (itemView.comment.isOwnedByCurrentUser) {
+        <div class="comment-actions">
+            <fd-ui-button
+                class="comment-action"
+                variant="secondary"
+                fill="text"
+                size="sm"
+                icon="edit"
+                (click)="edit.emit(itemView.comment)"
+            >
+                {{ 'COMMENTS.EDIT' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                class="comment-action comment-action--delete"
+                variant="danger"
+                fill="text"
+                size="sm"
+                icon="delete"
+                (click)="delete.emit(itemView.comment)"
+            >
+                {{ 'COMMENTS.DELETE' | translate }}
+            </fd-ui-button>
+        </div>
+    }
+</div>

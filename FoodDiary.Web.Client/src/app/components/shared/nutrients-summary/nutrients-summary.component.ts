@@ -3,20 +3,20 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
 import { distinctUntilChanged, fromEvent, map } from 'rxjs';
 
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import type { RecursivePartial } from '../../../shared/lib/common.data';
 import type { NutrientData } from '../../../shared/models/charts.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
+import { NutrientsSummaryChartsComponent } from './nutrients-summary-charts.component';
 
 const NUTRIENT_COLOR_WIDTH_MULTIPLIER = 2;
 const TOOLTIP_DECIMAL_PLACES = 2;
 
 @Component({
     selector: 'fd-nutrients-summary',
-    imports: [BaseChartDirective, DecimalPipe, TranslatePipe, NgStyle, CustomGroupComponent, NgTemplateOutlet],
+    imports: [DecimalPipe, TranslatePipe, NgStyle, CustomGroupComponent, NgTemplateOutlet, NutrientsSummaryChartsComponent],
     templateUrl: './nutrients-summary.component.html',
     styleUrl: './nutrients-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,48 @@
+@let itemView = item();
+
+<div role="listitem">
+    <button
+        type="button"
+        class="notifications-dialog__item fd-grid fd-gap-xxs"
+        [class.is-read]="itemView.notification.isRead"
+        [class.notifications-dialog__item--without-icon]="!itemView.hasAccentIcon"
+        [class.notifications-dialog__item--dietologist]="itemView.isDietologistInvitation"
+        [class.notifications-dialog__item--security]="itemView.isPasswordSetupSuggestion"
+        [attr.aria-label]="itemView.ariaLabel"
+        (click)="notificationOpen.emit(itemView.notification)"
+    >
+        @if (itemView.hasAccentIcon) {
+            <span
+                class="notifications-dialog__item-icon fd-place-center"
+                [class.notifications-dialog__item-icon--dietologist]="itemView.isDietologistInvitation"
+                [class.notifications-dialog__item-icon--security]="itemView.isPasswordSetupSuggestion"
+            >
+                <fd-ui-icon [name]="itemView.icon" />
+            </span>
+        }
+        <div class="notifications-dialog__item-content fd-grid fd-gap-xxs">
+            <div class="notifications-dialog__item-head fd-row fd-align-baseline fd-justify-between fd-gap-md">
+                <div class="notifications-dialog__item-head-main fd-grid fd-gap-xxs">
+                    @if (itemView.badgeKey; as badgeKey) {
+                        <span class="notifications-dialog__item-badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                            {{ badgeKey | translate }}
+                        </span>
+                    }
+                    <span class="notifications-dialog__item-title fd-ui-card-title">{{ itemView.notification.title }}</span>
+                </div>
+                <div class="notifications-dialog__item-meta fd-inline-center fd-justify-end fd-gap-xs">
+                    <span class="notifications-dialog__item-date fd-ui-caption">{{ itemView.dateLabel }}</span>
+                    <span class="notifications-dialog__item-indicator" [class.is-hidden]="itemView.notification.isRead"></span>
+                </div>
+            </div>
+            @if (itemView.notification.body) {
+                <p class="notifications-dialog__item-body fd-ui-body-sm">{{ itemView.notification.body }}</p>
+            }
+            @if (itemView.actionKey; as actionKey) {
+                <div class="notifications-dialog__item-cta fd-ui-pill fd-ui-pill--compact fd-ui-action-text" aria-hidden="true">
+                    {{ actionKey | translate }}
+                </div>
+            }
+        </div>
+    </button>
+</div>

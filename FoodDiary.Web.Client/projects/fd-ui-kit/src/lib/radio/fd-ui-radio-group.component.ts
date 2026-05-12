@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { FdUiRadioOptionsComponent } from './fd-ui-radio-options.component';
+
 export interface FdUiRadioOption<T = unknown> {
     label: string;
     value: T;
@@ -12,6 +14,7 @@ let nextId = 0;
 @Component({
     selector: 'fd-ui-radio-group',
     standalone: true,
+    imports: [FdUiRadioOptionsComponent],
     templateUrl: './fd-ui-radio-group.component.html',
     styleUrls: ['./fd-ui-radio-group.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

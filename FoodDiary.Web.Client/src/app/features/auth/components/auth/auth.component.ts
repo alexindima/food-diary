@@ -40,6 +40,9 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
 import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../models/auth.data';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
+import { AuthGoogleSectionComponent } from './auth-google-section.component';
+import { AuthPasswordResetFormComponent } from './auth-password-reset-form.component';
+import { AuthRegisterFieldsComponent } from './auth-register-fields.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -82,8 +85,8 @@ type LoginErrorField = (typeof LOGIN_ERROR_FIELDS)[number];
 type RegisterErrorField = (typeof REGISTER_ERROR_FIELDS)[number];
 type PasswordResetErrorField = (typeof PASSWORD_RESET_ERROR_FIELDS)[number];
 type LoginFieldErrors = Record<LoginErrorField, string | null>;
-type RegisterFieldErrors = Record<RegisterErrorField, string | null>;
-type PasswordResetFieldErrors = Record<PasswordResetErrorField, string | null>;
+export type RegisterFieldErrors = Record<RegisterErrorField, string | null>;
+export type PasswordResetFieldErrors = Record<PasswordResetErrorField, string | null>;
 
 @Component({
     selector: 'fd-auth',
@@ -99,6 +102,9 @@ type PasswordResetFieldErrors = Record<PasswordResetErrorField, string | null>;
         FdUiCheckboxComponent,
         FdUiFormErrorComponent,
         FdUiTabsComponent,
+        AuthPasswordResetFormComponent,
+        AuthRegisterFieldsComponent,
+        AuthGoogleSectionComponent,
     ],
 })
 export class AuthComponent {
@@ -834,10 +840,12 @@ interface RegisterFormValues {
 }
 
 type LoginFormGroup = FormGroupControls<LoginFormValues>;
-type RegisterFormGroup = FormGroupControls<RegisterFormValues>;
+export type RegisterFormGroup = FormGroupControls<RegisterFormValues>;
+export type RegisterForm = FormGroup<RegisterFormGroup>;
 
 interface PasswordResetFormValues {
     email: string;
 }
 
-type PasswordResetFormGroup = FormGroupControls<PasswordResetFormValues>;
+export type PasswordResetFormGroup = FormGroupControls<PasswordResetFormValues>;
+export type PasswordResetForm = FormGroup<PasswordResetFormGroup>;

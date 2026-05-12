@@ -11,6 +11,7 @@ import { FdCardHoverDirective } from '../../../../directives/card-hover.directiv
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
 import { LESSON_CATEGORIES, type LessonSummary } from '../../models/lesson.data';
+import { LessonsListGridComponent } from './lessons-list-grid.component';
 
 const PERCENTAGE_MULTIPLIER = 100;
 
@@ -20,7 +21,7 @@ interface LessonCategoryOption {
     fill: 'solid' | 'outline';
 }
 
-interface LessonListItem extends LessonSummary {
+export interface LessonListItem extends LessonSummary {
     categoryLabelKey: string;
     difficultyLabelKey: string;
 }
@@ -37,6 +38,7 @@ interface LessonListItem extends LessonSummary {
         PageBodyComponent,
         FdPageContainerDirective,
         FdCardHoverDirective,
+        LessonsListGridComponent,
     ],
     providers: [LessonFacade],
     templateUrl: './lessons-list-page.component.html',
