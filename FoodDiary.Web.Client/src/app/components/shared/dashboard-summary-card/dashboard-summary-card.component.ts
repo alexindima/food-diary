@@ -35,7 +35,7 @@ const DEFAULT_FATS_TARGET = 70;
 const DEFAULT_FIBER_CURRENT = 18;
 const DEFAULT_FIBER_TARGET = 30;
 
-export interface NutrientBar {
+export type NutrientBar = {
     id: string;
     label: string;
     labelKey?: string;
@@ -45,7 +45,7 @@ export interface NutrientBar {
     unitKey?: string;
     colorStart: string;
     colorEnd: string;
-}
+};
 
 @Component({
     selector: 'fd-dashboard-summary-card',
@@ -467,10 +467,10 @@ export class DashboardSummaryCardComponent {
     }
 }
 
-interface NutrientBarViewModel extends NutrientBar {
+type NutrientBarViewModel = {
     labelText: string;
     unitText: string;
     valueColor: string;
     fillBackground: string;
     fillWidth: number;
-}
+} & NutrientBar;

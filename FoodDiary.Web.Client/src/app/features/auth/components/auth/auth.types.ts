@@ -5,16 +5,16 @@ import type { FormGroupControls } from '../../../../shared/lib/common.data';
 export type RegisterFieldErrors = Record<'email' | 'password' | 'confirmPassword', string | null>;
 export type PasswordResetFieldErrors = Record<'email', string | null>;
 
-interface RegisterFormValues {
+type RegisterFormValues = {
     email: string;
     password: string;
     confirmPassword: string;
     agreeTerms: boolean;
-}
+};
 
-interface PasswordResetFormValues {
+type PasswordResetFormValues = {
     email: string;
-}
+};
 
 export type RegisterFormGroup = FormGroupControls<RegisterFormValues>;
 export type RegisterForm = FormGroup<RegisterFormGroup>;

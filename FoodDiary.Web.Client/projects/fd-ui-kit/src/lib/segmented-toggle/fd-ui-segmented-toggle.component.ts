@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 
-export interface FdUiSegmentedToggleOption {
+export type FdUiSegmentedToggleOption = {
     label: string;
     value: string;
-}
+};
 
 export type FdUiSegmentedToggleAppearance = 'default' | 'soft';
 export type FdUiSegmentedToggleSize = 'sm' | 'md';

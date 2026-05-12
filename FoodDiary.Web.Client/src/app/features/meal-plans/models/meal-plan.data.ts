@@ -1,4 +1,4 @@
-export interface MealPlanSummary {
+export type MealPlanSummary = {
     id: string;
     name: string;
     description?: string | null;
@@ -7,9 +7,9 @@ export interface MealPlanSummary {
     targetCaloriesPerDay?: number | null;
     isCurated: boolean;
     totalRecipes: number;
-}
+};
 
-export interface MealPlan {
+export type MealPlan = {
     id: string;
     name: string;
     description?: string | null;
@@ -18,15 +18,15 @@ export interface MealPlan {
     targetCaloriesPerDay?: number | null;
     isCurated: boolean;
     days: MealPlanDay[];
-}
+};
 
-export interface MealPlanDay {
+export type MealPlanDay = {
     id: string;
     dayNumber: number;
     meals: MealPlanMeal[];
-}
+};
 
-export interface MealPlanMeal {
+export type MealPlanMeal = {
     id: string;
     mealType: string;
     recipeId: string;
@@ -36,7 +36,7 @@ export interface MealPlanMeal {
     proteins?: number | null;
     fats?: number | null;
     carbs?: number | null;
-}
+};
 
 export type DietType = 'Balanced' | 'HighProtein' | 'LowCarb' | 'Keto' | 'Mediterranean' | 'Vegan' | 'Vegetarian';
 

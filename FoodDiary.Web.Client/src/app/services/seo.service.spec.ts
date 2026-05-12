@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SeoService } from './seo.service';
 
 type SeoServiceInternals = {
-    getCurrentSiteUrl(): string;
+    getCurrentSiteUrl: () => string;
 };
 
 let service: SeoService;

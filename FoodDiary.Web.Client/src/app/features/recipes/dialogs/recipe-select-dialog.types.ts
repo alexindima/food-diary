@@ -1,6 +1,6 @@
 import type { Recipe } from '../models/recipe.data';
 
-export interface RecipeSelectItemViewModel {
+export type RecipeSelectItemViewModel = {
     recipe: Recipe;
     imageUrl: string | undefined;
-}
+};

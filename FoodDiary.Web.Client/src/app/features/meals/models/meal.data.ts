@@ -3,7 +3,7 @@ import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
 
-export interface Consumption {
+export type Consumption = {
     id: string;
     date: string;
     mealType?: string | null;
@@ -31,18 +31,18 @@ export interface Consumption {
     favoriteMealId?: string | null;
     items: ConsumptionItem[];
     aiSessions?: ConsumptionAiSession[];
-}
+};
 
-export interface ConsumptionItem {
+export type ConsumptionItem = {
     id: string;
     consumptionId: string;
     amount: number;
     sourceType: ConsumptionSourceType;
     product?: Product | null;
     recipe?: Recipe | null;
-}
+};
 
-export interface ConsumptionAiSession {
+export type ConsumptionAiSession = {
     id: string;
     consumptionId: string;
     imageAssetId?: string | null;
@@ -50,9 +50,9 @@ export interface ConsumptionAiSession {
     recognizedAtUtc: string;
     notes?: string | null;
     items: ConsumptionAiItem[];
-}
+};
 
-export interface ConsumptionAiItem {
+export type ConsumptionAiItem = {
     id: string;
     sessionId: string;
     nameEn: string;
@@ -65,9 +65,9 @@ export interface ConsumptionAiItem {
     carbs: number;
     fiber: number;
     alcohol: number;
-}
+};
 
-export interface ConsumptionResponseDto {
+export type ConsumptionResponseDto = {
     id: string;
     date: string;
     mealType?: string | null;
@@ -95,15 +95,15 @@ export interface ConsumptionResponseDto {
     favoriteMealId?: string | null;
     items: ConsumptionItemResponseDto[];
     aiSessions?: ConsumptionAiSessionResponseDto[];
-}
+};
 
-export interface ConsumptionOverview {
+export type ConsumptionOverview = {
     allConsumptions: PageOf<Meal>;
     favoriteItems: FavoriteMeal[];
     favoriteTotalCount: number;
-}
+};
 
-export interface ConsumptionItemResponseDto {
+export type ConsumptionItemResponseDto = {
     id: string;
     consumptionId: string;
     amount: number;
@@ -130,9 +130,9 @@ export interface ConsumptionItemResponseDto {
     recipeTotalAlcohol?: number | null;
     productQualityScore?: number | null;
     productQualityGrade?: string | null;
-}
+};
 
-export interface ConsumptionAiSessionResponseDto {
+export type ConsumptionAiSessionResponseDto = {
     id: string;
     consumptionId: string;
     imageAssetId?: string | null;
@@ -140,9 +140,9 @@ export interface ConsumptionAiSessionResponseDto {
     recognizedAtUtc: string;
     notes?: string | null;
     items: ConsumptionAiItemResponseDto[];
-}
+};
 
-export interface ConsumptionAiItemResponseDto {
+export type ConsumptionAiItemResponseDto = {
     id: string;
     sessionId: string;
     nameEn: string;
@@ -155,19 +155,19 @@ export interface ConsumptionAiItemResponseDto {
     carbs: number;
     fiber: number;
     alcohol: number;
-}
+};
 
 export enum ConsumptionSourceType {
     Product = 'Product',
     Recipe = 'Recipe',
 }
 
-export interface ConsumptionFilters {
+export type ConsumptionFilters = {
     dateFrom?: string;
     dateTo?: string;
-}
+};
 
-export interface ConsumptionManageDto {
+export type ConsumptionManageDto = {
     date: Date;
     mealType?: string | null;
     comment?: string;
@@ -184,24 +184,24 @@ export interface ConsumptionManageDto {
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
     aiSessions?: ConsumptionAiSessionManageDto[];
-}
+};
 
-export interface ConsumptionItemManageDto {
+export type ConsumptionItemManageDto = {
     productId?: string | null;
     recipeId?: string | null;
     amount: number;
-}
+};
 
-export interface ConsumptionAiSessionManageDto {
+export type ConsumptionAiSessionManageDto = {
     imageAssetId?: string | null;
     imageUrl?: string | null;
     source?: string | null;
     recognizedAtUtc?: string | null;
     notes?: string | null;
     items: ConsumptionAiItemManageDto[];
-}
+};
 
-export interface ConsumptionAiItemManageDto {
+export type ConsumptionAiItemManageDto = {
     nameEn: string;
     nameLocal?: string | null;
     amount: number;
@@ -212,7 +212,7 @@ export interface ConsumptionAiItemManageDto {
     carbs: number;
     fiber: number;
     alcohol: number;
-}
+};
 
 export const createEmptyProductSnapshot = (): Product => ({
     id: '',
@@ -264,7 +264,7 @@ export type MealAiItemManageDto = ConsumptionAiItemManageDto;
 export type MealOverview = ConsumptionOverview;
 export const MealSourceType = ConsumptionSourceType;
 
-export interface FavoriteMeal {
+export type FavoriteMeal = {
     id: string;
     mealId: string;
     name: string | null;
@@ -276,4 +276,4 @@ export interface FavoriteMeal {
     totalFats: number;
     totalCarbs: number;
     itemCount: number;
-}
+};

@@ -13,10 +13,10 @@ export type NutritionChartTab = 'calories' | 'macros' | 'distribution';
 export type BodyChartTab = 'weight' | 'bmi' | 'waist' | 'whtr';
 export type MacroKey = 'proteins' | 'fats' | 'carbs' | 'fiber';
 
-export interface DateRange {
+export type DateRange = {
     start: Date;
     end: Date;
-}
+};
 
 // ── Validation guards ──────────────────────────────────────────────────
 

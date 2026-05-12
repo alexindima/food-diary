@@ -17,22 +17,22 @@ const PADDED_DATE_PART_LENGTH = 2;
 
 export type QuickMealItemType = 'product' | 'recipe';
 
-export interface QuickMealItem {
+export type QuickMealItem = {
     key: string;
     type: QuickMealItemType;
     product?: Product;
     recipe?: Recipe;
     amount: number;
     flashId?: number;
-}
+};
 
-export interface QuickMealDetails {
+export type QuickMealDetails = {
     date: string;
     time: string;
     comment: string;
     preMealSatietyLevel: number;
     postMealSatietyLevel: number;
-}
+};
 
 @Injectable({
     providedIn: 'root',

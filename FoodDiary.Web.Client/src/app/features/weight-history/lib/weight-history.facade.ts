@@ -46,11 +46,11 @@ const SECONDS_PER_MINUTE = 60;
 const MS_PER_SECOND = 1000;
 const MS_IN_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
 
-export interface BmiStatusInfo {
+export type BmiStatusInfo = {
     labelKey: string;
     descriptionKey: string;
     class: string;
-}
+};
 
 @Injectable({ providedIn: 'root' })
 export class WeightHistoryFacade {

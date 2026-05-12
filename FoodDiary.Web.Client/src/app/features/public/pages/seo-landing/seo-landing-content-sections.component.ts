@@ -3,13 +3,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import type { SeoLandingContentItemKeys, SeoLandingFaqItemKeys, SeoLandingTextKeys } from './seo-landing.types';
 
-interface SeoLandingContentSection extends SeoLandingTextKeys {
+type SeoLandingContentSection = {
     items: readonly SeoLandingContentItemKeys[];
-}
+} & SeoLandingTextKeys;
 
-interface SeoLandingFaqSection extends SeoLandingTextKeys {
+type SeoLandingFaqSection = {
     items: readonly SeoLandingFaqItemKeys[];
-}
+} & SeoLandingTextKeys;
 
 @Component({
     selector: 'fd-seo-landing-content-sections',

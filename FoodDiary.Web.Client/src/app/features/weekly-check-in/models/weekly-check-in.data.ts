@@ -1,11 +1,11 @@
-export interface WeeklyCheckInData {
+export type WeeklyCheckInData = {
     thisWeek: WeekSummary;
     lastWeek: WeekSummary;
     trends: WeekTrend;
     suggestions: string[];
-}
+};
 
-export interface WeekSummary {
+export type WeekSummary = {
     totalCalories: number;
     avgDailyCalories: number;
     avgProteins: number;
@@ -19,9 +19,9 @@ export interface WeekSummary {
     waistEnd: number | null;
     totalHydrationMl: number;
     avgDailyHydrationMl: number;
-}
+};
 
-export interface WeekTrend {
+export type WeekTrend = {
     calorieChange: number;
     proteinChange: number;
     fatChange: number;
@@ -30,4 +30,4 @@ export interface WeekTrend {
     waistChange: number | null;
     hydrationChange: number;
     mealsLoggedChange: number;
-}
+};

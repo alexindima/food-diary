@@ -8,11 +8,11 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiSatietyScaleComponent } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
-export interface SatietyLevelDialogData {
+export type SatietyLevelDialogData = {
     titleKey: string;
     subtitleKey?: string;
     value: number | null;
-}
+};
 
 const DEFAULT_SATIETY_LEVEL = 3;
 

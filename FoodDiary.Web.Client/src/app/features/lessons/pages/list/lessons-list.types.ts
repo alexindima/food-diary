@@ -1,6 +1,6 @@
 import type { LessonSummary } from '../../models/lesson.data';
 
-export interface LessonListItem extends LessonSummary {
+export type LessonListItem = {
     categoryLabelKey: string;
     difficultyLabelKey: string;
-}
+} & LessonSummary;

@@ -69,12 +69,12 @@ export class MealPlansListPageComponent {
     }
 }
 
-interface MealPlanCardViewModel extends MealPlanSummary {
+type MealPlanCardViewModel = {
     dietTypeKey: string;
-}
+} & MealPlanSummary;
 
-interface MealPlanDietFilterViewModel {
+type MealPlanDietFilterViewModel = {
     value: DietType | null;
     labelKey: string;
     fill: 'solid' | 'outline';
-}
+};

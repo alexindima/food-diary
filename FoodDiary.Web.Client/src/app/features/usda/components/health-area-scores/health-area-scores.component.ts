@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import type { HealthAreaScores } from '../../models/usda.data';
 
-interface HealthAreaDisplay {
+type HealthAreaDisplay = {
     key: string;
     labelKey: string;
     icon: string;
@@ -13,7 +13,7 @@ interface HealthAreaDisplay {
     gradeKey: string;
     gradeClass: string;
     strokeDasharray: string;
-}
+};
 
 const MAX_HEALTH_AREA_SCORE = 100;
 

@@ -823,7 +823,7 @@ export class RecipeManageComponent {
     }
 }
 
-interface RecipeManageHeaderState {
+type RecipeManageHeaderState = {
     titleKey: string;
     submitLabelKey: string;
-}
+};

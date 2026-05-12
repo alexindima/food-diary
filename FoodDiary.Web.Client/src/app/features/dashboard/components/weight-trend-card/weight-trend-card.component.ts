@@ -21,10 +21,10 @@ const FILL_COLOR_PERCENT = 15;
 const Y_AXIS_PADDING_MIN = 0.5;
 const Y_AXIS_PADDING_RATIO = 0.08;
 
-export interface WeightTrendPoint {
+export type WeightTrendPoint = {
     date: string | Date;
     value: number | null;
-}
+};
 
 @Component({
     selector: 'fd-weight-trend-card',

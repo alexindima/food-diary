@@ -5,11 +5,11 @@ import { describe, expect, it } from 'vitest';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import { FdUiButtonComponent } from './fd-ui-button.component';
 
-interface ButtonTestContext {
+type ButtonTestContext = {
     button: () => HTMLButtonElement;
     component: FdUiButtonComponent;
     fixture: ComponentFixture<FdUiButtonComponent>;
-}
+};
 
 function setupButton(): ButtonTestContext {
     TestBed.configureTestingModule({

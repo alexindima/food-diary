@@ -29,11 +29,11 @@ const THIRD_PROGRESS = 33;
 const FULL_PROGRESS = 100;
 const OVER_GOAL_PROGRESS = 150;
 
-interface TestContext {
+type TestContext = {
     component: () => DailyProgressCardComponent;
     fixture: () => ComponentFixture<DailyProgressCardComponent>;
     setInput: (name: string, value: unknown) => void;
-}
+};
 
 describe('DailyProgressCardComponent', () => {
     let component: DailyProgressCardComponent;

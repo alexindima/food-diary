@@ -3,12 +3,12 @@ import type { ImageSelection } from './image-upload.data';
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
 export type UiStyleOption = 'classic' | 'modern';
 
-export interface DashboardLayoutSettings {
+export type DashboardLayoutSettings = {
     web?: string[];
     mobile?: string[];
-}
+};
 
-export interface User {
+export type User = {
     id: string;
     email: string;
     hasPassword: boolean;
@@ -46,9 +46,9 @@ export interface User {
     lastLoginAtUtc?: string | null;
     aiConsentAcceptedAt?: string | null;
     calories?: number;
-}
+};
 
-export interface UpdateUserFormValues {
+export type UpdateUserFormValues = {
     username: string | null;
     firstName: string | null;
     lastName: string | null;
@@ -65,7 +65,7 @@ export interface UpdateUserFormValues {
     socialPushNotificationsEnabled?: boolean | null;
     theme?: string | null;
     uiStyle?: UiStyleOption | null;
-}
+};
 
 export class UpdateUserDto {
     public username?: string;
@@ -195,22 +195,22 @@ const normalizeProfileImage = (value: ImageSelection | string | null | undefined
     return { url, assetId: assetId ?? undefined };
 };
 
-export interface ChangePasswordRequest {
+export type ChangePasswordRequest = {
     currentPassword: string;
     newPassword: string;
-}
+};
 
-export interface SetPasswordRequest {
+export type SetPasswordRequest = {
     newPassword: string;
-}
+};
 
-export interface DesiredWeightResponse {
+export type DesiredWeightResponse = {
     desiredWeight: number | null;
-}
+};
 
-export interface DesiredWaistResponse {
+export type DesiredWaistResponse = {
     desiredWaist: number | null;
-}
+};
 
 export enum Gender {
     Male = 'M',

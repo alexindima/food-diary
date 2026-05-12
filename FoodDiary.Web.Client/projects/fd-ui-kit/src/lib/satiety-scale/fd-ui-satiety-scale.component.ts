@@ -4,13 +4,13 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FdUiAccentSurfaceComponent } from '../accent-surface/fd-ui-accent-surface.component';
 
-export interface FdUiSatietyScaleLevel {
+export type FdUiSatietyScaleLevel = {
     value: number;
     emoji: string;
     titleKey: string;
     descriptionKey: string;
     gradient: string;
-}
+};
 
 export const DEFAULT_HUNGER_LEVELS: FdUiSatietyScaleLevel[] = [
     {

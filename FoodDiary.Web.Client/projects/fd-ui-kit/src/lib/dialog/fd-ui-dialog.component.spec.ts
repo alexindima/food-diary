@@ -21,11 +21,11 @@ import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 })
 class DialogWithCustomHeaderHostComponent {}
 
-interface DialogTestContext {
+type DialogTestContext = {
     component: FdUiDialogComponent;
     dialogRefSpy: { close: ReturnType<typeof vi.fn> };
     fixture: ComponentFixture<FdUiDialogComponent>;
-}
+};
 
 function createDialogComponent(data: FdUiDialogData): DialogTestContext {
     const dialogRefSpy = { close: vi.fn() };

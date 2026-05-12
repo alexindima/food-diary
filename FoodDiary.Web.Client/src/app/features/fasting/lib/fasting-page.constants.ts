@@ -1,7 +1,7 @@
-export interface FastingEmojiScaleOption {
+export type FastingEmojiScaleOption = {
     value: number;
     emoji: string;
-}
+};
 
 export const FASTING_WARNING_THRESHOLD_HOURS = 72;
 export const FASTING_HARD_STOP_THRESHOLD_HOURS = 168;

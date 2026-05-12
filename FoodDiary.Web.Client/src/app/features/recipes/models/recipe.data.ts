@@ -8,7 +8,7 @@ export enum RecipeVisibility {
     Public = 'Public',
 }
 
-export interface Recipe {
+export type Recipe = {
     id: string;
     name: string;
     description?: string | null;
@@ -42,9 +42,9 @@ export interface Recipe {
     nutrientChartData?: NutrientData;
     isFavorite?: boolean;
     favoriteRecipeId?: string | null;
-}
+};
 
-export interface RecipeStep {
+export type RecipeStep = {
     id: string;
     stepNumber: number;
     title?: string | null;
@@ -52,9 +52,9 @@ export interface RecipeStep {
     imageUrl?: string | null;
     imageAssetId?: string | null;
     ingredients: RecipeIngredient[];
-}
+};
 
-export interface RecipeIngredient {
+export type RecipeIngredient = {
     id: string;
     amount: number;
     productId?: string | null;
@@ -69,20 +69,20 @@ export interface RecipeIngredient {
     productAlcoholPerBase?: number | null;
     nestedRecipeId?: string | null;
     nestedRecipeName?: string | null;
-}
+};
 
-export interface RecipeFilters {
+export type RecipeFilters = {
     search?: string | null;
-}
+};
 
-export interface RecipeOverview {
+export type RecipeOverview = {
     recentItems: Recipe[];
     allRecipes: PageOf<Recipe>;
     favoriteItems: FavoriteRecipe[];
     favoriteTotalCount: number;
-}
+};
 
-export interface FavoriteRecipe {
+export type FavoriteRecipe = {
     id: string;
     recipeId: string;
     name?: string | null;
@@ -93,9 +93,9 @@ export interface FavoriteRecipe {
     servings: number;
     totalTimeMinutes?: number | null;
     ingredientCount: number;
-}
+};
 
-export interface RecipeDto {
+export type RecipeDto = {
     name: string;
     description?: string | null;
     comment?: string | null;
@@ -114,18 +114,18 @@ export interface RecipeDto {
     manualFiber?: number | null;
     manualAlcohol?: number | null;
     steps: RecipeStepDto[];
-}
+};
 
-export interface RecipeStepDto {
+export type RecipeStepDto = {
     title?: string | null;
     description: string;
     imageUrl?: string | null;
     imageAssetId?: string | null;
     ingredients: RecipeIngredientDto[];
-}
+};
 
-export interface RecipeIngredientDto {
+export type RecipeIngredientDto = {
     productId?: string;
     nestedRecipeId?: string;
     amount: number;
-}
+};

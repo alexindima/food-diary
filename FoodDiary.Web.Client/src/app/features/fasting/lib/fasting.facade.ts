@@ -45,10 +45,10 @@ const HISTORY_TO_MONTH_OFFSET = 2;
 const DEFAULT_FIRST_REMINDER_HOURS = 12;
 const DEFAULT_FOLLOW_UP_REMINDER_HOURS = 20;
 
-interface FastingPromptState {
+type FastingPromptState = {
     dismissed?: boolean;
     snoozedUntilUtc?: string;
-}
+};
 
 @Injectable({ providedIn: 'root' })
 export class FastingFacade {

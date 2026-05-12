@@ -1,17 +1,17 @@
 import type { BillingPlan, BillingProvider } from '../models/billing.models';
 
-export interface PremiumOverviewBadgesViewModel {
+export type PremiumOverviewBadgesViewModel = {
     planLabelKey: string | null;
     statusLabelKey: string;
-}
+};
 
-export interface PremiumOverviewCopyState {
+export type PremiumOverviewCopyState = {
     stateLabelKey: string;
     periodLabelKey: string;
     showCancelAtPeriodEndBanner: boolean;
-}
+};
 
-export interface PremiumPlanCardViewModel {
+export type PremiumPlanCardViewModel = {
     plan: BillingPlan;
     titleKey: string;
     descriptionKey: string;
@@ -20,12 +20,12 @@ export interface PremiumPlanCardViewModel {
     kickerKey: string | null;
     isLoading: boolean;
     providerOptions: PremiumProviderOptionViewModel[];
-}
+};
 
-export interface PremiumProviderOptionViewModel {
+export type PremiumProviderOptionViewModel = {
     provider: BillingProvider;
     label: string;
-}
+};
 
 export type PremiumCheckoutRequest = {
     plan: BillingPlan;

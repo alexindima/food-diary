@@ -8,13 +8,13 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-export interface MealListFiltersDialogData {
+export type MealListFiltersDialogData = {
     dateRange: FdUiDateRangeValue | null;
-}
+};
 
-export interface MealListFiltersDialogResult {
+export type MealListFiltersDialogResult = {
     dateRange: FdUiDateRangeValue | null;
-}
+};
 
 @Component({
     selector: 'fd-meal-list-filters-dialog',

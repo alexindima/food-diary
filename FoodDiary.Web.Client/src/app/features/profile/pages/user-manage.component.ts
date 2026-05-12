@@ -1503,12 +1503,12 @@ export class UserManageComponent {
     }
 }
 
-interface ProfileStatusViewModel {
+type ProfileStatusViewModel = {
     key: string;
     tone: 'success' | 'warning' | 'danger' | 'muted';
-}
+};
 
-interface PasswordActionState {
+type PasswordActionState = {
     buttonLabelKey: string;
     descriptionKey: string;
-}
+};

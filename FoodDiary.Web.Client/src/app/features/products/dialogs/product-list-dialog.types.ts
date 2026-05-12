@@ -1,6 +1,6 @@
 import type { Product } from '../models/product.data';
 
-export interface ProductSelectItemViewModel {
+export type ProductSelectItemViewModel = {
     product: Product;
     imageUrl: string | undefined;
-}
+};

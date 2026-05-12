@@ -9,7 +9,7 @@ import { EntityCardComponent } from '../entity-card/entity-card.component';
 
 const QUALITY_SCORE_MAX = 100;
 
-export interface ProductCardItem {
+export type ProductCardItem = {
     id?: string;
     name: string;
     brand?: string | null;
@@ -25,7 +25,7 @@ export interface ProductCardItem {
     qualityGrade?: QualityGrade | null;
     isFavorite?: boolean;
     favoriteProductId?: string | null;
-}
+};
 
 @Component({
     selector: 'fd-product-card',

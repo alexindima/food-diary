@@ -114,8 +114,8 @@ export class ExplorePageComponent {
     }
 }
 
-interface ExploreSortAction {
+type ExploreSortAction = {
     value: 'newest' | 'popular';
     labelKey: string;
     variant: 'primary' | 'outline';
-}
+};

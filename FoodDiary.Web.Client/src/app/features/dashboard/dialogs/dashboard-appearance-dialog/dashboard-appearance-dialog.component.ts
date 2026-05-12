@@ -16,10 +16,10 @@ import {
     isAppUiStyleName,
 } from '../../../../theme/app-theme.config';
 
-export interface DashboardAppearanceDialogData {
+export type DashboardAppearanceDialogData = {
     theme: AppThemeName;
     uiStyle: AppUiStyleName;
-}
+};
 
 @Component({
     selector: 'fd-dashboard-appearance-dialog',

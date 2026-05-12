@@ -12,20 +12,20 @@ import type { FastingCheckIn } from '../../models/fasting.data';
 
 const INITIAL_CHART_RESIZE_DELAY_MS = 180;
 
-export interface FastingCheckInChartDialogData {
+export type FastingCheckInChartDialogData = {
     title: string;
     subtitle: string;
     checkIns: FastingCheckIn[];
-}
+};
 
-interface FastingCheckInChartPoint {
+type FastingCheckInChartPoint = {
     checkedInAtUtc: string;
     hungerLevel: number;
     energyLevel: number;
     moodLevel: number;
     symptoms: string[];
     notes: string | null;
-}
+};
 
 @Component({
     selector: 'fd-fasting-checkin-chart-dialog',

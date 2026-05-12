@@ -7,12 +7,12 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 
 export type FastingEndConfirmDialogResult = 'confirm' | 'cancel';
 
-export interface FastingEndConfirmDialogData {
+export type FastingEndConfirmDialogData = {
     title: string;
     message: string;
     confirmLabel: string;
     cancelLabel: string;
-}
+};
 
 @Component({
     selector: 'fd-fasting-end-confirm-dialog',

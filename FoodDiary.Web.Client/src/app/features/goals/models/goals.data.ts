@@ -1,4 +1,4 @@
-export interface GoalsResponse {
+export type GoalsResponse = {
     dailyCalorieTarget?: number | null;
     proteinTarget?: number | null;
     fatTarget?: number | null;
@@ -15,9 +15,9 @@ export interface GoalsResponse {
     fridayCalories?: number | null;
     saturdayCalories?: number | null;
     sundayCalories?: number | null;
-}
+};
 
-export interface UpdateGoalsRequest {
+export type UpdateGoalsRequest = {
     dailyCalorieTarget?: number | null;
     proteinTarget?: number | null;
     fatTarget?: number | null;
@@ -34,7 +34,7 @@ export interface UpdateGoalsRequest {
     fridayCalories?: number | null;
     saturdayCalories?: number | null;
     sundayCalories?: number | null;
-}
+};
 
 export const DAYS_OF_WEEK = [
     { key: 'mondayCalories' as const, labelKey: 'GOALS_PAGE.DAY_MONDAY' },

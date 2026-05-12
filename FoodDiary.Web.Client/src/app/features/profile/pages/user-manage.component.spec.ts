@@ -317,19 +317,19 @@ describe('UserManageComponent profile normalization and intents', () => {
     });
 });
 
-interface DietologistServiceMock {
+type DietologistServiceMock = {
     getRelationship: ReturnType<typeof vi.fn>;
     invite: ReturnType<typeof vi.fn>;
     updatePermissions: ReturnType<typeof vi.fn>;
     revokeRelationship: ReturnType<typeof vi.fn>;
-}
+};
 
-interface NotificationServiceMock {
+type NotificationServiceMock = {
     scheduleTestNotification: ReturnType<typeof vi.fn>;
     notificationsChangedVersion: ReturnType<typeof signal<number>>;
-}
+};
 
-interface ProfileManageFacadeMock {
+type ProfileManageFacadeMock = {
     user: WritableSignal<User | null>;
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
@@ -352,7 +352,7 @@ interface ProfileManageFacadeMock {
     refreshWebPushSubscriptions: ReturnType<typeof vi.fn>;
     removeWebPushSubscription: ReturnType<typeof vi.fn>;
     openAdminPanel: ReturnType<typeof vi.fn>;
-}
+};
 
 async function createComponentAsync(
     relationship: DietologistRelationship | null,

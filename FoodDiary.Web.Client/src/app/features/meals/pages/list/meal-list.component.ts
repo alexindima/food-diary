@@ -317,8 +317,8 @@ export class MealListComponent {
     }
 }
 
-interface SearchFormValues {
+type SearchFormValues = {
     dateRange: FdUiDateRangeValue | null;
-}
+};
 
 type SearchFormGroup = FormGroupControls<SearchFormValues>;

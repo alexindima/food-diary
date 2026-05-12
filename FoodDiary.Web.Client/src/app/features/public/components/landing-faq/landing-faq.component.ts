@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-export interface LandingFaqItem {
+export type LandingFaqItem = {
     questionKey: string;
     answerKey: string;
-}
+};
 
-export interface LandingFaqGuide {
+export type LandingFaqGuide = {
     path: string;
     labelKey: string;
-}
+};
 
 @Component({
     selector: 'fd-landing-faq',

@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { type Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, type Observable, of } from 'rxjs';
 
 import { RecipeLookupService } from '../../../shared/api/recipe-lookup.service';
 import type { RecipeLookup, RecipeLookupIngredient } from '../../../shared/models/recipe-lookup.data';

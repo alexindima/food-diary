@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 
 import type { FdUiRadioOption } from './fd-ui-radio.types';
 
-interface FdUiRadioOptionKeydownEvent {
+type FdUiRadioOptionKeydownEvent = {
     index: number;
     event: KeyboardEvent;
-}
+};
 
 @Component({
     selector: 'fd-ui-radio-options',

@@ -25,13 +25,13 @@ let nextDialogId = 0;
 export type FdUiDialogSize = 'sm' | 'md' | 'lg' | 'xl';
 export type FdUiDialogBodyScrollInset = 'default' | 'edge';
 
-export interface FdUiDialogData {
+export type FdUiDialogData = {
     title?: string;
     subtitle?: string;
     size?: FdUiDialogSize;
     dismissible?: boolean;
     bodyScrollInset?: FdUiDialogBodyScrollInset;
-}
+};
 
 @Component({
     selector: 'fd-ui-dialog',

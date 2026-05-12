@@ -8,7 +8,7 @@ import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight
 import type { DailyAdvice } from './daily-advice.data';
 import type { TdeeInsight } from './tdee-insight.data';
 
-export interface DashboardSnapshot {
+export type DashboardSnapshot = {
     date: string;
     dailyGoal: number;
     weeklyCalorieGoal: number;
@@ -26,9 +26,9 @@ export interface DashboardSnapshot {
     caloriesBurned?: number;
     tdeeInsight?: TdeeInsight | null;
     currentCycle?: CycleResponse | null;
-}
+};
 
-export interface DashboardStatistics {
+export type DashboardStatistics = {
     totalCalories: number;
     averageProteins: number;
     averageFats: number;
@@ -38,36 +38,36 @@ export interface DashboardStatistics {
     fatGoal?: number | null;
     carbGoal?: number | null;
     fiberGoal?: number | null;
-}
+};
 
-export interface WeeklyCaloriesPoint {
+export type WeeklyCaloriesPoint = {
     date: string;
     calories: number;
-}
+};
 
-export interface DashboardWeight {
+export type DashboardWeight = {
     latest: WeightEntrySummary | null;
     previous: WeightEntrySummary | null;
     desired: number | null;
-}
+};
 
-export interface DashboardWaist {
+export type DashboardWaist = {
     latest: WaistEntrySummary | null;
     previous: WaistEntrySummary | null;
     desired: number | null;
-}
+};
 
-export interface DashboardMeals {
+export type DashboardMeals = {
     items: Meal[];
     total: number;
-}
+};
 
-export interface WeightEntrySummary {
+export type WeightEntrySummary = {
     date: string;
     weight: number;
-}
+};
 
-export interface WaistEntrySummary {
+export type WaistEntrySummary = {
     date: string;
     circumference: number;
-}
+};

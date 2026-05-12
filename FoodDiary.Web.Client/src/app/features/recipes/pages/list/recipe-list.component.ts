@@ -415,9 +415,9 @@ export class RecipeListComponent {
     }
 }
 
-interface RecipeSearchFormValues {
+type RecipeSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
-}
+};
 
 type RecipeSearchFormGroup = FormGroupControls<RecipeSearchFormValues>;

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
-export interface UnsavedChangesHandler {
+export type UnsavedChangesHandler = {
     hasChanges: () => boolean;
     save: () => void | boolean | Promise<boolean>;
     discard: () => void;
-}
+};
 
 @Injectable({ providedIn: 'root' })
 export class UnsavedChangesService {

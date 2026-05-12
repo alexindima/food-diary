@@ -335,7 +335,7 @@ function createDialogServiceStub(): Pick<FdUiDialogService, 'open'> {
     } as unknown as Pick<FdUiDialogService, 'open'>;
 }
 
-interface FastingFacadeStub {
+type FastingFacadeStub = {
     isActive: Signal<boolean>;
     currentSession: WritableSignal<FastingSession | null>;
     selectedMode: WritableSignal<string>;
@@ -374,7 +374,7 @@ interface FastingFacadeStub {
     reduceTargetByHours: () => void;
     skipCyclicDay: () => void;
     postponeCyclicDay: () => void;
-}
+};
 
 function createFastingFacadeStub(): FastingFacadeStub {
     const currentSession = signal<FastingSession | null>(null);

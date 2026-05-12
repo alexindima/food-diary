@@ -291,7 +291,7 @@ export class MealItemsListComponent {
     }
 }
 
-interface ManualItemRowViewModel {
+type ManualItemRowViewModel = {
     index: number;
     group: FormGroup<ConsumptionItemFormData>;
     imageUrl: string | null;
@@ -302,4 +302,4 @@ interface ManualItemRowViewModel {
     proteinsLabel: string;
     fatsLabel: string;
     carbsLabel: string;
-}
+};

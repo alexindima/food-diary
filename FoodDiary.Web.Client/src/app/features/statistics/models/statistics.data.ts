@@ -1,4 +1,4 @@
-export interface AggregatedStatistics {
+export type AggregatedStatistics = {
     dateFrom: Date;
     dateTo: Date;
     totalCalories: number;
@@ -6,34 +6,34 @@ export interface AggregatedStatistics {
     averageFats: number;
     averageCarbs: number;
     averageFiber: number;
-}
+};
 
-export interface GetStatisticsDto {
+export type GetStatisticsDto = {
     dateFrom: Date;
     dateTo: Date;
     quantizationDays?: number;
-}
+};
 
-export interface MappedStatistics {
+export type MappedStatistics = {
     date: Date[];
     calories: number[];
     nutrientsStatistic: NutrientsStatistics;
     aggregatedNutrients: AggregatedNutrients;
-}
+};
 
-export interface NutrientsStatistics {
+export type NutrientsStatistics = {
     proteins: number[];
     fats: number[];
     carbs: number[];
     fiber: number[];
-}
+};
 
-export interface AggregatedNutrients {
+export type AggregatedNutrients = {
     proteins: number;
     fats: number;
     carbs: number;
     fiber: number;
-}
+};
 
 export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatistics {
     const dates: Date[] = [];

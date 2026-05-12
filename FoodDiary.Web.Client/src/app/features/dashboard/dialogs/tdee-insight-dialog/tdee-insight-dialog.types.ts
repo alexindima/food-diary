@@ -1,8 +1,8 @@
 import type { TdeeInsight } from '../../models/tdee-insight.data';
 
-export interface TdeeInsightDialogData {
+export type TdeeInsightDialogData = {
     insight: TdeeInsight | null;
-}
+};
 
 export type TdeeInsightDialogAction =
     | { type: 'profile' }
@@ -11,10 +11,10 @@ export type TdeeInsightDialogAction =
     | { type: 'goals' }
     | { type: 'applyGoal'; target: number };
 
-export interface TdeeSetupItem {
+export type TdeeSetupItem = {
     readonly key: string;
     readonly icon: string;
     readonly complete: boolean;
     readonly titleKey: string;
     readonly textKey: string;
-}
+};

@@ -272,7 +272,7 @@ describe('FastingFacade setup modes and target changes', () => {
     });
 });
 
-interface FastingServiceMock {
+type FastingServiceMock = {
     getOverview: ReturnType<typeof vi.fn>;
     getHistory: ReturnType<typeof vi.fn>;
     updateCheckIn: ReturnType<typeof vi.fn>;
@@ -282,7 +282,7 @@ interface FastingServiceMock {
     reduceTarget: ReturnType<typeof vi.fn>;
     skipCyclicDay: ReturnType<typeof vi.fn>;
     postponeCyclicDay: ReturnType<typeof vi.fn>;
-}
+};
 
 function setupFacade(): void {
     vi.useFakeTimers();

@@ -7,14 +7,14 @@ import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { Recipe, RecipeDto, RecipeFilters, RecipeOverview } from '../models/recipe.data';
 
-export interface RecipeOverviewQuery {
+export type RecipeOverviewQuery = {
     page: number;
     limit: number;
     filters?: RecipeFilters;
     includePublic?: boolean;
     recentLimit?: number;
     favoriteLimit?: number;
-}
+};
 
 const DEFAULT_RECENT_RECIPE_LIMIT = 10;
 const DEFAULT_RECIPE_OVERVIEW_RECENT_LIMIT = 10;

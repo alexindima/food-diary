@@ -1,32 +1,32 @@
-export interface WeightEntry {
+export type WeightEntry = {
     id: string;
     userId: string;
     date: string;
     weight: number;
-}
+};
 
-export interface CreateWeightEntryPayload {
+export type CreateWeightEntryPayload = {
     date: string;
     weight: number;
-}
+};
 
 export type UpdateWeightEntryPayload = CreateWeightEntryPayload;
 
-export interface WeightEntryFilters {
+export type WeightEntryFilters = {
     dateFrom?: string;
     dateTo?: string;
     limit?: number;
     sort?: 'asc' | 'desc';
-}
+};
 
-export interface WeightEntrySummaryPoint {
+export type WeightEntrySummaryPoint = {
     startDate: string;
     endDate: string;
     averageWeight: number;
-}
+};
 
-export interface WeightEntrySummaryFilters {
+export type WeightEntrySummaryFilters = {
     dateFrom: string;
     dateTo: string;
     quantizationDays: number;
-}
+};

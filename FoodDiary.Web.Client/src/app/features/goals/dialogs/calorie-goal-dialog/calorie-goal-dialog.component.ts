@@ -10,9 +10,9 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 import { GoalsService } from '../../api/goals.service';
 
-export interface CalorieGoalDialogData {
+export type CalorieGoalDialogData = {
     dailyCalorieTarget?: number | null;
-}
+};
 
 @Component({
     selector: 'fd-calorie-goal-dialog',

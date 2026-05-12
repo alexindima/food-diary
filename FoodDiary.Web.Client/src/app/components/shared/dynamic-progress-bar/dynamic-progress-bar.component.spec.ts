@@ -29,11 +29,11 @@ const NEGATIVE_MAX = -10;
 const MAX_200 = 200;
 const MAX_1000 = 1000;
 
-interface TestContext {
+type TestContext = {
     component: () => DynamicProgressBarComponent;
     fixture: () => ComponentFixture<DynamicProgressBarComponent>;
     setInputs: (current: number, max: number) => void;
-}
+};
 
 describe('DynamicProgressBarComponent', () => {
     let component: DynamicProgressBarComponent;

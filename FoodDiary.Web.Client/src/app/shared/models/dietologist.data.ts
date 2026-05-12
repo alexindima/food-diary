@@ -1,4 +1,4 @@
-export interface DietologistPermissions {
+export type DietologistPermissions = {
     shareProfile: boolean;
     shareMeals: boolean;
     shareStatistics: boolean;
@@ -7,9 +7,9 @@ export interface DietologistPermissions {
     shareGoals: boolean;
     shareHydration: boolean;
     shareFasting: boolean;
-}
+};
 
-export interface ClientSummary {
+export type ClientSummary = {
     userId: string;
     email: string;
     firstName: string | null;
@@ -21,9 +21,9 @@ export interface ClientSummary {
     activityLevel: string | null;
     permissions: DietologistPermissions;
     acceptedAtUtc: string;
-}
+};
 
-export interface DietologistInfo {
+export type DietologistInfo = {
     invitationId: string;
     dietologistUserId: string;
     email: string;
@@ -31,9 +31,9 @@ export interface DietologistInfo {
     lastName: string | null;
     permissions: DietologistPermissions;
     acceptedAtUtc: string;
-}
+};
 
-export interface DietologistRelationship {
+export type DietologistRelationship = {
     invitationId: string;
     status: string;
     email: string;
@@ -44,9 +44,9 @@ export interface DietologistRelationship {
     createdAtUtc: string;
     expiresAtUtc: string;
     acceptedAtUtc: string | null;
-}
+};
 
-export interface DietologistInvitationForCurrentUser {
+export type DietologistInvitationForCurrentUser = {
     invitationId: string;
     clientUserId: string;
     clientEmail: string;
@@ -55,9 +55,9 @@ export interface DietologistInvitationForCurrentUser {
     status: string;
     createdAtUtc: string;
     expiresAtUtc: string;
-}
+};
 
-export interface InviteDietologistRequest {
+export type InviteDietologistRequest = {
     dietologistEmail: string;
     permissions: DietologistPermissions;
-}
+};

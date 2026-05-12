@@ -4,29 +4,29 @@ import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 
-export interface NutritionControlNames {
+export type NutritionControlNames = {
     calories: string;
     proteins: string;
     fats: string;
     carbs: string;
     fiber: string;
     alcohol: string;
-}
+};
 
-export interface NutritionMacroSegment {
+export type NutritionMacroSegment = {
     key: 'proteins' | 'fats' | 'carbs';
     percent: number;
-}
+};
 
-export interface NutritionMacroState {
+export type NutritionMacroState = {
     isEmpty: boolean;
     segments: NutritionMacroSegment[];
-}
+};
 
-export interface NutritionMismatchWarning {
+export type NutritionMismatchWarning = {
     expectedCalories: number;
     actualCalories: number;
-}
+};
 
 @Component({
     selector: 'fd-nutrition-editor',
@@ -75,11 +75,11 @@ export class NutritionEditorComponent {
     });
 }
 
-interface NutritionMacroBarViewModel {
+type NutritionMacroBarViewModel = {
     isEmpty: boolean;
     segments: NutritionMacroSegmentViewModel[];
-}
+};
 
-interface NutritionMacroSegmentViewModel extends NutritionMacroSegment {
+type NutritionMacroSegmentViewModel = {
     color: string;
-}
+} & NutritionMacroSegment;

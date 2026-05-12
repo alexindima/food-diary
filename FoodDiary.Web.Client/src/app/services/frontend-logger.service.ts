@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
 
-interface FrontendLoggerOptions {
+type FrontendLoggerOptions = {
     devOnly?: boolean;
-}
+};
 
 @Injectable({
     providedIn: 'root',

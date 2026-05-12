@@ -241,7 +241,7 @@ function encodeSegment(value: Record<string, unknown>): string {
     return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
 }
 
-interface ClientApiMock {
+type ClientApiMock = {
     matches: (pathname: string) => boolean;
     createResponse: () => unknown;
-}
+};

@@ -12,10 +12,10 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { ReportService } from '../../api/report.service';
 import type { CreateReportDto } from '../../models/report.data';
 
-export interface ReportDialogData {
+export type ReportDialogData = {
     targetType: 'Recipe' | 'Comment';
     targetId: string;
-}
+};
 
 const REPORT_REASON_MAX_LENGTH = 1000;
 

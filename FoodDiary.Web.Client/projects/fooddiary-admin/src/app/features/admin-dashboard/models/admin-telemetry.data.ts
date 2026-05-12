@@ -1,4 +1,4 @@
-export interface FastingTelemetryPresetSummary {
+export type FastingTelemetryPresetSummary = {
     presetId: string;
     selectionCount: number;
     timingSaveCount: number;
@@ -9,9 +9,9 @@ export interface FastingTelemetryPresetSummary {
     savedCheckIns: number;
     completionRatePercent: number;
     checkInRatePercent: number;
-}
+};
 
-export interface FastingTelemetrySummary {
+export type FastingTelemetrySummary = {
     windowHours: number;
     generatedAtUtc: string;
     startedSessions: number;
@@ -27,4 +27,4 @@ export interface FastingTelemetrySummary {
     lastCheckInAtUtc: string | null;
     lastEventAtUtc: string | null;
     topPresets: FastingTelemetryPresetSummary[];
-}
+};

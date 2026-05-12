@@ -60,7 +60,7 @@ export class ConfirmPasswordResetRequest {
     }
 }
 
-export interface TelegramLoginWidgetRequest {
+export type TelegramLoginWidgetRequest = {
     id: number;
     authDate: number;
     hash: string;
@@ -68,14 +68,14 @@ export interface TelegramLoginWidgetRequest {
     firstName?: string;
     lastName?: string;
     photoUrl?: string;
-}
+};
 
-export interface TelegramAuthRequest {
+export type TelegramAuthRequest = {
     initData: string;
-}
+};
 
-export interface AuthResponse {
+export type AuthResponse = {
     accessToken: string;
     refreshToken: string;
     user: User;
-}
+};

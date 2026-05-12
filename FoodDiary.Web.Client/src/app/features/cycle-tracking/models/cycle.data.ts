@@ -1,4 +1,4 @@
-export interface DailySymptoms {
+export type DailySymptoms = {
     pain: number;
     mood: number;
     edema: number;
@@ -6,24 +6,24 @@ export interface DailySymptoms {
     energy: number;
     sleepQuality: number;
     libido: number;
-}
+};
 
-export interface CycleDay {
+export type CycleDay = {
     id: string;
     cycleId: string;
     date: string;
     isPeriod: boolean;
     symptoms: DailySymptoms;
     notes?: string | null;
-}
+};
 
-export interface CyclePredictions {
+export type CyclePredictions = {
     nextPeriodStart?: string | null;
     ovulationDate?: string | null;
     pmsStart?: string | null;
-}
+};
 
-export interface CycleResponse {
+export type CycleResponse = {
     id: string;
     userId: string;
     startDate: string;
@@ -32,18 +32,18 @@ export interface CycleResponse {
     notes?: string | null;
     days: CycleDay[];
     predictions?: CyclePredictions | null;
-}
+};
 
-export interface CreateCyclePayload {
+export type CreateCyclePayload = {
     startDate: string;
     averageLength?: number | null;
     lutealLength?: number | null;
     notes?: string | null;
-}
+};
 
-export interface UpsertCycleDayPayload {
+export type UpsertCycleDayPayload = {
     date: string;
     isPeriod: boolean;
     symptoms: DailySymptoms;
     notes?: string | null;
-}
+};

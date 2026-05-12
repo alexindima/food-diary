@@ -7,7 +7,7 @@ import { dietologistGuard } from './guards/dietologist.guard';
 import { loggedInGuard } from './guards/logged-in.guard';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 
-interface PublicSeoLandingRouteConfig {
+type PublicSeoLandingRouteConfig = {
     path: string;
     titleKey: string;
     descriptionKey: string;
@@ -16,7 +16,7 @@ interface PublicSeoLandingRouteConfig {
     stepKeys: readonly string[];
     faqKeys: readonly string[];
     relatedPaths: readonly string[];
-}
+};
 
 const publicSeoLanding = ({
     path,

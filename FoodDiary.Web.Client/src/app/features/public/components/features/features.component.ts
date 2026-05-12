@@ -65,7 +65,7 @@ export class FeaturesComponent {
     }
 }
 
-interface FeatureCategory {
+type FeatureCategory = {
     icon: string;
     key: string;
     labelKey: string;
@@ -75,11 +75,11 @@ interface FeatureCategory {
     tabId: string;
     panelId: string;
     itemKeys: FeatureItem[];
-}
+};
 
-interface FeatureItem {
+type FeatureItem = {
     key: string;
     kickerKey: string;
     titleKey: string;
     descriptionKey: string;
-}
+};

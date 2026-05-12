@@ -1,38 +1,38 @@
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 
-export interface EntityCardNutrition {
+export type EntityCardNutrition = {
     proteins: number;
     fats: number;
     carbs: number;
     fiber: number;
     alcohol: number;
-}
+};
 
-export interface EntityCardQuality {
+export type EntityCardQuality = {
     score: number;
     grade: QualityGrade;
-}
+};
 
-export interface EntityCardCollageImage {
+export type EntityCardCollageImage = {
     url: string;
     alt: string;
-}
+};
 
-export interface EntityCardCollageState {
+export type EntityCardCollageState = {
     images: EntityCardCollageImage[];
     count: number;
     hasImages: boolean;
-}
+};
 
-export interface EntityCardNormalizedQuality extends EntityCardQuality {
+export type EntityCardNormalizedQuality = {
     hintKey: string;
-}
+} & EntityCardQuality;
 
-export interface EntityCardPreviewInteractionState {
+export type EntityCardPreviewInteractionState = {
     hint: string | null;
     role: string | null;
     tabIndex: string | null;
     ariaLabel: string | null;
-}
+};
 
 export type EntityCardOwnershipIcon = 'person' | 'groups' | null;

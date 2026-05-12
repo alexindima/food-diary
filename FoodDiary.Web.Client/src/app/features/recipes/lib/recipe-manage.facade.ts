@@ -15,14 +15,14 @@ import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormData, NutritionScaleMode, StepFormData } from '../components/manage/recipe-manage.types';
 import type { Recipe, RecipeDto } from '../models/recipe.data';
 
-export interface RecipeNutritionSummary {
+export type RecipeNutritionSummary = {
     calories: number;
     proteins: number;
     fats: number;
     carbs: number;
     fiber: number;
     alcohol: number;
-}
+};
 
 const NUTRIENT_ROUNDING_FACTOR = 100;
 

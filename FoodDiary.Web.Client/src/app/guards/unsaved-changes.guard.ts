@@ -1,8 +1,7 @@
 import { inject } from '@angular/core';
 import type { CanDeactivateFn } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { from, isObservable, type Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { from, isObservable, type Observable, of, switchMap } from 'rxjs';
 
 import {
     UnsavedChangesDialogComponent,

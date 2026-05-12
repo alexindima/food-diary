@@ -15,7 +15,7 @@ export class WeeklyCheckInSuggestionsCardComponent {
     public readonly suggestions = input.required<WeeklyCheckInSuggestionViewModel[]>();
 }
 
-interface WeeklyCheckInSuggestionViewModel {
+type WeeklyCheckInSuggestionViewModel = {
     key: string;
     labelKey: string;
-}
+};

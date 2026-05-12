@@ -7,15 +7,15 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { WearableService } from '../../api/wearable.service';
 import type { WearableConnection, WearableProvider } from '../../models/wearable.data';
 
-interface ProviderConfig {
+type ProviderConfig = {
     id: WearableProvider;
     name: string;
     icon: string;
-}
+};
 
-interface ProviderRow extends ProviderConfig {
+type ProviderRow = {
     connection: WearableConnection | undefined;
-}
+} & ProviderConfig;
 
 @Component({
     selector: 'fd-wearable-connections',

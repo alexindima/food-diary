@@ -167,7 +167,7 @@ export class MealAiSessionsComponent {
     }
 }
 
-interface AiSessionRowViewModel {
+type AiSessionRowViewModel = {
     session: ConsumptionAiSessionManageDto;
     index: number;
     itemCount: number;
@@ -178,9 +178,9 @@ interface AiSessionRowViewModel {
     proteinsLabel: string;
     fatsLabel: string;
     carbsLabel: string;
-}
+};
 
-interface AiSessionItemViewModel {
+type AiSessionItemViewModel = {
     nameLabel: string;
     amountLabel: string;
-}
+};

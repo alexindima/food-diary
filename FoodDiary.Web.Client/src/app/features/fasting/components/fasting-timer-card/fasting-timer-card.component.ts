@@ -13,7 +13,7 @@ import { FastingControlsComponent } from '../fasting-controls/fasting-controls.c
 import { type FastingTimerCardDisplayGroup, FastingTimerCardGroupsComponent } from './fasting-timer-card-groups.component';
 import { type FastingTimerCardDisplayItem, FastingTimerCardItemsComponent } from './fasting-timer-card-items.component';
 
-interface FastingTimerCardState {
+type FastingTimerCardState = {
     isActive: boolean;
     isOvertime: boolean;
     currentSessionCompleted: boolean;
@@ -35,7 +35,7 @@ interface FastingTimerCardState {
     nextStageTitleKey: string | null;
     nextStageFormatted: string | null;
     showGlow: boolean;
-}
+};
 
 const RING_RADIUS = 90;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -492,8 +492,8 @@ export class FastingTimerCardComponent {
     }
 }
 
-interface FastingTimerCardChrome {
+type FastingTimerCardChrome = {
     density: 'compact' | 'default';
     title: string;
     showPageControls: boolean;
-}
+};

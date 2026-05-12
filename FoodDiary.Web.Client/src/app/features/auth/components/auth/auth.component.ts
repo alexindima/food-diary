@@ -827,10 +827,10 @@ export class AuthComponent {
     }
 }
 
-interface LoginFormValues {
+type LoginFormValues = {
     email: string;
     password: string;
     rememberMe: boolean;
-}
+};
 
 type LoginFormGroup = FormGroupControls<LoginFormValues>;

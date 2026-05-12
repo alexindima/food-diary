@@ -1,7 +1,7 @@
 export type BillingPlan = 'monthly' | 'yearly';
 export type BillingProvider = string;
 
-export interface BillingOverview {
+export type BillingOverview = {
     isPremium: boolean;
     subscriptionStatus: string | null;
     plan: BillingPlan | null;
@@ -15,14 +15,14 @@ export interface BillingOverview {
     provider: string;
     paddleClientToken: string | null;
     availableProviders: BillingProvider[];
-}
+};
 
-export interface CheckoutSessionResponse {
+export type CheckoutSessionResponse = {
     sessionId: string;
     url: string;
     plan: BillingPlan;
-}
+};
 
-export interface PortalSessionResponse {
+export type PortalSessionResponse = {
     url: string;
-}
+};

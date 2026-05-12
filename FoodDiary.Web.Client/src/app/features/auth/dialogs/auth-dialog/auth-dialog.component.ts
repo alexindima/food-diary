@@ -18,8 +18,8 @@ export class AuthDialogComponent {
     }) ?? { mode: 'login', returnUrl: null, adminReturnUrl: null };
 }
 
-interface AuthDialogData {
+type AuthDialogData = {
     mode: 'login' | 'register';
     returnUrl?: string | null;
     adminReturnUrl?: string | null;
-}
+};

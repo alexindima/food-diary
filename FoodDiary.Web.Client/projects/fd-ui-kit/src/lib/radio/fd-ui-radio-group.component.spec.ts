@@ -11,12 +11,12 @@ const TEST_OPTIONS: Array<FdUiRadioOption<string>> = [
     { value: 'c', label: 'Option C' },
 ];
 
-interface RadioGroupTestContext {
+type RadioGroupTestContext = {
     component: FdUiRadioGroupComponent<string>;
     fixture: ComponentFixture<FdUiRadioGroupComponent<string>>;
     host: () => HTMLElement;
     requireElement: <T extends Element>(selector: string) => T;
-}
+};
 
 async function setupRadioGroupAsync(): Promise<RadioGroupTestContext> {
     await TestBed.configureTestingModule({

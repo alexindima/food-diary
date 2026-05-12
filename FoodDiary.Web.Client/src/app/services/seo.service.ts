@@ -10,7 +10,7 @@ const RUSSIAN_HOSTS = new Set(['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrou
 const STRUCTURED_DATA_SELECTOR = 'script[data-seo-structured-data="app"]';
 const ROOT_PATHS = new Set(['', '/']);
 
-export interface SeoData {
+export type SeoData = {
     titleKey?: string | null;
     descriptionKey?: string;
     path?: string;
@@ -18,7 +18,7 @@ export interface SeoData {
     structuredDataBaseKey?: string;
     structuredDataFeatureKeys?: readonly string[];
     structuredDataFaqKeys?: readonly string[];
-}
+};
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {

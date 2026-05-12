@@ -7,13 +7,13 @@ import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
-export interface FdUiConfirmDialogData {
+export type FdUiConfirmDialogData = {
     title?: string;
     message?: string;
     confirmLabel?: string;
     cancelLabel?: string;
     danger?: boolean;
-}
+};
 
 @Component({
     selector: 'fd-ui-confirm-dialog',

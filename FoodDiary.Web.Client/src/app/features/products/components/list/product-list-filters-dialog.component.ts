@@ -10,15 +10,15 @@ import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd
 
 import { ProductType } from '../../models/product.data';
 
-export interface ProductListFiltersDialogData {
+export type ProductListFiltersDialogData = {
     onlyMine: boolean;
     productTypes: ProductType[];
-}
+};
 
-export interface ProductListFiltersDialogResult {
+export type ProductListFiltersDialogResult = {
     onlyMine: boolean;
     productTypes: ProductType[];
-}
+};
 
 @Component({
     selector: 'fd-product-list-filters-dialog',

@@ -1,6 +1,6 @@
 import type { NotificationItem } from '../../../services/notification.service';
 
-export interface NotificationViewModel {
+export type NotificationViewModel = {
     notification: NotificationItem;
     isPasswordSetupSuggestion: boolean;
     isDietologistInvitation: boolean;
@@ -10,4 +10,4 @@ export interface NotificationViewModel {
     actionKey: string | null;
     ariaLabel: string;
     dateLabel: string;
-}
+};

@@ -1,4 +1,4 @@
-export interface TdeeInsight {
+export type TdeeInsight = {
     estimatedTdee: number | null;
     adaptiveTdee: number | null;
     bmr: number | null;
@@ -8,4 +8,4 @@ export interface TdeeInsight {
     confidence: 'none' | 'low' | 'medium' | 'high';
     dataDaysUsed: number;
     goalAdjustmentHint: string | null;
-}
+};

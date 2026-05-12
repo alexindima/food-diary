@@ -6,17 +6,17 @@ import { FdUiDialogComponent } from '../dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from '../dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from '../dialog/fd-ui-dialog-ref';
 
-export interface FdUiImagePreviewDialogData {
+export type FdUiImagePreviewDialogData = {
     imageUrl?: string;
     collageImages?: readonly FdUiImagePreviewDialogCollageImage[];
     alt?: string;
     title?: string;
-}
+};
 
-export interface FdUiImagePreviewDialogCollageImage {
+export type FdUiImagePreviewDialogCollageImage = {
     url: string;
     alt?: string;
-}
+};
 
 const MAX_COLLAGE_IMAGES = 4;
 

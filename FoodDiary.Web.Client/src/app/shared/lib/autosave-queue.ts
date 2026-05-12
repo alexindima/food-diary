@@ -1,7 +1,6 @@
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, Subject } from 'rxjs';
 
 export class AutosaveQueue<T> {
     private readonly queue = new Subject<void>();

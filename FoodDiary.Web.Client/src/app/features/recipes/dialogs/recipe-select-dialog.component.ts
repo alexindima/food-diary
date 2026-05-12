@@ -176,9 +176,9 @@ export class RecipeSelectDialogComponent {
     }
 }
 
-interface RecipeSearchFormValues {
+type RecipeSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
-}
+};
 
 type RecipeSearchFormGroup = FormGroupControls<RecipeSearchFormValues>;

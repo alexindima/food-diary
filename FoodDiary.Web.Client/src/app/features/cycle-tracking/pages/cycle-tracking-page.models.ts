@@ -1,20 +1,20 @@
 import type { CycleDay, CyclePredictions, CycleResponse } from '../models/cycle.data';
 
-export interface CycleViewModel {
+export type CycleViewModel = {
     cycle: CycleResponse;
     startDateLabel: string;
-}
+};
 
-export interface CyclePredictionViewModel {
+export type CyclePredictionViewModel = {
     prediction: CyclePredictions;
     nextPeriodStartLabel: string;
     ovulationDateLabel: string;
     pmsStartLabel: string;
-}
+};
 
-export interface CycleDayViewModel {
+export type CycleDayViewModel = {
     day: CycleDay;
     dateLabel: string;
     accentColor: string;
     badgeLabelKey: string;
-}
+};

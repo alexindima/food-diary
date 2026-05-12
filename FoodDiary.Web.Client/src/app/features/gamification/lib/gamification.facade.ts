@@ -7,10 +7,10 @@ import type { Badge, GamificationData } from '../models/gamification.data';
 const HEALTH_SCORE_RING_RADIUS = 90;
 const PERCENTAGE_MULTIPLIER = 100;
 
-export interface BadgeDisplay extends Badge {
+export type BadgeDisplay = {
     icon: string;
     nameKey: string;
-}
+} & Badge;
 
 @Injectable({ providedIn: 'root' })
 export class GamificationFacade {

@@ -9,11 +9,11 @@ import { EntityCardComponent } from '../entity-card/entity-card.component';
 
 const QUALITY_SCORE_MAX = 100;
 
-export interface RecipeCardStep {
+export type RecipeCardStep = {
     ingredients?: unknown[] | null;
-}
+};
 
-export interface RecipeCardItem {
+export type RecipeCardItem = {
     id?: string;
     name: string;
     imageUrl?: string | null;
@@ -31,7 +31,7 @@ export interface RecipeCardItem {
     steps?: RecipeCardStep[] | null;
     isFavorite?: boolean;
     favoriteRecipeId?: string | null;
-}
+};
 
 @Component({
     selector: 'fd-recipe-card',

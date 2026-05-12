@@ -16,21 +16,21 @@ export type SeoPageSlug =
     | 'protein-tracker'
     | 'meal-prep-planner';
 
-export interface SeoLandingPageData {
+export type SeoLandingPageData = {
     baseKey: string;
     featureKeys: readonly string[];
     stepKeys: readonly string[];
     faqKeys: readonly string[];
     relatedPaths: readonly SeoPageSlug[];
-}
+};
 
-export interface SeoLandingTextKeys {
+export type SeoLandingTextKeys = {
     eyebrowKey: string;
     titleKey: string;
     subtitleKey: string;
-}
+};
 
-export interface SeoLandingHeroKeys extends SeoLandingTextKeys {
+export type SeoLandingHeroKeys = {
     primaryActionKey: string;
     secondaryActionKey: string;
     chipKeys: readonly string[];
@@ -40,23 +40,23 @@ export interface SeoLandingHeroKeys extends SeoLandingTextKeys {
         textKey: string;
         itemKeys: readonly string[];
     };
-}
+} & SeoLandingTextKeys;
 
-export interface SeoLandingContentItemKeys {
+export type SeoLandingContentItemKeys = {
     key: string;
     titleKey: string;
     textKey: string;
-}
+};
 
-export interface SeoLandingFaqItemKeys {
+export type SeoLandingFaqItemKeys = {
     key: string;
     questionKey: string;
     answerKey: string;
-}
+};
 
-export interface SeoLandingCtaKeys {
+export type SeoLandingCtaKeys = {
     titleKey: string;
     subtitleKey: string;
     primaryKey: string;
     secondaryKey: string;
-}
+};

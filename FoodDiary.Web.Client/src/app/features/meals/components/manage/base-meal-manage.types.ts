@@ -45,23 +45,23 @@ export type NutritionTotals = {
 export type NutritionMode = 'auto' | 'manual';
 export type MacroKey = 'proteins' | 'fats' | 'carbs';
 
-export interface MacroBarSegment {
+export type MacroBarSegment = {
     key: MacroKey;
     percent: number;
-}
+};
 
-export interface MacroBarState {
+export type MacroBarState = {
     isEmpty: boolean;
     segments: MacroBarSegment[];
-}
+};
 
-export interface CalorieMismatchWarning {
+export type CalorieMismatchWarning = {
     expectedCalories: number;
     actualCalories: number;
-}
+};
 
-export interface MealNutritionSummaryState {
+export type MealNutritionSummaryState = {
     autoTotals: NutritionTotals;
     summaryTotals: NutritionTotals;
     warning: CalorieMismatchWarning | null;
-}
+};

@@ -21,24 +21,24 @@ import { mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
 import type { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
 
-interface AiInputBarChannelState {
+type AiInputBarChannelState = {
     analyzing: WritableSignal<boolean>;
     results: WritableSignal<FoodVisionItem[]>;
     nutritionLoading: WritableSignal<boolean>;
     nutrition: WritableSignal<FoodNutritionResponse | null>;
     errorKey: WritableSignal<string | null>;
     nutritionErrorKey: WritableSignal<string | null>;
-}
+};
 
-interface SpeechRecognitionAlternativeLike {
+type SpeechRecognitionAlternativeLike = {
     transcript: string;
-}
+};
 
-interface SpeechRecognitionResultEventLike {
+type SpeechRecognitionResultEventLike = {
     results: ArrayLike<ArrayLike<SpeechRecognitionAlternativeLike>>;
-}
+};
 
-interface SpeechRecognitionLike {
+type SpeechRecognitionLike = {
     lang: string;
     interimResults: boolean;
     maxAlternatives: number;
@@ -47,11 +47,11 @@ interface SpeechRecognitionLike {
     onend: () => void;
     start: () => void;
     stop: () => void;
-}
+};
 
-interface SpeechRecognitionConstructorLike {
+type SpeechRecognitionConstructorLike = {
     new (): SpeechRecognitionLike;
-}
+};
 
 declare global {
     interface Window {

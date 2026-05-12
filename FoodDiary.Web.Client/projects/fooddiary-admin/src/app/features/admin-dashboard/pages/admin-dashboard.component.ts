@@ -10,7 +10,7 @@ import { AdminTelemetryService } from '../api/admin-telemetry.service';
 import type { AdminDashboardSummary } from '../models/admin-dashboard.data';
 import type { FastingTelemetryPresetSummary, FastingTelemetrySummary } from '../models/admin-telemetry.data';
 
-interface FastingTelemetryViewModel {
+type FastingTelemetryViewModel = {
     windowHours: number;
     startedSessions: string;
     completedSessions: string;
@@ -20,12 +20,12 @@ interface FastingTelemetryViewModel {
     averageCompletedDurationHours: string;
     lastCheckInRelativeTime: string;
     topPresets: FastingTelemetryPresetViewModel[];
-}
+};
 
-interface FastingTelemetryPresetViewModel extends FastingTelemetryPresetSummary {
+type FastingTelemetryPresetViewModel = {
     checkInRatePercentText: string;
     completionRatePercentText: string;
-}
+} & FastingTelemetryPresetSummary;
 
 const MS_PER_MINUTE = 60_000;
 const MINUTES_PER_HOUR = 60;

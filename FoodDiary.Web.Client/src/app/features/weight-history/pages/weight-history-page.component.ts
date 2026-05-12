@@ -157,9 +157,9 @@ export class WeightHistoryPageComponent {
     }
 }
 
-interface BmiSegment {
+type BmiSegment = {
     labelKey: string;
     from: number;
     to: number;
     class: string;
-}
+};

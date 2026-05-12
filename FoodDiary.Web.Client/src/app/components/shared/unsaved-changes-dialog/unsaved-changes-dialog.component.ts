@@ -8,13 +8,13 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 
 export type UnsavedChangesDialogResult = 'save' | 'discard' | 'stay';
 
-export interface UnsavedChangesDialogData {
+export type UnsavedChangesDialogData = {
     title?: string;
     message?: string;
     saveLabel?: string;
     discardLabel?: string;
     stayLabel?: string;
-}
+};
 
 @Component({
     selector: 'fd-unsaved-changes-dialog',

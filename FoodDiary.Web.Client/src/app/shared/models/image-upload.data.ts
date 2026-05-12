@@ -1,12 +1,12 @@
-export interface ImageUploadUrlResponse {
+export type ImageUploadUrlResponse = {
     uploadUrl: string;
     fileUrl: string;
     objectKey: string;
     expiresAtUtc: string;
     assetId: string;
-}
+};
 
-export interface ImageSelection {
+export type ImageSelection = {
     url: string | null;
     assetId: string | null;
-}
+};

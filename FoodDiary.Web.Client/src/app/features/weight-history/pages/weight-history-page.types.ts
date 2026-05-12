@@ -1,14 +1,14 @@
 import type { WeightEntry } from '../models/weight-entry.data';
 
-export interface BmiSegmentViewModel {
+export type BmiSegmentViewModel = {
     labelKey: string;
     from: number;
     to: number;
     class: string;
     width: string;
-}
+};
 
-export interface WeightEntryViewModel {
+export type WeightEntryViewModel = {
     entry: WeightEntry;
     dateLabel: string;
-}
+};

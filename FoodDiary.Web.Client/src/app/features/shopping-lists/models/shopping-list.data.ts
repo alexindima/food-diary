@@ -1,13 +1,13 @@
 import type { MeasurementUnit } from '../../products/models/product.data';
 
-export interface ShoppingList {
+export type ShoppingList = {
     id: string;
     name: string;
     createdAt: string;
     items: ShoppingListItem[];
-}
+};
 
-export interface ShoppingListItem {
+export type ShoppingListItem = {
     id: string;
     shoppingListId: string;
     productId?: string | null;
@@ -17,26 +17,26 @@ export interface ShoppingListItem {
     category?: string | null;
     isChecked: boolean;
     sortOrder: number;
-}
+};
 
-export interface ShoppingListSummary {
+export type ShoppingListSummary = {
     id: string;
     name: string;
     createdAt: string;
     itemsCount: number;
-}
+};
 
-export interface ShoppingListCreateDto {
+export type ShoppingListCreateDto = {
     name: string;
     items?: ShoppingListItemDto[];
-}
+};
 
-export interface ShoppingListUpdateDto {
+export type ShoppingListUpdateDto = {
     name?: string | null;
     items?: ShoppingListItemDto[];
-}
+};
 
-export interface ShoppingListItemDto {
+export type ShoppingListItemDto = {
     productId?: string | null;
     name?: string | null;
     amount?: number | null;
@@ -44,4 +44,4 @@ export interface ShoppingListItemDto {
     category?: string | null;
     isChecked?: boolean;
     sortOrder?: number | null;
-}
+};

@@ -16,7 +16,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type Cropper from 'cropperjs';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { finalize, map, switchMap } from 'rxjs/operators';
+import { finalize, map, switchMap } from 'rxjs';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';

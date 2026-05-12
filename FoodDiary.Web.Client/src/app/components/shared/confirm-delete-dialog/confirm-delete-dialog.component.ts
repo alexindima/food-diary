@@ -6,14 +6,14 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-export interface ConfirmDeleteDialogData {
+export type ConfirmDeleteDialogData = {
     title?: string;
     message?: string;
     name?: string | null;
     entityType?: string | null;
     confirmLabel?: string;
     cancelLabel?: string;
-}
+};
 
 @Component({
     selector: 'fd-confirm-delete-dialog',

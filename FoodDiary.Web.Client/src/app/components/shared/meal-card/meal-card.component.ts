@@ -10,7 +10,7 @@ import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
 import type { EntityCardCollageImage } from '../entity-card/entity-card.types';
 
-export interface MealCardItem {
+export type MealCardItem = {
     id: string;
     date: string | Date;
     mealType?: string | null;
@@ -30,7 +30,7 @@ export interface MealCardItem {
         recipe?: { imageUrl?: string | null; name?: string | null } | null;
     } | null> | null;
     aiSessions?: Array<{ imageUrl?: string | null; notes?: string | null; items?: unknown[] | null } | null> | null;
-}
+};
 
 const QUALITY_SCORE_MIN = 0;
 const QUALITY_SCORE_MAX = 100;

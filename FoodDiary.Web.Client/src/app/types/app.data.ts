@@ -1,4 +1,4 @@
-export interface AppConfig {
+export type AppConfig = {
     apiUrls: AppConfigApiUrls;
     paddleClientToken?: string;
     googleClientId?: string;
@@ -7,9 +7,9 @@ export interface AppConfig {
     adminAppUrl?: string;
     enableGlobalErrorHandler?: boolean;
     enableClientObservability?: boolean;
-}
+};
 
-export interface AppConfigApiUrls {
+export type AppConfigApiUrls = {
     auth: string;
     billing: string;
     products: string;
@@ -43,4 +43,4 @@ export interface AppConfigApiUrls {
     reports: string;
     openFoodFacts: string;
     export: string;
-}
+};

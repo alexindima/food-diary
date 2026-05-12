@@ -207,7 +207,7 @@ async function createComponentAsync(): Promise<void> {
     fixture.detectChanges();
 }
 
-interface FastingFacadeMock {
+type FastingFacadeMock = {
     initialize: ReturnType<typeof vi.fn>;
     loadMoreHistory: ReturnType<typeof vi.fn>;
     startFasting: ReturnType<typeof vi.fn>;
@@ -275,7 +275,7 @@ interface FastingFacadeMock {
     isOvertime: ReturnType<typeof signal<boolean>>;
     isActive: ReturnType<typeof signal<boolean>>;
     canExtendActiveSession: ReturnType<typeof signal<boolean>>;
-}
+};
 
 function createFacadeMock(): FastingFacadeMock {
     return {

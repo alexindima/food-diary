@@ -13,11 +13,11 @@ import {
 } from '../dialogs/admin-moderation-action-dialog.component';
 import type { AdminContentReport } from '../models/admin-moderation.data';
 
-interface AdminContentReportViewModel extends AdminContentReport {
+type AdminContentReportViewModel = {
     targetIdShort: string;
     createdText: string;
     reviewedText: string;
-}
+} & AdminContentReport;
 
 const TARGET_ID_PREVIEW_LENGTH = 8;
 const ADMIN_MODERATION_PAGE_SIZE = 20;

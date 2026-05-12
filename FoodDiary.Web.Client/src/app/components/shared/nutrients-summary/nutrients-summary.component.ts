@@ -209,7 +209,7 @@ export class NutrientsSummaryComponent {
     }
 }
 
-interface NutrientsSummaryConfigInternal {
+type NutrientsSummaryConfigInternal = {
     styles: {
         common: {
             gap: number;
@@ -240,7 +240,7 @@ interface NutrientsSummaryConfigInternal {
     content: {
         hidePieChart: boolean;
     };
-}
+};
 
 export type NutrientsSummaryConfig = RecursivePartial<NutrientsSummaryConfigInternal>;
 

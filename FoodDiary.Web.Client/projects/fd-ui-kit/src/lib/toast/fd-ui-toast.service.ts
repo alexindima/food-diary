@@ -6,14 +6,14 @@ export type FdUiToastAppearance = 'default' | 'positive' | 'negative' | 'warning
 export type FdUiToastHorizontalPosition = 'start' | 'center' | 'end';
 export type FdUiToastVerticalPosition = 'top' | 'bottom';
 
-export interface FdUiToastOptions {
+export type FdUiToastOptions = {
     action?: string;
     appearance?: FdUiToastAppearance;
     duration?: number;
     horizontalPosition?: FdUiToastHorizontalPosition;
     verticalPosition?: FdUiToastVerticalPosition;
     politeness?: AriaLivePoliteness;
-}
+};
 
 type FdUiToastSemanticKind = 'success' | 'error' | 'info';
 
@@ -26,11 +26,11 @@ const RANDOM_ID_RADIX = 36;
 const RANDOM_ID_SLICE_START = 2;
 const RANDOM_ID_SLICE_END = 9;
 
-export interface FdUiToastDismiss {
+export type FdUiToastDismiss = {
     dismissedByAction: boolean;
-}
+};
 
-export interface FdUiToastInstance {
+export type FdUiToastInstance = {
     id: string;
     message: string;
     action?: string;
@@ -40,7 +40,7 @@ export interface FdUiToastInstance {
     verticalPosition: FdUiToastVerticalPosition;
     politeness: AriaLivePoliteness;
     leaving: boolean;
-}
+};
 
 export class FdUiToastRef {
     private readonly afterDismissedSubject = new Subject<FdUiToastDismiss>();

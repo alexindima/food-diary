@@ -11,24 +11,24 @@ export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscr
 
 const DEFAULT_DIALOG_TOP_OFFSET = '40px';
 
-export interface FdUiDialogConfig<D = unknown> extends Omit<DialogConfig<D>, 'providers' | 'container'> {
+export type FdUiDialogConfig<D = unknown> = {
     preset?: FdUiDialogPreset;
     size?: FdUiDialogSize;
     providers?: StaticProvider[];
-}
+} & Omit<DialogConfig<D>, 'providers' | 'container'>;
 
-interface ResolvedDialogPreset {
+type ResolvedDialogPreset = {
     size?: FdUiDialogSize;
     panelClass?: string[];
     backdropClass?: string[];
-}
+};
 
-interface ResolvedDialogLayout {
+type ResolvedDialogLayout = {
     panelClass: string[];
     backdropClass: string[];
     isEdgeMobile: boolean;
     isFullscreen: boolean;
-}
+};
 
 @Injectable({
     providedIn: 'root',

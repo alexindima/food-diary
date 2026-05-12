@@ -1,9 +1,9 @@
-export interface FastingReminderPreset {
+export type FastingReminderPreset = {
     id: string;
     firstReminderHours: number;
     followUpReminderHours: number;
     labelKey: string;
-}
+};
 
 export const FASTING_REMINDER_PRESETS: readonly FastingReminderPreset[] = [
     {

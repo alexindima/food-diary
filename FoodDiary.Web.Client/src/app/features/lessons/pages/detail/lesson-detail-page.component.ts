@@ -11,10 +11,10 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { LessonFacade } from '../../lib/lesson.facade';
 import type { LessonDetail } from '../../models/lesson.data';
 
-interface LessonDetailState extends LessonDetail {
+type LessonDetailState = {
     categoryLabelKey: string;
     difficultyLabelKey: string;
-}
+} & LessonDetail;
 
 @Component({
     selector: 'fd-lesson-detail-page',

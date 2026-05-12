@@ -7,13 +7,13 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 
 export type FastingSafetyDialogResult = 'confirm' | 'cancel' | 'close';
 
-export interface FastingSafetyDialogData {
+export type FastingSafetyDialogData = {
     title: string;
     message: string;
     confirmLabel?: string;
     cancelLabel?: string;
     tone?: 'warning' | 'danger';
-}
+};
 
 @Component({
     selector: 'fd-fasting-safety-dialog',

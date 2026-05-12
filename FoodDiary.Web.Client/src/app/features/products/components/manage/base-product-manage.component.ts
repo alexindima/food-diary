@@ -949,45 +949,45 @@ export class BaseProductManageComponent {
     protected readonly ProductType = ProductType;
 }
 
-interface NutritionValues {
+type NutritionValues = {
     caloriesPerBase: number | null;
     proteinsPerBase: number | null;
     fatsPerBase: number | null;
     carbsPerBase: number | null;
     fiberPerBase: number | null;
     alcoholPerBase: number | null;
-}
+};
 
-interface ProductNutritionValues {
+type ProductNutritionValues = {
     caloriesPerBase: number;
     proteinsPerBase: number;
     fatsPerBase: number;
     carbsPerBase: number;
     fiberPerBase: number;
     alcoholPerBase: number;
-}
+};
 
 type NutritionField = keyof NutritionValues;
 
 type MacroKey = 'proteins' | 'fats' | 'carbs';
 
-interface MacroBarSegment {
+type MacroBarSegment = {
     key: MacroKey;
     percent: number;
-}
+};
 
-interface MacroBarState {
+type MacroBarState = {
     isEmpty: boolean;
     segments: MacroBarSegment[];
-}
+};
 
-interface CalorieMismatchWarning {
+type CalorieMismatchWarning = {
     expectedCalories: number;
     actualCalories: number;
-}
+};
 
-interface ProductManageHeaderState {
+type ProductManageHeaderState = {
     titleKey: string;
     submitIcon: 'save' | 'add';
     submitLabelKey: string;
-}
+};

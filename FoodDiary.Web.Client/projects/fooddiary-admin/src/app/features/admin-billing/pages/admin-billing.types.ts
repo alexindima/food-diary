@@ -1,6 +1,6 @@
 import type { AdminBillingPayment, AdminBillingSubscription, AdminBillingWebhookEvent } from '../api/admin-billing.service';
 
-export interface AdminBillingSubscriptionViewModel extends AdminBillingSubscription {
+export type AdminBillingSubscriptionViewModel = {
     currentPeriodStartText: string;
     currentPeriodEndText: string;
     nextBillingAttemptText: string;
@@ -8,18 +8,18 @@ export interface AdminBillingSubscriptionViewModel extends AdminBillingSubscript
     externalCustomerIdText: string;
     externalSubscriptionIdText: string;
     externalPaymentMethodIdText: string;
-}
+} & AdminBillingSubscription;
 
-export interface AdminBillingPaymentViewModel extends AdminBillingPayment {
+export type AdminBillingPaymentViewModel = {
     createdText: string;
     amountText: string;
     externalPaymentIdText: string;
     externalCustomerIdText: string;
     webhookEventIdText: string;
-}
+} & AdminBillingPayment;
 
-export interface AdminBillingWebhookEventViewModel extends AdminBillingWebhookEvent {
+export type AdminBillingWebhookEventViewModel = {
     processedText: string;
     eventIdText: string;
     externalObjectIdText: string;
-}
+} & AdminBillingWebhookEvent;

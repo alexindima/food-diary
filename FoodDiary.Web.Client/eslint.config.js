@@ -18,6 +18,18 @@ const hasTemplateAttribute = (node, name) => getTemplateAttributes(node).some(at
 
 const noAnyCastSyntax = [
     {
+        selector: 'ImportDeclaration[source.value=/^rxjs\\/internal(\\/|$)/]',
+        message: 'Do not import from rxjs/internal. Use the public rxjs API.',
+    },
+    {
+        selector: 'ImportDeclaration[source.value="rxjs/operators"]',
+        message: 'Import RxJS operators from rxjs instead of rxjs/operators.',
+    },
+    {
+        selector: 'ImportDeclaration[source.value=/^@angular\\/.*\\/src(\\/|$)/]',
+        message: 'Do not import Angular internals. Use public Angular APIs.',
+    },
+    {
         selector: 'TSAsExpression[typeAnnotation.type="TSAnyKeyword"]',
         message: 'Do not cast to any. Fix the type or narrow the value instead.',
     },
@@ -193,9 +205,7 @@ const getPropertyName = key => {
 };
 
 const isSubscribeCall = node =>
-    node.type === 'CallExpression' &&
-    node.callee.type === 'MemberExpression' &&
-    getPropertyName(node.callee.property) === 'subscribe';
+    node.type === 'CallExpression' && node.callee.type === 'MemberExpression' && getPropertyName(node.callee.property) === 'subscribe';
 
 const isThenableType = (checker, type) => {
     if (checker.getPromisedTypeOfPromise(type)) {
@@ -427,7 +437,13 @@ export default [
                             from: { type: 'app-feature-models' },
                             disallow: {
                                 to: {
-                                    type: ['app-feature-api', 'app-feature-components', 'app-feature-dialogs', 'app-feature-lib', 'app-feature-pages'],
+                                    type: [
+                                        'app-feature-api',
+                                        'app-feature-components',
+                                        'app-feature-dialogs',
+                                        'app-feature-lib',
+                                        'app-feature-pages',
+                                    ],
                                 },
                             },
                             message: 'Feature models must stay data-only and must not depend on API, UI, lib, or pages.',
@@ -546,7 +562,8 @@ export default [
                     ignoreRestSiblings: true,
                     argsIgnorePattern: '^_',
                     varsIgnorePattern: '^_',
-                    caughtErrors: 'none',
+                    caughtErrors: 'all',
+                    caughtErrorsIgnorePattern: '^_',
                     destructuredArrayIgnorePattern: '^_',
                 },
             ],
@@ -587,6 +604,19 @@ export default [
                 },
             ],
             '@typescript-eslint/consistent-generic-constructors': 'error',
+            '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+            '@typescript-eslint/method-signature-style': ['error', 'property'],
+            '@typescript-eslint/naming-convention': [
+                'error',
+                {
+                    selector: 'typeLike',
+                    format: ['PascalCase'],
+                },
+                {
+                    selector: 'enumMember',
+                    format: ['PascalCase', 'UPPER_CASE'],
+                },
+            ],
             '@typescript-eslint/no-array-delete': 'error',
             '@typescript-eslint/no-base-to-string': 'error',
             '@typescript-eslint/no-confusing-non-null-assertion': 'error',
@@ -606,6 +636,8 @@ export default [
                 {
                     ignore: [-1, 0, 1, 2],
                     ignoreArrayIndexes: true,
+                    ignoreEnums: true,
+                    ignoreReadonlyClassProperties: true,
                     enforceConst: true,
                 },
             ],
@@ -682,7 +714,7 @@ export default [
             'rxjs-x/no-nested-subscribe': 'error',
             'rxjs-x/no-subscribe-in-pipe': 'error',
             'rxjs-x/no-unsafe-switchmap': 'error',
-            'sonarjs/cognitive-complexity': ['error', 25],
+            'sonarjs/cognitive-complexity': ['error', 15],
             'sonarjs/no-nested-functions': 'error',
         },
     },
@@ -690,6 +722,26 @@ export default [
         files: ['**/*.spec.ts', 'src/test-setup.ts', 'src/app/testing/**/*.ts'],
         rules: {
             '@typescript-eslint/no-unsafe-type-assertion': 'off',
+        },
+    },
+    {
+        files: ['**/*.d.ts'],
+        rules: {
+            '@typescript-eslint/consistent-type-definitions': 'off',
+            '@typescript-eslint/method-signature-style': 'off',
+        },
+    },
+    {
+        files: [
+            'src/app/components/shared/ai-input-bar/ai-input-bar.component.ts',
+            'src/app/features/auth/lib/google-identity.service.ts',
+            'src/app/features/premium/lib/paddle-checkout.service.ts',
+            'src/app/services/auth.service.ts',
+        ],
+        rules: {
+            // These files augment the global Window interface for browser SDKs.
+            // Type aliases cannot participate in declaration merging.
+            '@typescript-eslint/consistent-type-definitions': 'off',
         },
     },
     {
@@ -977,7 +1029,8 @@ export default [
                                 '../../../features/*',
                                 '../../../../features/*',
                             ],
-                            message: 'Import a concrete feature layer such as models, api, components, dialogs, lib, or pages instead of a feature root.',
+                            message:
+                                'Import a concrete feature layer such as models, api, components, dialogs, lib, or pages instead of a feature root.',
                         },
                     ],
                 },

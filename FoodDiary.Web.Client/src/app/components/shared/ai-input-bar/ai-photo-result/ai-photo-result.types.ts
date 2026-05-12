@@ -9,50 +9,50 @@ export type EditableAiItem = {
     unit: string;
 };
 
-export interface AiResultRow {
+export type AiResultRow = {
     key: string;
     displayName: string;
     amountLabel: string;
-}
+};
 
-export interface AiNutritionSummaryItem {
+export type AiNutritionSummaryItem = {
     labelKey: string;
     value: string;
-}
+};
 
-export interface AiEditUnitOption {
+export type AiEditUnitOption = {
     value: string;
     label: string;
-}
+};
 
-export interface AiEditActionView {
+export type AiEditActionView = {
     variant: 'primary' | 'secondary';
     fill: 'solid' | 'outline';
     labelKey: string;
-}
+};
 
-export interface AiDetailsToggleView {
+export type AiDetailsToggleView = {
     icon: string;
     labelKey: string;
-}
+};
 
-export interface AiEditItemUpdate {
+export type AiEditItemUpdate = {
     index: number;
     field: 'name' | 'amount' | 'unit';
     value: string;
-}
+};
 
-export interface AiEditItemDrop {
+export type AiEditItemDrop = {
     previousIndex: number;
     currentIndex: number;
-}
+};
 
-export interface AiEditedItemsView {
+export type AiEditedItemsView = {
     items: EditableAiItem[];
     unitOptions: AiEditUnitOption[];
-}
+};
 
-export interface AiDetectedItemsView {
+export type AiDetectedItemsView = {
     rows: AiResultRow[];
     sourceItems: FoodVisionItem[];
-}
+};

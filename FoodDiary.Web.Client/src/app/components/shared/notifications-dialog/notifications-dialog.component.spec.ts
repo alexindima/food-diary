@@ -10,7 +10,7 @@ import { type NotificationItem, NotificationService } from '../../../services/no
 import { NotificationsDialogComponent } from './notifications-dialog.component';
 
 type NotificationsDialogComponentTestApi = NotificationsDialogComponent & {
-    notificationItems(): Array<{ icon: string }>;
+    notificationItems: () => Array<{ icon: string }>;
 };
 type NotificationsDialogTestContext = {
     component: NotificationsDialogComponent;

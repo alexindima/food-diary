@@ -1,7 +1,7 @@
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 
-export interface Product {
+export type Product = {
     id: string; // Guid
     barcode?: string | null;
     name: string;
@@ -30,11 +30,11 @@ export interface Product {
     usdaFdcId?: number | null;
     isFavorite?: boolean;
     favoriteProductId?: string | null;
-}
+};
 
 export type ProductSearchSuggestionSource = 'openFoodFacts' | 'usda';
 
-export interface ProductSearchSuggestion {
+export type ProductSearchSuggestion = {
     source: ProductSearchSuggestionSource;
     name: string;
     brand?: string | null;
@@ -47,9 +47,9 @@ export interface ProductSearchSuggestion {
     fatsPer100G?: number | null;
     carbsPer100G?: number | null;
     fiberPer100G?: number | null;
-}
+};
 
-export interface CreateProductRequest {
+export type CreateProductRequest = {
     barcode?: string | null;
     name: string;
     brand?: string | null;
@@ -69,9 +69,9 @@ export interface CreateProductRequest {
     fiberPerBase: number;
     alcoholPerBase: number;
     visibility: ProductVisibility;
-}
+};
 
-export interface UpdateProductRequest extends Partial<CreateProductRequest> {
+export type UpdateProductRequest = {
     clearBarcode?: boolean;
     clearBrand?: boolean;
     clearCategory?: boolean;
@@ -79,7 +79,7 @@ export interface UpdateProductRequest extends Partial<CreateProductRequest> {
     clearComment?: boolean;
     clearImageUrl?: boolean;
     clearImageAssetId?: boolean;
-}
+} & Partial<CreateProductRequest>;
 
 export class ProductFilters {
     public search?: string;
@@ -96,14 +96,14 @@ export class ProductFilters {
     }
 }
 
-export interface ProductOverview {
+export type ProductOverview = {
     recentItems: Product[];
     allProducts: PageOf<Product>;
     favoriteItems: FavoriteProduct[];
     favoriteTotalCount: number;
-}
+};
 
-export interface FavoriteProduct {
+export type FavoriteProduct = {
     id: string;
     productId: string;
     name?: string | null;
@@ -114,7 +114,7 @@ export interface FavoriteProduct {
     caloriesPerBase: number;
     baseUnit: string;
     defaultPortionAmount: number;
-}
+};
 
 export enum MeasurementUnit {
     G = 'G',

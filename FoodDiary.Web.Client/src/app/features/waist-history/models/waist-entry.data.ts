@@ -1,32 +1,32 @@
-export interface WaistEntry {
+export type WaistEntry = {
     id: string;
     userId: string;
     date: string;
     circumference: number;
-}
+};
 
-export interface CreateWaistEntryPayload {
+export type CreateWaistEntryPayload = {
     date: string;
     circumference: number;
-}
+};
 
 export type UpdateWaistEntryPayload = CreateWaistEntryPayload;
 
-export interface WaistEntryFilters {
+export type WaistEntryFilters = {
     dateFrom?: string;
     dateTo?: string;
     limit?: number;
     sort?: 'asc' | 'desc';
-}
+};
 
-export interface WaistEntrySummaryPoint {
+export type WaistEntrySummaryPoint = {
     startDate: string;
     endDate: string;
     averageCircumference: number;
-}
+};
 
-export interface WaistEntrySummaryFilters {
+export type WaistEntrySummaryFilters = {
     dateFrom: string;
     dateTo: string;
     quantizationDays: number;
-}
+};

@@ -6,7 +6,7 @@ import type { ActivityLevelOption, Gender, UiStyleOption } from '../../../shared
 import type { AppThemeName } from '../../../theme/app-theme.config';
 import type { BillingOverview } from '../../premium/models/billing.models';
 
-export interface UserFormValues {
+export type UserFormValues = {
     username: string | null;
     firstName: string | null;
     lastName: string | null;
@@ -23,11 +23,11 @@ export interface UserFormValues {
     pushNotificationsEnabled?: boolean | null;
     fastingPushNotificationsEnabled?: boolean | null;
     socialPushNotificationsEnabled?: boolean | null;
-}
+};
 
 export type UserFormData = FormGroupControls<UserFormValues>;
 
-interface DietologistFormValues {
+type DietologistFormValues = {
     email: string;
     shareProfile: boolean;
     shareMeals: boolean;
@@ -37,7 +37,7 @@ interface DietologistFormValues {
     shareGoals: boolean;
     shareHydration: boolean;
     shareFasting: boolean;
-}
+};
 
 export type DietologistFormData = FormGroupControls<DietologistFormValues>;
 export type DietologistPermissionControlName = Exclude<keyof DietologistFormValues, 'email'>;
@@ -47,14 +47,14 @@ export type DietologistPermissionChange = {
     value: boolean;
 };
 
-export interface ConnectedDeviceViewModel {
+export type ConnectedDeviceViewModel = {
     subscription: WebPushSubscriptionItem;
     label: string;
     meta: string;
     isCurrent: boolean;
-}
+};
 
-export interface BillingViewModel {
+export type BillingViewModel = {
     overview: BillingOverview;
     statusTone: 'success' | 'muted';
     endLabelKey: string;
@@ -62,4 +62,4 @@ export interface BillingViewModel {
     premiumActionVariant: 'secondary' | 'primary';
     premiumActionLabelKey: string;
     showManagedSupportNote: boolean;
-}
+};

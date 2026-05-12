@@ -1,4 +1,4 @@
-export interface FastingStagePresentation {
+export type FastingStagePresentation = {
     index: number;
     total: number;
     titleKey: string;
@@ -7,15 +7,15 @@ export interface FastingStagePresentation {
     glowColor: string;
     nextTitleKey: string | null;
     nextInMs: number | null;
-}
+};
 
-interface FastingStageDefinition {
+type FastingStageDefinition = {
     startsAtHours: number;
     titleKey: string;
     descriptionKey: string;
     color: string;
     glowColor: string;
-}
+};
 
 const MS_PER_HOUR = 3_600_000;
 

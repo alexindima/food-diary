@@ -40,7 +40,7 @@ const END_OF_DAY_MINUTES = 59;
 const END_OF_DAY_SECONDS = 59;
 const END_OF_DAY_MS = 999;
 
-interface TestContext {
+type TestContext = {
     component: () => MealListComponent;
     fixture: () => ComponentFixture<MealListComponent>;
     mockMealService: typeof mockMealService;
@@ -48,7 +48,7 @@ interface TestContext {
     mockFdDialogService: typeof mockFdDialogService;
     mockToastService: typeof mockToastService;
     mockFavoriteMealService: typeof mockFavoriteMealService;
-}
+};
 
 function createMockMeal(overrides: Partial<Meal> = {}): Meal {
     return {

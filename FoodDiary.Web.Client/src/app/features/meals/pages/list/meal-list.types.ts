@@ -1,13 +1,13 @@
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
 
-export interface FavoriteMealView {
+export type FavoriteMealView = {
     favorite: FavoriteMeal;
     displayName: string | null;
     displayNameKey: string;
-}
+};
 
-export interface MealDateGroupView {
+export type MealDateGroupView = {
     date: Date;
     dateLabel: string;
     items: Meal[];
-}
+};

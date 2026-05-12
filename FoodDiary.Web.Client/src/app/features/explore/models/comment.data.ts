@@ -1,4 +1,4 @@
-export interface RecipeComment {
+export type RecipeComment = {
     id: string;
     recipeId: string;
     authorId: string;
@@ -8,12 +8,12 @@ export interface RecipeComment {
     createdAtUtc: string;
     modifiedAtUtc?: string | null;
     isOwnedByCurrentUser: boolean;
-}
+};
 
-export interface CreateCommentDto {
+export type CreateCommentDto = {
     text: string;
-}
+};
 
-export interface UpdateCommentDto {
+export type UpdateCommentDto = {
     text: string;
-}
+};

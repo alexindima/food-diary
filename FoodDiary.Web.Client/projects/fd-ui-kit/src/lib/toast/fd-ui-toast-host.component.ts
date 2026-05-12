@@ -7,12 +7,12 @@ import {
     type FdUiToastVerticalPosition,
 } from './fd-ui-toast.service';
 
-interface FdUiToastViewport {
+type FdUiToastViewport = {
     key: string;
     horizontalPosition: FdUiToastHorizontalPosition;
     verticalPosition: FdUiToastVerticalPosition;
     toasts: FdUiToastInstance[];
-}
+};
 
 @Component({
     selector: 'fd-ui-toast-host',

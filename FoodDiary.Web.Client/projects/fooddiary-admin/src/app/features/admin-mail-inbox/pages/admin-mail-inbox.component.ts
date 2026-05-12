@@ -8,14 +8,14 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { AdminMailInboxService } from '../api/admin-mail-inbox.service';
 import type { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
 
-interface AdminMailInboxMessageSummaryViewModel extends AdminMailInboxMessageSummary {
+type AdminMailInboxMessageSummaryViewModel = {
     categoryLabel: string;
-}
+} & AdminMailInboxMessageSummary;
 
-interface AdminMailInboxMessageDetailsViewModel extends AdminMailInboxMessageDetails {
+type AdminMailInboxMessageDetailsViewModel = {
     categoryLabel: string;
     toRecipientsLabel: string;
-}
+} & AdminMailInboxMessageDetails;
 
 const DEFAULT_MAIL_INBOX_LIMIT = 50;
 const MAX_MAIL_INBOX_LIMIT = 200;

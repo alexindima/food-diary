@@ -1,16 +1,16 @@
-export interface HydrationEntry {
+export type HydrationEntry = {
     id: string;
     timestampUtc: string;
     amountMl: number;
-}
+};
 
-export interface HydrationDaily {
+export type HydrationDaily = {
     dateUtc: string;
     totalMl: number;
     goalMl: number | null;
-}
+};
 
-export interface CreateHydrationEntryPayload {
+export type CreateHydrationEntryPayload = {
     timestampUtc: string;
     amountMl: number;
-}
+};

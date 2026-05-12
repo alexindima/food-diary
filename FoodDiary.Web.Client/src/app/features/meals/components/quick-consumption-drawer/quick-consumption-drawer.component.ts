@@ -21,19 +21,19 @@ import {
     type MealManualItemDialogData,
 } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog.component';
 
-interface QuickConsumptionItemView {
+type QuickConsumptionItemView = {
     item: QuickMealItem;
     imageUrl: string;
     name: string;
     amount: number;
     unitKey: string;
     trackingKey: string;
-}
+};
 
-interface QuickConsumptionToggleView {
+type QuickConsumptionToggleView = {
     icon: string;
     labelKey: string;
-}
+};
 
 @Component({
     selector: 'fd-quick-consumption-drawer',

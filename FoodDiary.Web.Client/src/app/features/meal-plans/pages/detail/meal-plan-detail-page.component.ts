@@ -80,22 +80,22 @@ export class MealPlanDetailPageComponent {
     }
 }
 
-interface MealPlanDetailViewModel extends Omit<MealPlan, 'days'> {
+type MealPlanDetailViewModel = {
     dietTypeKey: string;
     days: MealPlanDayViewModel[];
-}
+} & Omit<MealPlan, 'days'>;
 
-interface MealPlanDayViewModel extends Omit<MealPlanDay, 'meals'> {
+type MealPlanDayViewModel = {
     meals: MealPlanMealViewModel[];
-}
+} & Omit<MealPlanDay, 'meals'>;
 
-interface MealPlanMealViewModel extends MealPlanMeal {
+type MealPlanMealViewModel = {
     mealTypeKey: string;
     nutritionItems: MealPlanNutritionItem[];
-}
+} & MealPlanMeal;
 
-interface MealPlanNutritionItem {
+type MealPlanNutritionItem = {
     unitKey: string;
     value: number;
     prefix: string;
-}
+};

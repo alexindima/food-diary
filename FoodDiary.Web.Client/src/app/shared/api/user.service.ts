@@ -19,12 +19,12 @@ import {
     type User,
 } from '../models/user.data';
 
-export interface UserProfileOverview {
+export type UserProfileOverview = {
     user: User;
     notificationPreferences: NotificationPreferences;
     webPushSubscriptions: WebPushSubscriptionItem[];
     dietologistRelationship: DietologistRelationship | null;
-}
+};
 
 @Injectable({
     providedIn: 'root',

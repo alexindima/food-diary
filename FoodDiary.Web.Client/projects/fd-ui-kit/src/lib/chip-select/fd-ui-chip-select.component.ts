@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, input, model } from '@ang
 
 import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 
-export interface FdUiChipSelectOption {
+export type FdUiChipSelectOption = {
     value: string;
     label: string;
     disabled?: boolean;
     ariaLabel?: string | null;
     hint?: string | null;
-}
+};
 
 export type FdUiChipSelectSize = 'sm' | 'md';
 

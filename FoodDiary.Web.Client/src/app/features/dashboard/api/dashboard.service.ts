@@ -8,13 +8,13 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 
-export interface DashboardSnapshotQuery {
+export type DashboardSnapshotQuery = {
     date: Date;
     page?: number;
     pageSize?: number;
     locale?: string;
     trendDays?: number;
-}
+};
 
 const DEFAULT_DASHBOARD_PAGE = 1;
 const DEFAULT_DASHBOARD_PAGE_SIZE = 10;

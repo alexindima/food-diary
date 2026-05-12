@@ -1,17 +1,17 @@
 export type AppThemeName = 'ocean' | 'leaf' | 'dark';
 export type AppUiStyleName = 'classic' | 'modern';
 
-export interface AppThemeDefinition {
+export type AppThemeDefinition = {
     name: AppThemeName;
     labelKey: string;
     browserThemeColor: string;
     colorScheme: 'light' | 'dark';
-}
+};
 
-export interface AppUiStyleDefinition {
+export type AppUiStyleDefinition = {
     name: AppUiStyleName;
     labelKey: string;
-}
+};
 
 export const APP_THEMES: readonly AppThemeDefinition[] = [
     {

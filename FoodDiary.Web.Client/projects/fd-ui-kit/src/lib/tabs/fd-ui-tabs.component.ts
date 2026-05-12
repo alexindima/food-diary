@@ -14,11 +14,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-export interface FdUiTab {
+export type FdUiTab = {
     value: string;
     label?: string;
     labelKey?: string;
-}
+};
 
 export type FdUiTabsAppearance = 'default' | 'wrap-compact';
 
@@ -118,6 +118,6 @@ export class FdUiTabsComponent {
     }
 }
 
-interface FdUiTabViewModel extends FdUiTab {
+type FdUiTabViewModel = {
     labelText: string;
-}
+} & FdUiTab;

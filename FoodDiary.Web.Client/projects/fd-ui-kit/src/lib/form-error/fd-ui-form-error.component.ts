@@ -3,10 +3,10 @@ import type { AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { merge } from 'rxjs';
 
-export interface FdValidationErrorConfig {
+export type FdValidationErrorConfig = {
     key: string;
     params?: Record<string, unknown>;
-}
+};
 
 export type FdValidationErrors = Record<string, (error?: unknown) => FdValidationErrorConfig | string>;
 

@@ -5,10 +5,10 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import type { SeoLandingCtaKeys } from './seo-landing.types';
 
-interface SeoLandingRelatedPage {
+type SeoLandingRelatedPage = {
     path: string;
     labelKey: string;
-}
+};
 
 @Component({
     selector: 'fd-seo-landing-footer-sections',

@@ -12,7 +12,7 @@ const FIRST_OPTION_INDEX = 0;
 const NEXT_OPTION_OFFSET = 1;
 const PREVIOUS_OPTION_OFFSET = -1;
 
-export interface FdUiEmojiPickerOption<T extends FdUiEmojiPickerValue = FdUiEmojiPickerValue> {
+export type FdUiEmojiPickerOption<T extends FdUiEmojiPickerValue = FdUiEmojiPickerValue> = {
     value: T;
     emoji: string;
     label?: string;
@@ -20,7 +20,7 @@ export interface FdUiEmojiPickerOption<T extends FdUiEmojiPickerValue = FdUiEmoj
     ariaLabel?: string;
     hint?: string;
     disabled?: boolean;
-}
+};
 
 export type FdUiEmojiPickerSize = 'sm' | 'md';
 

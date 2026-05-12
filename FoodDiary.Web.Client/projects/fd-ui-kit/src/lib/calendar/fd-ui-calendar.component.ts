@@ -16,7 +16,7 @@ const PREVIOUS_MONTH_OFFSET = -1;
 const NEXT_MONTH_OFFSET = 1;
 const LAST_WEEKDAY_OFFSET = CALENDAR_WEEKS_COUNT;
 
-interface FdUiCalendarCell {
+type FdUiCalendarCell = {
     date: Date;
     iso: string;
     label: string;
@@ -25,7 +25,7 @@ interface FdUiCalendarCell {
     isSelected: boolean;
     isActive: boolean;
     isDisabled: boolean;
-}
+};
 
 @Component({
     selector: 'fd-ui-calendar',

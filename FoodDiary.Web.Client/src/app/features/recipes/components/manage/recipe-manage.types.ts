@@ -3,7 +3,7 @@ import type { ImageSelection } from '../../../../shared/models/image-upload.data
 import type { Product } from '../../../products/models/product.data';
 import type { RecipeVisibility } from '../../models/recipe.data';
 
-export interface RecipeFormValues {
+export type RecipeFormValues = {
     name: string;
     description: string | null;
     comment: string | null;
@@ -21,42 +21,42 @@ export interface RecipeFormValues {
     manualFiber: number | null;
     manualAlcohol: number | null;
     steps: StepFormValues[];
-}
+};
 
-export interface StepFormValues {
+export type StepFormValues = {
     title: string | null;
     imageUrl: ImageSelection | null;
     description: string;
     ingredients: IngredientFormValues[];
-}
+};
 
-export interface IngredientFormValues {
+export type IngredientFormValues = {
     food: Product | null;
     amount: number | null;
     foodName: string | null;
     nestedRecipeId: string | null;
     nestedRecipeName: string | null;
-}
+};
 
 export type RecipeFormData = FormGroupControls<RecipeFormValues>;
 export type StepFormData = FormGroupControls<StepFormValues>;
 export type IngredientFormData = FormGroupControls<IngredientFormValues>;
 
-export interface CalorieMismatchWarning {
+export type CalorieMismatchWarning = {
     expectedCalories: number;
     actualCalories: number;
-}
+};
 
 export type NutritionMode = 'auto' | 'manual';
 export type NutritionScaleMode = 'recipe' | 'portion';
 export type MacroKey = 'proteins' | 'fats' | 'carbs';
 
-export interface MacroBarSegment {
+export type MacroBarSegment = {
     key: MacroKey;
     percent: number;
-}
+};
 
-export interface MacroBarState {
+export type MacroBarState = {
     isEmpty: boolean;
     segments: MacroBarSegment[];
-}
+};

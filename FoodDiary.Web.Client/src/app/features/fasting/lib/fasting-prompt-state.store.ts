@@ -3,10 +3,10 @@ import { inject, Injectable } from '@angular/core';
 import { BrowserStorageService } from '../../../services/browser-storage.service';
 import { isRecord } from '../../../shared/lib/unknown-value.utils';
 
-interface FastingPromptState {
+type FastingPromptState = {
     dismissed?: boolean;
     snoozedUntilUtc?: string;
-}
+};
 
 @Injectable({
     providedIn: 'root',

@@ -116,8 +116,8 @@ export class ClientDashboardComponent {
     }
 }
 
-interface ClientDashboardSection {
+type ClientDashboardSection = {
     isVisible: boolean;
     title: string;
     body: string;
-}
+};

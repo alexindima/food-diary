@@ -13,11 +13,11 @@ const PREVIOUS_OPTION_OFFSET = -1;
 
 let uniqueId = 0;
 
-export interface FdUiSelectOption<T = unknown> {
+export type FdUiSelectOption<T = unknown> = {
     value: T;
     label: string;
     hint?: string;
-}
+};
 
 @Component({
     selector: 'fd-ui-select',

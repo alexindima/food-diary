@@ -1,28 +1,28 @@
 export type MacroKey = 'proteins' | 'fats' | 'carbs';
 
-export interface MacroBarSegment {
+export type MacroBarSegment = {
     key: MacroKey;
     percent: number;
-}
+};
 
-export interface MacroBarState {
+export type MacroBarState = {
     isEmpty: boolean;
     segments: MacroBarSegment[];
-}
+};
 
-export interface CalorieMismatchWarning {
+export type CalorieMismatchWarning = {
     expectedCalories: number;
     actualCalories: number;
-}
+};
 
-export interface CalorieMismatchWarningInput {
+export type CalorieMismatchWarningInput = {
     calories: number;
     proteins: number;
     fats: number;
     carbs: number;
     alcohol?: number;
     threshold?: number;
-}
+};
 
 export type NutritionMode = 'auto' | 'manual';
 

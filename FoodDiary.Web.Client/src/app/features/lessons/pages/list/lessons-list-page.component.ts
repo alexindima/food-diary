@@ -13,11 +13,11 @@ import { LessonsListGridComponent } from './lessons-list-grid.component';
 
 const PERCENTAGE_MULTIPLIER = 100;
 
-interface LessonCategoryOption {
+type LessonCategoryOption = {
     value: string | null;
     labelKey: string;
     fill: 'solid' | 'outline';
-}
+};
 
 @Component({
     selector: 'fd-lessons-list-page',

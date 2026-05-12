@@ -1,4 +1,4 @@
-export interface ContentReport {
+export type ContentReport = {
     id: string;
     reporterId: string;
     targetType: string;
@@ -8,10 +8,10 @@ export interface ContentReport {
     adminNote?: string | null;
     createdAtUtc: string;
     reviewedAtUtc?: string | null;
-}
+};
 
-export interface CreateReportDto {
+export type CreateReportDto = {
     targetType: 'Recipe' | 'Comment';
     targetId: string;
     reason: string;
-}
+};

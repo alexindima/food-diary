@@ -23,11 +23,11 @@ const NEGATIVE_PERCENT = -10;
 const PROTEIN_CURRENT = 50;
 const PROTEIN_TARGET = 100;
 
-interface TestContext {
+type TestContext = {
     component: () => DashboardSummaryCardComponent;
     fixture: () => ComponentFixture<DashboardSummaryCardComponent>;
     setInput: (name: string, value: unknown) => void;
-}
+};
 
 describe('DashboardSummaryCardComponent', () => {
     let component: DashboardSummaryCardComponent;

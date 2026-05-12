@@ -2,28 +2,28 @@ import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inlin
 
 import type { FastingCheckIn, FastingMessage, FastingSession, FastingStats } from '../models/fasting.data';
 
-export interface FastingStatsViewModel {
+export type FastingStatsViewModel = {
     stats: FastingStats;
     hasPersonalSummary: boolean;
     topSymptomLabel: string;
-}
+};
 
-export interface FastingMessageViewModel {
+export type FastingMessageViewModel = {
     message: FastingMessage;
     severity: FdUiInlineAlertSeverity;
     title: string;
     body: string;
-}
+};
 
-export interface FastingCheckInViewModel {
+export type FastingCheckInViewModel = {
     checkIn: FastingCheckIn;
     checkedInAtLabel: string;
     relativeCheckedInAt: string | null;
     summary: string;
     symptomLabels: string[];
-}
+};
 
-export interface FastingHistorySessionViewModel {
+export type FastingHistorySessionViewModel = {
     session: FastingSession;
     startedAtLabel: string;
     accentColor: string;
@@ -38,4 +38,4 @@ export interface FastingHistorySessionViewModel {
     toggleKey: string;
     visibleCheckIns: FastingCheckInViewModel[];
     canLoadMoreCheckIns: boolean;
-}
+};

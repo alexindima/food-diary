@@ -1,6 +1,6 @@
 export type WeeklyCheckInTrendCardKey = 'calories' | 'protein' | 'weight' | 'hydration';
 
-export interface WeeklyCheckInTrendCardConfig {
+export type WeeklyCheckInTrendCardConfig = {
     key: WeeklyCheckInTrendCardKey;
     labelKey: string;
     value: number;
@@ -8,9 +8,9 @@ export interface WeeklyCheckInTrendCardConfig {
     numberFormat: string;
     invertPositive?: boolean;
     unitSeparator?: string;
-}
+};
 
-export interface WeeklyCheckInTrendCardViewModel {
+export type WeeklyCheckInTrendCardViewModel = {
     key: WeeklyCheckInTrendCardKey;
     labelKey: string;
     value: number;
@@ -20,4 +20,4 @@ export interface WeeklyCheckInTrendCardViewModel {
     valuePrefix: string;
     color: string;
     icon: string;
-}
+};

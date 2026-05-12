@@ -1,7 +1,7 @@
 import type { RecipeComment } from '../../models/comment.data';
 
-export interface RecipeCommentViewModel {
+export type RecipeCommentViewModel = {
     comment: RecipeComment;
     authorLabel: string;
     dateLabel: string;
-}
+};

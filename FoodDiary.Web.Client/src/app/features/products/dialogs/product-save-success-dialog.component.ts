@@ -7,9 +7,9 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import type { RedirectAction } from '../lib/product-manage.types';
 
-export interface ProductSaveSuccessDialogData {
+export type ProductSaveSuccessDialogData = {
     isEdit: boolean;
-}
+};
 
 @Component({
     selector: 'fd-product-save-success-dialog',

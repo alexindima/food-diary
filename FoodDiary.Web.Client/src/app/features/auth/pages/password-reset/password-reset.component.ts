@@ -198,9 +198,9 @@ export class PasswordResetComponent {
     }
 }
 
-interface PasswordResetFormValues {
+type PasswordResetFormValues = {
     password: string;
     confirmPassword: string;
-}
+};
 
 type PasswordResetFormGroup = FormGroupControls<PasswordResetFormValues>;

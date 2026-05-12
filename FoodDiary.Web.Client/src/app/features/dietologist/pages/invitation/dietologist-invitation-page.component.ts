@@ -184,8 +184,8 @@ export class DietologistInvitationPageComponent {
     }
 }
 
-interface DietologistInvitationView {
+type DietologistInvitationView = {
     invitation: DietologistInvitationForCurrentUser;
     displayName: string;
     expiresDateLabel: string;
-}
+};

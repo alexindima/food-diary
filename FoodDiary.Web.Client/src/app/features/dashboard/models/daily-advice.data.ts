@@ -1,7 +1,7 @@
-export interface DailyAdvice {
+export type DailyAdvice = {
     id: string;
     locale: string;
     value: string;
     tag?: string | null;
     weight: number;
-}
+};

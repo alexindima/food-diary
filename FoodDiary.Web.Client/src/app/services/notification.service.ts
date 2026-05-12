@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../constants/global-loading-context.tokens';
 import { AuthService } from './auth.service';
 
-export interface NotificationItem {
+export type NotificationItem = {
     id: string;
     type: string;
     title: string;
@@ -16,25 +16,25 @@ export interface NotificationItem {
     referenceId: string | null;
     isRead: boolean;
     createdAtUtc: string;
-}
+};
 
-export interface ScheduleTestNotificationRequest {
+export type ScheduleTestNotificationRequest = {
     delaySeconds: number;
     type: string;
-}
+};
 
-export interface ScheduledNotificationResponse {
+export type ScheduledNotificationResponse = {
     type: string;
     delaySeconds: number;
     scheduledAtUtc: string;
-}
+};
 
-export interface WebPushConfiguration {
+export type WebPushConfiguration = {
     enabled: boolean;
     publicKey: string | null;
-}
+};
 
-export interface WebPushSubscriptionRequest {
+export type WebPushSubscriptionRequest = {
     endpoint: string;
     expirationTime: string | null;
     keys: {
@@ -43,17 +43,17 @@ export interface WebPushSubscriptionRequest {
     };
     locale: string | null;
     userAgent: string | null;
-}
+};
 
-export interface NotificationPreferences {
+export type NotificationPreferences = {
     pushNotificationsEnabled: boolean;
     fastingPushNotificationsEnabled: boolean;
     socialPushNotificationsEnabled: boolean;
     fastingCheckInReminderHours: number;
     fastingCheckInFollowUpReminderHours: number;
-}
+};
 
-export interface WebPushSubscriptionItem {
+export type WebPushSubscriptionItem = {
     endpoint: string;
     endpointHost: string;
     expirationTimeUtc: string | null;
@@ -61,19 +61,19 @@ export interface WebPushSubscriptionItem {
     userAgent: string | null;
     createdAtUtc: string;
     updatedAtUtc: string | null;
-}
+};
 
-export interface UpdateNotificationPreferencesRequest {
+export type UpdateNotificationPreferencesRequest = {
     pushNotificationsEnabled?: boolean;
     fastingPushNotificationsEnabled?: boolean;
     socialPushNotificationsEnabled?: boolean;
     fastingCheckInReminderHours?: number;
     fastingCheckInFollowUpReminderHours?: number;
-}
+};
 
-interface FetchUnreadCountOptions {
+type FetchUnreadCountOptions = {
     force?: boolean;
-}
+};
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {

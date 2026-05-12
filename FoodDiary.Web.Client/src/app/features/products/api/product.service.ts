@@ -18,14 +18,14 @@ const DEFAULT_RECENT_LIMIT = 10;
 const DEFAULT_FAVORITE_LIMIT = 10;
 const DEFAULT_SUGGESTIONS_LIMIT = 5;
 
-export interface ProductOverviewQuery {
+export type ProductOverviewQuery = {
     page: number;
     limit: number;
     filters?: ProductFilters;
     includePublic?: boolean;
     recentLimit?: number;
     favoriteLimit?: number;
-}
+};
 
 @Injectable({
     providedIn: 'root',

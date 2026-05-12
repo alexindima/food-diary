@@ -8,10 +8,10 @@ import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import type { StepFormData, StepFormValues } from '../recipe-manage.types';
 import { RecipeStepCardComponent } from '../recipe-step-card/recipe-step-card.component';
 
-export interface StepIngredientEvent {
+export type StepIngredientEvent = {
     stepIndex: number;
     ingredientIndex: number;
-}
+};
 
 @Component({
     selector: 'fd-recipe-steps-list',

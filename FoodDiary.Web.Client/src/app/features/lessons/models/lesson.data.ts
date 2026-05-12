@@ -1,4 +1,4 @@
-export interface LessonSummary {
+export type LessonSummary = {
     id: string;
     title: string;
     summary?: string | null;
@@ -6,9 +6,9 @@ export interface LessonSummary {
     difficulty: string;
     estimatedReadMinutes: number;
     isRead: boolean;
-}
+};
 
-export interface LessonDetail {
+export type LessonDetail = {
     id: string;
     title: string;
     content: string;
@@ -17,7 +17,7 @@ export interface LessonDetail {
     difficulty: string;
     estimatedReadMinutes: number;
     isRead: boolean;
-}
+};
 
 export const LESSON_CATEGORIES = [
     'NutritionBasics',

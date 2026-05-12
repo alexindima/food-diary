@@ -7,14 +7,14 @@ export type FastingOccurrenceKind = 'FastingWindow' | 'EatingWindow' | 'FastDay'
 export type FastingMode = 'intermittent' | 'extended' | 'cyclic';
 export type FastingMessageTone = 'warning' | 'positive' | 'neutral';
 
-export interface FastingProtocolOption {
+export type FastingProtocolOption = {
     value: FastingProtocol;
     labelKey: string;
     hours: number;
     category: 'intermittent' | 'extended';
-}
+};
 
-export interface FastingSession {
+export type FastingSession = {
     id: string;
     startedAtUtc: string;
     endedAtUtc: string | null;
@@ -40,9 +40,9 @@ export interface FastingSession {
     symptoms: string[];
     checkInNotes: string | null;
     checkIns: FastingCheckIn[];
-}
+};
 
-export interface FastingCheckIn {
+export type FastingCheckIn = {
     id: string;
     checkedInAtUtc: string;
     hungerLevel: number;
@@ -50,9 +50,9 @@ export interface FastingCheckIn {
     moodLevel: number;
     symptoms: string[];
     notes: string | null;
-}
+};
 
-export interface FastingStats {
+export type FastingStats = {
     totalCompleted: number;
     currentStreak: number;
     averageDurationHours: number;
@@ -60,29 +60,29 @@ export interface FastingStats {
     checkInRateLast30Days: number;
     lastCheckInAtUtc: string | null;
     topSymptom: string | null;
-}
+};
 
-export interface FastingMessage {
+export type FastingMessage = {
     id: string;
     titleKey: string;
     bodyKey: string;
     tone: FastingMessageTone;
     bodyParams: Record<string, string> | null;
-}
+};
 
-export interface FastingInsights {
+export type FastingInsights = {
     alerts: FastingMessage[];
     insights: FastingMessage[];
-}
+};
 
-export interface FastingOverview {
+export type FastingOverview = {
     currentSession: FastingSession | null;
     stats: FastingStats;
     insights: FastingInsights;
     history: PageOf<FastingSession>;
-}
+};
 
-export interface StartFastingPayload {
+export type StartFastingPayload = {
     protocol?: string;
     planType?: FastingPlanType;
     plannedDurationHours?: number;
@@ -91,30 +91,30 @@ export interface StartFastingPayload {
     cyclicEatDayFastHours?: number;
     cyclicEatDayEatingWindowHours?: number;
     notes?: string;
-}
+};
 
-export interface ExtendFastingPayload {
+export type ExtendFastingPayload = {
     additionalHours: number;
-}
+};
 
-export interface ReduceFastingTargetPayload {
+export type ReduceFastingTargetPayload = {
     reducedHours: number;
-}
+};
 
-export interface UpdateFastingCheckInPayload {
+export type UpdateFastingCheckInPayload = {
     hungerLevel: number;
     energyLevel: number;
     moodLevel: number;
     symptoms?: string[] | null;
     checkInNotes?: string | null;
-}
+};
 
-export interface FastingHistoryQuery {
+export type FastingHistoryQuery = {
     from: string;
     to: string;
     page?: number;
     limit?: number;
-}
+};
 
 export const FASTING_PROTOCOLS: FastingProtocolOption[] = [
     { value: 'F16_8', labelKey: 'FASTING.PROTOCOL_16_8', hours: 16, category: 'intermittent' },
@@ -127,11 +127,11 @@ export const FASTING_PROTOCOLS: FastingProtocolOption[] = [
     { value: 'Custom', labelKey: 'FASTING.PROTOCOL_CUSTOM', hours: 16, category: 'extended' },
 ];
 
-export interface CyclicPresetOption {
+export type CyclicPresetOption = {
     fastDays: number;
     eatDays: number;
     label: string;
-}
+};
 
 export const CYCLIC_PRESETS: CyclicPresetOption[] = [
     { fastDays: 1, eatDays: 1, label: '1:1' },

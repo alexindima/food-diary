@@ -7,10 +7,10 @@ import { type ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, R
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
-export interface FdUiDateRangeValue {
+export type FdUiDateRangeValue = {
     start: Date | null;
     end: Date | null;
-}
+};
 
 @Component({
     selector: 'fd-ui-date-range-input',

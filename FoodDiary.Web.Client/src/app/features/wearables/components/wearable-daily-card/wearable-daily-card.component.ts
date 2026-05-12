@@ -4,13 +4,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import type { WearableDailySummary } from '../../models/wearable.data';
 
-interface WearableMetric {
+type WearableMetric = {
     key: string;
     labelKey: string;
     icon: string;
     value: number;
     unit: string;
-}
+};
 
 const MINUTES_PER_HOUR = 60;
 const HOURS_PRECISION_FACTOR = 10;

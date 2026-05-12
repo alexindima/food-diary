@@ -15,14 +15,14 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.directive';
 import { BaseChartDirective } from 'ng2-charts';
 
-export interface SummaryMacro {
+export type SummaryMacro = {
     key: string;
     labelKey: string;
     value: number;
     color: string;
-}
+};
 
-export interface SummaryMetrics {
+export type SummaryMetrics = {
     totalCalories: number;
     averageCard: {
         consumption: number;
@@ -30,7 +30,7 @@ export interface SummaryMetrics {
         burned: number;
     };
     macros: SummaryMacro[];
-}
+};
 
 export type StatisticsSummaryExportFormat = 'csv' | 'pdf';
 

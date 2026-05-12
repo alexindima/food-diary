@@ -16,7 +16,7 @@ const MAX_INTERMITTENT_FAST_HOURS = 23;
 const PERCENT_FULL = 100;
 const TIME_PAD_LENGTH = 2;
 
-export interface FastingTimerCardComputedState {
+export type FastingTimerCardComputedState = {
     progressPercent: number;
     elapsedFormatted: string;
     remainingFormatted: string;
@@ -29,13 +29,13 @@ export interface FastingTimerCardComputedState {
     ringColor: string | null;
     stage: FastingStagePresentation | null;
     nextStageFormatted: string | null;
-}
+};
 
-export interface FastingTimerCardComputedStateInput {
+export type FastingTimerCardComputedStateInput = {
     session: FastingSession | null;
     elapsedMs: number;
     translate: TranslateFn;
-}
+};
 
 export function buildFastingTimerCardComputedState(input: FastingTimerCardComputedStateInput): FastingTimerCardComputedState {
     const { session, elapsedMs, translate } = input;
@@ -51,11 +51,11 @@ export function buildFastingTimerCardComputedState(input: FastingTimerCardComput
     return buildIntermittentCycleState({ session, elapsedMs, translate });
 }
 
-interface FastingFallbackStateInput extends FastingTimerCardComputedStateInput {
+type FastingFallbackStateInput = {
     baseStage: FastingStagePresentation | null;
     totalMs: number;
     remainingMs: number;
-}
+} & FastingTimerCardComputedStateInput;
 
 function buildFastingFallbackState(input: FastingFallbackStateInput): FastingTimerCardComputedState {
     const { session, elapsedMs, translate, baseStage, totalMs, remainingMs } = input;

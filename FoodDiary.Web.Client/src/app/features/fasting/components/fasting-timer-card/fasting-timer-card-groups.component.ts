@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import type { FastingTimerCardDisplayItem } from './fasting-timer-card-items.component';
 
-export interface FastingTimerCardDisplayGroup {
+export type FastingTimerCardDisplayGroup = {
     className: string;
     items: FastingTimerCardDisplayItem[];
-}
+};
 
 @Component({
     selector: 'fd-fasting-timer-card-groups',

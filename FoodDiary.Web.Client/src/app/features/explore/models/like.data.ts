@@ -1,4 +1,4 @@
-export interface RecipeLikeStatus {
+export type RecipeLikeStatus = {
     isLiked: boolean;
     totalLikes: number;
-}
+};

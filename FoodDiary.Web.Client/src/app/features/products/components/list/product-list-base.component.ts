@@ -512,9 +512,9 @@ export class ProductListBaseComponent {
     }
 }
 
-interface ProductSearchFormValues {
+type ProductSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
-}
+};
 
 type ProductSearchFormGroup = FormGroupControls<ProductSearchFormValues>;

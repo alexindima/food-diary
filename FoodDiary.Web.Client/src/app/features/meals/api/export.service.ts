@@ -6,13 +6,13 @@ import { ApiService } from '../../../services/api.service';
 
 export type ExportFormat = 'csv' | 'pdf';
 
-export interface ExportDiaryRequest {
+export type ExportDiaryRequest = {
     dateFrom: string;
     dateTo: string;
     format?: ExportFormat;
     locale?: string;
     timeZoneOffsetMinutes?: number;
-}
+};
 
 @Injectable({
     providedIn: 'root',

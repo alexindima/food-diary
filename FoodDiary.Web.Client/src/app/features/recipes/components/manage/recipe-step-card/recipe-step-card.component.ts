@@ -218,10 +218,10 @@ export class RecipeStepCardComponent {
     }
 }
 
-interface RecipeIngredientRowView {
+type RecipeIngredientRowView = {
     index: number;
     prefixIcon: 'menu_book' | 'restaurant' | 'search';
     amountLabel: string;
     foodNameError: string | null;
     amountError: string | null;
-}
+};

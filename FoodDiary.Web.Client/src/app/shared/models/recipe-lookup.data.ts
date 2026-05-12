@@ -1,14 +1,14 @@
-export interface RecipeLookup {
+export type RecipeLookup = {
     id: string;
     servings: number;
     steps: RecipeLookupStep[];
-}
+};
 
-export interface RecipeLookupStep {
+export type RecipeLookupStep = {
     ingredients: RecipeLookupIngredient[];
-}
+};
 
-export interface RecipeLookupIngredient {
+export type RecipeLookupIngredient = {
     amount: number;
     productBaseUnit: string | null;
-}
+};

@@ -7,7 +7,7 @@ import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 
 const DEFAULT_OPEN_FOOD_FACTS_SEARCH_LIMIT = 10;
 
-export interface OpenFoodFactsProduct {
+export type OpenFoodFactsProduct = {
     barcode: string;
     name: string;
     brand?: string | null;
@@ -18,7 +18,7 @@ export interface OpenFoodFactsProduct {
     fatsPer100G?: number | null;
     carbsPer100G?: number | null;
     fiberPer100G?: number | null;
-}
+};
 
 @Injectable({
     providedIn: 'root',

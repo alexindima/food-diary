@@ -16,9 +16,9 @@ import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 
-export interface ChangePasswordDialogData {
+export type ChangePasswordDialogData = {
     hasPassword?: boolean;
-}
+};
 
 const ERROR_FIELDS = ['currentPassword', 'newPassword', 'confirmPassword'] as const;
 const PASSWORD_MIN_LENGTH = 6;
@@ -182,10 +182,10 @@ export class ChangePasswordDialogComponent {
     }
 }
 
-interface ChangePasswordFormValues {
+type ChangePasswordFormValues = {
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;
-}
+};
 
 type ChangePasswordFormData = FormGroupControls<ChangePasswordFormValues>;
