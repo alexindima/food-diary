@@ -1,14 +1,14 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { WeeklyCheckInFacade } from '../lib/weekly-check-in.facade';
+import { WeeklyCheckInStatsCardComponent } from './weekly-check-in-stats-card.component';
+import { WeeklyCheckInSuggestionsCardComponent } from './weekly-check-in-suggestions-card.component';
+import { WeeklyCheckInTrendsComponent } from './weekly-check-in-trends.component';
 
 @Component({
     selector: 'fd-weekly-check-in-page',
@@ -16,12 +16,12 @@ import { WeeklyCheckInFacade } from '../lib/weekly-check-in.facade';
     imports: [
         DecimalPipe,
         TranslatePipe,
-        FdUiIconComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        FdUiCardComponent,
-        FdUiAccentSurfaceComponent,
+        WeeklyCheckInTrendsComponent,
+        WeeklyCheckInStatsCardComponent,
+        WeeklyCheckInSuggestionsCardComponent,
     ],
     templateUrl: './weekly-check-in-page.component.html',
     styleUrl: './weekly-check-in-page.component.scss',
@@ -125,7 +125,7 @@ interface WeeklyCheckInTrendCardConfig {
     unitSeparator?: string;
 }
 
-interface WeeklyCheckInTrendCardViewModel {
+export interface WeeklyCheckInTrendCardViewModel {
     key: WeeklyCheckInTrendCardKey;
     labelKey: string;
     value: number;

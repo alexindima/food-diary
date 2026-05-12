@@ -5,79 +5,11 @@
         @if (isLoading()) {
             <div class="check-in__loader fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
         } @else {
-            @if (trendCards(); as trends) {
-                @if (trends.length > 0) {
-                    <div class="check-in__trends fd-grid fd-gap-xs">
-                        @for (trend of trends; track trend.key) {
-                            <fd-ui-accent-surface class="check-in__trend" accentSide="left" [accentColor]="trend.color" [tinted]="true">
-                                <div class="check-in__trend-row fd-row fd-gap-xs">
-                                    <fd-ui-icon [style.color]="trend.color" [name]="trend.icon" />
-                                    <div class="check-in__trend-info fd-stack">
-                                        <span class="check-in__trend-label fd-ui-helper-text">{{ trend.labelKey | translate }}</span>
-                                        <strong class="check-in__trend-value fd-ui-action-text">
-                                            {{ trend.valuePrefix }}{{ trend.value | number: trend.numberFormat }}{{ trend.unitSeparator
-                                            }}{{ trend.unitKey | translate }}
-                                        </strong>
-                                    </div>
-                                </div>
-                            </fd-ui-accent-surface>
-                        }
-                    </div>
-                }
-            }
+            <fd-weekly-check-in-trends [trends]="trendCards()" />
 
             <div class="check-in__grid fd-grid fd-gap-md">
-                <fd-ui-card class="check-in__card" [title]="'WEEKLY_CHECK_IN.THIS_WEEK' | translate">
-                    @if (thisWeek(); as w) {
-                        <div class="check-in__stats fd-stack fd-gap-xs">
-                            <div class="check-in__stat-row fd-row fd-justify-between">
-                                <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.AVG_CALORIES' | translate }}</span
-                                ><strong class="fd-ui-stat-value">{{ w.avgDailyCalories | number: '1.0-0' }}</strong>
-                            </div>
-                            <div class="check-in__stat-row fd-row fd-justify-between">
-                                <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.MEALS_LOGGED' | translate }}</span
-                                ><strong class="fd-ui-stat-value">{{ w.mealsLogged }}</strong>
-                            </div>
-                            <div class="check-in__stat-row fd-row fd-justify-between">
-                                <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.DAYS_LOGGED' | translate }}</span
-                                ><strong class="fd-ui-stat-value">{{ w.daysLogged }} / 7</strong>
-                            </div>
-                            <div class="check-in__stat-row fd-row fd-justify-between">
-                                <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.AVG_PROTEIN' | translate }}</span
-                                ><strong class="fd-ui-stat-value"
-                                    >{{ w.avgProteins | number: '1.0-0' }}{{ 'GENERAL.UNITS.G' | translate }}</strong
-                                >
-                            </div>
-                            @if (w.weightEnd) {
-                                <div class="check-in__stat-row fd-row fd-justify-between">
-                                    <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.WEIGHT' | translate }}</span
-                                    ><strong class="fd-ui-stat-value"
-                                        >{{ w.weightEnd | number: '1.1-1' }} {{ 'GENERAL.UNITS.KG' | translate }}</strong
-                                    >
-                                </div>
-                            }
-                            <div class="check-in__stat-row fd-row fd-justify-between">
-                                <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.AVG_WATER' | translate }}</span
-                                ><strong class="fd-ui-stat-value">{{ w.avgDailyHydrationMl }} {{ 'GENERAL.UNITS.ML' | translate }}</strong>
-                            </div>
-                        </div>
-                    }
-                </fd-ui-card>
-
-                <fd-ui-card class="check-in__card" [title]="'WEEKLY_CHECK_IN.SUGGESTIONS_TITLE' | translate">
-                    @if (suggestionRows().length > 0) {
-                        <div class="check-in__suggestions fd-stack fd-gap-xs">
-                            @for (suggestion of suggestionRows(); track suggestion.key) {
-                                <div class="check-in__suggestion fd-row fd-align-start fd-gap-xs">
-                                    <fd-ui-icon class="check-in__suggestion-icon" name="lightbulb" />
-                                    <span class="fd-ui-body-sm">{{ suggestion.labelKey | translate }}</span>
-                                </div>
-                            }
-                        </div>
-                    } @else {
-                        <p class="check-in__empty fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.NO_SUGGESTIONS' | translate }}</p>
-                    }
-                </fd-ui-card>
+                <fd-weekly-check-in-stats-card [week]="thisWeek()" />
+                <fd-weekly-check-in-suggestions-card [suggestions]="suggestionRows()" />
             </div>
         }
     </fd-page-body>

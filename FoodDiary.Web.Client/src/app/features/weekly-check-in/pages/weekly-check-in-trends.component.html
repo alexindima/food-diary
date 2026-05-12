@@ -1,0 +1,18 @@
+@if (trends().length > 0) {
+    <div class="check-in__trends fd-grid fd-gap-xs">
+        @for (trend of trends(); track trend.key) {
+            <fd-ui-accent-surface class="check-in__trend" accentSide="left" [accentColor]="trend.color" [tinted]="true">
+                <div class="check-in__trend-row fd-row fd-gap-xs">
+                    <fd-ui-icon [style.color]="trend.color" [name]="trend.icon" />
+                    <div class="check-in__trend-info fd-stack">
+                        <span class="check-in__trend-label fd-ui-helper-text">{{ trend.labelKey | translate }}</span>
+                        <strong class="check-in__trend-value fd-ui-action-text">
+                            {{ trend.valuePrefix }}{{ trend.value | number: trend.numberFormat }}{{ trend.unitSeparator
+                            }}{{ trend.unitKey | translate }}
+                        </strong>
+                    </div>
+                </div>
+            </fd-ui-accent-surface>
+        }
+    </div>
+}

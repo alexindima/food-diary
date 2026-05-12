@@ -1,0 +1,14 @@
+<fd-ui-card class="check-in__card" [title]="'WEEKLY_CHECK_IN.SUGGESTIONS_TITLE' | translate">
+    @if (suggestions().length > 0) {
+        <div class="check-in__suggestions fd-stack fd-gap-xs">
+            @for (suggestion of suggestions(); track suggestion.key) {
+                <div class="check-in__suggestion fd-row fd-align-start fd-gap-xs">
+                    <fd-ui-icon class="check-in__suggestion-icon" name="lightbulb" />
+                    <span class="fd-ui-body-sm">{{ suggestion.labelKey | translate }}</span>
+                </div>
+            }
+        </div>
+    } @else {
+        <p class="check-in__empty fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.NO_SUGGESTIONS' | translate }}</p>
+    }
+</fd-ui-card>
