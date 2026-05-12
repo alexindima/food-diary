@@ -1,69 +1,6 @@
 [
     {
         "type": "cycle",
-        "from": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete-menu.component.ts",
-        "to": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.component.ts",
-        "unresolvedTo": "./fd-ui-autocomplete.component",
-        "dependencyTypes": ["local", "type-only", "import"],
-        "rule": {
-            "severity": "error",
-            "name": "no-circular"
-        },
-        "cycle": [
-            {
-                "name": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.component.ts",
-                "dependencyTypes": ["local", "type-only", "import"]
-            },
-            {
-                "name": "projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete-menu.component.ts",
-                "dependencyTypes": ["local", "import"]
-            }
-        ]
-    },
-    {
-        "type": "cycle",
-        "from": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.component.ts",
-        "to": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu.component.ts",
-        "unresolvedTo": "./fd-ui-menu.component",
-        "dependencyTypes": ["local", "import"],
-        "rule": {
-            "severity": "error",
-            "name": "no-circular"
-        },
-        "cycle": [
-            {
-                "name": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu.component.ts",
-                "dependencyTypes": ["local", "import"]
-            },
-            {
-                "name": "projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.component.ts",
-                "dependencyTypes": ["local", "import"]
-            }
-        ]
-    },
-    {
-        "type": "cycle",
-        "from": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.component.ts",
-        "to": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.component.ts",
-        "unresolvedTo": "./fd-ui-radio-options.component",
-        "dependencyTypes": ["local", "import"],
-        "rule": {
-            "severity": "error",
-            "name": "no-circular"
-        },
-        "cycle": [
-            {
-                "name": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.component.ts",
-                "dependencyTypes": ["local", "import"]
-            },
-            {
-                "name": "projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.component.ts",
-                "dependencyTypes": ["local", "type-only", "import"]
-            }
-        ]
-    },
-    {
-        "type": "cycle",
         "from": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.component.ts",
         "to": "projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.component.ts",
         "unresolvedTo": "./admin-billing.component",
@@ -1293,32 +1230,10 @@
     },
     {
         "type": "dependency",
-        "from": "src/app/components/shared/entity-card/entity-card.component.ts",
-        "to": "src/app/features/products/models/product.data.ts",
-        "unresolvedTo": "../../../features/products/models/product.data",
-        "dependencyTypes": ["local", "type-only", "import"],
-        "rule": {
-            "severity": "error",
-            "name": "shared-ui-must-not-import-features"
-        }
-    },
-    {
-        "type": "dependency",
         "from": "src/app/components/shared/meal-card/meal-card.component.ts",
         "to": "src/app/features/meals/api/favorite-meal.service.ts",
         "unresolvedTo": "../../../features/meals/api/favorite-meal.service",
         "dependencyTypes": ["local", "import"],
-        "rule": {
-            "severity": "error",
-            "name": "shared-ui-must-not-import-features"
-        }
-    },
-    {
-        "type": "dependency",
-        "from": "src/app/components/shared/meal-card/meal-card.component.ts",
-        "to": "src/app/features/products/models/product.data.ts",
-        "unresolvedTo": "../../../features/products/models/product.data",
-        "dependencyTypes": ["local", "type-only", "import"],
         "rule": {
             "severity": "error",
             "name": "shared-ui-must-not-import-features"
@@ -1338,17 +1253,6 @@
     {
         "type": "dependency",
         "from": "src/app/components/shared/product-card/product-card.component.ts",
-        "to": "src/app/features/products/models/product.data.ts",
-        "unresolvedTo": "../../../features/products/models/product.data",
-        "dependencyTypes": ["local", "type-only", "import"],
-        "rule": {
-            "severity": "error",
-            "name": "shared-ui-must-not-import-features"
-        }
-    },
-    {
-        "type": "dependency",
-        "from": "src/app/components/shared/recipe-card/recipe-card.component.ts",
         "to": "src/app/features/products/models/product.data.ts",
         "unresolvedTo": "../../../features/products/models/product.data",
         "dependencyTypes": ["local", "type-only", "import"],

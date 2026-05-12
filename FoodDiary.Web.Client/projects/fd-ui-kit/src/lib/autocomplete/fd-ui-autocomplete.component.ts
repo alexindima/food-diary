@@ -5,7 +5,10 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
+import type { FdUiAutocompleteOption } from './fd-ui-autocomplete.types';
 import { FdUiAutocompleteMenuComponent } from './fd-ui-autocomplete-menu.component';
+
+export type { FdUiAutocompleteOption } from './fd-ui-autocomplete.types';
 
 const NO_ACTIVE_OPTION_INDEX = -1;
 const FIRST_OPTION_INDEX = 0;
@@ -14,15 +17,6 @@ const PREVIOUS_OPTION_OFFSET = -1;
 const EMPTY_STATE_MIN_QUERY_LENGTH = 2;
 
 let uniqueId = 0;
-
-export interface FdUiAutocompleteOption<T = unknown> {
-    id?: string | number;
-    value: T;
-    label: string;
-    hint?: string | null;
-    badge?: string | null;
-    data?: unknown;
-}
 
 @Component({
     selector: 'fd-ui-autocomplete',

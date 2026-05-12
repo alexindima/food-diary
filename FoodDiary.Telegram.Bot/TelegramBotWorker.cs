@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using System.Globalization;
 using System.Net.Http.Json;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -24,7 +25,7 @@ public sealed class TelegramBotWorker(
         }
 
         var me = await botClient.GetMe(stoppingToken);
-        logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString());
+        logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
         var receiverOptions = new ReceiverOptions {
             AllowedUpdates = Array.Empty<UpdateType>()

@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import type { FdUiRadioOption } from './fd-ui-radio.types';
 import { FdUiRadioOptionsComponent } from './fd-ui-radio-options.component';
 
-export interface FdUiRadioOption<T = unknown> {
-    label: string;
-    value: T;
-    description?: string;
-}
+export type { FdUiRadioOption } from './fd-ui-radio.types';
 
 let nextId = 0;
 

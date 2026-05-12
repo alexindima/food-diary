@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
-import type { QualityGrade } from '../../../features/products/models/product.data';
+import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { MediaCardComponent } from '../media-card/media-card.component';
 import { EntityCardActionsComponent } from './entity-card-actions.component';
 import { EntityCardBodyComponent } from './entity-card-body.component';

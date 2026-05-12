@@ -140,9 +140,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void RemoveItem(MealItem item) {
-        if (item is null) {
-            throw new ArgumentNullException(nameof(item));
-        }
+        ArgumentNullException.ThrowIfNull(item);
 
         if (_items.Remove(item)) {
             SetModified();

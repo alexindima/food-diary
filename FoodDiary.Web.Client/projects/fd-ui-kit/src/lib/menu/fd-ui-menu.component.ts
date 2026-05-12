@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, contentChildren, output, TemplateRef, viewChild } from '@angular/core';
 
-import { FdUiMenuItemComponent } from './fd-ui-menu-item.component';
+import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
 
 @Component({
     selector: 'fd-ui-menu',
@@ -9,10 +9,16 @@ import { FdUiMenuItemComponent } from './fd-ui-menu-item.component';
     styleUrls: ['./fd-ui-menu.component.scss'],
     exportAs: 'fdUiMenu',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: FD_UI_MENU,
+            useExisting: FdUiMenuComponent,
+        },
+    ],
 })
 export class FdUiMenuComponent {
     private readonly templateRefValue = viewChild.required(TemplateRef<unknown>);
-    private readonly menuItems = contentChildren(FdUiMenuItemComponent, { descendants: true });
+    private readonly menuItems = contentChildren(FD_UI_MENU_ITEM, { descendants: true });
 
     public readonly closed = output();
 

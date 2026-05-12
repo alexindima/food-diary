@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import { FdUiLoaderComponent } from '../loader/fd-ui-loader.component';
-import type { FdUiAutocompleteOption } from './fd-ui-autocomplete.component';
+import type { FdUiAutocompleteOption } from './fd-ui-autocomplete.types';
 
 @Component({
     selector: 'fd-ui-autocomplete-menu',

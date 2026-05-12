@@ -1,4 +1,5 @@
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 
 export interface Product {
     id: string; // Guid
@@ -47,8 +48,6 @@ export interface ProductSearchSuggestion {
     carbsPer100G?: number | null;
     fiberPer100G?: number | null;
 }
-
-export type QualityGrade = 'green' | 'yellow' | 'red';
 
 export interface CreateProductRequest {
     barcode?: string | null;

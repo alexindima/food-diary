@@ -29,7 +29,7 @@ public interface IPipelineBehavior<in TRequest, TResponse>
 }
 
 public readonly record struct Unit {
-    public static Unit Value { get; } = new();
+    public static Unit Value { get; }
 }
 
 public interface ISender {

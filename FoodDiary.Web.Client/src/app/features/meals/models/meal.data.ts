@@ -1,5 +1,5 @@
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { QualityGrade } from '../../products/models/product.data';
+import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
 

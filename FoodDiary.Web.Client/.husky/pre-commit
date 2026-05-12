@@ -9,6 +9,7 @@ HAS_FRONTEND_SHARED=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(
 HAS_FRONTEND_APP=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(src/app|assets/|src/environments|src/main|src/server|src/app\.|src/index\.html|src/manifest\.webmanifest|ngsw-config\.json)' || true)
 HAS_FRONTEND_UI_KIT=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/projects/fd-ui-kit/' || true)
 HAS_FRONTEND_ADMIN=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/projects/fooddiary-admin/' || true)
+HAS_FRONTEND_DEPS=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(src/app/|projects/(fooddiary-admin/src/app|fd-ui-kit/src/lib)/|package(-lock)?\.json|\.dependency-cruiser(-known-violations\.json|\.cjs))' || true)
 HAS_I18N=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(assets/i18n/.*\.json|scripts/check-i18n\.mjs|package\.json|src/.*\.html)$' || true)
 HAS_STORYBOOK=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
@@ -40,6 +41,13 @@ if [ "$HAS_SCSS" -gt 0 ]; then
   npm run stylelint || exit 1
 else
   echo "=== Skipping Stylelint (no .scss files changed) ==="
+fi
+
+if [ "$HAS_FRONTEND_DEPS" -gt 0 ]; then
+  echo "=== Running frontend dependency graph lint ==="
+  npm run lint:deps || exit 1
+else
+  echo "=== Skipping frontend dependency graph lint (no dependency-relevant frontend files changed) ==="
 fi
 
 if [ "$HAS_I18N" -gt 0 ]; then

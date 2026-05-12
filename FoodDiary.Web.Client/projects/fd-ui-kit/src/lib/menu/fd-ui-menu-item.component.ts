@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { FdUiMenuComponent } from './fd-ui-menu.component';
+import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
 
 @Component({
     selector: 'fd-ui-menu-item',
@@ -10,10 +10,16 @@ import { FdUiMenuComponent } from './fd-ui-menu.component';
     templateUrl: './fd-ui-menu-item.component.html',
     styleUrls: ['./fd-ui-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: FD_UI_MENU_ITEM,
+            useExisting: FdUiMenuItemComponent,
+        },
+    ],
 })
 export class FdUiMenuItemComponent {
     private readonly host = inject<ElementRef<HTMLButtonElement>>(ElementRef);
-    private readonly parentMenu = inject(FdUiMenuComponent, { optional: true });
+    private readonly parentMenu = inject(FD_UI_MENU, { optional: true });
 
     public readonly type = input<'button' | 'submit' | 'reset'>('button');
     public readonly routerLink = input<string | unknown[] | null>();

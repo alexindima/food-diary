@@ -32,7 +32,7 @@ public readonly record struct LanguageCode {
         }
 
         var normalized = value.Trim().ToLowerInvariant();
-        return normalized.StartsWith(Ru)
+        return normalized.StartsWith(Ru, StringComparison.Ordinal)
             ? new LanguageCode(Ru)
             : new LanguageCode(En);
     }

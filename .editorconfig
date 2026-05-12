@@ -21,3 +21,10 @@ csharp_new_line_before_else = false
 csharp_new_line_before_catch = false
 csharp_new_line_before_finally = false
 dotnet_diagnostic.IDE0005.severity = warning
+
+# Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1859.severity = none
