@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class GoalsService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.goals;
 

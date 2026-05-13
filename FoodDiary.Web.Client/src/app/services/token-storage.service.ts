@@ -2,9 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { BrowserStorageService } from './browser-storage.service';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class TokenStorageService {
     private readonly storage = inject(BrowserStorageService);
 

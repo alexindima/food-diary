@@ -10,9 +10,7 @@ function toNotificationHubUrl(authBaseUrl: string): string {
     return `${authBaseUrl.replace(/\/api(?:\/v\d+(?:\.\d+)?)?\/auth$/, '')}/hubs/notifications`;
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class NotificationRealtimeService {
     private readonly authService = inject(AuthService);
     private readonly notificationService = inject(NotificationService);

@@ -35,9 +35,7 @@ const MEAL_NUTRITION_FIELDS = ['calories', 'proteins', 'fats', 'carbs', 'fiber',
 type NutritionField = (typeof MEAL_NUTRITION_FIELDS)[number];
 type NutritionTotals = Record<NutritionField, number>;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class MealService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.consumptions;
 

@@ -25,9 +25,7 @@ function addOptionalNumberParam(params: Record<string, string | number>, key: st
     }
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class WaistEntriesService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.waists;
 

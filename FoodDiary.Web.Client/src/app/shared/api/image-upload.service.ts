@@ -7,9 +7,7 @@ import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { rethrowApiError } from '../lib/api-error.utils';
 import type { ImageUploadUrlResponse } from '../models/image-upload.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ImageUploadService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = environment.apiUrls.images;

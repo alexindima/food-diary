@@ -5,9 +5,7 @@ import { isRecord } from '../shared/lib/unknown-value.utils';
 const BASE64_BLOCK_SIZE = 4;
 const EXPIRATION_SECONDS_TO_MS = 1000;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class JwtDecoderService {
     public decodePayload(token: string): Record<string, unknown> | null {
         const payloadSegment = token.split('.').at(1);

@@ -4,7 +4,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import type { Observable } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body.component';
@@ -50,20 +49,15 @@ export class ProductListBaseComponent {
 
     public readonly searchForm = this.productListFacade.searchForm;
     public readonly productData = this.productListFacade.productData;
-    public readonly recentProducts = this.productListFacade.recentProducts;
     public readonly favorites = this.productListFacade.favorites;
     public readonly favoriteTotalCount = this.productListFacade.favoriteTotalCount;
     public readonly isFavoritesOpen = this.productListFacade.isFavoritesOpen;
     public readonly favoriteLoadingIds = this.productListFacade.favoriteLoadingIds;
     public readonly isFavoritesLoadingMore = this.productListFacade.isFavoritesLoadingMore;
     public readonly errorKey = this.productListFacade.errorKey;
-    public readonly searchValue = this.productListFacade.searchValue;
     public readonly onlyMineFilter = this.productListFacade.onlyMineFilter;
     public readonly isMobileView = this.productListFacade.isMobileView;
-    public readonly hasSearchValue = this.productListFacade.hasSearchValue;
-    public readonly showRecentSection = this.productListFacade.showRecentSection;
     public readonly recentProductItems = this.productListFacade.recentProductItems;
-    public readonly allProductsSectionItems = this.productListFacade.allProductsSectionItems;
     public readonly allProductItems = this.productListFacade.allProductItems;
     public readonly hasVisibleProducts = this.productListFacade.hasVisibleProducts;
     public readonly hasActiveFilters = this.productListFacade.hasActiveFilters;
@@ -75,7 +69,6 @@ export class ProductListBaseComponent {
     protected readonly pageSize = this.productListFacade.pageSize;
     protected readonly fdDialogService = this.productListFacade.fdDialogService;
     protected readonly navigationService = this.productListFacade.navigationService;
-    protected readonly productService = this.productListFacade.productService;
 
     public get currentPageIndex(): number {
         return this.productListFacade.currentPageIndex;
@@ -162,9 +155,5 @@ export class ProductListBaseComponent {
 
     protected reloadCurrentPage(): void {
         this.productListFacade.reloadCurrentPage();
-    }
-
-    protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {
-        return this.productListFacade.loadProducts(page, limit, search);
     }
 }

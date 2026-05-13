@@ -12,9 +12,7 @@ import type {
     PortalSessionResponse,
 } from '../models/billing.models';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PremiumBillingService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.billing;
 

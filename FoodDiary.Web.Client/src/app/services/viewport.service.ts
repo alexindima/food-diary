@@ -6,9 +6,7 @@ import { distinctUntilChanged, map } from 'rxjs';
 
 import { APP_MOBILE_VIEWPORT_QUERY } from '../config/runtime-ui.tokens';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ViewportService {
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly platformId = inject(PLATFORM_ID);

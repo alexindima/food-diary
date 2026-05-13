@@ -207,6 +207,37 @@ const getPropertyName = key => {
 const isSubscribeCall = node =>
     node.type === 'CallExpression' && node.callee.type === 'MemberExpression' && getPropertyName(node.callee.property) === 'subscribe';
 
+const isInjectableCallExpression = node =>
+    node?.type === 'CallExpression' &&
+    node.callee.type === 'Identifier' &&
+    node.callee.name === 'Injectable' &&
+    node.arguments.length === 1;
+
+const getSingleObjectProperty = node => {
+    if (node?.type !== 'ObjectExpression' || node.properties.length !== 1) {
+        return null;
+    }
+
+    return node.properties[0];
+};
+
+const isRootProvidedInProperty = property => {
+    if (property?.type !== 'Property' || property.computed || getPropertyName(property.key) !== 'providedIn') {
+        return false;
+    }
+
+    return property.value.type === 'Literal' && property.value.value === 'root';
+};
+
+const isRootInjectableDecorator = node => {
+    if (!isInjectableCallExpression(node.expression)) {
+        return false;
+    }
+
+    const [metadata] = node.expression.arguments;
+    return isRootProvidedInProperty(getSingleObjectProperty(metadata));
+};
+
 const isThenableType = (checker, type) => {
     if (checker.getPromisedTypeOfPromise(type)) {
         return true;
@@ -328,6 +359,39 @@ const localTsPlugin = {
                         if (isSubscribeCall(node)) {
                             subscribeDepth -= 1;
                         }
+                    },
+                };
+            },
+        },
+        'injectable-provided-in-root-single-line': {
+            meta: {
+                type: 'layout',
+                docs: {
+                    description: "Require @Injectable({ providedIn: 'root' }) decorators to stay on one line.",
+                },
+                fixable: 'code',
+                messages: {
+                    multiline: "Use @Injectable({ providedIn: 'root' }) on one line.",
+                },
+                schema: [],
+            },
+            create(context) {
+                return {
+                    Decorator(node) {
+                        if (!isRootInjectableDecorator(node)) {
+                            return;
+                        }
+
+                        const source = context.sourceCode.getText(node);
+                        if (!source.includes('\n')) {
+                            return;
+                        }
+
+                        context.report({
+                            node,
+                            messageId: 'multiline',
+                            fix: fixer => fixer.replaceText(node, "@Injectable({ providedIn: 'root' })"),
+                        });
                     },
                 };
             },
@@ -709,6 +773,7 @@ export default [
             ],
             'no-restricted-syntax': ['error', ...noAnyCastSyntax],
             'local/async-function-suffix': 'error',
+            'local/injectable-provided-in-root-single-line': 'error',
             'local/no-nested-subscribe': 'error',
             'rxjs-x/no-async-subscribe': 'error',
             'rxjs-x/no-implicit-any-catch': ['error', { allowExplicitAny: false }],

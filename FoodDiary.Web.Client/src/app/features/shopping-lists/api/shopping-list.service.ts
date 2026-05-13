@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ShoppingListService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.shoppingLists;
 

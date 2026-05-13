@@ -5,9 +5,7 @@ import { catchError, type Observable, tap } from 'rxjs';
 import { rethrowApiError } from '../shared/lib/api-error.utils';
 import type { AppConfig } from '../types/app.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AppConfigService {
     private config: AppConfig | null = null;
     private readonly http = inject(HttpClient);

@@ -79,9 +79,7 @@ export class FdUiToastRef {
     }
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FdUiToastService {
     private readonly enterAnimationMs = ENTER_ANIMATION_MS;
     private readonly exitAnimationMs = EXIT_ANIMATION_MS;

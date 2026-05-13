@@ -5,9 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import type { AggregatedStatistics, GetStatisticsDto } from '../models/statistics.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class StatisticsService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.statistics;
 

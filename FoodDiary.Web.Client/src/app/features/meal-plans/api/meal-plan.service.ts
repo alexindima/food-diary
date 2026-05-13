@@ -7,9 +7,7 @@ import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error
 import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class MealPlanService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.mealPlans;
 

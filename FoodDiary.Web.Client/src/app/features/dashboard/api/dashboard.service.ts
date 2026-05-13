@@ -19,9 +19,7 @@ export type DashboardSnapshotQuery = {
 const DEFAULT_DASHBOARD_PAGE = 1;
 const DEFAULT_DASHBOARD_PAGE_SIZE = 10;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class DashboardService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.dashboard;
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);

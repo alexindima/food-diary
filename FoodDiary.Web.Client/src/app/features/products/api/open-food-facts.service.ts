@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
-
-const DEFAULT_OPEN_FOOD_FACTS_SEARCH_LIMIT = 10;
+import { OPEN_FOOD_FACTS_SEARCH_LIMIT } from './product-api.tokens';
 
 export type OpenFoodFactsProduct = {
     barcode: string;
@@ -20,10 +19,10 @@ export type OpenFoodFactsProduct = {
     fiberPer100G?: number | null;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class OpenFoodFactsService extends ApiService {
+    private readonly defaultSearchLimit = inject(OPEN_FOOD_FACTS_SEARCH_LIMIT);
+
     protected readonly baseUrl = environment.apiUrls.openFoodFacts;
 
     public searchByBarcode(barcode: string): Observable<OpenFoodFactsProduct | null> {
@@ -32,8 +31,8 @@ export class OpenFoodFactsService extends ApiService {
         );
     }
 
-    public search(query: string, limit = DEFAULT_OPEN_FOOD_FACTS_SEARCH_LIMIT): Observable<OpenFoodFactsProduct[]> {
-        return this.get<OpenFoodFactsProduct[]>('products', { search: query, limit }).pipe(
+    public search(query: string, limit?: number): Observable<OpenFoodFactsProduct[]> {
+        return this.get<OpenFoodFactsProduct[]>('products', { search: query, limit: limit ?? this.defaultSearchLimit }).pipe(
             catchError((error: unknown) => fallbackApiError('Open Food Facts search error', error, [])),
         );
     }

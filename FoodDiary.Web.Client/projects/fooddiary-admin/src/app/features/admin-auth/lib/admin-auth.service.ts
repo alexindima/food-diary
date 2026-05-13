@@ -7,9 +7,7 @@ import { environment } from '../../../../environments/environment';
 const BASE64_BLOCK_SIZE = 4;
 const BASE64_REMAINDER_NONE = 0;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AdminAuthService {
     private readonly authUrl = environment.apiUrls.auth;
     private readonly http = inject(HttpClient);

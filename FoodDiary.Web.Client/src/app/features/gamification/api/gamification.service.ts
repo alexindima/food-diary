@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { GamificationData } from '../models/gamification.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class GamificationService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.gamification;
 

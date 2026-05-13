@@ -19,9 +19,7 @@ import type {
 
 const DEFAULT_HISTORY_PAGE_SIZE = 10;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FastingService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.fasting;
 

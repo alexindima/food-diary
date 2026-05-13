@@ -26,9 +26,7 @@ declare global {
     }
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class GoogleIdentityService {
     private readonly scriptUrl = 'https://accounts.google.com/gsi/client';
     private readonly scriptLoaded = signal<boolean>(false);

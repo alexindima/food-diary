@@ -8,9 +8,7 @@ import { ApiService } from './api.service';
 
 const DEFAULT_FASTING_SUMMARY_HOURS = 24;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AdminTelemetryService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.auth.replace('/auth', '/admin/telemetry');
 

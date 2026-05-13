@@ -6,9 +6,7 @@ import { ApiService } from '../../services/api.service';
 import { rethrowApiError } from '../lib/api-error.utils';
 import type { RecipeLookup } from '../models/recipe-lookup.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class RecipeLookupService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.recipes;
 

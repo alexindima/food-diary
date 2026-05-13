@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { RecipeLikeStatus } from '../models/like.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class LikeService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.recipes;
 

@@ -31,9 +31,7 @@ export type QuickMealDetails = {
     postMealSatietyLevel: number;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class QuickMealService {
     private readonly mealService = inject(MealService);
     private readonly toastService = inject(FdUiToastService);

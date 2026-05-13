@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 
 type StorageScope = 'local' | 'session';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class BrowserStorageService {
     public getItem(scope: StorageScope, key: string): string | null {
         return this.getStorage(scope)?.getItem(key) ?? null;

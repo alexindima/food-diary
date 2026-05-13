@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 
 import type { AuthMode } from '../features/auth/models/auth.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class NavigationService {
     private readonly router = inject(Router);
 

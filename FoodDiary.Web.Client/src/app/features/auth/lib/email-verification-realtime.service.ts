@@ -8,9 +8,7 @@ export function toEmailVerificationHubUrl(authBaseUrl: string): string {
     return `${authBaseUrl.replace(/\/api(?:\/v\d+(?:\.\d+)?)?\/auth$/, '')}/hubs/email-verification`;
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class EmailVerificationRealtimeService {
     private connection: HubConnection | null = null;
     private readonly connectedSignal = signal(false);

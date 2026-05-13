@@ -14,9 +14,7 @@ export type ExportDiaryRequest = {
     timeZoneOffsetMinutes?: number;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ExportService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.export;
 

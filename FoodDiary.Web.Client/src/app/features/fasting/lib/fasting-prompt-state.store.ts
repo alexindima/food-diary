@@ -8,9 +8,7 @@ type FastingPromptState = {
     snoozedUntilUtc?: string;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FastingPromptStateStore {
     private static readonly StorageKey = 'fd_fasting_prompt_state';
     private readonly storage = inject(BrowserStorageService);

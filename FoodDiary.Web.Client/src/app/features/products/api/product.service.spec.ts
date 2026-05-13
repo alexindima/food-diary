@@ -14,6 +14,7 @@ import {
     type UpdateProductRequest,
 } from '../models/product.data';
 import { ProductService } from './product.service';
+import { PRODUCT_API_LIMITS } from './product-api.tokens';
 
 const BASE_URL = 'http://localhost:5300/api/v1/products';
 const CHICKEN_CALORIES = 165;
@@ -21,8 +22,14 @@ const CHICKEN_PROTEINS = 31;
 const CHICKEN_FATS = 3.6;
 const QUALITY_SCORE_GREEN = 80;
 const DEFAULT_PAGE_LIMIT = 10;
+const DEFAULT_RECENT_LIMIT = 10;
+const DEFAULT_FAVORITE_LIMIT = 10;
+const DEFAULT_SUGGESTIONS_LIMIT = 5;
 const FILTERED_PAGE_LIMIT = 20;
 const RECENT_PRODUCTS_LIMIT = 5;
+const OVERRIDE_RECENT_LIMIT = 7;
+const OVERRIDE_FAVORITE_LIMIT = 8;
+const OVERRIDE_SUGGESTIONS_LIMIT = 3;
 const NEW_PRODUCT_CALORIES = 100;
 const NEW_PRODUCT_PROTEINS = 10;
 const NEW_PRODUCT_FATS = 2;
@@ -207,7 +214,7 @@ describe('ProductService recent', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
-        expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_RECENT_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
         req.flush(recentProducts);
     });
@@ -228,6 +235,69 @@ describe('ProductService recent', () => {
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+});
+
+describe('ProductService defaults', () => {
+    it('should use injected overview and suggestions limits by default', () => {
+        service.queryOverview({ page: 1, limit: DEFAULT_PAGE_LIMIT }).subscribe(result => {
+            expect(result.recentItems).toEqual([]);
+        });
+
+        const overviewReq = httpMock.expectOne(r => r.url === `${BASE_URL}/overview` && r.method === 'GET');
+        expect(overviewReq.request.params.get('recentLimit')).toBe(String(DEFAULT_RECENT_LIMIT));
+        expect(overviewReq.request.params.get('favoriteLimit')).toBe(String(DEFAULT_FAVORITE_LIMIT));
+        overviewReq.flush({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allProducts: MOCK_PAGE,
+        });
+
+        service.searchSuggestions('chi').subscribe(result => {
+            expect(result).toEqual([]);
+        });
+
+        const suggestionsReq = httpMock.expectOne(r => r.url === `${BASE_URL}/suggestions` && r.method === 'GET');
+        expect(suggestionsReq.request.params.get('limit')).toBe(String(DEFAULT_SUGGESTIONS_LIMIT));
+        suggestionsReq.flush([]);
+    });
+
+    it('should allow product API limits to be overridden through DI', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            providers: [
+                ProductService,
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                {
+                    provide: PRODUCT_API_LIMITS,
+                    useValue: {
+                        recent: OVERRIDE_RECENT_LIMIT,
+                        favorite: OVERRIDE_FAVORITE_LIMIT,
+                        suggestions: OVERRIDE_SUGGESTIONS_LIMIT,
+                    },
+                },
+            ],
+        });
+        service = TestBed.inject(ProductService);
+        httpMock = TestBed.inject(HttpTestingController);
+
+        service.queryOverview({ page: 1, limit: DEFAULT_PAGE_LIMIT }).subscribe();
+        const overviewReq = httpMock.expectOne(r => r.url === `${BASE_URL}/overview` && r.method === 'GET');
+        expect(overviewReq.request.params.get('recentLimit')).toBe(String(OVERRIDE_RECENT_LIMIT));
+        expect(overviewReq.request.params.get('favoriteLimit')).toBe(String(OVERRIDE_FAVORITE_LIMIT));
+        overviewReq.flush({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allProducts: MOCK_PAGE,
+        });
+
+        service.searchSuggestions('chi').subscribe();
+        const suggestionsReq = httpMock.expectOne(r => r.url === `${BASE_URL}/suggestions` && r.method === 'GET');
+        expect(suggestionsReq.request.params.get('limit')).toBe(String(OVERRIDE_SUGGESTIONS_LIMIT));
+        suggestionsReq.flush([]);
     });
 });
 

@@ -11,9 +11,7 @@ import { NotificationService, type WebPushSubscriptionRequest } from './notifica
 
 export type PushNotificationEnableResult = 'subscribed' | 'already-subscribed' | 'unsupported' | 'blocked' | 'unavailable';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PushNotificationService {
     private readonly swPush = inject(SwPush);
     private readonly authService = inject(AuthService);

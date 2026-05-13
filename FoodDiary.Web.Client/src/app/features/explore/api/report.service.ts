@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { ContentReport, CreateReportDto } from '../models/report.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ReportService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.reports;
 

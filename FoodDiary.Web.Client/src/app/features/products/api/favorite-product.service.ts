@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { FavoriteProduct } from '../models/product.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FavoriteProductService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.favoriteProducts;
 

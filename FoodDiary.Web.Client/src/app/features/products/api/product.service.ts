@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -13,10 +13,7 @@ import type {
     ProductSearchSuggestion,
     UpdateProductRequest,
 } from '../models/product.data';
-
-const DEFAULT_RECENT_LIMIT = 10;
-const DEFAULT_FAVORITE_LIMIT = 10;
-const DEFAULT_SUGGESTIONS_LIMIT = 5;
+import { PRODUCT_API_LIMITS } from './product-api.tokens';
 
 export type ProductOverviewQuery = {
     page: number;
@@ -27,10 +24,10 @@ export type ProductOverviewQuery = {
     favoriteLimit?: number;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService extends ApiService {
+    private readonly defaultLimits = inject(PRODUCT_API_LIMITS);
+
     protected readonly baseUrl = environment.apiUrls.products;
 
     public query(page: number, limit: number, filters?: ProductFilters, includePublic = true): Observable<PageOf<Product>> {
@@ -54,8 +51,8 @@ export class ProductService extends ApiService {
             limit,
             filters,
             includePublic = true,
-            recentLimit = DEFAULT_RECENT_LIMIT,
-            favoriteLimit = DEFAULT_FAVORITE_LIMIT,
+            recentLimit = this.defaultLimits.recent,
+            favoriteLimit = this.defaultLimits.favorite,
         } = query;
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
         this.applyProductFilters(params, filters);
@@ -82,15 +79,15 @@ export class ProductService extends ApiService {
         }
     }
 
-    public getRecent(limit = DEFAULT_RECENT_LIMIT, includePublic = true): Observable<Product[]> {
-        const params: Record<string, string | number | boolean> = { limit, includePublic };
+    public getRecent(limit?: number, includePublic = true): Observable<Product[]> {
+        const params: Record<string, string | number | boolean> = { limit: limit ?? this.defaultLimits.recent, includePublic };
         return this.get<Product[]>('recent', params).pipe(
             catchError((error: unknown) => fallbackApiError('Get recent products error', error, [])),
         );
     }
 
-    public searchSuggestions(search: string, limit = DEFAULT_SUGGESTIONS_LIMIT): Observable<ProductSearchSuggestion[]> {
-        return this.get<ProductSearchSuggestion[]>('suggestions', { search, limit }).pipe(
+    public searchSuggestions(search: string, limit?: number): Observable<ProductSearchSuggestion[]> {
+        return this.get<ProductSearchSuggestion[]>('suggestions', { search, limit: limit ?? this.defaultLimits.suggestions }).pipe(
             catchError((error: unknown) => fallbackApiError('Search product suggestions error', error, [])),
         );
     }

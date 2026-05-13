@@ -31,9 +31,7 @@ type ResolvedDialogLayout = {
     isFullscreen: boolean;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FdUiDialogService {
     private readonly dialog = inject(Dialog);
     private readonly overlay = inject(Overlay);

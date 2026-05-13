@@ -29,7 +29,7 @@ import type { ProductListFiltersDialogResult } from '../product-list-filters-dia
 
 @Injectable({ providedIn: 'root' })
 export class ProductListFacade {
-    public readonly productService = inject(ProductService);
+    private readonly productService = inject(ProductService);
     public readonly navigationService = inject(NavigationService);
     public readonly fdDialogService = inject(FdUiDialogService);
     private readonly quickConsumptionService = inject(QuickMealService);

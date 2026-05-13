@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class LessonService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.lessons;
 

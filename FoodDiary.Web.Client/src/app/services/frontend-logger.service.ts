@@ -6,9 +6,7 @@ type FrontendLoggerOptions = {
     devOnly?: boolean;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FrontendLoggerService {
     public warn(message: string, error?: unknown, options?: FrontendLoggerOptions): void {
         if (!this.shouldLog(options)) {

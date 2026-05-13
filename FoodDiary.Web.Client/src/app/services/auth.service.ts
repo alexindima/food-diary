@@ -35,9 +35,7 @@ declare global {
 
 const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
     private readonly quickConsumptionService = inject(QuickMealService);

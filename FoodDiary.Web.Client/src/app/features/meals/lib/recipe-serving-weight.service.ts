@@ -5,9 +5,7 @@ import { RecipeLookupService } from '../../../shared/api/recipe-lookup.service';
 import type { RecipeLookup, RecipeLookupIngredient } from '../../../shared/models/recipe-lookup.data';
 import type { Recipe, RecipeIngredient } from '../../recipes/models/recipe.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class RecipeServingWeightService {
     private readonly recipeLookupService = inject(RecipeLookupService);
     private readonly cache = new Map<string, number | null>();

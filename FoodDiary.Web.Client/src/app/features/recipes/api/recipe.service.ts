@@ -20,9 +20,7 @@ const DEFAULT_RECENT_RECIPE_LIMIT = 10;
 const DEFAULT_RECIPE_OVERVIEW_RECENT_LIMIT = 10;
 const DEFAULT_RECIPE_OVERVIEW_FAVORITE_LIMIT = 10;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class RecipeService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.recipes;
 

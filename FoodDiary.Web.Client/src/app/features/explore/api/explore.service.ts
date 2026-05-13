@@ -19,9 +19,7 @@ function addOptionalNumberParam(params: Record<string, string | number>, key: st
     }
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ExploreService extends ApiService {
     protected readonly baseUrl = `${environment.apiUrls.recipes}/explore`;
 

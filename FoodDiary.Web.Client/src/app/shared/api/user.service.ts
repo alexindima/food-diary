@@ -26,9 +26,7 @@ export type UserProfileOverview = {
     dietologistRelationship: DietologistRelationship | null;
 };
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UserService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.users;
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);

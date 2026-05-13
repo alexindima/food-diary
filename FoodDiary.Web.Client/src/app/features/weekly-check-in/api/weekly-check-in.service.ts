@@ -6,9 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { WeeklyCheckInData, WeekSummary, WeekTrend } from '../models/weekly-check-in.data';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class WeeklyCheckInService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.weeklyCheckIn;
 

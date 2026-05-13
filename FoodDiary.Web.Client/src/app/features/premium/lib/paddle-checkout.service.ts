@@ -42,9 +42,7 @@ declare global {
     }
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PaddleCheckoutService {
     private readonly scriptUrl = 'https://cdn.paddle.com/paddle/v2/paddle.js';
     private scriptLoadPromise: Promise<void> | null = null;

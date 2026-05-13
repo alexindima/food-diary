@@ -8,9 +8,7 @@ import { PRODUCT_NAME_SEARCH_MIN_LENGTH, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } 
 import type { ProductSearchSuggestion } from '../../../models/product.data';
 import type { ProductNameAutocompleteOption } from './product-name-search.types';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProductNameSearchFacade {
     private readonly productService = inject(ProductService);
     private readonly destroyRef = inject(DestroyRef);

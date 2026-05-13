@@ -33,9 +33,7 @@ const PUBLIC_SEO_PATHS = new Set([
     '/meal-prep-planner',
 ]);
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ThemeService {
     private readonly document = inject(DOCUMENT);
     private readonly themeStorageKey = 'fd_theme';

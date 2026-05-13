@@ -12,9 +12,7 @@ const FIRST_NAVIGATION_ENTRY_INDEX = 0;
 const DECIMAL_ROUNDING_FACTOR = 10;
 const DECIMAL_ROUNDING_DIVISOR = 10;
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FrontendObservabilityService {
     private readonly router = inject(Router);
     private readonly loggingApiService = inject(LoggingApiService);
