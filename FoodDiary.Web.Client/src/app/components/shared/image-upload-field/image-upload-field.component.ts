@@ -84,17 +84,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public disabled = false;
     public isCropping = false;
 
-    private readonly initialSelectionEffect = effect(() => {
-        const initial = this.initialSelection();
-        if (this.hasInitialSelection(initial)) {
-            this.selection = {
-                url: initial.url ?? null,
-                assetId: initial.assetId ?? null,
-            };
-            this.imageChanged.emit(this.selection);
-            this.cdr.markForCheck();
-        }
-    });
     public cropPreviewUrl: string | null = null;
     private cropper: Cropper | null = null;
     private originalFile: File | null = null;
@@ -103,6 +92,20 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     private onTouched: () => void = () => {};
 
     protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
+
+    public constructor() {
+        effect(() => {
+            const initial = this.initialSelection();
+            if (this.hasInitialSelection(initial)) {
+                this.selection = {
+                    url: initial.url ?? null,
+                    assetId: initial.assetId ?? null,
+                };
+                this.imageChanged.emit(this.selection);
+                this.cdr.markForCheck();
+            }
+        });
+    }
 
     private hasInitialSelection(initial: ImageSelection | null): initial is ImageSelection {
         return initial !== null && (initial.url !== null || initial.assetId !== null);

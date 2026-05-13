@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ProductCardComponent } from '../../../../../../components/shared/product-card/product-card.component';
@@ -16,11 +16,12 @@ import type { ProductCardViewModel } from '../../product-list.types';
     },
 })
 export class ProductListGroupsComponent {
-    public readonly showRecentSection = input.required<boolean>();
     public readonly recentItems = input.required<ProductCardViewModel[]>();
     public readonly allItems = input.required<ProductCardViewModel[]>();
     public readonly allProductsSectionLabelKey = input.required<string>();
     public readonly favoriteLoadingIds = input.required<ReadonlySet<string>>();
+
+    protected readonly showRecentSection = computed(() => this.recentItems().length > 0);
 
     public readonly openProduct = output<Product>();
     public readonly addToMeal = output<Product>();

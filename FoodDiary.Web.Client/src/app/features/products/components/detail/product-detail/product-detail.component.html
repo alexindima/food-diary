@@ -28,94 +28,15 @@
     <div class="product-detail fd-stack fd-gap-lg">
         @switch (activeTab()) {
             @case ('summary') {
-                <section class="product-detail__overview fd-grid fd-gap-md">
-                    <div class="product-detail__overview-main fd-stack fd-gap-sm">
-                        <fd-ui-accent-surface
-                            class="product-detail__hero fd-ui-summary-surface"
-                            accentSide="left"
-                            accentColor="var(--fd-color-primary-300)"
-                            [tinted]="true"
-                        >
-                            <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
-                                'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate
-                            }}</span>
-                            <strong class="product-detail__hero-value fd-ui-summary-surface__value">
-                                {{ calories }}
-                                {{ 'GENERAL.UNITS.KCAL' | translate }}
-                            </strong>
-                            <span class="product-detail__hero-meta fd-ui-body-sm">
-                                {{ product.defaultPortionAmount }}
-                                {{ baseUnitKey | translate }}
-                                &middot;
-                                {{ productTypeKey | translate }}
-                            </span>
-                        </fd-ui-accent-surface>
-
-                        <div class="product-detail__quality-row">
-                            <span class="product-detail__quality-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
-                            <div class="product-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
-                                <span
-                                    [class]="`product-detail__quality-fill fd-ui-progress-fill product-detail__quality-fill--${qualityGrade}`"
-                                    [style.width.%]="qualityScore"
-                                ></span>
-                            </div>
-                            <strong class="product-detail__quality-value fd-ui-body-sm" [fdUiHint]="qualityHintKey | translate">
-                                {{ qualityScore }}
-                            </strong>
-                        </div>
-                    </div>
-
-                    <div class="product-detail__macro-bars fd-stack fd-gap-sm">
-                        @for (macro of macroSummaryBlocks; track macro.labelKey) {
-                            <div class="product-detail__macro-row">
-                                <span class="product-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
-                                <div class="product-detail__macro-track" aria-hidden="true">
-                                    <span
-                                        class="product-detail__macro-fill"
-                                        [style.background]="macro.color"
-                                        [style.width.%]="macro.percent"
-                                    ></span>
-                                </div>
-                                <strong class="product-detail__macro-value fd-ui-body-sm">
-                                    {{ macro.value }} {{ macro.unitKey | translate }}
-                                </strong>
-                            </div>
-                        }
-                    </div>
-                </section>
-
-                <div class="product-detail__summary fd-grid fd-gap-sm">
-                    <fd-ui-accent-surface class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface">
-                        <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
-                            'PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION' | translate
-                        }}</span>
-                        <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
-                            {{ product.defaultPortionAmount }}
-                            {{ baseUnitKey | translate }}
-                        </strong>
-                    </fd-ui-accent-surface>
-
-                    <fd-ui-accent-surface class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface">
-                        <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
-                            'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate
-                        }}</span>
-                        <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
-                            {{ productTypeKey | translate }}
-                        </strong>
-                    </fd-ui-accent-surface>
-
-                    <fd-ui-accent-surface
-                        class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface"
-                        [hidden]="!product.barcode"
-                    >
-                        <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
-                            'PRODUCT_DETAIL.SUMMARY.BARCODE' | translate
-                        }}</span>
-                        <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title">
-                            {{ product.barcode }}
-                        </strong>
-                    </fd-ui-accent-surface>
-                </div>
+                <fd-product-detail-summary
+                    [product]="product"
+                    [calories]="calories"
+                    [baseUnitKey]="baseUnitKey"
+                    [productTypeKey]="productTypeKey"
+                    [qualityScore]="qualityScore"
+                    [qualityGrade]="qualityGrade"
+                    [macroSummaryBlocks]="macroSummaryBlocks"
+                />
             }
             @case ('nutrients') {
                 <fd-nutrition-editor
@@ -129,28 +50,12 @@
         }
     </div>
 
-    <div fdUiDialogFooter class="product-detail__footer fd-stack fd-gap-sm">
-        <span class="product-detail__warning fd-ui-body-sm" [hidden]="warningMessage() === null">{{ warningMessage() | translate }}</span>
-        <div class="product-detail__actions fd-ui-actions fd-ui-actions--end">
-            @if (canModify()) {
-                <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
-                    {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
-                </fd-ui-button>
-                <fd-ui-button size="md" variant="danger" icon="delete" (click)="onDelete()">
-                    {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
-                </fd-ui-button>
-            } @else {
-                <fd-ui-button
-                    size="md"
-                    variant="secondary"
-                    fill="outline"
-                    icon="content_copy"
-                    [disabled]="isDuplicateInProgress()"
-                    (click)="onDuplicate()"
-                >
-                    {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
-                </fd-ui-button>
-            }
-        </div>
-    </div>
+    <fd-product-detail-actions
+        [canModify]="canModify()"
+        [warningMessage]="warningMessage()"
+        [isDuplicateInProgress]="isDuplicateInProgress()"
+        (edit)="onEdit()"
+        (delete)="onDelete()"
+        (duplicate)="onDuplicate()"
+    />
 </fd-ui-dialog>

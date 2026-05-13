@@ -99,13 +99,13 @@ export class LandingPreviewTourComponent {
     public previewRecipes: Recipe[] = [];
     public previewQuickItems: QuickMealItem[] = [];
 
-    private readonly clearPreviewOnAuth = effect(() => {
-        if (this.isAuthenticated()) {
-            this.quickConsumptionService.exitPreview();
-        }
-    });
-
     public constructor() {
+        effect(() => {
+            if (this.isAuthenticated()) {
+                this.quickConsumptionService.exitPreview();
+            }
+        });
+
         this.refreshPreviewContent();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.refreshPreviewContent();

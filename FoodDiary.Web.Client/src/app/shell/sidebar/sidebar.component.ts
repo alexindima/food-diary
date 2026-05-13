@@ -185,32 +185,33 @@ export class SidebarComponent {
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
 
-    private readonly userSync = effect(() => {
-        if (!this.isAuthenticated()) {
-            this.userService.clearUser();
-            return;
-        }
-
-        this.syncCurrentUser();
-    });
-
-    private readonly progressSync = effect(() => {
-        if (!this.isMobileProgressVisible()) {
-            this.dailyConsumedKcal.set(0);
-            this.dailyGoalKcal.set(0);
-            return;
-        }
-
-        this.syncDailyProgress();
-    });
-
-    private readonly notificationSync = effect(() => {
-        if (this.isAuthenticated()) {
-            this.notificationService.fetchUnreadCount();
-            this.notificationService.ensureNotificationsLoaded();
-        }
-    });
     public constructor() {
+        effect(() => {
+            if (!this.isAuthenticated()) {
+                this.userService.clearUser();
+                return;
+            }
+
+            this.syncCurrentUser();
+        });
+
+        effect(() => {
+            if (!this.isMobileProgressVisible()) {
+                this.dailyConsumedKcal.set(0);
+                this.dailyGoalKcal.set(0);
+                return;
+            }
+
+            this.syncDailyProgress();
+        });
+
+        effect(() => {
+            if (this.isAuthenticated()) {
+                this.notificationService.fetchUnreadCount();
+                this.notificationService.ensureNotificationsLoaded();
+            }
+        });
+
         const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia(this.mobileViewportQuery);
         const updateMobileViewport = (): void => {
             this.isMobileViewport.set(this.getIsMobileViewport());

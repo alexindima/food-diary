@@ -183,23 +183,25 @@ export class WaistHistoryFacade {
         ),
     );
 
-    private readonly rangeEffect = effect(() => {
-        if (!this.initialized()) {
-            return;
-        }
+    public constructor() {
+        effect(() => {
+            if (!this.initialized()) {
+                return;
+            }
 
-        const range = this.selectedRange();
-        const customRange = this.customRangeValue();
+            const range = this.selectedRange();
+            const customRange = this.customRangeValue();
 
-        if (range !== 'custom') {
-            this.loadEntries();
-            return;
-        }
+            if (range !== 'custom') {
+                this.loadEntries();
+                return;
+            }
 
-        if (customRange?.start !== undefined && customRange.start !== null && customRange.end !== null) {
-            this.loadEntries();
-        }
-    });
+            if (customRange?.start !== undefined && customRange.start !== null && customRange.end !== null) {
+                this.loadEntries();
+            }
+        });
+    }
 
     public initialize(): void {
         if (this.initialized()) {

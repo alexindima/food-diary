@@ -14,6 +14,7 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base.component';
+import { ProductListFacade } from '../../components/list/product-list-lib/product-list.facade';
 import { ProductListEmptyStateComponent } from '../../components/list/product-list-sections/product-list-empty-state/product-list-empty-state.component';
 import { ProductListFavoritesComponent } from '../../components/list/product-list-sections/product-list-favorites/product-list-favorites.component';
 import { ProductListGroupsComponent } from '../../components/list/product-list-sections/product-list-groups/product-list-groups.component';
@@ -26,6 +27,7 @@ import type { Product } from '../../models/product.data';
     templateUrl: '../../components/list/product-list-base/product-list-base.component.html',
     styleUrls: ['./product-list-page.component.scss', '../../components/list/product-list-base/product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ProductListFacade],
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
@@ -80,11 +82,10 @@ export class ProductListPageComponent extends ProductListBaseComponent {
                     }
 
                     this.isDeleteInProgress = true;
-                    this.productData.setLoading(true);
-                    return this.productService.deleteById(result.id).pipe(
+                    return this.productListFacade.deleteProductAndReload(result.id).pipe(
                         switchMap(() => {
                             this.scrollToTop();
-                            return this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value);
+                            return EMPTY;
                         }),
                         finalize(() => {
                             this.isDeleteInProgress = false;

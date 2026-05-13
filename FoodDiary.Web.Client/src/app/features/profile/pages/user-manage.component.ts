@@ -37,7 +37,6 @@ import { ImageUploadFieldComponent } from '../../../components/shared/image-uplo
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { AuthService } from '../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
@@ -141,7 +140,6 @@ export class UserManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly imageUploadService = inject(ImageUploadService);
-    private readonly authService = inject(AuthService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly localizationService = inject(LocalizationService);

@@ -51,20 +51,23 @@ export class FdUiFormErrorComponent {
     public readonly error = input<string | null>();
     public readonly context = input<Record<string, unknown>>();
     public readonly showOnDirty = input(false);
-    private readonly controlSubscription = effect((onCleanup): void => {
-        const control = this.control();
-        if (control === null || control === undefined) {
-            return;
-        }
 
-        const subscription = merge(control.statusChanges, control.valueChanges, control.events).subscribe(() => {
-            this.controlVersion.update(version => version + 1);
-        });
+    public constructor() {
+        effect((onCleanup): void => {
+            const control = this.control();
+            if (control === null || control === undefined) {
+                return;
+            }
 
-        onCleanup((): void => {
-            subscription.unsubscribe();
+            const subscription = merge(control.statusChanges, control.valueChanges, control.events).subscribe(() => {
+                this.controlVersion.update(version => version + 1);
+            });
+
+            onCleanup((): void => {
+                subscription.unsubscribe();
+            });
         });
-    });
+    }
 
     public readonly message = computed((): string | null => {
         this.controlVersion();

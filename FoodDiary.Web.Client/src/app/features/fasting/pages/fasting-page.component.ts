@@ -618,22 +618,6 @@ export class FastingPageComponent {
         );
     }
 
-    private getEnergyDisplay(level: number | null): string {
-        if (level === null) {
-            return '—';
-        }
-
-        return `${this.getEnergyEmoji(level)} ${level}/5`;
-    }
-
-    private getMoodDisplay(level: number | null): string {
-        if (level === null) {
-            return '—';
-        }
-
-        return `${this.getMoodEmoji(level)} ${level}/5`;
-    }
-
     private getHungerSummaryValue(level: number | null): string {
         if (level === null) {
             return '—';

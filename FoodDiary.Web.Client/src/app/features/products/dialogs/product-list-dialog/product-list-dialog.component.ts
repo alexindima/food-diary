@@ -9,6 +9,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { take } from 'rxjs';
 
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base.component';
+import { ProductListFacade } from '../../components/list/product-list-lib/product-list.facade';
 import type { Product } from '../../models/product.data';
 import { ProductAddDialogComponent } from '../product-add-dialog/product-add-dialog.component';
 import type { ProductSelectItemViewModel } from './product-list-dialog.types';
@@ -16,10 +17,10 @@ import { ProductListDialogContentComponent } from './product-list-dialog-content
 
 @Component({
     selector: 'fd-product-list-dialog',
-    standalone: true,
     templateUrl: './product-list-dialog.component.html',
     styleUrls: ['./product-list-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ProductListFacade],
     imports: [
         ReactiveFormsModule,
         TranslatePipe,

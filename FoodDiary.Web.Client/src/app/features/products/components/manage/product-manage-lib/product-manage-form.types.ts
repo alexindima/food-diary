@@ -26,7 +26,7 @@ export type ProductFormValues = {
 
 export type NutritionMode = 'base' | 'portion';
 
-export type ProductManageCancelMode = 'emit' | 'navigate';
+export type ProductManageMode = 'page' | 'dialog';
 
 export type ProductFormData = FormGroupControls<ProductFormValues>;
 

@@ -10,7 +10,6 @@ import type { ProductSaveSuccessDialogData } from './product-save-success-dialog
 
 @Component({
     selector: 'fd-product-save-success-dialog',
-    standalone: true,
     imports: [FdUiDialogComponent, FdUiButtonComponent, TranslatePipe],
     templateUrl: './product-save-success-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

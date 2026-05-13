@@ -268,13 +268,28 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         expect(savedProduct).toBe(PRODUCT);
     });
 
-    it('should emit cancel without navigation or discard confirmation when cancel mode is emit', async () => {
+    it('should skip submit confirmation in dialog mode', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('mode', 'dialog');
+        fixture.detectChanges();
+        component.productForm.patchValue({
+            name: 'Valid product',
+            caloriesPerBase: 100,
+            proteinsPerBase: 10,
+        });
+
+        await component.onSubmitAsync();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledWith(null, expect.any(Object), true, expect.any(Function));
+    });
+
+    it('should emit cancel without navigation or discard confirmation in dialog mode', async () => {
         const { component, fixture, productManageFacade, navigationService } = await setupComponentAsync();
         let wasCancelled = false;
         component.cancelled.subscribe(() => {
             wasCancelled = true;
         });
-        fixture.componentRef.setInput('cancelMode', 'emit');
+        fixture.componentRef.setInput('mode', 'dialog');
         fixture.detectChanges();
         component.productForm.markAsDirty();
 

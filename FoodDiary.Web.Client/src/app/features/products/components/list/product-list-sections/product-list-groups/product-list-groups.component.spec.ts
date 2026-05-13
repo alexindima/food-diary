@@ -11,7 +11,6 @@ describe('ProductListGroupsComponent', () => {
         const recent = createProduct('recent-product', 'Recent apple');
         const all = createProduct('all-product', 'All pear');
         const { fixture } = await setupComponentAsync({
-            showRecentSection: true,
             recentItems: [createItem(recent)],
             allItems: [createItem(all)],
         });
@@ -44,7 +43,6 @@ describe('ProductListGroupsComponent', () => {
 type ProductListGroupsSetupOptions = {
     allItems?: ProductCardViewModel[];
     recentItems?: ProductCardViewModel[];
-    showRecentSection?: boolean;
 };
 
 async function setupComponentAsync(
@@ -55,7 +53,6 @@ async function setupComponentAsync(
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ProductListGroupsComponent);
-    fixture.componentRef.setInput('showRecentSection', options.showRecentSection ?? false);
     fixture.componentRef.setInput('recentItems', options.recentItems ?? []);
     fixture.componentRef.setInput('allItems', options.allItems ?? []);
     fixture.componentRef.setInput('allProductsSectionLabelKey', 'PRODUCT_LIST.ALL_PRODUCTS');

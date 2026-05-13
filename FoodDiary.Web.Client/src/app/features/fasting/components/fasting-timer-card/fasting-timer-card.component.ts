@@ -68,15 +68,6 @@ export class FastingTimerCardComponent {
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
     private readonly now = signal(new Date());
     private timerInterval: ReturnType<typeof setInterval> | null = null;
-    private readonly timerEffect = effect(() => {
-        const session = this.getSession();
-        if (!this.usesFacadeTimer() && session !== null && session.endedAtUtc === null) {
-            this.startTimer();
-            return;
-        }
-
-        this.stopTimer();
-    });
     protected readonly normalizedProgressPercent = computed(() => {
         const progress = this.viewState().progressPercent;
         return Number.isFinite(progress) ? Math.max(EMPTY_DURATION_MS, Math.min(progress, PERCENT_MULTIPLIER)) : EMPTY_DURATION_MS;
@@ -142,6 +133,16 @@ export class FastingTimerCardComponent {
     });
 
     public constructor() {
+        effect(() => {
+            const session = this.getSession();
+            if (!this.usesFacadeTimer() && session !== null && session.endedAtUtc === null) {
+                this.startTimer();
+                return;
+            }
+
+            this.stopTimer();
+        });
+
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.currentLanguage.set(this.localizationService.getCurrentLanguage());
         });

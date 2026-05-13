@@ -52,7 +52,7 @@ import {
 import type {
     NutritionMode,
     ProductFormData,
-    ProductManageCancelMode,
+    ProductManageMode,
     ProductManagePrefill,
 } from '../product-manage-lib/product-manage-form.types';
 import { ProductNameSearchFacade } from '../product-manage-lib/product-name-search.facade';
@@ -106,8 +106,7 @@ export class ProductManageFormComponent {
 
     public readonly product = input<Product | null>(null);
     public readonly prefill = input<ProductManagePrefill | null>(null);
-    public readonly skipConfirmDialog = input(false);
-    public readonly cancelMode = input<ProductManageCancelMode>('navigate');
+    public readonly mode = input<ProductManageMode>('page');
     public readonly saved = output<Product>();
     public readonly cancelled = output();
     public readonly globalError = signal<string | null>(null);
@@ -270,7 +269,7 @@ export class ProductManageFormComponent {
     }
 
     public async onCancelAsync(): Promise<void> {
-        if (this.cancelMode() === 'emit') {
+        if (this.mode() === 'dialog') {
             this.cancelled.emit();
             return;
         }
@@ -336,7 +335,7 @@ export class ProductManageFormComponent {
             const result = await this.productManageFacade.submitProductAsync(
                 product,
                 productData,
-                this.skipConfirmDialog(),
+                this.shouldSkipSubmitConfirmDialog(),
                 async savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
             );
             if (result.error !== null) {
@@ -486,6 +485,10 @@ export class ProductManageFormComponent {
 
     private ensurePremiumAccess(): boolean {
         return this.productManageFacade.ensurePremiumAccess();
+    }
+
+    private shouldSkipSubmitConfirmDialog(): boolean {
+        return this.mode() === 'dialog';
     }
 }
 

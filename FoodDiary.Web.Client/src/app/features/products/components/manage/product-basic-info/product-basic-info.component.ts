@@ -20,7 +20,6 @@ type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-product-basic-info',
-    standalone: true,
     templateUrl: './product-basic-info.component.html',
     styleUrls: ['./product-basic-info.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,39 +52,41 @@ export class ProductBasicInfoComponent {
 
     public readonly displayNameValue = (value: string | null): string => value ?? '';
 
-    private readonly errorSync = effect(onCleanup => {
-        const form = this.formGroup();
-        const formEvents = (form as { events?: Observable<unknown> }).events ?? EMPTY;
-        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-        const refresh = (): void => {
-            this.fieldErrors.set(this.buildFieldErrors());
-        };
+    public constructor() {
+        effect(onCleanup => {
+            const form = this.formGroup();
+            const formEvents = (form as { events?: Observable<unknown> }).events ?? EMPTY;
+            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+            const refresh = (): void => {
+                this.fieldErrors.set(this.buildFieldErrors());
+            };
 
-        refresh();
-        const subscription = merge(formEvents, form.statusChanges, form.valueChanges, languageChanges).subscribe(() => {
             refresh();
+            const subscription = merge(formEvents, form.statusChanges, form.valueChanges, languageChanges).subscribe(() => {
+                refresh();
+            });
+            onCleanup(() => {
+                subscription.unsubscribe();
+            });
         });
-        onCleanup(() => {
-            subscription.unsubscribe();
-        });
-    });
 
-    private readonly optionSync = effect(onCleanup => {
-        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-        const refresh = (): void => {
-            this.buildUnitOptions();
-            this.buildProductTypeOptions();
-            this.buildVisibilityOptions();
-        };
+        effect(onCleanup => {
+            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+            const refresh = (): void => {
+                this.buildUnitOptions();
+                this.buildProductTypeOptions();
+                this.buildVisibilityOptions();
+            };
 
-        refresh();
-        const subscription = languageChanges.subscribe(() => {
             refresh();
+            const subscription = languageChanges.subscribe(() => {
+                refresh();
+            });
+            onCleanup(() => {
+                subscription.unsubscribe();
+            });
         });
-        onCleanup(() => {
-            subscription.unsubscribe();
-        });
-    });
+    }
 
     public onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
         if (this.isProductNameSuggestion(option.data)) {

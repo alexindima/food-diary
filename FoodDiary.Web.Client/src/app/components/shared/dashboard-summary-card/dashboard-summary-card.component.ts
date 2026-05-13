@@ -403,12 +403,6 @@ export class DashboardSummaryCardComponent {
         return `#${this.toHex(mix(r))}${this.toHex(mix(g))}${this.toHex(mix(b))}`;
     }
 
-    private mixWithDark(color: string, ratio: number): string {
-        const [r, g, b] = this.parseColor(color);
-        const mix = (c: number): number => Math.round(c * (1 - ratio));
-        return `#${this.toHex(mix(r))}${this.toHex(mix(g))}${this.toHex(mix(b))}`;
-    }
-
     private buildDefaultNutrientBars(): NutrientBar[] {
         return [
             {

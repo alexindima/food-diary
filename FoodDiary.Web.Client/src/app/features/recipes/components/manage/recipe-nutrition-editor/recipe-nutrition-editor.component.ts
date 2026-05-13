@@ -67,36 +67,38 @@ export class RecipeNutritionEditorComponent {
     public readonly nutritionModeChange = output<string>();
     public readonly nutritionScaleModeChange = output<string>();
 
-    private readonly optionSync = effect(onCleanup => {
-        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-        const refresh = (): void => {
-            this.buildNutritionModeOptions();
-            this.buildNutritionScaleModeOptions();
-        };
+    public constructor() {
+        effect(onCleanup => {
+            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+            const refresh = (): void => {
+                this.buildNutritionModeOptions();
+                this.buildNutritionScaleModeOptions();
+            };
 
-        refresh();
-        const subscription = languageChanges.subscribe(() => {
             refresh();
+            const subscription = languageChanges.subscribe(() => {
+                refresh();
+            });
+            onCleanup(() => {
+                subscription.unsubscribe();
+            });
         });
-        onCleanup(() => {
-            subscription.unsubscribe();
-        });
-    });
 
-    private readonly nutritionStateSync = effect(onCleanup => {
-        const form = this.formGroup();
-        const refresh = (): void => {
-            this.updateCalorieWarning();
-        };
+        effect(onCleanup => {
+            const form = this.formGroup();
+            const refresh = (): void => {
+                this.updateCalorieWarning();
+            };
 
-        refresh();
-        const subscription = merge(form.valueChanges, form.statusChanges).subscribe(() => {
             refresh();
+            const subscription = merge(form.valueChanges, form.statusChanges).subscribe(() => {
+                refresh();
+            });
+            onCleanup(() => {
+                subscription.unsubscribe();
+            });
         });
-        onCleanup(() => {
-            subscription.unsubscribe();
-        });
-    });
+    }
 
     public caloriesError(): string | null {
         if (this.formGroup().controls.calculateNutritionAutomatically.value) {

@@ -28,7 +28,6 @@ import type { NutritionMode, ProductFormData } from '../product-manage-lib/produ
 
 @Component({
     selector: 'fd-product-nutrition-editor',
-    standalone: true,
     templateUrl: './product-nutrition-editor.component.html',
     styleUrls: ['./product-nutrition-editor.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,37 +61,39 @@ export class ProductNutritionEditorComponent {
     public readonly nutritionModeChange = output<string>();
     public readonly openAiRecognition = output();
 
-    private readonly optionSync = effect(onCleanup => {
-        const form = this.formGroup();
-        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-        const refresh = (): void => {
-            this.buildNutritionModeOptions();
-        };
+    public constructor() {
+        effect(onCleanup => {
+            const form = this.formGroup();
+            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+            const refresh = (): void => {
+                this.buildNutritionModeOptions();
+            };
 
-        refresh();
-        const subscription = merge(form.controls.baseUnit.valueChanges, languageChanges).subscribe(() => {
             refresh();
+            const subscription = merge(form.controls.baseUnit.valueChanges, languageChanges).subscribe(() => {
+                refresh();
+            });
+            onCleanup(() => {
+                subscription.unsubscribe();
+            });
         });
-        onCleanup(() => {
-            subscription.unsubscribe();
-        });
-    });
 
-    private readonly nutritionStateSync = effect(onCleanup => {
-        const form = this.formGroup();
-        const refresh = (): void => {
-            this.updateCalorieWarning();
-            this.updateMacroDistribution();
-        };
+        effect(onCleanup => {
+            const form = this.formGroup();
+            const refresh = (): void => {
+                this.updateCalorieWarning();
+                this.updateMacroDistribution();
+            };
 
-        refresh();
-        const subscription = form.valueChanges.subscribe(() => {
             refresh();
+            const subscription = form.valueChanges.subscribe(() => {
+                refresh();
+            });
+            onCleanup(() => {
+                subscription.unsubscribe();
+            });
         });
-        onCleanup(() => {
-            subscription.unsubscribe();
-        });
-    });
+    }
 
     public caloriesError(): string | null {
         const control = this.formGroup().controls.caloriesPerBase;

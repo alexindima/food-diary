@@ -7,7 +7,6 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { NavigationService } from '../../../services/navigation.service';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { WaistHistoryFacade } from '../lib/waist-history.facade';
@@ -45,7 +44,6 @@ const WHT_ELEVATED_MAX = 0.6;
     providers: [WaistHistoryFacade],
 })
 export class WaistHistoryPageComponent {
-    private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WaistHistoryFacade);
     private readonly translateService = inject(TranslateService);
 

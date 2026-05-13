@@ -219,19 +219,21 @@ export class GoalsFacade {
         },
     ];
 
-    private readonly presetSync = effect(() => {
-        const presetKey = this.selectedPreset();
-        if (presetKey === 'custom') {
-            return;
-        }
+    public constructor() {
+        effect(() => {
+            const presetKey = this.selectedPreset();
+            if (presetKey === 'custom') {
+                return;
+            }
 
-        const preset = this.macroPresets.find(item => item.key === presetKey);
-        if (preset?.percent === undefined) {
-            return;
-        }
+            const preset = this.macroPresets.find(item => item.key === presetKey);
+            if (preset?.percent === undefined) {
+                return;
+            }
 
-        this.applyPresetPercent(preset.percent);
-    });
+            this.applyPresetPercent(preset.percent);
+        });
+    }
 
     public readonly macroStates = computed(() =>
         this.macroConfigs.map(cfg => {

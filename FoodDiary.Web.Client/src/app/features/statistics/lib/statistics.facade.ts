@@ -137,23 +137,25 @@ export class StatisticsFacade {
         ),
     );
 
-    private readonly rangeEffect = effect(() => {
-        if (!this.initialized()) {
-            return;
-        }
+    public constructor() {
+        effect(() => {
+            if (!this.initialized()) {
+                return;
+            }
 
-        const range = this.selectedRange();
-        const customRange = this.customRangeValue();
+            const range = this.selectedRange();
+            const customRange = this.customRangeValue();
 
-        if (range !== 'custom') {
-            this.loadAllData();
-            return;
-        }
+            if (range !== 'custom') {
+                this.loadAllData();
+                return;
+            }
 
-        if (customRange?.start !== undefined && customRange.end !== null) {
-            this.loadAllData();
-        }
-    });
+            if (customRange?.start !== undefined && customRange.end !== null) {
+                this.loadAllData();
+            }
+        });
+    }
 
     public initialize(): void {
         if (this.initialized()) {

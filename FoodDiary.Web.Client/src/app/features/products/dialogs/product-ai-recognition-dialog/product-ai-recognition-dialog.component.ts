@@ -1,13 +1,11 @@
-import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { catchError, of } from 'rxjs';
 
@@ -15,18 +13,23 @@ import { ImageUploadFieldComponent } from '../../../../components/shared/image-u
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { ImageUploadService } from '../../../../shared/api/image-upload.service';
-import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../shared/lib/nutrition.constants';
-import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
-import { MeasurementUnit } from '../../models/product.data';
 import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action/product-ai-recognition-action.component';
 import type { ProductAiDialogData, ProductAiRecognitionFormGroup, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
+import {
+    applyNutritionToProductAiRecognitionForm,
+    buildProductAiRecognitionResult,
+    capitalizeName,
+    createProductAiRecognitionForm,
+    mapAiNutritionErrorKey,
+    mapAiRecognitionErrorKey,
+    normalizeItemsForNutrition,
+} from './product-ai-recognition-lib/product-ai-recognition.helpers';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result/product-ai-recognition-result.component';
 
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
-    standalone: true,
     templateUrl: './product-ai-recognition-dialog.component.html',
     styleUrls: ['./product-ai-recognition-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,8 +53,6 @@ export class ProductAiRecognitionDialogComponent {
     private readonly aiFoodService = inject(AiFoodService);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly logger = inject(FrontendLoggerService);
-    private readonly translateService = inject(TranslateService);
-
     public readonly isLoading = signal(false);
     public readonly isNutritionLoading = signal(false);
     public readonly hasAnalyzed = signal(false);
@@ -61,22 +62,7 @@ export class ProductAiRecognitionDialogComponent {
     public readonly results = signal<FoodVisionItem[]>([]);
     public readonly nutrition = signal<FoodNutritionResponse | null>(null);
     public readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
-    public readonly resultForm: ProductAiRecognitionFormGroup = new FormGroup({
-        name: new FormControl('', { nonNullable: true }),
-        portionAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, { nonNullable: true }),
-        baseUnit: new FormControl<MeasurementUnit>(MeasurementUnit.G, { nonNullable: true }),
-        caloriesPerBase: new FormControl(0, { nonNullable: true }),
-        proteinsPerBase: new FormControl(0, { nonNullable: true }),
-        fatsPerBase: new FormControl(0, { nonNullable: true }),
-        carbsPerBase: new FormControl(0, { nonNullable: true }),
-        fiberPerBase: new FormControl(0, { nonNullable: true }),
-        alcoholPerBase: new FormControl(0, { nonNullable: true }),
-    });
-
-    public readonly unitOptions: Array<FdUiSelectOption<MeasurementUnit>> = Object.values(MeasurementUnit).map(unit => ({
-        value: unit,
-        label: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${MeasurementUnit[unit]}`),
-    }));
+    public readonly resultForm: ProductAiRecognitionFormGroup = createProductAiRecognitionForm();
 
     public constructor() {
         effect(() => {
@@ -108,11 +94,9 @@ export class ProductAiRecognitionDialogComponent {
     public readonly isAnalyzeDisabled = computed(() => this.selection() === null || this.isLoading() || this.isNutritionLoading());
     public readonly itemNames = computed(() =>
         this.results()
-            .map(item => this.capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))
+            .map(item => capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))
             .filter(name => name.length > 0),
     );
-    public readonly hasMultipleItems = computed(() => this.results().length > 1);
-
     public onImageChanged(selection: ImageSelection | null): void {
         this.selection.set(selection);
         this.errorKey.set(null);
@@ -154,25 +138,13 @@ export class ProductAiRecognitionDialogComponent {
             return;
         }
 
-        const name = this.resultForm.controls.name.value.trim();
-        const baseUnit = this.resultForm.controls.baseUnit.value;
-        const requestedBaseAmount = this.getNumber(this.resultForm.controls.portionAmount.value);
-        const baseAmount = requestedBaseAmount > 0 ? requestedBaseAmount : this.getRecognizedAmount(baseUnit);
-        const image = this.selection();
-
-        const result: ProductAiRecognitionResult = {
-            name: name.length > 0 ? name : this.getFallbackName(),
-            description: this.getDescription() ?? null,
-            image: image !== null ? { ...image } : null,
-            baseAmount,
-            baseUnit,
-            caloriesPerBase: this.getNumber(this.resultForm.controls.caloriesPerBase.value),
-            proteinsPerBase: this.getNumber(this.resultForm.controls.proteinsPerBase.value),
-            fatsPerBase: this.getNumber(this.resultForm.controls.fatsPerBase.value),
-            carbsPerBase: this.getNumber(this.resultForm.controls.carbsPerBase.value),
-            fiberPerBase: this.getNumber(this.resultForm.controls.fiberPerBase.value),
-            alcoholPerBase: this.getNumber(this.resultForm.controls.alcoholPerBase.value),
-        };
+        const result = buildProductAiRecognitionResult({
+            form: this.resultForm,
+            selection: this.selection(),
+            itemNames: this.itemNames(),
+            results: this.results(),
+            description: this.getDescription(),
+        });
 
         this.dialogRef?.close(result);
     }
@@ -191,14 +163,7 @@ export class ProductAiRecognitionDialogComponent {
             })
             .pipe(
                 catchError((err: unknown) => {
-                    const status = getNumberProperty(err, 'status');
-                    if (status === HttpStatusCode.Forbidden) {
-                        this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (status === HttpStatusCode.TooManyRequests) {
-                        this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
-                    } else {
-                        this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_GENERIC');
-                    }
+                    this.errorKey.set(mapAiRecognitionErrorKey(err));
                     return of(null);
                 }),
             )
@@ -219,17 +184,12 @@ export class ProductAiRecognitionDialogComponent {
     private runNutrition(items: FoodVisionItem[]): void {
         this.isNutritionLoading.set(true);
         this.nutritionErrorKey.set(null);
-        const normalizedItems = this.normalizeItemsForNutrition(items);
+        const normalizedItems = normalizeItemsForNutrition(items);
         this.aiFoodService
             .calculateNutrition({ items: normalizedItems })
             .pipe(
                 catchError((err: unknown) => {
-                    const status = getNumberProperty(err, 'status');
-                    if (status === HttpStatusCode.TooManyRequests) {
-                        this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
-                    } else {
-                        this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
-                    }
+                    this.nutritionErrorKey.set(mapAiNutritionErrorKey(err));
                     return of(null);
                 }),
             )
@@ -239,95 +199,13 @@ export class ProductAiRecognitionDialogComponent {
                     return;
                 }
                 this.nutrition.set(response);
-                this.applyNutritionToForm(items, response);
+                applyNutritionToProductAiRecognitionForm(this.resultForm, items, response);
             });
-    }
-
-    private applyNutritionToForm(items: FoodVisionItem[], nutrition: FoodNutritionResponse): void {
-        const primary = (items as Array<FoodVisionItem | undefined>)[0];
-        const name = this.capitalizeName(primary?.nameLocal?.trim() ?? primary?.nameEn.trim() ?? '');
-        const baseUnit = this.resolveUnit(primary?.unit);
-        this.resultForm.patchValue({
-            name,
-            portionAmount: this.getRecognizedAmount(baseUnit),
-            baseUnit,
-            caloriesPerBase: nutrition.calories,
-            proteinsPerBase: nutrition.protein,
-            fatsPerBase: nutrition.fat,
-            carbsPerBase: nutrition.carbs,
-            fiberPerBase: nutrition.fiber,
-            alcoholPerBase: nutrition.alcohol,
-        });
-    }
-
-    private resolveUnit(unit?: string | null): MeasurementUnit {
-        if (unit === null || unit === undefined || unit.length === 0) {
-            return MeasurementUnit.G;
-        }
-        const normalized = unit.trim().toLowerCase();
-        if (['g', 'gram', 'grams', 'gr'].includes(normalized)) {
-            return MeasurementUnit.G;
-        }
-        if (['ml', 'l', 'liter', 'liters'].includes(normalized)) {
-            return MeasurementUnit.ML;
-        }
-        if (['pcs', 'pc', 'piece', 'pieces'].includes(normalized)) {
-            return MeasurementUnit.PCS;
-        }
-        return MeasurementUnit.G;
-    }
-
-    private getDefaultBaseAmount(unit: MeasurementUnit): number {
-        return unit === MeasurementUnit.PCS ? 1 : DEFAULT_NUTRITION_BASE_AMOUNT;
-    }
-
-    private getRecognizedAmount(unit: MeasurementUnit): number {
-        const compatibleAmounts = this.results()
-            .filter(item => this.resolveUnit(item.unit) === unit)
-            .map(item => this.getNumber(item.amount))
-            .filter(amount => amount > 0);
-
-        if (compatibleAmounts.length > 0) {
-            return compatibleAmounts.reduce((total, amount) => total + amount, 0);
-        }
-
-        return this.getDefaultBaseAmount(unit);
-    }
-
-    private normalizeItemsForNutrition(items: FoodVisionItem[]): FoodVisionItem[] {
-        return items.map(item => {
-            const baseUnit = this.resolveUnit(item.unit);
-            const normalizedUnit = baseUnit === MeasurementUnit.PCS ? 'pcs' : baseUnit.toLowerCase();
-            const amount = this.getNumber(item.amount);
-            const normalizedAmount = amount > 0 ? amount : this.getDefaultBaseAmount(baseUnit);
-
-            return {
-                ...item,
-                amount: normalizedAmount,
-                unit: normalizedUnit,
-            };
-        });
     }
 
     private getDescription(): string | null {
         const value = this.descriptionControl.value.trim();
         return value.length > 0 ? value : null;
-    }
-
-    private getFallbackName(): string {
-        return this.itemNames()[0] ?? '';
-    }
-
-    private capitalizeName(value: string): string {
-        if (value.length === 0) {
-            return '';
-        }
-        return value.charAt(0).toUpperCase() + value.slice(1);
-    }
-
-    private getNumber(value: number | string): number {
-        const parsed = Number(value);
-        return Number.isFinite(parsed) ? parsed : 0;
     }
 
     private cleanupAsset(): void {

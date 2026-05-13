@@ -26,15 +26,17 @@ export class SidebarUserMenuComponent {
 
     private readonly userMenuRef = viewChild<ElementRef<HTMLElement>>('userMenu');
 
-    private readonly userMenuFocusSync = effect(() => {
-        if (!this.isOpen()) {
-            return;
-        }
+    public constructor() {
+        effect(() => {
+            if (!this.isOpen()) {
+                return;
+            }
 
-        queueMicrotask(() => {
-            this.focusFirstInteractive(this.userMenuRef()?.nativeElement);
+            queueMicrotask(() => {
+                this.focusFirstInteractive(this.userMenuRef()?.nativeElement);
+            });
         });
-    });
+    }
 
     private focusFirstInteractive(container?: HTMLElement | null): void {
         if (container === null || container === undefined) {

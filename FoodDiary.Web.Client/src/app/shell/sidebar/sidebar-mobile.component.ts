@@ -41,15 +41,17 @@ export class SidebarMobileComponent {
 
     private readonly mobileSheetRef = viewChild<ElementRef<HTMLElement>>('mobileSheetPanel');
 
-    private readonly mobileSheetFocusSync = effect(() => {
-        if (!this.isSheetOpen()) {
-            return;
-        }
+    public constructor() {
+        effect(() => {
+            if (!this.isSheetOpen()) {
+                return;
+            }
 
-        queueMicrotask(() => {
-            this.focusFirstInteractive(this.mobileSheetRef()?.nativeElement);
+            queueMicrotask(() => {
+                this.focusFirstInteractive(this.mobileSheetRef()?.nativeElement);
+            });
         });
-    });
+    }
 
     private focusFirstInteractive(container?: HTMLElement | null): void {
         if (container === null || container === undefined) {

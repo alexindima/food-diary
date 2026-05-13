@@ -1,0 +1,24 @@
+<div fdUiDialogFooter class="product-detail__footer fd-stack fd-gap-sm">
+    <span class="product-detail__warning fd-ui-body-sm" [hidden]="warningMessage() === null">{{ warningMessage() | translate }}</span>
+    <div class="product-detail__actions fd-ui-actions fd-ui-actions--end">
+        @if (canModify()) {
+            <fd-ui-button size="md" variant="secondary" icon="edit" (click)="edit.emit()">
+                {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
+            </fd-ui-button>
+            <fd-ui-button size="md" variant="danger" icon="delete" (click)="delete.emit()">
+                {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
+            </fd-ui-button>
+        } @else {
+            <fd-ui-button
+                size="md"
+                variant="secondary"
+                fill="outline"
+                icon="content_copy"
+                [disabled]="isDuplicateInProgress()"
+                (click)="duplicate.emit()"
+            >
+                {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+</div>
