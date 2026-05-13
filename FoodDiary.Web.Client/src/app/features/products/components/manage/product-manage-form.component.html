@@ -17,12 +17,8 @@
             <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
                 <fd-product-basic-info
                     [formGroup]="productForm"
-                    [unitOptions]="unitOptions"
-                    [productTypeOptions]="productTypeSelectOptions"
-                    [visibilityOptions]="visibilitySelectOptions"
                     [nameOptions]="nameOptions()"
                     [isNameSearchLoading]="isNameSearchLoading()"
-                    [getControlError]="getControlErrorFn"
                     (openBarcodeScanner)="openBarcodeScanner()"
                     (openAiRecognition)="openAiRecognitionDialog()"
                     (nameQueryChange)="onNameQueryChange($event)"
@@ -35,12 +31,6 @@
                     <fd-product-nutrition-editor
                         [formGroup]="productForm"
                         [nutritionMode]="nutritionMode"
-                        [nutritionModeOptions]="nutritionModeOptions"
-                        [macroBarState]="macroBarState()"
-                        [nutritionWarning]="nutritionWarning()"
-                        [caloriesError]="caloriesError()"
-                        [macrosError]="macrosError()"
-                        [nutritionControlNames]="nutritionControlNames"
                         (nutritionModeChange)="onNutritionModeChange($event)"
                         (openAiRecognition)="openAiRecognitionDialog()"
                     />

@@ -3,13 +3,14 @@ import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiAutocompleteComponent, type FdUiAutocompleteOption } from 'fd-ui-kit/autocomplete/fd-ui-autocomplete.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import type { MeasurementUnit, ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
+import { MeasurementUnit, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductFormData } from '../product-manage-form.types';
 
 export type ProductNameSuggestion = ProductSearchSuggestion;
@@ -41,13 +42,12 @@ export class ProductBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly formGroup = input.required<FormGroup<ProductFormData>>();
-    public readonly unitOptions = input.required<Array<FdUiSelectOption<MeasurementUnit>>>();
-    public readonly productTypeOptions = input.required<Array<FdUiSelectOption<ProductType>>>();
-    public readonly visibilityOptions = input.required<Array<FdUiSelectOption<ProductVisibility>>>();
     public readonly nameOptions = input.required<ProductNameAutocompleteOption[]>();
     public readonly isNameSearchLoading = input.required<boolean>();
-    public readonly getControlError = input.required<(controlName: keyof ProductFormData) => string | null>();
     public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    public readonly unitOptions = signal<Array<FdUiSelectOption<MeasurementUnit>>>([]);
+    public readonly productTypeOptions = signal<Array<FdUiSelectOption<ProductType>>>([]);
+    public readonly visibilityOptions = signal<Array<FdUiSelectOption<ProductVisibility>>>([]);
 
     public readonly openBarcodeScanner = output();
     public readonly openAiRecognition = output();
@@ -73,6 +73,23 @@ export class ProductBasicInfoComponent {
         });
     });
 
+    private readonly optionSync = effect(onCleanup => {
+        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+        const refresh = (): void => {
+            this.buildUnitOptions();
+            this.buildProductTypeOptions();
+            this.buildVisibilityOptions();
+        };
+
+        refresh();
+        const subscription = languageChanges.subscribe(() => {
+            refresh();
+        });
+        onCleanup(() => {
+            subscription.unsubscribe();
+        });
+    });
+
     public onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
         if (this.isProductNameSuggestion(option.data)) {
             this.nameSuggestionSelected.emit(option.data);
@@ -84,9 +101,8 @@ export class ProductBasicInfoComponent {
     }
 
     private buildFieldErrors(): FieldErrors {
-        const getControlError = this.getControlError();
         return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
-            errors[field] = getControlError(field);
+            errors[field] = this.getControlError(field);
             return errors;
         }, this.createEmptyFieldErrors());
     }
@@ -99,5 +115,59 @@ export class ProductBasicInfoComponent {
             baseUnit: null,
             visibility: null,
         };
+    }
+
+    private buildVisibilityOptions(): void {
+        this.visibilityOptions.set(
+            (Object.values(ProductVisibility) as ProductVisibility[]).map(option => ({
+                value: option,
+                label: this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${option.toUpperCase()}`),
+            })),
+        );
+    }
+
+    private buildUnitOptions(): void {
+        this.unitOptions.set(
+            (Object.values(MeasurementUnit) as MeasurementUnit[]).map(unit => ({
+                value: unit,
+                label: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${MeasurementUnit[unit]}`),
+            })),
+        );
+    }
+
+    private buildProductTypeOptions(): void {
+        this.productTypeOptions.set(
+            (Object.values(ProductType) as ProductType[]).map(type => ({
+                value: type,
+                label: this.translateService.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`),
+            })),
+        );
+    }
+
+    private getControlError(controlName: ErrorField): string | null {
+        const control = this.formGroup().controls[controlName];
+
+        if (!control.touched && !control.dirty) {
+            return null;
+        }
+
+        const errors = control.errors;
+
+        if (errors === null) {
+            return null;
+        }
+
+        if (errors['required'] !== undefined) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+
+        const min = getNumberProperty(errors['min'], 'min');
+        if (min !== undefined) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
+                min,
+            });
+        }
+
+        return null;
     }
 }

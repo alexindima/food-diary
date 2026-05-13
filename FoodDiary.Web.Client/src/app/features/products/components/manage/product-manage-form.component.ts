@@ -23,8 +23,6 @@ import {
     type FdValidationErrors,
     getNumberProperty,
 } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { catchError, debounceTime, firstValueFrom, map, of, Subject, switchMap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
@@ -33,18 +31,8 @@ import { ManageHeaderComponent } from '../../../../components/shared/manage-head
 import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
-import {
-    DEFAULT_CALORIE_MISMATCH_THRESHOLD,
-    DEFAULT_NUTRITION_BASE_AMOUNT,
-    KJ_TO_KCAL_FACTOR,
-} from '../../../../shared/lib/nutrition.constants';
-import {
-    calculateCalorieMismatchWarning,
-    calculateMacroBarState,
-    checkCaloriesError,
-    checkMacrosError,
-    getControlNumericValue,
-} from '../../../../shared/lib/nutrition-form.utils';
+import { DEFAULT_NUTRITION_BASE_AMOUNT, KJ_TO_KCAL_FACTOR } from '../../../../shared/lib/nutrition.constants';
+import { checkMacrosError, getControlNumericValue } from '../../../../shared/lib/nutrition-form.utils';
 import { getRecordProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { UsdaService } from '../../../usda/api/usda.service';
@@ -125,8 +113,6 @@ export class ProductManageFormComponent {
     public readonly saved = output<Product>();
     public readonly cancelled = output();
     public readonly globalError = signal<string | null>(null);
-    public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
-    public readonly macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
     private populatedProduct: Product | null = null;
     private appliedPrefillKey: string | null = null;
     private usdaDetailRequestId = 0;
@@ -134,21 +120,9 @@ export class ProductManageFormComponent {
     public readonly isSubmitting = signal(false);
 
     public productForm: FormGroup<ProductFormData>;
-    public unitOptions: Array<FdUiSelectOption<MeasurementUnit>> = [];
-    public productTypeSelectOptions: Array<FdUiSelectOption<ProductType>> = [];
-    public visibilitySelectOptions: Array<FdUiSelectOption<ProductVisibility>> = [];
     public nutritionMode: NutritionMode = 'base';
-    public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public readonly nameOptions = signal<ProductNameAutocompleteOption[]>([]);
     public readonly isNameSearchLoading = signal(false);
-    public readonly nutritionControlNames = {
-        calories: 'caloriesPerBase',
-        proteins: 'proteinsPerBase',
-        fats: 'fatsPerBase',
-        carbs: 'carbsPerBase',
-        fiber: 'fiberPerBase',
-        alcohol: 'alcoholPerBase',
-    };
     private readonly nameQuery$ = new Subject<string>();
     private readonly nutritionFields: NutritionField[] = [
         'caloriesPerBase',
@@ -159,13 +133,8 @@ export class ProductManageFormComponent {
         'alcoholPerBase',
     ];
 
-    public readonly getControlErrorFn = (controlName: keyof ProductFormData): string | null => {
-        return this.getControlError(controlName);
-    };
-
     public constructor() {
         this.productForm = this.createProductForm();
-        this.initializeFormOptions();
         this.bindFormEffects();
         this.bindNameSearch();
     }
@@ -199,23 +168,9 @@ export class ProductManageFormComponent {
         });
     }
 
-    private initializeFormOptions(): void {
-        this.buildUnitOptions();
-        this.buildProductTypeOptions();
-        this.buildVisibilityOptions();
-        this.buildNutritionModeOptions();
-    }
-
     private bindFormEffects(): void {
         this.productForm.controls.baseUnit.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(unit => {
             this.productForm.controls.baseAmount.setValue(this.getDefaultBaseAmount(unit));
-            this.buildNutritionModeOptions();
-        });
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.buildUnitOptions();
-            this.buildProductTypeOptions();
-            this.buildVisibilityOptions();
-            this.buildNutritionModeOptions();
         });
 
         effect(() => {
@@ -235,8 +190,6 @@ export class ProductManageFormComponent {
         });
         this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.updateCalorieWarning();
-            this.updateMacroDistribution();
         });
     }
 
@@ -529,7 +482,7 @@ export class ProductManageFormComponent {
 
         this.productForm.markAllAsTouched();
 
-        if (this.macrosError() !== null || !this.productForm.valid) {
+        if (this.hasMacrosError() || !this.productForm.valid) {
             return null;
         }
 
@@ -656,12 +609,7 @@ export class ProductManageFormComponent {
         this.nameOptions.set([this.toProductNameOption(suggestion)]);
     }
 
-    public caloriesError(): string | null {
-        const control = this.productForm.controls.caloriesPerBase;
-        return checkCaloriesError(control) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED') : null;
-    }
-
-    public macrosError(): string | null {
+    private hasMacrosError(): boolean {
         const controls = [
             this.productForm.controls.proteinsPerBase,
             this.productForm.controls.fatsPerBase,
@@ -669,59 +617,7 @@ export class ProductManageFormComponent {
             this.productForm.controls.alcoholPerBase,
         ];
 
-        return checkMacrosError(controls) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED') : null;
-    }
-
-    public getControlError(controlName: keyof ProductFormData): string | null {
-        const control = this.productForm.controls[controlName];
-
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const errors = control.errors;
-
-        if (errors === null) {
-            return null;
-        }
-
-        if (errors['required'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        const min = getNumberProperty(errors['min'], 'min');
-        if (min !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min,
-            });
-        }
-
-        return null;
-    }
-
-    private updateCalorieWarning(): void {
-        const calories = this.getNumberValue(this.productForm.controls.caloriesPerBase);
-        const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
-        const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
-        const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
-        const alcohol = this.getNumberValue(this.productForm.controls.alcoholPerBase);
-        this.nutritionWarning.set(
-            calculateCalorieMismatchWarning({
-                calories,
-                proteins,
-                fats,
-                carbs,
-                alcohol,
-                threshold: DEFAULT_CALORIE_MISMATCH_THRESHOLD,
-            }),
-        );
-    }
-
-    private updateMacroDistribution(): void {
-        const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
-        const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
-        const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
-        this.macroBarState.set(calculateMacroBarState(proteins, fats, carbs));
+        return checkMacrosError(controls);
     }
 
     private resetNutritionControls(): void {
@@ -784,13 +680,6 @@ export class ProductManageFormComponent {
         return Math.round(value * PRODUCT_NUTRIENT_ROUNDING_FACTOR) / PRODUCT_NUTRIENT_ROUNDING_FACTOR;
     }
 
-    private getUnitLabel(baseUnit: MeasurementUnit | null): string {
-        if (baseUnit === null) {
-            return '';
-        }
-        return this.translateService.instant(`GENERAL.UNITS.${baseUnit}`);
-    }
-
     private getDefaultBaseAmount(unit: MeasurementUnit): number {
         return unit === MeasurementUnit.PCS ? 1 : DEFAULT_NUTRITION_BASE_AMOUNT;
     }
@@ -816,32 +705,27 @@ export class ProductManageFormComponent {
             targetBaseAmount,
         );
 
-        this.productForm.patchValue(
-            {
-                name: product.name,
-                barcode: product.barcode ?? null,
-                brand: product.brand ?? null,
-                productType: normalizedProductType,
-                description: product.description ?? null,
-                comment: product.comment ?? null,
-                imageUrl: this.getProductImageSelection(product),
-                baseAmount: targetBaseAmount,
-                defaultPortionAmount: product.defaultPortionAmount,
-                baseUnit: product.baseUnit,
-                caloriesPerBase: normalizedNutrition.caloriesPerBase,
-                proteinsPerBase: normalizedNutrition.proteinsPerBase,
-                fatsPerBase: normalizedNutrition.fatsPerBase,
-                carbsPerBase: normalizedNutrition.carbsPerBase,
-                fiberPerBase: normalizedNutrition.fiberPerBase,
-                alcoholPerBase: normalizedNutrition.alcoholPerBase,
-                visibility: normalizedVisibility,
-                usdaFdcId: product.usdaFdcId ?? null,
-            },
-            { emitEvent: false },
-        );
+        this.productForm.patchValue({
+            name: product.name,
+            barcode: product.barcode ?? null,
+            brand: product.brand ?? null,
+            productType: normalizedProductType,
+            description: product.description ?? null,
+            comment: product.comment ?? null,
+            imageUrl: this.getProductImageSelection(product),
+            baseAmount: targetBaseAmount,
+            defaultPortionAmount: product.defaultPortionAmount,
+            baseUnit: product.baseUnit,
+            caloriesPerBase: normalizedNutrition.caloriesPerBase,
+            proteinsPerBase: normalizedNutrition.proteinsPerBase,
+            fatsPerBase: normalizedNutrition.fatsPerBase,
+            carbsPerBase: normalizedNutrition.carbsPerBase,
+            fiberPerBase: normalizedNutrition.fiberPerBase,
+            alcoholPerBase: normalizedNutrition.alcoholPerBase,
+            visibility: normalizedVisibility,
+            usdaFdcId: product.usdaFdcId ?? null,
+        });
         this.nutritionMode = 'base';
-        this.updateCalorieWarning();
-        this.updateMacroDistribution();
     }
 
     private getProductImageSelection(product: Product): ImageSelection {
@@ -871,9 +755,6 @@ export class ProductManageFormComponent {
         });
 
         this.nutritionMode = 'portion';
-        this.buildNutritionModeOptions();
-        this.updateCalorieWarning();
-        this.updateMacroDistribution();
     }
 
     private handleSubmitError(error: unknown): void {
@@ -897,47 +778,6 @@ export class ProductManageFormComponent {
 
     private clearGlobalError(): void {
         this.globalError.set(null);
-    }
-
-    private buildVisibilityOptions(): void {
-        this.visibilitySelectOptions = (Object.values(ProductVisibility) as ProductVisibility[]).map(option => ({
-            value: option,
-            label: this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${option.toUpperCase()}`),
-        }));
-    }
-
-    private buildUnitOptions(): void {
-        this.unitOptions = (Object.values(MeasurementUnit) as MeasurementUnit[]).map(unit => ({
-            value: unit,
-            label: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${MeasurementUnit[unit]}`),
-        }));
-    }
-
-    private buildProductTypeOptions(): void {
-        this.productTypeSelectOptions = (Object.values(ProductType) as ProductType[]).map(type => ({
-            value: type,
-            label: this.translateService.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`),
-        }));
-    }
-
-    private buildNutritionModeOptions(): void {
-        const baseUnit = this.productForm.controls.baseUnit.value;
-        const amount = this.getDefaultBaseAmount(baseUnit);
-        const unitLabel = this.getUnitLabel(baseUnit);
-
-        this.nutritionModeOptions = [
-            {
-                value: 'base',
-                label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.BASE', {
-                    amount,
-                    unit: unitLabel,
-                }),
-            },
-            {
-                value: 'portion',
-                label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.PORTION'),
-            },
-        ];
     }
 
     private async syncUsdaLinkAsync(savedProduct: Product, nextFdcId: number | null, previousFdcId: number | null): Promise<void> {
@@ -1019,23 +859,6 @@ type ProductNutritionValues = {
 };
 
 type NutritionField = keyof NutritionValues;
-
-type MacroKey = 'proteins' | 'fats' | 'carbs';
-
-type MacroBarSegment = {
-    key: MacroKey;
-    percent: number;
-};
-
-type MacroBarState = {
-    isEmpty: boolean;
-    segments: MacroBarSegment[];
-};
-
-type CalorieMismatchWarning = {
-    expectedCalories: number;
-    actualCalories: number;
-};
 
 type ProductManageHeaderState = {
     titleKey: string;
