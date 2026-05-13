@@ -1,4 +1,6 @@
 /** @type {import('stylelint').Config} */
+import noSassUseAsWildcard from './stylelint-rules/no-sass-use-as-wildcard.js';
+
 const componentRawColorProperties =
     '/^(?:color|background|background-color|border|border-color|border-top|border-right|border-bottom|border-left|box-shadow|text-shadow|outline|outline-color|fill|stroke)$/';
 
@@ -16,6 +18,7 @@ const restrictedValueRules = {
 export default {
     customSyntax: 'postcss-scss',
     ignoreFiles: ['dist/**/*.css', 'dist-admin/**/*.css', 'dist-storybook/**/*.css'],
+    plugins: [noSassUseAsWildcard],
     rules: {
         'block-no-empty': true,
         'color-named': 'never',
@@ -49,6 +52,7 @@ export default {
         'selector-max-compound-selectors': 5,
         'selector-max-id': 0,
         'selector-disallowed-list': [/::ng-deep/],
+        'food-diary/no-sass-use-as-wildcard': true,
         'shorthand-property-no-redundant-values': true,
         'rule-empty-line-before': ['always-multi-line'],
         'declaration-empty-line-before': ['never'],

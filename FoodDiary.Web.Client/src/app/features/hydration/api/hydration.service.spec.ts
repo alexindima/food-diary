@@ -8,7 +8,6 @@ import type { HydrationDaily, HydrationEntry } from '../models/hydration.data';
 import { HydrationService } from './hydration.service';
 
 const ENTRY_AMOUNT_ML = 250;
-const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 
 describe('HydrationService', () => {
     let service: HydrationService;
@@ -62,7 +61,7 @@ describe('HydrationService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/daily`);
-        req.flush('Server error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
     it('should get entries for date', () => {
@@ -82,7 +81,7 @@ describe('HydrationService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/`);
-        req.flush('Server error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
     it('should add entry', () => {

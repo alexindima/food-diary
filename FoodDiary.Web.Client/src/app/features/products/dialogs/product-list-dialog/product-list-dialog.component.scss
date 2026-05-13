@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .product-select {
-
+    // stylelint-disable-next-line rule-empty-line-before
     &__title {
         margin: 0;
     }

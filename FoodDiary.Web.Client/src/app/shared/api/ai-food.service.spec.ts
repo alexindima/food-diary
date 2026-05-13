@@ -17,7 +17,6 @@ const INPUT_LIMIT = 10000;
 const OUTPUT_LIMIT = 5000;
 const INPUT_USED = 2500;
 const OUTPUT_USED = 1200;
-const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 
 let service: AiFoodService;
 let httpMock: HttpTestingController;
@@ -113,7 +112,7 @@ describe('AiFoodService usage', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/usage/me`);
-        req.flush('Server error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 

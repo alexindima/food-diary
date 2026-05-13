@@ -6,9 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { adminAuthInterceptor } from './admin-auth.interceptor';
 
-const HTTP_UNAUTHORIZED: number = HttpStatusCode.Unauthorized;
-const HTTP_FORBIDDEN: number = HttpStatusCode.Forbidden;
-
 const getHttpStatus = (error: unknown): number | undefined => (error instanceof HttpErrorResponse ? error.status : undefined);
 
 describe('adminAuthInterceptor', () => {
@@ -61,12 +58,12 @@ describe('adminAuthInterceptor', () => {
 
         http.get('/api/admin/users').subscribe({
             error: (error: unknown) => {
-                expect(getHttpStatus(error)).toBe(HTTP_UNAUTHORIZED);
+                expect(getHttpStatus(error)).toBe(HttpStatusCode.Unauthorized);
             },
         });
 
         const req = httpMock.expectOne('/api/admin/users');
-        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(localStorage.getItem('authToken')).toBeNull();
         expect(localStorage.getItem('refreshToken')).toBeNull();
@@ -81,12 +78,12 @@ describe('adminAuthInterceptor', () => {
 
         http.get('/api/admin/users').subscribe({
             error: (error: unknown) => {
-                expect(getHttpStatus(error)).toBe(HTTP_FORBIDDEN);
+                expect(getHttpStatus(error)).toBe(HttpStatusCode.Forbidden);
             },
         });
 
         const req = httpMock.expectOne('/api/admin/users');
-        req.flush(null, { status: HTTP_FORBIDDEN, statusText: 'Forbidden' });
+        req.flush(null, { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' });
 
         expect(router.navigate).toHaveBeenCalledWith(['/unauthorized'], {
             queryParams: { reason: 'forbidden', returnUrl: '/users?page=2' },
@@ -98,12 +95,12 @@ describe('adminAuthInterceptor', () => {
 
         http.post('/api/v1/auth/admin-sso/exchange', {}).subscribe({
             error: (error: unknown) => {
-                expect(getHttpStatus(error)).toBe(HTTP_UNAUTHORIZED);
+                expect(getHttpStatus(error)).toBe(HttpStatusCode.Unauthorized);
             },
         });
 
         const req = httpMock.expectOne('/api/v1/auth/admin-sso/exchange');
-        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(router.navigate).not.toHaveBeenCalled();
     });

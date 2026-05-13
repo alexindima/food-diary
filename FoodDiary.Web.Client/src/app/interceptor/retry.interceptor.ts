@@ -11,9 +11,6 @@ import { type Observable, retry, throwError, timer } from 'rxjs';
 
 import { RETRY_TIMING_CONFIG } from '../config/runtime-ui.tokens';
 
-const HTTP_CLIENT_ERROR_MIN: number = HttpStatusCode.BadRequest;
-const HTTP_SERVER_ERROR_MIN: number = HttpStatusCode.InternalServerError;
-
 @Injectable()
 export class RetryInterceptor implements HttpInterceptor {
     private readonly timingConfig = inject(RETRY_TIMING_CONFIG);
@@ -29,8 +26,8 @@ export class RetryInterceptor implements HttpInterceptor {
                 delay: (error, retryCount) => {
                     if (
                         error instanceof HttpErrorResponse &&
-                        error.status >= HTTP_CLIENT_ERROR_MIN &&
-                        error.status < HTTP_SERVER_ERROR_MIN
+                        error.status >= Number(HttpStatusCode.BadRequest) &&
+                        error.status < Number(HttpStatusCode.InternalServerError)
                     ) {
                         return throwError(() => error);
                     }

@@ -10,8 +10,6 @@ import { ProductService } from '../api/product.service';
 import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../models/product.data';
 import { ProductManageFacade } from './product-manage.facade';
 
-const HTTP_BAD_REQUEST: number = HttpStatusCode.BadRequest;
-
 const product: Product = {
     id: 'p1',
     name: 'Test product',
@@ -137,12 +135,12 @@ describe('ProductManageFacade submit', () => {
     });
 
     it('should return error when save fails', async () => {
-        productService.create.mockReturnValueOnce(throwError(() => ({ status: HTTP_BAD_REQUEST })));
+        productService.create.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.BadRequest })));
 
         const result = await facade.submitProductAsync(null, request, true);
 
         expect(result.product).toBeNull();
-        expect(result.error?.status).toBe(HTTP_BAD_REQUEST);
+        expect(result.error?.status).toBe(HttpStatusCode.BadRequest);
     });
 });
 

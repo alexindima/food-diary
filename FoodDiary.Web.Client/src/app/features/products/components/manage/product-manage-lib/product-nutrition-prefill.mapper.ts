@@ -7,6 +7,10 @@ import { buildResetNutritionPatch, roundProductNutrientValue } from './product-m
 import type { ProductFormValues } from './product-manage-form.types';
 
 type NutritionSourceProduct = OpenFoodFactsProduct | ProductSearchSuggestion;
+type ProductNutritionPatchField = keyof Pick<
+    ProductFormValues,
+    'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'fiberPerBase' | 'alcoholPerBase'
+>;
 
 export function buildOpenFoodFactsLookupPatch(values: ProductFormValues, offProduct: OpenFoodFactsProduct): Partial<ProductFormValues> {
     const patch: Partial<ProductFormValues> = {};
@@ -84,10 +88,7 @@ function setNutritionPatchValue(
         values: ProductFormValues | null;
         overwrite: boolean;
     },
-    field: keyof Pick<
-        ProductFormValues,
-        'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'fiberPerBase' | 'alcoholPerBase'
-    >,
+    field: ProductNutritionPatchField,
     value: number | null | undefined,
     whole = false,
 ): void {

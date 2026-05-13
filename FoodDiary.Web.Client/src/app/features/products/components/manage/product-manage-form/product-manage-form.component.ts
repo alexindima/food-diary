@@ -49,7 +49,12 @@ import {
     getDefaultProductBaseAmount,
     getProductControlNumberValue,
 } from '../product-manage-lib/product-manage-form.mapper';
-import type { NutritionMode, ProductFormData, ProductManagePrefill } from '../product-manage-lib/product-manage-form.types';
+import type {
+    NutritionMode,
+    ProductFormData,
+    ProductManageCancelMode,
+    ProductManagePrefill,
+} from '../product-manage-lib/product-manage-form.types';
 import { ProductNameSearchFacade } from '../product-manage-lib/product-name-search.facade';
 import type { ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 import {
@@ -102,7 +107,7 @@ export class ProductManageFormComponent {
     public readonly product = input<Product | null>(null);
     public readonly prefill = input<ProductManagePrefill | null>(null);
     public readonly skipConfirmDialog = input(false);
-    public readonly cancelMode = input<'emit' | 'navigate'>('navigate');
+    public readonly cancelMode = input<ProductManageCancelMode>('navigate');
     public readonly saved = output<Product>();
     public readonly cancelled = output();
     public readonly globalError = signal<string | null>(null);
@@ -486,6 +491,8 @@ export class ProductManageFormComponent {
 
 type ProductManageHeaderState = {
     titleKey: string;
-    submitIcon: 'save' | 'add';
+    submitIcon: ProductManageSubmitIcon;
     submitLabelKey: string;
 };
+
+type ProductManageSubmitIcon = 'save' | 'add';

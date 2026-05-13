@@ -1,8 +1,8 @@
-@use 'mixins' as *;
+@use 'mixins' as mixins;
 @use 'variables' as variables;
 
 :host {
-    @include host-style('/assets/images/background.webp');
+    @include mixins.host-style('/assets/images/background.webp');
 }
 
 .not-found {
@@ -77,5 +77,3 @@
 .not-found__button:active {
     transform: scale(1);
 }
-
-

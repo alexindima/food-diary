@@ -12,9 +12,10 @@ import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { getNumberProperty, getRecordProperty } from '../../../shared/lib/unknown-value.utils';
 import { ProductService } from '../api/product.service';
-import { ProductSaveSuccessDialogComponent, type ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog.component';
+import { ProductSaveSuccessDialogComponent } from '../dialogs/product-save-success-dialog/product-save-success-dialog.component';
+import type { ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog/product-save-success-dialog.types';
 import type { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
-import type { RedirectAction } from './product-manage.types';
+import type { ProductDeleteResult, RedirectAction } from './product-manage.types';
 
 @Injectable({ providedIn: 'root' })
 export class ProductManageFacade {
@@ -52,7 +53,7 @@ export class ProductManageFacade {
         return false;
     }
 
-    public async deleteProductAsync(product: Product, confirmData: ConfirmDeleteDialogData): Promise<'deleted' | 'cancelled' | 'error'> {
+    public async deleteProductAsync(product: Product, confirmData: ConfirmDeleteDialogData): Promise<ProductDeleteResult> {
         const confirmed = await firstValueFrom(
             this.fdDialogService.open(ConfirmDeleteDialogComponent, { data: confirmData, preset: 'confirm' }).afterClosed(),
         );

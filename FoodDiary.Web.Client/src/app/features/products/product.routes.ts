@@ -14,11 +14,11 @@ const routes: Routes = [
             },
             {
                 path: 'add',
-                loadComponent: async () => import('./pages/manage/product-add.component').then(m => m.ProductAddComponent),
+                loadComponent: async () => import('./pages/manage/product-add/product-add.component').then(m => m.ProductAddComponent),
             },
             {
                 path: ':id/edit',
-                loadComponent: async () => import('./pages/manage/product-edit.component').then(m => m.ProductEditComponent),
+                loadComponent: async () => import('./pages/manage/product-edit/product-edit.component').then(m => m.ProductEditComponent),
                 resolve: { product: productResolver },
             },
         ],

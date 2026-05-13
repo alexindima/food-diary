@@ -19,8 +19,6 @@ const RECENT_RECIPES_LIMIT = 5;
 const NEW_RECIPE_PREP_MINUTES = 10;
 const NEW_RECIPE_COOK_MINUTES = 20;
 const NEW_RECIPE_SERVINGS = 4;
-const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
-const HTTP_NOT_FOUND: number = HttpStatusCode.NotFound;
 const MOCK_RECIPE: Recipe = {
     id: 'r1',
     name: 'Grilled Chicken Salad',
@@ -104,7 +102,7 @@ describe('RecipeService query', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
-        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 
@@ -135,7 +133,7 @@ describe('RecipeService reads', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/r1` && r.method === 'GET');
-        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
+        req.flush('Not Found', { status: HttpStatusCode.NotFound, statusText: 'Not Found' });
     });
 });
 
@@ -215,7 +213,7 @@ describe('RecipeService recent', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
-        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 

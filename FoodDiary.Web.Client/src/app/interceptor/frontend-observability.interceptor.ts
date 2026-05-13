@@ -14,9 +14,6 @@ import { environment } from '../../environments/environment';
 import { SKIP_OBSERVABILITY } from '../constants/observability-context.tokens';
 import { FrontendObservabilityService } from '../services/frontend-observability.service';
 
-const HTTP_CLIENT_ERROR_MIN: number = HttpStatusCode.BadRequest;
-const HTTP_SERVER_ERROR_MIN: number = HttpStatusCode.InternalServerError;
-
 @Injectable()
 export class FrontendObservabilityInterceptor implements HttpInterceptor {
     private readonly frontendObservabilityService = inject(FrontendObservabilityService);
@@ -70,11 +67,11 @@ export class FrontendObservabilityInterceptor implements HttpInterceptor {
             return 'network_error';
         }
 
-        if (error.status >= HTTP_SERVER_ERROR_MIN) {
+        if (error.status >= Number(HttpStatusCode.InternalServerError)) {
             return 'server_error';
         }
 
-        if (error.status >= HTTP_CLIENT_ERROR_MIN) {
+        if (error.status >= Number(HttpStatusCode.BadRequest)) {
             return 'client_error';
         }
 

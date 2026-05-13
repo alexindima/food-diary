@@ -4,7 +4,8 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ProductSaveSuccessDialogComponent, type ProductSaveSuccessDialogData } from './product-save-success-dialog.component';
+import { ProductSaveSuccessDialogComponent } from './product-save-success-dialog.component';
+import type { ProductSaveSuccessDialogData } from './product-save-success-dialog.types';
 
 describe('ProductSaveSuccessDialogComponent', () => {
     let component: ProductSaveSuccessDialogComponent;

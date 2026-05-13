@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ProductListEmptyStateComponent } from './product-list-empty-state.component';
+import { type ProductListEmptyState, ProductListEmptyStateComponent } from './product-list-empty-state.component';
 
 describe('ProductListEmptyStateComponent', () => {
     it('should render empty state and emit add product requests', async () => {
@@ -26,7 +26,7 @@ describe('ProductListEmptyStateComponent', () => {
 });
 
 async function setupComponentAsync(
-    state: 'empty' | 'no-results',
+    state: ProductListEmptyState,
 ): Promise<{ component: ProductListEmptyStateComponent; fixture: ComponentFixture<ProductListEmptyStateComponent> }> {
     await TestBed.configureTestingModule({
         imports: [ProductListEmptyStateComponent, TranslateModule.forRoot()],

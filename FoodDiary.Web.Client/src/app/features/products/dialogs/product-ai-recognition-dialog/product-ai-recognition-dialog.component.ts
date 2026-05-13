@@ -20,12 +20,9 @@ import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../models/product.data';
-import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action.component';
+import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action/product-ai-recognition-action.component';
 import type { ProductAiDialogData, ProductAiRecognitionFormGroup, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
-import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result.component';
-
-const HTTP_FORBIDDEN_STATUS: number = HttpStatusCode.Forbidden;
-const HTTP_TOO_MANY_REQUESTS_STATUS: number = HttpStatusCode.TooManyRequests;
+import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result/product-ai-recognition-result.component';
 
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
@@ -195,9 +192,9 @@ export class ProductAiRecognitionDialogComponent {
             .pipe(
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
-                    if (status === HTTP_FORBIDDEN_STATUS) {
+                    if (status === HttpStatusCode.Forbidden) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    } else if (status === HttpStatusCode.TooManyRequests) {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('PRODUCT_AI_DIALOG.ERROR_GENERIC');
@@ -228,7 +225,7 @@ export class ProductAiRecognitionDialogComponent {
             .pipe(
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
-                    if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    if (status === HttpStatusCode.TooManyRequests) {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('PRODUCT_AI_DIALOG.NUTRITION_ERROR');

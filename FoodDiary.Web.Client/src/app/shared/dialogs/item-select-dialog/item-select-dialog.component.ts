@@ -8,8 +8,8 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
-import { ProductAddDialogComponent } from '../../../features/products/dialogs/product-add-dialog.component';
-import { ProductListDialogComponent } from '../../../features/products/dialogs/product-list-dialog.component';
+import { ProductAddDialogComponent } from '../../../features/products/dialogs/product-add-dialog/product-add-dialog.component';
+import { ProductListDialogComponent } from '../../../features/products/dialogs/product-list-dialog/product-list-dialog.component';
 import type { Product } from '../../../features/products/models/product.data';
 import { RecipeSelectDialogComponent } from '../../../features/recipes/dialogs/recipe-select-dialog.component';
 import type { Recipe } from '../../../features/recipes/models/recipe.data';

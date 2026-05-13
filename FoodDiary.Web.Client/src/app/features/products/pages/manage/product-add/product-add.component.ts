@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
-import type { OpenFoodFactsProduct } from '../../api/open-food-facts.service';
-import { ProductManageFormComponent } from '../../components/manage/product-manage-form/product-manage-form.component';
-import type { ProductManagePrefill } from '../../components/manage/product-manage-lib/product-manage-form.types';
+import { getRecordProperty, getStringProperty } from '../../../../../shared/lib/unknown-value.utils';
+import type { OpenFoodFactsProduct } from '../../../api/open-food-facts.service';
+import { ProductManageFormComponent } from '../../../components/manage/product-manage-form/product-manage-form.component';
+import type { ProductManagePrefill } from '../../../components/manage/product-manage-lib/product-manage-form.types';
 
 @Component({
     selector: 'fd-product-add',
     templateUrl: './product-add.component.html',
-    styleUrls: ['./product-add.component.scss', '../../components/manage/product-manage-form/product-manage-form.component.scss'],
+    styleUrls: ['./product-add.component.scss', '../../../components/manage/product-manage-form/product-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ProductManageFormComponent],
 })

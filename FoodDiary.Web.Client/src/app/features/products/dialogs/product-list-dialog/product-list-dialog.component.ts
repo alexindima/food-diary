@@ -6,10 +6,11 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { take } from 'rxjs';
 
-import { ProductListBaseComponent } from '../components/list/product-list-base/product-list-base.component';
-import type { Product } from '../models/product.data';
-import { ProductAddDialogComponent } from './product-add-dialog.component';
+import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base.component';
+import type { Product } from '../../models/product.data';
+import { ProductAddDialogComponent } from '../product-add-dialog/product-add-dialog.component';
 import type { ProductSelectItemViewModel } from './product-list-dialog.types';
 import { ProductListDialogContentComponent } from './product-list-dialog-content.component';
 
@@ -43,12 +44,14 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductListDialogComponent, Product | null>, {
         optional: true,
     });
+
     public override onAddProductClick(): void {
         this.fdDialogService
             .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
                 preset: 'fullscreen',
             })
             .afterClosed()
+            .pipe(take(1))
             .subscribe(product => {
                 if (product !== null && product !== undefined) {
                     this.handleSelection(product);

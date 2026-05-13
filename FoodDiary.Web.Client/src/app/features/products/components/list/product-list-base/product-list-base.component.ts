@@ -6,7 +6,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, map, type Observable, of, switchMap, take, tap } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { ErrorStateComponent } from '../../../../../components/shared/error-state/error-state.component';
@@ -24,21 +24,22 @@ import { FavoriteProductService } from '../../../api/favorite-product.service';
 import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../../api/open-food-facts.service';
 import { ProductService } from '../../../api/product.service';
 import { resolveProductImageUrl } from '../../../lib/product-image.util';
-import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../../models/product.data';
-import type { ProductCardViewModel } from '../product-list.types';
 import {
-    ProductListFiltersDialogComponent,
-    type ProductListFiltersDialogResult,
-} from '../product-list-filters-dialog/product-list-filters-dialog.component';
+    PRODUCT_LIST_FAVORITE_LIMIT,
+    PRODUCT_LIST_OFF_SEARCH_LIMIT,
+    PRODUCT_LIST_OFF_SEARCH_MIN_LENGTH,
+    PRODUCT_LIST_PAGE_SIZE,
+    PRODUCT_LIST_RECENT_LIMIT,
+} from '../product-list.config';
+import type { ProductCardViewModel } from '../product-list.types';
+import { ProductListFiltersDialogComponent } from '../product-list-filters-dialog/product-list-filters-dialog.component';
+import type { ProductListFiltersDialogResult } from '../product-list-filters-dialog/product-list-filters-dialog.types';
 import { ProductListEmptyStateComponent } from '../product-list-sections/product-list-empty-state/product-list-empty-state.component';
 import { ProductListFavoritesComponent } from '../product-list-sections/product-list-favorites/product-list-favorites.component';
 import { ProductListGroupsComponent } from '../product-list-sections/product-list-groups/product-list-groups.component';
 import { ProductListOffSectionComponent } from '../product-list-sections/product-list-off-section/product-list-off-section.component';
 import { ProductListPaginationComponent } from '../product-list-sections/product-list-pagination/product-list-pagination.component';
-
-const DEFAULT_PAGE_SIZE = 10;
-const OFF_SEARCH_LIMIT = 5;
 
 @Component({
     selector: 'fd-product-list-base',
@@ -67,7 +68,7 @@ const OFF_SEARCH_LIMIT = 5;
 export class ProductListBaseComponent {
     protected readonly productService = inject(ProductService);
     protected readonly navigationService = inject(NavigationService);
-    protected readonly pageSize = DEFAULT_PAGE_SIZE;
+    protected readonly pageSize = PRODUCT_LIST_PAGE_SIZE;
     protected readonly fdDialogService = inject(FdUiDialogService);
     protected readonly quickConsumptionService = inject(QuickMealService);
     protected readonly favoriteProductService = inject(FavoriteProductService);
@@ -121,12 +122,10 @@ export class ProductListBaseComponent {
     public readonly hasVisibleProducts = computed(() => this.showRecentSection() || this.allProductsSectionItems().length > 0);
     public readonly hasActiveFilters = computed(() => this.onlyMineFilter() || this.selectedProductTypes().length > 0);
     public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
-    public readonly isNoResultsState = computed(() => !this.hasVisibleProducts() && !this.isEmptyState());
     public readonly allProductsSectionLabelKey = computed(() =>
         this.hasSearchValue() ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS',
     );
     public readonly isMobileSearchVisible = computed(() => this.isMobileSearchOpen() || this.hasSearchValue());
-    public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     private readonly isMobileSearchOpen = signal(false);
     private readonly selectedProductTypes = signal<ProductType[]>([]);
     public readonly offProducts = signal<OpenFoodFactsProduct[]>([]);
@@ -152,6 +151,7 @@ export class ProductListBaseComponent {
                     this.searchValue.set(value);
                 }),
                 debounceTime(this.searchDebounceMs),
+                distinctUntilChanged(),
                 switchMap(value => this.loadProducts(1, this.pageSize, value)),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -171,10 +171,6 @@ export class ProductListBaseComponent {
 
     public resolveImage(product: Product): string | undefined {
         return resolveProductImageUrl(product.imageUrl ?? undefined, product.productType ?? ProductType.Unknown);
-    }
-
-    protected isPrivateVisibility(visibility: Product['visibility']): boolean {
-        return visibility.toString().toUpperCase() === 'PRIVATE';
     }
 
     public retryLoad(): void {
@@ -198,6 +194,7 @@ export class ProductListBaseComponent {
                 size: 'lg',
             })
             .afterClosed()
+            .pipe(take(1))
             .subscribe(barcode => {
                 if (barcode !== null && barcode !== undefined && barcode.length > 0) {
                     this.searchForm.controls.search.setValue(barcode);
@@ -298,7 +295,13 @@ export class ProductListBaseComponent {
         this.searchOpenFoodFacts(this.searchForm.controls.search.value);
 
         return this.productService
-            .queryOverview({ page: 1, limit: this.pageSize, includePublic: true, recentLimit: 10, favoriteLimit: 10 })
+            .queryOverview({
+                page: 1,
+                limit: this.pageSize,
+                includePublic: true,
+                recentLimit: PRODUCT_LIST_RECENT_LIMIT,
+                favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
+            })
             .pipe(
                 tap(data => {
                     this.productData.setData(data.allProducts);
@@ -325,14 +328,14 @@ export class ProductListBaseComponent {
 
     private searchOpenFoodFacts(search: string | null): void {
         const trimmed = search?.trim();
-        if (trimmed === undefined || trimmed.length < 2) {
+        if (trimmed === undefined || trimmed.length < PRODUCT_LIST_OFF_SEARCH_MIN_LENGTH) {
             this.offProducts.set([]);
             return;
         }
 
         this.offLoading.set(true);
         this.openFoodFactsService
-            .search(trimmed, OFF_SEARCH_LIMIT)
+            .search(trimmed, PRODUCT_LIST_OFF_SEARCH_LIMIT)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
@@ -438,17 +441,16 @@ export class ProductListBaseComponent {
     }
 
     public removeFavorite(favorite: FavoriteProduct): void {
-        this.favoriteProductService.remove(favorite.id).subscribe({
-            next: () => {
-                this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
-                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                this.syncProductFavoriteState(favorite.productId, false, null);
-            },
-        });
-    }
-
-    protected getProductTypeTranslationKey(product: Product): string {
-        return buildProductTypeTranslationKey(product.productType ?? product.category ?? null);
+        this.favoriteProductService
+            .remove(favorite.id)
+            .pipe(take(1))
+            .subscribe({
+                next: () => {
+                    this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
+                    this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                    this.syncProductFavoriteState(favorite.productId, false, null);
+                },
+            });
     }
 
     protected reloadCurrentPage(): void {

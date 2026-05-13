@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
     selector: 'fd-product-ai-recognition-action',
     imports: [TranslatePipe, FdUiButtonComponent],
     templateUrl: './product-ai-recognition-action.component.html',
-    styleUrl: './product-ai-recognition-dialog.component.scss',
+    styleUrl: '../product-ai-recognition-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductAiRecognitionActionComponent {

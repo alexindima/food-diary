@@ -5,11 +5,8 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import type { RedirectAction } from '../lib/product-manage.types';
-
-export type ProductSaveSuccessDialogData = {
-    isEdit: boolean;
-};
+import type { RedirectAction } from '../../lib/product-manage.types';
+import type { ProductSaveSuccessDialogData } from './product-save-success-dialog.types';
 
 @Component({
     selector: 'fd-product-save-success-dialog',

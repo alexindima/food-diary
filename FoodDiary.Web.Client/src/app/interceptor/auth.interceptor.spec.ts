@@ -16,9 +16,6 @@ import { AuthService } from '../services/auth.service';
 import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import { AuthInterceptor } from './auth.interceptor';
 
-const HTTP_UNAUTHORIZED: number = HttpStatusCode.Unauthorized;
-const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
-
 type AuthServiceMock = {
     getToken: ReturnType<typeof vi.fn<() => string | null>>;
     refreshToken: ReturnType<typeof vi.fn<() => Observable<string | null>>>;
@@ -102,7 +99,7 @@ describe('AuthInterceptor refresh flow', () => {
         http.get('/api/data').subscribe();
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.refreshToken).toHaveBeenCalledTimes(1);
 
@@ -121,7 +118,7 @@ describe('AuthInterceptor refresh flow', () => {
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         const retryReq = httpTesting.expectOne('/api/data');
         expect(retryReq.request.headers.get('Authorization')).toBe('Bearer refreshed-token');
@@ -142,7 +139,7 @@ describe('AuthInterceptor refresh flow', () => {
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
     });
@@ -153,12 +150,12 @@ describe('AuthInterceptor refresh flow', () => {
 
         http.get('/api/data').subscribe({
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HTTP_UNAUTHORIZED);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.Unauthorized);
             },
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
     });
@@ -170,12 +167,12 @@ describe('AuthInterceptor error handling', () => {
 
         http.get('/api/auth/login').subscribe({
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HTTP_UNAUTHORIZED);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.Unauthorized);
             },
         });
 
         const req = httpTesting.expectOne('/api/auth/login');
-        req.flush(null, { status: HTTP_UNAUTHORIZED, statusText: 'Unauthorized' });
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
         expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
@@ -186,12 +183,12 @@ describe('AuthInterceptor error handling', () => {
 
         http.get('/api/data').subscribe({
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HTTP_INTERNAL_SERVER_ERROR);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.InternalServerError);
             },
         });
 
         const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
 
         expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
         expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();

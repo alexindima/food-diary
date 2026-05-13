@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -9,16 +9,11 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
 import { ProductType } from '../../../models/product.data';
-
-export type ProductListFiltersDialogData = {
-    onlyMine: boolean;
-    productTypes: ProductType[];
-};
-
-export type ProductListFiltersDialogResult = {
-    onlyMine: boolean;
-    productTypes: ProductType[];
-};
+import type {
+    ProductListFiltersDialogData,
+    ProductListFiltersDialogResult,
+    ProductListVisibilityFilter,
+} from './product-list-filters-dialog.types';
 
 @Component({
     selector: 'fd-product-list-filters-dialog',
@@ -45,12 +40,13 @@ export class ProductListFiltersDialogComponent {
         { value: 'mine', label: this.translate.instant('PRODUCT_LIST.FILTER_MY_PRODUCTS') },
     ];
 
-    public visibilityValue: 'all' | 'mine' = this.data.onlyMine ? 'mine' : 'all';
-    public readonly selectedTypeValues = signal<ProductType[]>([...this.data.productTypes]);
+    public visibilityValue: ProductListVisibilityFilter = this.data.onlyMine ? 'mine' : 'all';
+    public readonly selectedTypeValues = linkedSignal(() => [...this.data.productTypes]);
 
     public readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[]).filter(
         type => type !== ProductType.Unknown,
     );
+    private readonly selectableProductTypes = new Set<string>(this.productTypes);
     public readonly productTypeOptions = computed(() =>
         this.productTypes.map<FdUiChipSelectOption>(type => {
             const label = this.translate.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`);
@@ -67,17 +63,8 @@ export class ProductListFiltersDialogComponent {
         this.visibilityValue = value === 'mine' ? 'mine' : 'all';
     }
 
-    public isTypeSelected(type: ProductType): boolean {
-        return this.selectedTypeValues().includes(type);
-    }
-
-    public toggleType(type: ProductType): void {
-        if (this.isTypeSelected(type)) {
-            this.selectedTypeValues.update(values => values.filter(item => item !== type));
-            return;
-        }
-
-        this.selectedTypeValues.update(values => [...values, type]);
+    public onSelectedTypesChange(values: string[]): void {
+        this.selectedTypeValues.set(values.filter((value): value is ProductType => this.selectableProductTypes.has(value)));
     }
 
     public onApply(): void {

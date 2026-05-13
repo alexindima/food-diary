@@ -62,9 +62,6 @@ declare global {
     }
 }
 
-const HTTP_FORBIDDEN_STATUS: number = HttpStatusCode.Forbidden;
-const HTTP_TOO_MANY_REQUESTS_STATUS: number = HttpStatusCode.TooManyRequests;
-
 @Component({
     selector: 'fd-ai-input-bar',
     templateUrl: './ai-input-bar.component.html',
@@ -486,9 +483,9 @@ export class AiInputBarComponent {
             .pipe(
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
-                    if (status === HTTP_FORBIDDEN_STATUS) {
+                    if (status === HttpStatusCode.Forbidden) {
                         state.errorKey.set(errorKeys.premium);
-                    } else if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    } else if (status === HttpStatusCode.TooManyRequests) {
                         state.errorKey.set(errorKeys.quota);
                     } else {
                         state.errorKey.set(errorKeys.generic);
@@ -525,7 +522,7 @@ export class AiInputBarComponent {
             .pipe(
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
-                    if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    if (status === HttpStatusCode.TooManyRequests) {
                         state.nutritionErrorKey.set(errorKeys.quota);
                     } else {
                         state.nutritionErrorKey.set(errorKeys.generic);

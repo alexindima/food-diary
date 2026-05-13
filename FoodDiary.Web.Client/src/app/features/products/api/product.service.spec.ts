@@ -27,8 +27,6 @@ const NEW_PRODUCT_CALORIES = 100;
 const NEW_PRODUCT_PROTEINS = 10;
 const NEW_PRODUCT_FATS = 2;
 const NEW_PRODUCT_CARBS = 12;
-const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
-const HTTP_NOT_FOUND: number = HttpStatusCode.NotFound;
 const MOCK_PRODUCT: Product = {
     id: 'p1',
     name: 'Chicken Breast',
@@ -128,7 +126,7 @@ describe('ProductService query', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
-        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 
@@ -149,7 +147,7 @@ describe('ProductService reads', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/p1`);
-        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
+        req.flush('Not Found', { status: HttpStatusCode.NotFound, statusText: 'Not Found' });
     });
 });
 
@@ -229,7 +227,7 @@ describe('ProductService recent', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
-        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 

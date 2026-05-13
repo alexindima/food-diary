@@ -58,9 +58,8 @@ async function setupComponentAsync(
 
     const fixture = TestBed.createComponent(ProductListFavoritesComponent);
     fixture.componentRef.setInput('favorites', favorites);
-    fixture.componentRef.setInput('count', favorites.length);
+    fixture.componentRef.setInput('totalCount', favorites.length);
     fixture.componentRef.setInput('isOpen', true);
-    fixture.componentRef.setInput('showLoadMore', false);
     fixture.componentRef.setInput('isLoadingMore', false);
     fixture.detectChanges();
 

@@ -115,9 +115,8 @@
             @if (favorites().length > 0) {
                 <fd-product-list-favorites
                     [favorites]="favorites()"
-                    [count]="favoriteTotalCount()"
+                    [totalCount]="favoriteTotalCount()"
                     [isOpen]="isFavoritesOpen()"
-                    [showLoadMore]="hasMoreFavorites()"
                     [isLoadingMore]="isFavoritesLoadingMore()"
                     (favoritesToggle)="toggleFavorites()"
                     (loadMore)="loadFavorites()"

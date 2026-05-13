@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -19,10 +19,12 @@ import type { FavoriteProduct } from '../../../../models/product.data';
 })
 export class ProductListFavoritesComponent {
     public readonly favorites = input.required<FavoriteProduct[]>();
-    public readonly count = input.required<number>();
+    public readonly totalCount = input.required<number>();
     public readonly isOpen = input.required<boolean>();
-    public readonly showLoadMore = input.required<boolean>();
     public readonly isLoadingMore = input.required<boolean>();
+
+    protected readonly count = computed(() => this.totalCount());
+    protected readonly showLoadMore = computed(() => this.totalCount() > this.favorites().length);
 
     public readonly favoritesToggle = output();
     public readonly loadMore = output();

@@ -14,8 +14,6 @@ const FASTING_CHECK_IN_REMINDER_HOURS = 12;
 const FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
 const DESIRED_WEIGHT = 75;
 const UPDATED_DESIRED_WEIGHT = 70;
-const HTTP_BAD_REQUEST: number = HttpStatusCode.BadRequest;
-const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
 const MOCK_USER: User = {
     id: 'user-1',
     email: 'test@example.com',
@@ -66,7 +64,7 @@ describe('UserService info', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/info`);
-        req.flush('Server error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
 
         expect(service.user()).toBeNull();
     });
@@ -129,7 +127,7 @@ describe('UserService password', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/password`);
-        req.flush('Server error', { status: HTTP_BAD_REQUEST, statusText: 'Bad Request' });
+        req.flush('Server error', { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' });
     });
 
     it('should set password and update hasPassword in signal', () => {

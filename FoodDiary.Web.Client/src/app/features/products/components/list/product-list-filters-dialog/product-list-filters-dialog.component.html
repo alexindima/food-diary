@@ -15,7 +15,8 @@
             size="sm"
             [options]="productTypeOptions()"
             [ariaLabel]="'PRODUCT_LIST.FILTER_CATEGORIES' | translate"
-            [(selectedValues)]="selectedTypeValues"
+            [selectedValues]="selectedTypeValues()"
+            (selectedValuesChange)="onSelectedTypesChange($event)"
         />
     </section>
 

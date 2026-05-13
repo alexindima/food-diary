@@ -11,7 +11,6 @@ import { MealService } from './meal.service';
 const BASE_URL = 'http://localhost:5300/api/v1/consumptions';
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
-const SERVER_ERROR_STATUS: number = HttpStatusCode.InternalServerError;
 const TOTAL_CALORIES = 500;
 const PRE_MEAL_SATIETY_LEVEL = 3;
 const POST_MEAL_SATIETY_LEVEL = 4;
@@ -118,12 +117,12 @@ describe('MealService query', () => {
                 expect.fail('Expected query to fail');
             },
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(SERVER_ERROR_STATUS);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.InternalServerError);
             },
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
-        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 
@@ -203,7 +202,7 @@ describe('MealService create', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
-        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 
@@ -240,7 +239,7 @@ describe('MealService update', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
-        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 
@@ -259,12 +258,12 @@ describe('MealService delete', () => {
                 expect.fail('Expected delete to fail');
             },
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(SERVER_ERROR_STATUS);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.InternalServerError);
             },
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
-        req.flush('Server Error', { status: SERVER_ERROR_STATUS, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
 

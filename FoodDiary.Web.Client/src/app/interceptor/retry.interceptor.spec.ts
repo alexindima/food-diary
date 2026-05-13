@@ -6,10 +6,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import { RetryInterceptor } from './retry.interceptor';
 
-const HTTP_BAD_REQUEST: number = HttpStatusCode.BadRequest;
-const HTTP_NOT_FOUND: number = HttpStatusCode.NotFound;
-const HTTP_INTERNAL_SERVER_ERROR: number = HttpStatusCode.InternalServerError;
-
 describe('RetryInterceptor', () => {
     let http: HttpClient;
     let httpMock: HttpTestingController;
@@ -47,33 +43,33 @@ describe('RetryInterceptor', () => {
     it('should not retry on 400 errors', () => {
         http.get('/api/test').subscribe({
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HTTP_BAD_REQUEST);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.BadRequest);
             },
         });
 
         const req = httpMock.expectOne('/api/test');
-        req.flush('Bad Request', { status: HTTP_BAD_REQUEST, statusText: 'Bad Request' });
+        req.flush('Bad Request', { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' });
     });
 
     it('should not retry on 404 errors', () => {
         http.get('/api/test').subscribe({
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HTTP_NOT_FOUND);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.NotFound);
             },
         });
 
         const req = httpMock.expectOne('/api/test');
-        req.flush('Not Found', { status: HTTP_NOT_FOUND, statusText: 'Not Found' });
+        req.flush('Not Found', { status: HttpStatusCode.NotFound, statusText: 'Not Found' });
     });
 
     it('should not retry POST requests', () => {
         http.post('/api/test', { value: 1 }).subscribe({
             error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HTTP_INTERNAL_SERVER_ERROR);
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.InternalServerError);
             },
         });
 
         const req = httpMock.expectOne('/api/test');
-        req.flush('Server Error', { status: HTTP_INTERNAL_SERVER_ERROR, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });

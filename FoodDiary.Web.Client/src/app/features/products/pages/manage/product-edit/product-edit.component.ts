@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { ProductManageFormComponent } from '../../components/manage/product-manage-form/product-manage-form.component';
-import type { Product } from '../../models/product.data';
+import { ProductManageFormComponent } from '../../../components/manage/product-manage-form/product-manage-form.component';
+import type { Product } from '../../../models/product.data';
 
 @Component({
     selector: 'fd-product-edit',
     templateUrl: './product-edit.component.html',
-    styleUrls: ['./product-edit.component.scss', '../../components/manage/product-manage-form/product-manage-form.component.scss'],
+    styleUrls: ['./product-edit.component.scss', '../../../components/manage/product-manage-form/product-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ProductManageFormComponent],
 })

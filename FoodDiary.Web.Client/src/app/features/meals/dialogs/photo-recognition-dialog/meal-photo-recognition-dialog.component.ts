@@ -40,8 +40,6 @@ const UNIT_OPTIONS: readonly UnitOptionView[] = [
     { value: 'ml', labelKey: 'GENERAL.UNITS.ML' },
     { value: 'pcs', labelKey: 'GENERAL.UNITS.PCS' },
 ];
-const HTTP_FORBIDDEN_STATUS: number = HttpStatusCode.Forbidden;
-const HTTP_TOO_MANY_REQUESTS_STATUS: number = HttpStatusCode.TooManyRequests;
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
 @Component({
@@ -295,9 +293,9 @@ export class MealPhotoRecognitionDialogComponent {
             .pipe(
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
-                    if (status === HTTP_FORBIDDEN_STATUS) {
+                    if (status === HttpStatusCode.Forbidden) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
-                    } else if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    } else if (status === HttpStatusCode.TooManyRequests) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
@@ -329,7 +327,7 @@ export class MealPhotoRecognitionDialogComponent {
             .pipe(
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
-                    if (status === HTTP_TOO_MANY_REQUESTS_STATUS) {
+                    if (status === HttpStatusCode.TooManyRequests) {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');

@@ -5,7 +5,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ProductType } from '../../../models/product.data';
-import { ProductListFiltersDialogComponent, type ProductListFiltersDialogData } from './product-list-filters-dialog.component';
+import { ProductListFiltersDialogComponent } from './product-list-filters-dialog.component';
+import type { ProductListFiltersDialogData } from './product-list-filters-dialog.types';
 
 describe('ProductListFiltersDialogComponent', () => {
     let component: ProductListFiltersDialogComponent;
@@ -41,27 +42,22 @@ describe('ProductListFiltersDialogComponent', () => {
         createComponent({ onlyMine: true, productTypes: [ProductType.Dairy] });
 
         expect(component.visibilityValue).toBe('mine');
-        expect(component.isTypeSelected(ProductType.Dairy)).toBe(true);
-        expect(component.isTypeSelected(ProductType.Meat)).toBe(false);
+        expect(component.selectedTypeValues()).toEqual([ProductType.Dairy]);
     });
 
-    it('should toggle product type selection', () => {
+    it('should update product type selection', () => {
         createComponent();
 
-        expect(component.isTypeSelected(ProductType.Meat)).toBe(true);
+        component.onSelectedTypesChange([ProductType.Fruit, ProductType.Grain]);
 
-        component.toggleType(ProductType.Meat);
-        expect(component.isTypeSelected(ProductType.Meat)).toBe(false);
-
-        component.toggleType(ProductType.Grain);
-        expect(component.isTypeSelected(ProductType.Grain)).toBe(true);
+        expect(component.selectedTypeValues()).toEqual([ProductType.Fruit, ProductType.Grain]);
     });
 
     it('should apply filters on submit', () => {
         createComponent({ onlyMine: false, productTypes: [] });
 
         component.onVisibilityChange('mine');
-        component.toggleType(ProductType.Seafood);
+        component.onSelectedTypesChange([ProductType.Seafood]);
         component.onApply();
 
         const result = dialogRefSpy.close.mock.calls[0]?.[0] as ProductListFiltersDialogData | undefined;
