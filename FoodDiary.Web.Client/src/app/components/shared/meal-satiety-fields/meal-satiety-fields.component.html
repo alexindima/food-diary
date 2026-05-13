@@ -1,0 +1,31 @@
+<div
+    class="meal-satiety-fields fd-grid fd-gap-sm"
+    [class.meal-satiety-fields--columns]="layout() === 'columns'"
+    [class.meal-satiety-fields--compact-columns]="layout() === 'compactColumns'"
+>
+    <div class="meal-satiety-fields__field fd-grid fd-gap-xxs">
+        <p class="meal-satiety-fields__label fd-ui-field-label fd-ui-field-label--floating">
+            {{ labelBeforeKey() | translate }}
+        </p>
+        <fd-ui-emoji-picker
+            [size]="pickerSize()"
+            [options]="hungerEmojiOptions"
+            [selectedValue]="preMealSatietyLevel()"
+            [ariaLabel]="preMealSatietyAriaLabel()"
+            (selectedValueChange)="onSatietyLevelChange('before', $event)"
+        />
+    </div>
+
+    <div class="meal-satiety-fields__field fd-grid fd-gap-xxs">
+        <p class="meal-satiety-fields__label fd-ui-field-label fd-ui-field-label--floating">
+            {{ labelAfterKey() | translate }}
+        </p>
+        <fd-ui-emoji-picker
+            [size]="pickerSize()"
+            [options]="satietyEmojiOptions"
+            [selectedValue]="postMealSatietyLevel()"
+            [ariaLabel]="postMealSatietyAriaLabel()"
+            (selectedValueChange)="onSatietyLevelChange('after', $event)"
+        />
+    </div>
+</div>

@@ -2,7 +2,6 @@
     class="meal-details-fields fd-grid fd-gap-sm"
     [class.meal-details-fields--surface]="surface()"
     [class.meal-details-fields--regular]="density() === 'regular'"
-    [class.meal-details-fields--satiety-columns]="satietyLayout() === 'columns'"
 >
     <div class="meal-details-fields__date-time fd-grid fd-gap-xs">
         <label class="meal-details-fields__field fd-grid fd-gap-xxs">
@@ -44,31 +43,11 @@
         ></textarea>
     </label>
 
-    <div class="meal-details-fields__satiety fd-grid fd-gap-sm">
-        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
-            <p class="meal-details-fields__label meal-details-fields__satiety-label fd-ui-field-label fd-ui-field-label--floating">
-                {{ 'MEAL_DETAILS.SATIETY_BEFORE' | translate }}
-            </p>
-            <fd-ui-emoji-picker
-                size="sm"
-                [options]="hungerEmojiOptions"
-                [selectedValue]="preMealSatietyLevel()"
-                [ariaLabel]="preMealSatietyAriaLabel()"
-                (selectedValueChange)="onSatietyLevelChange('before', $event)"
-            />
-        </div>
-
-        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
-            <p class="meal-details-fields__label meal-details-fields__satiety-label fd-ui-field-label fd-ui-field-label--floating">
-                {{ 'MEAL_DETAILS.SATIETY_AFTER' | translate }}
-            </p>
-            <fd-ui-emoji-picker
-                size="sm"
-                [options]="satietyEmojiOptions"
-                [selectedValue]="postMealSatietyLevel()"
-                [ariaLabel]="postMealSatietyAriaLabel()"
-                (selectedValueChange)="onSatietyLevelChange('after', $event)"
-            />
-        </div>
-    </div>
+    <fd-meal-satiety-fields
+        [layout]="satietyLayout() === 'columns' ? 'columns' : 'stacked'"
+        [preMealSatietyLevel]="preMealSatietyLevel()"
+        [postMealSatietyLevel]="postMealSatietyLevel()"
+        (preMealSatietyLevelChange)="onPreMealSatietyLevelChange($event)"
+        (postMealSatietyLevelChange)="onPostMealSatietyLevelChange($event)"
+    />
 </div>

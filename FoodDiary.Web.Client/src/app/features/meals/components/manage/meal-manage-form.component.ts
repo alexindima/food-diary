@@ -12,20 +12,14 @@ import {
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    FdUiEmojiPickerComponent,
-    type FdUiEmojiPickerOption,
-    type FdUiEmojiPickerValue,
-} from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker.component';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -37,42 +31,48 @@ import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { MealSatietyFieldsComponent } from '../../../../components/shared/meal-satiety-fields/meal-satiety-fields.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
-import { MEAL_TYPE_OPTIONS, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
+import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import type { NutrientData } from '../../../../shared/models/charts.data';
-import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
     type ConsumptionItem,
-    type ConsumptionItemManageDto,
     type ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../models/meal.data';
+import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
+import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
 import type {
     CalorieMismatchWarning,
     ConsumptionFormData,
-    ConsumptionFormValues,
     ConsumptionItemFormData,
-    ConsumptionItemFormValues,
     MacroBarState,
     MealNutritionSummaryState,
     NutritionMode,
-    NutritionTotals,
-} from './base-meal-manage.types';
-import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
-import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
+} from './meal-manage.types';
+import {
+    buildMealManageDto,
+    buildMealManageFormPatchValue,
+    createMealManageForm,
+    getConsumptionItemInitialAmount,
+    getDateInputValue,
+    getTimeInputValue,
+} from './meal-manage-form.mapper';
+import { buildMealNutritionModeOptions, buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-options.mapper';
+import { resolveMealManageControlError } from './meal-manage-view.utils';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog.component';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
 
-export type { ConsumptionFormData, ConsumptionItemFormData } from './base-meal-manage.types';
+export type { ConsumptionFormData, ConsumptionItemFormData } from './meal-manage.types';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -87,15 +87,14 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
-const TIME_PAD_LENGTH = 2;
 
 type GeneralErrorField = (typeof GENERAL_ERROR_FIELDS)[number];
 type GeneralFieldErrors = Record<GeneralErrorField, string | null>;
 
 @Component({
-    selector: 'fd-base-meal-manage',
-    templateUrl: './base-meal-manage.component.html',
-    styleUrls: ['./base-meal-manage.component.scss'],
+    selector: 'fd-meal-manage-form',
+    templateUrl: './meal-manage-form.component.html',
+    styleUrls: ['./meal-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [
@@ -107,17 +106,17 @@ type GeneralFieldErrors = Record<GeneralErrorField, string | null>;
         FdUiTimeInputComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
-        FdUiEmojiPickerComponent,
         ManageHeaderComponent,
         FdPageContainerDirective,
         AiInputBarComponent,
         ImageUploadFieldComponent,
+        MealSatietyFieldsComponent,
         MealItemsListComponent,
         MealAiSessionsComponent,
         MealNutritionSidebarComponent,
     ],
 })
-export class BaseMealManageComponent {
+export class MealManageFormComponent {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -154,16 +153,12 @@ export class BaseMealManageComponent {
     public readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     public readonly selectedMealType = signal<string | null>(null);
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
-    public hungerEmojiOptions: Array<FdUiEmojiPickerOption<number>> = [];
-    public satietyEmojiOptions: Array<FdUiEmojiPickerOption<number>> = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
-    public readonly preMealSatietyAriaLabel = signal('');
-    public readonly postMealSatietyAriaLabel = signal('');
     public readonly generalFieldErrors = signal<GeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
     public readonly manageHeaderState = computed(() => ({
         titleKey: this.consumption() !== null ? 'CONSUMPTION_MANAGE.EDIT_TITLE' : 'CONSUMPTION_MANAGE.ADD_TITLE',
     }));
-    private populatedConsumptionId: string | null = null;
+    private populatedConsumption: Consumption | null = null;
 
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
@@ -179,20 +174,17 @@ export class BaseMealManageComponent {
     });
 
     public consumptionForm: FormGroup<ConsumptionFormData>;
-    public readonly mealTypeOptions = MEAL_TYPE_OPTIONS;
     public mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
         this.consumptionForm = this.createConsumptionForm();
         this.buildMealTypeOptions();
         this.buildNutritionModeOptions();
-        this.buildSatietyEmojiOptions();
         this.nutritionMode.set(this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual');
         this.watchLanguageChanges();
         this.watchGeneralFieldErrors();
         this.updateGeneralFieldErrors();
         this.watchSatietyChanges();
-        this.updateSatietyAriaLabels();
         this.watchMealTypeChanges();
         this.updateManualNutritionValidators(true);
         this.updateItemValidationRules();
@@ -216,31 +208,9 @@ export class BaseMealManageComponent {
     }
 
     private createConsumptionForm(): FormGroup<ConsumptionFormData> {
-        return new FormGroup<ConsumptionFormData>({
-            date: new FormControl<string>(this.getDateInputValue(new Date()), {
-                nonNullable: true,
-                validators: Validators.required,
-            }),
-            time: new FormControl<string>(this.getTimeInputValue(new Date()), {
-                nonNullable: true,
-                validators: Validators.required,
-            }),
-            mealType: new FormControl<string | null>(null),
-            items: new FormArray<FormGroup<ConsumptionItemFormData>>(
-                [this.mealManageFacade.createConsumptionItem()],
-                this.mealManageFacade.createItemsValidator(() => this.aiSessions()),
-            ),
-            comment: new FormControl<string | null>(null),
-            imageUrl: new FormControl<ImageSelection | null>(null),
-            isNutritionAutoCalculated: new FormControl<boolean>(true, { nonNullable: true }),
-            manualCalories: new FormControl<number | null>(null),
-            manualProteins: new FormControl<number | null>(null),
-            manualFats: new FormControl<number | null>(null),
-            manualCarbs: new FormControl<number | null>(null),
-            manualFiber: new FormControl<number | null>(null),
-            manualAlcohol: new FormControl<number | null>(null, [Validators.min(0)]),
-            preMealSatietyLevel: new FormControl<number | null>(DEFAULT_SATIETY_LEVEL),
-            postMealSatietyLevel: new FormControl<number | null>(DEFAULT_SATIETY_LEVEL),
+        return createMealManageForm({
+            createItem: () => this.mealManageFacade.createConsumptionItem(),
+            createItemsValidator: () => this.mealManageFacade.createItemsValidator(() => this.aiSessions()),
         });
     }
 
@@ -248,8 +218,6 @@ export class BaseMealManageComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
             this.buildNutritionModeOptions();
-            this.buildSatietyEmojiOptions();
-            this.updateSatietyAriaLabels();
             this.updateGeneralFieldErrors();
         });
     }
@@ -272,7 +240,6 @@ export class BaseMealManageComponent {
             .subscribe(() => {
                 this.preMealSatietyLevel.set(this.consumptionForm.controls.preMealSatietyLevel.value);
                 this.postMealSatietyLevel.set(this.consumptionForm.controls.postMealSatietyLevel.value);
-                this.updateSatietyAriaLabels();
             });
     }
 
@@ -298,15 +265,15 @@ export class BaseMealManageComponent {
             const consumption = this.consumption();
             untracked(() => {
                 if (consumption === null) {
-                    this.populatedConsumptionId = null;
+                    this.populatedConsumption = null;
                     return;
                 }
 
-                if (this.populatedConsumptionId === consumption.id) {
+                if (this.populatedConsumption === consumption) {
                     return;
                 }
 
-                this.populatedConsumptionId = consumption.id;
+                this.populatedConsumption = consumption;
                 this.populateForm(consumption);
                 this.updateItemValidationRules();
                 this.updateSummary();
@@ -466,40 +433,7 @@ export class BaseMealManageComponent {
 
     // --- Satiety ---
 
-    public getSatietyLevelMeta(
-        controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel',
-        value: number | null,
-    ): { emoji: string; label: string; description: string; gradient: string } {
-        const normalizedValue = normalizeSatietyLevel(value);
-        const levels = controlName === 'preMealSatietyLevel' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
-        const config = levels.find(level => level.value === normalizedValue);
-        return {
-            emoji: config?.emoji ?? '😐',
-            label: this.translateService.instant(config?.titleKey ?? ''),
-            description: this.translateService.instant(config?.descriptionKey ?? ''),
-            gradient: config?.gradient ?? 'linear-gradient(135deg, var(--fd-color-orange-500), var(--fd-color-yellow-300))',
-        };
-    }
-
-    private getSatietyButtonAriaLabel(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): string {
-        const labelKey =
-            controlName === 'preMealSatietyLevel' ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' : 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL';
-        const meta = this.getSatietyLevelMeta(controlName, this.consumptionForm.controls[controlName].value);
-        const sectionLabel = this.translateService.instant(labelKey);
-
-        return `${sectionLabel}. ${meta.label}. ${meta.description}`;
-    }
-
-    private updateSatietyAriaLabels(): void {
-        this.preMealSatietyAriaLabel.set(this.getSatietyButtonAriaLabel('preMealSatietyLevel'));
-        this.postMealSatietyAriaLabel.set(this.getSatietyButtonAriaLabel('postMealSatietyLevel'));
-    }
-
-    public onSatietyLevelChange(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel', value: FdUiEmojiPickerValue | null): void {
-        if (typeof value !== 'number') {
-            return;
-        }
-
+    public onSatietyLevelChange(controlName: MealSatietyControlName, value: number | null): void {
         const control = this.consumptionForm.controls[controlName];
         control.setValue(normalizeSatietyLevel(value));
         control.markAsDirty();
@@ -553,66 +487,12 @@ export class BaseMealManageComponent {
     }
 
     private buildConsumptionManageDto(): ConsumptionManageDto {
-        const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
-        const manualTotals = this.mealManageFacade.getManualNutritionTotals(this.consumptionForm);
-        const image = this.consumptionForm.controls.imageUrl.value;
-
-        return {
-            date: this.buildDateTime(),
-            mealType: this.consumptionForm.controls.mealType.value ?? undefined,
-            comment: this.consumptionForm.controls.comment.value ?? undefined,
-            imageUrl: image?.url ?? undefined,
-            imageAssetId: image?.assetId ?? undefined,
-            items: this.mapConsumptionItems(),
+        return buildMealManageDto(this.consumptionForm.getRawValue(), {
             aiSessions: this.aiSessions(),
-            isNutritionAutoCalculated,
-            ...this.buildManualNutritionPayload(isNutritionAutoCalculated, manualTotals),
-            preMealSatietyLevel: normalizeSatietyLevel(this.consumptionForm.controls.preMealSatietyLevel.value),
-            postMealSatietyLevel: normalizeSatietyLevel(this.consumptionForm.controls.postMealSatietyLevel.value),
-        };
-    }
-
-    private mapConsumptionItems(): ConsumptionItemManageDto[] {
-        return this.consumptionForm.controls.items.value.flatMap(item => this.mapConsumptionItem(item));
-    }
-
-    private mapConsumptionItem(item: Partial<ConsumptionItemFormValues>): ConsumptionItemManageDto[] {
-        const amount = this.normalizeItemAmount(item.amount);
-        const sourceType =
-            item.sourceType ??
-            (item.recipe !== null && item.recipe !== undefined ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
-
-        if (sourceType === ConsumptionSourceType.Product && item.product !== null && item.product !== undefined) {
-            return [{ productId: item.product.id, recipeId: null, amount }];
-        }
-
-        if (sourceType === ConsumptionSourceType.Recipe && item.recipe !== null && item.recipe !== undefined) {
-            return [
-                {
-                    recipeId: item.recipe.id,
-                    productId: null,
-                    amount: this.mealManageFacade.convertRecipeGramsToServings(item.recipe, amount),
-                },
-            ];
-        }
-
-        return [];
-    }
-
-    private normalizeItemAmount(value: unknown): number {
-        const parsedAmount = Number(value);
-        return Number.isNaN(parsedAmount) || parsedAmount === 0 ? 0 : parsedAmount;
-    }
-
-    private buildManualNutritionPayload(isNutritionAutoCalculated: boolean, manualTotals: NutritionTotals): Partial<ConsumptionManageDto> {
-        return {
-            manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
-            manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
-            manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
-            manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
-            manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
-            manualAlcohol: isNutritionAutoCalculated ? undefined : manualTotals.alcohol,
-        };
+            buildDateTime: () => this.buildDateTime(),
+            convertRecipeGramsToServings: (recipe, amount) => this.mealManageFacade.convertRecipeGramsToServings(recipe, amount),
+            manualTotals: this.mealManageFacade.getManualNutritionTotals(this.consumptionForm),
+        });
     }
 
     // --- Private methods ---
@@ -658,7 +538,7 @@ export class BaseMealManageComponent {
     }
 
     private populateForm(consumption: Consumption): void {
-        this.consumptionForm.patchValue(this.buildConsumptionFormPatchValue(consumption));
+        this.consumptionForm.patchValue(buildMealManageFormPatchValue(consumption));
         this.aiSessions.set(consumption.aiSessions ?? []);
 
         const itemsArray = this.items;
@@ -677,41 +557,11 @@ export class BaseMealManageComponent {
         this.updateItemValidationRules();
     }
 
-    private buildConsumptionFormPatchValue(consumption: Consumption): Partial<ConsumptionFormValues> {
-        return {
-            date: this.getDateInputValue(new Date(consumption.date)),
-            time: this.getTimeInputValue(new Date(consumption.date)),
-            mealType: normalizeMealType(consumption.mealType),
-            comment: this.toNullable(consumption.comment),
-            imageUrl: {
-                url: this.toNullable(consumption.imageUrl),
-                assetId: this.toNullable(consumption.imageAssetId),
-            },
-            isNutritionAutoCalculated: consumption.isNutritionAutoCalculated,
-            ...this.buildConsumptionManualNutritionPatchValue(consumption),
-            preMealSatietyLevel: normalizeSatietyLevel(this.toNullable(consumption.preMealSatietyLevel)),
-            postMealSatietyLevel: normalizeSatietyLevel(this.toNullable(consumption.postMealSatietyLevel)),
-        };
-    }
-
-    private buildConsumptionManualNutritionPatchValue(consumption: Consumption): Partial<ConsumptionFormValues> {
-        return {
-            manualCalories: consumption.manualCalories ?? consumption.totalCalories,
-            manualProteins: consumption.manualProteins ?? consumption.totalProteins,
-            manualFats: consumption.manualFats ?? consumption.totalFats,
-            manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
-            manualFiber: consumption.manualFiber ?? consumption.totalFiber,
-            manualAlcohol: consumption.manualAlcohol ?? consumption.totalAlcohol,
-        };
-    }
-
-    private toNullable<T>(value: T | null | undefined): T | null {
-        return value ?? null;
-    }
-
     private appendConsumptionItemForm(item: ConsumptionItem): void {
         const sourceType = item.sourceType;
-        const initialAmount = this.getConsumptionItemInitialAmount(item);
+        const initialAmount = getConsumptionItemInitialAmount(item, value =>
+            this.mealManageFacade.convertRecipeServingsToGrams(value.recipe ?? null, value.amount),
+        );
         this.items.push(
             this.mealManageFacade.createConsumptionItem(
                 sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
@@ -725,12 +575,6 @@ export class BaseMealManageComponent {
             const currentIndex = this.items.length - 1;
             this.mealManageFacade.ensureRecipeWeightForExistingItem(this.items.at(currentIndex), item.amount, item.recipe ?? null);
         }
-    }
-
-    private getConsumptionItemInitialAmount(item: ConsumptionItem): number {
-        return item.sourceType === ConsumptionSourceType.Recipe
-            ? this.mealManageFacade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount)
-            : item.amount;
     }
 
     private updateSummary(): void {
@@ -798,36 +642,7 @@ export class BaseMealManageComponent {
     }
 
     private buildNutritionModeOptions(): void {
-        this.nutritionModeOptions = [
-            {
-                value: 'auto',
-                label: this.translateService.instant('CONSUMPTION_MANAGE.NUTRITION_MODE.AUTO'),
-            },
-            {
-                value: 'manual',
-                label: this.translateService.instant('CONSUMPTION_MANAGE.NUTRITION_MODE.MANUAL'),
-            },
-        ];
-    }
-
-    private buildSatietyEmojiOptions(): void {
-        this.hungerEmojiOptions = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
-        this.satietyEmojiOptions = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
-    }
-
-    private buildEmojiOptions(levels: typeof DEFAULT_SATIETY_LEVELS): Array<FdUiEmojiPickerOption<number>> {
-        return levels.map(level => {
-            const label = this.translateService.instant(level.titleKey);
-            const description = this.translateService.instant(level.descriptionKey);
-            return {
-                value: level.value,
-                emoji: level.emoji,
-                label,
-                description,
-                ariaLabel: `${label}. ${description}`,
-                hint: `${label}. ${description}`,
-            };
-        });
+        this.nutritionModeOptions = buildMealNutritionModeOptions(this.translateService);
     }
 
     private async addConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
@@ -894,23 +709,15 @@ export class BaseMealManageComponent {
     }
 
     private buildMealTypeOptions(): void {
-        this.mealTypeSelectOptions = this.mealTypeOptions.map(option => ({
-            value: option,
-            label: this.translateService.instant(`MEAL_TYPES.${option}`),
-        }));
+        this.mealTypeSelectOptions = buildMealTypeSelectOptions(this.translateService);
     }
 
     private getDateInputValue(date: Date): string {
-        const year = date.getFullYear();
-        const month = this.padNumber(date.getMonth() + 1);
-        const day = this.padNumber(date.getDate());
-        return `${year}-${month}-${day}`;
+        return getDateInputValue(date);
     }
 
     private getTimeInputValue(date: Date): string {
-        const hours = this.padNumber(date.getHours());
-        const minutes = this.padNumber(date.getMinutes());
-        return `${hours}:${minutes}`;
+        return getTimeInputValue(date);
     }
 
     private buildDateTime(): Date {
@@ -923,26 +730,8 @@ export class BaseMealManageComponent {
         return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
     }
 
-    private padNumber(value: number): string {
-        return value.toString().padStart(TIME_PAD_LENGTH, '0');
-    }
-
     private resolveControlError(control: AbstractControl | null): string | null {
-        if (control === null || !control.invalid || !control.touched) {
-            return null;
-        }
-
-        if (control.errors?.['required'] === true) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        const minError: unknown = control.getError('min');
-        if (minError !== null) {
-            const min = getNumberProperty(minError, 'min') ?? 0;
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+        return resolveMealManageControlError(control, this.translateService);
     }
 
     private loadAiUsage(): void {

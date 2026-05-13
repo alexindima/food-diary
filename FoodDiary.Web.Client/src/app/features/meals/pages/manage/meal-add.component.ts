@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BaseMealManageComponent } from '../../components/manage/base-meal-manage.component';
+import { MealManageFormComponent } from '../../components/manage/meal-manage-form.component';
 
 @Component({
     selector: 'fd-meal-add',
     templateUrl: './meal-add.component.html',
-    styleUrls: ['./meal-add.component.scss', '../../components/manage/base-meal-manage.component.scss'],
+    styleUrls: ['./meal-add.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseMealManageComponent],
+    imports: [MealManageFormComponent],
 })
-export class MealAddComponent extends BaseMealManageComponent {}
+export class MealAddComponent {}

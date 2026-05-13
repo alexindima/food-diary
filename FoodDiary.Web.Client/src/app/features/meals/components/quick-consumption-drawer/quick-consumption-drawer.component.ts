@@ -15,7 +15,7 @@ import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { MealManageFacade } from '../../lib/meal-manage.facade';
 import { type QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
 import { ConsumptionSourceType } from '../../models/meal.data';
-import type { ConsumptionItemFormData } from '../manage/base-meal-manage.types';
+import type { ConsumptionItemFormData } from '../manage/meal-manage.types';
 import {
     MealManualItemDialogComponent,
     type MealManualItemDialogData,

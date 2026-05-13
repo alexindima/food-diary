@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -8,17 +8,20 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
-import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData, NutritionTotals } from '../base-meal-manage.types';
-
-const NUTRITION_FRACTION_THRESHOLD = 0.01;
+import type { ConsumptionItemFormData, NutritionTotals } from '../meal-manage.types';
+import {
+    formatMealManageAmount,
+    formatMealManageMacro,
+    getEmptyNutritionTotals,
+    resolveMealManageControlError,
+} from '../meal-manage-view.utils';
 
 @Component({
     selector: 'fd-meal-items-list',
     templateUrl: './meal-items-list.component.html',
-    styleUrls: ['../base-meal-manage.component.scss'],
+    styleUrls: ['../meal-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,
@@ -59,10 +62,10 @@ export class MealItemsListComponent {
                     icon: this.getItemSourceIcon(index),
                     sourceName: this.getItemSourceName(index),
                     amountLabel: this.formatManualAmount(index),
-                    caloriesLabel: this.formatManualMacro(totals.calories, 'GENERAL.UNITS.KCAL'),
-                    proteinsLabel: this.formatManualMacro(totals.proteins, 'GENERAL.UNITS.G'),
-                    fatsLabel: this.formatManualMacro(totals.fats, 'GENERAL.UNITS.G'),
-                    carbsLabel: this.formatManualMacro(totals.carbs, 'GENERAL.UNITS.G'),
+                    caloriesLabel: formatMealManageMacro(totals.calories, 'GENERAL.UNITS.KCAL', this.translateService),
+                    proteinsLabel: formatMealManageMacro(totals.proteins, 'GENERAL.UNITS.G', this.translateService),
+                    fatsLabel: formatMealManageMacro(totals.fats, 'GENERAL.UNITS.G', this.translateService),
+                    carbsLabel: formatMealManageMacro(totals.carbs, 'GENERAL.UNITS.G', this.translateService),
                 };
             });
     });
@@ -158,7 +161,7 @@ export class MealItemsListComponent {
 
     public getAmountControlError(index: number): string | null {
         const group = (this.formArray().controls as Array<FormGroup<ConsumptionItemFormData> | undefined>)[index];
-        return this.resolveControlError(group?.controls.amount ?? null);
+        return resolveMealManageControlError(group?.controls.amount ?? null, this.translateService);
     }
 
     private getManualItemTotals(index: number): NutritionTotals {
@@ -174,7 +177,7 @@ export class MealItemsListComponent {
 
     private getProductManualItemTotals(product: ConsumptionItemFormData['product']['value'], amount: number): NutritionTotals {
         if (product === null || product.baseAmount <= 0) {
-            return this.getEmptyTotals();
+            return getEmptyNutritionTotals();
         }
 
         const multiplier = amount / product.baseAmount;
@@ -190,7 +193,7 @@ export class MealItemsListComponent {
 
     private getRecipeManualItemTotals(recipe: ConsumptionItemFormData['recipe']['value'], amount: number): NutritionTotals {
         if (recipe === null || recipe.servings <= 0) {
-            return this.getEmptyTotals();
+            return getEmptyNutritionTotals();
         }
 
         const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
@@ -204,21 +207,10 @@ export class MealItemsListComponent {
         };
     }
 
-    private formatManualMacro(value: number, unitKey: string): string {
-        const locale = this.getCurrentLanguage();
-        const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
-        const formatter = new Intl.NumberFormat(locale, {
-            maximumFractionDigits: hasFraction ? 1 : 0,
-            minimumFractionDigits: hasFraction ? 1 : 0,
-        });
-        const unitLabel = this.translateService.instant(unitKey);
-        return `${formatter.format(value)} ${unitLabel}`.trim();
-    }
-
     private formatManualAmount(index: number): string {
         const amount = this.formArray().at(index).controls.amount.value ?? 0;
         const unitLabel = this.getAmountUnitLabel(index);
-        return unitLabel !== null ? `${this.formatNumber(amount)} ${unitLabel}`.trim() : this.formatNumber(amount);
+        return formatMealManageAmount(amount, unitLabel, this.translateService);
     }
 
     private getManualItemImageUrl(index: number): string | null {
@@ -245,47 +237,6 @@ export class MealItemsListComponent {
 
     public onItemSourceClick(index: number): void {
         this.openItemSelect.emit(index);
-    }
-
-    private formatNumber(value: number): string {
-        const locale = this.getCurrentLanguage();
-        const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
-        return new Intl.NumberFormat(locale, {
-            maximumFractionDigits: hasFraction ? 1 : 0,
-            minimumFractionDigits: hasFraction ? 1 : 0,
-        }).format(value);
-    }
-
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (control === null || control.invalid === false || control.touched === false) {
-            return null;
-        }
-
-        if (control.errors?.['required'] === true) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        const minError: unknown = control.getError('min');
-        if (minError !== null) {
-            const min = getNumberProperty(minError, 'min') ?? 0;
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    }
-
-    private getEmptyTotals(): NutritionTotals {
-        return { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
-    }
-
-    private getCurrentLanguage(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        if (currentLang.length > 0) {
-            return currentLang;
-        }
-
-        const fallbackLang = this.translateService.getFallbackLang() ?? '';
-        return fallbackLang.length > 0 ? fallbackLang : 'en';
     }
 }
 

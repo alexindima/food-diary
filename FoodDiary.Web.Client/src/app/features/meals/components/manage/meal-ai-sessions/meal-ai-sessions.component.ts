@@ -6,14 +6,12 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
-import type { NutritionTotals } from '../base-meal-manage.types';
-
-const FRACTION_EPSILON = 0.01;
+import { formatMealAiAmount, formatMealAiName, formatMealManageMacro, getAiSessionTotals } from '../meal-manage-view.utils';
 
 @Component({
     selector: 'fd-meal-ai-sessions',
     templateUrl: './meal-ai-sessions.component.html',
-    styleUrls: ['../base-meal-manage.component.scss'],
+    styleUrls: ['../meal-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent],
 })
@@ -33,7 +31,7 @@ export class MealAiSessionsComponent {
         this.activeLang();
 
         return this.aiSessions().map((session, index) => {
-            const totals = this.getAiSessionTotals(session);
+            const totals = getAiSessionTotals(session);
             const isExpanded = expandedAiSessions.has(index);
             const visibleItems = isExpanded ? session.items : this.visibleAiItems(session.items, this.aiPreviewMaxItems);
 
@@ -44,13 +42,13 @@ export class MealAiSessionsComponent {
                 isExpanded,
                 hiddenItemsCount: this.getHiddenAiItemsCount(session.items, this.aiPreviewMaxItems),
                 visibleItems: visibleItems.map(item => ({
-                    nameLabel: this.formatAiName(item.nameLocal ?? item.nameEn),
-                    amountLabel: this.formatAiAmount(item.amount, item.unit),
+                    nameLabel: formatMealAiName(item.nameLocal ?? item.nameEn),
+                    amountLabel: formatMealAiAmount(item.amount, item.unit, this.translateService),
                 })),
-                caloriesLabel: this.formatAiMacro(totals.calories, 'GENERAL.UNITS.KCAL'),
-                proteinsLabel: this.formatAiMacro(totals.proteins, 'GENERAL.UNITS.G'),
-                fatsLabel: this.formatAiMacro(totals.fats, 'GENERAL.UNITS.G'),
-                carbsLabel: this.formatAiMacro(totals.carbs, 'GENERAL.UNITS.G'),
+                caloriesLabel: formatMealManageMacro(totals.calories, 'GENERAL.UNITS.KCAL', this.translateService),
+                proteinsLabel: formatMealManageMacro(totals.proteins, 'GENERAL.UNITS.G', this.translateService),
+                fatsLabel: formatMealManageMacro(totals.fats, 'GENERAL.UNITS.G', this.translateService),
+                carbsLabel: formatMealManageMacro(totals.carbs, 'GENERAL.UNITS.G', this.translateService),
             };
         });
     });
@@ -63,78 +61,8 @@ export class MealAiSessionsComponent {
         });
     }
 
-    private formatAiAmount(amount: number, unit: string): string {
-        const normalized = unit.trim().toLowerCase();
-        const unitMap: Record<string, string> = {
-            g: 'GENERAL.UNITS.G',
-            gram: 'GENERAL.UNITS.G',
-            grams: 'GENERAL.UNITS.G',
-            gr: 'GENERAL.UNITS.G',
-            ml: 'GENERAL.UNITS.ML',
-            l: 'GENERAL.UNITS.ML',
-            pcs: 'GENERAL.UNITS.PCS',
-            pc: 'GENERAL.UNITS.PCS',
-            piece: 'GENERAL.UNITS.PCS',
-            pieces: 'GENERAL.UNITS.PCS',
-            kcal: 'GENERAL.UNITS.KCAL',
-        };
-
-        const unitKey = normalized.length > 0 ? unitMap[normalized] : undefined;
-        const unitLabel = unitKey !== undefined ? this.translateService.instant(unitKey) : unit;
-        return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
-    }
-
-    private formatAiName(name?: string | null): string {
-        if (name === null || name === undefined || name.length === 0) {
-            return '';
-        }
-
-        const trimmed = name.trim();
-        if (trimmed.length === 0) {
-            return '';
-        }
-
-        const [first, ...rest] = trimmed;
-        return `${first.toLocaleUpperCase()}${rest.join('')}`;
-    }
-
-    private formatAiMacro(value: number, unitKey: string): string {
-        const locale = this.getCurrentLanguage();
-        const hasFraction = Math.abs(value % 1) > FRACTION_EPSILON;
-        const formatter = new Intl.NumberFormat(locale, {
-            maximumFractionDigits: hasFraction ? 1 : 0,
-            minimumFractionDigits: hasFraction ? 1 : 0,
-        });
-        const unitLabel = this.translateService.instant(unitKey);
-        return `${formatter.format(value)} ${unitLabel}`.trim();
-    }
-
-    private getCurrentLanguage(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        if (currentLang.length > 0) {
-            return currentLang;
-        }
-
-        const fallbackLang = this.translateService.getFallbackLang() ?? '';
-        return fallbackLang.length > 0 ? fallbackLang : 'en';
-    }
-
     public getAiSessionLabel(index: number): string {
         return this.translateService.instant('CONSUMPTION_MANAGE.ITEMS_AI_PHOTO_LABEL', { index: index + 1 });
-    }
-
-    private getAiSessionTotals(session: ConsumptionAiSessionManageDto): NutritionTotals {
-        return session.items.reduce(
-            (totals, item) => ({
-                calories: totals.calories + item.calories,
-                proteins: totals.proteins + item.proteins,
-                fats: totals.fats + item.fats,
-                carbs: totals.carbs + item.carbs,
-                fiber: totals.fiber + item.fiber,
-                alcohol: totals.alcohol + item.alcohol,
-            }),
-            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
-        );
     }
 
     public toggleAiSessionExpanded(index: number): void {

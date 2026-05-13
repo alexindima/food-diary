@@ -10,7 +10,7 @@ import { AiFoodService } from '../../../shared/api/ai-food.service';
 import type { UserAiUsageResponse } from '../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { MealService } from '../api/meal.service';
-import type { ConsumptionFormData, ConsumptionItemFormData } from '../components/manage/base-meal-manage.types';
+import type { ConsumptionFormData, ConsumptionItemFormData } from '../components/manage/meal-manage.types';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,

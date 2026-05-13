@@ -16,13 +16,13 @@ import {
     type ItemSelectDialogData,
     type ItemSelection,
 } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
-import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { MealManageFacade } from '../../../lib/meal-manage.facade';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../base-meal-manage.types';
+import type { ConsumptionItemFormData } from '../meal-manage.types';
+import { resolveMealManageControlError } from '../meal-manage-view.utils';
 
 const MIN_AMOUNT = 0.01;
 
@@ -86,22 +86,7 @@ export class MealManualItemDialogComponent {
 
     public readonly amountError = computed(() => {
         this.amountValidationVersion();
-
-        if (!this.amount.invalid || !this.amount.touched) {
-            return null;
-        }
-
-        if (this.amount.errors?.['required'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        const minError: unknown = this.amount.getError('min');
-        if (minError !== null) {
-            const min = getNumberProperty(minError, 'min') ?? MIN_AMOUNT;
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+        return resolveMealManageControlError(this.amount, this.translateService, MIN_AMOUNT);
     });
 
     public constructor() {

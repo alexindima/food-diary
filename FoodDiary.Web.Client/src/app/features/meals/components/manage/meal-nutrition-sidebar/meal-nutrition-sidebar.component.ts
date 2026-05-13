@@ -12,12 +12,12 @@ import {
     NutritionEditorComponent,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import type { Consumption } from '../../../models/meal.data';
-import type { CalorieMismatchWarning, ConsumptionFormData, MacroBarState, NutritionMode } from '../base-meal-manage.types';
+import type { CalorieMismatchWarning, ConsumptionFormData, MacroBarState, NutritionMode } from '../meal-manage.types';
 
 @Component({
     selector: 'fd-meal-nutrition-sidebar',
     templateUrl: './meal-nutrition-sidebar.component.html',
-    styleUrls: ['../base-meal-manage.component.scss'],
+    styleUrls: ['../meal-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

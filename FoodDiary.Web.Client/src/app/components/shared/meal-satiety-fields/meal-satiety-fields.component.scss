@@ -1,0 +1,49 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.meal-satiety-fields {
+    grid-template-columns: 1fr;
+    min-width: 0;
+}
+
+.meal-satiety-fields--columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+}
+
+.meal-satiety-fields--compact-columns {
+    grid-template-columns: repeat(2, minmax(0, max-content));
+    column-gap: var(--fd-space-xl);
+    max-width: max-content;
+}
+
+.meal-satiety-fields__field {
+    min-width: 0;
+}
+
+.meal-satiety-fields__label {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+}
+
+.meal-satiety-fields--compact-columns .meal-satiety-fields__label {
+    color: var(--fd-color-text);
+}
+
+.meal-satiety-fields--compact-columns fd-ui-emoji-picker {
+    --fd-emoji-picker-option-width: 52px;
+    --fd-emoji-picker-option-height: 52px;
+    --fd-emoji-picker-option-padding: var(--fd-space-xs);
+}
+
+@media #{variables.$media-phablet} {
+
+    .meal-satiety-fields--columns,
+    .meal-satiety-fields--compact-columns {
+        grid-template-columns: 1fr;
+    }
+}

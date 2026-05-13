@@ -80,30 +80,16 @@
                     <p class="consumption-manage__satiety-note fd-ui-body-sm">
                         {{ 'CONSUMPTION_MANAGE.SATIETY_SECTION_HINT' | translate }}
                     </p>
-                    <div class="consumption-manage__satiety-grid fd-grid fd-gap-md">
-                        <div class="consumption-manage__satiety-field fd-stack fd-gap-xs">
-                            <p class="consumption-manage__satiety-picker-label fd-ui-action-text">
-                                {{ 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' | translate }}
-                            </p>
-                            <fd-ui-emoji-picker
-                                [options]="hungerEmojiOptions"
-                                [selectedValue]="preMealSatietyLevel()"
-                                [ariaLabel]="preMealSatietyAriaLabel()"
-                                (selectedValueChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
-                            />
-                        </div>
-                        <div class="consumption-manage__satiety-field fd-stack fd-gap-xs">
-                            <p class="consumption-manage__satiety-picker-label fd-ui-action-text">
-                                {{ 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL' | translate }}
-                            </p>
-                            <fd-ui-emoji-picker
-                                [options]="satietyEmojiOptions"
-                                [selectedValue]="postMealSatietyLevel()"
-                                [ariaLabel]="postMealSatietyAriaLabel()"
-                                (selectedValueChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
-                            />
-                        </div>
-                    </div>
+                    <fd-meal-satiety-fields
+                        layout="compactColumns"
+                        pickerSize="md"
+                        labelBeforeKey="CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL"
+                        labelAfterKey="CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL"
+                        [preMealSatietyLevel]="preMealSatietyLevel()"
+                        [postMealSatietyLevel]="postMealSatietyLevel()"
+                        (preMealSatietyLevelChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
+                        (postMealSatietyLevelChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
+                    />
                 </fd-ui-card>
 
                 <div class="consumption-manage__items-section fd-stack fd-gap-md">

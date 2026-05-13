@@ -20,15 +20,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.meal-details-fields__satiety {
-    grid-template-columns: 1fr;
-}
-
-.meal-details-fields--satiety-columns .meal-details-fields__satiety {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-}
-
 .meal-details-fields__field {
     min-width: 0;
 }
@@ -82,9 +73,8 @@
 }
 
 @media #{variables.$media-phablet} {
-    /* stylelint-disable-next-line rule-empty-line-before */
-    .meal-details-fields__date-time,
-    .meal-details-fields--satiety-columns .meal-details-fields__satiety {
+
+    .meal-details-fields__date-time {
         grid-template-columns: 1fr;
     }
 }

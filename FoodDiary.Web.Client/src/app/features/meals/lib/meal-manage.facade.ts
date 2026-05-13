@@ -33,7 +33,7 @@ import type {
     ConsumptionItemFormData,
     MealNutritionSummaryState,
     NutritionTotals,
-} from '../components/manage/base-meal-manage.types';
+} from '../components/manage/meal-manage.types';
 import {
     type ConsumptionManageRedirectAction,
     type ConsumptionManageSuccessDialogData,
