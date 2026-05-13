@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
-import { type AbstractControl, type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -8,8 +8,8 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { RecipeVisibility } from '../../../models/recipe.data';
+import { resolveRecipeControlError } from '../recipe-form-error.utils';
 import type { RecipeFormData } from '../recipe-manage.types';
 
 const ERROR_FIELDS = ['name', 'cookTime', 'prepTime', 'servings', 'description', 'visibility', 'comment'] as const;
@@ -72,7 +72,7 @@ export class RecipeBasicInfoComponent {
 
     private buildFieldErrors(form: FormGroup<RecipeFormData>): FieldErrors {
         return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
-            errors[field] = this.resolveControlError(form.controls[field]);
+            errors[field] = resolveRecipeControlError(form.controls[field], this.translateService);
             return errors;
         }, this.createEmptyFieldErrors());
     }
@@ -96,36 +96,5 @@ export class RecipeBasicInfoComponent {
                 label: this.translateService.instant(`RECIPE_VISIBILITY.${option}`),
             })),
         );
-    }
-
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (control === null) {
-            return null;
-        }
-
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const errors = control.errors;
-        if (errors === null) {
-            return null;
-        }
-
-        if (errors['required'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        const minError: unknown = errors['min'];
-        if (minError !== undefined) {
-            const min = getNumberProperty(minError, 'min') ?? 0;
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-        }
-
-        if (errors['nonEmptyArray'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY');
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
 }

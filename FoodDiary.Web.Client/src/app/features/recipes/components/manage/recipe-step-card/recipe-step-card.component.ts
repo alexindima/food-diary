@@ -1,7 +1,7 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type AbstractControl, type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -11,7 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import type { FormGroupControls } from '../../../../../shared/lib/common.data';
-import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
+import { resolveRecipeControlError } from '../recipe-form-error.utils';
 import type { IngredientFormValues, StepFormData } from '../recipe-manage.types';
 
 @Component({
@@ -75,7 +75,7 @@ export class RecipeStepCardComponent {
     public readonly descriptionError = computed(() => {
         this.formRevision();
         this.currentLanguage();
-        return this.resolveControlError(this.stepFormGroup().controls.description);
+        return resolveRecipeControlError(this.stepFormGroup().controls.description, this.translateService);
     });
     public readonly expandedIcon = computed(() => (this.isExpanded() ? 'expand_less' : 'expand_more'));
     public readonly ingredientRows = computed<RecipeIngredientRowView[]>(() => {
@@ -91,8 +91,8 @@ export class RecipeStepCardComponent {
                 index,
                 prefixIcon: nestedRecipeId !== null && nestedRecipeId.length > 0 ? 'menu_book' : food !== null ? 'restaurant' : 'search',
                 amountLabel: this.resolveIngredientAmountLabel(nestedRecipeId !== null && nestedRecipeId.length > 0, unitKey),
-                foodNameError: this.resolveControlError(ingredient.controls.foodName),
-                amountError: this.resolveControlError(ingredient.controls.amount),
+                foodNameError: resolveRecipeControlError(ingredient.controls.foodName, this.translateService),
+                amountError: resolveRecipeControlError(ingredient.controls.amount, this.translateService),
             };
         });
     });
@@ -162,37 +162,6 @@ export class RecipeStepCardComponent {
         titleControl.setValue(trimmedTitle.length > 0 ? trimmedTitle : null);
     }
 
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (control === null) {
-            return null;
-        }
-
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const errors = control.errors;
-        if (errors === null) {
-            return null;
-        }
-
-        if (errors['required'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        const minError: unknown = errors['min'];
-        if (minError !== undefined) {
-            const min = getNumberProperty(minError, 'min') ?? 0;
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-        }
-
-        if (errors['nonEmptyArray'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY');
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    }
-
     private resolveIngredientAmountLabel(isNestedRecipe: boolean, unitKey: string | null): string {
         if (isNestedRecipe) {
             return this.translateService.instant('RECIPE_SELECT_DIALOG.SERVINGS');
@@ -207,13 +176,17 @@ export class RecipeStepCardComponent {
     }
 
     private getCurrentLanguage(): string {
-        const currentLang = this.translateService.getCurrentLang();
+        const currentLang = this.normalizeLanguage(this.translateService.getCurrentLang());
         if (currentLang.length > 0) {
             return currentLang;
         }
 
-        const fallbackLang = this.translateService.getFallbackLang();
-        return fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en';
+        const fallbackLang = this.normalizeLanguage(this.translateService.getFallbackLang());
+        return fallbackLang.length > 0 ? fallbackLang : 'en';
+    }
+
+    private normalizeLanguage(value: unknown): string {
+        return typeof value === 'string' ? value : '';
     }
 }
 

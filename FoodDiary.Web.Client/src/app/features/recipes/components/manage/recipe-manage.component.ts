@@ -54,7 +54,7 @@ export class RecipeManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly expandedSteps = new Set<number>();
-    private lastRecipeId: string | null = null;
+    private lastRecipe: Recipe | null = null;
 
     private readonly recipeManageFacade = inject(RecipeManageFacade);
 
@@ -108,12 +108,12 @@ export class RecipeManageComponent {
             const recipe = this.recipe();
             untracked(() => {
                 if (recipe !== null) {
-                    if (this.lastRecipeId !== recipe.id) {
-                        this.lastRecipeId = recipe.id;
+                    if (this.lastRecipe !== recipe) {
+                        this.lastRecipe = recipe;
                         this.populateForm(recipe);
                     }
                 } else {
-                    this.lastRecipeId = null;
+                    this.lastRecipe = null;
                     this.updateNutrientSummary(null);
                 }
             });
@@ -220,7 +220,7 @@ export class RecipeManageComponent {
             return;
         }
 
-        if (this.recipeForm.valid === false) {
+        if (!this.recipeForm.valid) {
             this.recipeManageFacade.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
