@@ -24,7 +24,7 @@ import {
     getControlNumericValue,
 } from '../../../../../shared/lib/nutrition-form.utils';
 import { MeasurementUnit } from '../../../models/product.data';
-import type { NutritionMode, ProductFormData } from '../product-manage-form.types';
+import type { NutritionMode, ProductFormData } from '../product-manage-lib/product-manage-form.types';
 
 @Component({
     selector: 'fd-product-nutrition-editor',

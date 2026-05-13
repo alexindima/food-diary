@@ -25,7 +25,7 @@
     }
 
     &__delete-button {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &--icon {
             width: var(--fd-size-control-md);
             min-width: var(--fd-size-control-md);
@@ -95,7 +95,7 @@
     }
 
     @media #{variables.$media-tablet} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__form {
             padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-sm);
         }
@@ -106,7 +106,7 @@
     }
 
     @media #{variables.$media-mobile} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__action-button {
             width: 100%;
         }

@@ -1,7 +1,7 @@
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
-import type { ImageSelection } from '../../../../shared/models/image-upload.data';
-import type { OpenFoodFactsProduct } from '../../api/open-food-facts.service';
-import type { MeasurementUnit, ProductType, ProductVisibility } from '../../models/product.data';
+import type { FormGroupControls } from '../../../../../shared/lib/common.data';
+import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import type { OpenFoodFactsProduct } from '../../../api/open-food-facts.service';
+import type { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
 
 export type ProductFormValues = {
     name: string;

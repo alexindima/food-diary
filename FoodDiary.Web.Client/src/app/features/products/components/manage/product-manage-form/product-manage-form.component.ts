@@ -25,21 +25,21 @@ import {
 } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { catchError, firstValueFrom, of } from 'rxjs';
 
-import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
-import type { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { NavigationService } from '../../../../services/navigation.service';
-import { checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import { getRecordProperty } from '../../../../shared/lib/unknown-value.utils';
-import { UsdaService } from '../../../usda/api/usda.service';
-import type { UsdaFoodDetail } from '../../../usda/models/usda.data';
-import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
-import { ProductAiRecognitionDialogComponent } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
-import type { ProductAiRecognitionResult } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
-import { ProductManageFacade } from '../../lib/product-manage.facade';
-import type { Product } from '../../models/product.data';
-import { ProductBasicInfoComponent } from './product-basic-info/product-basic-info.component';
+import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner.component';
+import type { ConfirmDeleteDialogData } from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header.component';
+import { FdPageContainerDirective } from '../../../../../directives/layout/page-container.directive';
+import { NavigationService } from '../../../../../services/navigation.service';
+import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
+import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
+import { UsdaService } from '../../../../usda/api/usda.service';
+import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
+import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../../api/open-food-facts.service';
+import { ProductAiRecognitionDialogComponent } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
+import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
+import { ProductManageFacade } from '../../../lib/product-manage.facade';
+import type { Product } from '../../../models/product.data';
+import { ProductBasicInfoComponent } from '../product-basic-info/product-basic-info.component';
 import {
     buildAiResultPatch,
     buildConvertedNutritionPatch,
@@ -48,17 +48,17 @@ import {
     createProductForm,
     getDefaultProductBaseAmount,
     getProductControlNumberValue,
-} from './product-manage-form.mapper';
-import type { NutritionMode, ProductFormData, ProductManagePrefill } from './product-manage-form.types';
-import { ProductNameSearchFacade } from './product-name-search.facade';
-import type { ProductNameSuggestion } from './product-name-search.types';
-import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
+} from '../product-manage-lib/product-manage-form.mapper';
+import type { NutritionMode, ProductFormData, ProductManagePrefill } from '../product-manage-lib/product-manage-form.types';
+import { ProductNameSearchFacade } from '../product-manage-lib/product-name-search.facade';
+import type { ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 import {
     buildOpenFoodFactsLookupPatch,
     buildResetNutritionPatch,
     buildSourceProductPrefillPatch,
     buildUsdaFoodDetailPrefillPatch,
-} from './product-nutrition-prefill.mapper';
+} from '../product-manage-lib/product-nutrition-prefill.mapper';
+import { ProductNutritionEditorComponent } from '../product-nutrition-editor/product-nutrition-editor.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,

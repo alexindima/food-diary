@@ -52,7 +52,7 @@
 }
 
 @media #{variables.$media-mobile} {
-
+    // stylelint-disable-next-line rule-empty-line-before
     .product-manage__hero {
         grid-template-columns: 1fr;
         grid-template-rows: auto;

@@ -1,8 +1,8 @@
-import { DEFAULT_NUTRITION_BASE_AMOUNT, KJ_TO_KCAL_FACTOR } from '../../../../shared/lib/nutrition.constants';
-import { USDA_NUTRIENT_IDS } from '../../../usda/lib/usda-nutrient.constants';
-import type { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
-import type { OpenFoodFactsProduct } from '../../api/open-food-facts.service';
-import { MeasurementUnit, type ProductSearchSuggestion } from '../../models/product.data';
+import { DEFAULT_NUTRITION_BASE_AMOUNT, KJ_TO_KCAL_FACTOR } from '../../../../../shared/lib/nutrition.constants';
+import { USDA_NUTRIENT_IDS } from '../../../../usda/lib/usda-nutrient.constants';
+import type { Micronutrient, UsdaFoodDetail } from '../../../../usda/models/usda.data';
+import type { OpenFoodFactsProduct } from '../../../api/open-food-facts.service';
+import { MeasurementUnit, type ProductSearchSuggestion } from '../../../models/product.data';
 import { buildResetNutritionPatch, roundProductNutrientValue } from './product-manage-form.mapper';
 import type { ProductFormValues } from './product-manage-form.types';
 

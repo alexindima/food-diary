@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import { ProductManageFormComponent } from '../components/manage/product-manage-form.component';
+import { ProductManageFormComponent } from '../components/manage/product-manage-form/product-manage-form.component';
 import type { Product } from '../models/product.data';
 
 @Component({

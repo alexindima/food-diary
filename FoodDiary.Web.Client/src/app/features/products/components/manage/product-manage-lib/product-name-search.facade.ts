@@ -2,10 +2,10 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, debounceTime, map, of, Subject, switchMap } from 'rxjs';
 
-import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../config/runtime-ui.tokens';
-import { ProductService } from '../../api/product.service';
-import { PRODUCT_NAME_SEARCH_MIN_LENGTH, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } from '../../lib/product-manage.constants';
-import type { ProductSearchSuggestion } from '../../models/product.data';
+import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../../config/runtime-ui.tokens';
+import { ProductService } from '../../../api/product.service';
+import { PRODUCT_NAME_SEARCH_MIN_LENGTH, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } from '../../../lib/product-manage.constants';
+import type { ProductSearchSuggestion } from '../../../models/product.data';
 import type { ProductNameAutocompleteOption } from './product-name-search.types';
 
 @Injectable({

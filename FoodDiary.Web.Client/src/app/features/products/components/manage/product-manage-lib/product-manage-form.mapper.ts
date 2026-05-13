@@ -1,12 +1,12 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../shared/lib/nutrition.constants';
-import { getControlNumericValue } from '../../../../shared/lib/nutrition-form.utils';
-import type { ImageSelection } from '../../../../shared/models/image-upload.data';
-import type { ProductAiRecognitionResult } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
-import { PRODUCT_MIN_AMOUNT, PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../lib/product-manage.constants';
-import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
-import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
+import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
+import { getControlNumericValue } from '../../../../../shared/lib/nutrition-form.utils';
+import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
+import { PRODUCT_MIN_AMOUNT, PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../../lib/product-manage.constants';
+import { normalizeProductType as normalizeProductTypeValue } from '../../../lib/product-type.utils';
+import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { NutritionMode, ProductFormData, ProductFormValues } from './product-manage-form.types';
 
 export type NutritionValues = {

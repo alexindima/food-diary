@@ -11,8 +11,8 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
-import type { ProductFormData } from '../product-manage-form.types';
-import type { ProductNameAutocompleteOption, ProductNameSuggestion } from '../product-name-search.types';
+import type { ProductFormData } from '../product-manage-lib/product-manage-form.types';
+import type { ProductNameAutocompleteOption, ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 
 const ERROR_FIELDS = ['name', 'productType', 'defaultPortionAmount', 'baseUnit', 'visibility'] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];

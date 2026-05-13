@@ -4,13 +4,13 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { NavigationService } from '../../../../services/navigation.service';
-import { UsdaService } from '../../../usda/api/usda.service';
-import type { UsdaFoodDetail } from '../../../usda/models/usda.data';
-import { OpenFoodFactsService } from '../../api/open-food-facts.service';
-import { ProductService } from '../../api/product.service';
-import { ProductManageFacade } from '../../lib/product-manage.facade';
-import { MeasurementUnit, type Product, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../models/product.data';
+import { NavigationService } from '../../../../../services/navigation.service';
+import { UsdaService } from '../../../../usda/api/usda.service';
+import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
+import { OpenFoodFactsService } from '../../../api/open-food-facts.service';
+import { ProductService } from '../../../api/product.service';
+import { ProductManageFacade } from '../../../lib/product-manage.facade';
+import { MeasurementUnit, type Product, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
 import { ProductManageFormComponent } from './product-manage-form.component';
 
 const PRODUCT: Product = {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import type { ImageSelection } from '../../../../shared/models/image-upload.data';
-import type { ProductAiRecognitionResult } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
+import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
 import {
     buildAiResultPatch,
     buildConvertedNutritionPatch,

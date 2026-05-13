@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { KJ_TO_KCAL_FACTOR } from '../../../../shared/lib/nutrition.constants';
-import { USDA_NUTRIENT_IDS } from '../../../usda/lib/usda-nutrient.constants';
-import type { UsdaFoodDetail } from '../../../usda/models/usda.data';
-import type { OpenFoodFactsProduct } from '../../api/open-food-facts.service';
-import { MeasurementUnit, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../models/product.data';
+import { KJ_TO_KCAL_FACTOR } from '../../../../../shared/lib/nutrition.constants';
+import { USDA_NUTRIENT_IDS } from '../../../../usda/lib/usda-nutrient.constants';
+import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
+import type { OpenFoodFactsProduct } from '../../../api/open-food-facts.service';
+import { MeasurementUnit, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductFormValues } from './product-manage-form.types';
 import {
     buildOpenFoodFactsLookupPatch,
