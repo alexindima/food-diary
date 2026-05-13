@@ -13,18 +13,18 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ProductDetailActionResult } from '../../components/detail/product-detail.component';
-import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
-import { ProductListEmptyStateComponent } from '../../components/list/product-list-empty-state.component';
-import { ProductListFavoritesComponent } from '../../components/list/product-list-favorites.component';
-import { ProductListGroupsComponent } from '../../components/list/product-list-groups.component';
-import { ProductListOffSectionComponent } from '../../components/list/product-list-off-section.component';
-import { ProductListPaginationComponent } from '../../components/list/product-list-pagination.component';
+import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base.component';
+import { ProductListEmptyStateComponent } from '../../components/list/product-list-sections/product-list-empty-state/product-list-empty-state.component';
+import { ProductListFavoritesComponent } from '../../components/list/product-list-sections/product-list-favorites/product-list-favorites.component';
+import { ProductListGroupsComponent } from '../../components/list/product-list-sections/product-list-groups/product-list-groups.component';
+import { ProductListOffSectionComponent } from '../../components/list/product-list-sections/product-list-off-section/product-list-off-section.component';
+import { ProductListPaginationComponent } from '../../components/list/product-list-sections/product-list-pagination/product-list-pagination.component';
 import type { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-list-page',
-    templateUrl: '../../components/list/product-list-base.component.html',
-    styleUrls: ['./product-list-page.component.scss', '../../components/list/product-list-base.component.scss'],
+    templateUrl: '../../components/list/product-list-base/product-list-base.component.html',
+    styleUrls: ['./product-list-page.component.scss', '../../components/list/product-list-base/product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

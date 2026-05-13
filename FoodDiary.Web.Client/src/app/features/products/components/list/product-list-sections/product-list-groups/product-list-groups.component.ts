@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
-import type { Product } from '../../models/product.data';
-import type { ProductCardViewModel } from './product-list.types';
+import { ProductCardComponent } from '../../../../../../components/shared/product-card/product-card.component';
+import type { Product } from '../../../../models/product.data';
+import type { ProductCardViewModel } from '../../product-list.types';
 
 @Component({
     selector: 'fd-product-list-groups',
     imports: [TranslatePipe, ProductCardComponent],
     templateUrl: './product-list-groups.component.html',
-    styleUrl: './product-list-base.component.scss',
+    styleUrl: '../../product-list-base/product-list-base.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         style: 'display: contents',

@@ -7,7 +7,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
     selector: 'fd-product-list-empty-state',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent],
     templateUrl: './product-list-empty-state.component.html',
-    styleUrl: './product-list-base.component.scss',
+    styleUrl: '../../product-list-base/product-list-base.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         style: 'display: contents',

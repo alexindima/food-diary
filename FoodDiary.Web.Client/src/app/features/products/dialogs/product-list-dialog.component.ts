@@ -7,7 +7,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 
-import { ProductListBaseComponent } from '../components/list/product-list-base.component';
+import { ProductListBaseComponent } from '../components/list/product-list-base/product-list-base.component';
 import type { Product } from '../models/product.data';
 import { ProductAddDialogComponent } from './product-add-dialog.component';
 import type { ProductSelectItemViewModel } from './product-list-dialog.types';

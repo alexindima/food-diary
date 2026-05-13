@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .product-list-filters-dialog {
-
+    // stylelint-disable-next-line rule-empty-line-before
     &__visibility {
         margin-bottom: var(--fd-space-md);
     }
@@ -23,7 +23,7 @@
     }
 
     @media #{variables.$media-mobile} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__types {
             --fd-chip-select-item-height: var(--fd-size-chip-select-item-height);
         }

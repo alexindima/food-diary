@@ -8,7 +8,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
-import { ProductType } from '../../models/product.data';
+import { ProductType } from '../../../models/product.data';
 
 export type ProductListFiltersDialogData = {
     onlyMine: boolean;
