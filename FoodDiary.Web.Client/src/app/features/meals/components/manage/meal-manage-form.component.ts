@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
@@ -24,7 +23,6 @@ import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
-import { MealSatietyFieldsComponent } from '../../../../components/shared/meal-satiety-fields/meal-satiety-fields.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
@@ -64,6 +62,7 @@ import { buildMealNutritionModeOptions, buildMealTypeSelectOptions, type MealSat
 import { resolveMealManageControlError } from './meal-manage-view.utils';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog.component';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
+import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card.component';
 
 export type { ConsumptionFormData, ConsumptionItemFormData } from './meal-manage.types';
 
@@ -90,11 +89,10 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiCardComponent,
         ManageHeaderComponent,
         FdPageContainerDirective,
         MealGeneralInfoComponent,
-        MealSatietyFieldsComponent,
+        MealSatietyCardComponent,
         MealItemsSectionComponent,
         MealNutritionSidebarComponent,
     ],

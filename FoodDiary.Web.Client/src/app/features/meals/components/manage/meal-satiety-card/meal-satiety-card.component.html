@@ -1,0 +1,21 @@
+<fd-ui-card
+    class="consumption-manage__card"
+    tone="editor"
+    density="relaxed"
+    headerAlign="center"
+    [title]="'CONSUMPTION_MANAGE.SATIETY_SECTION_TITLE' | translate"
+>
+    <p class="consumption-manage__satiety-note fd-ui-body-sm">
+        {{ 'CONSUMPTION_MANAGE.SATIETY_SECTION_HINT' | translate }}
+    </p>
+    <fd-meal-satiety-fields
+        layout="compactColumns"
+        pickerSize="md"
+        labelBeforeKey="CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL"
+        labelAfterKey="CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL"
+        [preMealSatietyLevel]="preMealSatietyLevel()"
+        [postMealSatietyLevel]="postMealSatietyLevel()"
+        (preMealSatietyLevelChange)="preMealSatietyLevelChange.emit($event)"
+        (postMealSatietyLevelChange)="postMealSatietyLevelChange.emit($event)"
+    />
+</fd-ui-card>
