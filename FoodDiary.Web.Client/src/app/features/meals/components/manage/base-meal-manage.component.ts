@@ -40,8 +40,8 @@ import { ManageHeaderComponent } from '../../../../components/shared/manage-head
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { MEAL_TYPE_OPTIONS, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
-import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
-import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
+import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../shared/lib/nutrition.constants';
+import { calculateMacroBarState, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
@@ -63,7 +63,6 @@ import type {
     ConsumptionItemFormData,
     ConsumptionItemFormValues,
     MacroBarState,
-    MacroKey,
     MealNutritionSummaryState,
     NutritionMode,
     NutritionTotals,
@@ -168,24 +167,7 @@ export class BaseMealManageComponent {
 
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
-        const entries: Array<{ key: MacroKey; value: number }> = [
-            { key: 'proteins', value: nutrients.proteins },
-            { key: 'fats', value: nutrients.fats },
-            { key: 'carbs', value: nutrients.carbs },
-        ];
-        const positive = entries.filter(entry => entry.value > 0);
-        if (positive.length === 0) {
-            return { isEmpty: true, segments: [] };
-        }
-
-        const total = positive.reduce((sum, entry) => sum + entry.value, 0);
-        return {
-            isEmpty: false,
-            segments: positive.map(entry => ({
-                key: entry.key,
-                percent: (entry.value / total) * PERCENT_MULTIPLIER,
-            })),
-        };
+        return calculateMacroBarState(nutrients.proteins, nutrients.fats, nutrients.carbs);
     });
 
     public readonly aiQuotaExceeded = computed(() => {

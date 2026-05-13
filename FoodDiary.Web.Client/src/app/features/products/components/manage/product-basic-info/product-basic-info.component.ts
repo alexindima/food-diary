@@ -10,7 +10,7 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import type { MeasurementUnit, ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
-import type { ProductFormData } from '../base-product-manage.types';
+import type { ProductFormData } from '../product-manage-form.types';
 
 export type ProductNameSuggestion = ProductSearchSuggestion;
 

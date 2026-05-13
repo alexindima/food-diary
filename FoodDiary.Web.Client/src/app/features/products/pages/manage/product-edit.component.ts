@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { BaseProductManageComponent } from '../../components/manage/base-product-manage.component';
+import { ProductManageFormComponent } from '../../components/manage/product-manage-form.component';
+import type { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-edit',
     templateUrl: './product-edit.component.html',
-    styleUrls: ['./product-edit.component.scss', '../../components/manage/base-product-manage.component.scss'],
+    styleUrls: ['./product-edit.component.scss', '../../components/manage/product-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseProductManageComponent],
+    imports: [ProductManageFormComponent],
 })
-export class ProductEditComponent extends BaseProductManageComponent {}
+export class ProductEditComponent {
+    public readonly product = input<Product | null>(null);
+}

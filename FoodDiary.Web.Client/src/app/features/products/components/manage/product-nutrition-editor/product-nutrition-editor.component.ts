@@ -14,7 +14,7 @@ import {
     type NutritionControlNames,
     NutritionEditorComponent,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import type { NutritionMode, ProductFormData } from '../base-product-manage.types';
+import type { NutritionMode, ProductFormData } from '../product-manage-form.types';
 
 @Component({
     selector: 'fd-product-nutrition-editor',

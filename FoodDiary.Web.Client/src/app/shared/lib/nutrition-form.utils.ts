@@ -40,7 +40,6 @@ export type NutritionMode = 'auto' | 'manual';
  * Calculate expected calories from macronutrient grams.
  * Proteins: 4 kcal/g, Fats: 9 kcal/g, Carbs: 4 kcal/g, Alcohol: 7 kcal/g.
  *
- * Delegates to the same normalization logic used by {@link NutritionCalculationService}:
  * null / undefined / NaN / Infinity / negative values are treated as 0.
  */
 export function calculateCaloriesFromMacros(

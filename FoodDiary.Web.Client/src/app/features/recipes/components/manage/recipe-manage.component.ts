@@ -12,13 +12,13 @@ import { ManageHeaderComponent } from '../../../../components/shared/manage-head
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../shared/lib/nutrition.constants';
 import {
-    DEFAULT_CALORIE_MISMATCH_THRESHOLD,
-    DEFAULT_NUTRITION_BASE_AMOUNT,
-    PERCENT_MULTIPLIER,
-} from '../../../../shared/lib/nutrition.constants';
-import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
-import { calculateCalorieMismatchWarning, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
+    calculateCalorieMismatchWarning,
+    calculateMacroBarState,
+    checkCaloriesError,
+    checkMacrosError,
+} from '../../../../shared/lib/nutrition-form.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
@@ -31,7 +31,6 @@ import type {
     IngredientFormData,
     IngredientFormValues,
     MacroBarState,
-    MacroKey,
     NutritionMode,
     NutritionScaleMode,
     RecipeFormData,
@@ -68,7 +67,6 @@ const DEFAULT_PRODUCT_QUALITY_SCORE = 50;
 })
 export class RecipeManageComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly expandedSteps = new Set<number>();
     private lastRecipeId: string | null = null;
@@ -99,24 +97,7 @@ export class RecipeManageComponent {
     public isSubmitting = this.recipeManageFacade.isSubmitting;
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
-        const entries: Array<{ key: MacroKey; value: number }> = [
-            { key: 'proteins', value: nutrients.proteins },
-            { key: 'fats', value: nutrients.fats },
-            { key: 'carbs', value: nutrients.carbs },
-        ];
-        const positive = entries.filter(entry => entry.value > 0);
-        if (positive.length === 0) {
-            return { isEmpty: true, segments: [] };
-        }
-
-        const total = positive.reduce((sum, entry) => sum + entry.value, 0);
-        return {
-            isEmpty: false,
-            segments: positive.map(entry => ({
-                key: entry.key,
-                percent: (entry.value / total) * PERCENT_MULTIPLIER,
-            })),
-        };
+        return calculateMacroBarState(nutrients.proteins, nutrients.fats, nutrients.carbs);
     });
 
     public recipeForm: FormGroup<RecipeFormData>;

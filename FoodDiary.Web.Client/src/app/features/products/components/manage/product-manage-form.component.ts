@@ -8,6 +8,7 @@ import {
     type FactoryProvider,
     inject,
     input,
+    output,
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,7 +34,6 @@ import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../shared/lib/nutrition.constants';
-import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
     calculateCalorieMismatchWarning,
     calculateMacroBarState,
@@ -41,7 +41,7 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../shared/lib/nutrition-form.utils';
-import { getRecordProperty, getStringProperty, isRecord } from '../../../../shared/lib/unknown-value.utils';
+import { getRecordProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { UsdaService } from '../../../usda/api/usda.service';
 import type { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
@@ -59,12 +59,12 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../models/product.data';
-import type { NutritionMode, ProductFormData, ProductFormValues } from './base-product-manage.types';
 import {
     ProductBasicInfoComponent,
     type ProductNameAutocompleteOption,
     type ProductNameSuggestion,
 } from './product-basic-info/product-basic-info.component';
+import type { NutritionMode, ProductFormData, ProductFormValues, ProductManagePrefill } from './product-manage-form.types';
 import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -91,9 +91,9 @@ const USDA_FIBER_NUTRIENT_ID = 1079;
 const USDA_ALCOHOL_NUTRIENT_ID = 1018;
 
 @Component({
-    selector: 'fd-base-product-manage',
-    templateUrl: './base-product-manage.component.html',
-    styleUrls: ['./base-product-manage.component.scss'],
+    selector: 'fd-product-manage-form',
+    templateUrl: './product-manage-form.component.html',
+    styleUrls: ['./product-manage-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [
@@ -108,11 +108,10 @@ const USDA_ALCOHOL_NUTRIENT_ID = 1018;
         ProductNutritionEditorComponent,
     ],
 })
-export class BaseProductManageComponent {
+export class ProductManageFormComponent {
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
-    private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly productManageFacade = inject(ProductManageFacade);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
@@ -120,15 +119,21 @@ export class BaseProductManageComponent {
     private readonly usdaService = inject(UsdaService);
     private readonly nameSearchDebounceMs = inject(NAME_SEARCH_DEBOUNCE_MS_TOKEN);
 
-    public readonly product = input<Product | null>();
+    public readonly product = input<Product | null>(null);
+    public readonly prefill = input<ProductManagePrefill | null>(null);
+    public readonly skipConfirmDialog = input(false);
+    public readonly cancelMode = input<'emit' | 'navigate'>('navigate');
+    public readonly saved = output<Product>();
+    public readonly cancelled = output();
     public readonly globalError = signal<string | null>(null);
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     public readonly macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
-    private formInitialized = false;
+    private populatedProductId: string | null = null;
+    private appliedPrefillKey: string | null = null;
+    private usdaDetailRequestId = 0;
     public readonly isDeleting = signal(false);
     public readonly isSubmitting = signal(false);
 
-    protected skipConfirmDialog = false;
     public productForm: FormGroup<ProductFormData>;
     public unitOptions: Array<FdUiSelectOption<MeasurementUnit>> = [];
     public productTypeSelectOptions: Array<FdUiSelectOption<ProductType>> = [];
@@ -164,7 +169,6 @@ export class BaseProductManageComponent {
         this.initializeFormOptions();
         this.bindFormEffects();
         this.bindNameSearch();
-        this.prefillFromNavigationState();
     }
 
     private createProductForm(): FormGroup<ProductFormData> {
@@ -217,10 +221,18 @@ export class BaseProductManageComponent {
 
         effect(() => {
             const currentProduct = this.product();
-            if (currentProduct !== null && currentProduct !== undefined && !this.formInitialized) {
+            if (currentProduct !== null) {
+                if (this.populatedProductId === currentProduct.id) {
+                    return;
+                }
                 this.populateForm(currentProduct);
-                this.formInitialized = true;
+                this.populatedProductId = currentProduct.id;
+                this.appliedPrefillKey = null;
+                return;
             }
+
+            this.populatedProductId = null;
+            this.applyPrefillIfNeeded(this.prefill());
         });
         this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
@@ -255,21 +267,47 @@ export class BaseProductManageComponent {
             });
     }
 
-    private prefillFromNavigationState(): void {
-        const currentProduct = this.product();
-        if (currentProduct === null || currentProduct === undefined) {
-            const navigationState: unknown = history.state;
-            const offProduct = getRecordProperty(navigationState, 'offProduct');
-            if (this.isOpenFoodFactsProduct(offProduct)) {
-                this.prefillFromOffProduct(offProduct);
-            } else {
-                const barcode = getStringProperty(navigationState, 'barcode');
-                if (barcode !== undefined && barcode.length > 0) {
-                    this.productForm.controls.barcode.setValue(barcode);
-                    this.lookupOpenFoodFacts(barcode);
-                }
-            }
+    private applyPrefillIfNeeded(prefill: ProductManagePrefill | null): void {
+        const key = this.getPrefillKey(prefill);
+        if (key === null || key === this.appliedPrefillKey || this.productForm.dirty) {
+            return;
         }
+
+        this.appliedPrefillKey = key;
+        if (prefill === null) {
+            return;
+        }
+
+        if (prefill.offProduct !== null && prefill.offProduct !== undefined) {
+            this.prefillFromOffProduct(prefill.offProduct);
+            return;
+        }
+
+        this.applyBarcodePrefill(prefill.barcode ?? null);
+    }
+
+    private applyBarcodePrefill(barcodeValue: string | null): void {
+        const barcode = barcodeValue?.trim();
+        if (barcode === undefined || barcode.length === 0) {
+            return;
+        }
+
+        this.productForm.controls.barcode.setValue(barcode);
+        this.lookupOpenFoodFacts(barcode);
+    }
+
+    private getPrefillKey(prefill: ProductManagePrefill | null): string | null {
+        if (prefill === null) {
+            return null;
+        }
+
+        const offProduct = prefill.offProduct;
+        if (offProduct !== null && offProduct !== undefined) {
+            return `off:${offProduct.barcode}`;
+        }
+
+        const barcode = prefill.barcode?.trim();
+        return barcode === undefined || barcode.length === 0 ? null : `barcode:${barcode}`;
     }
 
     public readonly canShowDeleteButton = computed(() => {
@@ -277,7 +315,7 @@ export class BaseProductManageComponent {
         return currentProduct?.isOwnedByCurrentUser === true;
     });
     public readonly manageHeaderState = computed<ProductManageHeaderState>(() => {
-        const isEdit = this.product() !== null && this.product() !== undefined;
+        const isEdit = this.product() !== null;
 
         return {
             titleKey: isEdit ? 'PRODUCT_MANAGE.EDIT_TITLE' : 'PRODUCT_MANAGE.ADD_TITLE',
@@ -307,7 +345,7 @@ export class BaseProductManageComponent {
             .searchByBarcode(barcode)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(offProduct => {
-                if (offProduct === null) {
+                if (offProduct === null || this.product() !== null || this.productForm.controls.barcode.value !== barcode) {
                     return;
                 }
 
@@ -440,6 +478,11 @@ export class BaseProductManageComponent {
     }
 
     public async onCancelAsync(): Promise<void> {
+        if (this.cancelMode() === 'emit') {
+            this.cancelled.emit();
+            return;
+        }
+
         if (this.hasUnsavedChanges()) {
             const shouldLeave = await this.confirmDiscardChangesAsync();
             if (shouldLeave !== true) {
@@ -453,13 +496,7 @@ export class BaseProductManageComponent {
     public async onDeleteProductAsync(): Promise<void> {
         const currentProduct = this.product();
 
-        if (
-            currentProduct === null ||
-            currentProduct === undefined ||
-            !currentProduct.isOwnedByCurrentUser ||
-            this.isDeleting() ||
-            this.isSubmitting()
-        ) {
+        if (currentProduct === null || !currentProduct.isOwnedByCurrentUser || this.isDeleting() || this.isSubmitting()) {
             return;
         }
 
@@ -487,6 +524,10 @@ export class BaseProductManageComponent {
     }
 
     public async onSubmitAsync(): Promise<Product | null> {
+        if (this.isSubmitting() || this.isDeleting()) {
+            return null;
+        }
+
         this.productForm.markAllAsTouched();
 
         if (this.macrosError() !== null || !this.productForm.valid) {
@@ -503,11 +544,14 @@ export class BaseProductManageComponent {
             const result = await this.productManageFacade.submitProductAsync(
                 product,
                 productData,
-                this.skipConfirmDialog,
+                this.skipConfirmDialog(),
                 async savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
             );
             if (result.error !== null) {
                 this.handleSubmitError(result.error);
+            }
+            if (result.product !== null) {
+                this.saved.emit(result.product);
             }
             return result.product;
         } finally {
@@ -591,7 +635,9 @@ export class BaseProductManageComponent {
                 brand: null,
                 usdaFdcId: fdcId,
             });
+            this.resetNutritionControls();
             this.nameOptions.set([this.toProductNameOption(suggestion)]);
+            const requestId = ++this.usdaDetailRequestId;
             this.usdaService
                 .getFoodDetail(fdcId)
                 .pipe(
@@ -599,7 +645,7 @@ export class BaseProductManageComponent {
                     takeUntilDestroyed(this.destroyRef),
                 )
                 .subscribe(detail => {
-                    if (detail !== null) {
+                    if (detail !== null && requestId === this.usdaDetailRequestId && this.productForm.controls.usdaFdcId.value === fdcId) {
                         this.prefillFromUsdaFoodDetail(detail);
                     }
                 });
@@ -677,6 +723,17 @@ export class BaseProductManageComponent {
         const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
         const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
         this.macroBarState.set(calculateMacroBarState(proteins, fats, carbs));
+    }
+
+    private resetNutritionControls(): void {
+        this.productForm.patchValue({
+            caloriesPerBase: null,
+            proteinsPerBase: null,
+            fatsPerBase: null,
+            carbsPerBase: null,
+            fiberPerBase: null,
+            alcoholPerBase: null,
+        });
     }
 
     private convertNutritionControls(factor: number): void {
@@ -882,10 +939,6 @@ export class BaseProductManageComponent {
                 label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.PORTION'),
             },
         ];
-    }
-
-    private isOpenFoodFactsProduct(value: unknown): value is OpenFoodFactsProduct {
-        return isRecord(value) && typeof value['barcode'] === 'string' && typeof value['name'] === 'string';
     }
 
     private async syncUsdaLinkAsync(savedProduct: Product, nextFdcId: number | null, previousFdcId: number | null): Promise<void> {
