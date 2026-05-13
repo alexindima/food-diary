@@ -12,7 +12,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ProductDetailActionResult } from '../../components/detail/product-detail.component';
+import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base.component';
 import { ProductListEmptyStateComponent } from '../../components/list/product-list-sections/product-list-empty-state/product-list-empty-state.component';
 import { ProductListFavoritesComponent } from '../../components/list/product-list-sections/product-list-favorites/product-list-favorites.component';
@@ -50,7 +50,7 @@ export class ProductListPageComponent extends ProductListBaseComponent {
     private isDeleteInProgress = false;
 
     protected override async handleProductClickAsync(product: Product): Promise<void> {
-        const { ProductDetailComponent } = await import('../../components/detail/product-detail.component');
+        const { ProductDetailComponent } = await import('../../components/detail/product-detail/product-detail.component');
         this.fdDialogService
             .open(ProductDetailComponent, {
                 preset: 'detail',

@@ -393,6 +393,7 @@ export default [
             'object-shorthand': ['error', 'always'],
             curly: ['error', 'all'],
             'no-redeclare': 'error',
+            'object-curly-spacing': ['error', 'always'],
             quotes: ['error', 'single', { avoidEscape: true }],
             'keyword-spacing': ['error', { after: true }],
             'prefer-const': 'error',

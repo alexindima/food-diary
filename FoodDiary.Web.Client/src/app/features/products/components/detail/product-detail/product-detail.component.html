@@ -22,11 +22,11 @@
                 <span class="material-icons" aria-hidden="true">close</span>
             </button>
         </div>
-        <fd-ui-tabs class="product-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
+        <fd-ui-tabs class="product-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab()" (selectedValueChange)="onTabChange($event)" />
     </header>
 
     <div class="product-detail fd-stack fd-gap-lg">
-        @switch (activeTab) {
+        @switch (activeTab()) {
             @case ('summary') {
                 <section class="product-detail__overview fd-grid fd-gap-md">
                     <div class="product-detail__overview-main fd-stack fd-gap-sm">
@@ -46,7 +46,7 @@
                             <span class="product-detail__hero-meta fd-ui-body-sm">
                                 {{ product.defaultPortionAmount }}
                                 {{ baseUnitKey | translate }}
-                                ·
+                                &middot;
                                 {{ productTypeKey | translate }}
                             </span>
                         </fd-ui-accent-surface>
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="product-detail__macro-bars fd-stack fd-gap-sm">
-                        @for (macro of macroSummaryBlocks(); track macro.labelKey) {
+                        @for (macro of macroSummaryBlocks; track macro.labelKey) {
                             <div class="product-detail__macro-row">
                                 <span class="product-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
                                 <div class="product-detail__macro-track" aria-hidden="true">
@@ -145,7 +145,7 @@
                     variant="secondary"
                     fill="outline"
                     icon="content_copy"
-                    [disabled]="isDuplicateInProgress"
+                    [disabled]="isDuplicateInProgress()"
                     (click)="onDuplicate()"
                 >
                     {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
