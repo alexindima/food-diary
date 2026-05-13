@@ -11,64 +11,11 @@
         @let generalErrors = generalFieldErrors();
         <div class="consumption-manage__grid fd-grid fd-gap-xl">
             <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">
-                <fd-ui-card
-                    class="consumption-manage__card"
-                    tone="editor"
-                    density="relaxed"
-                    headerAlign="center"
-                    [title]="'CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE' | translate"
-                >
-                    <div class="consumption-manage__hero fd-grid fd-gap-lg">
-                        <div class="consumption-manage__image">
-                            <fd-image-upload-field
-                                appearance="compact"
-                                formControlName="imageUrl"
-                                [description]="'CONSUMPTION_MANAGE.IMAGE_DESCRIPTION' | translate"
-                            />
-                        </div>
-                        <div class="consumption-manage__hero-fields fd-stack fd-gap-lg">
-                            <div class="consumption-manage__field-row fd-grid fd-gap-lg">
-                                <div class="consumption-manage__field fd-stack fd-gap-xs">
-                                    <fd-ui-date-input
-                                        formControlName="date"
-                                        size="lg"
-                                        [label]="'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate"
-                                        [required]="true"
-                                        [error]="generalErrors.date"
-                                    />
-                                </div>
-                                <div class="consumption-manage__field fd-stack fd-gap-xs">
-                                    <fd-ui-time-input
-                                        formControlName="time"
-                                        size="lg"
-                                        [label]="'CONSUMPTION_MANAGE.CHOOSE_TIME' | translate"
-                                        [required]="true"
-                                        [error]="generalErrors.time"
-                                    />
-                                </div>
-                            </div>
-                            <div class="consumption-manage__field fd-stack fd-gap-xs">
-                                <fd-ui-select
-                                    formControlName="mealType"
-                                    size="lg"
-                                    [label]="'CONSUMPTION_MANAGE.MEAL_TYPE_LABEL' | translate"
-                                    [placeholder]="'CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate"
-                                    [options]="mealTypeSelectOptions"
-                                    [error]="generalErrors.mealType"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="consumption-manage__field consumption-manage__field--full fd-stack fd-gap-xs">
-                        <fd-ui-textarea
-                            formControlName="comment"
-                            size="lg"
-                            [label]="'CONSUMPTION_MANAGE.COMMENT' | translate"
-                            [placeholder]="'CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER' | translate"
-                            [rows]="3"
-                        />
-                    </div>
-                </fd-ui-card>
+                <fd-meal-general-info
+                    [consumptionForm]="consumptionForm"
+                    [mealTypeSelectOptions]="mealTypeSelectOptions"
+                    [generalErrors]="generalErrors"
+                />
 
                 <fd-ui-card
                     class="consumption-manage__card"
@@ -92,54 +39,20 @@
                     />
                 </fd-ui-card>
 
-                <div class="consumption-manage__items-section fd-stack fd-gap-md">
-                    <div class="consumption-manage__items-header fd-row fd-wrap fd-justify-between fd-gap-md">
-                        <h2 class="consumption-manage__section-title fd-ui-section-title">
-                            {{ 'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate }}
-                        </h2>
-                    </div>
-                    <div class="consumption-manage__items-grid fd-grid fd-gap-lg">
-                        <fd-ai-input-bar
-                            mode="emit"
-                            [mealType]="selectedMealType()"
-                            [isProcessing]="consumptionForm.disabled"
-                            (mealRecognized)="onAiMealRecognized($event)"
-                        />
-
-                        <div class="consumption-manage__manual-choice fd-row fd-wrap fd-gap-sm fd-align-center">
-                            <span class="consumption-manage__manual-choice-label fd-ui-body-sm">
-                                {{ 'CONSUMPTION_MANAGE.ITEMS_OR_MANUAL' | translate }}
-                            </span>
-                            <fd-ui-button
-                                type="button"
-                                variant="secondary"
-                                fill="outline"
-                                size="sm"
-                                icon="search"
-                                (click)="addConsumptionItem()"
-                            >
-                                {{ 'CONSUMPTION_MANAGE.CHOOSE_ITEM' | translate }}
-                            </fd-ui-button>
-                        </div>
-
-                        <fd-meal-items-list
-                            [formArray]="items"
-                            [hasExternalItems]="aiSessions().length > 0"
-                            [renderVersion]="itemsRenderVersion()"
-                            (editItem)="openManualItemDialog($event)"
-                            (removeItemEvent)="removeItem($event)"
-                            (openItemSelect)="onItemSourceClick($event)"
-                        >
-                            @if (aiSessions().length) {
-                                <fd-meal-ai-sessions
-                                    [aiSessions]="aiSessions()"
-                                    (editSession)="onEditAiSession($event)"
-                                    (deleteSession)="onDeleteAiSession($event)"
-                                />
-                            }
-                        </fd-meal-items-list>
-                    </div>
-                </div>
+                <fd-meal-items-section
+                    [items]="items"
+                    [aiSessions]="aiSessions()"
+                    [selectedMealType]="selectedMealType()"
+                    [isProcessing]="consumptionForm.disabled"
+                    [renderVersion]="itemsRenderVersion()"
+                    (mealRecognized)="onAiMealRecognized($event)"
+                    (addItem)="addConsumptionItem()"
+                    (editItem)="openManualItemDialog($event)"
+                    (removeItem)="removeItem($event)"
+                    (openItemSelect)="onItemSourceClick($event)"
+                    (editSession)="onEditAiSession($event)"
+                    (deleteSession)="onDeleteAiSession($event)"
+                />
             </div>
 
             <div class="consumption-manage__column consumption-manage__column--secondary fd-stack fd-gap-lg">

@@ -15,21 +15,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
 import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
-import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
-import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { MealSatietyFieldsComponent } from '../../../../components/shared/meal-satiety-fields/meal-satiety-fields.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -49,8 +42,8 @@ import {
     type ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../models/meal.data';
-import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
-import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
+import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info.component';
+import { MealItemsSectionComponent } from './meal-items-section/meal-items-section.component';
 import type {
     CalorieMismatchWarning,
     ConsumptionFormData,
@@ -88,9 +81,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 
 const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
 
-type GeneralErrorField = (typeof GENERAL_ERROR_FIELDS)[number];
-type GeneralFieldErrors = Record<GeneralErrorField, string | null>;
-
 @Component({
     selector: 'fd-meal-manage-form',
     templateUrl: './meal-manage-form.component.html',
@@ -100,19 +90,12 @@ type GeneralFieldErrors = Record<GeneralErrorField, string | null>;
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiButtonComponent,
         FdUiCardComponent,
-        FdUiDateInputComponent,
-        FdUiTimeInputComponent,
-        FdUiSelectComponent,
-        FdUiTextareaComponent,
         ManageHeaderComponent,
         FdPageContainerDirective,
-        AiInputBarComponent,
-        ImageUploadFieldComponent,
+        MealGeneralInfoComponent,
         MealSatietyFieldsComponent,
-        MealItemsListComponent,
-        MealAiSessionsComponent,
+        MealItemsSectionComponent,
         MealNutritionSidebarComponent,
     ],
 })
@@ -154,7 +137,7 @@ export class MealManageFormComponent {
     public readonly selectedMealType = signal<string | null>(null);
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
-    public readonly generalFieldErrors = signal<GeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
+    public readonly generalFieldErrors = signal<MealGeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
     public readonly manageHeaderState = computed(() => ({
         titleKey: this.consumption() !== null ? 'CONSUMPTION_MANAGE.EDIT_TITLE' : 'CONSUMPTION_MANAGE.ADD_TITLE',
     }));
@@ -448,14 +431,14 @@ export class MealManageFormComponent {
 
     private updateGeneralFieldErrors(): void {
         this.generalFieldErrors.set(
-            GENERAL_ERROR_FIELDS.reduce<GeneralFieldErrors>((errors, field) => {
+            GENERAL_ERROR_FIELDS.reduce<MealGeneralFieldErrors>((errors, field) => {
                 errors[field] = this.getControlError(field);
                 return errors;
             }, this.createEmptyGeneralFieldErrors()),
         );
     }
 
-    private createEmptyGeneralFieldErrors(): GeneralFieldErrors {
+    private createEmptyGeneralFieldErrors(): MealGeneralFieldErrors {
         return {
             date: null,
             time: null,
