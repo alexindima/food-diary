@@ -16,7 +16,7 @@
 
         <div class="recipe-manage__grid fd-grid fd-gap-lg">
             <div class="recipe-manage__column recipe-manage__column--primary fd-stack">
-                <fd-recipe-basic-info [formGroup]="recipeForm" [visibilitySelectOptions]="visibilitySelectOptions" />
+                <fd-recipe-basic-info [formGroup]="recipeForm" />
 
                 <fd-recipe-steps-list
                     [stepsFormArray]="steps"
@@ -31,53 +31,14 @@
 
             <div class="recipe-manage__column recipe-manage__column--secondary fd-stack">
                 <div class="recipe-manage__sticky-stack fd-stack fd-gap-lg">
-                    <fd-ui-card
-                        class="recipe-manage__card recipe-manage__card--facts"
-                        appearance="entry"
-                        tone="editor-gradient"
-                        density="relaxed"
-                        headerAlign="center"
-                        [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
-                    >
-                        <div class="recipe-manage__nutrition fd-stack fd-gap-md">
-                            <fd-nutrition-editor
-                                manualHintKey="RECIPE_MANAGE.MANUAL_NUTRITION_HINT"
-                                [formGroup]="recipeForm"
-                                [controlNames]="nutritionControlNames"
-                                [macroState]="macroBarState()"
-                                [readonly]="isNutritionReadonly()"
-                                [caloriesError]="caloriesError()"
-                                [macrosError]="macrosError()"
-                                [showManualHint]="showManualNutritionHint()"
-                                [warning]="nutritionWarning()"
-                            >
-                                <fd-ui-segmented-toggle
-                                    nutrition-before
-                                    class="recipe-manage__nutrition-toggle"
-                                    appearance="soft"
-                                    [fullWidth]="true"
-                                    [stackOnNarrow]="false"
-                                    [options]="nutritionModeOptions"
-                                    [selectedValue]="nutritionMode()"
-                                    [fdUiHint]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                                    [ariaLabel]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                                    (selectedValueChange)="onNutritionModeChange($event)"
-                                />
-                                <fd-ui-segmented-toggle
-                                    nutrition-before
-                                    class="recipe-manage__nutrition-toggle"
-                                    appearance="soft"
-                                    [fullWidth]="true"
-                                    [stackOnNarrow]="false"
-                                    [options]="nutritionScaleModeOptions"
-                                    [selectedValue]="nutritionScaleMode"
-                                    [fdUiHint]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
-                                    [ariaLabel]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
-                                    (selectedValueChange)="onNutritionScaleModeChange($event)"
-                                />
-                            </fd-nutrition-editor>
-                        </div>
-                    </fd-ui-card>
+                    <fd-recipe-nutrition-editor
+                        [formGroup]="recipeForm"
+                        [nutritionMode]="nutritionMode()"
+                        [nutritionScaleMode]="nutritionScaleMode"
+                        [nutrientChartData]="nutrientChartData()"
+                        (nutritionModeChange)="onNutritionModeChange($event)"
+                        (nutritionScaleModeChange)="onNutritionScaleModeChange($event)"
+                    />
 
                     <div class="recipe-manage__actions-panel">
                         <div class="recipe-manage__footer-actions fd-ui-actions fd-ui-actions--split">

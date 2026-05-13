@@ -1,0 +1,15 @@
+.recipe-manage {
+
+    &__card {
+        overflow: hidden;
+
+        &--facts {
+            container-type: inline-size;
+            gap: var(--fd-space-md);
+        }
+    }
+
+    &__nutrition-toggle {
+        width: 100%;
+    }
+}

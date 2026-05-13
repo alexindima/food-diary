@@ -46,35 +46,12 @@
         gap: var(--fd-space-xl);
     }
 
-    &__card {
-        overflow: hidden;
-
-        &--calories,
-        &--facts,
-        &--visibility {
-            gap: var(--fd-space-md);
-        }
-
-        &--facts {
-            container-type: inline-size;
-        }
-    }
-
     &__sticky-stack {
         position: sticky;
         top: calc(var(--fd-space-xl) + var(--fd-space-xs));
 
         @media #{variables.$media-mobile} {
             position: static;
-        }
-    }
-
-    &__summary-calories {
-        margin: 0;
-        color: var(--fd-color-text);
-
-        strong {
-            font-weight: var(--fd-font-weight-bold);
         }
     }
 
@@ -108,21 +85,5 @@
         &__action-button {
             width: 100%;
         }
-    }
-
-    &__nutrition-toggle {
-        width: 100%;
-    }
-
-    &__drag-card {
-        text-align: center;
-    }
-
-    &__drag-placeholder {
-        border: var(--fd-border-width-strong) dashed var(--fd-color-text-muted);
-        border-radius: var(--fd-radius-card);
-        padding: var(--fd-space-md);
-        text-align: center;
-        color: var(--fd-color-text-muted);
     }
 }

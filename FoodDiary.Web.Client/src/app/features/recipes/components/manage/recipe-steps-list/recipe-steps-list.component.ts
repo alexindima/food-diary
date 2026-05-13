@@ -15,7 +15,6 @@ export type StepIngredientEvent = {
 
 @Component({
     selector: 'fd-recipe-steps-list',
-    standalone: true,
     imports: [ReactiveFormsModule, TranslatePipe, DragDropModule, FdUiButtonComponent, RecipeStepCardComponent],
     templateUrl: './recipe-steps-list.component.html',
     styleUrls: ['./recipe-steps-list.component.scss'],

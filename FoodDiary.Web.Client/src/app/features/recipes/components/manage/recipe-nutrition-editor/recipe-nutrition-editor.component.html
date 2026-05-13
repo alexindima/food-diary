@@ -1,0 +1,47 @@
+<fd-ui-card
+    class="recipe-manage__card recipe-manage__card--facts"
+    appearance="entry"
+    tone="editor-gradient"
+    density="relaxed"
+    headerAlign="center"
+    [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
+>
+    <div class="recipe-manage__nutrition fd-stack fd-gap-md">
+        <fd-nutrition-editor
+            manualHintKey="RECIPE_MANAGE.MANUAL_NUTRITION_HINT"
+            [formGroup]="formGroup()"
+            [controlNames]="nutritionControlNames"
+            [macroState]="macroBarState()"
+            [readonly]="isNutritionReadonly()"
+            [caloriesError]="caloriesError()"
+            [macrosError]="macrosError()"
+            [showManualHint]="showManualNutritionHint()"
+            [warning]="nutritionWarning()"
+        >
+            <fd-ui-segmented-toggle
+                nutrition-before
+                class="recipe-manage__nutrition-toggle"
+                appearance="soft"
+                [fullWidth]="true"
+                [stackOnNarrow]="false"
+                [options]="nutritionModeOptions()"
+                [selectedValue]="nutritionMode()"
+                [fdUiHint]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                [ariaLabel]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                (selectedValueChange)="nutritionModeChange.emit($event)"
+            />
+            <fd-ui-segmented-toggle
+                nutrition-before
+                class="recipe-manage__nutrition-toggle"
+                appearance="soft"
+                [fullWidth]="true"
+                [stackOnNarrow]="false"
+                [options]="nutritionScaleModeOptions()"
+                [selectedValue]="nutritionScaleMode()"
+                [fdUiHint]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
+                [ariaLabel]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
+                (selectedValueChange)="nutritionScaleModeChange.emit($event)"
+            />
+        </fd-nutrition-editor>
+    </div>
+</fd-ui-card>

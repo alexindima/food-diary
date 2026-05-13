@@ -16,7 +16,6 @@ import type { IngredientFormValues, StepFormData } from '../recipe-manage.types'
 
 @Component({
     selector: 'fd-recipe-step-card',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         TranslatePipe,

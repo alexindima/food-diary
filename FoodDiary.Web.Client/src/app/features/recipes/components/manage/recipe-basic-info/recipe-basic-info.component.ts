@@ -9,7 +9,7 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
-import type { RecipeVisibility } from '../../../models/recipe.data';
+import { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormData } from '../recipe-manage.types';
 
 const ERROR_FIELDS = ['name', 'cookTime', 'prepTime', 'servings', 'description', 'visibility', 'comment'] as const;
@@ -18,7 +18,6 @@ type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-recipe-basic-info',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
@@ -36,7 +35,7 @@ export class RecipeBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly formGroup = input.required<FormGroup<RecipeFormData>>();
-    public readonly visibilitySelectOptions = input.required<Array<FdUiSelectOption<RecipeVisibility>>>();
+    public readonly visibilitySelectOptions = signal<Array<FdUiSelectOption<RecipeVisibility>>>([]);
     public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
 
     private readonly errorSync = effect(onCleanup => {
@@ -49,6 +48,21 @@ export class RecipeBasicInfoComponent {
 
         refresh();
         const subscription = merge(formEvents, form.statusChanges, form.valueChanges, languageChanges).subscribe(() => {
+            refresh();
+        });
+        onCleanup(() => {
+            subscription.unsubscribe();
+        });
+    });
+
+    private readonly optionSync = effect(onCleanup => {
+        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+        const refresh = (): void => {
+            this.buildVisibilityOptions();
+        };
+
+        refresh();
+        const subscription = languageChanges.subscribe(() => {
             refresh();
         });
         onCleanup(() => {
@@ -73,6 +87,15 @@ export class RecipeBasicInfoComponent {
             visibility: null,
             comment: null,
         };
+    }
+
+    private buildVisibilityOptions(): void {
+        this.visibilitySelectOptions.set(
+            Object.values(RecipeVisibility).map(option => ({
+                value: option,
+                label: this.translateService.instant(`RECIPE_VISIBILITY.${option}`),
+            })),
+        );
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
