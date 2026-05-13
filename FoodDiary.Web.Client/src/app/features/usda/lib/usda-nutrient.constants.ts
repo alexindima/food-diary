@@ -1,4 +1,10 @@
 export const USDA_NUTRIENT_IDS = {
+    energy: 1008,
+    protein: 1003,
+    fat: 1004,
+    carbs: 1005,
+    alcohol: 1018,
+    fiber: 1079,
     vitaminA: 1106,
     thiamin: 1165,
     riboflavin: 1166,

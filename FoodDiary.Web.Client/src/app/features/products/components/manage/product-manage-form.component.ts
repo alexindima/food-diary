@@ -33,7 +33,11 @@ import { ManageHeaderComponent } from '../../../../components/shared/manage-head
 import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
-import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../shared/lib/nutrition.constants';
+import {
+    DEFAULT_CALORIE_MISMATCH_THRESHOLD,
+    DEFAULT_NUTRITION_BASE_AMOUNT,
+    KJ_TO_KCAL_FACTOR,
+} from '../../../../shared/lib/nutrition.constants';
 import {
     calculateCalorieMismatchWarning,
     calculateMacroBarState,
@@ -44,11 +48,18 @@ import {
 import { getRecordProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { UsdaService } from '../../../usda/api/usda.service';
+import { USDA_NUTRIENT_IDS } from '../../../usda/lib/usda-nutrient.constants';
 import type { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
 import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
 import { ProductAiRecognitionDialogComponent } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
 import type { ProductAiRecognitionResult } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
+import {
+    PRODUCT_MIN_AMOUNT,
+    PRODUCT_NAME_SEARCH_MIN_LENGTH,
+    PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT,
+    PRODUCT_NUTRIENT_ROUNDING_FACTOR,
+} from '../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../lib/product-manage.facade';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
 import {
@@ -77,18 +88,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         }),
     }),
 };
-
-const NAME_SEARCH_MIN_LENGTH = 3;
-const NAME_SEARCH_SUGGESTION_LIMIT = 5;
-const MIN_PRODUCT_AMOUNT = 0.001;
-const NUTRIENT_ROUNDING_FACTOR = 10;
-const KJ_TO_KCAL_FACTOR = 0.239005736;
-const USDA_ENERGY_NUTRIENT_ID = 1008;
-const USDA_PROTEIN_NUTRIENT_ID = 1003;
-const USDA_FAT_NUTRIENT_ID = 1004;
-const USDA_CARBS_NUTRIENT_ID = 1005;
-const USDA_FIBER_NUTRIENT_ID = 1079;
-const USDA_ALCOHOL_NUTRIENT_ID = 1018;
 
 @Component({
     selector: 'fd-product-manage-form',
@@ -182,11 +181,11 @@ export class ProductManageFormComponent {
             imageUrl: new FormControl<ImageSelection | null>(null),
             baseAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, {
                 nonNullable: true,
-                validators: [Validators.required, Validators.min(MIN_PRODUCT_AMOUNT)],
+                validators: [Validators.required, Validators.min(PRODUCT_MIN_AMOUNT)],
             }),
             defaultPortionAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, {
                 nonNullable: true,
-                validators: [Validators.required, Validators.min(MIN_PRODUCT_AMOUNT)],
+                validators: [Validators.required, Validators.min(PRODUCT_MIN_AMOUNT)],
             }),
             baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true, validators: Validators.required }),
             caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
@@ -247,7 +246,7 @@ export class ProductManageFormComponent {
                 debounceTime(this.nameSearchDebounceMs),
                 switchMap(query => {
                     const trimmed = query.trim();
-                    if (trimmed.length < NAME_SEARCH_MIN_LENGTH) {
+                    if (trimmed.length < PRODUCT_NAME_SEARCH_MIN_LENGTH) {
                         this.isNameSearchLoading.set(false);
                         this.nameOptions.set([]);
                         return of<ProductNameAutocompleteOption[]>([]);
@@ -255,7 +254,7 @@ export class ProductManageFormComponent {
 
                     this.isNameSearchLoading.set(true);
                     return this.productService
-                        .searchSuggestions(trimmed, NAME_SEARCH_SUGGESTION_LIMIT)
+                        .searchSuggestions(trimmed, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT)
                         .pipe(map(suggestions => suggestions.map(suggestion => this.toProductNameOption(suggestion))))
                         .pipe(catchError(() => of<ProductNameAutocompleteOption[]>([])));
                 }),
@@ -408,12 +407,12 @@ export class ProductManageFormComponent {
     private prefillFromUsdaFoodDetail(detail: UsdaFoodDetail): void {
         const controls = this.productForm.controls;
         const nutrients = detail.nutrients;
-        const calories = this.getUsdaNutrientAmount(nutrients, [USDA_ENERGY_NUTRIENT_ID], [/^energy$/i]);
-        const proteins = this.getUsdaNutrientAmount(nutrients, [USDA_PROTEIN_NUTRIENT_ID], [/^protein$/i]);
-        const fats = this.getUsdaNutrientAmount(nutrients, [USDA_FAT_NUTRIENT_ID], [/total lipid/i, /^fat$/i]);
-        const carbs = this.getUsdaNutrientAmount(nutrients, [USDA_CARBS_NUTRIENT_ID], [/carbohydrate/i]);
-        const fiber = this.getUsdaNutrientAmount(nutrients, [USDA_FIBER_NUTRIENT_ID], [/fiber/i]);
-        const alcohol = this.getUsdaNutrientAmount(nutrients, [USDA_ALCOHOL_NUTRIENT_ID], [/alcohol/i]);
+        const calories = this.getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.energy], [/^energy$/i]);
+        const proteins = this.getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.protein], [/^protein$/i]);
+        const fats = this.getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.fat], [/total lipid/i, /^fat$/i]);
+        const carbs = this.getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.carbs], [/carbohydrate/i]);
+        const fiber = this.getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.fiber], [/fiber/i]);
+        const alcohol = this.getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.alcohol], [/alcohol/i]);
 
         controls.name.setValue(detail.description);
         controls.usdaFdcId.setValue(detail.fdcId);
@@ -485,7 +484,7 @@ export class ProductManageFormComponent {
 
         if (this.hasUnsavedChanges()) {
             const shouldLeave = await this.confirmDiscardChangesAsync();
-            if (shouldLeave !== true) {
+            if (!shouldLeave) {
                 return;
             }
         }
@@ -782,7 +781,7 @@ export class ProductManageFormComponent {
     }
 
     private roundValue(value: number): number {
-        return Math.round(value * NUTRIENT_ROUNDING_FACTOR) / NUTRIENT_ROUNDING_FACTOR;
+        return Math.round(value * PRODUCT_NUTRIENT_ROUNDING_FACTOR) / PRODUCT_NUTRIENT_ROUNDING_FACTOR;
     }
 
     private getUnitLabel(baseUnit: MeasurementUnit | null): string {
