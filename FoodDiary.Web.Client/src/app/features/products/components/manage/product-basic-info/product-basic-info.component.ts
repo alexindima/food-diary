@@ -10,12 +10,9 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import { MeasurementUnit, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
+import { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductFormData } from '../product-manage-form.types';
-
-export type ProductNameSuggestion = ProductSearchSuggestion;
-
-export type ProductNameAutocompleteOption = FdUiAutocompleteOption<string> & { data: ProductNameSuggestion };
+import type { ProductNameAutocompleteOption, ProductNameSuggestion } from '../product-name-search.types';
 
 const ERROR_FIELDS = ['name', 'productType', 'defaultPortionAmount', 'baseUnit', 'visibility'] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];

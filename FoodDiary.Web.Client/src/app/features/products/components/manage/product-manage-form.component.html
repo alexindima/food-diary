@@ -17,8 +17,8 @@
             <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
                 <fd-product-basic-info
                     [formGroup]="productForm"
-                    [nameOptions]="nameOptions()"
-                    [isNameSearchLoading]="isNameSearchLoading()"
+                    [nameOptions]="nameSearch.options()"
+                    [isNameSearchLoading]="nameSearch.isLoading()"
                     (openBarcodeScanner)="openBarcodeScanner()"
                     (openAiRecognition)="openAiRecognitionDialog()"
                     (nameQueryChange)="onNameQueryChange($event)"
