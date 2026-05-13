@@ -127,7 +127,7 @@ export class ProductManageFormComponent {
     public readonly globalError = signal<string | null>(null);
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     public readonly macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
-    private populatedProductId: string | null = null;
+    private populatedProduct: Product | null = null;
     private appliedPrefillKey: string | null = null;
     private usdaDetailRequestId = 0;
     public readonly isDeleting = signal(false);
@@ -221,16 +221,16 @@ export class ProductManageFormComponent {
         effect(() => {
             const currentProduct = this.product();
             if (currentProduct !== null) {
-                if (this.populatedProductId === currentProduct.id) {
+                if (this.populatedProduct === currentProduct) {
                     return;
                 }
                 this.populateForm(currentProduct);
-                this.populatedProductId = currentProduct.id;
+                this.populatedProduct = currentProduct;
                 this.appliedPrefillKey = null;
                 return;
             }
 
-            this.populatedProductId = null;
+            this.populatedProduct = null;
             this.applyPrefillIfNeeded(this.prefill());
         });
         this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {

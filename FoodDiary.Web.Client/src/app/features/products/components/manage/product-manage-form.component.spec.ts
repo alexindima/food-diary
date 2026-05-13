@@ -1,11 +1,12 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../../services/navigation.service';
 import { UsdaService } from '../../../usda/api/usda.service';
+import type { UsdaFoodDetail } from '../../../usda/models/usda.data';
 import { OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
 import { ProductManageFacade } from '../../lib/product-manage.facade';
@@ -46,6 +47,11 @@ const SECOND_PRODUCT: Product = {
     caloriesPerBase: 240,
     proteinsPerBase: 20,
 };
+const SAME_ID_UPDATED_PRODUCT: Product = {
+    ...PRODUCT,
+    name: 'Updated same id product',
+    caloriesPerBase: 180,
+};
 const OFF_PRODUCT = {
     barcode: '4600000000000',
     name: 'Open Food Facts product',
@@ -56,10 +62,18 @@ const OFF_PRODUCT = {
     fiberPer100G: 3,
     brand: 'OFF brand',
 };
+const USDA_FDC_ID = 123;
+const SECOND_USDA_FDC_ID = 456;
+const USDA_PROTEIN_NUTRIENT_ID = 1003;
 const USDA_SUGGESTION: ProductSearchSuggestion = {
     source: 'usda',
     name: 'USDA suggestion',
-    usdaFdcId: 123,
+    usdaFdcId: USDA_FDC_ID,
+};
+const SECOND_USDA_SUGGESTION: ProductSearchSuggestion = {
+    source: 'usda',
+    name: 'Second USDA suggestion',
+    usdaFdcId: SECOND_USDA_FDC_ID,
 };
 const USDA_PROTEIN_PER_100G = 12.345;
 const EXPECTED_ROUNDED_USDA_PROTEIN = 12.3;
@@ -81,6 +95,13 @@ type ProductManageFormSetup = {
     fixture: ComponentFixture<ProductManageFormComponent>;
     component: ProductManageFormComponent;
     productManageFacade: ProductManageFacadeMock;
+    navigationService: {
+        navigateToProductListAsync: ReturnType<typeof vi.fn>;
+    };
+    openFoodFactsService: {
+        searchByBarcode: ReturnType<typeof vi.fn>;
+    };
+    usdaService: UsdaServiceMock;
 };
 
 describe('ProductManageFormComponent header state', () => {
@@ -107,7 +128,7 @@ describe('ProductManageFormComponent header state', () => {
     });
 });
 
-describe('ProductManageFormComponent form behavior', () => {
+describe('ProductManageFormComponent product inputs', () => {
     it('should repopulate the form when the product input changes', async () => {
         const { component, fixture } = await setupComponentAsync();
 
@@ -122,6 +143,19 @@ describe('ProductManageFormComponent form behavior', () => {
         expect(component.productForm.controls.caloriesPerBase.value).toBe(SECOND_PRODUCT.caloriesPerBase);
     });
 
+    it('should repopulate the form when the product input is refreshed with the same id', async () => {
+        const { component, fixture } = await setupComponentAsync();
+
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('product', SAME_ID_UPDATED_PRODUCT);
+        fixture.detectChanges();
+
+        expect(component.productForm.controls.name.value).toBe(SAME_ID_UPDATED_PRODUCT.name);
+        expect(component.productForm.controls.caloriesPerBase.value).toBe(SAME_ID_UPDATED_PRODUCT.caloriesPerBase);
+    });
+
     it('should not apply add prefill over an edit product', async () => {
         const { component, fixture } = await setupComponentAsync();
 
@@ -132,7 +166,25 @@ describe('ProductManageFormComponent form behavior', () => {
         expect(component.productForm.controls.name.value).toBe(PRODUCT.name);
         expect(component.productForm.controls.barcode.value).toBe(PRODUCT.barcode);
     });
+});
 
+describe('ProductManageFormComponent prefill behavior', () => {
+    it('should ignore stale Open Food Facts lookup response when barcode changes', async () => {
+        const { component, fixture, openFoodFactsService } = await setupComponentAsync();
+        const lookupResult$ = new Subject<typeof OFF_PRODUCT | null>();
+        openFoodFactsService.searchByBarcode.mockReturnValue(lookupResult$);
+
+        fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode });
+        fixture.detectChanges();
+        component.productForm.controls.barcode.setValue('changed-barcode');
+        lookupResult$.next(OFF_PRODUCT);
+
+        expect(component.productForm.controls.name.value).toBe('');
+        expect(component.productForm.controls.brand.value).toBeNull();
+    });
+});
+
+describe('ProductManageFormComponent USDA behavior', () => {
     it('should clear stale nutrition values before applying USDA detail', async () => {
         const { component } = await setupComponentAsync();
 
@@ -156,6 +208,23 @@ describe('ProductManageFormComponent form behavior', () => {
         expect(component.productForm.controls.alcoholPerBase.value).toBeNull();
     });
 
+    it('should ignore stale USDA detail response when a later USDA suggestion is selected', async () => {
+        const { component, usdaService } = await setupComponentAsync();
+        const firstDetail$ = new Subject<UsdaFoodDetail | null>();
+        const secondDetail$ = new Subject<UsdaFoodDetail | null>();
+        usdaService.getFoodDetail.mockImplementation((fdcId: number) => (fdcId === USDA_FDC_ID ? firstDetail$ : secondDetail$));
+
+        component.onNameSuggestionSelected(USDA_SUGGESTION);
+        component.onNameSuggestionSelected(SECOND_USDA_SUGGESTION);
+        firstDetail$.next(createUsdaFoodDetail(USDA_FDC_ID, 'Old USDA detail'));
+        secondDetail$.next(createUsdaFoodDetail(SECOND_USDA_FDC_ID, 'Fresh USDA detail'));
+
+        expect(component.productForm.controls.name.value).toBe('Fresh USDA detail');
+        expect(component.productForm.controls.usdaFdcId.value).toBe(SECOND_USDA_FDC_ID);
+    });
+});
+
+describe('ProductManageFormComponent submit and cancel behavior', () => {
     it('should ignore duplicate submit while a save is already in progress', async () => {
         const { component, productManageFacade } = await setupComponentAsync();
         let resolveSubmit!: (value: { product: Product | null; error: null }) => void;
@@ -179,11 +248,53 @@ describe('ProductManageFormComponent form behavior', () => {
         resolveSubmit({ product: PRODUCT, error: null });
         await firstSubmit;
     });
+
+    it('should emit saved product after successful submit', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        let savedProduct: Product | null = null;
+        component.saved.subscribe(product => {
+            savedProduct = product;
+        });
+        productManageFacade.submitProductAsync.mockResolvedValue({ product: PRODUCT, error: null });
+        component.productForm.patchValue({
+            name: 'Valid product',
+            caloriesPerBase: 100,
+            proteinsPerBase: 10,
+        });
+
+        const result = await component.onSubmitAsync();
+
+        expect(result).toBe(PRODUCT);
+        expect(savedProduct).toBe(PRODUCT);
+    });
+
+    it('should emit cancel without navigation or discard confirmation when cancel mode is emit', async () => {
+        const { component, fixture, productManageFacade, navigationService } = await setupComponentAsync();
+        let wasCancelled = false;
+        component.cancelled.subscribe(() => {
+            wasCancelled = true;
+        });
+        fixture.componentRef.setInput('cancelMode', 'emit');
+        fixture.detectChanges();
+        component.productForm.markAsDirty();
+
+        await component.onCancelAsync();
+
+        expect(wasCancelled).toBe(true);
+        expect(productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
+    });
 });
 
 async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
     const usdaService = createUsdaServiceMock();
+    const navigationService = {
+        navigateToProductListAsync: vi.fn().mockResolvedValue(undefined),
+    };
+    const openFoodFactsService = {
+        searchByBarcode: vi.fn().mockReturnValue(of(null)),
+    };
 
     await TestBed.configureTestingModule({
         imports: [ProductManageFormComponent, TranslateModule.forRoot()],
@@ -196,9 +307,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
             },
             {
                 provide: OpenFoodFactsService,
-                useValue: {
-                    searchByBarcode: vi.fn().mockReturnValue(of(null)),
-                },
+                useValue: openFoodFactsService,
             },
             {
                 provide: UsdaService,
@@ -212,9 +321,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
             },
             {
                 provide: NavigationService,
-                useValue: {
-                    navigateToProductListAsync: vi.fn().mockResolvedValue(undefined),
-                },
+                useValue: navigationService,
             },
             {
                 provide: ProductManageFacade,
@@ -228,6 +335,9 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
         fixture,
         component: fixture.componentInstance,
         productManageFacade,
+        navigationService,
+        openFoodFactsService,
+        usdaService,
     };
 }
 
@@ -242,26 +352,28 @@ function createProductManageFacadeMock(): ProductManageFacadeMock {
 
 function createUsdaServiceMock(): UsdaServiceMock {
     return {
-        getFoodDetail: vi.fn().mockReturnValue(
-            of({
-                fdcId: 123,
-                description: 'USDA detail',
-                foodCategory: null,
-                portions: [],
-                healthScores: null,
-                nutrients: [
-                    {
-                        nutrientId: 1003,
-                        name: 'Protein',
-                        unit: 'g',
-                        amountPer100g: USDA_PROTEIN_PER_100G,
-                        dailyValue: null,
-                        percentDailyValue: null,
-                    },
-                ],
-            }),
-        ),
+        getFoodDetail: vi.fn().mockReturnValue(of(createUsdaFoodDetail(USDA_FDC_ID, 'USDA detail'))),
         linkProduct: vi.fn().mockReturnValue(of(null)),
         unlinkProduct: vi.fn().mockReturnValue(of(null)),
+    };
+}
+
+function createUsdaFoodDetail(fdcId: number, description: string): UsdaFoodDetail {
+    return {
+        fdcId,
+        description,
+        foodCategory: null,
+        portions: [],
+        healthScores: null,
+        nutrients: [
+            {
+                nutrientId: USDA_PROTEIN_NUTRIENT_ID,
+                name: 'Protein',
+                unit: 'g',
+                amountPer100g: USDA_PROTEIN_PER_100G,
+                dailyValue: null,
+                percentDailyValue: null,
+            },
+        ],
     };
 }
