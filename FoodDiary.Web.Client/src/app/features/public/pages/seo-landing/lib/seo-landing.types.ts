@@ -60,3 +60,27 @@ export type SeoLandingCtaKeys = {
     primaryKey: string;
     secondaryKey: string;
 };
+
+export type SeoLandingSectionKeys = {
+    items: readonly SeoLandingContentItemKeys[];
+} & SeoLandingTextKeys;
+
+export type SeoLandingFaqSectionKeys = {
+    items: readonly SeoLandingFaqItemKeys[];
+} & SeoLandingTextKeys;
+
+export type SeoLandingRelatedPage = {
+    path: string;
+    labelKey: string;
+};
+
+export type SeoLandingViewModel = {
+    baseKey: string;
+    hero: SeoLandingHeroKeys;
+    audience: SeoLandingSectionKeys;
+    features: SeoLandingSectionKeys;
+    steps: SeoLandingSectionKeys;
+    faq: SeoLandingFaqSectionKeys;
+    cta: SeoLandingCtaKeys;
+    relatedPages: readonly SeoLandingRelatedPage[];
+};

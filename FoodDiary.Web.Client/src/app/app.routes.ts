@@ -30,7 +30,7 @@ const publicSeoLanding = ({
 }: PublicSeoLandingRouteConfig): Route => ({
     path,
     loadComponent: async (): Promise<Type<unknown>> =>
-        import('./features/public/pages/seo-landing/seo-landing-page.component').then(m => m.SeoLandingPageComponent),
+        import('./features/public/pages/seo-landing/seo-landing-page/seo-landing-page.component').then(m => m.SeoLandingPageComponent),
     data: {
         seo: {
             titleKey,

@@ -3,18 +3,13 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import type { SeoLandingCtaKeys } from './seo-landing.types';
-
-type SeoLandingRelatedPage = {
-    path: string;
-    labelKey: string;
-};
+import type { SeoLandingCtaKeys, SeoLandingRelatedPage } from '../lib/seo-landing.types';
 
 @Component({
     selector: 'fd-seo-landing-footer-sections',
     imports: [RouterLink, TranslatePipe, FdUiButtonComponent],
     templateUrl: './seo-landing-footer-sections.component.html',
-    styleUrl: './seo-landing-page.component.scss',
+    styleUrl: '../seo-landing-page/seo-landing-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeoLandingFooterSectionsComponent {

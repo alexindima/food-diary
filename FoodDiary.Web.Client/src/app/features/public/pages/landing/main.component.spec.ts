@@ -1,18 +1,18 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { PublicAuthDialogService } from '../../lib/public-auth-dialog.service';
 import { MainComponent } from './main.component';
 
 describe('MainComponent', () => {
     let fixture: ComponentFixture<MainComponent>;
-    let dialogServiceMock: { open: ReturnType<typeof vi.fn> };
+    let authDialogServiceMock: { openAsync: ReturnType<typeof vi.fn> };
 
     beforeEach(() => {
         TestBed.resetTestingModule();
-        dialogServiceMock = {
-            open: vi.fn(),
+        authDialogServiceMock = {
+            openAsync: vi.fn().mockResolvedValue(undefined),
         };
     });
 
@@ -35,7 +35,7 @@ describe('MainComponent', () => {
         await TestBed.configureTestingModule({
             imports: [MainComponent],
             providers: [
-                { provide: FdUiDialogService, useValue: dialogServiceMock },
+                { provide: PublicAuthDialogService, useValue: authDialogServiceMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -59,19 +59,13 @@ describe('MainComponent', () => {
 
         fixture.detectChanges();
         await vi.waitFor(() => {
-            expect(dialogServiceMock.open).toHaveBeenCalledTimes(1);
+            expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
         });
-        expect(dialogServiceMock.open).toHaveBeenCalledWith(
-            expect.any(Function),
-            expect.objectContaining({
-                preset: 'form',
-                data: {
-                    mode: 'login',
-                    returnUrl: '/dashboard',
-                    adminReturnUrl: '/users',
-                },
-            }),
-        );
+        expect(authDialogServiceMock.openAsync).toHaveBeenCalledWith({
+            mode: 'login',
+            returnUrl: '/dashboard',
+            adminReturnUrl: '/users',
+        });
     });
 
     it('does not open auth dialog outside auth routes', async () => {
@@ -79,6 +73,6 @@ describe('MainComponent', () => {
 
         fixture.detectChanges();
 
-        expect(dialogServiceMock.open).not.toHaveBeenCalled();
+        expect(authDialogServiceMock.openAsync).not.toHaveBeenCalled();
     });
 });

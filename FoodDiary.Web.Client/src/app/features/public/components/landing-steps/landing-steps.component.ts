@@ -1,32 +1,23 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+
+import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import { LANDING_STEPS } from './landing-steps.config';
 
 @Component({
     selector: 'fd-landing-steps',
-    standalone: true,
     imports: [TranslateModule, FdUiButtonComponent],
     templateUrl: './landing-steps.component.html',
     styleUrls: ['./landing-steps.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingStepsComponent {
-    private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly authDialogService = inject(PublicAuthDialogService);
 
-    protected readonly steps = ['STEP1', 'STEP2', 'STEP3'].map(key => ({
-        key,
-        titleKey: `LANDING_STEPS.${key}.TITLE`,
-        textKey: `LANDING_STEPS.${key}.TEXT`,
-    }));
+    protected readonly steps = LANDING_STEPS;
 
-    public async openAuthAsync(mode: 'login' | 'register'): Promise<void> {
-        const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
-
-        this.fdDialogService.open(AuthDialogComponent, {
-            preset: 'form',
-            autoFocus: mode === 'login' ? '#auth-login-email' : '#auth-register-email',
-            data: { mode },
-        });
+    public async openAuthAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authDialogService.openAsync({ mode });
     }
 }

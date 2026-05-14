@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inje
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
 import { LocalizationService } from '../../../../services/localization.service';
+import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
 
 @Component({
     selector: 'fd-hero',
@@ -15,7 +15,7 @@ import { LocalizationService } from '../../../../services/localization.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroComponent {
-    private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly authDialogService = inject(PublicAuthDialogService);
     private readonly translateService = inject(TranslateService);
     private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -55,14 +55,8 @@ export class HeroComponent {
         void this.openAuthDialogAsync('register');
     }
 
-    private async openAuthDialogAsync(mode: 'login' | 'register'): Promise<void> {
-        const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
-
-        this.fdDialogService.open(AuthDialogComponent, {
-            preset: 'form',
-            autoFocus: mode === 'login' ? '#auth-login-email' : '#auth-register-email',
-            data: { mode },
-        });
+    private async openAuthDialogAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authDialogService.openAsync({ mode });
     }
 
     private getCurrentLanguage(): string {

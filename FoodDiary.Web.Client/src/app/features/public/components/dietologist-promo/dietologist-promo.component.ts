@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+
+import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import { DIETOLOGIST_PROMO_PERMISSIONS, DIETOLOGIST_PROMO_WORKFLOW_STEPS } from './dietologist-promo.config';
 
 @Component({
     selector: 'fd-dietologist-promo',
@@ -11,25 +13,12 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DietologistPromoComponent {
-    private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly authDialogService = inject(PublicAuthDialogService);
 
-    protected readonly workflowSteps = ['INVITE', 'SHARE', 'ADJUST'].map(key => ({
-        key,
-        titleKey: `LANDING_DIETOLOGIST.STEPS.${key}.TITLE`,
-        textKey: `LANDING_DIETOLOGIST.STEPS.${key}.TEXT`,
-    }));
-    protected readonly permissions = ['MEALS', 'STATISTICS', 'WEIGHT', 'GOALS', 'FASTING'].map(key => ({
-        key,
-        labelKey: `LANDING_DIETOLOGIST.PERMISSIONS.${key}`,
-    }));
+    protected readonly workflowSteps = DIETOLOGIST_PROMO_WORKFLOW_STEPS;
+    protected readonly permissions = DIETOLOGIST_PROMO_PERMISSIONS;
 
-    protected async openAuthAsync(mode: 'login' | 'register'): Promise<void> {
-        const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
-
-        this.fdDialogService.open(AuthDialogComponent, {
-            preset: 'form',
-            autoFocus: mode === 'login' ? '#auth-login-email' : '#auth-register-email',
-            data: { mode },
-        });
+    protected async openAuthAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authDialogService.openAsync({ mode });
     }
 }
