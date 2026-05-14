@@ -8,7 +8,7 @@ import type { PageOf } from '../../../../shared/models/page-of.data';
 import { RecipeService } from '../../api/recipe.service';
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeSelectDialogComponent } from './recipe-select-dialog.component';
-import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
+import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recipe-select-dialog.types';
 
 const PAGE_SIZE = 10;
 const SECOND_PAGE_INDEX = 1;

@@ -26,13 +26,13 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { RecipeService } from '../../api/recipe.service';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import type { Recipe, RecipeFilters } from '../../models/recipe.data';
+import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content/recipe-select-dialog-content.component';
 import {
     RECIPE_SELECT_DIALOG_FIRST_PAGE,
     RECIPE_SELECT_DIALOG_NEXT_PAGE_OFFSET,
     RECIPE_SELECT_DIALOG_PAGE_SIZE,
-} from './recipe-select-dialog.config';
-import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
-import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content.component';
+} from './recipe-select-dialog-lib/recipe-select-dialog.config';
+import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recipe-select-dialog.types';
 
 @Component({
     selector: 'fd-recipe-select-dialog',

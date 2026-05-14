@@ -154,7 +154,6 @@ function setupComponent(options: SetupOptions = {}): { fixture: ComponentFixture
 type RecipeListFacadeMock = Omit<
     RecipeListFacade,
     | 'addToMeal'
-    | 'deleteRecipe'
     | 'getFavoriteRecipe'
     | 'handleDetailActionAsync'
     | 'hasActiveFilters'
@@ -163,12 +162,10 @@ type RecipeListFacadeMock = Omit<
     | 'loadInitialOverview'
     | 'loadRecipes'
     | 'navigateToAddRecipeAsync'
-    | 'navigateToEditRecipeAsync'
     | 'removeFavorite'
     | 'toggleRecipeFavorite'
 > & {
     addToMeal: ReturnType<typeof vi.fn>;
-    deleteRecipe: ReturnType<typeof vi.fn>;
     getFavoriteRecipe: ReturnType<typeof vi.fn>;
     handleDetailActionAsync: ReturnType<typeof vi.fn>;
     hasActiveFilters: ReturnType<typeof vi.fn>;
@@ -177,7 +174,6 @@ type RecipeListFacadeMock = Omit<
     loadInitialOverview: ReturnType<typeof vi.fn>;
     loadRecipes: ReturnType<typeof vi.fn>;
     navigateToAddRecipeAsync: ReturnType<typeof vi.fn>;
-    navigateToEditRecipeAsync: ReturnType<typeof vi.fn>;
     removeFavorite: ReturnType<typeof vi.fn>;
     toggleRecipeFavorite: ReturnType<typeof vi.fn>;
 };
@@ -197,7 +193,6 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         allRecipesSectionItems: signal([createRecipe()]),
         allRecipesSectionLabelKey: signal('RECIPE_LIST.ALL_RECIPES'),
         currentPageIndex: signal(0),
-        deleteRecipe: vi.fn().mockReturnValue(of(undefined)),
         errorKey: signal(null),
         favoriteLoadingIds: signal<ReadonlySet<string>>(new Set<string>()),
         favoriteRecipes: signal<FavoriteRecipe[]>([]),
@@ -213,7 +208,6 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         loadInitialOverview: vi.fn().mockReturnValue(of(undefined)),
         loadRecipes: vi.fn().mockReturnValue(of(undefined)),
         navigateToAddRecipeAsync: vi.fn().mockResolvedValue(true),
-        navigateToEditRecipeAsync: vi.fn().mockResolvedValue(true),
         pageSize: PAGE_SIZE,
         recipeData,
         recentRecipes: signal<Recipe[]>([]),

@@ -42,21 +42,5 @@ export type RecipeFormData = FormGroupControls<RecipeFormValues>;
 export type StepFormData = FormGroupControls<StepFormValues>;
 export type IngredientFormData = FormGroupControls<IngredientFormValues>;
 
-export type CalorieMismatchWarning = {
-    expectedCalories: number;
-    actualCalories: number;
-};
-
 export type NutritionMode = 'auto' | 'manual';
 export type NutritionScaleMode = 'recipe' | 'portion';
-export type MacroKey = 'proteins' | 'fats' | 'carbs';
-
-export type MacroBarSegment = {
-    key: MacroKey;
-    percent: number;
-};
-
-export type MacroBarState = {
-    isEmpty: boolean;
-    segments: MacroBarSegment[];
-};

@@ -81,7 +81,6 @@ export class RecipeListComponent {
     public readonly isFavoritesLoadingMore = this.recipeListFacade.isFavoritesLoadingMore;
     public readonly errorKey = this.recipeListFacade.errorKey;
     public readonly isMobileView = this.viewportService.isMobile;
-    public readonly showRecentSection = computed(() => this.recipeListFacade.showRecentSection());
     public readonly recentRecipeItems = computed<RecipeCardViewModel[]>(() =>
         this.recentRecipes().map(recipe => ({
             recipe,
@@ -211,16 +210,6 @@ export class RecipeListComponent {
                 this.searchForm.controls.search.value,
                 this.searchForm.controls.onlyMine.value,
             )
-            .subscribe();
-    }
-
-    public async onEditRecipeAsync(recipe: Recipe): Promise<void> {
-        await this.recipeListFacade.navigateToEditRecipeAsync(recipe.id);
-    }
-
-    public onDeleteRecipe(recipe: Recipe): void {
-        this.recipeListFacade
-            .deleteRecipe(recipe, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
             .subscribe();
     }
 
