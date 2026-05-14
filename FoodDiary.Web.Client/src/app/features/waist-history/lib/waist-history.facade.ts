@@ -2,50 +2,23 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
-import { END_OF_DAY_HOUR, END_OF_DAY_MILLISECOND, END_OF_DAY_MINUTE, END_OF_DAY_SECOND } from '../../../shared/lib/local-date.utils';
-import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
-import { MS_PER_DAY } from '../../../shared/lib/time.constants';
 import { WaistEntriesService } from '../api/waist-entries.service';
-import type {
-    CreateWaistEntryPayload,
-    WaistEntry,
-    WaistEntryFilters,
-    WaistEntrySummaryFilters,
-    WaistEntrySummaryPoint,
-} from '../models/waist-entry.data';
+import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
+import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
+import type { WaistHistoryCustomRange, WaistHistoryDateRange, WaistHistoryRange } from './waist-history.types';
+import { buildWaistHistoryChartData } from './waist-history-chart.mapper';
 import {
-    MAX_DESIRED_WAIST_CM,
-    MAX_WAIST_CM,
-    MIN_WAIST_CM,
-    WAIST_HISTORY_ENTRIES_LIMIT_MAX,
-    WAIST_HISTORY_RATIO_ROUNDING_FACTOR,
-} from './waist-history.constants';
-
-export type WaistHistoryRange = 'week' | 'month' | 'year' | 'custom';
-
-const WHT_SCALE_MAX = 0.8;
-const POINTER_PADDING_PERCENT = 1;
-const WHT_UNDER_MAX = 0.4;
-const WHT_NORMAL_MAX = 0.5;
-const WHT_ELEVATED_MAX = 0.6;
-const DEFAULT_MONTH_OFFSET = 1;
-const WEEK_DAYS = 7;
-const ENTRIES_LIMIT_PER_DAY = 5;
-const MONTH_QUANTIZATION_DAYS = 3;
-const YEAR_QUANTIZATION_DAYS = 14;
-const CUSTOM_QUANTIZATION_DIVISOR = 12;
-const DATE_PART_PAD_LENGTH = 2;
-const DATE_PART_PAD = '0';
-
-export type WhtStatusInfo = {
-    labelKey: string;
-    descriptionKey: string;
-    class: string;
-};
+    buildDefaultWaistHistoryCustomRange,
+    buildWaistHistoryFiltersForRange,
+    calculateWaistHistoryRangeDates,
+    formatWaistHistoryDateInput,
+    isWaistHistoryRange,
+    normalizeStartOfDay,
+} from './waist-history-range.utils';
+import { buildWhtViewModel } from './waist-history-wht.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class WaistHistoryFacade {
@@ -62,20 +35,22 @@ export class WaistHistoryFacade {
     private lastLoadedRangeKey: string | null = null;
 
     public readonly selectedRange = signal<WaistHistoryRange>(this.defaultRange);
-    public readonly currentRange = computed<{ start: Date; end: Date }>(() => this.calculateRangeDates(this.selectedRange()));
+    public readonly currentRange = computed<WaistHistoryDateRange>(() =>
+        calculateWaistHistoryRangeDates(this.selectedRange(), this.customRangeControl.value),
+    );
     public readonly entries = signal<WaistEntry[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
     public readonly isEditing = signal(false);
     public readonly summaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
-    public readonly customRangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
+    public readonly customRangeControl = new FormControl<WaistHistoryCustomRange | null>(null);
     public readonly desiredWaist = signal<number | null>(null);
     public readonly isDesiredWaistSaving = signal(false);
     public readonly desiredWaistControl = new FormControl<string>('');
 
     public readonly form = this.fb.group({
-        date: [this.formatDateInput(new Date()), Validators.required],
+        date: [formatWaistHistoryDateInput(new Date()), Validators.required],
         circumference: ['', [Validators.required, Validators.min(MIN_WAIST_CM), Validators.max(MAX_WAIST_CM)]],
     });
 
@@ -83,92 +58,20 @@ export class WaistHistoryFacade {
         [...this.entries()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     );
 
-    public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const ordered = [...this.summaryPoints()].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
-        const label = this.translate.instant('WAIST_HISTORY.CHART_LABEL');
-
-        return {
-            labels: ordered.map(point => this.formatDateLabel(point.startDate)),
-            datasets: [
-                {
-                    data: ordered.map(point => (point.averageCircumference > 0 ? point.averageCircumference : null)),
-                    label,
-                    borderColor: 'var(--fd-color-sky-500)',
-                    backgroundColor: 'transparent',
-                    fill: false,
-                    tension: 0.35,
-                    pointRadius: 4,
-                    pointBackgroundColor: 'var(--fd-color-white)',
-                    borderWidth: 2,
-                    spanGaps: true,
-                },
-            ],
-        };
-    });
+    public readonly chartData = computed(() =>
+        buildWaistHistoryChartData(
+            this.summaryPoints(),
+            this.translate.instant('WAIST_HISTORY.CHART_LABEL'),
+            this.translate.getCurrentLang(),
+        ),
+    );
 
     public readonly latestWaist = computed<number | null>(() => {
         const entries = this.entriesDescending();
         return entries.length > 0 ? entries[0].circumference : null;
     });
 
-    public readonly whtrValue = computed<number | null>(() => {
-        const height = this.userHeightCm();
-        const waist = this.latestWaist();
-        if (height === null || waist === null || height <= 0 || waist <= 0) {
-            return null;
-        }
-
-        const ratio = waist / height;
-        return Math.round(ratio * WAIST_HISTORY_RATIO_ROUNDING_FACTOR) / WAIST_HISTORY_RATIO_ROUNDING_FACTOR;
-    });
-
-    public readonly whtrPointerPosition = computed(() => {
-        const ratio = this.whtrValue();
-        if (ratio === null) {
-            return '0%';
-        }
-
-        const rawPercent = (ratio / WHT_SCALE_MAX) * PERCENT_MULTIPLIER;
-        const clamped = Math.max(POINTER_PADDING_PERCENT, Math.min(PERCENT_MULTIPLIER - POINTER_PADDING_PERCENT, rawPercent));
-        return `${clamped}%`;
-    });
-
-    public readonly whtrStatusInfo = computed<WhtStatusInfo | null>(() => {
-        const ratio = this.whtrValue();
-        if (ratio === null) {
-            return null;
-        }
-
-        if (ratio < WHT_UNDER_MAX) {
-            return {
-                labelKey: 'WAIST_HISTORY.WHT_STATUS.UNDER',
-                descriptionKey: 'WAIST_HISTORY.WHT_STATUS_DESC.UNDER',
-                class: 'waist-history-page__wht-status--under',
-            };
-        }
-
-        if (ratio < WHT_NORMAL_MAX) {
-            return {
-                labelKey: 'WAIST_HISTORY.WHT_STATUS.NORMAL',
-                descriptionKey: 'WAIST_HISTORY.WHT_STATUS_DESC.NORMAL',
-                class: 'waist-history-page__wht-status--normal',
-            };
-        }
-
-        if (ratio < WHT_ELEVATED_MAX) {
-            return {
-                labelKey: 'WAIST_HISTORY.WHT_STATUS.ELEVATED',
-                descriptionKey: 'WAIST_HISTORY.WHT_STATUS_DESC.ELEVATED',
-                class: 'waist-history-page__wht-status--elevated',
-            };
-        }
-
-        return {
-            labelKey: 'WAIST_HISTORY.WHT_STATUS.HIGH',
-            descriptionKey: 'WAIST_HISTORY.WHT_STATUS_DESC.HIGH',
-            class: 'waist-history-page__wht-status--high',
-        };
-    });
+    public readonly whtViewModel = computed(() => buildWhtViewModel(this.userHeightCm(), this.latestWaist()));
 
     private readonly customRangeValue = toSignal(
         this.customRangeControl.valueChanges.pipe(
@@ -252,7 +155,7 @@ export class WaistHistoryFacade {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
         this.form.setValue({
-            date: this.formatDateInput(new Date(entry.date)),
+            date: formatWaistHistoryDateInput(new Date(entry.date)),
             circumference: entry.circumference.toString(),
         });
     }
@@ -261,7 +164,7 @@ export class WaistHistoryFacade {
         this.resetEditingState();
         const latest = (this.entriesDescending() as Array<WaistEntry | undefined>)[0];
         this.form.setValue({
-            date: this.formatDateInput(new Date()),
+            date: formatWaistHistoryDateInput(new Date()),
             circumference: latest !== undefined ? latest.circumference.toString() : '',
         });
     }
@@ -310,16 +213,6 @@ export class WaistHistoryFacade {
             });
     }
 
-    private parseDesiredWaist(): number | null | undefined {
-        const rawValue = this.desiredWaistControl.value?.trim();
-        if (rawValue === undefined || rawValue.length === 0) {
-            return null;
-        }
-
-        const parsedValue = Number(rawValue.replace(',', '.'));
-        return Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > MAX_DESIRED_WAIST_CM ? undefined : parsedValue;
-    }
-
     public changeRange(value: string): void {
         if (!isWaistHistoryRange(value) || value === this.selectedRange()) {
             return;
@@ -330,10 +223,7 @@ export class WaistHistoryFacade {
         if (value === 'custom') {
             const current = this.customRangeControl.value;
             if (current?.start === undefined || current.start === null || current.end === null) {
-                const end = new Date();
-                const start = new Date(end);
-                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
-                this.customRangeControl.setValue({ start, end }, { emitEvent: true });
+                this.customRangeControl.setValue(buildDefaultWaistHistoryCustomRange(), { emitEvent: true });
             }
             return;
         }
@@ -341,20 +231,29 @@ export class WaistHistoryFacade {
         this.customRangeControl.setValue(null, { emitEvent: false });
     }
 
-    private loadEntries(initializeRange = true, force = false): void {
-        const { entriesParams, summaryParams, rangeKey } = this.buildFiltersForRange(this.selectedRange());
+    private parseDesiredWaist(): number | null | undefined {
+        const rawValue = this.desiredWaistControl.value?.trim();
+        if (rawValue === undefined || rawValue.length === 0) {
+            return null;
+        }
+
+        const parsedValue = Number(rawValue.replace(',', '.'));
+        return Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > MAX_DESIRED_WAIST_CM ? undefined : parsedValue;
+    }
+
+    private loadEntries(showLoader = true, force = false): void {
+        const { entriesParams, summaryParams, rangeKey } = buildWaistHistoryFiltersForRange(
+            this.selectedRange(),
+            this.customRangeControl.value,
+        );
 
         if (!force && rangeKey === this.lastLoadedRangeKey) {
             return;
         }
 
         this.lastLoadedRangeKey = rangeKey;
-        this.isLoading.set(true);
-
-        if (initializeRange && this.selectedRange() === 'custom') {
-            const start = new Date(summaryParams.dateFrom);
-            const end = new Date(summaryParams.dateTo);
-            this.customRangeControl.setValue({ start, end }, { emitEvent: false });
+        if (showLoader) {
+            this.isLoading.set(true);
         }
 
         this.waistEntriesService
@@ -367,6 +266,12 @@ export class WaistHistoryFacade {
             )
             .subscribe(entries => {
                 this.entries.set(entries);
+                if (!this.isEditing() && entries.length > 0) {
+                    const latest = [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+                    this.form.patchValue({
+                        circumference: latest.circumference.toString(),
+                    });
+                }
             });
 
         this.loadSummary(summaryParams);
@@ -420,7 +325,7 @@ export class WaistHistoryFacade {
         }
 
         const date = typeof rawDate === 'string' ? new Date(rawDate) : rawDate;
-        const utcDate = this.normalizeStartOfDay(date);
+        const utcDate = normalizeStartOfDay(date);
         const circumference = Number(rawCircumference);
 
         return {
@@ -433,112 +338,7 @@ export class WaistHistoryFacade {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
         this.form.patchValue({
-            date: this.formatDateInput(new Date()),
+            date: formatWaistHistoryDateInput(new Date()),
         });
     }
-
-    private buildFiltersForRange(range: WaistHistoryRange): {
-        entriesParams: WaistEntryFilters;
-        summaryParams: WaistEntrySummaryFilters;
-        rangeKey: string;
-    } {
-        const { start, end } = this.calculateRangeDates(range);
-        const normalizedStart = this.normalizeStartOfDay(start);
-        const normalizedEnd = this.normalizeEndOfDay(end);
-        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_PER_DAY));
-        const quantizationDays = this.getQuantizationDays(range, totalDays);
-        const limit = Math.min(WAIST_HISTORY_ENTRIES_LIMIT_MAX, totalDays * ENTRIES_LIMIT_PER_DAY);
-        const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
-
-        return {
-            entriesParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                sort: 'desc',
-                limit,
-            },
-            summaryParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                quantizationDays,
-            },
-            rangeKey,
-        };
-    }
-
-    private calculateRangeDates(range: WaistHistoryRange): { start: Date; end: Date } {
-        const now = new Date();
-        let start = new Date(now);
-        let end = new Date(now);
-
-        if (range === 'week') {
-            start.setDate(start.getDate() - WEEK_DAYS);
-        } else if (range === 'month') {
-            start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
-        } else if (range === 'year') {
-            start.setFullYear(start.getFullYear() - DEFAULT_MONTH_OFFSET);
-        } else {
-            const custom = this.customRangeControl.value;
-            if (custom?.start !== undefined && custom.start !== null) {
-                start = new Date(custom.start);
-            } else {
-                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
-            }
-
-            if (custom?.end !== undefined && custom.end !== null) {
-                end = new Date(custom.end);
-            }
-        }
-
-        return { start, end };
-    }
-
-    private getQuantizationDays(range: WaistHistoryRange, totalDays: number): number {
-        if (range === 'week') {
-            return 1;
-        }
-
-        if (range === 'month') {
-            return MONTH_QUANTIZATION_DAYS;
-        }
-
-        if (range === 'year') {
-            return YEAR_QUANTIZATION_DAYS;
-        }
-
-        return Math.max(1, Math.round(totalDays / CUSTOM_QUANTIZATION_DIVISOR));
-    }
-
-    private normalizeStartOfDay(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    }
-
-    private normalizeEndOfDay(date: Date): Date {
-        return new Date(
-            Date.UTC(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate(),
-                END_OF_DAY_HOUR,
-                END_OF_DAY_MINUTE,
-                END_OF_DAY_SECOND,
-                END_OF_DAY_MILLISECOND,
-            ),
-        );
-    }
-
-    private formatDateInput(date: Date): string {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
-        const day = String(date.getDate()).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
-        return `${year}-${month}-${day}`;
-    }
-
-    private formatDateLabel(dateString: string): string {
-        return new Date(dateString).toLocaleDateString();
-    }
-}
-
-function isWaistHistoryRange(value: string): value is WaistHistoryRange {
-    return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
 }

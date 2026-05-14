@@ -44,6 +44,7 @@ beforeEach(() => {
                 provide: TranslateService,
                 useValue: {
                     instant: vi.fn((key: string) => key),
+                    getCurrentLang: vi.fn(() => 'en'),
                 },
             },
         ],
@@ -64,7 +65,8 @@ describe('WaistHistoryFacade loading', () => {
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
         expect(facade.desiredWaist()).toBe(TARGET_WAIST);
-        expect(facade.whtrValue()).toBe(EXPECTED_WHTR);
+        expect(facade.form.controls.circumference.value).toBe('82');
+        expect(facade.whtViewModel()?.value).toBe(EXPECTED_WHTR);
     });
 });
 
@@ -90,6 +92,19 @@ describe('WaistHistoryFacade entries', () => {
         expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
     });
 
+    it('does not submit invalid form', () => {
+        facade.form.setValue({
+            date: '',
+            circumference: '',
+        });
+
+        facade.submit();
+
+        expect(waistEntriesService.create).not.toHaveBeenCalled();
+        expect(waistEntriesService.update).not.toHaveBeenCalled();
+        expect(facade.form.touched).toBe(true);
+    });
+
     it('switches to edit mode and updates the existing entry', () => {
         const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 };
 
@@ -101,6 +116,45 @@ describe('WaistHistoryFacade entries', () => {
             date: '2026-04-01T00:00:00.000Z',
             circumference: 82,
         });
+    });
+
+    it('cancels editing and restores latest circumference in the form', () => {
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 };
+        facade.entries.set([entry, { id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', circumference: 80.5 }]);
+
+        facade.startEdit(entry);
+        facade.cancelEdit();
+
+        expect(facade.isEditing()).toBe(false);
+        expect(facade.form.controls.circumference.value).toBe('80.5');
+    });
+
+    it('deletes entry and exits edit mode when edited entry is removed', () => {
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 };
+        facade.startEdit(entry);
+
+        facade.deleteEntry(entry);
+
+        expect(waistEntriesService.remove).toHaveBeenCalledWith('entry-1');
+        expect(facade.isEditing()).toBe(false);
+        expect(waistEntriesService.getEntries).toHaveBeenCalledTimes(1);
+        expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('WaistHistoryFacade ranges', () => {
+    it('ignores unsupported range values', () => {
+        facade.changeRange('quarter');
+
+        expect(facade.selectedRange()).toBe('month');
+    });
+
+    it('initializes default custom range when custom range is selected', () => {
+        facade.changeRange('custom');
+
+        expect(facade.selectedRange()).toBe('custom');
+        expect(facade.customRangeControl.value?.start).toBeInstanceOf(Date);
+        expect(facade.customRangeControl.value?.end).toBeInstanceOf(Date);
     });
 });
 

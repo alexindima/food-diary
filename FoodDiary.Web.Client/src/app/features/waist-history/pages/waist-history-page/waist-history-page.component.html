@@ -19,20 +19,10 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-waist-history-chart-card
-            [isLoading]="isSummaryLoading()"
-            [hasPoints]="hasSummaryPoints()"
-            [chartData]="chartData()"
-            [chartOptions]="chartOptions"
-        />
+        <fd-waist-history-chart-card [isLoading]="isSummaryLoading()" [chartData]="chartData()" />
 
         @defer (on viewport) {
-            <fd-waist-history-wht-card
-                [value]="whtrValue()"
-                [status]="whtrStatusInfo()"
-                [segments]="whtSegments"
-                [pointerPosition]="whtrPointerPosition()"
-            />
+            <fd-waist-history-wht-card [viewModel]="whtViewModel()" />
         } @placeholder {
             <div class="waist-history-page__placeholder" aria-hidden="true"></div>
         }
@@ -57,7 +47,7 @@
             <div class="waist-history-page__content waist-history-page__content--full">
                 <fd-waist-history-entries-card
                     [isLoading]="isLoading()"
-                    [items]="entryItems()"
+                    [entries]="entriesDescending()"
                     (editEntry)="startEdit($event)"
                     (removeEntry)="deleteEntry($event)"
                 />

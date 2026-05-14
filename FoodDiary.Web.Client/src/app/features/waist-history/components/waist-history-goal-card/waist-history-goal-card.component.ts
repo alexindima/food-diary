@@ -9,7 +9,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
     selector: 'fd-waist-history-goal-card',
     imports: [ReactiveFormsModule, FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent, TranslatePipe],
     templateUrl: './waist-history-goal-card.component.html',
-    styleUrl: './waist-history-page.component.scss',
+    styleUrl: '../../pages/waist-history-page/waist-history-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryGoalCardComponent {

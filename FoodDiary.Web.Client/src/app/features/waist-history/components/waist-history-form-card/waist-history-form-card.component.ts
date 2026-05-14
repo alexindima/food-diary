@@ -10,7 +10,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
     selector: 'fd-waist-history-form-card',
     imports: [ReactiveFormsModule, FdUiButtonComponent, FdUiCardComponent, FdUiDateInputComponent, FdUiInputComponent, TranslatePipe],
     templateUrl: './waist-history-form-card.component.html',
-    styleUrl: './waist-history-page.component.scss',
+    styleUrl: '../../pages/waist-history-page/waist-history-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryFormCardComponent {
