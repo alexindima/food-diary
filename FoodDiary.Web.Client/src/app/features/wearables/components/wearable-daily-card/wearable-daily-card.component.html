@@ -8,7 +8,9 @@
             @for (metric of metrics(); track metric.key) {
                 <div class="metric-item fd-ui-stat-tile fd-ui-stat-tile--compact fd-ui-stat-tile--centered">
                     <span class="metric-icon">{{ metric.icon }}</span>
-                    <span class="metric-value fd-ui-stat-tile__value fd-ui-metric-lg">{{ metric.value | number: '1.0-0' }}</span>
+                    <span class="metric-value fd-ui-stat-tile__value fd-ui-metric-lg">{{
+                        metric.value | number: metric.numberFormat
+                    }}</span>
                     <span class="metric-unit fd-ui-stat-tile__meta fd-ui-helper-text">{{ metric.unit }}</span>
                     <span class="metric-label fd-ui-stat-tile__label fd-ui-overline">{{ metric.labelKey | translate }}</span>
                 </div>

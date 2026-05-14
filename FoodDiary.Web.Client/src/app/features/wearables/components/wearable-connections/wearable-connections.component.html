@@ -14,11 +14,11 @@
                 }
             </div>
             @if (provider.connection) {
-                <fd-ui-button variant="text" (click)="disconnect(provider.id)">
+                <fd-ui-button variant="ghost" (click)="disconnect(provider.id)">
                     {{ 'WEARABLES.DISCONNECT' | translate }}
                 </fd-ui-button>
             } @else {
-                <fd-ui-button variant="flat" (click)="connect(provider.id)">
+                <fd-ui-button variant="primary" (click)="connect(provider.id)">
                     {{ 'WEARABLES.CONNECT' | translate }}
                 </fd-ui-button>
             }
