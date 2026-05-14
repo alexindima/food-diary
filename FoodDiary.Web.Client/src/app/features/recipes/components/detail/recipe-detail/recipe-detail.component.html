@@ -34,7 +34,7 @@
                     [totalTime]="totalTime"
                     [qualityGrade]="qualityGrade"
                     [qualityScore]="qualityScore"
-                    [macroSummaryBlocks]="macroSummaryBlocks()"
+                    [macroSummaryBlocks]="macroSummaryBlocks"
                     [ingredientCount]="ingredientCount"
                     [ingredientPreview]="ingredientPreview"
                 />
@@ -69,7 +69,7 @@
                     variant="secondary"
                     fill="outline"
                     icon="content_copy"
-                    [disabled]="isDuplicateInProgress"
+                    [disabled]="isDuplicateInProgress()"
                     (click)="onDuplicate()"
                 >
                     {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}

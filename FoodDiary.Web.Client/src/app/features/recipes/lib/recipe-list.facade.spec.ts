@@ -7,8 +7,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
+import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
-import { RecipeVisibility } from '../models/recipe.data';
+import { type FavoriteRecipe, RecipeVisibility } from '../models/recipe.data';
 import { RecipeListFacade } from './recipe-list.facade';
 
 const PAGE_LIMIT = 10;
@@ -29,8 +30,10 @@ let facade: RecipeListFacade;
 let recipeService: {
     queryOverview: ReturnType<typeof vi.fn>;
     query: ReturnType<typeof vi.fn>;
+    getById: ReturnType<typeof vi.fn>;
     deleteById: ReturnType<typeof vi.fn>;
 };
+let favoriteRecipeService: { getAll: ReturnType<typeof vi.fn>; add: ReturnType<typeof vi.fn>; remove: ReturnType<typeof vi.fn> };
 let navigationService: {
     navigateToRecipeAddAsync: ReturnType<typeof vi.fn>;
     navigateToRecipeEditAsync: ReturnType<typeof vi.fn>;
@@ -63,7 +66,14 @@ beforeEach(() => {
                 totalItems: 1,
             }),
         ),
+        getById: vi.fn().mockReturnValue(of(recipe)),
         deleteById: vi.fn().mockReturnValue(of(undefined)),
+    };
+
+    favoriteRecipeService = {
+        getAll: vi.fn().mockReturnValue(of([createFavoriteRecipe()])),
+        add: vi.fn().mockReturnValue(of(createFavoriteRecipe())),
+        remove: vi.fn().mockReturnValue(of(null)),
     };
 
     navigationService = {
@@ -84,6 +94,7 @@ beforeEach(() => {
         providers: [
             RecipeListFacade,
             { provide: RecipeService, useValue: recipeService },
+            { provide: FavoriteRecipeService, useValue: favoriteRecipeService },
             { provide: NavigationService, useValue: navigationService },
             { provide: QuickMealService, useValue: quickMealService },
             { provide: FdUiToastService, useValue: toastService },
@@ -97,6 +108,73 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(RecipeListFacade);
+});
+
+describe('RecipeListFacade favorites', () => {
+    it('loads favorites and updates counters', () => {
+        facade.loadFavorites().subscribe();
+
+        expect(favoriteRecipeService.getAll).toHaveBeenCalled();
+        expect(facade.favoriteRecipes()).toEqual([createFavoriteRecipe()]);
+        expect(facade.favoriteTotalCount()).toBe(1);
+        expect(facade.isFavoritesLoadingMore()).toBe(false);
+    });
+
+    it('adds favorite recipe, syncs recipe state, and reloads favorites', () => {
+        const notFavoriteRecipe = { ...recipe, isFavorite: false, favoriteRecipeId: null };
+        facade.recipeData.setData({
+            data: [notFavoriteRecipe],
+            page: 1,
+            limit: PAGE_LIMIT,
+            totalPages: 1,
+            totalItems: 1,
+        });
+
+        facade.toggleRecipeFavorite(notFavoriteRecipe).subscribe();
+
+        expect(favoriteRecipeService.add).toHaveBeenCalledWith('recipe-1', 'Recipe');
+        expect(favoriteRecipeService.getAll).toHaveBeenCalled();
+        expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: true, favoriteRecipeId: 'favorite-1' }));
+        expect(facade.favoriteLoadingIds().size).toBe(0);
+    });
+
+    it('removes favorite recipe by looking up favorite id when recipe state has no favorite id', () => {
+        const favoriteRecipe = { ...recipe, isFavorite: true, favoriteRecipeId: null };
+        facade.recipeData.setData({
+            data: [favoriteRecipe],
+            page: 1,
+            limit: PAGE_LIMIT,
+            totalPages: 1,
+            totalItems: 1,
+        });
+
+        facade.toggleRecipeFavorite(favoriteRecipe).subscribe();
+
+        expect(favoriteRecipeService.getAll).toHaveBeenCalled();
+        expect(favoriteRecipeService.remove).toHaveBeenCalledWith('favorite-1');
+        expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteRecipeId: null }));
+        expect(facade.favoriteLoadingIds().size).toBe(0);
+    });
+
+    it('removes favorite entry and syncs related recipe state', () => {
+        const favorite = createFavoriteRecipe();
+        facade.favoriteRecipes.set([favorite]);
+        facade.favoriteTotalCount.set(1);
+        facade.recipeData.setData({
+            data: [{ ...recipe, isFavorite: true, favoriteRecipeId: favorite.id }],
+            page: 1,
+            limit: PAGE_LIMIT,
+            totalPages: 1,
+            totalItems: 1,
+        });
+
+        facade.removeFavorite(favorite).subscribe();
+
+        expect(favoriteRecipeService.remove).toHaveBeenCalledWith('favorite-1');
+        expect(facade.favoriteRecipes()).toEqual([]);
+        expect(facade.favoriteTotalCount()).toBe(0);
+        expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteRecipeId: null }));
+    });
 });
 
 describe('RecipeListFacade overview', () => {
@@ -127,6 +205,19 @@ describe('RecipeListFacade overview', () => {
         expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
     });
 });
+
+function createFavoriteRecipe(): FavoriteRecipe {
+    return {
+        id: 'favorite-1',
+        recipeId: 'recipe-1',
+        name: 'Recipe',
+        createdAtUtc: '2026-04-02T00:00:00Z',
+        recipeName: 'Recipe',
+        servings: 1,
+        totalTimeMinutes: 10,
+        ingredientCount: 2,
+    };
+}
 
 describe('RecipeListFacade actions', () => {
     it('deletes recipe and reloads first page', () => {

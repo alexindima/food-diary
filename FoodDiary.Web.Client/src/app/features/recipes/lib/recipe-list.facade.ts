@@ -6,6 +6,7 @@ import { catchError, finalize, map, type Observable, of, switchMap, tap } from '
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
+import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
 import type { RecipeDetailActionResult } from '../components/detail/recipe-detail-lib/recipe-detail.types';
 import {
@@ -22,6 +23,7 @@ export class RecipeListFacade {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private readonly quickMealService = inject(QuickMealService);
+    private readonly favoriteRecipeService = inject(FavoriteRecipeService);
 
     public readonly pageSize = RECIPE_LIST_PAGE_SIZE;
     public readonly recipeData = new PagedData<Recipe>();
@@ -32,6 +34,7 @@ export class RecipeListFacade {
     public readonly errorKey = signal<string | null>(null);
     public readonly isDeleting = signal(false);
     public readonly isFavoritesLoadingMore = signal(false);
+    public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
 
     public readonly showRecentSection = computed(() => !this.hasSearchValue(this.searchValue()) && this.recentRecipes().length > 0);
     public readonly allRecipesSectionItems = computed(() => {
@@ -173,12 +176,109 @@ export class RecipeListFacade {
         this.quickMealService.addRecipe(recipe);
     }
 
+    public loadFavorites(): Observable<void> {
+        this.isFavoritesLoadingMore.set(true);
+
+        return this.favoriteRecipeService.getAll().pipe(
+            tap(favorites => {
+                this.favoriteRecipes.set(favorites);
+                this.favoriteTotalCount.set(favorites.length);
+            }),
+            map(() => void 0),
+            finalize(() => {
+                this.isFavoritesLoadingMore.set(false);
+            }),
+        );
+    }
+
+    public toggleRecipeFavorite(recipe: Recipe): Observable<void> {
+        if (this.favoriteLoadingIds().has(recipe.id)) {
+            return of(void 0);
+        }
+
+        this.setFavoriteLoading(recipe.id, true);
+
+        if (recipe.isFavorite === true) {
+            return this.removeRecipeFavorite(recipe);
+        }
+
+        return this.favoriteRecipeService.add(recipe.id, recipe.name).pipe(
+            tap(favorite => {
+                this.syncRecipeFavoriteState(recipe.id, true, favorite.id);
+            }),
+            switchMap(() => this.loadFavorites()),
+            finalize(() => {
+                this.setFavoriteLoading(recipe.id, false);
+            }),
+        );
+    }
+
+    public getFavoriteRecipe(favorite: FavoriteRecipe): Observable<Recipe | null> {
+        return this.recipeService.getById(favorite.recipeId);
+    }
+
+    public removeFavorite(favorite: FavoriteRecipe): Observable<void> {
+        return this.favoriteRecipeService.remove(favorite.id).pipe(
+            tap(() => {
+                this.favoriteRecipes.update(favorites => favorites.filter(item => item.id !== favorite.id));
+                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                this.syncRecipeFavoriteState(favorite.recipeId, false, null);
+            }),
+            map(() => void 0),
+        );
+    }
+
     public hasActiveFilters(onlyMine: boolean): boolean {
         return onlyMine;
     }
 
     public hasSearch(search: string | null): boolean {
         return this.hasSearchValue(search);
+    }
+
+    private syncRecipeFavoriteState(recipeId: string, isFavorite: boolean, favoriteRecipeId: string | null): void {
+        this.recipeData.items.update(items =>
+            items.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
+        );
+        this.recentRecipes.update(recipes =>
+            recipes.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
+        );
+    }
+
+    private removeRecipeFavorite(recipe: Recipe): Observable<void> {
+        const favoriteId = recipe.favoriteRecipeId;
+        const request$ =
+            favoriteId !== null && favoriteId !== undefined && favoriteId.length > 0
+                ? this.favoriteRecipeService.remove(favoriteId)
+                : this.favoriteRecipeService.getAll().pipe(
+                      switchMap(favorites => {
+                          const match = favorites.find(favorite => favorite.recipeId === recipe.id);
+                          return match === undefined ? of(null) : this.favoriteRecipeService.remove(match.id);
+                      }),
+                  );
+
+        return request$.pipe(
+            tap(() => {
+                this.syncRecipeFavoriteState(recipe.id, false, null);
+            }),
+            switchMap(() => this.loadFavorites()),
+            finalize(() => {
+                this.setFavoriteLoading(recipe.id, false);
+            }),
+        );
+    }
+
+    private setFavoriteLoading(recipeId: string, isLoading: boolean): void {
+        this.favoriteLoadingIds.update(current => {
+            const next = new Set(current);
+            if (isLoading) {
+                next.add(recipeId);
+            } else {
+                next.delete(recipeId);
+            }
+
+            return next;
+        });
     }
 
     private hasSearchValue(value: string | null): boolean {

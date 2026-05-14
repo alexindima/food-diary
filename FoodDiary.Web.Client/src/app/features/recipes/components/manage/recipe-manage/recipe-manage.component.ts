@@ -1,35 +1,23 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, type FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header.component';
 import { FdPageContainerDirective } from '../../../../../directives/layout/page-container.directive';
-import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
-import type { NutrientData } from '../../../../../shared/models/charts.data';
-import type { Product } from '../../../../products/models/product.data';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { Recipe, RecipeDto } from '../../../models/recipe.data';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info.component';
-import type {
-    IngredientFormData,
-    NutritionMode,
-    NutritionScaleMode,
-    RecipeFormData,
-    RecipeFormValues,
-    StepFormData,
-    StepFormValues,
-} from '../recipe-manage-lib/recipe-manage.types';
+import type { NutritionScaleMode, RecipeFormData, RecipeFormValues, StepFormData } from '../recipe-manage-lib/recipe-manage.types';
 import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
     createRecipeForm,
-    createRecipeIngredientGroup,
-    createRecipeStepGroup,
     hasNoRecipeNutritionTotals,
-    mapRecipeStepToFormValue,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
+import { RecipeNutritionFormManager } from '../recipe-manage-lib/recipe-nutrition-form.manager';
+import { RecipeStepFormManager } from '../recipe-manage-lib/recipe-step-form.manager';
 import { RecipeNutritionEditorComponent } from '../recipe-nutrition-editor/recipe-nutrition-editor.component';
 import { RecipeStepsListComponent, type StepIngredientEvent } from '../recipe-steps-list/recipe-steps-list.component';
 
@@ -53,25 +41,17 @@ import { RecipeStepsListComponent, type StepIngredientEvent } from '../recipe-st
 export class RecipeManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly expandedSteps = new Set<number>();
+    private readonly stepFormManager: RecipeStepFormManager;
+    private readonly nutritionFormManager: RecipeNutritionFormManager;
     private lastRecipe: Recipe | null = null;
 
     private readonly recipeManageFacade = inject(RecipeManageFacade);
 
     public readonly recipe = input<Recipe | null>(null);
-    public readonly totalCalories = signal<number>(0);
-    public readonly totalFiber = signal<number>(0);
-    public readonly totalAlcohol = signal<number>(0);
-    public readonly nutrientChartData = signal<NutrientData>({
-        proteins: 0,
-        fats: 0,
-        carbs: 0,
-    });
     public globalError = this.recipeManageFacade.globalError;
     public isSubmitting = this.recipeManageFacade.isSubmitting;
 
     public recipeForm: FormGroup<RecipeFormData>;
-    public readonly nutritionMode = signal<NutritionMode>('auto');
     public readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;
 
@@ -80,29 +60,43 @@ export class RecipeManageComponent {
             submitLabelKey: isEdit ? 'RECIPE_MANAGE.SAVE_BUTTON' : 'RECIPE_MANAGE.ADD_BUTTON',
         };
     });
-    public nutritionScaleMode: NutritionScaleMode = 'recipe';
+    public readonly totalCalories: RecipeNutritionFormManager['totalCalories'];
+    public readonly totalFiber: RecipeNutritionFormManager['totalFiber'];
+    public readonly totalAlcohol: RecipeNutritionFormManager['totalAlcohol'];
+    public readonly nutrientChartData: RecipeNutritionFormManager['nutrientChartData'];
+    public readonly nutritionMode: RecipeNutritionFormManager['nutritionMode'];
 
     private isFormReady = true;
 
     public constructor() {
         this.recipeForm = createRecipeForm();
-        this.nutritionMode.set(this.recipeForm.controls.calculateNutritionAutomatically.value ? 'auto' : 'manual');
+        this.stepFormManager = new RecipeStepFormManager(this.recipeForm.controls.steps, () => ({
+            selectIngredient: this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT'),
+            unknownProduct: this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
+        }));
+        this.nutritionFormManager = new RecipeNutritionFormManager(this.recipeForm, {
+            calculateAutoSummary: (steps): RecipeNutritionSummary => this.recipeManageFacade.calculateAutoSummary(steps),
+            fromRecipeTotal: (value, scaleMode, servings): number => this.recipeManageFacade.fromRecipeTotal(value, scaleMode, servings),
+            getSummaryFromRecipe: (recipeData, fallback): RecipeNutritionSummary =>
+                this.recipeManageFacade.getSummaryFromRecipe(recipeData, fallback),
+            roundNutritionValue: (value): number => this.recipeManageFacade.roundNutritionValue(value),
+            toRecipeTotal: (value, scaleMode, servings): number => this.recipeManageFacade.toRecipeTotal(value, scaleMode, servings),
+        });
+        this.totalCalories = this.nutritionFormManager.totalCalories;
+        this.totalFiber = this.nutritionFormManager.totalFiber;
+        this.totalAlcohol = this.nutritionFormManager.totalAlcohol;
+        this.nutrientChartData = this.nutritionFormManager.nutrientChartData;
+        this.nutritionMode = this.nutritionFormManager.nutritionMode;
 
         this.addStep();
         this.setupFormValueChangeTracking();
-        this.recalculateNutrientsFromForm();
-        this.updateManualNutritionValidators(this.recipeForm.controls.calculateNutritionAutomatically.value);
+        this.nutritionFormManager.initialize();
 
         this.recipeForm.controls.calculateNutritionAutomatically.valueChanges.pipe(takeUntilDestroyed()).subscribe(isAuto => {
-            this.nutritionMode.set(isAuto ? 'auto' : 'manual');
             if (!this.isFormReady) {
                 return;
             }
-            if (!isAuto) {
-                this.populateManualNutritionFromCurrentSummary();
-            }
-            this.updateManualNutritionValidators(isAuto);
-            this.updateSummaryFromForm();
+            this.nutritionFormManager.handleAutoCalculationChange(isAuto);
         });
         effect(() => {
             const recipe = this.recipe();
@@ -114,7 +108,7 @@ export class RecipeManageComponent {
                     }
                 } else {
                     this.lastRecipe = null;
-                    this.updateNutrientSummary(null);
+                    this.nutritionFormManager.updateNutrientSummary(null);
                 }
             });
         });
@@ -125,46 +119,29 @@ export class RecipeManageComponent {
     }
 
     public get expandedStepsSet(): Set<number> {
-        return this.expandedSteps;
+        return this.stepFormManager.expandedSteps;
     }
 
     // -- Step management (delegated from steps-list) --
 
     public addStep(): void {
-        this.steps.push(this.createStepGroup());
-        this.expandedSteps.add(this.steps.length - 1);
+        this.stepFormManager.addStep();
     }
 
     public removeStep(index: number): void {
-        this.steps.removeAt(index);
-        const nextExpanded = new Set<number>();
-        this.expandedSteps.forEach(stepIndex => {
-            if (stepIndex === index) {
-                return;
-            }
-            nextExpanded.add(stepIndex > index ? stepIndex - 1 : stepIndex);
-        });
-        this.expandedSteps.clear();
-        nextExpanded.forEach(stepIndex => this.expandedSteps.add(stepIndex));
+        this.stepFormManager.removeStep(index);
     }
 
     public addIngredientToStep(stepIndex: number): void {
-        const step = this.steps.at(stepIndex);
-        step.controls.ingredients.push(this.createIngredientGroup());
+        this.stepFormManager.addIngredientToStep(stepIndex);
     }
 
     public toggleStepExpanded(index: number): void {
-        if (this.expandedSteps.has(index)) {
-            this.expandedSteps.delete(index);
-            return;
-        }
-
-        this.expandedSteps.add(index);
+        this.stepFormManager.toggleStepExpanded(index);
     }
 
     public removeIngredientFromStep(event: StepIngredientEvent): void {
-        const step = this.steps.at(event.stepIndex);
-        step.controls.ingredients.removeAt(event.ingredientIndex);
+        this.stepFormManager.removeIngredientFromStep(event);
     }
 
     public onProductSelectClick(event: StepIngredientEvent): void {
@@ -173,11 +150,10 @@ export class RecipeManageComponent {
             if (selection === null) {
                 return;
             }
-            const ingredientsArray = this.steps.at(stepIndex).controls.ingredients;
-            const foodGroup = ingredientsArray.at(ingredientIndex);
+            const foodGroup = this.stepFormManager.getIngredientGroup({ stepIndex, ingredientIndex });
             this.recipeManageFacade.applyItemSelection(foodGroup, selection);
             if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                this.recalculateNutrientsFromForm();
+                this.nutritionFormManager.recalculateNutrientsFromForm();
             }
         });
     }
@@ -185,39 +161,11 @@ export class RecipeManageComponent {
     // -- Nutrition mode --
 
     public onNutritionModeChange(nextMode: string): void {
-        const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
-        if (this.nutritionMode() === resolvedMode) {
-            return;
-        }
-
-        this.nutritionMode.set(resolvedMode);
-        this.recipeForm.controls.calculateNutritionAutomatically.setValue(resolvedMode === 'auto');
+        this.nutritionFormManager.onNutritionModeChange(nextMode);
     }
 
     public onNutritionScaleModeChange(nextMode: string): void {
-        const resolvedMode: NutritionScaleMode = nextMode === 'portion' ? 'portion' : 'recipe';
-        if (this.nutritionScaleMode === resolvedMode) {
-            return;
-        }
-
-        const servings = this.getServingsValue();
-        const factor = resolvedMode === 'portion' ? 1 / servings : servings;
-        this.convertManualNutritionControls(factor);
-        this.nutritionScaleMode = resolvedMode;
-        this.updateSummaryFromForm();
-    }
-
-    private hasMacrosError(): boolean {
-        if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-            return false;
-        }
-
-        return checkMacrosError([
-            this.recipeForm.controls.manualProteins,
-            this.recipeForm.controls.manualFats,
-            this.recipeForm.controls.manualCarbs,
-            this.recipeForm.controls.manualAlcohol,
-        ]);
+        this.nutritionFormManager.onNutritionScaleModeChange(nextMode);
     }
 
     // -- Form submission --
@@ -225,7 +173,7 @@ export class RecipeManageComponent {
     public onSubmit(): void {
         this.markFormGroupTouched(this.recipeForm);
 
-        if (this.hasMacrosError()) {
+        if (this.nutritionFormManager.hasMacrosError()) {
             return;
         }
 
@@ -264,8 +212,11 @@ export class RecipeManageComponent {
     private prepareRecipeDto(): RecipeDto {
         const formValue = this.recipeForm.getRawValue();
 
-        return buildRecipeDto(formValue, this.nutritionScaleMode, this.getServingsValue(), (value, scaleMode, servings) =>
-            this.recipeManageFacade.toRecipeTotal(value, scaleMode, servings),
+        return buildRecipeDto(
+            formValue,
+            this.nutritionScaleMode,
+            this.nutritionFormManager.getServingsValue(),
+            (value, scaleMode, servings) => this.recipeManageFacade.toRecipeTotal(value, scaleMode, servings),
         );
     }
 
@@ -273,17 +224,15 @@ export class RecipeManageComponent {
         this.isFormReady = false;
         this.recipeForm.patchValue(this.buildRecipeFormPatchValue(recipeData));
 
-        this.resetSteps();
-        this.expandedSteps.clear();
+        this.stepFormManager.resetSteps();
+        this.stepFormManager.populateRecipeSteps(recipeData);
 
-        this.populateRecipeSteps(recipeData);
-
-        this.updateNutrientSummary(recipeData);
+        this.nutritionFormManager.updateNutrientSummary(recipeData);
         this.isFormReady = true;
         if (this.hasNoRecipeNutritionTotals(recipeData)) {
-            this.recalculateNutrientsFromForm();
+            this.nutritionFormManager.recalculateNutrientsFromForm();
         } else {
-            this.updateSummaryFromForm();
+            this.nutritionFormManager.updateSummaryFromForm();
         }
     }
 
@@ -291,46 +240,8 @@ export class RecipeManageComponent {
         return buildRecipeFormPatchValue(recipeData);
     }
 
-    private populateRecipeSteps(recipeData: Recipe): void {
-        if (recipeData.steps.length === 0) {
-            this.addStep();
-            return;
-        }
-
-        recipeData.steps.forEach((step, index) => {
-            this.steps.push(this.createStepGroup(this.mapRecipeStepToFormValue(step)));
-            this.expandedSteps.add(index);
-        });
-    }
-
-    private mapRecipeStepToFormValue(step: Recipe['steps'][number]): StepFormValues {
-        return mapRecipeStepToFormValue(step, {
-            selectIngredient: this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT'),
-            unknownProduct: this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
-        });
-    }
-
     private hasNoRecipeNutritionTotals(recipeData: Recipe): boolean {
         return hasNoRecipeNutritionTotals(recipeData);
-    }
-
-    private resetSteps(): void {
-        while (this.steps.length > 0) {
-            this.steps.removeAt(0);
-        }
-    }
-
-    private createStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
-        return createRecipeStepGroup(step);
-    }
-
-    private createIngredientGroup(
-        food: Product | null = null,
-        amount: number | null = null,
-        nestedRecipeId: string | null = null,
-        nestedRecipeName: string | null = null,
-    ): FormGroup<IngredientFormData> {
-        return createRecipeIngredientGroup(food, amount, nestedRecipeId, nestedRecipeName);
     }
 
     // -- Nutrition calculation --
@@ -340,7 +251,7 @@ export class RecipeManageComponent {
             if (!this.isFormReady) {
                 return;
             }
-            this.updateSummaryFromForm();
+            this.nutritionFormManager.updateSummaryFromForm();
         });
 
         this.recipeForm.controls.steps.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -348,134 +259,13 @@ export class RecipeManageComponent {
                 return;
             }
             if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                this.recalculateNutrientsFromForm();
+                this.nutritionFormManager.recalculateNutrientsFromForm();
             }
         });
     }
 
-    private updateNutrientSummary(recipeData: Recipe | null): void {
-        const summary = this.recipeManageFacade.getSummaryFromRecipe(recipeData, {
-            calories: this.totalCalories(),
-            proteins: this.nutrientChartData().proteins,
-            fats: this.nutrientChartData().fats,
-            carbs: this.nutrientChartData().carbs,
-            fiber: this.totalFiber(),
-            alcohol: this.totalAlcohol(),
-        });
-
-        this.setNutrientSummary(summary);
-    }
-
-    private updateSummaryFromForm(): void {
-        if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-            this.recalculateNutrientsFromForm();
-            return;
-        }
-
-        this.setNutrientSummary({
-            calories: this.toRecipeTotal(this.recipeForm.controls.manualCalories.value),
-            proteins: this.toRecipeTotal(this.recipeForm.controls.manualProteins.value),
-            fats: this.toRecipeTotal(this.recipeForm.controls.manualFats.value),
-            carbs: this.toRecipeTotal(this.recipeForm.controls.manualCarbs.value),
-            fiber: this.toRecipeTotal(this.recipeForm.controls.manualFiber.value),
-            alcohol: this.toRecipeTotal(this.recipeForm.controls.manualAlcohol.value),
-        });
-    }
-
-    private populateManualNutritionFromCurrentSummary(): void {
-        this.patchManualNutritionFromCurrentSummary();
-    }
-
-    private syncManualControlsWithSummary(): void {
-        this.patchManualNutritionFromCurrentSummary();
-    }
-
-    private patchManualNutritionFromCurrentSummary(): void {
-        this.recipeForm.patchValue(
-            {
-                manualCalories: this.fromRecipeTotal(this.totalCalories()),
-                manualProteins: this.fromRecipeTotal(this.nutrientChartData().proteins),
-                manualFats: this.fromRecipeTotal(this.nutrientChartData().fats),
-                manualCarbs: this.fromRecipeTotal(this.nutrientChartData().carbs),
-                manualFiber: this.fromRecipeTotal(this.totalFiber()),
-                manualAlcohol: this.fromRecipeTotal(this.totalAlcohol()),
-            },
-            { emitEvent: false },
-        );
-    }
-
-    private recalculateNutrientsFromForm(): void {
-        const summary = this.recipeManageFacade.calculateAutoSummary(this.recipeForm.controls.steps);
-        this.setNutrientSummary(summary);
-    }
-
-    private setNutrientSummary({ calories, proteins, fats, carbs, fiber, alcohol }: RecipeNutritionSummary): void {
-        this.totalCalories.set(this.recipeManageFacade.roundNutritionValue(calories));
-        this.totalFiber.set(this.recipeManageFacade.roundNutritionValue(fiber));
-        this.totalAlcohol.set(this.recipeManageFacade.roundNutritionValue(alcohol));
-        this.nutrientChartData.set({
-            proteins: this.recipeManageFacade.roundNutritionValue(proteins),
-            fats: this.recipeManageFacade.roundNutritionValue(fats),
-            carbs: this.recipeManageFacade.roundNutritionValue(carbs),
-        });
-
-        if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-            this.syncManualControlsWithSummary();
-        }
-    }
-
-    private updateManualNutritionValidators(isAuto: boolean): void {
-        const caloriesValidators = isAuto ? [Validators.min(0)] : [Validators.required, Validators.min(0)];
-        this.recipeForm.controls.manualCalories.setValidators(caloriesValidators);
-        this.recipeForm.controls.manualCalories.updateValueAndValidity({ emitEvent: false });
-
-        this.getOptionalManualNutritionControls().forEach(control => {
-            control.setValidators([Validators.min(0)]);
-            control.updateValueAndValidity({ emitEvent: false });
-        });
-    }
-
-    private getServingsValue(): number {
-        const servings = Number(this.recipeForm.controls.servings.value);
-        return Number.isFinite(servings) && servings > 0 ? servings : 1;
-    }
-
-    private fromRecipeTotal(value: number | null | undefined): number {
-        return this.recipeManageFacade.fromRecipeTotal(value, this.nutritionScaleMode, this.getServingsValue());
-    }
-
-    private toRecipeTotal(value: number | null | undefined): number {
-        return this.recipeManageFacade.toRecipeTotal(value, this.nutritionScaleMode, this.getServingsValue());
-    }
-
-    private convertManualNutritionControls(factor: number): void {
-        const fields: Array<
-            keyof Pick<
-                RecipeFormValues,
-                'manualCalories' | 'manualProteins' | 'manualFats' | 'manualCarbs' | 'manualFiber' | 'manualAlcohol'
-            >
-        > = ['manualCalories', 'manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'];
-        const patch: Partial<RecipeFormValues> = {};
-
-        fields.forEach(field => {
-            const raw = Number(this.recipeForm.controls[field].value);
-            if (!Number.isFinite(raw)) {
-                return;
-            }
-            patch[field] = this.recipeManageFacade.roundNutritionValue(raw * factor);
-        });
-
-        this.recipeForm.patchValue(patch, { emitEvent: false });
-    }
-
-    private getOptionalManualNutritionControls(): Array<FormControl<number | null>> {
-        return [
-            this.recipeForm.controls.manualProteins,
-            this.recipeForm.controls.manualFats,
-            this.recipeForm.controls.manualCarbs,
-            this.recipeForm.controls.manualFiber,
-            this.recipeForm.controls.manualAlcohol,
-        ];
+    public get nutritionScaleMode(): NutritionScaleMode {
+        return this.nutritionFormManager.nutritionScaleMode;
     }
 }
 

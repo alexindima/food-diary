@@ -17,7 +17,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { debounceTime, distinctUntilChanged, finalize, of, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
@@ -27,8 +27,6 @@ import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
-import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
-import { RecipeService } from '../../api/recipe.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.component';
 import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
@@ -69,8 +67,6 @@ export class RecipeListComponent {
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly recipeListFacade = inject(RecipeListFacade);
-    private readonly favoriteRecipeService = inject(FavoriteRecipeService);
-    private readonly recipeService = inject(RecipeService);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -116,7 +112,7 @@ export class RecipeListComponent {
     private readonly isMobileSearchOpen = signal(false);
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public readonly isDeleting = this.recipeListFacade.isDeleting;
-    public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
+    public readonly favoriteLoadingIds = this.recipeListFacade.favoriteLoadingIds;
 
     public constructor() {
         this.searchForm = new FormGroup<RecipeSearchFormGroup>({
@@ -261,45 +257,11 @@ export class RecipeListComponent {
     }
 
     public loadFavorites(): void {
-        this.recipeListFacade.isFavoritesLoadingMore.set(true);
-        this.favoriteRecipeService
-            .getAll()
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.recipeListFacade.isFavoritesLoadingMore.set(false);
-                }),
-            )
-            .subscribe(favorites => {
-                this.favorites.set(favorites);
-                this.favoriteTotalCount.set(favorites.length);
-            });
+        this.recipeListFacade.loadFavorites().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     public onRecipeFavoriteToggle(recipe: Recipe): void {
-        if (this.favoriteLoadingIds().has(recipe.id)) {
-            return;
-        }
-
-        this.setFavoriteLoading(recipe.id, true);
-
-        if (recipe.isFavorite === true) {
-            this.removeRecipeFavorite(recipe);
-            return;
-        }
-
-        this.favoriteRecipeService
-            .add(recipe.id, recipe.name)
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.setFavoriteLoading(recipe.id, false);
-                }),
-            )
-            .subscribe(favorite => {
-                this.syncRecipeFavoriteState(recipe.id, true, favorite.id);
-                this.loadFavorites();
-            });
+        this.recipeListFacade.toggleRecipeFavorite(recipe).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     public toggleFavorites(): void {
@@ -307,8 +269,8 @@ export class RecipeListComponent {
     }
 
     public openFavoriteRecipe(favorite: FavoriteRecipe): void {
-        this.recipeService
-            .getById(favorite.recipeId)
+        this.recipeListFacade
+            .getFavoriteRecipe(favorite)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(recipe => {
                 if (recipe !== null) {
@@ -318,8 +280,8 @@ export class RecipeListComponent {
     }
 
     public addFavoriteRecipeToMeal(favorite: FavoriteRecipe): void {
-        this.recipeService
-            .getById(favorite.recipeId)
+        this.recipeListFacade
+            .getFavoriteRecipe(favorite)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(recipe => {
                 if (recipe !== null) {
@@ -329,13 +291,7 @@ export class RecipeListComponent {
     }
 
     public removeFavorite(favorite: FavoriteRecipe): void {
-        this.favoriteRecipeService.remove(favorite.id).subscribe({
-            next: () => {
-                this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
-                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                this.syncRecipeFavoriteState(favorite.recipeId, false, null);
-            },
-        });
+        this.recipeListFacade.removeFavorite(favorite).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     private scrollToTop(): void {
@@ -351,53 +307,6 @@ export class RecipeListComponent {
                 this.searchForm.controls.onlyMine.value,
             )
             .subscribe();
-    }
-
-    private syncRecipeFavoriteState(recipeId: string, isFavorite: boolean, favoriteRecipeId: string | null): void {
-        this.recipeData.items.update(items =>
-            items.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
-        );
-        this.recentRecipes.update(recipes =>
-            recipes.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
-        );
-    }
-
-    private removeRecipeFavorite(recipe: Recipe): void {
-        const favoriteId = recipe.favoriteRecipeId;
-        const request$ =
-            favoriteId !== null && favoriteId !== undefined && favoriteId.length > 0
-                ? this.favoriteRecipeService.remove(favoriteId)
-                : this.favoriteRecipeService.getAll().pipe(
-                      switchMap(favorites => {
-                          const match = favorites.find(favorite => favorite.recipeId === recipe.id);
-                          return match === undefined ? of(null) : this.favoriteRecipeService.remove(match.id);
-                      }),
-                  );
-
-        request$
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.setFavoriteLoading(recipe.id, false);
-                }),
-            )
-            .subscribe(() => {
-                this.syncRecipeFavoriteState(recipe.id, false, null);
-                this.loadFavorites();
-            });
-    }
-
-    private setFavoriteLoading(recipeId: string, isLoading: boolean): void {
-        this.favoriteLoadingIds.update(current => {
-            const next = new Set(current);
-            if (isLoading) {
-                next.add(recipeId);
-            } else {
-                next.delete(recipeId);
-            }
-
-            return next;
-        });
     }
 }
 
