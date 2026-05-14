@@ -19,10 +19,10 @@
     </div>
 
     <div *fdUiDialogFooter class="dialog-footer">
-        <fd-ui-button variant="text" (click)="onCancelAsync()">
+        <fd-ui-button variant="ghost" (click)="onCancel()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button variant="flat" [disabled]="!selectedFood()" (click)="onConfirm()">
+        <fd-ui-button variant="primary" [disabled]="!selectedFood()" (click)="onConfirm()">
             {{ 'USDA_SEARCH.LINK' | translate }}
         </fd-ui-button>
     </div>

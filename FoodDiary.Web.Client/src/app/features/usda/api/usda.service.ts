@@ -1,19 +1,20 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../models/usda.data';
-
-const DEFAULT_USDA_SEARCH_LIMIT = 20;
+import { USDA_SEARCH_LIMIT } from './usda-api.tokens';
 
 @Injectable({ providedIn: 'root' })
 export class UsdaService extends ApiService {
+    private readonly defaultSearchLimit = inject(USDA_SEARCH_LIMIT);
+
     protected readonly baseUrl = environment.apiUrls.usda;
 
-    public searchFoods(search: string, limit: number = DEFAULT_USDA_SEARCH_LIMIT): Observable<UsdaFood[]> {
-        return this.get<UsdaFood[]>('foods', { search, limit }).pipe(
+    public searchFoods(search: string, limit?: number): Observable<UsdaFood[]> {
+        return this.get<UsdaFood[]>('foods', { search, limit: limit ?? this.defaultSearchLimit }).pipe(
             catchError((error: unknown) => fallbackApiError('Search USDA foods error', error, [])),
         );
     }
