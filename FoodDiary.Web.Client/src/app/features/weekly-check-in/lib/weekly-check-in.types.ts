@@ -21,3 +21,8 @@ export type WeeklyCheckInTrendCardViewModel = {
     color: string;
     icon: string;
 };
+
+export type WeeklyCheckInSuggestionViewModel = {
+    key: string;
+    labelKey: string;
+};

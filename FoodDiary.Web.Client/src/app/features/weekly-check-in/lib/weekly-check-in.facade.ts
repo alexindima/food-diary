@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
+import { buildWeeklyCheckInSuggestionRows, buildWeeklyCheckInTrendCards } from './weekly-check-in.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class WeeklyCheckInFacade {
@@ -15,29 +16,12 @@ export class WeeklyCheckInFacade {
     public readonly data = computed(() => (this.dataResource.hasValue() ? this.dataResource.value() : null));
 
     public readonly thisWeek = computed(() => this.data()?.thisWeek);
-    public readonly lastWeek = computed(() => this.data()?.lastWeek);
     public readonly trends = computed(() => this.data()?.trends);
     public readonly suggestions = computed(() => this.data()?.suggestions ?? []);
+    public readonly suggestionRows = computed(() => buildWeeklyCheckInSuggestionRows(this.suggestions()));
+    public readonly trendCards = computed(() => buildWeeklyCheckInTrendCards(this.trends()));
 
     public initialize(): void {
         this.dataResource.reload();
-    }
-
-    public getTrendIcon(value: number): string {
-        if (value > 0) {
-            return 'trending_up';
-        }
-        if (value < 0) {
-            return 'trending_down';
-        }
-        return 'trending_flat';
-    }
-
-    public getTrendColor(value: number, invertPositive = false): string {
-        if (value === 0) {
-            return 'var(--fd-color-slate-500)';
-        }
-        const isPositive = invertPositive ? value < 0 : value > 0;
-        return isPositive ? 'var(--fd-color-green-500)' : 'var(--fd-color-danger)';
     }
 }

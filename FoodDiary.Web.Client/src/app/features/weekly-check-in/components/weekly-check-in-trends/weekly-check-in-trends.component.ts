@@ -4,14 +4,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 
-import type { WeeklyCheckInTrendCardViewModel } from './weekly-check-in.types';
+import type { WeeklyCheckInTrendCardViewModel } from '../../lib/weekly-check-in.types';
 
 @Component({
     selector: 'fd-weekly-check-in-trends',
-    standalone: true,
     imports: [DecimalPipe, TranslatePipe, FdUiIconComponent, FdUiAccentSurfaceComponent],
     templateUrl: './weekly-check-in-trends.component.html',
-    styleUrl: './weekly-check-in-page.component.scss',
+    styleUrl: '../../pages/weekly-check-in-page/weekly-check-in-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeeklyCheckInTrendsComponent {
