@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
@@ -66,6 +66,38 @@ describe('RecipeSelectDialogComponent', () => {
 
         expect(component.searchForm.controls.onlyMine.value).toBe(true);
         expect(component.onlyMineFilter()).toBe(true);
+    });
+
+    it('clears search through form control', () => {
+        const { component } = setupComponent([createRecipe()]);
+        component.searchForm.controls.search.setValue('salad');
+
+        component.clearSearch();
+
+        expect(component.searchForm.controls.search.value).toBe('');
+        expect(component.searchValue()).toBe('');
+    });
+
+    it('emits create recipe request', () => {
+        const { component } = setupComponent([createRecipe()]);
+        const requests: void[] = [];
+        component.createRecipeRequested.subscribe(() => {
+            requests.push(undefined);
+        });
+
+        component.onCreateRecipeClick();
+
+        expect(requests.length).toBe(1);
+    });
+
+    it('clears data and resets loading on load failure', () => {
+        const { component, recipeService } = setupComponent([createRecipe()]);
+        recipeService.query.mockReturnValueOnce(throwError(() => new Error('load failed')));
+
+        component.loadRecipes(1).subscribe();
+
+        expect(component.recipeData.items()).toEqual([]);
+        expect(component.recipeData.isLoading()).toBe(false);
     });
 });
 

@@ -279,6 +279,58 @@ describe('RecipeService defaults', () => {
     });
 });
 
+describe('RecipeService overview', () => {
+    it('should query overview with trimmed search, includePublic flag, and custom limits', () => {
+        service
+            .queryOverview({
+                page: 1,
+                limit: DEFAULT_PAGE_LIMIT,
+                filters: { search: ' salad ' },
+                includePublic: false,
+                recentLimit: OVERRIDE_OVERVIEW_RECENT_LIMIT,
+                favoriteLimit: OVERRIDE_OVERVIEW_FAVORITE_LIMIT,
+            })
+            .subscribe(result => {
+                expect(result.allRecipes).toEqual(MOCK_PAGE);
+            });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview` && r.method === 'GET');
+        expect(req.request.params.get('page')).toBe('1');
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
+        expect(req.request.params.get('includePublic')).toBe('false');
+        expect(req.request.params.get('recentLimit')).toBe(String(OVERRIDE_OVERVIEW_RECENT_LIMIT));
+        expect(req.request.params.get('favoriteLimit')).toBe(String(OVERRIDE_OVERVIEW_FAVORITE_LIMIT));
+        expect(req.request.params.get('search')).toBe('salad');
+        req.flush({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allRecipes: MOCK_PAGE,
+        });
+    });
+
+    it('should omit blank overview search and return fallback overview on failure', () => {
+        service
+            .queryOverview({
+                page: 1,
+                limit: DEFAULT_PAGE_LIMIT,
+                filters: { search: '   ' },
+            })
+            .subscribe(result => {
+                expect(result).toEqual({
+                    recentItems: [],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
+                    allRecipes: { data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 },
+                });
+            });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview` && r.method === 'GET');
+        expect(req.request.params.has('search')).toBe(false);
+        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+});
+
 function createRecipeDto(name: string): RecipeDto {
     return {
         name,
