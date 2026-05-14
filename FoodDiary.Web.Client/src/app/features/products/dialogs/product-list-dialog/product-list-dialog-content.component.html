@@ -20,7 +20,7 @@
                         <div class="product-select__name fd-ui-action-text fd-truncate">{{ item.product.name }}</div>
                         <div class="product-select__meta fd-ui-caption fd-truncate">
                             @if (item.product.brand) {
-                                {{ item.product.brand }} ·
+                                {{ item.product.brand }} &middot;
                             }
                             {{ item.product.caloriesPerBase }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}/{{ item.product.baseAmount
                             }}{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}

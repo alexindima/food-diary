@@ -38,7 +38,7 @@ describe('JwtDecoderService decodePayload', () => {
     });
 
     it('should decode UTF-8 claim values', () => {
-        const payload = { fd_impersonation_reason: 'ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð¾ÑˆÐ¸Ð±ÐºÐ¸ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ' };
+        const payload = { fd_impersonation_reason: 'Проверка ошибки пользователя' };
         const token = encodePayload(payload);
         expect(service.decodePayload(token)).toEqual(payload);
     });

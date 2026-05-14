@@ -34,6 +34,7 @@ const DEFAULT_FATS_CURRENT = 45;
 const DEFAULT_FATS_TARGET = 70;
 const DEFAULT_FIBER_CURRENT = 18;
 const DEFAULT_FIBER_TARGET = 30;
+const CSS_VARIABLE_FUNCTION_PREFIX = 'var(';
 
 export type NutrientBar = {
     id: string;
@@ -60,7 +61,6 @@ export class DashboardSummaryCardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly languageVersion = signal(0);
 
-    private static readonly CSS_VAR_PATTERN = /^var\((--[^),\s]+)(?:,\s*([^)]+))?\)$/;
     private static readonly CSS_COLOR_VALUES: Partial<Record<string, string>> = {
         '--fd-color-sky-500': '#0ea5e9',
         '--fd-color-blue-500': '#3b82f6',
@@ -366,9 +366,9 @@ export class DashboardSummaryCardComponent {
         if (value.startsWith('#')) {
             channels = this.hexToChannels(value);
         } else {
-            const cssVariable = DashboardSummaryCardComponent.CSS_VAR_PATTERN.exec(value.trim());
+            const cssVariable = this.parseCssVariableSyntax(value.trim());
             if (cssVariable !== null) {
-                channels = this.parseCssVariable(cssVariable[1], cssVariable[2]);
+                channels = this.parseCssVariable(cssVariable.variableName, cssVariable.fallback);
             } else {
                 channels = this.parseRgbChannels(value);
             }
@@ -377,6 +377,37 @@ export class DashboardSummaryCardComponent {
         const resolved = channels ?? this.hexToChannels(COLOR_FALLBACK);
         this.colorCache.set(value, resolved);
         return resolved;
+    }
+
+    private parseCssVariableSyntax(value: string): { variableName: string; fallback?: string } | null {
+        if (!value.startsWith(CSS_VARIABLE_FUNCTION_PREFIX) || !value.endsWith(')')) {
+            return null;
+        }
+
+        const content = value.slice(CSS_VARIABLE_FUNCTION_PREFIX.length, -1).trim();
+        const commaIndex = content.indexOf(',');
+        const rawVariableName = commaIndex === -1 ? content : content.slice(0, commaIndex);
+        const variableName = rawVariableName.trim();
+        if (!this.isValidCssVariableName(variableName)) {
+            return null;
+        }
+
+        const fallback = commaIndex === -1 ? undefined : content.slice(commaIndex + 1).trim();
+        return fallback === undefined || fallback.length === 0 ? { variableName } : { variableName, fallback };
+    }
+
+    private isValidCssVariableName(value: string): boolean {
+        if (!value.startsWith('--') || value.length <= 2) {
+            return false;
+        }
+
+        for (const char of value) {
+            if (char.trim().length === 0 || char === ')') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private parseCssVariable(variableName: string, fallback?: string): [number, number, number] | null {

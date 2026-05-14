@@ -3,9 +3,10 @@ import type { HubConnection } from '@microsoft/signalr';
 
 import { environment } from '../../../../environments/environment';
 import type { AuthService } from '../../../services/auth.service';
+import { buildRealtimeHubUrl } from '../../../shared/lib/realtime-hub-url.utils';
 
 export function toEmailVerificationHubUrl(authBaseUrl: string): string {
-    return `${authBaseUrl.replace(/\/api(?:\/v\d+(?:\.\d+)?)?\/auth$/, '')}/hubs/email-verification`;
+    return buildRealtimeHubUrl(authBaseUrl, '/hubs/email-verification');
 }
 
 @Injectable({ providedIn: 'root' })

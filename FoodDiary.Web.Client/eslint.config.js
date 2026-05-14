@@ -9,12 +9,63 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import boundariesPlugin from 'eslint-plugin-boundaries';
 import prettierPlugin from 'eslint-plugin-prettier';
 import rxjsXPlugin from 'eslint-plugin-rxjs-x';
+import securityPlugin from 'eslint-plugin-security';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
+
+const securityRecommendedRules = Object.fromEntries(
+    Object.keys(securityPlugin.configs.recommended.rules).map(ruleName => [ruleName, 'error']),
+);
 
 const getTemplateAttributes = node => [...(node.attributes ?? []), ...(node.inputs ?? [])];
 
 const hasTemplateAttribute = (node, name) => getTemplateAttributes(node).some(attribute => attribute.name === name);
+
+const mojibakeMarkers = [
+    { codePoint: 0xfffd, label: 'replacement character' },
+    { codePoint: 0x00c2, label: 'U+00C2' },
+    { codePoint: 0x00c3, label: 'U+00C3' },
+    { codePoint: 0x00d0, label: 'U+00D0' },
+    { codePoint: 0x00d1, label: 'U+00D1' },
+].map(marker => ({
+    ...marker,
+    value: String.fromCharCode(marker.codePoint),
+}));
+
+const createNoMojibakeRule = context => ({
+    Program() {
+        const source = context.sourceCode.getText();
+
+        for (const marker of mojibakeMarkers) {
+            const index = source.indexOf(marker.value);
+            if (index === -1) {
+                continue;
+            }
+
+            context.report({
+                loc: context.sourceCode.getLocFromIndex(index),
+                messageId: 'mojibake',
+                data: {
+                    marker: marker.label,
+                },
+            });
+        }
+    },
+});
+
+const noMojibakeRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow common mojibake and replacement-character artifacts in source files.',
+        },
+        messages: {
+            mojibake: 'Possible mojibake or encoding artifact: `{{marker}}`.',
+        },
+        schema: [],
+    },
+    create: createNoMojibakeRule,
+};
 
 const noAnyCastSyntax = [
     {
@@ -99,6 +150,7 @@ const hasProjectedText = nodes =>
 
 const localTemplatePlugin = {
     rules: {
+        'no-mojibake': noMojibakeRule,
         'fd-ui-button-accessible-name': {
             meta: {
                 type: 'problem',
@@ -273,6 +325,7 @@ const isAsyncLikeFunction = (context, node) => {
 
 const localTsPlugin = {
     rules: {
+        'no-mojibake': noMojibakeRule,
         'async-function-suffix': {
             meta: {
                 type: 'problem',
@@ -423,6 +476,7 @@ export default [
             prettier: prettierPlugin,
             'simple-import-sort': simpleImportSortPlugin,
             boundaries: boundariesPlugin,
+            security: securityPlugin,
             sonarjs: sonarjsPlugin,
             'rxjs-x': rxjsXPlugin,
             local: localTsPlugin,
@@ -434,10 +488,14 @@ export default [
         },
         rules: {
             ...eslintConfigPrettier.rules,
+            ...securityRecommendedRules,
+            'security/detect-object-injection': 'off',
             complexity: ['error', 10],
             'no-alert': 'error',
             'no-console': 'error',
+            'no-constant-condition': ['error', { checkLoops: true }],
             'no-debugger': 'error',
+            'local/no-mojibake': 'error',
             'no-else-return': 'error',
             'no-implicit-coercion': 'error',
             'no-lonely-if': 'error',
@@ -1406,6 +1464,7 @@ export default [
                 },
             ],
             'local/fd-ui-button-accessible-name': 'error',
+            'local/no-mojibake': 'error',
         },
     },
 ];

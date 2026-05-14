@@ -16,7 +16,7 @@
             <span class="recipe-detail__hero-meta fd-ui-body-sm">
                 {{ recipe().servings }} {{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}
                 @if (totalTime() !== null) {
-                    Â· {{ totalTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
+                    &middot; {{ totalTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
                 }
             </span>
         </fd-ui-accent-surface>

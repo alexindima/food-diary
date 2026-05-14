@@ -2,12 +2,13 @@ import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
 
 import { environment } from '../../environments/environment';
+import { buildRealtimeHubUrl } from '../shared/lib/realtime-hub-url.utils';
 import { AuthService } from './auth.service';
 import { FrontendLoggerService } from './frontend-logger.service';
 import { NotificationService } from './notification.service';
 
 function toNotificationHubUrl(authBaseUrl: string): string {
-    return `${authBaseUrl.replace(/\/api(?:\/v\d+(?:\.\d+)?)?\/auth$/, '')}/hubs/notifications`;
+    return buildRealtimeHubUrl(authBaseUrl, '/hubs/notifications');
 }
 
 @Injectable({ providedIn: 'root' })
