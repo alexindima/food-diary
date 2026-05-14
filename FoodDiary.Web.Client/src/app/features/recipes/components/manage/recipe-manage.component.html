@@ -21,6 +21,7 @@
                 <fd-recipe-steps-list
                     [stepsFormArray]="steps"
                     [expandedSteps]="expandedStepsSet"
+                    (stepExpandedToggle)="toggleStepExpanded($event)"
                     (addStep)="addStep()"
                     (removeStep)="removeStep($event)"
                     (addIngredient)="addIngredientToStep($event)"
@@ -33,9 +34,7 @@
                 <div class="recipe-manage__sticky-stack fd-stack fd-gap-lg">
                     <fd-recipe-nutrition-editor
                         [formGroup]="recipeForm"
-                        [nutritionMode]="nutritionMode()"
                         [nutritionScaleMode]="nutritionScaleMode"
-                        [nutrientChartData]="nutrientChartData()"
                         (nutritionModeChange)="onNutritionModeChange($event)"
                         (nutritionScaleModeChange)="onNutritionScaleModeChange($event)"
                     />

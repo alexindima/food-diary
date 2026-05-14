@@ -77,7 +77,6 @@ export class RecipeDetailComponent {
     public readonly alcohol: number;
     public readonly qualityScore: number;
     public readonly qualityGrade: string;
-    public readonly qualityHintKey: string;
     public readonly macroBlocks: MacroBlock[];
     public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
     public readonly ingredientPreview: IngredientPreviewItem[];
@@ -98,7 +97,6 @@ export class RecipeDetailComponent {
     public activeTab: 'summary' | 'nutrients' = 'summary';
     public readonly totalTime: number | null;
     public readonly ingredientCount: number;
-    public readonly visibilityKey: string;
     public readonly isDeleteDisabled: boolean;
     public readonly isEditDisabled: boolean;
     public readonly canModify: boolean;
@@ -119,11 +117,9 @@ export class RecipeDetailComponent {
         this.alcohol = this.resolveAlcoholValue();
         this.qualityScore = normalizeQualityScore(data.qualityScore);
         this.qualityGrade = data.qualityGrade ?? 'yellow';
-        this.qualityHintKey = `QUALITY.${this.qualityGrade.toUpperCase()}`;
         this.totalTime = this.calculateTotalPreparationTime();
         this.ingredientCount = this.computeIngredientCount();
         this.ingredientPreview = this.buildIngredientPreview();
-        this.visibilityKey = `RECIPE_VISIBILITY.${this.recipe.visibility}`;
         this.isDeleteDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
         this.isEditDisabled = !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
         this.canModify = !this.isEditDisabled;

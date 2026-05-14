@@ -114,7 +114,6 @@
                 [favorites]="favorites()"
                 [favoriteTotalCount]="favoriteTotalCount()"
                 [isFavoritesOpen]="isFavoritesOpen()"
-                [hasMoreFavorites]="hasMoreFavorites()"
                 [isFavoritesLoadingMore]="isFavoritesLoadingMore()"
                 (favoritesToggle)="toggleFavorites()"
                 (favoritesLoadMore)="loadFavorites()"
@@ -124,12 +123,10 @@
             />
 
             <fd-recipe-list-results
-                [hasVisibleRecipes]="hasVisibleRecipes()"
-                [showRecentSection]="showRecentSection()"
                 [recentRecipeItems]="recentRecipeItems()"
                 [allRecipeItems]="allRecipeItems()"
                 [allRecipesSectionLabelKey]="allRecipesSectionLabelKey()"
-                [isEmptyState]="isEmptyState()"
+                [emptyState]="emptyState()"
                 [favoriteLoadingIds]="favoriteLoadingIds()"
                 (recipeOpen)="onRecipeClick($event)"
                 (recipeAddToMeal)="onAddToMeal($event)"

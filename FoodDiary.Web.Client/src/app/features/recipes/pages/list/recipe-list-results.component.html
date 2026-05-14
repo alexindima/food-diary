@@ -46,7 +46,7 @@
             </div>
         }
     </div>
-} @else if (isEmptyState()) {
+} @else if (emptyState() === 'empty') {
     <div class="recipe-list__empty-state fd-stack fd-gap-xs fd-align-center">
         <fd-ui-icon class="recipe-list__no-results-icon" name="menu_book" size="xl" />
         <div class="recipe-list__empty-title fd-ui-card-title">{{ 'RECIPE_LIST.EMPTY_TITLE' | translate }}</div>

@@ -22,10 +22,11 @@ export type StepIngredientEvent = {
 })
 export class RecipeStepsListComponent {
     public readonly stepsFormArray = input.required<FormArray<FormGroup<FormGroupControls<StepFormValues>>>>();
-    public readonly expandedSteps = input.required<Set<number>>();
+    public readonly expandedSteps = input.required<ReadonlySet<number>>();
 
     public readonly addStep = output();
     public readonly removeStep = output<number>();
+    public readonly stepExpandedToggle = output<number>();
     public readonly addIngredient = output<number>();
     public readonly removeIngredient = output<StepIngredientEvent>();
     public readonly selectProduct = output<StepIngredientEvent>();
@@ -34,13 +35,8 @@ export class RecipeStepsListComponent {
         return this.expandedSteps().has(index);
     }
 
-    public toggleStepExpanded(index: number): void {
-        const expanded = this.expandedSteps();
-        if (expanded.has(index)) {
-            expanded.delete(index);
-        } else {
-            expanded.add(index);
-        }
+    public onToggleStepExpanded(index: number): void {
+        this.stepExpandedToggle.emit(index);
     }
 
     public onStepDrop(event: CdkDragDrop<Array<FormGroup<StepFormData>>>): void {

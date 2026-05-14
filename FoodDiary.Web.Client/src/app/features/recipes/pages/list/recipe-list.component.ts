@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -30,16 +30,14 @@ import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail.types';
-import {
-    RecipeListFiltersDialogComponent,
-    type RecipeListFiltersDialogResult,
-} from '../../components/list/recipe-list-filters-dialog.component';
+import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog.component';
+import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog.types';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import type { FavoriteRecipe, Recipe, RecipeVisibility } from '../../models/recipe.data';
+import type { FavoriteRecipe, Recipe } from '../../models/recipe.data';
 import type { RecipeCardViewModel } from './recipe-list.types';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites.component';
-import { RecipeListResultsComponent } from './recipe-list-results.component';
+import { type RecipeListEmptyState, RecipeListResultsComponent } from './recipe-list-results.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -64,7 +62,6 @@ import { RecipeListResultsComponent } from './recipe-list-results.component';
     providers: [RecipeListFacade],
 })
 export class RecipeListComponent {
-    private readonly translateService = inject(TranslateService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
@@ -107,18 +104,16 @@ export class RecipeListComponent {
             !this.recipeListFacade.hasSearch(this.searchForm.controls.search.value) &&
             !this.hasActiveFilters(),
     );
-    public readonly isNoResultsState = computed(() => !this.hasVisibleRecipes() && !this.isEmptyState());
     public readonly allRecipesSectionLabelKey = computed(() => this.recipeListFacade.allRecipesSectionLabelKey());
+    public readonly emptyState = computed<RecipeListEmptyState>(() => (this.isEmptyState() ? 'empty' : 'no-results'));
     public readonly isMobileSearchVisible = computed(
         () => this.isMobileSearchOpen() || this.recipeListFacade.hasSearch(this.searchForm.controls.search.value),
     );
     public readonly pageIndex = computed(() => this.currentPageIndex());
-    public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     private readonly isMobileSearchOpen = signal(false);
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public readonly isDeleting = this.recipeListFacade.isDeleting;
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
-    protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
 
     public constructor() {
         this.searchForm = new FormGroup<RecipeSearchFormGroup>({
@@ -230,14 +225,6 @@ export class RecipeListComponent {
             .subscribe();
     }
 
-    public trackByRecipeId(_index: number, recipe: Recipe): string {
-        return recipe.id;
-    }
-
-    public getVisibilityTranslation(visibility: RecipeVisibility): string {
-        return this.translateService.instant(`RECIPE_VISIBILITY.${visibility}`);
-    }
-
     public toggleMobileSearch(): void {
         this.isMobileSearchOpen.update(value => !value);
     }
@@ -346,10 +333,6 @@ export class RecipeListComponent {
                 this.syncRecipeFavoriteState(favorite.recipeId, false, null);
             },
         });
-    }
-
-    public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {
-        return visibility?.toString().toUpperCase() === 'PRIVATE';
     }
 
     private scrollToTop(): void {

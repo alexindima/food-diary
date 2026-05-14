@@ -22,8 +22,7 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../../shared/lib/nutrition-form.utils';
-import type { NutrientData } from '../../../../../shared/models/charts.data';
-import type { NutritionMode, NutritionScaleMode, RecipeFormData } from '../recipe-manage.types';
+import type { NutritionScaleMode, RecipeFormData } from '../recipe-manage.types';
 
 @Component({
     selector: 'fd-recipe-nutrition-editor',
@@ -41,19 +40,27 @@ import type { NutritionMode, NutritionScaleMode, RecipeFormData } from '../recip
 })
 export class RecipeNutritionEditorComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly formRevision = signal(0);
 
     public readonly formGroup = input.required<FormGroup<RecipeFormData>>();
-    public readonly nutritionMode = input.required<NutritionMode>();
     public readonly nutritionScaleMode = input.required<NutritionScaleMode>();
-    public readonly nutrientChartData = input.required<NutrientData>();
     public readonly nutritionWarning = signal<NutritionMismatchWarning | null>(null);
     public readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
     public readonly nutritionScaleModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
+    public readonly nutritionMode = computed(() => {
+        this.formRevision();
+        return this.formGroup().controls.calculateNutritionAutomatically.value ? 'auto' : 'manual';
+    });
     public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
     public readonly macroBarState = computed<NutritionMacroState>(() => {
-        const nutrients = this.nutrientChartData();
-        return calculateMacroBarState(nutrients.proteins, nutrients.fats, nutrients.carbs);
+        this.formRevision();
+        const form = this.formGroup();
+        return calculateMacroBarState(
+            this.getNumberValue(form.controls.manualProteins),
+            this.getNumberValue(form.controls.manualFats),
+            this.getNumberValue(form.controls.manualCarbs),
+        );
     });
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'manualCalories',
@@ -87,6 +94,7 @@ export class RecipeNutritionEditorComponent {
         effect(onCleanup => {
             const form = this.formGroup();
             const refresh = (): void => {
+                this.formRevision.update(revision => revision + 1);
                 this.updateCalorieWarning();
             };
 

@@ -4,7 +4,8 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
-import { RecipeListFiltersDialogComponent, type RecipeListFiltersDialogData } from './recipe-list-filters-dialog.component';
+import { RecipeListFiltersDialogComponent } from './recipe-list-filters-dialog.component';
+import type { RecipeListFiltersDialogData } from './recipe-list-filters-dialog.types';
 
 describe('RecipeListFiltersDialogComponent', () => {
     let component: RecipeListFiltersDialogComponent;

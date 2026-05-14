@@ -153,6 +153,15 @@ export class RecipeManageComponent {
         step.controls.ingredients.push(this.createIngredientGroup());
     }
 
+    public toggleStepExpanded(index: number): void {
+        if (this.expandedSteps.has(index)) {
+            this.expandedSteps.delete(index);
+            return;
+        }
+
+        this.expandedSteps.add(index);
+    }
+
     public removeIngredientFromStep(event: StepIngredientEvent): void {
         const step = this.steps.at(event.stepIndex);
         step.controls.ingredients.removeAt(event.ingredientIndex);

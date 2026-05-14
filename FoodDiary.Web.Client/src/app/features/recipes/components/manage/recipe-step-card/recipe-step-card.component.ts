@@ -39,7 +39,6 @@ export class RecipeStepCardComponent {
     public readonly stepFormGroup = input.required<FormGroup<StepFormData>>();
     public readonly stepIndex = input.required<number>();
     public readonly isExpanded = input.required<boolean>();
-    public readonly isFirst = input.required<boolean>();
     public readonly dragDisabled = input.required<boolean>();
 
     public readonly removeStep = output();
@@ -78,6 +77,7 @@ export class RecipeStepCardComponent {
         return resolveRecipeControlError(this.stepFormGroup().controls.description, this.translateService);
     });
     public readonly expandedIcon = computed(() => (this.isExpanded() ? 'expand_less' : 'expand_more'));
+    public readonly isFirst = computed(() => this.stepIndex() === 0);
     public readonly ingredientRows = computed<RecipeIngredientRowView[]>(() => {
         this.formRevision();
         this.currentLanguage();

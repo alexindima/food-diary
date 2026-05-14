@@ -81,7 +81,7 @@ export class RecipeSelectDialogComponent {
 
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
-    protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
+    protected readonly pageSize = PAGE_SIZE;
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -170,10 +170,6 @@ export class RecipeSelectDialogComponent {
 
     private scrollToTop(): void {
         this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    public isPrivateVisibility(visibility: Recipe['visibility']): boolean {
-        return visibility.toString().toUpperCase() === 'PRIVATE';
     }
 }
 

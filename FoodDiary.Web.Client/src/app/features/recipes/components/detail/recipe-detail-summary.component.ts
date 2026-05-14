@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
@@ -20,8 +20,8 @@ export class RecipeDetailSummaryComponent {
     public readonly totalTime = input.required<number | null>();
     public readonly qualityGrade = input.required<string>();
     public readonly qualityScore = input.required<number>();
-    public readonly qualityHintKey = input.required<string>();
     public readonly macroSummaryBlocks = input.required<readonly MacroBlock[]>();
     public readonly ingredientCount = input.required<number>();
     public readonly ingredientPreview = input.required<readonly IngredientPreviewItem[]>();
+    public readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
 }

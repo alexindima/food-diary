@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -17,8 +17,8 @@ export class RecipeListFavoritesComponent {
     public readonly favorites = input.required<readonly FavoriteRecipe[]>();
     public readonly favoriteTotalCount = input.required<number>();
     public readonly isFavoritesOpen = input.required<boolean>();
-    public readonly hasMoreFavorites = input.required<boolean>();
     public readonly isFavoritesLoadingMore = input.required<boolean>();
+    public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
 
     public readonly favoritesToggle = output();
     public readonly favoritesLoadMore = output();

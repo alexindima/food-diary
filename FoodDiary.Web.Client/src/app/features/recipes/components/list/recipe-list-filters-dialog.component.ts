@@ -8,13 +8,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
-export type RecipeListFiltersDialogData = {
-    onlyMine: boolean;
-};
-
-export type RecipeListFiltersDialogResult = {
-    onlyMine: boolean;
-};
+import type { RecipeListFiltersDialogData, RecipeListFiltersDialogResult } from './recipe-list-filters-dialog.types';
 
 @Component({
     selector: 'fd-recipe-list-filters-dialog',

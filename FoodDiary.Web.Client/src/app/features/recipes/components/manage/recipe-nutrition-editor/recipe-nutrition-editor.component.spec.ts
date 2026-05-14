@@ -28,10 +28,10 @@ describe('RecipeNutritionEditorComponent', () => {
 
         form.controls.calculateNutritionAutomatically.setValue(false);
         form.controls.manualCalories.setValidators([Validators.required, Validators.min(0)]);
-        fixture.componentRef.setInput('nutritionMode', 'manual');
         form.controls.manualCalories.markAsTouched();
         form.controls.manualCalories.updateValueAndValidity();
         form.controls.manualProteins.markAsTouched();
+        fixture.detectChanges();
 
         expect(component.isNutritionReadonly()).toBe(false);
         expect(component.showManualNutritionHint()).toBe(true);
@@ -40,13 +40,9 @@ describe('RecipeNutritionEditorComponent', () => {
     });
 
     it('should calculate macro state from summary data supplied by the parent', async () => {
-        const { component, fixture } = await setupComponentAsync();
+        const { component, form, fixture } = await setupComponentAsync();
 
-        fixture.componentRef.setInput('nutrientChartData', {
-            proteins: 10,
-            fats: 5,
-            carbs: 35,
-        });
+        form.patchValue({ manualProteins: 10, manualFats: 5, manualCarbs: 35 });
         fixture.detectChanges();
 
         expect(component.macroBarState()).toEqual({
@@ -91,11 +87,5 @@ async function setupComponentAsync(): Promise<RecipeNutritionEditorSetup> {
 
 function setRequiredInputs(fixture: ComponentFixture<RecipeNutritionEditorComponent>, form: ReturnType<typeof createRecipeForm>): void {
     fixture.componentRef.setInput('formGroup', form);
-    fixture.componentRef.setInput('nutritionMode', 'auto');
     fixture.componentRef.setInput('nutritionScaleMode', 'recipe');
-    fixture.componentRef.setInput('nutrientChartData', {
-        proteins: 0,
-        fats: 0,
-        carbs: 0,
-    });
 }
