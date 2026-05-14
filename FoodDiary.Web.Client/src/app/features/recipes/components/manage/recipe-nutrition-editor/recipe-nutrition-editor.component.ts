@@ -22,7 +22,7 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../../shared/lib/nutrition-form.utils';
-import type { NutritionScaleMode, RecipeFormData } from '../recipe-manage.types';
+import type { NutritionScaleMode, RecipeFormData } from '../recipe-manage-lib/recipe-manage.types';
 
 @Component({
     selector: 'fd-recipe-nutrition-editor',

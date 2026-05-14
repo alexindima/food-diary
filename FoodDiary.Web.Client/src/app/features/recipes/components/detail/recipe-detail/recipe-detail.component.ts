@@ -15,24 +15,25 @@ import { of, switchMap } from 'rxjs';
 import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
-} from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+} from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import {
     type NutritionControlNames,
     NutritionEditorComponent,
     type NutritionMacroState,
-} from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import { CHART_COLORS } from '../../../../constants/chart-colors';
-import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
-import { normalizeQualityScore } from '../../../../shared/lib/quality-score.utils';
-import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
-import { RecipeService } from '../../api/recipe.service';
-import type { Recipe } from '../../models/recipe.data';
-import { type IngredientPreviewItem, type MacroBlock, RecipeDetailActionResult } from './recipe-detail.types';
-import { RecipeDetailSummaryComponent } from './recipe-detail-summary.component';
-
-const MACRO_SUMMARY_LIMIT = 3;
-const MIN_MACRO_BAR_PERCENT = 4;
-const INGREDIENT_PREVIEW_LIMIT = 6;
+} from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
+import { CHART_COLORS } from '../../../../../constants/chart-colors';
+import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
+import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
+import { FavoriteRecipeService } from '../../../api/favorite-recipe.service';
+import { RecipeService } from '../../../api/recipe.service';
+import type { Recipe } from '../../../models/recipe.data';
+import {
+    RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT,
+    RECIPE_DETAIL_MACRO_SUMMARY_LIMIT,
+    RECIPE_DETAIL_MIN_MACRO_BAR_PERCENT,
+} from '../recipe-detail-lib/recipe-detail.config';
+import { type IngredientPreviewItem, type MacroBlock, RecipeDetailActionResult } from '../recipe-detail-lib/recipe-detail.types';
+import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-detail-summary.component';
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -78,7 +79,7 @@ export class RecipeDetailComponent {
     public readonly qualityScore: number;
     public readonly qualityGrade: string;
     public readonly macroBlocks: MacroBlock[];
-    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MACRO_SUMMARY_LIMIT));
+    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, RECIPE_DETAIL_MACRO_SUMMARY_LIMIT));
     public readonly ingredientPreview: IngredientPreviewItem[];
     public readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',
@@ -228,13 +229,13 @@ export class RecipeDetailComponent {
 
     private resolveMacroPercent(value: number, values: number[]): number {
         const max = Math.max(...values, value, 1);
-        return Math.max(MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_MULTIPLIER));
+        return Math.max(RECIPE_DETAIL_MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_MULTIPLIER));
     }
 
     private buildIngredientPreview(): IngredientPreviewItem[] {
         return this.recipe.steps
             .flatMap(step => step.ingredients)
-            .slice(0, INGREDIENT_PREVIEW_LIMIT)
+            .slice(0, RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT)
             .map(ingredient => ({
                 name:
                     ingredient.productName ??

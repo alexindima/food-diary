@@ -3,15 +3,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 
-import type { Recipe } from '../../models/recipe.data';
-import type { IngredientPreviewItem, MacroBlock } from './recipe-detail.types';
-import { RecipeDetailIngredientPreviewComponent } from './recipe-detail-ingredient-preview.component';
+import type { Recipe } from '../../../models/recipe.data';
+import { RecipeDetailIngredientPreviewComponent } from '../recipe-detail-ingredient-preview/recipe-detail-ingredient-preview.component';
+import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
 
 @Component({
     selector: 'fd-recipe-detail-summary',
     imports: [TranslatePipe, FdUiHintDirective, FdUiAccentSurfaceComponent, RecipeDetailIngredientPreviewComponent],
     templateUrl: './recipe-detail-summary.component.html',
-    styleUrl: './recipe-detail.component.scss',
+    styleUrl: '../recipe-detail/recipe-detail.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeDetailSummaryComponent {

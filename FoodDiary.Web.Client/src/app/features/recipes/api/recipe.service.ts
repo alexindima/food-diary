@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -6,6 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { Recipe, RecipeDto, RecipeFilters, RecipeOverview } from '../models/recipe.data';
+import { RECIPE_API_LIMITS } from './recipe-api.tokens';
 
 export type RecipeOverviewQuery = {
     page: number;
@@ -16,12 +17,10 @@ export type RecipeOverviewQuery = {
     favoriteLimit?: number;
 };
 
-const DEFAULT_RECENT_RECIPE_LIMIT = 10;
-const DEFAULT_RECIPE_OVERVIEW_RECENT_LIMIT = 10;
-const DEFAULT_RECIPE_OVERVIEW_FAVORITE_LIMIT = 10;
-
 @Injectable({ providedIn: 'root' })
 export class RecipeService extends ApiService {
+    private readonly defaultLimits = inject(RECIPE_API_LIMITS);
+
     protected readonly baseUrl = environment.apiUrls.recipes;
 
     public query(page: number, limit: number, filters?: RecipeFilters, includePublic = true): Observable<PageOf<Recipe>> {
@@ -48,8 +47,8 @@ export class RecipeService extends ApiService {
         return this.get<Recipe>(id, params).pipe(catchError((error: unknown) => fallbackApiError('Get recipe error', error, null)));
     }
 
-    public getRecent(limit = DEFAULT_RECENT_RECIPE_LIMIT, includePublic = true): Observable<Recipe[]> {
-        const params: Record<string, string | number | boolean> = { limit, includePublic };
+    public getRecent(limit?: number, includePublic = true): Observable<Recipe[]> {
+        const params: Record<string, string | number | boolean> = { limit: limit ?? this.defaultLimits.recent, includePublic };
         return this.get<Recipe[]>('recent', params).pipe(
             catchError((error: unknown) => fallbackApiError('Get recent recipes error', error, [])),
         );
@@ -61,8 +60,8 @@ export class RecipeService extends ApiService {
             limit,
             filters,
             includePublic = true,
-            recentLimit = DEFAULT_RECIPE_OVERVIEW_RECENT_LIMIT,
-            favoriteLimit = DEFAULT_RECIPE_OVERVIEW_FAVORITE_LIMIT,
+            recentLimit = this.defaultLimits.overviewRecent,
+            favoriteLimit = this.defaultLimits.overviewFavorite,
         } = query;
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit, favoriteLimit };
         const search = filters?.search?.trim();

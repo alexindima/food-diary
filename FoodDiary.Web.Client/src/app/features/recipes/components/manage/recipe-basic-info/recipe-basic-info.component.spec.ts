@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { RecipeVisibility } from '../../../models/recipe.data';
-import { createRecipeForm } from '../recipe-manage-form.mapper';
+import { createRecipeForm } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeBasicInfoComponent } from './recipe-basic-info.component';
 
 describe('RecipeBasicInfoComponent', () => {

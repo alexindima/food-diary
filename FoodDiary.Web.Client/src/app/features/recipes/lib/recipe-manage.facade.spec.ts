@@ -9,7 +9,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { RecipeService } from '../api/recipe.service';
-import type { IngredientFormData, StepFormData } from '../components/manage/recipe-manage.types';
+import type { IngredientFormData, StepFormData } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import { RecipeVisibility } from '../models/recipe.data';
 import { RecipeManageFacade } from './recipe-manage.facade';
 

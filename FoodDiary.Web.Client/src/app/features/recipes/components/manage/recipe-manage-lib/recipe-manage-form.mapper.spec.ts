@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { MeasurementUnit, ProductVisibility } from '../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { MeasurementUnit, ProductVisibility } from '../../../../products/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import type { NutritionScaleMode, RecipeFormValues } from './recipe-manage.types';
 import {
     buildRecipeDto,

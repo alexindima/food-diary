@@ -29,15 +29,18 @@ import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
-import { RecipeDetailActionResult } from '../../components/detail/recipe-detail.types';
-import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog.component';
-import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog.types';
+import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
+import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.component';
+import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
+import { RecipeListFavoritesComponent } from '../../components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites.component';
+import {
+    type RecipeListEmptyState,
+    RecipeListResultsComponent,
+} from '../../components/list/recipe-list-sections/recipe-list-results/recipe-list-results.component';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import type { FavoriteRecipe, Recipe } from '../../models/recipe.data';
 import type { RecipeCardViewModel } from './recipe-list.types';
-import { RecipeListFavoritesComponent } from './recipe-list-favorites.component';
-import { type RecipeListEmptyState, RecipeListResultsComponent } from './recipe-list-results.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -174,7 +177,7 @@ export class RecipeListComponent {
     }
 
     private async openRecipeDetailAsync(recipe: Recipe): Promise<void> {
-        const { RecipeDetailComponent } = await import('../../components/detail/recipe-detail.component');
+        const { RecipeDetailComponent } = await import('../../components/detail/recipe-detail/recipe-detail.component');
         this.fdDialogService
             .open(RecipeDetailComponent, {
                 preset: 'detail',

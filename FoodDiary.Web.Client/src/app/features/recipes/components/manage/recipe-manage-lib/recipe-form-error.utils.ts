@@ -1,6 +1,6 @@
 import type { AbstractControl } from '@angular/forms';
 
-import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
+import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 
 type InstantTranslator = {
     instant: (key: string, interpolateParams?: object) => string;

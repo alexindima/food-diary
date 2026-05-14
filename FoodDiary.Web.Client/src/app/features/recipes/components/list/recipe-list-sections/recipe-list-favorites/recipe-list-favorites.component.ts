@@ -3,14 +3,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import { FavoritesSectionComponent } from '../../../../components/shared/favorites-section/favorites-section.component';
-import type { FavoriteRecipe } from '../../models/recipe.data';
+import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section.component';
+import type { FavoriteRecipe } from '../../../../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-list-favorites',
     imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FavoritesSectionComponent],
     templateUrl: './recipe-list-favorites.component.html',
-    styleUrl: './recipe-list.component.scss',
+    styleUrl: '../../../../pages/list/recipe-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeListFavoritesComponent {

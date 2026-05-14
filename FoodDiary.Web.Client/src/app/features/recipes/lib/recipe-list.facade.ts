@@ -7,12 +7,13 @@ import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import { QuickMealService } from '../../meals/lib/quick-meal.service';
 import { RecipeService } from '../api/recipe.service';
-import type { RecipeDetailActionResult } from '../components/detail/recipe-detail.types';
+import type { RecipeDetailActionResult } from '../components/detail/recipe-detail-lib/recipe-detail.types';
+import {
+    RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT,
+    RECIPE_LIST_OVERVIEW_RECENT_LIMIT,
+    RECIPE_LIST_PAGE_SIZE,
+} from '../components/list/recipe-list.config';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
-
-const RECIPE_PAGE_SIZE = 10;
-const OVERVIEW_RECENT_LIMIT = 10;
-const OVERVIEW_FAVORITE_LIMIT = 10;
 
 @Injectable({ providedIn: 'root' })
 export class RecipeListFacade {
@@ -22,7 +23,7 @@ export class RecipeListFacade {
     private readonly toastService = inject(FdUiToastService);
     private readonly quickMealService = inject(QuickMealService);
 
-    public readonly pageSize = RECIPE_PAGE_SIZE;
+    public readonly pageSize = RECIPE_LIST_PAGE_SIZE;
     public readonly recipeData = new PagedData<Recipe>();
     public readonly currentPageIndex = signal(0);
     public readonly recentRecipes = signal<Recipe[]>([]);
@@ -91,8 +92,8 @@ export class RecipeListFacade {
                 limit,
                 filters,
                 includePublic,
-                recentLimit: OVERVIEW_RECENT_LIMIT,
-                favoriteLimit: OVERVIEW_FAVORITE_LIMIT,
+                recentLimit: RECIPE_LIST_OVERVIEW_RECENT_LIMIT,
+                favoriteLimit: RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT,
             })
             .pipe(
                 tap(data => {

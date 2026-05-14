@@ -4,14 +4,14 @@ import { FormArray, type FormControl, FormGroup, ReactiveFormsModule, Validators
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import type { NutrientData } from '../../../../shared/models/charts.data';
-import type { Product } from '../../../products/models/product.data';
-import { RecipeManageFacade, type RecipeNutritionSummary } from '../../lib/recipe-manage.facade';
-import type { Recipe, RecipeDto } from '../../models/recipe.data';
-import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
+import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header.component';
+import { FdPageContainerDirective } from '../../../../../directives/layout/page-container.directive';
+import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
+import type { NutrientData } from '../../../../../shared/models/charts.data';
+import type { Product } from '../../../../products/models/product.data';
+import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
+import type { Recipe, RecipeDto } from '../../../models/recipe.data';
+import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info.component';
 import type {
     IngredientFormData,
     NutritionMode,
@@ -20,7 +20,7 @@ import type {
     RecipeFormValues,
     StepFormData,
     StepFormValues,
-} from './recipe-manage.types';
+} from '../recipe-manage-lib/recipe-manage.types';
 import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
@@ -29,9 +29,9 @@ import {
     createRecipeStepGroup,
     hasNoRecipeNutritionTotals,
     mapRecipeStepToFormValue,
-} from './recipe-manage-form.mapper';
-import { RecipeNutritionEditorComponent } from './recipe-nutrition-editor/recipe-nutrition-editor.component';
-import { RecipeStepsListComponent, type StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
+} from '../recipe-manage-lib/recipe-manage-form.mapper';
+import { RecipeNutritionEditorComponent } from '../recipe-nutrition-editor/recipe-nutrition-editor.component';
+import { RecipeStepsListComponent, type StepIngredientEvent } from '../recipe-steps-list/recipe-steps-list.component';
 
 @Component({
     selector: 'fd-recipe-manage',

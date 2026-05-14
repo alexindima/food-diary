@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { createRecipeForm } from '../recipe-manage-form.mapper';
+import { createRecipeForm } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeStepsListComponent } from './recipe-steps-list.component';
 
 describe('RecipeStepsListComponent', () => {

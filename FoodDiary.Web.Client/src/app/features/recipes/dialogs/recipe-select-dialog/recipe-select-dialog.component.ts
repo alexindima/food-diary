@@ -20,18 +20,19 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
 
-import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
-import type { FormGroupControls } from '../../../shared/lib/common.data';
-import { PagedData } from '../../../shared/lib/paged-data.data';
-import { RecipeService } from '../api/recipe.service';
-import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
-import type { Recipe, RecipeFilters } from '../models/recipe.data';
+import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
+import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { RecipeService } from '../../api/recipe.service';
+import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
+import type { Recipe, RecipeFilters } from '../../models/recipe.data';
+import {
+    RECIPE_SELECT_DIALOG_FIRST_PAGE,
+    RECIPE_SELECT_DIALOG_NEXT_PAGE_OFFSET,
+    RECIPE_SELECT_DIALOG_PAGE_SIZE,
+} from './recipe-select-dialog.config';
 import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content.component';
-
-const PAGE_SIZE = 10;
-const FIRST_PAGE = 1;
-const NEXT_PAGE_OFFSET = 1;
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -81,12 +82,12 @@ export class RecipeSelectDialogComponent {
 
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
-    protected readonly pageSize = PAGE_SIZE;
+    protected readonly pageSize = RECIPE_SELECT_DIALOG_PAGE_SIZE;
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
-        this.loadRecipes(FIRST_PAGE).subscribe();
+        this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE).subscribe();
 
         this.searchForm.controls.search.valueChanges
             .pipe(
@@ -95,7 +96,7 @@ export class RecipeSelectDialogComponent {
                     this.searchValue.set(value);
                 }),
                 debounceTime(this.searchDebounceMs),
-                switchMap(() => this.loadRecipes(FIRST_PAGE)),
+                switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
             )
             .subscribe();
 
@@ -106,7 +107,7 @@ export class RecipeSelectDialogComponent {
                 tap(value => {
                     this.onlyMineFilter.set(value);
                 }),
-                switchMap(() => this.loadRecipes(FIRST_PAGE)),
+                switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
             )
             .subscribe();
     }
@@ -118,7 +119,7 @@ export class RecipeSelectDialogComponent {
             search: this.searchForm.controls.search.value ?? undefined,
         };
 
-        return this.recipeService.query(page, PAGE_SIZE, filters, includePublic).pipe(
+        return this.recipeService.query(page, RECIPE_SELECT_DIALOG_PAGE_SIZE, filters, includePublic).pipe(
             tap(pageData => {
                 this.recipeData.setData(pageData);
                 this.currentPageIndex = pageData.page - 1;
@@ -137,7 +138,7 @@ export class RecipeSelectDialogComponent {
     public onPageChange(pageIndex: number): void {
         this.scrollToTop();
         this.currentPageIndex = pageIndex;
-        this.loadRecipes(pageIndex + NEXT_PAGE_OFFSET).subscribe();
+        this.loadRecipes(pageIndex + RECIPE_SELECT_DIALOG_NEXT_PAGE_OFFSET).subscribe();
     }
 
     public onRecipeClick(recipe: Recipe): void {

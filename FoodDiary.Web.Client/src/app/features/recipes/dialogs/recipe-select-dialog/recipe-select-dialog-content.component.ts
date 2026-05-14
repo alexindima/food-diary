@@ -5,7 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
-import type { Recipe } from '../models/recipe.data';
+import type { Recipe } from '../../models/recipe.data';
 import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
 
 @Component({

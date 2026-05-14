@@ -16,7 +16,7 @@ import { RecipeCardComponent } from '../../../../components/shared/recipe-card/r
 import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail.component';
+import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail/recipe-detail.component';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import type { Recipe } from '../../../recipes/models/recipe.data';
 import { ExploreService } from '../../api/explore.service';

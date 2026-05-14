@@ -9,11 +9,11 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import { RecipeVisibility } from '../../../models/recipe.data';
-import { resolveRecipeControlError } from '../recipe-form-error.utils';
-import type { RecipeFormData } from '../recipe-manage.types';
+import { resolveRecipeControlError } from '../recipe-manage-lib/recipe-form-error.utils';
+import type { RecipeFormData } from '../recipe-manage-lib/recipe-manage.types';
+import { RECIPE_BASIC_INFO_ERROR_FIELDS } from './recipe-basic-info.config';
 
-const ERROR_FIELDS = ['name', 'cookTime', 'prepTime', 'servings', 'description', 'visibility', 'comment'] as const;
-type ErrorField = (typeof ERROR_FIELDS)[number];
+type ErrorField = (typeof RECIPE_BASIC_INFO_ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
@@ -73,7 +73,7 @@ export class RecipeBasicInfoComponent {
     }
 
     private buildFieldErrors(form: FormGroup<RecipeFormData>): FieldErrors {
-        return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
+        return RECIPE_BASIC_INFO_ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
             errors[field] = resolveRecipeControlError(form.controls[field], this.translateService);
             return errors;
         }, this.createEmptyFieldErrors());

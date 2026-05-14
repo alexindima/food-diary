@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { createRecipeForm } from '../recipe-manage-form.mapper';
+import { createRecipeForm } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionEditorComponent } from './recipe-nutrition-editor.component';
 
 type RecipeNutritionEditorSetup = {

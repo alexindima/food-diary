@@ -1,4 +1,4 @@
-import type { Recipe } from '../models/recipe.data';
+import type { Recipe } from '../../models/recipe.data';
 
 export type RecipeSelectItemViewModel = {
     recipe: Recipe;

@@ -3,10 +3,10 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
-import type { PageOf } from '../../../shared/models/page-of.data';
-import { RecipeService } from '../api/recipe.service';
-import { type Recipe, RecipeVisibility } from '../models/recipe.data';
+import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
+import type { PageOf } from '../../../../shared/models/page-of.data';
+import { RecipeService } from '../../api/recipe.service';
+import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeSelectDialogComponent } from './recipe-select-dialog.component';
 import type { RecipeSelectItemViewModel } from './recipe-select-dialog.types';
 

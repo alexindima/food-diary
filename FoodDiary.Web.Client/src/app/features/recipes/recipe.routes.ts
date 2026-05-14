@@ -14,11 +14,11 @@ const routes: Routes = [
             },
             {
                 path: 'add',
-                loadComponent: async () => import('./pages/manage/recipe-add.component').then(m => m.RecipeAddComponent),
+                loadComponent: async () => import('./pages/manage/recipe-add/recipe-add.component').then(m => m.RecipeAddComponent),
             },
             {
                 path: ':id/edit',
-                loadComponent: async () => import('./pages/manage/recipe-edit.component').then(m => m.RecipeEditComponent),
+                loadComponent: async () => import('./pages/manage/recipe-edit/recipe-edit.component').then(m => m.RecipeEditComponent),
                 resolve: { recipe: recipeResolver },
             },
         ],

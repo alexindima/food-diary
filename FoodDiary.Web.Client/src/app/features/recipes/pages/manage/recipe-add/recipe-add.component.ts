@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { RecipeManageComponent } from '../../components/manage/recipe-manage.component';
+import { RecipeManageComponent } from '../../../components/manage/recipe-manage/recipe-manage.component';
 
 @Component({
     selector: 'app-recipe-add',

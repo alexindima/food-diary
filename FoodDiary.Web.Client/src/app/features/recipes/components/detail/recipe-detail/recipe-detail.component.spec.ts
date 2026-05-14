@@ -8,8 +8,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { RecipeService } from '../../api/recipe.service';
-import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { RecipeService } from '../../../api/recipe.service';
+import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import { RecipeDetailComponent } from './recipe-detail.component';
 
 const PREP_TIME_MINUTES = 10;

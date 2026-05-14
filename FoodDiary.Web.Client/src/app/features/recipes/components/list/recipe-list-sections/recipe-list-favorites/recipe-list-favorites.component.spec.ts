@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import type { FavoriteRecipe } from '../../models/recipe.data';
+import type { FavoriteRecipe } from '../../../../models/recipe.data';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites.component';
 
 describe('RecipeListFavoritesComponent', () => {

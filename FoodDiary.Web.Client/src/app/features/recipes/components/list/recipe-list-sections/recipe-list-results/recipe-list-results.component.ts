@@ -3,15 +3,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
-import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
-import type { Recipe } from '../../models/recipe.data';
-import type { RecipeCardViewModel } from './recipe-list.types';
+import { RecipeCardComponent } from '../../../../../../components/shared/recipe-card/recipe-card.component';
+import type { Recipe } from '../../../../models/recipe.data';
+import type { RecipeCardViewModel } from '../../../../pages/list/recipe-list.types';
 
 @Component({
     selector: 'fd-recipe-list-results',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent, RecipeCardComponent],
     templateUrl: './recipe-list-results.component.html',
-    styleUrl: './recipe-list.component.scss',
+    styleUrl: '../../../../pages/list/recipe-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeListResultsComponent {

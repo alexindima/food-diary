@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import { RecipeDetailSummaryComponent } from './recipe-detail-summary.component';
 
 const RECIPE_CALORIES = 240;

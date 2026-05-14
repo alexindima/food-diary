@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../models/recipe.data';
 import { RecipeService } from './recipe.service';
+import { RECIPE_API_LIMITS } from './recipe-api.tokens';
 
 const BASE_URL = 'http://localhost:5300/api/v1/recipes';
 const RECIPE_SERVINGS = 2;
@@ -15,7 +16,13 @@ const RECIPE_TOTAL_FATS = 12;
 const RECIPE_TOTAL_CARBS = 15;
 const RECIPE_TOTAL_FIBER = 4;
 const DEFAULT_PAGE_LIMIT = 10;
+const DEFAULT_RECENT_LIMIT = 10;
+const DEFAULT_OVERVIEW_RECENT_LIMIT = 10;
+const DEFAULT_OVERVIEW_FAVORITE_LIMIT = 10;
 const RECENT_RECIPES_LIMIT = 5;
+const OVERRIDE_RECENT_LIMIT = 7;
+const OVERRIDE_OVERVIEW_RECENT_LIMIT = 8;
+const OVERRIDE_OVERVIEW_FAVORITE_LIMIT = 9;
 const NEW_RECIPE_PREP_MINUTES = 10;
 const NEW_RECIPE_COOK_MINUTES = 20;
 const NEW_RECIPE_SERVINGS = 4;
@@ -80,7 +87,7 @@ describe('RecipeService query', () => {
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
-        expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
+        expect(req.request.params.get('limit')).toBe(String(DEFAULT_RECENT_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
         req.flush(MOCK_PAGE);
     });
@@ -214,6 +221,61 @@ describe('RecipeService recent', () => {
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+});
+
+describe('RecipeService defaults', () => {
+    it('should use injected overview limits by default', () => {
+        service.queryOverview({ page: 1, limit: DEFAULT_PAGE_LIMIT }).subscribe(result => {
+            expect(result.recentItems).toEqual([]);
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview` && r.method === 'GET');
+        expect(req.request.params.get('recentLimit')).toBe(String(DEFAULT_OVERVIEW_RECENT_LIMIT));
+        expect(req.request.params.get('favoriteLimit')).toBe(String(DEFAULT_OVERVIEW_FAVORITE_LIMIT));
+        req.flush({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allRecipes: MOCK_PAGE,
+        });
+    });
+
+    it('should allow recipe API limits to be overridden through DI', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            providers: [
+                RecipeService,
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                {
+                    provide: RECIPE_API_LIMITS,
+                    useValue: {
+                        recent: OVERRIDE_RECENT_LIMIT,
+                        overviewRecent: OVERRIDE_OVERVIEW_RECENT_LIMIT,
+                        overviewFavorite: OVERRIDE_OVERVIEW_FAVORITE_LIMIT,
+                    },
+                },
+            ],
+        });
+        service = TestBed.inject(RecipeService);
+        httpMock = TestBed.inject(HttpTestingController);
+
+        service.getRecent().subscribe();
+        const recentReq = httpMock.expectOne(r => r.url === `${BASE_URL}/recent` && r.method === 'GET');
+        expect(recentReq.request.params.get('limit')).toBe(String(OVERRIDE_RECENT_LIMIT));
+        recentReq.flush([]);
+
+        service.queryOverview({ page: 1, limit: DEFAULT_PAGE_LIMIT }).subscribe();
+        const overviewReq = httpMock.expectOne(r => r.url === `${BASE_URL}/overview` && r.method === 'GET');
+        expect(overviewReq.request.params.get('recentLimit')).toBe(String(OVERRIDE_OVERVIEW_RECENT_LIMIT));
+        expect(overviewReq.request.params.get('favoriteLimit')).toBe(String(OVERRIDE_OVERVIEW_FAVORITE_LIMIT));
+        overviewReq.flush({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allRecipes: MOCK_PAGE,
+        });
     });
 });
 

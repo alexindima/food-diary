@@ -11,8 +11,8 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import type { FormGroupControls } from '../../../../../shared/lib/common.data';
-import { resolveRecipeControlError } from '../recipe-form-error.utils';
-import type { IngredientFormValues, StepFormData } from '../recipe-manage.types';
+import { resolveRecipeControlError } from '../recipe-manage-lib/recipe-form-error.utils';
+import type { IngredientFormValues, StepFormData } from '../recipe-manage-lib/recipe-manage.types';
 
 @Component({
     selector: 'fd-recipe-step-card',

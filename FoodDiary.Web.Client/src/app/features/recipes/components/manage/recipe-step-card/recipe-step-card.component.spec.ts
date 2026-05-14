@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../products/models/product.data';
-import { createRecipeStepGroup } from '../recipe-manage-form.mapper';
+import { createRecipeStepGroup } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeStepCardComponent } from './recipe-step-card.component';
 
 describe('RecipeStepCardComponent', () => {
