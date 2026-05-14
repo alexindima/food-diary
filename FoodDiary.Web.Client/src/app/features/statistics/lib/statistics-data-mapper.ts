@@ -7,8 +7,6 @@ import { MS_PER_DAY } from '../../../shared/lib/time.constants';
 import type { MappedStatistics } from '../models/statistics.data';
 import { applyAlpha } from './statistics-chart-config';
 
-// ── Types ──────────────────────────────────────────────────────────────
-
 export type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 export type NutritionChartTab = 'calories' | 'macros' | 'distribution';
 export type BodyChartTab = 'weight' | 'bmi' | 'waist' | 'whtr';
@@ -18,8 +16,6 @@ export type DateRange = {
     start: Date;
     end: Date;
 };
-
-// ── Validation guards ──────────────────────────────────────────────────
 
 export function isStatisticsRange(value: unknown): value is StatisticsRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
@@ -32,8 +28,6 @@ export function isNutritionTab(value: unknown): value is NutritionChartTab {
 export function isBodyTab(value: unknown): value is BodyChartTab {
     return value === 'weight' || value === 'bmi' || value === 'waist' || value === 'whtr';
 }
-
-// ── Date range helpers ─────────────────────────────────────────────────
 
 const HALF_YEAR_DAYS = 180;
 const LONG_RANGE_QUANTIZATION_DAYS = 30;
@@ -119,8 +113,6 @@ export function getCurrentDateRange(
 
     return { start, end };
 }
-
-// ── Chart data builders ────────────────────────────────────────────────
 
 export function buildCaloriesLineChartData(
     stats: MappedStatistics | null,

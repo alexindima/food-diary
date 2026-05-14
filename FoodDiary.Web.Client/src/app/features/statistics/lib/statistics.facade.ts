@@ -8,12 +8,13 @@ import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
 import { UserService } from '../../../shared/api/user.service';
 import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
+import { type ExportFormat, ExportService } from '../../meals/api/export.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
-import { type MappedStatistics, mapStatistics } from '../models/statistics.data';
+import type { MappedStatistics } from '../models/statistics.data';
 import {
     type BodyChartTab,
     buildBodyChartData,
@@ -33,6 +34,8 @@ import {
     type NutritionChartTab,
     type StatisticsRange,
 } from './statistics-data-mapper';
+import { buildStatisticsExportRequest } from './statistics-export.mapper';
+import { mapStatistics } from './statistics-statistics.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class StatisticsFacade {
@@ -40,6 +43,7 @@ export class StatisticsFacade {
     private readonly weightEntriesService = inject(WeightEntriesService);
     private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly userService = inject(UserService);
+    private readonly exportService = inject(ExportService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -56,6 +60,7 @@ export class StatisticsFacade {
     public readonly isBodyLoading = signal(false);
     public readonly hasLoadError = signal(false);
     public readonly hasBodyLoadError = signal(false);
+    public readonly exportingFormat = signal<ExportFormat | null>(null);
     public readonly chartStatisticsData = signal<MappedStatistics | null>(null);
     public readonly weightSummaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
@@ -151,7 +156,7 @@ export class StatisticsFacade {
                 return;
             }
 
-            if (customRange?.start !== undefined && customRange.end !== null) {
+            if (customRange?.start !== null && customRange?.end !== null) {
                 this.loadAllData();
             }
         });
@@ -195,6 +200,31 @@ export class StatisticsFacade {
     public reload(): void {
         this.lastLoadedRangeKey = null;
         this.loadAllData();
+    }
+
+    public exportDiary(format: ExportFormat): void {
+        if (this.exportingFormat() !== null) {
+            return;
+        }
+
+        this.exportingFormat.set(format);
+        this.exportService
+            .exportDiary(
+                buildStatisticsExportRequest({
+                    range: this.currentRange(),
+                    format,
+                    currentLang: this.translateService.getCurrentLang(),
+                    fallbackLang: this.translateService.getFallbackLang(),
+                    timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
+                }),
+            )
+            .pipe(
+                finalize(() => {
+                    this.exportingFormat.set(null);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     private loadAllData(): void {
@@ -248,7 +278,7 @@ export class StatisticsFacade {
         this.hasBodyLoadError.set(false);
         const normalizedStart = normalizeStartOfDay(range.start).toISOString();
         const normalizedEnd = normalizeEndOfDay(range.end).toISOString();
-        const quantizationDays = getQuantizationDays(range.start, range.end);
+        const quantizationDays = getQuantizationDays(normalizeStartOfDay(range.start), normalizeEndOfDay(range.end));
 
         forkJoin({
             weight: this.weightEntriesService.getSummary({

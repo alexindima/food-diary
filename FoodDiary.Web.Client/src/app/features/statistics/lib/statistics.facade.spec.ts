@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
+import { ExportService } from '../../meals/api/export.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import { StatisticsService } from '../api/statistics.service';
@@ -18,6 +19,7 @@ let statisticsService: { getAggregatedStatistics: ReturnType<typeof vi.fn> };
 let weightEntriesService: { getSummary: ReturnType<typeof vi.fn> };
 let waistEntriesService: { getSummary: ReturnType<typeof vi.fn> };
 let userService: { getInfo: ReturnType<typeof vi.fn> };
+let exportService: { exportDiary: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     statisticsService = {
@@ -48,6 +50,9 @@ beforeEach(() => {
     userService = {
         getInfo: vi.fn().mockReturnValue(of({ height: USER_HEIGHT_CM })),
     };
+    exportService = {
+        exportDiary: vi.fn().mockReturnValue(of(undefined)),
+    };
 
     TestBed.configureTestingModule({
         providers: [
@@ -56,6 +61,7 @@ beforeEach(() => {
             { provide: WeightEntriesService, useValue: weightEntriesService },
             { provide: WaistEntriesService, useValue: waistEntriesService },
             { provide: UserService, useValue: userService },
+            { provide: ExportService, useValue: exportService },
             {
                 provide: TranslateService,
                 useValue: {
@@ -99,6 +105,36 @@ describe('StatisticsFacade loading', () => {
         expect(weightEntriesService.getSummary).toHaveBeenCalledTimes(1);
         expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
         expect(facade.selectedRange()).toBe('month');
+    });
+});
+
+describe('StatisticsFacade export', () => {
+    it('exports current date range and tracks exporting format', () => {
+        facade.initialize();
+        TestBed.tick();
+
+        facade.exportDiary('csv');
+        TestBed.tick();
+
+        expect(exportService.exportDiary).toHaveBeenCalledWith(
+            expect.objectContaining({
+                format: 'csv',
+                locale: 'en',
+            }),
+        );
+        expect(facade.exportingFormat()).toBeNull();
+    });
+
+    it('skips export while another export is in progress', () => {
+        exportService.exportDiary.mockReturnValueOnce(new Subject<void>());
+
+        facade.initialize();
+        TestBed.tick();
+        facade.exportDiary('pdf');
+        facade.exportDiary('csv');
+
+        expect(exportService.exportDiary).toHaveBeenCalledTimes(1);
+        expect(facade.exportingFormat()).toBe('pdf');
     });
 });
 

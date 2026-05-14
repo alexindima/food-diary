@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
-import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { finalize } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -15,7 +13,7 @@ import { StatisticsBodyComponent } from '../../../components/shared/statistics-b
 import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
 import { StatisticsSummaryComponent } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { type ExportFormat, ExportService } from '../../meals/api/export.service';
+import type { ExportFormat } from '../../meals/api/export.service';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import {
     barChartOptions,
@@ -26,11 +24,11 @@ import {
     radarChartOptions,
     summarySparklineOptions,
 } from '../lib/statistics-chart-config';
-import { isBodyTab, isNutritionTab, isStatisticsRange, normalizeEndOfDay, normalizeStartOfDay } from '../lib/statistics-data-mapper';
+import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
+import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';
 
 @Component({
     selector: 'fd-statistics',
-    standalone: true,
     providers: [StatisticsFacade],
     imports: [
         CommonModule,
@@ -53,30 +51,15 @@ import { isBodyTab, isNutritionTab, isStatisticsRange, normalizeEndOfDay, normal
 })
 export class StatisticsComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly exportService = inject(ExportService);
     protected readonly facade = inject(StatisticsFacade);
 
     public constructor() {
         this.facade.initialize();
     }
 
-    public readonly rangeTabs: FdUiTab[] = [
-        { value: 'week', labelKey: 'STATISTICS.RANGES.WEEK' },
-        { value: 'month', labelKey: 'STATISTICS.RANGES.MONTH' },
-        { value: 'year', labelKey: 'STATISTICS.RANGES.YEAR' },
-        { value: 'custom', labelKey: 'STATISTICS.RANGES.CUSTOM' },
-    ];
-    public readonly nutritionTabs: FdUiTab[] = [
-        { value: 'calories', labelKey: 'STATISTICS.NUTRITION_TABS.CALORIES' },
-        { value: 'macros', labelKey: 'STATISTICS.NUTRITION_TABS.MACROS' },
-        { value: 'distribution', labelKey: 'STATISTICS.NUTRITION_TABS.DISTRIBUTION' },
-    ];
-    public readonly bodyTabs: FdUiTab[] = [
-        { value: 'weight', labelKey: 'STATISTICS.BODY_TABS.WEIGHT' },
-        { value: 'bmi', labelKey: 'STATISTICS.BODY_TABS.BMI' },
-        { value: 'waist', labelKey: 'STATISTICS.BODY_TABS.WAIST' },
-        { value: 'whtr', labelKey: 'STATISTICS.BODY_TABS.WHTR' },
-    ];
+    public readonly rangeTabs = STATISTICS_RANGE_TABS;
+    public readonly nutritionTabs = STATISTICS_NUTRITION_TABS;
+    public readonly bodyTabs = STATISTICS_BODY_TABS;
 
     public readonly selectedRange = this.facade.selectedRange;
     public readonly selectedNutritionTab = this.facade.selectedNutritionTab;
@@ -98,7 +81,7 @@ export class StatisticsComponent {
     public readonly nutrientsBarChartData = this.facade.nutrientsBarChartData;
     public readonly bodyChartData = this.facade.bodyChartData;
     public readonly hasBodyData = this.facade.hasBodyData;
-    public readonly exportingFormat = signal<ExportFormat | null>(null);
+    public readonly exportingFormat = this.facade.exportingFormat;
 
     public readonly caloriesLineChartOptions = createCaloriesLineChartOptions(
         (label, value) => `${label}: ${parseFloat(value.toFixed(2))} ${this.translateService.instant('GENERAL.UNITS.KCAL')}`,
@@ -135,25 +118,6 @@ export class StatisticsComponent {
     }
 
     public exportDiary(format: ExportFormat): void {
-        if (this.exportingFormat() !== null) {
-            return;
-        }
-
-        const range = this.currentRange();
-        const dateFrom = normalizeStartOfDay(range.start).toISOString();
-        const dateTo = normalizeEndOfDay(range.end).toISOString();
-        const currentLang = this.translateService.getCurrentLang();
-        const fallbackLang = this.translateService.getFallbackLang();
-        const locale = currentLang.length > 0 ? currentLang : fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : undefined;
-        const timeZoneOffsetMinutes = -new Date().getTimezoneOffset();
-        this.exportingFormat.set(format);
-        this.exportService
-            .exportDiary({ dateFrom, dateTo, format, locale, timeZoneOffsetMinutes })
-            .pipe(
-                finalize(() => {
-                    this.exportingFormat.set(null);
-                }),
-            )
-            .subscribe();
+        this.facade.exportDiary(format);
     }
 }
