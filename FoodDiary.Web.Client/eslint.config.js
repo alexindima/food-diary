@@ -91,6 +91,19 @@ const noAnyCastSyntax = [
     },
 ];
 
+const noRedundantBooleanComparisonSyntax = [
+    {
+        selector:
+            'BinaryExpression[operator="==="][left.type="CallExpression"][left.callee.object.name="Number"][left.callee.property.name="isNaN"][right.value=false]',
+        message: 'Use !Number.isNaN(value) instead of comparing Number.isNaN(value) with false.',
+    },
+    {
+        selector:
+            'BinaryExpression[operator="==="][left.value=false][right.type="CallExpression"][right.callee.object.name="Number"][right.callee.property.name="isNaN"]',
+        message: 'Use !Number.isNaN(value) instead of comparing Number.isNaN(value) with false.',
+    },
+];
+
 const appBoundaryElements = [
     { type: 'app-shared-models', pattern: 'src/app/shared/models', mode: 'folder' },
     { type: 'app-shared-api', pattern: 'src/app/shared/api', mode: 'folder' },
@@ -830,7 +843,7 @@ export default [
                     ignoreStatic: true,
                 },
             ],
-            'no-restricted-syntax': ['error', ...noAnyCastSyntax],
+            'no-restricted-syntax': ['error', ...noAnyCastSyntax, ...noRedundantBooleanComparisonSyntax],
             'local/async-function-suffix': 'error',
             'local/injectable-provided-in-root-single-line': 'error',
             'local/no-nested-subscribe': 'error',
@@ -907,6 +920,7 @@ export default [
             'no-restricted-syntax': [
                 'error',
                 ...noAnyCastSyntax,
+                ...noRedundantBooleanComparisonSyntax,
                 {
                     selector: 'Decorator[expression.callee.name="HostListener"]',
                     message:

@@ -33,8 +33,7 @@
                 <fd-shopping-list-manage-controls
                     [listSelectControl]="listSelectControl"
                     [listNameControl]="listNameControl"
-                    [listOptions]="listOptions()"
-                    [listsCount]="lists().length"
+                    [lists]="lists()"
                     [isLoading]="isLoading()"
                     [canDeleteList]="canDeleteList()"
                     [canClearList]="canClearList()"
@@ -54,8 +53,7 @@
                 <fd-shopping-list-manage-controls
                     [listSelectControl]="listSelectControl"
                     [listNameControl]="listNameControl"
-                    [listOptions]="listOptions()"
-                    [listsCount]="lists().length"
+                    [lists]="lists()"
                     [isLoading]="isLoading()"
                     [canDeleteList]="canDeleteList()"
                     [canClearList]="canClearList()"
@@ -73,11 +71,10 @@
         } @else {
             <fd-shopping-list-items-panel
                 [itemForm]="itemForm"
-                [unitOptions]="unitOptions"
-                [items]="itemViewModels()"
+                [items]="items()"
                 (itemAdd)="addItem()"
                 (itemRemove)="removeItem($event)"
-                (itemCheckedChange)="toggleItemChecked($event.item, $event.checked)"
+                (itemCheckedChange)="toggleItemChecked($event.itemId, $event.checked)"
             />
         }
     </fd-page-body>

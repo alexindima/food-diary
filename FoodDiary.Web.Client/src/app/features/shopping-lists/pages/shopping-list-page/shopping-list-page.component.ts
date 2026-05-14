@@ -6,22 +6,20 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
-} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
-import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { ViewportService } from '../../../services/viewport.service';
-import { MeasurementUnit } from '../../products/models/product.data';
-import { ShoppingListFacade } from '../lib/shopping-list.facade';
-import type { ShoppingListItem } from '../models/shopping-list.data';
-import type { ShoppingListItemFormGroup, ShoppingListItemViewModel } from './shopping-list.types';
-import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel.component';
-import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls.component';
+} from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { ViewportService } from '../../../../services/viewport.service';
+import type { MeasurementUnit } from '../../../products/models/product.data';
+import { ShoppingListFacade } from '../../lib/shopping-list.facade';
+import type { ShoppingListItemFormGroup } from '../../lib/shopping-list-form.types';
+import { ShoppingListItemsPanelComponent } from '../shopping-list-items-panel/shopping-list-items-panel.component';
+import { ShoppingListManageControlsComponent } from '../shopping-list-manage-controls/shopping-list-manage-controls.component';
 
 @Component({
     selector: 'fd-shopping-list-page',
@@ -61,23 +59,11 @@ export class ShoppingListPageComponent {
     public readonly canClearList = computed(
         () => this.lists().length === 1 && this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
-    public readonly listOptions = computed(() => this.facade.listOptions());
-    public readonly itemViewModels = computed<ShoppingListItemViewModel[]>(() => {
-        this.activeLang();
-
-        return this.items().map(item => ({
-            ...item,
-            meta: this.formatItemMeta(item),
-        }));
-    });
     public readonly listSelectControl = new FormControl<string | null>(null);
     public readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
     public readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
-    public unitOptions: Array<FdUiSelectOption<MeasurementUnit>> = [];
 
-    private readonly unitValues = Object.values(MeasurementUnit) as MeasurementUnit[];
     private readonly isMobileManageOpen = signal(false);
-    private readonly activeLang = signal(this.translateService.getCurrentLang());
 
     public constructor() {
         this.itemForm = new FormGroup<ShoppingListItemFormGroup>({
@@ -85,12 +71,6 @@ export class ShoppingListPageComponent {
             amount: new FormControl<number | null>(null),
             unit: new FormControl<MeasurementUnit | null>(null),
             category: new FormControl<string | null>(null),
-        });
-
-        this.buildUnitOptions();
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
-            this.activeLang.set(event.lang);
-            this.buildUnitOptions();
         });
 
         this.listNameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
@@ -156,20 +136,8 @@ export class ShoppingListPageComponent {
         this.facade.removeItem(itemId);
     }
 
-    public toggleItemChecked(item: ShoppingListItem, checked: boolean): void {
-        this.facade.toggleItemChecked(item.id, checked);
-    }
-
-    private formatItemMeta(item: ShoppingListItem): string {
-        const parts: string[] = [];
-        if (item.amount !== null && item.amount !== undefined && Number.isNaN(item.amount) === false) {
-            const unitLabel = this.getUnitLabel(item.unit);
-            parts.push(unitLabel !== null ? `${item.amount} ${unitLabel}` : `${item.amount}`);
-        }
-        if (item.category !== null && item.category !== undefined && item.category.length > 0) {
-            parts.push(item.category);
-        }
-        return parts.join(' - ');
+    public toggleItemChecked(itemId: string, checked: boolean): void {
+        this.facade.toggleItemChecked(itemId, checked);
     }
 
     public toggleMobileManage(): void {
@@ -236,22 +204,5 @@ export class ShoppingListPageComponent {
 
     public createNewList(): void {
         this.facade.createNewList();
-    }
-
-    private buildUnitOptions(): void {
-        this.unitOptions = this.unitValues.map(unit => ({
-            value: unit,
-            label: this.translateService.instant(`GENERAL.UNITS.${unit}`),
-        }));
-    }
-
-    private getUnitLabel(unit?: MeasurementUnit | string | null): string | null {
-        if (unit === null || unit === undefined || unit.length === 0) {
-            return null;
-        }
-
-        const key = `GENERAL.UNITS.${unit}`;
-        const translated = this.translateService.instant(key);
-        return translated === key ? unit : translated;
     }
 }

@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { ShoppingListPageComponent } from './pages/shopping-list-page.component';
+import { ShoppingListPageComponent } from './pages/shopping-list-page/shopping-list-page.component';
 
 const routes: Routes = [
     {

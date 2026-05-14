@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -6,7 +6,8 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import type { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import type { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
+import type { ShoppingList, ShoppingListItem, ShoppingListSummary } from '../models/shopping-list.data';
+import { mapShoppingListItemToDto, normalizeShoppingListAmount, rebuildShoppingListSortOrder } from './shopping-list-item.mapper';
 
 export type ShoppingListDraftItem = {
     name: string;
@@ -42,12 +43,6 @@ export class ShoppingListFacade {
     public readonly lists = signal<ShoppingListSummary[]>([]);
     public readonly selectedListId = signal<string | null>(null);
     public readonly listName = signal('');
-    public readonly listOptions = computed(() =>
-        this.lists().map(list => ({
-            value: list.id,
-            label: `${list.name} (${list.itemsCount})`,
-        })),
-    );
 
     public constructor() {}
 
@@ -99,7 +94,7 @@ export class ShoppingListFacade {
                 id: this.createTempId(),
                 shoppingListId: this.list()?.id ?? '',
                 name,
-                amount: this.normalizeAmount(draft.amount),
+                amount: normalizeShoppingListAmount(draft.amount),
                 unit: draft.unit ?? null,
                 category: draft.category?.trim() ?? null,
                 productId: null,
@@ -114,7 +109,7 @@ export class ShoppingListFacade {
 
     public removeItem(itemId: string): void {
         const filtered = this.items().filter(item => item.id !== itemId);
-        this.items.set(this.rebuildSortOrder(filtered));
+        this.items.set(rebuildShoppingListSortOrder(filtered));
         this.scheduleSave();
     }
 
@@ -249,40 +244,13 @@ export class ShoppingListFacade {
     private applyList(list: ShoppingList): void {
         this.suppressAutosave = true;
         this.list.set(list);
-        this.items.set(this.rebuildSortOrder(list.items));
+        this.items.set(rebuildShoppingListSortOrder(list.items));
         this.listName.set(list.name);
         this.selectedListId.set(list.id);
         this.lastLoadedListId.set(list.id);
         queueMicrotask(() => {
             this.suppressAutosave = false;
         });
-    }
-
-    private rebuildSortOrder(items: ShoppingListItem[]): ShoppingListItem[] {
-        return items.map((item, index) => ({
-            ...item,
-            sortOrder: index + 1,
-        }));
-    }
-
-    private normalizeAmount(value: number | null): number | null {
-        if (value === null) {
-            return null;
-        }
-        const parsed = Number(value);
-        return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
-    }
-
-    private mapItemToDto(item: ShoppingListItem, index: number): ShoppingListItemDto {
-        return {
-            productId: item.productId ?? null,
-            name: item.name,
-            amount: item.amount ?? null,
-            unit: item.unit ?? null,
-            category: item.category ?? null,
-            isChecked: item.isChecked,
-            sortOrder: index + 1,
-        };
     }
 
     private updateListSummary(list: ShoppingList): void {
@@ -325,7 +293,7 @@ export class ShoppingListFacade {
         this.isSaving.set(true);
         const payload = {
             name,
-            items: this.items().map((item, index) => this.mapItemToDto(item, index)),
+            items: this.items().map((item, index) => mapShoppingListItemToDto(item, index)),
         };
 
         this.shoppingListService
