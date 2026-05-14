@@ -10,7 +10,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
     selector: 'fd-weight-history-form-card',
     imports: [ReactiveFormsModule, FdUiButtonComponent, FdUiCardComponent, FdUiDateInputComponent, FdUiInputComponent, TranslatePipe],
     templateUrl: './weight-history-form-card.component.html',
-    styleUrl: './weight-history-page.component.scss',
+    styleUrl: '../../pages/weight-history-page/weight-history-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryFormCardComponent {

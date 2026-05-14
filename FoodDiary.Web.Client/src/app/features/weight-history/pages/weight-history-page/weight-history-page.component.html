@@ -19,20 +19,10 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-weight-history-chart-card
-            [isLoading]="isSummaryLoading()"
-            [hasPoints]="hasSummaryPoints()"
-            [chartData]="chartData()"
-            [chartOptions]="chartOptions"
-        />
+        <fd-weight-history-chart-card [isLoading]="isSummaryLoading()" [chartData]="chartData()" />
 
         @defer (on viewport) {
-            <fd-weight-history-bmi-card
-                [value]="bmiValue()"
-                [status]="bmiStatusInfo()"
-                [segments]="bmiSegments()"
-                [pointerPosition]="bmiPointerPosition()"
-            />
+            <fd-weight-history-bmi-card [viewModel]="bmiViewModel()" />
         } @placeholder {
             <div class="weight-history-page__placeholder" aria-hidden="true"></div>
         }
@@ -57,7 +47,7 @@
             <div class="weight-history-page__content weight-history-page__content--full fd-grid fd-gap-card-content">
                 <fd-weight-history-entries-card
                     [isLoading]="isLoading()"
-                    [items]="entryItems()"
+                    [entries]="entriesDescending()"
                     (editEntry)="startEdit($event)"
                     (removeEntry)="deleteEntry($event)"
                 />

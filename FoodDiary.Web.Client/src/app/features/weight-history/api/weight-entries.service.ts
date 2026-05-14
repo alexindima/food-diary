@@ -4,6 +4,7 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { addOptionalNumberParam, addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import type {
     CreateWeightEntryPayload,
     UpdateWeightEntryPayload,
@@ -13,24 +14,12 @@ import type {
     WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
 
-function addOptionalStringParam(params: Record<string, string | number>, key: string, value: string | undefined): void {
-    if (value !== undefined && value.length > 0) {
-        params[key] = value;
-    }
-}
-
-function addOptionalNumberParam(params: Record<string, string | number>, key: string, value: number | undefined): void {
-    if (value !== undefined) {
-        params[key] = value;
-    }
-}
-
 @Injectable({ providedIn: 'root' })
 export class WeightEntriesService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.weights;
 
     public getEntries(filters?: WeightEntryFilters): Observable<WeightEntry[]> {
-        const params: Record<string, string | number> = {};
+        const params: ApiQueryParams = {};
 
         addOptionalStringParam(params, 'dateFrom', filters?.dateFrom);
         addOptionalStringParam(params, 'dateTo', filters?.dateTo);
@@ -63,7 +52,7 @@ export class WeightEntriesService extends ApiService {
     }
 
     public getSummary(filters: WeightEntrySummaryFilters): Observable<WeightEntrySummaryPoint[]> {
-        const params: Record<string, string | number> = {
+        const params: ApiQueryParams = {
             dateFrom: filters.dateFrom,
             dateTo: filters.dateTo,
             quantizationDays: filters.quantizationDays,

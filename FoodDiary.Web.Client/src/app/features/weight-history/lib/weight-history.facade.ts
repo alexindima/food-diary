@@ -2,50 +2,28 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
-import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
-import { END_OF_DAY_HOUR, END_OF_DAY_MILLISECOND, END_OF_DAY_MINUTE, END_OF_DAY_SECOND } from '../../../shared/lib/local-date.utils';
-import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
-import { MS_PER_DAY } from '../../../shared/lib/time.constants';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import type {
     CreateWeightEntryPayload,
     WeightEntry,
-    WeightEntryFilters,
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
+import { MAX_WEIGHT_KG, MIN_WEIGHT_KG } from './weight-history.constants';
+import type { WeightHistoryCustomRange, WeightHistoryDateRange, WeightHistoryRange } from './weight-history.types';
+import { buildBmiViewModel } from './weight-history-bmi.mapper';
+import { buildWeightHistoryChartData } from './weight-history-chart.mapper';
 import {
-    MAX_WEIGHT_KG,
-    MIN_WEIGHT_KG,
-    WEIGHT_HISTORY_ENTRIES_LIMIT_MAX,
-    WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR,
-} from './weight-history.constants';
-
-export type WeightHistoryRange = 'week' | 'month' | 'year' | 'custom';
-
-const BMI_SCALE_MAX = 40;
-const BMI_POINTER_PADDING_PERCENT = 1;
-const BMI_UNDERWEIGHT_MAX = 18.5;
-const BMI_NORMAL_MAX = 25;
-const BMI_OVERWEIGHT_MAX = 30;
-const DEFAULT_MONTH_OFFSET = 1;
-const WEEK_DAYS = 7;
-const ENTRIES_LIMIT_PER_DAY = 5;
-const MONTH_QUANTIZATION_DAYS = 3;
-const YEAR_QUANTIZATION_DAYS = 14;
-const CUSTOM_QUANTIZATION_DIVISOR = 12;
-const DATE_PART_PAD_LENGTH = 2;
-const DATE_PART_PAD = '0';
-
-export type BmiStatusInfo = {
-    labelKey: string;
-    descriptionKey: string;
-    class: string;
-};
+    buildDefaultWeightHistoryCustomRange,
+    buildWeightHistoryFiltersForRange,
+    calculateWeightHistoryRangeDates,
+    formatWeightHistoryDateInput,
+    isWeightHistoryRange,
+    normalizeStartOfDay,
+} from './weight-history-range.utils';
 
 @Injectable({ providedIn: 'root' })
 export class WeightHistoryFacade {
@@ -62,7 +40,9 @@ export class WeightHistoryFacade {
     private lastLoadedRangeKey: string | null = null;
 
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
-    public readonly currentRange = computed<{ start: Date; end: Date }>(() => this.calculateRangeDates(this.selectedRange()));
+    public readonly currentRange = computed<WeightHistoryDateRange>(() =>
+        calculateWeightHistoryRangeDates(this.selectedRange(), this.customRangeControl.value),
+    );
     public readonly entries = signal<WeightEntry[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
@@ -71,10 +51,10 @@ export class WeightHistoryFacade {
     public readonly isDesiredWeightSaving = signal(false);
     public readonly summaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
-    public readonly customRangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
+    public readonly customRangeControl = new FormControl<WeightHistoryCustomRange | null>(null);
 
     public readonly form = this.fb.group({
-        date: [this.formatDateInput(new Date()), Validators.required],
+        date: [formatWeightHistoryDateInput(new Date()), Validators.required],
         weight: ['', [Validators.required, Validators.min(MIN_WEIGHT_KG), Validators.max(MAX_WEIGHT_KG)]],
     });
 
@@ -84,93 +64,20 @@ export class WeightHistoryFacade {
         [...this.entries()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     );
 
-    public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const ordered = [...this.summaryPoints()].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
-        const label = this.translate.instant('WEIGHT_HISTORY.CHART_LABEL');
-
-        return {
-            labels: ordered.map(point => this.formatDateLabel(point.startDate)),
-            datasets: [
-                {
-                    data: ordered.map(point => (point.averageWeight > 0 ? point.averageWeight : null)),
-                    label,
-                    borderColor: 'var(--fd-color-primary-600)',
-                    backgroundColor: 'transparent',
-                    fill: false,
-                    tension: 0.35,
-                    pointRadius: 4,
-                    pointBackgroundColor: 'var(--fd-color-white)',
-                    borderWidth: 2,
-                    spanGaps: true,
-                },
-            ],
-        };
-    });
+    public readonly chartData = computed(() =>
+        buildWeightHistoryChartData(
+            this.summaryPoints(),
+            this.translate.instant('WEIGHT_HISTORY.CHART_LABEL'),
+            this.translate.getCurrentLang(),
+        ),
+    );
 
     public readonly latestWeight = computed<number | null>(() => {
         const entries = this.entriesDescending();
         return entries.length > 0 ? entries[0].weight : null;
     });
 
-    public readonly bmiValue = computed<number | null>(() => {
-        const heightCm = this.userHeightCm();
-        const latest = this.latestWeight();
-        if (heightCm === null || latest === null || heightCm <= 0 || latest <= 0) {
-            return null;
-        }
-
-        const heightMeters = heightCm / CENTIMETERS_PER_METER;
-        const bmi = latest / (heightMeters * heightMeters);
-        return Math.round(bmi * WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR) / WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR;
-    });
-
-    public readonly bmiPointerPosition = computed(() => {
-        const bmi = this.bmiValue();
-        if (bmi === null) {
-            return '0%';
-        }
-
-        const rawPercent = (bmi / BMI_SCALE_MAX) * PERCENT_MULTIPLIER;
-        const percent = Math.max(BMI_POINTER_PADDING_PERCENT, Math.min(PERCENT_MULTIPLIER - BMI_POINTER_PADDING_PERCENT, rawPercent));
-        return `${percent}%`;
-    });
-
-    public readonly bmiStatusInfo = computed<BmiStatusInfo | null>(() => {
-        const bmi = this.bmiValue();
-        if (bmi === null) {
-            return null;
-        }
-
-        if (bmi < BMI_UNDERWEIGHT_MAX) {
-            return {
-                labelKey: 'WEIGHT_HISTORY.BMI_STATUS.UNDERWEIGHT',
-                descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.UNDERWEIGHT',
-                class: 'weight-history-page__bmi-status--under',
-            };
-        }
-
-        if (bmi < BMI_NORMAL_MAX) {
-            return {
-                labelKey: 'WEIGHT_HISTORY.BMI_STATUS.NORMAL',
-                descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.NORMAL',
-                class: 'weight-history-page__bmi-status--normal',
-            };
-        }
-
-        if (bmi < BMI_OVERWEIGHT_MAX) {
-            return {
-                labelKey: 'WEIGHT_HISTORY.BMI_STATUS.OVER',
-                descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.OVER',
-                class: 'weight-history-page__bmi-status--over',
-            };
-        }
-
-        return {
-            labelKey: 'WEIGHT_HISTORY.BMI_STATUS.OBESE',
-            descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.OBESE',
-            class: 'weight-history-page__bmi-status--obese',
-        };
-    });
+    public readonly bmiViewModel = computed(() => buildBmiViewModel(this.userHeightCm(), this.latestWeight()));
 
     private readonly customRangeValue = toSignal(
         this.customRangeControl.valueChanges.pipe(
@@ -254,7 +161,7 @@ export class WeightHistoryFacade {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
         this.form.setValue({
-            date: this.formatDateInput(new Date(entry.date)),
+            date: formatWeightHistoryDateInput(new Date(entry.date)),
             weight: entry.weight.toString(),
         });
     }
@@ -263,7 +170,7 @@ export class WeightHistoryFacade {
         this.resetEditingState();
         const latest = (this.entriesDescending() as Array<WeightEntry | undefined>)[0];
         this.form.setValue({
-            date: this.formatDateInput(new Date()),
+            date: formatWeightHistoryDateInput(new Date()),
             weight: latest !== undefined ? latest.weight.toString() : '',
         });
     }
@@ -332,10 +239,7 @@ export class WeightHistoryFacade {
         if (value === 'custom') {
             const current = this.customRangeControl.value;
             if (current?.start === undefined || current.start === null || current.end === null) {
-                const end = new Date();
-                const start = new Date(end);
-                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
-                this.customRangeControl.setValue({ start, end }, { emitEvent: true });
+                this.customRangeControl.setValue(buildDefaultWeightHistoryCustomRange(), { emitEvent: true });
             }
             return;
         }
@@ -344,7 +248,10 @@ export class WeightHistoryFacade {
     }
 
     private loadEntries(showLoader = true, force = false): void {
-        const { entriesParams, summaryParams, rangeKey } = this.buildFiltersForRange(this.selectedRange());
+        const { entriesParams, summaryParams, rangeKey } = buildWeightHistoryFiltersForRange(
+            this.selectedRange(),
+            this.customRangeControl.value,
+        );
 
         if (!force && rangeKey === this.lastLoadedRangeKey) {
             return;
@@ -418,7 +325,7 @@ export class WeightHistoryFacade {
         }
 
         const date = typeof rawDate === 'string' ? new Date(rawDate) : rawDate;
-        const utcDate = this.normalizeStartOfDay(date);
+        const utcDate = normalizeStartOfDay(date);
         const weight = Number(rawWeight);
 
         return {
@@ -431,112 +338,7 @@ export class WeightHistoryFacade {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
         this.form.patchValue({
-            date: this.formatDateInput(new Date()),
+            date: formatWeightHistoryDateInput(new Date()),
         });
     }
-
-    private buildFiltersForRange(range: WeightHistoryRange): {
-        entriesParams: WeightEntryFilters;
-        summaryParams: WeightEntrySummaryFilters;
-        rangeKey: string;
-    } {
-        const { start, end } = this.calculateRangeDates(range);
-        const normalizedStart = this.normalizeStartOfDay(start);
-        const normalizedEnd = this.normalizeEndOfDay(end);
-        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_PER_DAY));
-        const quantizationDays = this.getQuantizationDays(range, totalDays);
-        const limit = Math.min(WEIGHT_HISTORY_ENTRIES_LIMIT_MAX, totalDays * ENTRIES_LIMIT_PER_DAY);
-        const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
-
-        return {
-            entriesParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                sort: 'desc',
-                limit,
-            },
-            summaryParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                quantizationDays,
-            },
-            rangeKey,
-        };
-    }
-
-    private calculateRangeDates(range: WeightHistoryRange): { start: Date; end: Date } {
-        const now = new Date();
-        let start = new Date(now);
-        let end = new Date(now);
-
-        if (range === 'week') {
-            start.setDate(start.getDate() - WEEK_DAYS);
-        } else if (range === 'month') {
-            start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
-        } else if (range === 'year') {
-            start.setFullYear(start.getFullYear() - DEFAULT_MONTH_OFFSET);
-        } else {
-            const custom = this.customRangeControl.value;
-            if (custom?.start !== undefined && custom.start !== null) {
-                start = new Date(custom.start);
-            } else {
-                start.setMonth(start.getMonth() - DEFAULT_MONTH_OFFSET);
-            }
-
-            if (custom?.end !== undefined && custom.end !== null) {
-                end = new Date(custom.end);
-            }
-        }
-
-        return { start, end };
-    }
-
-    private normalizeStartOfDay(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    }
-
-    private normalizeEndOfDay(date: Date): Date {
-        return new Date(
-            Date.UTC(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate(),
-                END_OF_DAY_HOUR,
-                END_OF_DAY_MINUTE,
-                END_OF_DAY_SECOND,
-                END_OF_DAY_MILLISECOND,
-            ),
-        );
-    }
-
-    private formatDateInput(date: Date): string {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
-        const day = String(date.getDate()).padStart(DATE_PART_PAD_LENGTH, DATE_PART_PAD);
-        return `${year}-${month}-${day}`;
-    }
-
-    private getQuantizationDays(range: WeightHistoryRange, totalDays: number): number {
-        if (range === 'week') {
-            return 1;
-        }
-
-        if (range === 'month') {
-            return MONTH_QUANTIZATION_DAYS;
-        }
-
-        if (range === 'year') {
-            return YEAR_QUANTIZATION_DAYS;
-        }
-
-        return Math.max(1, Math.round(totalDays / CUSTOM_QUANTIZATION_DIVISOR));
-    }
-
-    private formatDateLabel(dateString: string): string {
-        return new Date(dateString).toLocaleDateString();
-    }
-}
-
-function isWeightHistoryRange(value: string): value is WeightHistoryRange {
-    return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
 }

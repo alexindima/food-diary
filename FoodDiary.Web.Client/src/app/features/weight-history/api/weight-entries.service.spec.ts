@@ -4,10 +4,11 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import type { WeightEntry } from '../models/weight-entry.data';
+import type { WeightEntry, WeightEntryFilters } from '../models/weight-entry.data';
 import { WeightEntriesService } from './weight-entries.service';
 
 const BASE_URL = environment.apiUrls.weights;
+const ENTRY_LIMIT = 10;
 const MOCK_ENTRY: WeightEntry = {
     id: 'w-1',
     userId: 'user-1',
@@ -42,8 +43,8 @@ describe('WeightEntriesService list', () => {
         req.flush([MOCK_ENTRY]);
     });
 
-    it('should get entries with date filters', () => {
-        const filters = { dateFrom: '2026-01-01', dateTo: '2026-03-01' };
+    it('should get entries with filters', () => {
+        const filters: WeightEntryFilters = { dateFrom: '2026-01-01', dateTo: '2026-03-01', limit: ENTRY_LIMIT, sort: 'desc' };
 
         service.getEntries(filters).subscribe(entries => {
             expect(entries).toEqual([MOCK_ENTRY]);
@@ -53,6 +54,18 @@ describe('WeightEntriesService list', () => {
         expect(req.request.method).toBe('GET');
         expect(req.request.params.get('dateFrom')).toBe('2026-01-01');
         expect(req.request.params.get('dateTo')).toBe('2026-03-01');
+        expect(req.request.params.get('limit')).toBe(`${ENTRY_LIMIT}`);
+        expect(req.request.params.get('sort')).toBe('desc');
+        req.flush([MOCK_ENTRY]);
+    });
+
+    it('should skip empty optional filters', () => {
+        service.getEntries({ dateFrom: '', dateTo: undefined, limit: undefined }).subscribe(entries => {
+            expect(entries).toEqual([MOCK_ENTRY]);
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        expect(req.request.params.keys()).toEqual([]);
         req.flush([MOCK_ENTRY]);
     });
 
