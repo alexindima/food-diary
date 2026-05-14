@@ -22,10 +22,8 @@
             @if (results().length) {
                 <div class="photo-ai-dialog__results fd-stack fd-gap-sm">
                     <fd-meal-photo-result-actions
-                        [isLoading]="isLoading()"
                         [hasSelectionAsset]="hasSelectionAsset()"
                         [isEditing]="isEditing()"
-                        [editActionState]="editActionState()"
                         (reanalyze)="onReanalyze()"
                         (editAction)="handleEditAction()"
                     />

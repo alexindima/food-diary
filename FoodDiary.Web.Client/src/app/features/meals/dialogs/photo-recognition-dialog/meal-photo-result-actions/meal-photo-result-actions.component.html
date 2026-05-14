@@ -6,7 +6,7 @@
             variant="secondary"
             fill="text"
             icon="refresh"
-            [disabled]="isLoading() || !hasSelectionAsset() || isEditing()"
+            [disabled]="!hasSelectionAsset() || isEditing()"
             [fdUiHint]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
             [ariaLabel]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
             (click)="reanalyze.emit()"

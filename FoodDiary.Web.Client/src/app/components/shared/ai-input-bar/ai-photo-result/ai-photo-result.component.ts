@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
+import { normalizeAiNutritionItemName, recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { AiInputBarMealDetails } from '../ai-input-bar.types';
@@ -17,6 +18,7 @@ import type {
     AiEditItemUpdate,
     AiEditUnitOption,
     AiNutritionSummaryItem,
+    AiPhotoEditApplied,
     AiResultRow,
     EditableAiItem,
 } from './ai-photo-result.types';
@@ -77,7 +79,7 @@ export class AiPhotoResultComponent {
 
     public readonly dismissed = output();
     public readonly addToMeal = output<AiInputBarMealDetails>();
-    public readonly editApplied = output<FoodVisionItem[]>();
+    public readonly editApplied = output<AiPhotoEditApplied>();
     public readonly reanalyzeRequested = output();
 
     public readonly isEditing = signal(false);
@@ -212,16 +214,14 @@ export class AiPhotoResultComponent {
         this.isEditing.set(false);
 
         if (changes.requiresAi) {
-            this.editApplied.emit(normalized);
+            this.editApplied.emit({ items: normalized, nutrition: null });
             return;
         }
 
-        const recalculated = this.recalculateNutritionFromLocal(changes, edited);
-        if (recalculated !== null) {
-            this.editApplied.emit(normalized);
-        } else {
-            this.editApplied.emit(normalized);
-        }
+        this.editApplied.emit({
+            items: normalized,
+            nutrition: recalculateEditedAiNutrition(this.nutrition(), this.sourceItems(), edited),
+        });
     }
 
     public handleEditAction(): void {
@@ -376,7 +376,7 @@ export class AiPhotoResultComponent {
                 continue;
             }
 
-            const nameChanged = this.normalizeName(previous.name) !== this.normalizeName(item.name);
+            const nameChanged = normalizeAiNutritionItemName(previous.name) !== normalizeAiNutritionItemName(item.name);
             const unitChanged = previous.unit.trim().toLowerCase() !== item.unit.trim().toLowerCase();
             if (nameChanged || unitChanged) {
                 requiresAi = true;
@@ -392,61 +392,5 @@ export class AiPhotoResultComponent {
         }
 
         return { requiresAi, removedIds, addedItems, amountChanges };
-    }
-
-    private recalculateNutritionFromLocal(changes: EditChangeSummary, edited: EditableAiItem[]): FoodNutritionResponse | null {
-        const nutrition = this.nutrition();
-        if (nutrition === null) {
-            return null;
-        }
-
-        const nutritionById = new Map(nutrition.items.map(item => [this.normalizeName(item.name), item]));
-        const source = this.sourceItems();
-
-        const updatedItems = edited
-            .map(item => {
-                const base = source.find(sourceItem => sourceItem.id === item.id);
-                const originalName = base?.nameEn ?? base?.name ?? item.name;
-                const originalNutrition = nutritionById.get(this.normalizeName(originalName));
-                if (originalNutrition === undefined) {
-                    return null;
-                }
-
-                const ratio = base !== undefined && base.amount > 0 ? item.amount / base.amount : 1;
-                return {
-                    name: item.name,
-                    amount: item.amount,
-                    unit: item.unit,
-                    calories: originalNutrition.calories * ratio,
-                    protein: originalNutrition.protein * ratio,
-                    fat: originalNutrition.fat * ratio,
-                    carbs: originalNutrition.carbs * ratio,
-                    fiber: originalNutrition.fiber * ratio,
-                    alcohol: originalNutrition.alcohol * ratio,
-                };
-            })
-            .filter((item): item is FoodNutritionResponse['items'][number] => item !== null);
-
-        if (updatedItems.length !== edited.length) {
-            return null;
-        }
-
-        const totals = updatedItems.reduce(
-            (acc, item) => ({
-                calories: acc.calories + item.calories,
-                protein: acc.protein + item.protein,
-                fat: acc.fat + item.fat,
-                carbs: acc.carbs + item.carbs,
-                fiber: acc.fiber + item.fiber,
-                alcohol: acc.alcohol + item.alcohol,
-            }),
-            { calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, alcohol: 0 },
-        );
-
-        return { ...totals, items: updatedItems, notes: nutrition.notes ?? null };
-    }
-
-    private normalizeName(value?: string | null): string {
-        return (value ?? '').trim().toLowerCase();
     }
 }

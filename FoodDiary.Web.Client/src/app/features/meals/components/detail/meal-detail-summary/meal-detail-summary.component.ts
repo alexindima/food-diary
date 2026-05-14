@@ -1,11 +1,13 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 
+import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
 import type { Meal } from '../../../models/meal.data';
 import { MealDetailItemPreviewComponent } from '../meal-detail-item-preview/meal-detail-item-preview.component';
+import { MEAL_DETAIL_DEFAULT_QUALITY_GRADE } from '../meal-detail-lib/meal-detail.config';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';
 
 @Component({
@@ -17,17 +19,16 @@ import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../
 })
 export class MealDetailSummaryComponent {
     public readonly consumption = input.required<Meal>();
-    public readonly calories = input.required<number>();
-    public readonly qualityGrade = input.required<string>();
-    public readonly qualityScore = input.required<number>();
-    public readonly qualityHintKey = input.required<string>();
     public readonly macroSummaryBlocks = input.required<readonly MealMacroBlock[]>();
     public readonly preMealSatietyMeta = input.required<MealSatietyMeta>();
     public readonly postMealSatietyMeta = input.required<MealSatietyMeta>();
-    public readonly visibleItemPreview = input.required<readonly MealDetailItemPreview[]>();
-    public readonly itemsCount = input.required<number>();
-    public readonly hiddenItemPreviewCount = input.required<number>();
+    public readonly itemPreview = input.required<readonly MealDetailItemPreview[]>();
     public readonly isItemPreviewExpanded = input.required<boolean>();
+
+    public readonly calories = computed(() => this.consumption().totalCalories);
+    public readonly qualityGrade = computed(() => this.consumption().qualityGrade ?? MEAL_DETAIL_DEFAULT_QUALITY_GRADE);
+    public readonly qualityScore = computed(() => normalizeQualityScore(this.consumption().qualityScore));
+    public readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
 
     public readonly itemPreviewExpandedToggle = output();
 }

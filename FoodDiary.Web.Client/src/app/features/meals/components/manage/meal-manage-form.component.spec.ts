@@ -7,7 +7,6 @@ import { EMPTY, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../../services/navigation.service';
-import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
     type Consumption,
@@ -22,13 +21,6 @@ import type { ConsumptionItemFormData, MealNutritionSummaryState, NutritionTotal
 const PRODUCT_AMOUNT = 150;
 const TOTAL_CALORIES = 300;
 const UPDATED_TOTAL_CALORIES = 450;
-const AI_USAGE: UserAiUsageResponse = {
-    inputLimit: 1000,
-    outputLimit: 1000,
-    inputUsed: 100,
-    outputUsed: 200,
-    resetAtUtc: '2026-04-06T00:00:00Z',
-};
 const EMPTY_TOTALS: NutritionTotals = {
     calories: 0,
     proteins: 0,
@@ -47,7 +39,6 @@ type MealManageFacadeMock = {
     createItemsValidator: ReturnType<typeof vi.fn>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
     getManualNutritionTotals: ReturnType<typeof vi.fn>;
-    loadAiUsageAsync: ReturnType<typeof vi.fn>;
     openEditAiPhotoSessionDialogAsync: ReturnType<typeof vi.fn>;
     removeAiSession: ReturnType<typeof vi.fn>;
     replaceAiSession: ReturnType<typeof vi.fn>;
@@ -233,7 +224,6 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         createItemsValidator: vi.fn(() => Validators.nullValidator),
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         getManualNutritionTotals: vi.fn().mockReturnValue(EMPTY_TOTALS),
-        loadAiUsageAsync: vi.fn().mockResolvedValue(AI_USAGE),
         openEditAiPhotoSessionDialogAsync: vi.fn().mockResolvedValue(null),
         removeAiSession: vi.fn((sessions: ConsumptionAiSessionManageDto[], index: number) =>
             sessions.filter((_session, currentIndex) => currentIndex !== index),

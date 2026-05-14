@@ -58,10 +58,6 @@ export class MealDetailComponent {
     public readonly carbs: number;
     public readonly fiber: number;
     public readonly alcohol: number;
-    public readonly qualityScore: number;
-    public readonly qualityGrade: string;
-    public readonly qualityHintKey: string;
-    public readonly itemsCount: number;
     public readonly formattedDate: string | null;
     public readonly mealTypeLabel: string | null;
     public readonly preMealSatietyMeta: MealSatietyMeta;
@@ -71,15 +67,10 @@ export class MealDetailComponent {
         { value: 'nutrients', labelKey: 'CONSUMPTION_DETAIL.TABS.NUTRIENTS' },
     ];
     public activeTab: 'summary' | 'nutrients' = 'summary';
-    public readonly itemPreviewMaxItems: number;
     public readonly isItemPreviewExpanded = signal(false);
     public readonly macroBlocks: MealMacroBlock[];
     public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MEAL_DETAIL_MACRO_SUMMARY_LIMIT));
     public readonly itemPreview: MealDetailItemPreview[];
-    public readonly visibleItemPreview = computed<MealDetailItemPreview[]>(() =>
-        this.isItemPreviewExpanded() ? this.itemPreview : this.itemPreview.slice(0, this.itemPreviewMaxItems),
-    );
-    public readonly hiddenItemPreviewCount = computed(() => Math.max(0, this.itemPreview.length - this.itemPreviewMaxItems));
     public readonly nutritionControlNames: NutritionControlNames;
     public readonly nutritionForm: FormGroup<MealDetailNutritionForm>;
     public readonly macroBarState: NutritionMacroState;
@@ -95,15 +86,10 @@ export class MealDetailComponent {
         this.carbs = viewModel.carbs;
         this.fiber = viewModel.fiber;
         this.alcohol = viewModel.alcohol;
-        this.qualityScore = viewModel.qualityScore;
-        this.qualityGrade = viewModel.qualityGrade;
-        this.qualityHintKey = viewModel.qualityHintKey;
-        this.itemsCount = viewModel.itemsCount;
         this.formattedDate = this.datePipe.transform(this.consumption.date, 'dd.MM.yyyy, HH:mm');
         this.mealTypeLabel = viewModel.mealTypeLabel;
         this.preMealSatietyMeta = viewModel.preMealSatietyMeta;
         this.postMealSatietyMeta = viewModel.postMealSatietyMeta;
-        this.itemPreviewMaxItems = viewModel.itemPreviewMaxItems;
         this.itemPreview = viewModel.itemPreview;
         this.macroBlocks = viewModel.macroBlocks;
         this.nutritionControlNames = viewModel.nutritionControlNames;

@@ -99,9 +99,7 @@
 }
 
 <fd-meal-detail-item-preview
-    [items]="visibleItemPreview()"
-    [itemsCount]="itemsCount()"
-    [hiddenItemPreviewCount]="hiddenItemPreviewCount()"
+    [items]="itemPreview()"
     [isItemPreviewExpanded]="isItemPreviewExpanded()"
     (itemPreviewExpandedToggle)="itemPreviewExpandedToggle.emit()"
 />

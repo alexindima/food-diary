@@ -134,9 +134,6 @@ describe('buildMealDetailViewModel nutrition state', () => {
         expect(viewModel.carbs).toBe(TOTAL_CARBS);
         expect(viewModel.fiber).toBe(TOTAL_FIBER);
         expect(viewModel.alcohol).toBe(TOTAL_ALCOHOL);
-        expect(viewModel.qualityScore).toBe(QUALITY_SCORE);
-        expect(viewModel.qualityGrade).toBe('green');
-        expect(viewModel.qualityHintKey).toBe('QUALITY.GREEN');
         expect(viewModel.mealTypeLabel).toBe('translated:MEAL_TYPES.breakfast');
         expect(viewModel.nutritionForm.controls.calories.value).toBe(TOTAL_CALORIES);
     });
@@ -175,7 +172,7 @@ describe('buildMealDetailViewModel item preview state', () => {
     it('combines manual and AI item previews with translated fallback names and known units', () => {
         const viewModel = buildMealDetailViewModel(createMealWithItemPreview(), translate);
 
-        expect(viewModel.itemsCount).toBe(EXPECTED_ITEM_PREVIEW_COUNT);
+        expect(viewModel.itemPreview.length).toBe(EXPECTED_ITEM_PREVIEW_COUNT);
         expect(viewModel.itemPreview).toEqual([
             { name: 'Oatmeal', amount: BASE_AMOUNT, unitKey: 'GENERAL.UNITS.G', unitText: null },
             {

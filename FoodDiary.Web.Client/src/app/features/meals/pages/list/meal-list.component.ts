@@ -30,7 +30,7 @@ import {
     type MealListFiltersDialogResult,
 } from './meal-list-filters-dialog/meal-list-filters-dialog.component';
 import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
-import { MealListContentComponent } from './meal-list-sections/meal-list-content/meal-list-content.component';
+import { MealListContentComponent, type MealListEmptyState } from './meal-list-sections/meal-list-content/meal-list-content.component';
 import { MealListFavoritesComponent } from './meal-list-sections/meal-list-favorites/meal-list-favorites.component';
 
 @Component({
@@ -87,8 +87,13 @@ export class MealListComponent {
         const dateRange = this.searchForm.controls.dateRange.value;
         return (dateRange?.start !== null && dateRange?.start !== undefined) || (dateRange?.end !== null && dateRange?.end !== undefined);
     });
-    public readonly isEmptyState = computed(() => this.consumptionData.items().length === 0 && !this.hasDateFilter());
-    public readonly isNoResultsState = computed(() => this.consumptionData.items().length === 0 && this.hasDateFilter());
+    public readonly emptyState = computed<MealListEmptyState | null>(() => {
+        if (this.consumptionData.items().length > 0) {
+            return null;
+        }
+
+        return this.hasDateFilter() ? 'no-results' : 'empty';
+    });
     public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     public readonly currentPageIndex = computed(() => this.mealListFacade.currentPageIndex());
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');

@@ -7,7 +7,7 @@
         <fd-skeleton-card />
     </div>
 } @else {
-    @if (isEmptyState()) {
+    @if (emptyState() === 'empty') {
         <div class="consumption-list__empty-state fd-stack fd-align-center fd-gap-xs">
             <fd-ui-icon class="consumption-list__no-results-icon" name="restaurant_menu" size="xl" />
             <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.EMPTY_TITLE' | translate }}</div>
@@ -16,7 +16,7 @@
                 {{ 'CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON' | translate }}
             </fd-ui-button>
         </div>
-    } @else if (isNoResultsState()) {
+    } @else if (emptyState() === 'no-results') {
         <div class="consumption-list__no-results fd-stack fd-align-center fd-gap-xs">
             <fd-ui-icon class="consumption-list__no-results-icon" name="search_off" size="xl" />
             <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.NO_RESULTS_TITLE' | translate }}</div>

@@ -55,14 +55,10 @@ async function setupComponentAsync(
     fixture.componentRef.setInput('nutritionControlNames', createNutritionControlNames());
     fixture.componentRef.setInput('macroBarState', createMacroBarState());
     fixture.componentRef.setInput('nutritionMode', options.nutritionMode ?? 'auto');
-    fixture.componentRef.setInput('nutritionModeOptions', [
-        { value: 'auto', label: 'Auto' },
-        { value: 'manual', label: 'Manual' },
-    ]);
     fixture.componentRef.setInput('nutritionWarning', null);
     fixture.componentRef.setInput('caloriesError', null);
     fixture.componentRef.setInput('macrosError', null);
-    fixture.componentRef.setInput('consumption', null);
+    fixture.componentRef.setInput('isEditMode', false);
     fixture.componentRef.setInput('globalError', null);
     fixture.detectChanges();
 

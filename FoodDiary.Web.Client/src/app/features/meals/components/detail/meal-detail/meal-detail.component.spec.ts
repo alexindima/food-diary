@@ -154,8 +154,8 @@ describe('MealDetailComponent actions', () => {
         expect(component.consumption).toEqual(mockMeal);
     });
 
-    it('should count items', () => {
-        expect(component.itemsCount).toBe(0);
+    it('should build an empty item preview', () => {
+        expect(component.itemPreview).toEqual([]);
     });
 });
 
@@ -201,7 +201,7 @@ describe('MealDetailComponent item previews', () => {
 
         const customComponent = await createComponentAsync(meal);
 
-        expect(customComponent.itemsCount).toBe(2);
+        expect(customComponent.itemPreview).toHaveLength(2);
         expect(customComponent.itemPreview.map(item => item.name)).toEqual(['Manual item', 'ИИ позиция']);
     });
 });
@@ -245,11 +245,10 @@ describe('MealDetailComponent macro blocks and expanded preview', () => {
 
         const customComponent = await createComponentAsync(meal);
 
-        expect(customComponent.visibleItemPreview().map(item => item.name)).toEqual(['First item', 'Second item']);
-        expect(customComponent.hiddenItemPreviewCount()).toBe(1);
+        expect(customComponent.itemPreview.slice(0, 2).map(item => item.name)).toEqual(['First item', 'Second item']);
 
         customComponent.toggleItemPreviewExpanded();
 
-        expect(customComponent.visibleItemPreview().map(item => item.name)).toEqual(['First item', 'Second item', 'Third item']);
+        expect(customComponent.isItemPreviewExpanded()).toBe(true);
     });
 });

@@ -1,7 +1,8 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS } from '../meal-detail-lib/meal-detail.config';
 import type { MealDetailItemPreview } from '../meal-detail-lib/meal-detail.types';
 
 @Component({
@@ -13,9 +14,12 @@ import type { MealDetailItemPreview } from '../meal-detail-lib/meal-detail.types
 })
 export class MealDetailItemPreviewComponent {
     public readonly items = input.required<readonly MealDetailItemPreview[]>();
-    public readonly itemsCount = input.required<number>();
-    public readonly hiddenItemPreviewCount = input.required<number>();
     public readonly isItemPreviewExpanded = input.required<boolean>();
+
+    public readonly visibleItems = computed(() =>
+        this.isItemPreviewExpanded() ? this.items() : this.items().slice(0, MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS),
+    );
+    public readonly hiddenItemPreviewCount = computed(() => Math.max(0, this.items().length - MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS));
 
     public readonly itemPreviewExpandedToggle = output();
 }

@@ -21,12 +21,6 @@ export type MacroSummaryItem = {
     numberFormat: string;
 };
 
-export type PhotoAiEditActionState = {
-    variant: 'primary' | 'secondary';
-    fill: 'solid' | 'outline';
-    labelKey: string;
-};
-
 export type EditableAiItem = {
     id: string;
     name: string;

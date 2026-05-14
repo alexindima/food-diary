@@ -22,6 +22,7 @@ import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premi
 import { mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
 import type { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
+import type { AiPhotoEditApplied } from './ai-photo-result/ai-photo-result.types';
 
 type AiInputBarChannelState = {
     analyzing: WritableSignal<boolean>;
@@ -288,9 +289,16 @@ export class AiInputBarComponent {
         this.textNutritionErrorKey.set(null);
     }
 
-    public onTextEditApplied(items: FoodVisionItem[]): void {
-        this.textResults.set(items);
-        this.runTextNutrition(items);
+    public onTextEditApplied(result: AiPhotoEditApplied): void {
+        this.textResults.set(result.items);
+        if (result.nutrition !== null) {
+            this.textIsNutritionLoading.set(false);
+            this.textNutritionErrorKey.set(null);
+            this.textNutrition.set(result.nutrition);
+            return;
+        }
+
+        this.runTextNutrition(result.items);
     }
 
     public onTextReanalyze(): void {
@@ -312,9 +320,16 @@ export class AiInputBarComponent {
         this.photoNutritionErrorKey.set(null);
     }
 
-    public onPhotoEditApplied(items: FoodVisionItem[]): void {
-        this.photoResults.set(items);
-        this.runPhotoNutrition(items);
+    public onPhotoEditApplied(result: AiPhotoEditApplied): void {
+        this.photoResults.set(result.items);
+        if (result.nutrition !== null) {
+            this.photoIsNutritionLoading.set(false);
+            this.photoNutritionErrorKey.set(null);
+            this.photoNutrition.set(result.nutrition);
+            return;
+        }
+
+        this.runPhotoNutrition(result.items);
     }
 
     public onPhotoReanalyze(): void {

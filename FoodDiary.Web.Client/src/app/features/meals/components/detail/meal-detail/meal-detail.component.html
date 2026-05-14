@@ -46,16 +46,10 @@
             @case ('summary') {
                 <fd-meal-detail-summary
                     [consumption]="consumption"
-                    [calories]="calories"
-                    [qualityGrade]="qualityGrade"
-                    [qualityScore]="qualityScore"
-                    [qualityHintKey]="qualityHintKey"
                     [macroSummaryBlocks]="macroSummaryBlocks()"
                     [preMealSatietyMeta]="preMealSatietyMeta"
                     [postMealSatietyMeta]="postMealSatietyMeta"
-                    [visibleItemPreview]="visibleItemPreview()"
-                    [itemsCount]="itemsCount"
-                    [hiddenItemPreviewCount]="hiddenItemPreviewCount()"
+                    [itemPreview]="itemPreview"
                     [isItemPreviewExpanded]="isItemPreviewExpanded()"
                     (itemPreviewExpandedToggle)="toggleItemPreviewExpanded()"
                 />

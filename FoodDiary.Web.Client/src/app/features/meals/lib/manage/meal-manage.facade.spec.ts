@@ -6,8 +6,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealService } from '../../api/meal.service';
 import type { ConsumptionFormData, ConsumptionItemFormData } from '../../components/manage/meal-manage-lib/meal-manage.types';
@@ -22,10 +20,6 @@ import {
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MealManageFacade } from './meal-manage.facade';
 
-const AI_INPUT_LIMIT = 1000;
-const AI_OUTPUT_LIMIT = 1000;
-const AI_INPUT_USED = 100;
-const AI_OUTPUT_USED = 200;
 const RECIPE_SERVING_WEIGHT = 50;
 const RECIPE_SERVING_AMOUNT = 2;
 const EXPECTED_RECIPE_AMOUNT = 100;
@@ -100,7 +94,6 @@ const EXPECTED_MISMATCH_CALORIES = 230;
 
 let facade: MealManageFacade;
 let mealService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn> };
-let aiFoodService: { getUsageSummary: ReturnType<typeof vi.fn> };
 let authService: { isPremium: ReturnType<typeof vi.fn> };
 let navigationService: {
     navigateToHomeAsync: ReturnType<typeof vi.fn>;
@@ -127,22 +120,11 @@ const consumptionData: ConsumptionManageDto = {
     items: [],
     isNutritionAutoCalculated: true,
 };
-const usage: UserAiUsageResponse = {
-    inputLimit: AI_INPUT_LIMIT,
-    outputLimit: AI_OUTPUT_LIMIT,
-    inputUsed: AI_INPUT_USED,
-    outputUsed: AI_OUTPUT_USED,
-    resetAtUtc: '2026-04-03T00:00:00Z',
-};
-
 describe('MealManageFacade', () => {
     beforeEach(() => {
         mealService = {
             create: vi.fn(),
             update: vi.fn(),
-        };
-        aiFoodService = {
-            getUsageSummary: vi.fn(),
         };
         authService = {
             isPremium: vi.fn(),
@@ -162,7 +144,6 @@ describe('MealManageFacade', () => {
 
         mealService.create.mockReturnValue(of(consumption));
         mealService.update.mockReturnValue(of(consumption));
-        aiFoodService.getUsageSummary.mockReturnValue(of(usage));
         authService.isPremium.mockReturnValue(true);
         dialogService.open.mockReturnValue({ afterClosed: () => of('ConsumptionList') });
         recipeWeightService.loadServingWeight.mockReturnValue(of(RECIPE_SERVING_WEIGHT));
@@ -175,7 +156,6 @@ describe('MealManageFacade', () => {
             providers: [
                 MealManageFacade,
                 { provide: MealService, useValue: mealService },
-                { provide: AiFoodService, useValue: aiFoodService },
                 { provide: AuthService, useValue: authService },
                 { provide: NavigationService, useValue: navigationService },
                 { provide: FdUiDialogService, useValue: dialogService },
@@ -194,10 +174,6 @@ describe('MealManageFacade', () => {
 
 function registerSubmitAndNavigationTests(): void {
     describe('submit and navigation', () => {
-        it('should load ai usage summary', async () => {
-            await expect(facade.loadAiUsageAsync()).resolves.toEqual(usage);
-        });
-
         it('should create consumption when original consumption is null', async () => {
             const result = await facade.submitConsumptionAsync(null, consumptionData);
 

@@ -1,4 +1,4 @@
-import type { FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 
 export type EditableAiItem = {
     id: string;
@@ -45,6 +45,11 @@ export type AiEditItemUpdate = {
 export type AiEditItemDrop = {
     previousIndex: number;
     currentIndex: number;
+};
+
+export type AiPhotoEditApplied = {
+    items: FoodVisionItem[];
+    nutrition: FoodNutritionResponse | null;
 };
 
 export type AiEditedItemsView = {

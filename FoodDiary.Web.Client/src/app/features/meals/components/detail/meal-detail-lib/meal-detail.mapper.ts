@@ -7,15 +7,9 @@ import type {
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
-import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
 import type { ConsumptionAiItem, Meal } from '../../../models/meal.data';
-import {
-    MEAL_DETAIL_DEFAULT_QUALITY_GRADE,
-    MEAL_DETAIL_DEFAULT_SATIETY_EMOJI,
-    MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS,
-    MEAL_DETAIL_MIN_MACRO_BAR_PERCENT,
-} from './meal-detail.config';
+import { MEAL_DETAIL_DEFAULT_SATIETY_EMOJI, MEAL_DETAIL_MIN_MACRO_BAR_PERCENT } from './meal-detail.config';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from './meal-detail.types';
 
 export type MealDetailNutritionForm = {
@@ -34,14 +28,9 @@ export type MealDetailViewModel = {
     carbs: number;
     fiber: number;
     alcohol: number;
-    qualityScore: number;
-    qualityGrade: string;
-    qualityHintKey: string;
-    itemsCount: number;
     mealTypeLabel: string | null;
     preMealSatietyMeta: MealSatietyMeta;
     postMealSatietyMeta: MealSatietyMeta;
-    itemPreviewMaxItems: number;
     itemPreview: MealDetailItemPreview[];
     macroBlocks: MealMacroBlock[];
     nutritionControlNames: NutritionControlNames;
@@ -57,7 +46,6 @@ export function buildMealDetailViewModel(meal: Meal, translate: (key: string) =>
     const fiber = meal.totalFiber;
     const alcohol = meal.totalAlcohol;
     const datasetValues = [proteins, fats, carbs];
-    const qualityGrade = meal.qualityGrade ?? MEAL_DETAIL_DEFAULT_QUALITY_GRADE;
 
     return {
         calories,
@@ -66,17 +54,12 @@ export function buildMealDetailViewModel(meal: Meal, translate: (key: string) =>
         carbs,
         fiber,
         alcohol,
-        qualityScore: normalizeQualityScore(meal.qualityScore),
-        qualityGrade,
-        qualityHintKey: `QUALITY.${qualityGrade.toUpperCase()}`,
-        itemsCount: getTotalItemsCount(meal),
         mealTypeLabel:
             meal.mealType !== null && meal.mealType !== undefined && meal.mealType.length > 0
                 ? translate(`MEAL_TYPES.${meal.mealType}`)
                 : null,
         preMealSatietyMeta: buildSatietyMeta('before', meal.preMealSatietyLevel, translate),
         postMealSatietyMeta: buildSatietyMeta('after', meal.postMealSatietyLevel, translate),
-        itemPreviewMaxItems: MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS,
         itemPreview: buildItemPreview(meal, translate),
         macroBlocks: buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, datasetValues),
         nutritionControlNames: {
@@ -194,11 +177,6 @@ function buildItemPreview(meal: Meal, translate: (key: string) => string): MealD
     );
 
     return [...manualItems, ...aiItems];
-}
-
-function getTotalItemsCount(meal: Meal): number {
-    const aiItemsCount = (meal.aiSessions ?? []).reduce((total, session) => total + session.items.length, 0);
-    return meal.items.length + aiItemsCount;
 }
 
 function getAiItemName(item: ConsumptionAiItem, translate: (key: string) => string): string {

@@ -1,10 +1,10 @@
 <section class="consumption-detail__list fd-stack fd-gap-xs">
     <h3 class="consumption-detail__list-title fd-ui-card-title">
         {{ 'CONSUMPTION_DETAIL.SUMMARY.ITEMS' | translate }}
-        <span class="consumption-detail__list-count fd-ui-caption">{{ itemsCount() }}</span>
+        <span class="consumption-detail__list-count fd-ui-caption">{{ items().length }}</span>
     </h3>
-    @if (items().length) {
-        @for (item of items(); track $index) {
+    @if (visibleItems().length) {
+        @for (item of visibleItems(); track $index) {
             <div class="consumption-detail__list-row">
                 <span class="fd-ui-body-sm">{{ item.name }}</span>
                 <strong class="fd-ui-body-sm">

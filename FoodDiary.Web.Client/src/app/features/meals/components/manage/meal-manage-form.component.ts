@@ -17,7 +17,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
@@ -30,7 +29,6 @@ import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../shared/lib/nutri
 import { calculateMacroBarState, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { getStringProperty } from '../../../../shared/lib/unknown-value.utils';
-import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import type { NutrientData } from '../../../../shared/models/charts.data';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
@@ -58,11 +56,7 @@ import {
     getDateInputValue,
     getTimeInputValue,
 } from './meal-manage-lib/meal-manage-form.mapper';
-import {
-    buildMealNutritionModeOptions,
-    buildMealTypeSelectOptions,
-    type MealSatietyControlName,
-} from './meal-manage-lib/meal-manage-options.mapper';
+import { buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-lib/meal-manage-options.mapper';
 import { resolveMealManageControlError } from './meal-manage-lib/meal-manage-view.utils';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog.component';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
@@ -131,13 +125,11 @@ export class MealManageFormComponent {
     });
     public readonly globalError = signal<string | null>(null);
     public readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
-    public readonly aiUsage = signal<UserAiUsageResponse | null>(null);
     public readonly itemsRenderVersion = signal(0);
     public readonly nutritionMode = signal<NutritionMode>('auto');
     public readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     public readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     public readonly selectedMealType = signal<string | null>(null);
-    public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     public readonly generalFieldErrors = signal<MealGeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
     public readonly manageHeaderState = computed(() => ({
@@ -150,21 +142,12 @@ export class MealManageFormComponent {
         return calculateMacroBarState(nutrients.proteins, nutrients.fats, nutrients.carbs);
     });
 
-    public readonly aiQuotaExceeded = computed(() => {
-        const usage = this.aiUsage();
-        if (usage === null) {
-            return false;
-        }
-        return usage.inputUsed >= usage.inputLimit || usage.outputUsed >= usage.outputLimit;
-    });
-
     public consumptionForm: FormGroup<ConsumptionFormData>;
     public mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
         this.consumptionForm = this.createConsumptionForm();
         this.buildMealTypeOptions();
-        this.buildNutritionModeOptions();
         this.nutritionMode.set(this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual');
         this.watchLanguageChanges();
         this.watchGeneralFieldErrors();
@@ -175,7 +158,6 @@ export class MealManageFormComponent {
         this.updateItemValidationRules();
         this.watchNutritionModeChanges();
 
-        this.loadAiUsage();
         const presetMealType = this.resolvePresetMealType();
         if (presetMealType !== null) {
             this.consumptionForm.controls.mealType.setValue(presetMealType);
@@ -202,7 +184,6 @@ export class MealManageFormComponent {
     private watchLanguageChanges(): void {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
-            this.buildNutritionModeOptions();
             this.updateGeneralFieldErrors();
         });
     }
@@ -626,10 +607,6 @@ export class MealManageFormComponent {
         this.mealManageFacade.updateItemValidationRules(this.consumptionForm.controls.items);
     }
 
-    private buildNutritionModeOptions(): void {
-        this.nutritionModeOptions = buildMealNutritionModeOptions(this.translateService);
-    }
-
     private async addConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
         const response = await this.mealManageFacade.submitConsumptionAsync(null, consumptionData);
         await this.handleSubmitResponseAsync(response);
@@ -708,20 +685,12 @@ export class MealManageFormComponent {
     private buildDateTime(): Date {
         const dateValue = this.consumptionForm.controls.date.value;
         const timeValue = this.consumptionForm.controls.time.value;
-        const datePart = dateValue;
-        const timePart = timeValue;
-        const combined = `${datePart}T${timePart}`;
+        const combined = `${dateValue}T${timeValue}`;
         const parsed = new Date(combined);
         return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {
         return resolveMealManageControlError(control, this.translateService);
-    }
-
-    private loadAiUsage(): void {
-        void this.mealManageFacade.loadAiUsageAsync().then(usage => {
-            this.aiUsage.set(usage);
-        });
     }
 }

@@ -10,6 +10,8 @@ import { SkeletonCardComponent } from '../../../../../../components/shared/skele
 import type { Meal } from '../../../../models/meal.data';
 import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
 
+export type MealListEmptyState = 'empty' | 'no-results';
+
 @Component({
     selector: 'fd-meal-list-content',
     imports: [
@@ -28,8 +30,7 @@ import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
 export class MealListContentComponent {
     public readonly errorKey = input.required<string | null>();
     public readonly isLoading = input.required<boolean>();
-    public readonly isEmptyState = input.required<boolean>();
-    public readonly isNoResultsState = input.required<boolean>();
+    public readonly emptyState = input.required<MealListEmptyState | null>();
     public readonly groups = input.required<readonly MealDateGroupView[]>();
     public readonly totalPages = input.required<number>();
     public readonly totalItems = input.required<number>();

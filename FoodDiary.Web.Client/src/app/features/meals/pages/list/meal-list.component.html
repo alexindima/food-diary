@@ -75,8 +75,7 @@
         <fd-meal-list-content
             [errorKey]="errorKey()"
             [isLoading]="consumptionData.isLoading()"
-            [isEmptyState]="isEmptyState()"
-            [isNoResultsState]="isNoResultsState()"
+            [emptyState]="emptyState()"
             [groups]="groupedConsumptions()"
             [totalPages]="consumptionData.totalPages"
             [totalItems]="consumptionData.totalItems"

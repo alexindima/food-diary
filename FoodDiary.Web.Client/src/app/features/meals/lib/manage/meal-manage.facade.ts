@@ -14,7 +14,6 @@ import { firstValueFrom } from 'rxjs';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import {
     ItemSelectDialogComponent,
     type ItemSelectDialogData,
@@ -22,7 +21,6 @@ import {
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { calculateCalorieMismatchWarning, getControlNumericValue, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import { isRecord } from '../../../../shared/lib/unknown-value.utils';
-import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
@@ -52,15 +50,10 @@ import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT, MEAL_MANAGE_MIN_ITEM_AMOUNT, MEAL_MANA
 @Injectable({ providedIn: 'root' })
 export class MealManageFacade {
     private readonly mealService = inject(MealService);
-    private readonly aiFoodService = inject(AiFoodService);
     private readonly authService = inject(AuthService);
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeWeight = inject(RecipeServingWeightService);
-
-    public async loadAiUsageAsync(): Promise<UserAiUsageResponse | null> {
-        return firstValueFrom(this.aiFoodService.getUsageSummary());
-    }
 
     public ensurePremiumAccess(): boolean {
         if (this.authService.isPremium()) {
