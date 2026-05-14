@@ -86,6 +86,9 @@ async function createComponentAsync(meal: Meal = mockMeal): Promise<MealDetailCo
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
             ],
         })
+        .overrideComponent(MealDetailComponent, {
+            set: { template: '' },
+        })
         .compileComponents();
 
     fixture = TestBed.createComponent(MealDetailComponent);

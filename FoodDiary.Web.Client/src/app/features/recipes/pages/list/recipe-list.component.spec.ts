@@ -15,8 +15,8 @@ import { RecipeListComponent } from './recipe-list.component';
 const PAGE_SIZE = 10;
 const SECOND_PAGE_INDEX = 1;
 const SECOND_PAGE = 2;
-const ASYNC_IMPORT_FLUSH_DELAY_MS = 0;
-const WAIT_ATTEMPTS = 20;
+const ASYNC_IMPORT_FLUSH_DELAY_MS = 5;
+const WAIT_ATTEMPTS = 200;
 const ZERO_DEBOUNCE_MS = 0;
 
 let facade: RecipeListFacadeMock;
@@ -232,6 +232,8 @@ async function waitForAsync(predicate: () => boolean): Promise<void> {
 
         await flushPromisesAsync();
     }
+
+    expect(predicate()).toBe(true);
 }
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
