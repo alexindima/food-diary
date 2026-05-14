@@ -1,5 +1,6 @@
 installWebStorageMock('localStorage');
 installWebStorageMock('sessionStorage');
+installResizeObserverMock();
 installCssParseWarningFilter();
 installCssParseStderrFilter();
 
@@ -59,6 +60,34 @@ function createMockStorage(): Storage {
             state.set(key, value);
         },
     };
+}
+
+function installResizeObserverMock(): void {
+    if (typeof globalThis.ResizeObserver === 'function') {
+        return;
+    }
+
+    class MockResizeObserver implements ResizeObserver {
+        public constructor(_callback: ResizeObserverCallback) {}
+
+        public disconnect(): void {}
+
+        public observe(_target: Element): void {}
+
+        public unobserve(_target: Element): void {}
+    }
+
+    Object.defineProperty(globalThis, 'ResizeObserver', {
+        value: MockResizeObserver,
+        configurable: true,
+    });
+
+    if (typeof window === 'object') {
+        Object.defineProperty(window, 'ResizeObserver', {
+            value: MockResizeObserver,
+            configurable: true,
+        });
+    }
 }
 
 function installCssParseWarningFilter(): void {
