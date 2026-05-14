@@ -1,0 +1,1 @@
+export const QUICK_MEAL_DEFAULT_ITEM_AMOUNT = 1;

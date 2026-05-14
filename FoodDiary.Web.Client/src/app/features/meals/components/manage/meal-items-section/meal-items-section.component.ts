@@ -8,7 +8,7 @@ import type { AiInputBarResult } from '../../../../../components/shared/ai-input
 import type { ConsumptionAiSessionManageDto } from '../../../models/meal.data';
 import { MealAiSessionsComponent } from '../meal-ai-sessions/meal-ai-sessions.component';
 import { MealItemsListComponent } from '../meal-items-list/meal-items-list.component';
-import type { ConsumptionItemFormData } from '../meal-manage.types';
+import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
 
 @Component({
     selector: 'fd-meal-items-section',

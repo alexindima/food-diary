@@ -27,6 +27,7 @@ const mojibakeMarkers = [
     { codePoint: 0x00c3, label: 'U+00C3' },
     { codePoint: 0x00d0, label: 'U+00D0' },
     { codePoint: 0x00d1, label: 'U+00D1' },
+    { codePoint: 0x00f0, label: 'U+00F0' },
 ].map(marker => ({
     ...marker,
     value: String.fromCharCode(marker.codePoint),

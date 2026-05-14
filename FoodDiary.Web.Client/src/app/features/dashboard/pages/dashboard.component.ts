@@ -22,7 +22,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { MealService } from '../../meals/api/meal.service';
-import { buildMealManageDtoFromAiResult } from '../../meals/lib/ai-meal-result.mapper';
+import { buildMealManageDtoFromAiResult } from '../../meals/lib/ai/ai-meal-result.mapper';
 import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
 import type { TdeeInsightDialogAction, TdeeInsightDialogData } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.types';
 import { DashboardFacade } from '../lib/dashboard.facade';

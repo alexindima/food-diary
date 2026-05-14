@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../../services/navigation.service';
 import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
-import { MealManageFacade } from '../../lib/meal-manage.facade';
+import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -16,8 +16,8 @@ import {
     ConsumptionSourceType,
     createEmptyProductSnapshot,
 } from '../../models/meal.data';
-import type { ConsumptionItemFormData, MealNutritionSummaryState, NutritionTotals } from './meal-manage.types';
 import { MealManageFormComponent } from './meal-manage-form.component';
+import type { ConsumptionItemFormData, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
 
 const PRODUCT_AMOUNT = 150;
 const TOTAL_CALORIES = 300;

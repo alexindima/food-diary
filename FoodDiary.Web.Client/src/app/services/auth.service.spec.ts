@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
 import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../features/auth/models/auth.data';
-import { QuickMealService } from '../features/meals/lib/quick-meal.service';
+import { QuickMealService } from '../features/meals/lib/quick/quick-meal.service';
 import { AuthService } from './auth.service';
 import { LocalizationService } from './localization.service';
 import { NavigationService } from './navigation.service';

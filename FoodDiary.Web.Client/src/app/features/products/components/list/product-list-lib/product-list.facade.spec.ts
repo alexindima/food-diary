@@ -8,7 +8,7 @@ import { APP_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens'
 import { NavigationService } from '../../../../../services/navigation.service';
 import { ViewportService } from '../../../../../services/viewport.service';
 import type { PageOf } from '../../../../../shared/models/page-of.data';
-import { QuickMealService } from '../../../../meals/lib/quick-meal.service';
+import { QuickMealService } from '../../../../meals/lib/quick/quick-meal.service';
 import { FavoriteProductService } from '../../../api/favorite-product.service';
 import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../../api/open-food-facts.service';
 import { ProductService } from '../../../api/product.service';

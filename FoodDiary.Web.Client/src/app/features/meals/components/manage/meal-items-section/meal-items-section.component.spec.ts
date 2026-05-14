@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../meal-manage.types';
+import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
 import { MealItemsSectionComponent } from './meal-items-section.component';
 
 const ITEM_INDEX = 1;

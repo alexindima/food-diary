@@ -6,7 +6,7 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
-import { QuickMealService } from '../../meals/lib/quick-meal.service';
+import { QuickMealService } from '../../meals/lib/quick/quick-meal.service';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
 import { type FavoriteRecipe, RecipeVisibility } from '../models/recipe.data';

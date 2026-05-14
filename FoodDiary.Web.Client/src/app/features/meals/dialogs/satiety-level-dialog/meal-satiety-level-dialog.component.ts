@@ -52,10 +52,4 @@ export class MealSatietyLevelDialogComponent {
     public close(): void {
         this.dialogRef.close();
     }
-
-    public getSelectionLabel(): string {
-        const value = this.selectedValue();
-        const title = this.translateService.instant(`HUNGER_SCALE.LEVEL_${value}.TITLE`);
-        return `${value} - ${title}`;
-    }
 }

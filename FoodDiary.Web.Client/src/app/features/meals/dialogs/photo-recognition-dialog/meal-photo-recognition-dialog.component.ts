@@ -14,8 +14,8 @@ import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../models/meal.data';
-import { MealPhotoEditListComponent } from './meal-photo-edit-list.component';
-import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary.component';
+import { MealPhotoEditListComponent } from './meal-photo-edit-list/meal-photo-edit-list.component';
+import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary/meal-photo-nutrition-summary.component';
 import type {
     EditableAiItem,
     MacroSummaryItem,
@@ -24,10 +24,10 @@ import type {
     PhotoAiEditItemUpdate,
     RecognizedItemView,
     UnitOptionView,
-} from './meal-photo-recognition-dialog.types';
-import { MealPhotoResultActionsComponent } from './meal-photo-result-actions.component';
-import { MealPhotoResultTableComponent } from './meal-photo-result-table.component';
-import { MealPhotoUploadPanelComponent } from './meal-photo-upload-panel.component';
+} from './meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
+import { MealPhotoResultActionsComponent } from './meal-photo-result-actions/meal-photo-result-actions.component';
+import { MealPhotoResultTableComponent } from './meal-photo-result-table/meal-photo-result-table.component';
+import { MealPhotoUploadPanelComponent } from './meal-photo-upload-panel/meal-photo-upload-panel.component';
 
 type PhotoAiDialogData = {
     initialSelection?: ImageSelection | null;
@@ -407,10 +407,6 @@ export class MealPhotoRecognitionDialogComponent {
         }
 
         this.startEditing();
-    }
-
-    public cancelEditing(): void {
-        this.isEditing.set(false);
     }
 
     public onEditItemDrop(event: PhotoAiEditItemDrop): void {

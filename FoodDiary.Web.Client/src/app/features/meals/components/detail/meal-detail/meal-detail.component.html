@@ -1,0 +1,88 @@
+<fd-ui-dialog size="lg">
+    <header fdUiDialogHeader class="consumption-detail__header">
+        <div class="consumption-detail__header-row">
+            <div class="consumption-detail__title-group">
+                <fd-ui-button
+                    class="consumption-detail__favorite-btn fd-favorite-button fd-inline-center"
+                    appearance="plain-icon"
+                    variant="secondary"
+                    fill="text"
+                    iconSize="sm"
+                    [icon]="favoriteIcon()"
+                    [class.consumption-detail__favorite-btn--active]="isFavorite()"
+                    [class.fd-favorite-button--active]="isFavorite()"
+                    [disabled]="isFavoriteLoading()"
+                    [fdUiHint]="favoriteAriaLabelKey() | translate"
+                    [ariaLabel]="favoriteAriaLabelKey() | translate"
+                    (click)="toggleFavorite()"
+                />
+                <div class="consumption-detail__heading">
+                    <h2 class="consumption-detail__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }}</h2>
+                    @if (formattedDate) {
+                        <p class="consumption-detail__subtitle">
+                            {{ formattedDate }}
+                            @if (mealTypeLabel) {
+                                <span aria-hidden="true"> &middot; </span>
+                                <span>{{ mealTypeLabel }}</span>
+                            }
+                        </p>
+                    }
+                </div>
+            </div>
+            <button type="button" class="consumption-detail__close-button" aria-label="Close dialog" (click)="close()">
+                <span class="material-icons" aria-hidden="true">close</span>
+            </button>
+        </div>
+        <fd-ui-tabs
+            class="consumption-detail__tabs"
+            [tabs]="tabs"
+            [selectedValue]="activeTab"
+            (selectedValueChange)="onTabChange($event)"
+        />
+    </header>
+
+    <div class="consumption-detail fd-stack fd-gap-lg">
+        @switch (activeTab) {
+            @case ('summary') {
+                <fd-meal-detail-summary
+                    [consumption]="consumption"
+                    [calories]="calories"
+                    [qualityGrade]="qualityGrade"
+                    [qualityScore]="qualityScore"
+                    [qualityHintKey]="qualityHintKey"
+                    [macroSummaryBlocks]="macroSummaryBlocks()"
+                    [preMealSatietyMeta]="preMealSatietyMeta"
+                    [postMealSatietyMeta]="postMealSatietyMeta"
+                    [visibleItemPreview]="visibleItemPreview()"
+                    [itemsCount]="itemsCount"
+                    [hiddenItemPreviewCount]="hiddenItemPreviewCount()"
+                    [isItemPreviewExpanded]="isItemPreviewExpanded()"
+                    (itemPreviewExpandedToggle)="toggleItemPreviewExpanded()"
+                />
+            }
+            @case ('nutrients') {
+                <fd-nutrition-editor
+                    class="consumption-detail__nutrients"
+                    [formGroup]="nutritionForm"
+                    [controlNames]="nutritionControlNames"
+                    [macroState]="macroBarState"
+                    [readonly]="true"
+                />
+            }
+        }
+    </div>
+
+    <div fdUiDialogFooter class="consumption-detail__footer fd-stack fd-gap-sm">
+        <div class="consumption-detail__actions fd-ui-actions fd-ui-actions--end">
+            <fd-ui-button size="md" variant="secondary" icon="replay" (click)="onRepeat()">
+                {{ 'CONSUMPTION_DETAIL.REPEAT_BUTTON' | translate }}
+            </fd-ui-button>
+            <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
+                {{ 'CONSUMPTION_DETAIL.EDIT_BUTTON' | translate }}
+            </fd-ui-button>
+            <fd-ui-button size="md" variant="danger" icon="delete" (click)="onDelete()">
+                {{ 'CONSUMPTION_DETAIL.DELETE_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</fd-ui-dialog>

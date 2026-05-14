@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
-import { formatMealAiAmount, formatMealAiName, formatMealManageMacro, getAiSessionTotals } from '../meal-manage-view.utils';
+import { formatMealAiAmount, formatMealAiName, formatMealManageMacro, getAiSessionTotals } from '../meal-manage-lib/meal-manage-view.utils';
 
 @Component({
     selector: 'fd-meal-ai-sessions',
@@ -59,10 +59,6 @@ export class MealAiSessionsComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             this.activeLang.set(event.lang);
         });
-    }
-
-    public getAiSessionLabel(index: number): string {
-        return this.translateService.instant('CONSUMPTION_MANAGE.ITEMS_AI_PHOTO_LABEL', { index: index + 1 });
     }
 
     public toggleAiSessionExpanded(index: number): void {

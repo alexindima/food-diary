@@ -1,0 +1,2 @@
+export const MEAL_LIST_PAGE_SIZE = 10;
+export const MEAL_LIST_OVERVIEW_FAVORITES_LIMIT = 10;

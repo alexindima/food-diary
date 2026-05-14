@@ -18,11 +18,11 @@ import {
 } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
-import { MealManageFacade } from '../../../lib/meal-manage.facade';
-import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
+import { MealManageFacade } from '../../../lib/manage/meal-manage.facade';
+import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../meal-manage.types';
-import { resolveMealManageControlError } from '../meal-manage-view.utils';
+import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
+import { resolveMealManageControlError } from '../meal-manage-lib/meal-manage-view.utils';
 
 const MIN_AMOUNT = 0.01;
 

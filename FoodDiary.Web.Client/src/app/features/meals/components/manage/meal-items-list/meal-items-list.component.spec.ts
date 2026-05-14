@@ -5,9 +5,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
-import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
+import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../meal-manage.types';
+import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
 import { MealItemsListComponent } from './meal-items-list.component';
 
 const PRODUCT_AMOUNT = 150;

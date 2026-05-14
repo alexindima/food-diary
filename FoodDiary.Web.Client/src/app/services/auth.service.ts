@@ -13,7 +13,7 @@ import type {
     TelegramLoginWidgetRequest,
 } from '../features/auth/models/auth.data';
 import type { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
-import { QuickMealService } from '../features/meals/lib/quick-meal.service';
+import { QuickMealService } from '../features/meals/lib/quick/quick-meal.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
 import { ApiService } from './api.service';
 import { FrontendLoggerService } from './frontend-logger.service';

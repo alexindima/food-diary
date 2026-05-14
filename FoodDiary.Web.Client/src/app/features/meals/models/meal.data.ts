@@ -252,17 +252,10 @@ export type Meal = Consumption;
 export type MealItem = ConsumptionItem;
 export type MealAiSession = ConsumptionAiSession;
 export type MealAiItem = ConsumptionAiItem;
-export type MealResponseDto = ConsumptionResponseDto;
-export type MealItemResponseDto = ConsumptionItemResponseDto;
-export type MealAiSessionResponseDto = ConsumptionAiSessionResponseDto;
-export type MealAiItemResponseDto = ConsumptionAiItemResponseDto;
 export type MealFilters = ConsumptionFilters;
 export type MealManageDto = ConsumptionManageDto;
-export type MealItemManageDto = ConsumptionItemManageDto;
 export type MealAiSessionManageDto = ConsumptionAiSessionManageDto;
-export type MealAiItemManageDto = ConsumptionAiItemManageDto;
 export type MealOverview = ConsumptionOverview;
-export const MealSourceType = ConsumptionSourceType;
 
 export type FavoriteMeal = {
     id: string;

@@ -25,11 +25,13 @@ import {
     type MealManageDto,
     type MealOverview,
 } from '../models/meal.data';
+import {
+    MEAL_API_DEFAULT_FAVORITE_LIMIT,
+    MEAL_API_DEFAULT_ITEM_AMOUNT,
+    MEAL_API_EMPTY_NUTRITION_VALUE,
+    MEAL_API_NUTRITION_CLOSE_TOLERANCE,
+} from './meal-api.config';
 
-const DEFAULT_FAVORITE_LIMIT = 10;
-const NUTRITION_CLOSE_TOLERANCE = 0.000001;
-const DEFAULT_ITEM_AMOUNT = 1;
-const EMPTY_NUTRITION_VALUE = 0;
 const MEAL_NUTRITION_FIELDS = ['calories', 'proteins', 'fats', 'carbs', 'fiber', 'alcohol'] as const;
 
 type NutritionField = (typeof MEAL_NUTRITION_FIELDS)[number];
@@ -54,7 +56,7 @@ export class MealService extends ApiService {
         page: number,
         limit: number,
         filters: MealFilters,
-        favoriteLimit = DEFAULT_FAVORITE_LIMIT,
+        favoriteLimit = MEAL_API_DEFAULT_FAVORITE_LIMIT,
     ): Observable<MealOverview> {
         const params = { page, limit, favoriteLimit, ...filters };
         return this.get<ConsumptionOverview>('overview', params).pipe(
@@ -188,7 +190,7 @@ export class MealService extends ApiService {
     }
 
     private areClose(left: number, right: number): boolean {
-        return Math.abs(left - right) <= NUTRITION_CLOSE_TOLERANCE;
+        return Math.abs(left - right) <= MEAL_API_NUTRITION_CLOSE_TOLERANCE;
     }
 
     private mapConsumptionItem(response: ConsumptionItemResponseDto): ConsumptionItem {
@@ -220,14 +222,14 @@ export class MealService extends ApiService {
             name: this.withDefault(response.productName, ''),
             imageUrl: this.toNullable(response.productImageUrl),
             baseUnit: this.normalizeMeasurementUnit(response.productBaseUnit),
-            baseAmount: this.withDefault(response.productBaseAmount, DEFAULT_ITEM_AMOUNT),
-            defaultPortionAmount: this.withDefault(response.productBaseAmount, DEFAULT_ITEM_AMOUNT),
-            caloriesPerBase: this.withDefault(response.productCaloriesPerBase, EMPTY_NUTRITION_VALUE),
-            proteinsPerBase: this.withDefault(response.productProteinsPerBase, EMPTY_NUTRITION_VALUE),
-            fatsPerBase: this.withDefault(response.productFatsPerBase, EMPTY_NUTRITION_VALUE),
-            carbsPerBase: this.withDefault(response.productCarbsPerBase, EMPTY_NUTRITION_VALUE),
-            fiberPerBase: this.withDefault(response.productFiberPerBase, EMPTY_NUTRITION_VALUE),
-            alcoholPerBase: this.withDefault(response.productAlcoholPerBase, EMPTY_NUTRITION_VALUE),
+            baseAmount: this.withDefault(response.productBaseAmount, MEAL_API_DEFAULT_ITEM_AMOUNT),
+            defaultPortionAmount: this.withDefault(response.productBaseAmount, MEAL_API_DEFAULT_ITEM_AMOUNT),
+            caloriesPerBase: this.withDefault(response.productCaloriesPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
+            proteinsPerBase: this.withDefault(response.productProteinsPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
+            fatsPerBase: this.withDefault(response.productFatsPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
+            carbsPerBase: this.withDefault(response.productCarbsPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
+            fiberPerBase: this.withDefault(response.productFiberPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
+            alcoholPerBase: this.withDefault(response.productAlcoholPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
         };
     }
 
@@ -238,13 +240,13 @@ export class MealService extends ApiService {
             id: this.withDefault(response.recipeId, ''),
             name: this.withDefault(response.recipeName, ''),
             imageUrl: this.toNullable(response.recipeImageUrl),
-            servings: this.withDefault(response.recipeServings, DEFAULT_ITEM_AMOUNT),
-            totalCalories: this.withDefault(response.recipeTotalCalories, EMPTY_NUTRITION_VALUE),
-            totalProteins: this.withDefault(response.recipeTotalProteins, EMPTY_NUTRITION_VALUE),
-            totalFats: this.withDefault(response.recipeTotalFats, EMPTY_NUTRITION_VALUE),
-            totalCarbs: this.withDefault(response.recipeTotalCarbs, EMPTY_NUTRITION_VALUE),
-            totalFiber: this.withDefault(response.recipeTotalFiber, EMPTY_NUTRITION_VALUE),
-            totalAlcohol: this.withDefault(response.recipeTotalAlcohol, EMPTY_NUTRITION_VALUE),
+            servings: this.withDefault(response.recipeServings, MEAL_API_DEFAULT_ITEM_AMOUNT),
+            totalCalories: this.withDefault(response.recipeTotalCalories, MEAL_API_EMPTY_NUTRITION_VALUE),
+            totalProteins: this.withDefault(response.recipeTotalProteins, MEAL_API_EMPTY_NUTRITION_VALUE),
+            totalFats: this.withDefault(response.recipeTotalFats, MEAL_API_EMPTY_NUTRITION_VALUE),
+            totalCarbs: this.withDefault(response.recipeTotalCarbs, MEAL_API_EMPTY_NUTRITION_VALUE),
+            totalFiber: this.withDefault(response.recipeTotalFiber, MEAL_API_EMPTY_NUTRITION_VALUE),
+            totalAlcohol: this.withDefault(response.recipeTotalAlcohol, MEAL_API_EMPTY_NUTRITION_VALUE),
         };
     }
 
@@ -292,12 +294,12 @@ export class MealService extends ApiService {
 
     private createEmptyNutritionTotals(): NutritionTotals {
         return {
-            calories: EMPTY_NUTRITION_VALUE,
-            proteins: EMPTY_NUTRITION_VALUE,
-            fats: EMPTY_NUTRITION_VALUE,
-            carbs: EMPTY_NUTRITION_VALUE,
-            fiber: EMPTY_NUTRITION_VALUE,
-            alcohol: EMPTY_NUTRITION_VALUE,
+            calories: MEAL_API_EMPTY_NUTRITION_VALUE,
+            proteins: MEAL_API_EMPTY_NUTRITION_VALUE,
+            fats: MEAL_API_EMPTY_NUTRITION_VALUE,
+            carbs: MEAL_API_EMPTY_NUTRITION_VALUE,
+            fiber: MEAL_API_EMPTY_NUTRITION_VALUE,
+            alcohol: MEAL_API_EMPTY_NUTRITION_VALUE,
         };
     }
 

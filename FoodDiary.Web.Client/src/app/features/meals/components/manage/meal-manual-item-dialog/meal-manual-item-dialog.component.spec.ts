@@ -9,10 +9,10 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
-import { MealManageFacade } from '../../../lib/meal-manage.facade';
-import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
+import { MealManageFacade } from '../../../lib/manage/meal-manage.facade';
+import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../meal-manage.types';
+import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog.component';
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 125;

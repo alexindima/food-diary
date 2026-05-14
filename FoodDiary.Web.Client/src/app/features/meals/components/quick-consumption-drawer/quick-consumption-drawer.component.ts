@@ -12,10 +12,10 @@ import { resolveProductImageUrl } from '../../../products/lib/product-image.util
 import { normalizeProductType } from '../../../products/lib/product-type.utils';
 import { ProductType } from '../../../products/models/product.data';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
-import { MealManageFacade } from '../../lib/meal-manage.facade';
-import { type QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
+import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
+import { type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import { ConsumptionSourceType } from '../../models/meal.data';
-import type { ConsumptionItemFormData } from '../manage/meal-manage.types';
+import type { ConsumptionItemFormData } from '../manage/meal-manage-lib/meal-manage.types';
 import {
     MealManualItemDialogComponent,
     type MealManualItemDialogData,

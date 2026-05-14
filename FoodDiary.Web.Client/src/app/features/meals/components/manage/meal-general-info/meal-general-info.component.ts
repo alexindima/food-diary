@@ -9,7 +9,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
-import type { ConsumptionFormData } from '../meal-manage.types';
+import type { ConsumptionFormData } from '../meal-manage-lib/meal-manage.types';
 
 export type MealGeneralFieldErrors = {
     date: string | null;

@@ -20,15 +20,18 @@ import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { MealService } from '../../api/meal.service';
-import type { MealDetailComponent } from '../../components/detail/meal-detail.component';
-import type { MealDetailActionResult } from '../../components/detail/meal-detail.types';
-import { buildMealManageDtoFromAiResult } from '../../lib/ai-meal-result.mapper';
-import { MealListFacade } from '../../lib/meal-list.facade';
+import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail.component';
+import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
+import { buildMealManageDtoFromAiResult } from '../../lib/ai/ai-meal-result.mapper';
+import { MealListFacade } from '../../lib/list/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
-import type { FavoriteMealView, MealDateGroupView } from './meal-list.types';
-import { MealListContentComponent } from './meal-list-content.component';
-import { MealListFavoritesComponent } from './meal-list-favorites.component';
-import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog.component';
+import {
+    MealListFiltersDialogComponent,
+    type MealListFiltersDialogResult,
+} from './meal-list-filters-dialog/meal-list-filters-dialog.component';
+import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
+import { MealListContentComponent } from './meal-list-sections/meal-list-content/meal-list-content.component';
+import { MealListFavoritesComponent } from './meal-list-sections/meal-list-favorites/meal-list-favorites.component';
 
 @Component({
     selector: 'fd-meal-list',
@@ -175,7 +178,7 @@ export class MealListComponent {
     }
 
     public async openMealDetailsAsync(consumption: Meal): Promise<void> {
-        const { MealDetailComponent } = await import('../../components/detail/meal-detail.component');
+        const { MealDetailComponent } = await import('../../components/detail/meal-detail/meal-detail.component');
 
         this.fdDialogService
             .open<MealDetailComponent, Meal, MealDetailActionResult>(MealDetailComponent, {

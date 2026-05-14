@@ -10,7 +10,7 @@ import { NavigationService } from '../../../../../services/navigation.service';
 import { ViewportService } from '../../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import { PagedData } from '../../../../../shared/lib/paged-data.data';
-import { QuickMealService } from '../../../../meals/lib/quick-meal.service';
+import { QuickMealService } from '../../../../meals/lib/quick/quick-meal.service';
 import { FavoriteProductService } from '../../../api/favorite-product.service';
 import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../../api/open-food-facts.service';
 import { ProductService } from '../../../api/product.service';

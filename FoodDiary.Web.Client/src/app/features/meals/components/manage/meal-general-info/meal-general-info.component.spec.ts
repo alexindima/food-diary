@@ -3,7 +3,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import type { ConsumptionFormData, ConsumptionItemFormData } from '../meal-manage.types';
+import type { ConsumptionFormData, ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info.component';
 
 describe('MealGeneralInfoComponent', () => {

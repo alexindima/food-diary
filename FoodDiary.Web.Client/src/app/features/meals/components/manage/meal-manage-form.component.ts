@@ -32,7 +32,7 @@ import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared
 import { getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import type { NutrientData } from '../../../../shared/models/charts.data';
-import { MealManageFacade } from '../../lib/meal-manage.facade';
+import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -49,7 +49,7 @@ import type {
     MacroBarState,
     MealNutritionSummaryState,
     NutritionMode,
-} from './meal-manage.types';
+} from './meal-manage-lib/meal-manage.types';
 import {
     buildMealManageDto,
     buildMealManageFormPatchValue,
@@ -57,14 +57,18 @@ import {
     getConsumptionItemInitialAmount,
     getDateInputValue,
     getTimeInputValue,
-} from './meal-manage-form.mapper';
-import { buildMealNutritionModeOptions, buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-options.mapper';
-import { resolveMealManageControlError } from './meal-manage-view.utils';
+} from './meal-manage-lib/meal-manage-form.mapper';
+import {
+    buildMealNutritionModeOptions,
+    buildMealTypeSelectOptions,
+    type MealSatietyControlName,
+} from './meal-manage-lib/meal-manage-options.mapper';
+import { resolveMealManageControlError } from './meal-manage-lib/meal-manage-view.utils';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog.component';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card.component';
 
-export type { ConsumptionFormData, ConsumptionItemFormData } from './meal-manage.types';
+export type { ConsumptionFormData, ConsumptionItemFormData } from './meal-manage-lib/meal-manage.types';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,

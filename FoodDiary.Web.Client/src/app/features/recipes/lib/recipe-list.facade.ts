@@ -5,7 +5,7 @@ import { catchError, finalize, map, type Observable, of, switchMap, tap } from '
 
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
-import { QuickMealService } from '../../meals/lib/quick-meal.service';
+import { QuickMealService } from '../../meals/lib/quick/quick-meal.service';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
 import type { RecipeDetailActionResult } from '../components/detail/recipe-detail-lib/recipe-detail.types';

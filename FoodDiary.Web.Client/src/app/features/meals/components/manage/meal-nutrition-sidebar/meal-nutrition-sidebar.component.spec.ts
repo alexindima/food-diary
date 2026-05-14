@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { NutritionControlNames } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import type { ConsumptionFormData, ConsumptionItemFormData, MacroBarState, NutritionMode } from '../meal-manage.types';
+import type { ConsumptionFormData, ConsumptionItemFormData, MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar.component';
 
 describe('MealNutritionSidebarComponent state', () => {

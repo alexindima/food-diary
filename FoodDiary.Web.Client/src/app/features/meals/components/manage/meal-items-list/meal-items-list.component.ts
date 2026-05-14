@@ -8,15 +8,15 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
-import { RecipeServingWeightService } from '../../../lib/recipe-serving-weight.service';
+import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData, NutritionTotals } from '../meal-manage.types';
+import type { ConsumptionItemFormData, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
 import {
     formatMealManageAmount,
     formatMealManageMacro,
     getEmptyNutritionTotals,
     resolveMealManageControlError,
-} from '../meal-manage-view.utils';
+} from '../meal-manage-lib/meal-manage-view.utils';
 
 @Component({
     selector: 'fd-meal-items-list',
@@ -153,10 +153,6 @@ export class MealItemsListComponent {
             return 'restaurant';
         }
         return 'search';
-    }
-
-    public getAmountPlaceholder(index: number): string {
-        return this.isRecipeItem(index) ? 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_RECIPE' : 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT';
     }
 
     public getAmountControlError(index: number): string | null {

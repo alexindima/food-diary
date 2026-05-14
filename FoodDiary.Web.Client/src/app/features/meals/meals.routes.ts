@@ -9,10 +9,10 @@ const routes: Routes = [
         component: MealContainerComponent,
         children: [
             { path: '', loadComponent: async () => import('./pages/list/meal-list.component').then(m => m.MealListComponent) },
-            { path: 'add', loadComponent: async () => import('./pages/manage/meal-add.component').then(m => m.MealAddComponent) },
+            { path: 'add', loadComponent: async () => import('./pages/manage/meal-add/meal-add.component').then(m => m.MealAddComponent) },
             {
                 path: ':id/edit',
-                loadComponent: async () => import('./pages/manage/meal-edit.component').then(m => m.MealEditComponent),
+                loadComponent: async () => import('./pages/manage/meal-edit/meal-edit.component').then(m => m.MealEditComponent),
                 resolve: { consumption: mealResolver },
             },
         ],
