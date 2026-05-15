@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, type Observable, tap } from 'rxjs';
+import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -37,9 +37,6 @@ export class HydrationService extends ApiService {
         };
 
         return this.post<HydrationEntry>('', payload).pipe(
-            tap(() => {
-                // no-op side effects; refresh handled by caller
-            }),
             catchError((error: unknown) => rethrowApiError('Create hydration entry error', error)),
         );
     }
