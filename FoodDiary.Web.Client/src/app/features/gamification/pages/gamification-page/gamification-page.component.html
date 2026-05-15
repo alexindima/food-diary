@@ -1,0 +1,25 @@
+<div class="gamification fd-stack fd-gap-page-header" fdPageContainer>
+    <fd-page-header
+        class="gamification__header"
+        [title]="'GAMIFICATION.TITLE' | translate"
+        [subtitle]="'GAMIFICATION.SUBTITLE' | translate"
+    />
+
+    <fd-page-body>
+        @if (isLoading()) {
+            <div class="gamification__loader fd-ui-body-sm">{{ 'GAMIFICATION.LOADING' | translate }}</div>
+        } @else {
+            <fd-gamification-stats-grid
+                [currentStreak]="currentStreak()"
+                [longestStreak]="longestStreak()"
+                [totalMealsLogged]="totalMealsLogged()"
+                [weeklyAdherence]="weeklyAdherence()"
+            />
+
+            <div class="gamification__grid fd-grid fd-gap-card-content">
+                <fd-gamification-health-score-card [score]="healthScore()" />
+                <fd-gamification-badges-card [badges]="badges()" />
+            </div>
+        }
+    </fd-page-body>
+</div>

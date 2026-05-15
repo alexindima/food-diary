@@ -1,0 +1,25 @@
+<fd-ui-card class="gamification__card" [title]="'GAMIFICATION.HEALTH_SCORE_TITLE' | translate">
+    <div class="gamification__score fd-stack fd-align-center fd-gap-card-header">
+        <div class="gamification__score-ring">
+            <svg class="gamification__score-svg" viewBox="0 0 200 200">
+                <circle class="gamification__score-track" cx="100" cy="100" r="90" fill="none" stroke-width="10" />
+                <circle
+                    class="gamification__score-progress"
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    fill="none"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                    [style.stroke-dasharray]="ring().strokeDasharray"
+                    [style.stroke-dashoffset]="ring().strokeDashoffset"
+                />
+            </svg>
+            <div class="gamification__score-content fd-stack fd-align-center fd-justify-center">
+                <strong class="gamification__score-value fd-ui-metric-hero">{{ score() }}</strong>
+                <span class="gamification__score-label fd-ui-metric-unit">/ 100</span>
+            </div>
+        </div>
+        <p class="gamification__score-hint fd-ui-caption">{{ 'GAMIFICATION.HEALTH_SCORE_HINT' | translate }}</p>
+    </div>
+</fd-ui-card>

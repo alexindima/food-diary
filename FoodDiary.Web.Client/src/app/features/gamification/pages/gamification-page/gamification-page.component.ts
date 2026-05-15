@@ -1,25 +1,25 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
-import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
-import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { GamificationFacade } from '../lib/gamification.facade';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { GamificationFacade } from '../../lib/gamification.facade';
+import { GamificationBadgesCardComponent } from '../gamification-page-sections/badges-card/gamification-badges-card.component';
+import { GamificationHealthScoreCardComponent } from '../gamification-page-sections/health-score-card/gamification-health-score-card.component';
+import { GamificationStatsGridComponent } from '../gamification-page-sections/stats-grid/gamification-stats-grid.component';
 
 @Component({
     selector: 'fd-gamification-page',
     standalone: true,
     imports: [
         TranslatePipe,
-        FdUiIconComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        FdUiCardComponent,
-        FdUiAccentSurfaceComponent,
+        GamificationStatsGridComponent,
+        GamificationHealthScoreCardComponent,
+        GamificationBadgesCardComponent,
     ],
     templateUrl: './gamification-page.component.html',
     styleUrl: './gamification-page.component.scss',
@@ -35,9 +35,7 @@ export class GamificationPageComponent {
     public readonly totalMealsLogged = this.facade.totalMealsLogged;
     public readonly healthScore = this.facade.healthScore;
     public readonly weeklyAdherence = this.facade.weeklyAdherence;
-    public readonly healthScoreRing = this.facade.healthScoreRing;
-    public readonly earnedBadges = this.facade.earnedBadges;
-    public readonly lockedBadges = this.facade.lockedBadges;
+    public readonly badges = this.facade.badges;
 
     public constructor() {
         this.facade.initialize();

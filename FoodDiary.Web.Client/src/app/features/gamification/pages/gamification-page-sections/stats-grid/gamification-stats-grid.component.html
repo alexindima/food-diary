@@ -1,0 +1,14 @@
+<div class="gamification__stats-grid fd-grid fd-gap-card-header">
+    @for (stat of stats(); track stat.key) {
+        <fd-ui-accent-surface
+            class="gamification__stat fd-ui-stat-tile fd-ui-stat-tile--centered"
+            accentSide="top"
+            [accentColor]="stat.accentColor"
+            [tinted]="true"
+        >
+            <fd-ui-icon [attr.class]="`gamification__stat-icon ${stat.iconClass}`" [name]="stat.icon" />
+            <strong class="gamification__stat-value fd-ui-stat-tile__value fd-ui-metric-lg">{{ stat.value }}</strong>
+            <span class="gamification__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{ stat.labelKey | translate }}</span>
+        </fd-ui-accent-surface>
+    }
+</div>
