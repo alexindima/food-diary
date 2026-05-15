@@ -1,6 +1,6 @@
 import type { FormGroup } from '@angular/forms';
 
-import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
+import type { DietologistPermissions, DietologistRelationship } from '../../../../../shared/models/dietologist.data';
 import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage.config';
 import type { DietologistFormData } from './user-manage.types';
 

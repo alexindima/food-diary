@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
-import type { BillingViewModel } from '../../user-manage/user-manage.types';
+import type { BillingViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
 import { UserManageBillingSummaryComponent } from '../billing-summary/user-manage-billing-summary.component';
 
 @Component({

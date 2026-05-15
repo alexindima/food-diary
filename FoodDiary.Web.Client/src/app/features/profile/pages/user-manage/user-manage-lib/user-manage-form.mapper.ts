@@ -1,8 +1,8 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
-import type { ImageSelection } from '../../../../shared/models/image-upload.data';
-import { type ActivityLevelOption, Gender, type User } from '../../../../shared/models/user.data';
+import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { type ActivityLevelOption, Gender, type User } from '../../../../../shared/models/user.data';
 import {
     APP_THEMES,
     APP_UI_STYLES,
@@ -10,7 +10,7 @@ import {
     type AppUiStyleName,
     isAppThemeName,
     isAppUiStyleName,
-} from '../../../../theme/app-theme.config';
+} from '../../../../../theme/app-theme.config';
 import { ACTIVITY_LEVEL_OPTIONS, DEFAULT_DIETOLOGIST_PERMISSIONS, LANGUAGE_CODES } from './user-manage.config';
 import type { DietologistFormData, UserFormData, UserFormValues } from './user-manage.types';
 

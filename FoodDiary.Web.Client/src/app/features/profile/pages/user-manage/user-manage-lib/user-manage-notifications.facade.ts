@@ -3,18 +3,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
-import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
-import { LocalizationService } from '../../../../services/localization.service';
-import { NotificationService, type WebPushSubscriptionItem } from '../../../../services/notification.service';
-import { PushNotificationService } from '../../../../services/push-notification.service';
+import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
+import { LocalizationService } from '../../../../../services/localization.service';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../../../services/notification.service';
+import { PushNotificationService } from '../../../../../services/push-notification.service';
 import {
     FASTING_REMINDER_PRESETS,
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
-} from '../../../../shared/lib/fasting-reminder-presets';
-import { parseIntegerInput } from '../../../../shared/lib/number.utils';
-import type { User } from '../../../../shared/models/user.data';
-import { ProfileManageFacade } from '../../lib/profile-manage.facade';
+} from '../../../../../shared/lib/fasting-reminder-presets';
+import { parseIntegerInput } from '../../../../../shared/lib/number.utils';
+import type { User } from '../../../../../shared/models/user.data';
+import { ProfileManageFacade } from '../../../lib/profile-manage.facade';
 import {
     DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
     DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,

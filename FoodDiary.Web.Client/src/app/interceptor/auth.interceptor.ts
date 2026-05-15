@@ -11,7 +11,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const skipAuth = req.context.get(SKIP_AUTH);
-        if (skipAuth === true) {
+        if (skipAuth) {
             return next.handle(req);
         }
 

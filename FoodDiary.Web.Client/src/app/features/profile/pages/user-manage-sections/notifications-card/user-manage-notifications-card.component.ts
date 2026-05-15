@@ -9,8 +9,8 @@ import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 
 import type { WebPushSubscriptionItem } from '../../../../../services/notification.service';
 import { type FastingReminderPreset, resolveFastingReminderPresetId } from '../../../../../shared/lib/fasting-reminder-presets';
-import type { ConnectedDeviceViewModel } from '../../user-manage/user-manage.types';
-import { buildNotificationsStatusKey } from '../../user-manage/user-manage-notifications.mapper';
+import type { ConnectedDeviceViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
+import { buildNotificationsStatusKey } from '../../user-manage/user-manage-lib/user-manage-notifications.mapper';
 import { UserManageConnectedDevicesComponent } from '../connected-devices/user-manage-connected-devices.component';
 
 export type FastingReminderHoursChange = {

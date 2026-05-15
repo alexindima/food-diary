@@ -11,7 +11,7 @@ import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-ba
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field.component';
 import type { Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
-import type { PasswordActionState, ProfileStatusViewModel, UserFormData } from '../../user-manage/user-manage.types';
+import type { PasswordActionState, ProfileStatusViewModel, UserFormData } from '../../user-manage/user-manage-lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-account-card',

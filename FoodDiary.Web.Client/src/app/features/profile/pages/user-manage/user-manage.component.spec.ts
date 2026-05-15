@@ -12,7 +12,6 @@ import { FrontendObservabilityService } from '../../../../services/frontend-obse
 import { LocalizationService } from '../../../../services/localization.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../services/notification.service';
 import { PushNotificationService } from '../../../../services/push-notification.service';
-import { ImageUploadService } from '../../../../shared/api/image-upload.service';
 import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import type { User } from '../../../../shared/models/user.data';
 import { DietologistService } from '../../../dietologist/api/dietologist.service';
@@ -376,7 +375,6 @@ async function createComponentAsync(
 function createTestingProviders(queryParams: Record<string, string>): unknown[] {
     return [
         { provide: DietologistService, useValue: dietologistService },
-        { provide: ImageUploadService, useValue: { deleteAsset: vi.fn().mockReturnValue(of(undefined)) } },
         { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
         { provide: ActivatedRoute, useValue: { queryParamMap: of(convertToParamMap(queryParams)) } },
         { provide: Router, useValue: router },

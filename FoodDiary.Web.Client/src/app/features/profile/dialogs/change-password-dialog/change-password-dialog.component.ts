@@ -123,7 +123,7 @@ export class ChangePasswordDialogComponent {
         request$.subscribe({
             next: success => {
                 this.isSubmitting.set(false);
-                if (success === true) {
+                if (success) {
                     this.dialogRef.close(true);
                     return;
                 }

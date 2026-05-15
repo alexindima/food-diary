@@ -5,12 +5,12 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
-import { LocalizationService } from '../../../../services/localization.service';
-import { NotificationService, type WebPushSubscriptionItem } from '../../../../services/notification.service';
-import { PushNotificationService } from '../../../../services/push-notification.service';
-import type { User } from '../../../../shared/models/user.data';
-import { ProfileManageFacade } from '../../lib/profile-manage.facade';
+import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
+import { LocalizationService } from '../../../../../services/localization.service';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../../../services/notification.service';
+import { PushNotificationService } from '../../../../../services/push-notification.service';
+import type { User } from '../../../../../shared/models/user.data';
+import { ProfileManageFacade } from '../../../lib/profile-manage.facade';
 import { UserManageNotificationsFacade } from './user-manage-notifications.facade';
 
 const FIRST_REMINDER_HOURS = 6;

@@ -5,7 +5,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 
 import type { DietologistPermissions, DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import type { DietologistFormData, DietologistPermissionChange } from '../../user-manage/user-manage.types';
+import type { DietologistFormData, DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
 import { UserManageDietologistPermissionsComponent } from '../dietologist-permissions/user-manage-dietologist-permissions.component';
 import { UserManageDietologistSummaryComponent } from '../dietologist-summary/user-manage-dietologist-summary.component';
 

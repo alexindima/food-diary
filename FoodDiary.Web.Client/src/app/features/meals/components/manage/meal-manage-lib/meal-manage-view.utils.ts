@@ -79,7 +79,7 @@ export function resolveMealManageControlError(
     translateService: TranslateService,
     minFallback = 0,
 ): string | null {
-    if (control === null || control.invalid === false || control.touched === false) {
+    if (control === null || !control.invalid || !control.touched) {
         return null;
     }
 

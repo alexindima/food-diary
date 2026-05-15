@@ -786,6 +786,7 @@ export default [
             '@typescript-eslint/no-non-null-assertion': 'error',
             '@typescript-eslint/no-redundant-type-constituents': 'error',
             '@typescript-eslint/no-unnecessary-template-expression': 'error',
+            '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
             '@typescript-eslint/no-unnecessary-condition': 'error',
             '@typescript-eslint/no-confusing-void-expression': 'error',
             '@typescript-eslint/no-unnecessary-type-arguments': 'error',

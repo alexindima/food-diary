@@ -6,7 +6,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
 import type { ActivityLevelOption } from '../../../../../shared/models/user.data';
-import type { UserFormData } from '../../user-manage/user-manage.types';
+import type { UserFormData } from '../../user-manage/user-manage-lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-body-card',

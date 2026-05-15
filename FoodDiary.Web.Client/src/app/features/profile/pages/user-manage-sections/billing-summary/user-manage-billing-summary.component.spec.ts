@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../../services/localization.service';
 import type { BillingOverview } from '../../../../premium/models/billing.models';
-import type { BillingViewModel } from '../../user-manage/user-manage.types';
+import type { BillingViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
 import { UserManageBillingSummaryComponent } from './user-manage-billing-summary.component';
 
 const BILLING_OVERVIEW: BillingOverview = {

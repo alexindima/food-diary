@@ -4,14 +4,14 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 
 import { LocalizationService } from '../../../../../services/localization.service';
-import type { BillingViewModel } from '../../user-manage/user-manage.types';
+import type { BillingViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
 import {
     getBillingPlanLabelKey,
     getBillingProviderLabel,
     getBillingRenewalLabelKey,
     getBillingStatusLabelKey,
-} from '../../user-manage/user-manage-billing.mapper';
-import { formatUserManageDate } from '../../user-manage/user-manage-date.mapper';
+} from '../../user-manage/user-manage-lib/user-manage-billing.mapper';
+import { formatUserManageDate } from '../../user-manage/user-manage-lib/user-manage-date.mapper';
 
 @Component({
     selector: 'fd-user-manage-billing-summary',

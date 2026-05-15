@@ -3,8 +3,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
-import type { DietologistPermissionChange } from '../../user-manage/user-manage.types';
-import { createDietologistForm } from '../../user-manage/user-manage-form.mapper';
+import type { DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
+import { createDietologistForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageDietologistCardComponent } from './user-manage-dietologist-card.component';
 
 describe('UserManageDietologistCardComponent', () => {

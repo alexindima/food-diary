@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { FrontendLoggerService } from '../../../../../services/frontend-logger.service';
 import { ImageUploadService } from '../../../../../shared/api/image-upload.service';
 import { Gender } from '../../../../../shared/models/user.data';
-import { createUserManageForm } from '../../user-manage/user-manage-form.mapper';
+import { createUserManageForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageAccountCardComponent } from './user-manage-account-card.component';
 
 describe('UserManageAccountCardComponent', () => {

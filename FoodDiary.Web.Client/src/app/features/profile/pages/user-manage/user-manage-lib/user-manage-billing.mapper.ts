@@ -1,4 +1,4 @@
-import type { BillingOverview, BillingProvider } from '../../../premium/models/billing.models';
+import type { BillingOverview, BillingProvider } from '../../../../premium/models/billing.models';
 import type { BillingViewModel } from './user-manage.types';
 
 export function buildBillingView(overview: BillingOverview | null): BillingViewModel | null {

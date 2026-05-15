@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { Gender, type User } from '../../../../shared/models/user.data';
+import { Gender, type User } from '../../../../../shared/models/user.data';
 import { buildUserManageSelectOptions, createDietologistForm, createUserManageForm, mapUserToForm } from './user-manage-form.mapper';
 
 const USER: User = {

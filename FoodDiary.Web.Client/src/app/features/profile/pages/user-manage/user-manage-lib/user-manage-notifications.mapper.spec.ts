@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { WebPushSubscriptionItem } from '../../../../services/notification.service';
+import type { WebPushSubscriptionItem } from '../../../../../services/notification.service';
 import { buildConnectedDeviceItems, buildNotificationsStatusKey, isCurrentConnectedDevice } from './user-manage-notifications.mapper';
 
 const SUBSCRIPTION: WebPushSubscriptionItem = {

@@ -1,4 +1,4 @@
-import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
+import { resolveAppLocale } from '../../../../../shared/lib/locale.constants';
 
 export function formatUserManageDate(value: string | null | undefined, language: string): string | null {
     return formatUserManageDateValue(value, language, { dateStyle: 'medium' });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
+import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
 import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-dietologist-form.mapper';
 import { createDietologistForm } from './user-manage-form.mapper';
 

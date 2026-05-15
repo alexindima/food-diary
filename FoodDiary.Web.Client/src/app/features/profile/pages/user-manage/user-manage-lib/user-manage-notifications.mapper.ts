@@ -1,4 +1,4 @@
-import type { WebPushSubscriptionItem } from '../../../../services/notification.service';
+import type { WebPushSubscriptionItem } from '../../../../../services/notification.service';
 import type { ConnectedDeviceViewModel } from './user-manage.types';
 
 type DeviceLabelMatcher = {

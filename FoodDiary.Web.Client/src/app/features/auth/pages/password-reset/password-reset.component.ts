@@ -139,7 +139,7 @@ export class PasswordResetComponent {
             return null;
         }
 
-        const shouldShow = control.touched === true || control.dirty === true;
+        const shouldShow = control.touched || control.dirty;
         if (!shouldShow) {
             return null;
         }

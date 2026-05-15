@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { createUserManageForm } from '../../user-manage/user-manage-form.mapper';
+import { createUserManageForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageBodyCardComponent } from './user-manage-body-card.component';
 
 describe('UserManageBodyCardComponent', () => {

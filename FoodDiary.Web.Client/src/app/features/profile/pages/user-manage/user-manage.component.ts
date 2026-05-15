@@ -30,7 +30,6 @@ import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ImageUploadService } from '../../../../shared/api/image-upload.service';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
@@ -45,7 +44,7 @@ import { UserManageBodyCardComponent } from '../user-manage-sections/body-card/u
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card.component';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card.component';
 import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card.component';
-import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage.config';
+import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage-lib/user-manage.config';
 import type {
     BillingViewModel,
     DietologistFormData,
@@ -55,12 +54,17 @@ import type {
     ProfileStatusViewModel,
     UserFormData,
     UserFormValues,
-} from './user-manage.types';
-import { buildBillingView } from './user-manage-billing.mapper';
-import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-dietologist-form.mapper';
-import { buildUserManageSelectOptions, createDietologistForm, createUserManageForm, mapUserToForm } from './user-manage-form.mapper';
-import { UserManageNotificationsFacade } from './user-manage-notifications.facade';
-import { buildProfileStatus } from './user-manage-profile-status.mapper';
+} from './user-manage-lib/user-manage.types';
+import { buildBillingView } from './user-manage-lib/user-manage-billing.mapper';
+import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-lib/user-manage-dietologist-form.mapper';
+import {
+    buildUserManageSelectOptions,
+    createDietologistForm,
+    createUserManageForm,
+    mapUserToForm,
+} from './user-manage-lib/user-manage-form.mapper';
+import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
+import { buildProfileStatus } from './user-manage-lib/user-manage-profile-status.mapper';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -98,7 +102,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 export class UserManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly imageUploadService = inject(ImageUploadService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly facade = inject(ProfileManageFacade);
@@ -112,7 +115,6 @@ export class UserManageComponent {
     private readonly platformId = inject(PLATFORM_ID);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly isBrowser = isPlatformBrowser(this.platformId);
-    private lastUserData: Partial<UserFormValues> | null = null;
     private lastNotificationSyncVersion = -1;
     private readonly pendingPasswordSetupIntent = signal(false);
 
@@ -201,7 +203,6 @@ export class UserManageComponent {
             }
 
             const userData = mapUserToForm(user);
-            this.lastUserData = userData;
             this.applyUserData(userData);
             this.notifications.syncFromUser(user);
         });
@@ -282,25 +283,6 @@ export class UserManageComponent {
 
         if (this.userForm.valid) {
             this.facade.saveProfileNow(this.buildUserUpdateDto());
-        }
-    }
-
-    public resetForm(): void {
-        this.facade.clearGlobalError();
-        const currentImageId = this.userForm.controls.profileImage.value?.assetId;
-        const baselineImageId = this.lastUserData?.profileImage?.assetId ?? null;
-        if (currentImageId !== null && currentImageId !== undefined && currentImageId.length > 0 && currentImageId !== baselineImageId) {
-            this.imageUploadService.deleteAsset(currentImageId).subscribe({
-                error: () => {
-                    // swallow errors to avoid blocking reset
-                },
-            });
-        }
-
-        if (this.lastUserData !== null) {
-            this.applyUserData(this.lastUserData);
-        } else {
-            this.facade.initialize();
         }
     }
 

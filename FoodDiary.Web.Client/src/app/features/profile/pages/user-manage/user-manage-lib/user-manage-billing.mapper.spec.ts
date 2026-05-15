@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { BillingOverview } from '../../../premium/models/billing.models';
+import type { BillingOverview } from '../../../../premium/models/billing.models';
 import {
     buildBillingView,
     getBillingPlanLabelKey,

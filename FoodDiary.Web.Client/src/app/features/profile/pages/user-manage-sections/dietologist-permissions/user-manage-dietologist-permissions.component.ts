@@ -4,8 +4,8 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
-import { DIETOLOGIST_PERMISSION_OPTIONS } from '../../user-manage/user-manage.config';
-import type { DietologistPermissionChange } from '../../user-manage/user-manage.types';
+import { DIETOLOGIST_PERMISSION_OPTIONS } from '../../user-manage/user-manage-lib/user-manage.config';
+import type { DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-dietologist-permissions',

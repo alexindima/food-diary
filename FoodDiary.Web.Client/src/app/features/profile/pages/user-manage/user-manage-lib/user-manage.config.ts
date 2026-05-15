@@ -1,5 +1,5 @@
-import type { DietologistPermissions } from '../../../../shared/models/dietologist.data';
-import type { ActivityLevelOption } from '../../../../shared/models/user.data';
+import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
+import type { ActivityLevelOption } from '../../../../../shared/models/user.data';
 
 export type DietologistPermissionOption = {
     controlName: keyof DietologistPermissions;
