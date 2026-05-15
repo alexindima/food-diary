@@ -23,9 +23,6 @@
     } @else if (billingView(); as billing) {
         <fd-user-manage-billing-summary
             [billing]="billing"
-            [billingCurrentPeriodStartLabel]="billingCurrentPeriodStartLabel()"
-            [billingCurrentPeriodEndLabel]="billingCurrentPeriodEndLabel()"
-            [billingNextAttemptLabel]="billingNextAttemptLabel()"
             [isOpeningBillingPortal]="isOpeningBillingPortal()"
             (billingPortalOpen)="billingPortalOpen.emit()"
             (premiumPageOpen)="premiumPageOpen.emit()"

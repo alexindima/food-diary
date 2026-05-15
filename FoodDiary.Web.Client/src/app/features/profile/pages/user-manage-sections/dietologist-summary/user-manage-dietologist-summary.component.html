@@ -6,7 +6,7 @@
         </div>
         @if (isDietologistConnected()) {
             <div class="user-manage__dietologist-info-list fd-stack fd-gap-xxs">
-                @if (dietologistAcceptedDateLabel(); as acceptedDate) {
+                @if (formatDate(dietologistRelationship()?.acceptedAtUtc); as acceptedDate) {
                     <div class="user-manage__dietologist-info-row">
                         {{ 'USER_MANAGE.DIETOLOGIST_CONNECTED_DATE' | translate: { date: acceptedDate } }}
                     </div>
@@ -62,7 +62,7 @@
             </span>
         </div>
     }
-    @if (pendingExpiresDate(); as expiresDate) {
+    @if (isDietologistPending() && formatDate(dietologistRelationship()?.expiresAtUtc); as expiresDate) {
         <div class="user-manage__dietologist-meta">
             {{ 'USER_MANAGE.DIETOLOGIST_PENDING_EXPIRES' | translate: { date: expiresDate } }}
         </div>

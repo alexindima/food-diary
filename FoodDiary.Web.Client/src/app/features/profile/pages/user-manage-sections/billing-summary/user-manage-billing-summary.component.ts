@@ -3,6 +3,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
 
+import { LocalizationService } from '../../../../../services/localization.service';
 import type { BillingViewModel } from '../../user-manage/user-manage.types';
 import {
     getBillingPlanLabelKey,
@@ -10,6 +11,7 @@ import {
     getBillingRenewalLabelKey,
     getBillingStatusLabelKey,
 } from '../../user-manage/user-manage-billing.mapper';
+import { formatUserManageDate } from '../../user-manage/user-manage-date.mapper';
 
 @Component({
     selector: 'fd-user-manage-billing-summary',
@@ -20,11 +22,9 @@ import {
 })
 export class UserManageBillingSummaryComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly localizationService = inject(LocalizationService);
 
     public readonly billing = input.required<BillingViewModel>();
-    public readonly billingCurrentPeriodStartLabel = input.required<string | null>();
-    public readonly billingCurrentPeriodEndLabel = input.required<string | null>();
-    public readonly billingNextAttemptLabel = input.required<string | null>();
     public readonly isOpeningBillingPortal = input.required<boolean>();
 
     public readonly billingPlanLabelKey = computed(() => getBillingPlanLabelKey(this.billing().overview));
@@ -38,4 +38,8 @@ export class UserManageBillingSummaryComponent {
 
     public readonly billingPortalOpen = output();
     public readonly premiumPageOpen = output();
+
+    public formatDate(value: string | null | undefined): string | null {
+        return formatUserManageDate(value, this.localizationService.getCurrentLanguage());
+    }
 }

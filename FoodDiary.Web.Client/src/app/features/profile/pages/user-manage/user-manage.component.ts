@@ -15,9 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
@@ -26,13 +23,10 @@ import {
     type FdValidationErrors,
     getNumberProperty,
 } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 
-import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -46,7 +40,6 @@ import {
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../../shared/lib/fasting-reminder-presets';
-import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { parseIntegerInput } from '../../../../shared/lib/number.utils';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
@@ -55,7 +48,10 @@ import { DietologistService } from '../../../dietologist/api/dietologist.service
 import { PremiumBillingService } from '../../../premium/api/premium-billing.service';
 import type { BillingOverview } from '../../../premium/models/billing.models';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
+import { resolveTranslatedControlError } from '../../lib/profile-validation-error.mapper';
+import { UserManageAccountCardComponent } from '../user-manage-sections/account-card/user-manage-account-card.component';
 import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card.component';
+import { UserManageBodyCardComponent } from '../user-manage-sections/body-card/user-manage-body-card.component';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card.component';
 import {
     type FastingReminderHoursChange,
@@ -75,16 +71,17 @@ import type {
     DietologistFormData,
     DietologistPermissionChange,
     DietologistPermissionControlName,
+    PasswordActionState,
     ProfileStatusViewModel,
     UserFormData,
     UserFormValues,
 } from './user-manage.types';
 import { buildBillingView } from './user-manage-billing.mapper';
+import { formatUserManageDateTime } from './user-manage-date.mapper';
 import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-dietologist-form.mapper';
 import { buildUserManageSelectOptions, createDietologistForm, createUserManageForm, mapUserToForm } from './user-manage-form.mapper';
-import { buildConnectedDeviceItems, buildNotificationsStatusKey, isCurrentConnectedDevice } from './user-manage-notifications.mapper';
+import { buildConnectedDeviceItems, isCurrentConnectedDevice } from './user-manage-notifications.mapper';
 import { buildProfileStatus } from './user-manage-profile-status.mapper';
-import { resolveTranslatedControlError } from './user-manage-validation.mapper';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -103,18 +100,13 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiCardComponent,
-        FdUiInputComponent,
-        FdUiSelectComponent,
-        FdUiDateInputComponent,
-        FdUiButtonComponent,
         FdUiFormErrorComponent,
-        FdUiStatusBadgeComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        ImageUploadFieldComponent,
+        UserManageAccountCardComponent,
         UserManageBillingCardComponent,
+        UserManageBodyCardComponent,
         UserManageDietologistCardComponent,
         UserManageNotificationsCardComponent,
         UserManagePrivacyCardComponent,
@@ -146,7 +138,7 @@ export class UserManageComponent {
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private lastUserData: Partial<UserFormValues> | null = null;
     private lastNotificationSyncVersion = -1;
-    private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
+    public readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
     private readonly hasTrackedNotificationsView = signal(false);
     private readonly pendingPasswordSetupIntent = signal(false);
     private readonly languageVersion = signal(0);
@@ -217,91 +209,7 @@ export class UserManageComponent {
         );
     });
     public readonly dietologistInviteEmailError = signal<string | null>(null);
-    public readonly dietologistAcceptedDateLabel = computed(() => {
-        this.languageVersion();
-        return this.formatLocalizedDate(this.dietologistRelationship()?.acceptedAtUtc);
-    });
-    public readonly dietologistExpiresDateLabel = computed(() => {
-        this.languageVersion();
-        return this.formatLocalizedDate(this.dietologistRelationship()?.expiresAtUtc);
-    });
-    public readonly billingCurrentPeriodStartLabel = computed(() => {
-        this.languageVersion();
-        return this.formatLocalizedDate(this.billingOverview()?.currentPeriodStartUtc);
-    });
-    public readonly billingCurrentPeriodEndLabel = computed(() => {
-        this.languageVersion();
-        return this.formatLocalizedDate(this.billingOverview()?.currentPeriodEndUtc);
-    });
-    public readonly billingNextAttemptLabel = computed(() => {
-        this.languageVersion();
-        return this.formatLocalizedDate(this.billingOverview()?.nextBillingAttemptUtc);
-    });
     public readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
-    public readonly notificationsStatusKey = computed(() =>
-        buildNotificationsStatusKey({
-            isSchedulingTestNotification: this.isSchedulingTestNotification(),
-            isRemovingConnectedDevice: this.removingConnectedDeviceEndpoint() !== null,
-            isPushNotificationsBusy: this.pushNotificationsBusy(),
-            isUpdatingNotifications: this.isUpdatingNotifications(),
-        }),
-    );
-    public readonly connectedDevicesSectionState = computed<'loading' | 'content' | 'empty'>(() => {
-        if (this.isLoadingConnectedDevices()) {
-            return 'loading';
-        }
-
-        return this.connectedDevices().length === 0 ? 'empty' : 'content';
-    });
-    public readonly pushNotificationsAccountStatusKey = computed(() =>
-        this.pushNotificationsEnabled()
-            ? 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED'
-            : 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_DISABLED',
-    );
-    public readonly pushNotificationsDeviceStatusKey = computed(() => {
-        if (!this.pushNotificationsSupported()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED';
-        }
-
-        if (this.notificationPermission() === 'denied') {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_BLOCKED';
-        }
-
-        if (this.pushNotificationsSubscribed()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_ENABLED';
-        }
-
-        if (!this.pushNotificationsEnabled()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_IDLE';
-        }
-
-        return 'USER_MANAGE.NOTIFICATIONS_STATUS_SETUP_REQUIRED';
-    });
-    public readonly pushNotificationsHintKey = computed(() => {
-        if (!this.pushNotificationsEnabled()) {
-            return 'USER_MANAGE.NOTIFICATIONS_DISABLED_HINT';
-        }
-
-        if (this.notificationPermission() === 'denied') {
-            return 'USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT';
-        }
-
-        if (!this.pushNotificationsSupported()) {
-            return 'USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT';
-        }
-
-        if (this.pushNotificationsSubscribed()) {
-            return 'USER_MANAGE.NOTIFICATIONS_ENABLED_HINT';
-        }
-
-        return 'USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT';
-    });
-    public readonly activeFastingReminderPresetId = computed(() => {
-        const firstReminder = this.fastingCheckInReminderHours();
-        const followUpReminder = this.fastingCheckInFollowUpReminderHours();
-        const presetId = resolveFastingReminderPresetId(firstReminder, followUpReminder);
-        return presetId === 'custom' ? null : presetId;
-    });
 
     public constructor() {
         this.userForm = createUserManageForm();
@@ -601,11 +509,12 @@ export class UserManageComponent {
             return;
         }
 
+        const activePresetId = this.getActiveFastingReminderPresetId();
         this.frontendObservability.recordFastingReminderTimingSaved({
             firstReminderHours: firstReminder,
             followUpReminderHours: followUpReminder,
-            source: this.activeFastingReminderPresetId() !== null ? 'preset' : 'manual',
-            presetId: this.activeFastingReminderPresetId() ?? undefined,
+            source: activePresetId !== null ? 'preset' : 'manual',
+            presetId: activePresetId ?? undefined,
         });
         this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
     }
@@ -621,7 +530,7 @@ export class UserManageComponent {
                 ? await this.pushNotifications.removeSubscriptionAsync(endpoint)
                 : await this.facade.removeWebPushSubscriptionAsync(endpoint);
 
-        if (removed === false) {
+        if (!removed) {
             this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'failed', {
                 currentDevice: this.isCurrentDevice(subscription),
             });
@@ -850,18 +759,6 @@ export class UserManageComponent {
         );
     }
 
-    public formatMetric(value: number | null | undefined): string {
-        if (value === null || value === undefined || Number.isNaN(value)) {
-            return '\u2014';
-        }
-
-        return Number.isInteger(value) ? `${value}` : value.toFixed(1);
-    }
-
-    public getNotificationsStatusKey(): string | null {
-        return this.notificationsStatusKey();
-    }
-
     private updateProfileStatus(): void {
         this.profileStatus.set(this.buildProfileStatus());
     }
@@ -1038,34 +935,12 @@ export class UserManageComponent {
     }
 
     public formatDateTime(value: string | null): string | null {
-        if (value === null || value.length === 0) {
-            return null;
-        }
-
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return null;
-        }
-
-        return new Intl.DateTimeFormat(resolveAppLocale(this.localizationService.getCurrentLanguage()), {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-        }).format(date);
+        return formatUserManageDateTime(value, this.localizationService.getCurrentLanguage());
     }
 
-    private formatLocalizedDate(value: string | null | undefined): string | null {
-        if (value === null || value === undefined || value.length === 0) {
-            return null;
-        }
-
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return null;
-        }
-
-        return new Intl.DateTimeFormat(resolveAppLocale(this.localizationService.getCurrentLanguage()), {
-            dateStyle: 'medium',
-        }).format(date);
+    private getActiveFastingReminderPresetId(): string | null {
+        const presetId = resolveFastingReminderPresetId(this.fastingCheckInReminderHours(), this.fastingCheckInFollowUpReminderHours());
+        return presetId === 'custom' ? null : presetId;
     }
 
     private surfaceBusySignals(): boolean[] {
@@ -1084,8 +959,3 @@ export class UserManageComponent {
         ];
     }
 }
-
-type PasswordActionState = {
-    buttonLabelKey: string;
-    descriptionKey: string;
-};

@@ -133,7 +133,7 @@ export class ProfileManageFacade {
             )
             .subscribe({
                 next: success => {
-                    if (success !== true) {
+                    if (!success) {
                         this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
                         return;
                     }

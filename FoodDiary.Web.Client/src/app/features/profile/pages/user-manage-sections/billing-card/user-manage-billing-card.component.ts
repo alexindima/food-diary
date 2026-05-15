@@ -17,9 +17,6 @@ export class UserManageBillingCardComponent {
     public readonly isLoadingBilling = input.required<boolean>();
     public readonly billingError = input.required<string | null>();
     public readonly billingView = input.required<BillingViewModel | null>();
-    public readonly billingCurrentPeriodStartLabel = input.required<string | null>();
-    public readonly billingCurrentPeriodEndLabel = input.required<string | null>();
-    public readonly billingNextAttemptLabel = input.required<string | null>();
     public readonly isOpeningBillingPortal = input.required<boolean>();
 
     public readonly billingReload = output();

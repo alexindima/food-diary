@@ -3,7 +3,7 @@ import type { TranslateService } from '@ngx-translate/core';
 import type { FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { resolveTranslatedControlError } from './user-manage-validation.mapper';
+import { resolveTranslatedControlError } from './profile-validation-error.mapper';
 
 const MIN_LENGTH = 5;
 const OVERRIDDEN_MIN_LENGTH = 8;

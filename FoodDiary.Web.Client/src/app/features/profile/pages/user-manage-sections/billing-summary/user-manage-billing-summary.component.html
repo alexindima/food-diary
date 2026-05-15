@@ -17,13 +17,13 @@
             <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_RENEWAL' | translate }}</span>
             <strong>{{ billingRenewalLabelKey() | translate }}</strong>
         </div>
-        @if (billingCurrentPeriodStartLabel(); as startDate) {
+        @if (formatDate(billingView.overview.currentPeriodStartUtc); as startDate) {
             <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                 <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_PERIOD_START' | translate }}</span>
                 <strong>{{ startDate }}</strong>
             </div>
         }
-        @if (billingCurrentPeriodEndLabel(); as endDate) {
+        @if (formatDate(billingView.overview.currentPeriodEndUtc); as endDate) {
             <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                 <span class="user-manage__billing-label">
                     {{ billingView.endLabelKey | translate }}
@@ -31,7 +31,7 @@
                 <strong>{{ endDate }}</strong>
             </div>
         }
-        @if (billingView.showNextAttempt && billingNextAttemptLabel(); as nextAttemptDate) {
+        @if (billingView.showNextAttempt && formatDate(billingView.overview.nextBillingAttemptUtc); as nextAttemptDate) {
             <div class="user-manage__billing-item fd-stack fd-gap-xxs">
                 <span class="user-manage__billing-label">{{ 'USER_MANAGE.BILLING_NEXT_CHARGE' | translate }}</span>
                 <strong>{{ nextAttemptDate }}</strong>

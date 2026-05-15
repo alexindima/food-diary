@@ -167,7 +167,7 @@
         }
 
         <fd-user-manage-connected-devices
-            [state]="connectedDevicesSectionState()"
+            [isLoading]="isLoadingConnectedDevices()"
             [items]="connectedDeviceItems()"
             [pushNotificationsBusy]="pushNotificationsBusy()"
             [removingEndpoint]="removingConnectedDeviceEndpoint()"

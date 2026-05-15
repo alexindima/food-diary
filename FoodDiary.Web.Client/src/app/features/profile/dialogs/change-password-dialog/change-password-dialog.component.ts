@@ -1,21 +1,22 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { UserService } from '../../../../shared/api/user.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
-import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../auth/lib/auth.constants';
+import { resolveTranslatedControlError } from '../../lib/profile-validation-error.mapper';
 
 export type ChangePasswordDialogData = {
     hasPassword?: boolean;
@@ -24,6 +25,14 @@ export type ChangePasswordDialogData = {
 const ERROR_FIELDS = ['currentPassword', 'newPassword', 'confirmPassword'] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
+const CHANGE_PASSWORD_VALIDATION_ERRORS: FdValidationErrors = {
+    required: () => 'FORM_ERRORS.REQUIRED',
+    minlength: (error?: unknown) => ({
+        key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
+        params: { requiredLength: getNumberProperty(error, 'requiredLength') },
+    }),
+    matchField: () => 'FORM_ERRORS.PASSWORD.MATCH',
+};
 
 @Component({
     selector: 'fd-change-password-dialog',
@@ -135,7 +144,11 @@ export class ChangePasswordDialogComponent {
     private updateFieldErrors(): void {
         this.fieldErrors.set(
             ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
-                errors[field] = this.resolveControlError(this.form.controls[field]);
+                errors[field] = resolveTranslatedControlError(
+                    this.form.controls[field],
+                    CHANGE_PASSWORD_VALIDATION_ERRORS,
+                    this.translateService,
+                );
                 return errors;
             }, this.createEmptyFieldErrors()),
         );
@@ -147,37 +160,6 @@ export class ChangePasswordDialogComponent {
             newPassword: null,
             confirmPassword: null,
         };
-    }
-
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (control === null || !control.invalid || !control.touched) {
-            return null;
-        }
-
-        if (control.errors?.['required'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        const minLengthErrorMessage = this.resolveMinLengthError(control);
-        if (minLengthErrorMessage !== null) {
-            return minLengthErrorMessage;
-        }
-
-        if (control.errors?.['matchField'] !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.PASSWORD.MATCH');
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    }
-
-    private resolveMinLengthError(control: AbstractControl): string | null {
-        const minLengthError: unknown = control.getError('minlength');
-        if (minLengthError === null || minLengthError === undefined) {
-            return null;
-        }
-
-        const requiredLength = getNumberProperty(minLengthError, 'requiredLength') ?? AUTH_PASSWORD_MIN_LENGTH;
-        return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', { requiredLength });
     }
 }
 

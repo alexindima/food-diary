@@ -1,0 +1,133 @@
+<fd-ui-card class="user-manage__card user-manage__card--account fd-stack fd-gap-card-profile" tone="profile" density="profile">
+    <div class="user-manage__card-header fd-row fd-gap-sm">
+        <div class="user-manage__card-icon user-manage__card-icon--account"></div>
+        <div class="user-manage__card-text fd-stack fd-gap-xxs">
+            <div class="user-manage__card-title">{{ 'USER_MANAGE.ACCOUNT_SECTION' | translate }}</div>
+            <div class="user-manage__card-subtitle">
+                {{ 'USER_MANAGE.ACCOUNT_DESC' | translate }}
+            </div>
+            <div class="user-manage__status-row fd-row fd-wrap fd-gap-xs">
+                @let status = profileStatus();
+                <fd-ui-status-badge [tone]="status.tone">
+                    {{ status.key | translate }}
+                </fd-ui-status-badge>
+            </div>
+        </div>
+    </div>
+    <div class="user-manage__account fd-grid fd-gap-lg" [formGroup]="userForm()">
+        <div class="user-manage__avatar-block fd-stack fd-gap-sm fd-align-center">
+            <div class="image-upload-field__label-block">
+                <div class="image-upload-field__label-title">{{ 'USER_MANAGE.AVATAR' | translate }}</div>
+            </div>
+            <fd-image-upload-field
+                class="user-manage__avatar"
+                formControlName="profileImage"
+                recommendedSize="512 x 512"
+                acceptedTypes="image/png,image/jpeg,image/webp"
+                [description]="'USER_MANAGE.AVATAR_DESC' | translate"
+                [maxSizeMb]="5"
+                [cropEnabled]="true"
+                [cropSize]="512"
+                [cropAspectRatio]="1"
+                [deleteOnClear]="true"
+            />
+        </div>
+        <div class="user-manage__account-fields fd-stack fd-gap-lg">
+            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
+                <fd-ui-input
+                    class="user-manage__account-row-field"
+                    formControlName="email"
+                    type="email"
+                    size="lg"
+                    [label]="'USER_MANAGE.EMAIL' | translate"
+                    [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
+                />
+                <fd-ui-input
+                    class="user-manage__account-row-field"
+                    formControlName="username"
+                    size="lg"
+                    [label]="'USER_MANAGE.USERNAME' | translate"
+                    [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
+                />
+            </div>
+            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
+                <fd-ui-input
+                    class="user-manage__account-row-field"
+                    formControlName="firstName"
+                    size="lg"
+                    [label]="'USER_MANAGE.FIRST_NAME' | translate"
+                    [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
+                />
+                <fd-ui-input
+                    class="user-manage__account-row-field"
+                    formControlName="lastName"
+                    size="lg"
+                    [label]="'USER_MANAGE.LAST_NAME' | translate"
+                    [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
+                />
+            </div>
+            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
+                <fd-ui-date-input
+                    class="user-manage__account-row-field"
+                    formControlName="birthDate"
+                    size="lg"
+                    [label]="'USER_MANAGE.BIRTH_DATE' | translate"
+                    [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
+                />
+                <fd-ui-select
+                    class="user-manage__account-row-field"
+                    formControlName="gender"
+                    size="lg"
+                    [label]="'USER_MANAGE.GENDER' | translate"
+                    [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
+                    [options]="genderOptions()"
+                />
+            </div>
+            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
+                <fd-ui-select
+                    class="user-manage__account-row-field"
+                    formControlName="language"
+                    size="lg"
+                    [label]="'USER_MANAGE.LANGUAGE' | translate"
+                    [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
+                    [options]="languageOptions()"
+                />
+                <fd-ui-select
+                    class="user-manage__account-row-field"
+                    formControlName="theme"
+                    size="lg"
+                    [label]="'USER_MANAGE.THEME' | translate"
+                    [placeholder]="'USER_MANAGE.THEME_PLACEHOLDER' | translate"
+                    [options]="themeOptions()"
+                />
+            </div>
+            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
+                <fd-ui-select
+                    class="user-manage__account-row-field"
+                    formControlName="uiStyle"
+                    size="lg"
+                    [label]="'USER_MANAGE.UI_STYLE' | translate"
+                    [placeholder]="'USER_MANAGE.UI_STYLE_PLACEHOLDER' | translate"
+                    [options]="uiStyleOptions()"
+                />
+            </div>
+            <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
+                <div class="user-manage__link-button fd-row">
+                    <fd-ui-button
+                        class="user-manage__link-button-control"
+                        type="button"
+                        fill="outline"
+                        variant="secondary"
+                        icon="lock"
+                        (click)="passwordChange.emit()"
+                    >
+                        {{ passwordActionState().buttonLabelKey | translate }}
+                    </fd-ui-button>
+                </div>
+                <div class="user-manage__account-row-field user-manage__card-subtitle">
+                    {{ passwordActionState().descriptionKey | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+</fd-ui-card>

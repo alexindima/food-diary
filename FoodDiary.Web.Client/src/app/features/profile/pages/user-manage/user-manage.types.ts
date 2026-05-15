@@ -54,6 +54,8 @@ export type ConnectedDeviceViewModel = {
     isCurrent: boolean;
 };
 
+export type ConnectedDevicesSectionState = 'loading' | 'content' | 'empty';
+
 export type BillingViewModel = {
     overview: BillingOverview;
     statusTone: 'success' | 'muted';
@@ -67,4 +69,9 @@ export type BillingViewModel = {
 export type ProfileStatusViewModel = {
     key: string;
     tone: 'success' | 'warning' | 'danger' | 'muted';
+};
+
+export type PasswordActionState = {
+    buttonLabelKey: string;
+    descriptionKey: string;
 };

@@ -238,21 +238,6 @@ describe('UserManageComponent profile autosave feedback', () => {
         fixture.detectChanges();
         expect(component.profileStatus().key).toBe('USER_MANAGE.PROFILE_STATUS_SAVING');
     });
-
-    it('reports the current notifications background action status', async () => {
-        await createComponentAsync(null);
-
-        expect(component.getNotificationsStatusKey()).toBeNull();
-
-        facade.isUpdatingNotifications.set(true);
-        fixture.detectChanges();
-        expect(component.getNotificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_SAVING');
-
-        facade.isUpdatingNotifications.set(false);
-        component.isSchedulingTestNotification.set(true);
-        fixture.detectChanges();
-        expect(component.getNotificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING');
-    });
 });
 
 describe('UserManageComponent profile normalization and intents', () => {

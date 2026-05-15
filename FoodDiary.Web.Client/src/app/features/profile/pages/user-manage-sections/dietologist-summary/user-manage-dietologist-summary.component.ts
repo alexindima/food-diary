@@ -1,11 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
+import { LocalizationService } from '../../../../../services/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
 import type { DietologistFormData } from '../../user-manage/user-manage.types';
+import { formatUserManageDate } from '../../user-manage/user-manage-date.mapper';
 
 type DietologistSummaryAction = {
     fill: 'outline' | 'solid';
@@ -24,18 +26,19 @@ type DietologistSummaryAction = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageDietologistSummaryComponent {
+    private readonly localizationService = inject(LocalizationService);
+
     public readonly dietologistForm = input.required<FormGroup<DietologistFormData>>();
     public readonly dietologistRelationship = input.required<DietologistRelationship | null>();
     public readonly dietologistInviteEmailError = input.required<string | null>();
-    public readonly dietologistAcceptedDateLabel = input.required<string | null>();
-    public readonly dietologistExpiresDateLabel = input.required<string | null>();
     public readonly isSavingDietologist = input.required<boolean>();
-    public readonly hasDietologistRelationship = input.required<boolean>();
-    public readonly isDietologistPending = input.required<boolean>();
-    public readonly isDietologistConnected = input.required<boolean>();
 
     public readonly dietologistInvite = output();
     public readonly dietologistRevoke = output();
+
+    protected readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
+    protected readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
+    protected readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
 
     protected readonly labelView = computed(() => {
         if (this.isDietologistConnected()) {
@@ -97,13 +100,6 @@ export class UserManageDietologistSummaryComponent {
     });
 
     protected readonly showPendingStatus = computed(() => this.hasDietologistRelationship() && !this.isDietologistConnected());
-    protected readonly pendingExpiresDate = computed(() => {
-        if (!this.isDietologistPending()) {
-            return null;
-        }
-
-        return this.dietologistExpiresDateLabel();
-    });
 
     protected handleSummaryAction(action: DietologistSummaryAction['action']): void {
         if (action === 'invite') {
@@ -112,5 +108,9 @@ export class UserManageDietologistSummaryComponent {
         }
 
         this.dietologistRevoke.emit();
+    }
+
+    protected formatDate(value: string | null | undefined): string | null {
+        return formatUserManageDate(value, this.localizationService.getCurrentLanguage());
     }
 }

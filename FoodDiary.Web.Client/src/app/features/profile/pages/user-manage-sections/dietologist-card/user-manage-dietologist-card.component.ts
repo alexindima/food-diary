@@ -29,13 +29,8 @@ export class UserManageDietologistCardComponent {
     public readonly dietologistPermissions = input.required<DietologistPermissions>();
     public readonly dietologistError = input.required<string | null>();
     public readonly dietologistInviteEmailError = input.required<string | null>();
-    public readonly dietologistAcceptedDateLabel = input.required<string | null>();
-    public readonly dietologistExpiresDateLabel = input.required<string | null>();
     public readonly isLoadingDietologist = input.required<boolean>();
     public readonly isSavingDietologist = input.required<boolean>();
-    public readonly hasDietologistRelationship = input.required<boolean>();
-    public readonly isDietologistPending = input.required<boolean>();
-    public readonly isDietologistConnected = input.required<boolean>();
 
     public readonly dietologistInvite = output();
     public readonly dietologistRevoke = output();
