@@ -30,17 +30,7 @@ import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
-import { LocalizationService } from '../../../../services/localization.service';
-import { NotificationService, type WebPushSubscriptionItem } from '../../../../services/notification.service';
-import { PushNotificationService } from '../../../../services/push-notification.service';
 import { ImageUploadService } from '../../../../shared/api/image-upload.service';
-import {
-    FASTING_REMINDER_PRESETS,
-    type FastingReminderPreset,
-    resolveFastingReminderPresetId,
-} from '../../../../shared/lib/fasting-reminder-presets';
-import { parseIntegerInput } from '../../../../shared/lib/number.utils';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
@@ -53,21 +43,11 @@ import { UserManageAccountCardComponent } from '../user-manage-sections/account-
 import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card.component';
 import { UserManageBodyCardComponent } from '../user-manage-sections/body-card/user-manage-body-card.component';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card.component';
-import {
-    type FastingReminderHoursChange,
-    UserManageNotificationsCardComponent,
-} from '../user-manage-sections/notifications-card/user-manage-notifications-card.component';
+import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card.component';
 import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card.component';
-import {
-    DEFAULT_DIETOLOGIST_PERMISSIONS,
-    DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
-    DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,
-    MAX_FASTING_REMINDER_HOURS,
-    TEST_NOTIFICATION_DELAY_SECONDS,
-} from './user-manage.config';
+import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage.config';
 import type {
     BillingViewModel,
-    ConnectedDeviceViewModel,
     DietologistFormData,
     DietologistPermissionChange,
     DietologistPermissionControlName,
@@ -77,10 +57,9 @@ import type {
     UserFormValues,
 } from './user-manage.types';
 import { buildBillingView } from './user-manage-billing.mapper';
-import { formatUserManageDateTime } from './user-manage-date.mapper';
 import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-dietologist-form.mapper';
 import { buildUserManageSelectOptions, createDietologistForm, createUserManageForm, mapUserToForm } from './user-manage-form.mapper';
-import { buildConnectedDeviceItems, isCurrentConnectedDevice } from './user-manage-notifications.mapper';
+import { UserManageNotificationsFacade } from './user-manage-notifications.facade';
 import { buildProfileStatus } from './user-manage-profile-status.mapper';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -113,7 +92,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.scss',
-    providers: [VALIDATION_ERRORS_PROVIDER, ProfileManageFacade],
+    providers: [VALIDATION_ERRORS_PROVIDER, ProfileManageFacade, UserManageNotificationsFacade],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComponent {
@@ -122,26 +101,20 @@ export class UserManageComponent {
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly localizationService = inject(LocalizationService);
     private readonly facade = inject(ProfileManageFacade);
+    public readonly notifications = inject(UserManageNotificationsFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly cdr = inject(ChangeDetectorRef);
-    private readonly notificationService = inject(NotificationService);
-    private readonly pushNotifications = inject(PushNotificationService);
     private readonly dietologistService = inject(DietologistService);
     private readonly billingService = inject(PremiumBillingService);
     private readonly toastService = inject(FdUiToastService);
-    private readonly frontendObservability = inject(FrontendObservabilityService);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private lastUserData: Partial<UserFormValues> | null = null;
     private lastNotificationSyncVersion = -1;
-    public readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
-    private readonly hasTrackedNotificationsView = signal(false);
     private readonly pendingPasswordSetupIntent = signal(false);
-    private readonly languageVersion = signal(0);
 
     public genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
     public activityLevelOptions: Array<FdUiSelectOption<ActivityLevelOption | null>> = [];
@@ -163,8 +136,6 @@ export class UserManageComponent {
     public readonly isDeleting = this.facade.isDeleting;
     public readonly isSavingProfile = this.facade.isSavingProfile;
     public readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
-    public readonly isUpdatingNotifications = this.facade.isUpdatingNotifications;
-    public readonly isSchedulingTestNotification = signal(false);
     public readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().some(isBusy => isBusy));
     public readonly hasAiConsent = computed(() => {
         const acceptedAt = this.facade.user()?.aiConsentAcceptedAt;
@@ -179,34 +150,12 @@ export class UserManageComponent {
             descriptionKey: hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION' : 'USER_MANAGE.SET_PASSWORD_DESCRIPTION',
         };
     });
-    public readonly pushNotificationsEnabled = computed(() => this.facade.user()?.pushNotificationsEnabled ?? false);
-    public readonly fastingPushNotificationsEnabled = computed(() => this.facade.user()?.fastingPushNotificationsEnabled ?? true);
-    public readonly socialPushNotificationsEnabled = computed(() => this.facade.user()?.socialPushNotificationsEnabled ?? true);
-    public readonly fastingCheckInReminderHours = signal(DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS);
-    public readonly fastingCheckInFollowUpReminderHours = signal(DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS);
-    public readonly fastingReminderPresets = FASTING_REMINDER_PRESETS;
-    public readonly pushNotificationsSupported = this.pushNotifications.isSupported;
-    public readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
-    public readonly pushNotificationsBusy = this.pushNotifications.isBusy;
-    public readonly currentSubscriptionEndpoint = this.pushNotifications.currentSubscriptionEndpoint;
-    public readonly connectedDevices = this.facade.webPushSubscriptions;
-    public readonly isLoadingConnectedDevices = this.facade.isLoadingWebPushSubscriptions;
-    public readonly removingConnectedDeviceEndpoint = this.facade.removingWebPushSubscriptionEndpoint;
     public readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
     public readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
     public readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
     public readonly profileStatus = signal<ProfileStatusViewModel>({
         key: 'USER_MANAGE.PROFILE_STATUS_SAVED',
         tone: 'success',
-    });
-    public readonly connectedDeviceItems = computed<ConnectedDeviceViewModel[]>(() => {
-        this.languageVersion();
-        return buildConnectedDeviceItems(
-            this.connectedDevices(),
-            this.currentSubscriptionEndpoint(),
-            value => this.formatDateTime(value),
-            key => this.translateService.instant(key),
-        );
     });
     public readonly dietologistInviteEmailError = signal<string | null>(null);
     public readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
@@ -234,7 +183,6 @@ export class UserManageComponent {
     private watchLanguageChanges(): void {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildSelectOptions();
-            this.languageVersion.update(version => version + 1);
             this.updateDietologistInviteEmailError();
         });
     }
@@ -255,17 +203,7 @@ export class UserManageComponent {
             const userData = mapUserToForm(user);
             this.lastUserData = userData;
             this.applyUserData(userData);
-            this.fastingCheckInReminderHours.set(user.fastingCheckInReminderHours);
-            this.fastingCheckInFollowUpReminderHours.set(user.fastingCheckInFollowUpReminderHours);
-
-            if (!this.hasTrackedNotificationsView()) {
-                this.frontendObservability.recordNotificationSettingsViewed({
-                    pushEnabled: user.pushNotificationsEnabled,
-                    fastingEnabled: user.fastingPushNotificationsEnabled,
-                    socialEnabled: user.socialPushNotificationsEnabled,
-                });
-                this.hasTrackedNotificationsView.set(true);
-            }
+            this.notifications.syncFromUser(user);
         });
     }
 
@@ -301,7 +239,7 @@ export class UserManageComponent {
 
     private watchNotificationRelationshipRefresh(): void {
         effect(() => {
-            const version = this.notificationService.notificationsChangedVersion();
+            const version = this.notifications.notificationsChangedVersion();
             if (version === this.lastNotificationSyncVersion) {
                 return;
             }
@@ -376,231 +314,6 @@ export class UserManageComponent {
 
     public onDeleteAccount(): void {
         this.facade.deleteAccount();
-    }
-
-    public async togglePushNotificationsAsync(): Promise<void> {
-        if (this.isUpdatingNotifications() || this.pushNotificationsBusy()) {
-            return;
-        }
-
-        const nextEnabled = !this.pushNotificationsEnabled();
-        const user = await this.facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: nextEnabled });
-        if (user === null) {
-            return;
-        }
-
-        this.notificationPermission.set(this.readNotificationPermission());
-        if (!nextEnabled) {
-            this.handlePushNotificationsDisabled();
-            return;
-        }
-
-        const result = await this.pushNotifications.ensureSubscriptionAsync();
-        this.handlePushSubscriptionResult(result);
-    }
-
-    private handlePushNotificationsDisabled(): void {
-        this.frontendObservability.recordNotificationPreferenceChanged('push', false, {
-            permission: this.notificationPermission(),
-        });
-        this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'));
-    }
-
-    private handlePushSubscriptionResult(result: Awaited<ReturnType<PushNotificationService['ensureSubscriptionAsync']>>): void {
-        switch (result) {
-            case 'subscribed':
-            case 'already-subscribed':
-                this.frontendObservability.recordNotificationPreferenceChanged('push', true, {
-                    permission: this.notificationPermission(),
-                });
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'success', { result });
-                this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'));
-                this.facade.refreshWebPushSubscriptions();
-                break;
-            case 'unsupported':
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unsupported', { result });
-                this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT'));
-                break;
-            case 'blocked':
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'blocked', { result });
-                this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT'));
-                break;
-            case 'unavailable':
-                this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unavailable', { result });
-                this.toastService.info(
-                    this.translateService.instant(
-                        this.notificationPermission() === 'denied'
-                            ? 'USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT'
-                            : 'USER_MANAGE.NOTIFICATIONS_UNAVAILABLE_HINT',
-                    ),
-                );
-                break;
-        }
-    }
-
-    public async toggleFastingPushNotificationsAsync(): Promise<void> {
-        if (this.isUpdatingNotifications()) {
-            return;
-        }
-
-        const user = await this.facade.updateNotificationPreferencesAsync({
-            fastingPushNotificationsEnabled: !this.fastingPushNotificationsEnabled(),
-        });
-        if (user === null) {
-            return;
-        }
-
-        this.toastService.info(
-            this.translateService.instant(
-                user.fastingPushNotificationsEnabled
-                    ? 'USER_MANAGE.NOTIFICATIONS_FASTING_ENABLED_TOAST'
-                    : 'USER_MANAGE.NOTIFICATIONS_FASTING_DISABLED_TOAST',
-            ),
-        );
-        this.frontendObservability.recordNotificationPreferenceChanged('fasting', user.fastingPushNotificationsEnabled);
-    }
-
-    public onFastingReminderHoursChange(value: string | number, field: 'first' | 'followUp'): void {
-        const parsed = parseIntegerInput(value);
-        if (parsed === null) {
-            return;
-        }
-
-        const normalized = Math.max(1, Math.min(MAX_FASTING_REMINDER_HOURS, parsed));
-        if (field === 'first') {
-            this.fastingCheckInReminderHours.set(normalized);
-            return;
-        }
-
-        this.fastingCheckInFollowUpReminderHours.set(normalized);
-    }
-
-    public onFastingReminderHoursChangeRequest(request: FastingReminderHoursChange): void {
-        this.onFastingReminderHoursChange(request.value, request.field);
-    }
-
-    public applyFastingReminderPreset(preset: FastingReminderPreset): void {
-        this.fastingCheckInReminderHours.set(preset.firstReminderHours);
-        this.fastingCheckInFollowUpReminderHours.set(preset.followUpReminderHours);
-        this.frontendObservability.recordFastingReminderPresetSelected({
-            presetId: preset.id,
-            firstReminderHours: preset.firstReminderHours,
-            followUpReminderHours: preset.followUpReminderHours,
-        });
-    }
-
-    public async saveFastingReminderHoursAsync(): Promise<void> {
-        if (this.isUpdatingNotifications()) {
-            return;
-        }
-
-        const firstReminder = this.fastingCheckInReminderHours();
-        const followUpReminder = this.fastingCheckInFollowUpReminderHours();
-        if (followUpReminder <= firstReminder) {
-            this.toastService.error(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_ERROR'));
-            return;
-        }
-
-        const user = await this.facade.updateNotificationPreferencesAsync({
-            fastingCheckInReminderHours: firstReminder,
-            fastingCheckInFollowUpReminderHours: followUpReminder,
-        });
-        if (user === null) {
-            return;
-        }
-
-        const activePresetId = this.getActiveFastingReminderPresetId();
-        this.frontendObservability.recordFastingReminderTimingSaved({
-            firstReminderHours: firstReminder,
-            followUpReminderHours: followUpReminder,
-            source: activePresetId !== null ? 'preset' : 'manual',
-            presetId: activePresetId ?? undefined,
-        });
-        this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
-    }
-
-    public async removeConnectedDeviceAsync(subscription: WebPushSubscriptionItem): Promise<void> {
-        const endpoint = subscription.endpoint;
-        if (endpoint.length === 0 || this.removingConnectedDeviceEndpoint() !== null || this.pushNotificationsBusy()) {
-            return;
-        }
-
-        const removed =
-            this.currentSubscriptionEndpoint() === endpoint
-                ? await this.pushNotifications.removeSubscriptionAsync(endpoint)
-                : await this.facade.removeWebPushSubscriptionAsync(endpoint);
-
-        if (!removed) {
-            this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'failed', {
-                currentDevice: this.isCurrentDevice(subscription),
-            });
-            this.toastService.error(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE_ERROR'));
-            return;
-        }
-
-        this.facade.refreshWebPushSubscriptions();
-        this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'success', {
-            currentDevice: this.isCurrentDevice(subscription),
-        });
-        this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVED_TOAST'));
-    }
-
-    public isCurrentDevice(subscription: WebPushSubscriptionItem): boolean {
-        return isCurrentConnectedDevice(subscription, this.currentSubscriptionEndpoint());
-    }
-
-    public async toggleSocialPushNotificationsAsync(): Promise<void> {
-        if (this.isUpdatingNotifications()) {
-            return;
-        }
-
-        const user = await this.facade.updateNotificationPreferencesAsync({
-            socialPushNotificationsEnabled: !this.socialPushNotificationsEnabled(),
-        });
-        if (user === null) {
-            return;
-        }
-
-        this.toastService.info(
-            this.translateService.instant(
-                user.socialPushNotificationsEnabled
-                    ? 'USER_MANAGE.NOTIFICATIONS_SOCIAL_ENABLED_TOAST'
-                    : 'USER_MANAGE.NOTIFICATIONS_SOCIAL_DISABLED_TOAST',
-            ),
-        );
-        this.frontendObservability.recordNotificationPreferenceChanged('social', user.socialPushNotificationsEnabled);
-    }
-
-    public scheduleTestNotification(): void {
-        if (this.isSchedulingTestNotification()) {
-            return;
-        }
-
-        this.isSchedulingTestNotification.set(true);
-        this.notificationService
-            .scheduleTestNotification({
-                delaySeconds: TEST_NOTIFICATION_DELAY_SECONDS,
-                type: 'FastingCompleted',
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.isSchedulingTestNotification.set(false);
-                    this.frontendObservability.recordNotificationSubscriptionEvent('test-push.schedule', 'success', {
-                        type: 'FastingCompleted',
-                        delaySeconds: TEST_NOTIFICATION_DELAY_SECONDS,
-                    });
-                    this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_SCHEDULED'));
-                },
-                error: () => {
-                    this.isSchedulingTestNotification.set(false);
-                    this.frontendObservability.recordNotificationSubscriptionEvent('test-push.schedule', 'failed', {
-                        type: 'FastingCompleted',
-                        delaySeconds: TEST_NOTIFICATION_DELAY_SECONDS,
-                    });
-                    this.toastService.error(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_ERROR'));
-                },
-            });
     }
 
     public inviteDietologist(): void {
@@ -926,36 +639,19 @@ export class UserManageComponent {
         });
     }
 
-    private readNotificationPermission(): NotificationPermission | 'unsupported' {
-        if (typeof Notification === 'undefined') {
-            return 'unsupported';
-        }
-
-        return Notification.permission;
-    }
-
-    public formatDateTime(value: string | null): string | null {
-        return formatUserManageDateTime(value, this.localizationService.getCurrentLanguage());
-    }
-
-    private getActiveFastingReminderPresetId(): string | null {
-        const presetId = resolveFastingReminderPresetId(this.fastingCheckInReminderHours(), this.fastingCheckInFollowUpReminderHours());
-        return presetId === 'custom' ? null : presetId;
-    }
-
     private surfaceBusySignals(): boolean[] {
         return [
             this.isSavingProfile(),
             this.isDeleting(),
             this.isRevokingAiConsent(),
-            this.isUpdatingNotifications(),
-            this.isSchedulingTestNotification(),
+            this.notifications.isUpdatingNotifications(),
+            this.notifications.isSchedulingTestNotification(),
             this.isSavingDietologist(),
             this.isLoadingDietologist(),
             this.isLoadingBilling(),
             this.isOpeningBillingPortal(),
-            this.isLoadingConnectedDevices(),
-            this.removingConnectedDeviceEndpoint() !== null,
+            this.notifications.isLoadingConnectedDevices(),
+            this.notifications.removingConnectedDeviceEndpoint() !== null,
         ];
     }
 }
