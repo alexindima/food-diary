@@ -5,6 +5,7 @@ export type AppConfig = {
     telegramBotUsername?: string;
     buildVersion?: string;
     adminAppUrl?: string;
+    supportEmail?: string;
     enableGlobalErrorHandler?: boolean;
     enableClientObservability?: boolean;
 };

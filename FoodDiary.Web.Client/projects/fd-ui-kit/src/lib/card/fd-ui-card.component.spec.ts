@@ -16,8 +16,8 @@ describe('FdUiCardComponent', () => {
     let fixture: ComponentFixture<FdUiCardComponent>;
 
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
-    const requireElement = <T extends Element>(selector: string): T => {
-        const element = host().querySelector<T>(selector);
+    const requireElement = (selector: string): HTMLElement => {
+        const element = host().querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
         }
@@ -67,7 +67,7 @@ describe('FdUiCardComponent', () => {
         fixture.componentRef.setInput('title', 'Test Title');
         fixture.detectChanges();
 
-        const titleEl = requireElement<HTMLElement>('.fd-ui-card__title');
+        const titleEl = requireElement('.fd-ui-card__title');
         expect(titleEl.textContent.trim()).toBe('Test Title');
     });
 
@@ -75,7 +75,7 @@ describe('FdUiCardComponent', () => {
         fixture.componentRef.setInput('meta', '100 kcal');
         fixture.detectChanges();
 
-        const metaEl = requireElement<HTMLElement>('.fd-ui-card__meta');
+        const metaEl = requireElement('.fd-ui-card__meta');
         expect(metaEl.textContent.trim()).toBe('100 kcal');
     });
 

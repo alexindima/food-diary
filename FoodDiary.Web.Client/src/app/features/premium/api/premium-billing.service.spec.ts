@@ -53,6 +53,19 @@ describe('PremiumBillingService', () => {
         });
     });
 
+    it('creates checkout session for selected provider', () => {
+        service.createCheckoutSession('monthly', 'paddle').subscribe();
+
+        const req = httpMock.expectOne(`${baseUrl}/checkout-session`);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body).toEqual({ plan: 'monthly', provider: 'paddle' });
+        req.flush({
+            sessionId: 'cs_test_456',
+            url: 'https://checkout.paddle.com/pay/cs_test_456',
+            plan: 'monthly',
+        });
+    });
+
     it('creates portal session', () => {
         service.createPortalSession().subscribe();
 

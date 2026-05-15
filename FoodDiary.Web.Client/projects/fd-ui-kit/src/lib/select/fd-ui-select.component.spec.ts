@@ -13,7 +13,7 @@ type SelectTestContext = {
     component: FdUiSelectComponent<string>;
     fixture: ComponentFixture<FdUiSelectComponent<string>>;
     host: () => HTMLElement;
-    requireElement: <T extends Element>(selector: string) => T;
+    requireElement: (selector: string) => HTMLElement;
 };
 
 async function setupSelectAsync(): Promise<SelectTestContext> {
@@ -25,8 +25,8 @@ async function setupSelectAsync(): Promise<SelectTestContext> {
     const fixture = TestBed.createComponent(FdUiSelectComponent<string>);
     const component = fixture.componentInstance;
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
-    const requireElement = <T extends Element>(selector: string): T => {
-        const element = host().querySelector<T>(selector);
+    const requireElement = (selector: string): HTMLElement => {
+        const element = host().querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
         }
@@ -53,7 +53,7 @@ describe('FdUiSelectComponent rendering', () => {
         fixture.componentRef.setInput('label', 'Fruit');
         fixture.detectChanges();
 
-        const labelEl = requireElement<HTMLElement>('.fd-ui-select__label-text');
+        const labelEl = requireElement('.fd-ui-select__label-text');
         expect(labelEl.textContent.trim()).toBe('Fruit');
     });
 
@@ -63,7 +63,7 @@ describe('FdUiSelectComponent rendering', () => {
         fixture.componentRef.setInput('required', true);
         fixture.detectChanges();
 
-        const requiredEl = requireElement<HTMLElement>('.fd-ui-select__required');
+        const requiredEl = requireElement('.fd-ui-select__required');
         expect(requiredEl.textContent.trim()).toBe('*');
     });
 
@@ -72,7 +72,7 @@ describe('FdUiSelectComponent rendering', () => {
         fixture.componentRef.setInput('error', 'This field is required');
         fixture.detectChanges();
 
-        const errorEl = requireElement<HTMLElement>('.fd-ui-select__error');
+        const errorEl = requireElement('.fd-ui-select__error');
         expect(errorEl.textContent.trim()).toBe('This field is required');
     });
 });
@@ -174,7 +174,7 @@ describe('FdUiSelectComponent classes', () => {
         fixture.componentRef.setInput('size', 'lg');
         fixture.detectChanges();
 
-        const selectEl = requireElement<HTMLElement>('.fd-ui-select');
+        const selectEl = requireElement('.fd-ui-select');
         expect(selectEl.classList).toContain('fd-ui-select--size-lg');
     });
 });

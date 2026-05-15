@@ -1,4 +1,4 @@
-import type { BillingPlan, BillingProvider } from '../models/billing.models';
+import type { BillingPlan, BillingProvider } from '../../../models/billing.models';
 
 export type PremiumOverviewBadgesViewModel = {
     planLabelKey: string | null;
@@ -9,6 +9,14 @@ export type PremiumOverviewCopyState = {
     stateLabelKey: string;
     periodLabelKey: string;
     showCancelAtPeriodEndBanner: boolean;
+};
+
+export type PremiumOverviewCardViewModel = {
+    copyState: PremiumOverviewCopyState;
+    badges: PremiumOverviewBadgesViewModel;
+    currentPeriodEndLabel: string | null;
+    hintKey: string;
+    showManageBilling: boolean;
 };
 
 export type PremiumPlanCardViewModel = {

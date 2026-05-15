@@ -19,8 +19,8 @@ describe('FdUiEmptyStateComponent', () => {
         return fixture.nativeElement as HTMLElement;
     }
 
-    function requireElement<T extends Element>(fixture: ComponentFixture<TestHostComponent>, selector: string): T {
-        const element = host(fixture).querySelector<T>(selector);
+    function requireElement(fixture: ComponentFixture<TestHostComponent>, selector: string): HTMLElement {
+        const element = host(fixture).querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
         }
@@ -47,7 +47,7 @@ describe('FdUiEmptyStateComponent', () => {
 
     it('applies compact appearance class', async () => {
         const fixture = await createComponentAsync('compact');
-        const emptyState = requireElement<HTMLElement>(fixture, 'fd-ui-empty-state');
+        const emptyState = requireElement(fixture, 'fd-ui-empty-state');
         expect(emptyState.classList.contains('fd-ui-empty-state--compact')).toBe(true);
     });
 });

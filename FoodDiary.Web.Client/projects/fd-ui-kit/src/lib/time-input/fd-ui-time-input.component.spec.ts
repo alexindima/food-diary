@@ -7,7 +7,7 @@ type TimeInputTestContext = {
     component: FdUiTimeInputComponent;
     fixture: ComponentFixture<FdUiTimeInputComponent>;
     host: () => HTMLElement;
-    requireElement: <T extends Element>(selector: string) => T;
+    requireElement: (selector: string) => HTMLElement;
 };
 
 async function setupTimeInputAsync(): Promise<TimeInputTestContext> {
@@ -19,8 +19,8 @@ async function setupTimeInputAsync(): Promise<TimeInputTestContext> {
     const fixture = TestBed.createComponent(FdUiTimeInputComponent);
     const component = fixture.componentInstance;
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
-    const requireElement = <T extends Element>(selector: string): T => {
-        const element = host().querySelector<T>(selector);
+    const requireElement = (selector: string): HTMLElement => {
+        const element = host().querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
         }
@@ -47,7 +47,7 @@ describe('FdUiTimeInputComponent rendering', () => {
         fixture.componentRef.setInput('label', 'Meal Time');
         fixture.detectChanges();
 
-        const label = requireElement<HTMLElement>('.fd-ui-time-input__label-text');
+        const label = requireElement('.fd-ui-time-input__label-text');
         expect(label.textContent).toContain('Meal Time');
     });
 
@@ -63,7 +63,7 @@ describe('FdUiTimeInputComponent rendering', () => {
         fixture.componentRef.setInput('required', true);
         fixture.detectChanges();
 
-        const asterisk = requireElement<HTMLElement>('.fd-ui-time-input__required');
+        const asterisk = requireElement('.fd-ui-time-input__required');
         expect(asterisk.textContent).toContain('*');
     });
 
@@ -72,7 +72,7 @@ describe('FdUiTimeInputComponent rendering', () => {
         fixture.componentRef.setInput('error', 'Invalid time');
         fixture.detectChanges();
 
-        const errorEl = requireElement<HTMLElement>('.fd-ui-time-input__error');
+        const errorEl = requireElement('.fd-ui-time-input__error');
         expect(errorEl.textContent).toContain('Invalid time');
     });
 
@@ -135,13 +135,13 @@ describe('FdUiTimeInputComponent classes', () => {
         fixture.componentRef.setInput('size', 'lg');
         fixture.detectChanges();
 
-        const container = requireElement<HTMLElement>('.fd-ui-time-input');
+        const container = requireElement('.fd-ui-time-input');
         expect(container.classList).toContain('fd-ui-time-input--size-lg');
     });
 
     it('should default to md size class', async () => {
         const { requireElement } = await setupTimeInputAsync();
-        const container = requireElement<HTMLElement>('.fd-ui-time-input');
+        const container = requireElement('.fd-ui-time-input');
         expect(container.classList).toContain('fd-ui-time-input--size-md');
     });
 });

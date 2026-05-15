@@ -3,11 +3,11 @@
         <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
             <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
             <p class="premium-access-page__text fd-ui-body">
-                {{ overviewCopyState().stateLabelKey | translate }}
+                {{ viewModel().copyState.stateLabelKey | translate }}
             </p>
         </div>
 
-        @if (showManageBilling()) {
+        @if (viewModel().showManageBilling) {
             <fd-ui-button
                 variant="secondary"
                 fill="outline"
@@ -26,25 +26,25 @@
         </p>
     } @else if (overview()) {
         <div class="premium-access-page__badges fd-row fd-gap-pill fd-wrap">
-            @if (overviewBadges().planLabelKey) {
+            @if (viewModel().badges.planLabelKey) {
                 <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
-                    {{ overviewBadges().planLabelKey | translate }}
+                    {{ viewModel().badges.planLabelKey | translate }}
                 </span>
             }
             <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
-                {{ overviewBadges().statusLabelKey | translate }}
+                {{ viewModel().badges.statusLabelKey | translate }}
             </span>
         </div>
 
-        @if (currentPeriodEndLabel(); as currentPeriodEnd) {
+        @if (viewModel().currentPeriodEndLabel; as currentPeriodEnd) {
             <p class="premium-access-page__meta fd-ui-body-sm">
-                {{ overviewCopyState().periodLabelKey | translate }}
+                {{ viewModel().copyState.periodLabelKey | translate }}
                 <strong>{{ currentPeriodEnd }}</strong>
             </p>
         }
 
         <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-            {{ overviewHintKey() | translate }}
+            {{ viewModel().hintKey | translate }}
         </p>
     }
 </fd-ui-card>

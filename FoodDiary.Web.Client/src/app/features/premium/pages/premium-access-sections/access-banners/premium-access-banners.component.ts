@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
-import type { PremiumOverviewCopyState } from './premium-access-page.types';
+import { NoticeBannerComponent } from '../../../../../components/shared/notice-banner/notice-banner.component';
+import type { PremiumOverviewCopyState } from '../../premium-access/premium-access-lib/premium-access.types';
 
 @Component({
     selector: 'fd-premium-access-banners',

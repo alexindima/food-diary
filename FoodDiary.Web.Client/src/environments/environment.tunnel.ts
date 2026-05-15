@@ -43,6 +43,7 @@ export const environment: AppConfig = {
     telegramBotUsername: 'fooddiaryclub_bot',
     buildVersion: 'dev-tunnel',
     adminAppUrl: 'https://admin-dev.fooddiary.club',
+    supportEmail: 'admin@fooddiary.club',
     enableGlobalErrorHandler: false,
     enableClientObservability: false,
 };

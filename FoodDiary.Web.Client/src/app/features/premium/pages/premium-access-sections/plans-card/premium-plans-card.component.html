@@ -31,7 +31,7 @@
                                 fill="outline"
                                 fullWidth
                                 [loading]="card.isLoading"
-                                [disabled]="checkoutLoadingPlan() !== null"
+                                [disabled]="checkoutDisabled()"
                                 (click)="checkout.emit({ plan: card.plan, provider: provider.provider })"
                             >
                                 {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: provider.label } }}
@@ -42,7 +42,7 @@
                     <fd-ui-button
                         fullWidth
                         [loading]="card.isLoading"
-                        [disabled]="checkoutLoadingPlan() !== null"
+                        [disabled]="checkoutDisabled()"
                         (click)="checkout.emit({ plan: card.plan })"
                     >
                         {{ card.actionKey | translate }}

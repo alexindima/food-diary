@@ -16,8 +16,8 @@ describe('FdUiSegmentedToggleComponent', () => {
 
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
     const radioButtons = (): HTMLButtonElement[] => Array.from(host().querySelectorAll<HTMLButtonElement>('[role="radio"]'));
-    const requireElement = <T extends Element>(selector: string): T => {
-        const element = host().querySelector<T>(selector);
+    const requireElement = (selector: string): HTMLElement => {
+        const element = host().querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
         }
@@ -79,12 +79,12 @@ describe('FdUiSegmentedToggleComponent', () => {
         fixture.componentRef.setInput('size', 'sm');
         fixture.detectChanges();
 
-        const container = requireElement<HTMLElement>('.fd-ui-segmented-toggle');
+        const container = requireElement('.fd-ui-segmented-toggle');
         expect(container.classList).toContain('fd-ui-segmented-toggle--size-sm');
     });
 
     it('should control narrow stacking class', () => {
-        const container = requireElement<HTMLElement>('.fd-ui-segmented-toggle');
+        const container = requireElement('.fd-ui-segmented-toggle');
         expect(container.classList).toContain('fd-ui-segmented-toggle--stack-on-narrow');
 
         fixture.componentRef.setInput('stackOnNarrow', false);

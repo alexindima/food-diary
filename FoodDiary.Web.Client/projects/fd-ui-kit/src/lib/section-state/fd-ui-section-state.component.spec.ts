@@ -46,10 +46,18 @@ describe('FdUiSectionStateComponent', () => {
     let host: TestHostComponent;
 
     const nativeHost = (): HTMLElement => fixture.nativeElement as HTMLElement;
-    const requireElement = <T extends Element>(selector: string): T => {
-        const element = nativeHost().querySelector<T>(selector);
+    const requireElement = (selector: string): HTMLElement => {
+        const element = nativeHost().querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
+        }
+
+        return element;
+    };
+    const requireButtonElement = (selector: string): HTMLButtonElement => {
+        const element = nativeHost().querySelector<HTMLButtonElement>(selector);
+        if (element === null) {
+            throw new Error(`Expected button ${selector} to exist.`);
         }
 
         return element;
@@ -59,7 +67,7 @@ describe('FdUiSectionStateComponent', () => {
         fixture = await createComponentAsync();
         host = fixture.componentInstance;
 
-        expect(requireElement<HTMLElement>('.projected-content').textContent).toContain('Ready');
+        expect(requireElement('.projected-content').textContent).toContain('Ready');
     });
 
     it('renders loader in loading state', async () => {
@@ -86,7 +94,7 @@ describe('FdUiSectionStateComponent', () => {
         host.state.set('error');
         fixture.detectChanges();
 
-        requireElement<HTMLButtonElement>('button').click();
+        requireButtonElement('button').click();
         expect(host.retryCount()).toBe(1);
     });
 
@@ -97,7 +105,7 @@ describe('FdUiSectionStateComponent', () => {
         host.state.set('empty');
         fixture.detectChanges();
 
-        const sectionState = requireElement<HTMLElement>('fd-ui-section-state');
+        const sectionState = requireElement('fd-ui-section-state');
         expect(sectionState.classList.contains('fd-ui-section-state--compact')).toBe(true);
     });
 });

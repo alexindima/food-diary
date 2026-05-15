@@ -15,7 +15,7 @@ type RadioGroupTestContext = {
     component: FdUiRadioGroupComponent<string>;
     fixture: ComponentFixture<FdUiRadioGroupComponent<string>>;
     host: () => HTMLElement;
-    requireElement: <T extends Element>(selector: string) => T;
+    requireElement: (selector: string) => HTMLElement;
 };
 
 async function setupRadioGroupAsync(): Promise<RadioGroupTestContext> {
@@ -28,8 +28,8 @@ async function setupRadioGroupAsync(): Promise<RadioGroupTestContext> {
     fixture.detectChanges();
 
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
-    const requireElement = <T extends Element>(selector: string): T => {
-        const element = host().querySelector<T>(selector);
+    const requireElement = (selector: string): HTMLElement => {
+        const element = host().querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
         }
@@ -58,7 +58,7 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.componentRef.setInput('label', 'Choose one');
         fixture.detectChanges();
 
-        const label = requireElement<HTMLElement>('.fd-ui-radio-group__label');
+        const label = requireElement('.fd-ui-radio-group__label');
         expect(label.textContent).toContain('Choose one');
     });
 
@@ -135,7 +135,7 @@ describe('FdUiRadioGroupComponent helper text', () => {
         fixture.componentRef.setInput('error', 'This field is required');
         fixture.detectChanges();
 
-        const error = requireElement<HTMLElement>('.fd-ui-radio-group__error');
+        const error = requireElement('.fd-ui-radio-group__error');
         expect(error.textContent).toContain('This field is required');
     });
 
@@ -145,7 +145,7 @@ describe('FdUiRadioGroupComponent helper text', () => {
         fixture.componentRef.setInput('hint', 'Select your preference');
         fixture.detectChanges();
 
-        const hint = requireElement<HTMLElement>('.fd-ui-radio-group__hint');
+        const hint = requireElement('.fd-ui-radio-group__hint');
         expect(hint.textContent).toContain('Select your preference');
     });
 });

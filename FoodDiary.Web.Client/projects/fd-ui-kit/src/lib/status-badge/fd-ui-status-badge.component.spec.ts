@@ -17,8 +17,8 @@ describe('FdUiStatusBadgeComponent', () => {
         return fixture.nativeElement as HTMLElement;
     }
 
-    function requireElement<T extends Element>(fixture: ComponentFixture<TestHostComponent>, selector: string): T {
-        const element = host(fixture).querySelector<T>(selector);
+    function requireElement(fixture: ComponentFixture<TestHostComponent>, selector: string): HTMLElement {
+        const element = host(fixture).querySelector<HTMLElement>(selector);
         if (element === null) {
             throw new Error(`Expected element ${selector} to exist.`);
         }
@@ -46,7 +46,7 @@ describe('FdUiStatusBadgeComponent', () => {
 
     it('applies tone class', async () => {
         const fixture = await createComponentAsync('success');
-        const badge = requireElement<HTMLElement>(fixture, 'fd-ui-status-badge');
+        const badge = requireElement(fixture, 'fd-ui-status-badge');
         expect(badge.classList.contains('fd-ui-status-badge--success')).toBe(true);
     });
 });

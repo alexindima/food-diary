@@ -3,30 +3,21 @@
 
     <fd-premium-access-banners
         [checkoutReturnState]="checkoutReturnState()"
-        [overviewCopyState]="overviewCopyState()"
+        [overviewCopyState]="overviewViewModel().copyState"
         [errorMessage]="errorMessage()"
         (retry)="reloadOverviewAsync()"
     />
 
     <fd-premium-overview-card
-        [overviewCopyState]="overviewCopyState()"
-        [showManageBilling]="showManageBilling()"
+        [viewModel]="overviewViewModel()"
         [portalLoading]="portalLoading()"
         [isLoading]="isLoading()"
         [overview]="overview()"
-        [overviewBadges]="overviewBadges()"
-        [currentPeriodEndLabel]="currentPeriodEndLabel()"
-        [overviewHintKey]="overviewHintKey()"
         (manageBilling)="openPortalAsync()"
     />
 
     @if (showPlans()) {
-        <fd-premium-plans-card
-            [cards]="planCards()"
-            [showProviderChoices]="showProviderChoices()"
-            [checkoutLoadingPlan]="checkoutLoadingPlan()"
-            (checkout)="startCheckoutFromViewAsync($event)"
-        />
+        <fd-premium-plans-card [cards]="planCards()" (checkout)="startCheckoutFromViewAsync($event)" />
     }
 
     <fd-premium-benefits-card />

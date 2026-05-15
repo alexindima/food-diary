@@ -304,6 +304,49 @@ const isRootInjectableDecorator = node => {
     return isRootProvidedInProperty(getSingleObjectProperty(metadata));
 };
 
+const createNoLocallyCaughtThrowRule = context => {
+    let caughtTryDepth = 0;
+    const functionTryDepthStack = [];
+
+    const enterFunction = () => {
+        functionTryDepthStack.push(caughtTryDepth);
+        caughtTryDepth = 0;
+    };
+
+    const exitFunction = () => {
+        caughtTryDepth = functionTryDepthStack.pop() ?? 0;
+    };
+
+    return {
+        FunctionDeclaration: enterFunction,
+        'FunctionDeclaration:exit': exitFunction,
+        FunctionExpression: enterFunction,
+        'FunctionExpression:exit': exitFunction,
+        ArrowFunctionExpression: enterFunction,
+        'ArrowFunctionExpression:exit': exitFunction,
+        TryStatement(node) {
+            if (node.handler) {
+                caughtTryDepth += 1;
+            }
+        },
+        'TryStatement:exit'(node) {
+            if (node.handler) {
+                caughtTryDepth -= 1;
+            }
+        },
+        ThrowStatement(node) {
+            if (caughtTryDepth === 0) {
+                return;
+            }
+
+            context.report({
+                node,
+                messageId: 'locallyCaughtThrow',
+            });
+        },
+    };
+};
+
 const isThenableType = (checker, type) => {
     if (checker.getPromisedTypeOfPromise(type)) {
         return true;
@@ -463,6 +506,19 @@ const localTsPlugin = {
                 };
             },
         },
+        'no-locally-caught-throw': {
+            meta: {
+                type: 'problem',
+                docs: {
+                    description: 'Disallow throwing exceptions inside try blocks that have a local catch handler.',
+                },
+                messages: {
+                    locallyCaughtThrow: 'Do not throw only to catch locally. Use an explicit control-flow branch instead.',
+                },
+                schema: [],
+            },
+            create: createNoLocallyCaughtThrowRule,
+        },
     },
 };
 
@@ -510,6 +566,7 @@ export default [
             'no-constant-condition': ['error', { checkLoops: true }],
             'no-debugger': 'error',
             'local/no-mojibake': 'error',
+            'local/no-locally-caught-throw': 'error',
             'no-else-return': 'error',
             'no-implicit-coercion': 'error',
             'no-lonely-if': 'error',
@@ -647,6 +704,7 @@ export default [
             ],
             'sonarjs/no-duplicated-branches': 'error',
             'sonarjs/no-identical-functions': 'error',
+            'sonarjs/no-identical-expressions': 'error',
             'sonarjs/no-nested-switch': 'error',
             'sonarjs/no-redundant-boolean': 'error',
             'sonarjs/no-small-switch': 'error',
@@ -789,6 +847,7 @@ export default [
             '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
             '@typescript-eslint/no-unnecessary-condition': 'error',
             '@typescript-eslint/no-confusing-void-expression': 'error',
+            '@typescript-eslint/no-unnecessary-type-parameters': 'error',
             '@typescript-eslint/no-unnecessary-type-arguments': 'error',
             '@typescript-eslint/no-unnecessary-type-assertion': 'error',
             '@typescript-eslint/no-unnecessary-type-constraint': 'error',

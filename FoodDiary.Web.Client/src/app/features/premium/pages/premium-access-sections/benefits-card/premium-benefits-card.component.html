@@ -17,6 +17,6 @@
 
     <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
         {{ 'PREMIUM_PAGE.SUPPORT.TEXT' | translate }}
-        <a class="premium-access-page__link" href="mailto:admin@fooddiary.club">admin@fooddiary.club</a>
+        <a class="premium-access-page__link" [href]="supportEmailHref">{{ supportEmail }}</a>
     </p>
 </fd-ui-card>

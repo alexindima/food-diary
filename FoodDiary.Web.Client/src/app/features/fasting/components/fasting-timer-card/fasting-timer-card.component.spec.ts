@@ -140,7 +140,7 @@ function registerContentTests(): void {
             setSession(fixture, createSession({ protocol: 'F16_8' }));
             fixture.detectChanges();
 
-            const separator = requireElement<HTMLElement>(fixture, '.fasting-timer-card__summary-protocol-separator');
+            const separator = requireElement(fixture, '.fasting-timer-card__summary-protocol-separator');
             expect(separator.textContent.trim()).toBe('\u00b7');
             expect(host(fixture).textContent).not.toContain('\u00c2');
         });
@@ -166,7 +166,7 @@ function registerProgressTests(): void {
             setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(EXTENDED_OVERTIME_HOURS) }));
             fixture.detectChanges();
 
-            const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
+            const percent = requireElement(fixture, '.fasting-timer-card__percent');
             expect(percent.textContent.trim()).toBe('100%');
         });
 
@@ -177,7 +177,7 @@ function registerProgressTests(): void {
             setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(RING_TEST_HOURS) }));
             fixture.detectChanges();
 
-            const progressRing = requireElement<SVGCircleElement>(fixture, '.fasting-timer-card__ring-progress');
+            const progressRing = requireSvgCircleElement(fixture, '.fasting-timer-card__ring-progress');
             const circumference = 2 * Math.PI * RING_RADIUS;
             expect(Number(progressRing.style.strokeDasharray)).toBeCloseTo(circumference);
             expect(Number(progressRing.style.strokeDashoffset)).toBeCloseTo(circumference * RING_OFFSET_RATIO);
@@ -221,8 +221,8 @@ function registerTimerDisplayTests(): void {
             );
             fixture.detectChanges();
 
-            const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
-            const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
+            const elapsed = requireElement(fixture, '.fasting-timer-card__elapsed');
+            const percent = requireElement(fixture, '.fasting-timer-card__percent');
             expect(elapsed.textContent.trim()).toBe('05:00:00');
             expect(percent.textContent.trim()).toBe('50%');
         });
@@ -242,8 +242,8 @@ function registerTimerDisplayTests(): void {
             getFacadeStub(fixture).elapsedMs.set(TIMER_ELAPSED_HOURS * MS_PER_HOUR);
             fixture.detectChanges();
 
-            const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
-            const percent = requireElement<HTMLElement>(fixture, '.fasting-timer-card__percent');
+            const elapsed = requireElement(fixture, '.fasting-timer-card__elapsed');
+            const percent = requireElement(fixture, '.fasting-timer-card__percent');
             expect(elapsed.textContent.trim()).toBe('05:00:00');
             expect(percent.textContent.trim()).toBe('50%');
         });
@@ -256,7 +256,7 @@ function registerTimerDisplayTests(): void {
             vi.advanceTimersByTime(DASHBOARD_TICK_MS);
             fixture.detectChanges();
 
-            const elapsed = requireElement<HTMLElement>(fixture, '.fasting-timer-card__elapsed');
+            const elapsed = requireElement(fixture, '.fasting-timer-card__elapsed');
             expect(elapsed.textContent.trim()).toBe('00:00:01');
         });
     });
@@ -280,7 +280,7 @@ function registerAccessibilityTests(): void {
             fixture.componentInstance.layout.set('dashboard');
             fixture.detectChanges();
 
-            const ringSvg = requireElement<SVGElement>(fixture, '.fasting-timer-card__ring-svg');
+            const ringSvg = requireSvgElement(fixture, '.fasting-timer-card__ring-svg');
             expect(ringSvg.getAttribute('aria-hidden')).toBe('true');
             expect(ringSvg.getAttribute('focusable')).toBe('false');
         });
@@ -429,10 +429,28 @@ function host(fixture: ComponentFixture<FastingTimerCardHostComponent>): HTMLEle
     return fixture.nativeElement as HTMLElement;
 }
 
-function requireElement<T extends Element>(fixture: ComponentFixture<FastingTimerCardHostComponent>, selector: string): T {
-    const element = host(fixture).querySelector<T>(selector);
+function requireElement(fixture: ComponentFixture<FastingTimerCardHostComponent>, selector: string): HTMLElement {
+    const element = host(fixture).querySelector<HTMLElement>(selector);
     if (element === null) {
         throw new Error(`Expected element ${selector} to exist.`);
+    }
+
+    return element;
+}
+
+function requireSvgElement(fixture: ComponentFixture<FastingTimerCardHostComponent>, selector: string): SVGElement {
+    const element = host(fixture).querySelector<SVGElement>(selector);
+    if (element === null) {
+        throw new Error(`Expected SVG element ${selector} to exist.`);
+    }
+
+    return element;
+}
+
+function requireSvgCircleElement(fixture: ComponentFixture<FastingTimerCardHostComponent>, selector: string): SVGCircleElement {
+    const element = host(fixture).querySelector<SVGCircleElement>(selector);
+    if (element === null) {
+        throw new Error(`Expected SVG circle ${selector} to exist.`);
     }
 
     return element;

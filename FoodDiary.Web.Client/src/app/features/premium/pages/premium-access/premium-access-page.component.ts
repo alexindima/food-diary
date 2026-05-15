@@ -1,5 +1,4 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,29 +6,29 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
-import { environment } from '../../../../environments/environment';
-import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { AuthService } from '../../../services/auth.service';
-import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import { getStringProperty } from '../../../shared/lib/unknown-value.utils';
-import { PremiumBillingService } from '../api/premium-billing.service';
-import { PaddleCheckoutService } from '../lib/paddle-checkout.service';
-import type { BillingOverview, BillingPlan, BillingProvider } from '../models/billing.models';
-import { PremiumAccessBannersComponent } from './premium-access-banners.component';
+import { environment } from '../../../../../environments/environment';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { AuthService } from '../../../../services/auth.service';
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
+import { PremiumBillingService } from '../../api/premium-billing.service';
+import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
+import type { BillingOverview, BillingPlan, BillingProvider } from '../../models/billing.models';
+import { PremiumAccessBannersComponent } from '../premium-access-sections/access-banners/premium-access-banners.component';
+import { PremiumBenefitsCardComponent } from '../premium-access-sections/benefits-card/premium-benefits-card.component';
+import { PremiumOverviewCardComponent } from '../premium-access-sections/overview-card/premium-overview-card.component';
+import { PremiumPlansCardComponent } from '../premium-access-sections/plans-card/premium-plans-card.component';
 import type {
     PremiumCheckoutRequest,
-    PremiumOverviewBadgesViewModel,
-    PremiumOverviewCopyState,
+    PremiumOverviewCardViewModel,
     PremiumPlanCardViewModel,
-} from './premium-access-page.types';
-import { PremiumBenefitsCardComponent } from './premium-benefits-card.component';
-import { PremiumOverviewCardComponent } from './premium-overview-card.component';
-import { PremiumPlansCardComponent } from './premium-plans-card.component';
+} from './premium-access-lib/premium-access.types';
+import { formatPremiumMediumDate } from './premium-access-lib/premium-access-date.utils';
+import { resolvePremiumErrorMessage } from './premium-access-lib/premium-access-error.utils';
+import { buildPremiumOverviewCardViewModel, buildPremiumPlanCards } from './premium-access-lib/premium-access-view.mapper';
 
 @Component({
     selector: 'fd-premium-access-page',
-    standalone: true,
     templateUrl: './premium-access-page.component.html',
     styleUrls: ['./premium-access-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,76 +64,23 @@ export class PremiumAccessPageComponent {
     public readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
     private readonly languageVersion = signal(0);
 
-    public readonly canManageBilling = computed(() => this.overview()?.manageBillingAvailable ?? false);
     public readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
-    public readonly showManageBilling = computed(() => this.canManageBilling() && this.isPremium());
     public readonly availableProviders = computed(() => {
         const overview = this.overview();
-        const providers = overview?.availableProviders.filter(provider => provider.trim().length > 0) ?? [];
-        return providers;
+        return overview?.availableProviders.filter(provider => provider.trim().length > 0) ?? [];
     });
     public readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
     public readonly showPlans = computed(() => !this.isLoading() && !this.isPremium() && this.checkoutAvailable());
-    public readonly showProviderChoices = computed(() => this.availableProviders().length > 1);
-    public readonly overviewHintKey = computed(() => {
-        if (this.showManageBilling()) {
-            return 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT';
-        }
-
-        return this.checkoutAvailable() ? 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_UNAVAILABLE_HINT';
-    });
-    public readonly overviewBadges = computed<PremiumOverviewBadgesViewModel>(() => {
-        const overview = this.overview();
-
-        return {
-            planLabelKey:
-                this.isPremium() && overview?.plan !== null && overview?.plan !== undefined ? this.getPlanLabelKey(overview.plan) : null,
-            statusLabelKey: this.getStatusLabelKey(overview?.subscriptionStatus ?? null),
-        };
-    });
-    public readonly overviewCopyState = computed<PremiumOverviewCopyState>(() => {
-        const overview = this.overview();
-
-        return {
-            stateLabelKey: this.isPremium() ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE' : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE',
-            periodLabelKey: overview?.cancelAtPeriodEnd === true ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
-            showCancelAtPeriodEndBanner: overview?.cancelAtPeriodEnd ?? false,
-        };
-    });
     public readonly currentPeriodEndLabel = computed(() => {
         this.languageVersion();
         return this.formatMediumDate(this.overview()?.currentPeriodEndUtc);
     });
-    public readonly planCards = computed<PremiumPlanCardViewModel[]>(() => {
-        const providers = this.availableProviders().map(provider => ({
-            provider,
-            label: this.getProviderLabel(provider),
-        }));
-        const loadingPlan = this.checkoutLoadingPlan();
-
-        return [
-            {
-                plan: 'monthly' as const,
-                titleKey: 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE',
-                descriptionKey: 'PREMIUM_PAGE.PLANS.MONTHLY.DESCRIPTION',
-                actionKey: 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION',
-                isFeatured: false,
-                kickerKey: null,
-                isLoading: loadingPlan === 'monthly',
-                providerOptions: providers,
-            },
-            {
-                plan: 'yearly' as const,
-                titleKey: 'PREMIUM_PAGE.PLANS.YEARLY.TITLE',
-                descriptionKey: 'PREMIUM_PAGE.PLANS.YEARLY.DESCRIPTION',
-                actionKey: 'PREMIUM_PAGE.PLANS.YEARLY.ACTION',
-                isFeatured: true,
-                kickerKey: 'PREMIUM_PAGE.PLANS.YEARLY.KICKER',
-                isLoading: loadingPlan === 'yearly',
-                providerOptions: providers,
-            },
-        ];
-    });
+    public readonly overviewViewModel = computed<PremiumOverviewCardViewModel>(() =>
+        buildPremiumOverviewCardViewModel(this.overview(), this.isPremium(), this.checkoutAvailable(), this.currentPeriodEndLabel()),
+    );
+    public readonly planCards = computed<PremiumPlanCardViewModel[]>(() =>
+        buildPremiumPlanCards(this.availableProviders(), this.checkoutLoadingPlan()),
+    );
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -154,14 +100,13 @@ export class PremiumAccessPageComponent {
         try {
             const session = await firstValueFrom(this.billingService.createCheckoutSession(plan, provider));
             if (session.url.length === 0) {
-                throw new Error('Checkout URL is missing.');
+                this.showErrorMessage('Checkout URL is missing.');
+                return;
             }
 
             this.document.location.href = session.url;
         } catch (error) {
-            const message = this.getErrorMessage(error);
-            this.errorMessage.set(message);
-            this.toastService.error(message);
+            this.showErrorMessage(this.getErrorMessage(error));
         } finally {
             this.checkoutLoadingPlan.set(null);
         }
@@ -182,14 +127,13 @@ export class PremiumAccessPageComponent {
         try {
             const session = await firstValueFrom(this.billingService.createPortalSession());
             if (session.url.length === 0) {
-                throw new Error('Portal URL is missing.');
+                this.showErrorMessage('Portal URL is missing.');
+                return;
             }
 
             this.document.location.href = session.url;
         } catch (error) {
-            const message = this.getErrorMessage(error);
-            this.errorMessage.set(message);
-            this.toastService.error(message);
+            this.showErrorMessage(this.getErrorMessage(error));
         } finally {
             this.portalLoading.set(false);
         }
@@ -199,57 +143,8 @@ export class PremiumAccessPageComponent {
         await this.loadOverviewAsync();
     }
 
-    private getPlanLabelKey(plan: BillingPlan | null): string {
-        return plan === 'yearly' ? 'PREMIUM_PAGE.PLANS.YEARLY.TITLE' : 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE';
-    }
-
-    private getStatusLabelKey(status: string | null): string {
-        switch (status) {
-            case 'active':
-                return 'PREMIUM_PAGE.STATUS.ACTIVE';
-            case 'trialing':
-                return 'PREMIUM_PAGE.STATUS.TRIALING';
-            case 'past_due':
-                return 'PREMIUM_PAGE.STATUS.PAST_DUE';
-            case 'canceled':
-                return 'PREMIUM_PAGE.STATUS.CANCELED';
-            case 'unpaid':
-                return 'PREMIUM_PAGE.STATUS.UNPAID';
-            case 'incomplete':
-                return 'PREMIUM_PAGE.STATUS.INCOMPLETE';
-            case null:
-                return 'PREMIUM_PAGE.STATUS.NONE';
-            default:
-                return 'PREMIUM_PAGE.STATUS.NONE';
-        }
-    }
-
-    private getProviderLabel(provider: BillingProvider): string {
-        switch (provider.toLowerCase()) {
-            case 'yookassa':
-                return 'YooKassa';
-            case 'paddle':
-                return 'Paddle';
-            case 'stripe':
-                return 'Stripe';
-            default:
-                return provider;
-        }
-    }
-
     private formatMediumDate(value: string | null | undefined): string | null {
-        if (value === null || value === undefined || value.length === 0) {
-            return null;
-        }
-
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return null;
-        }
-
-        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
-            dateStyle: 'medium',
-        }).format(date);
+        return formatPremiumMediumDate(value, resolveAppLocale(this.translateService.getCurrentLang()));
     }
 
     private async initializePageAsync(): Promise<void> {
@@ -324,9 +219,7 @@ export class PremiumAccessPageComponent {
                 replaceUrl: true,
             });
         } catch (error) {
-            const message = this.getErrorMessage(error);
-            this.errorMessage.set(message);
-            this.toastService.error(message);
+            this.showErrorMessage(this.getErrorMessage(error));
         }
     }
 
@@ -336,7 +229,10 @@ export class PremiumAccessPageComponent {
     }
 
     private showPaddleClientTokenMissingError(): void {
-        const message = 'Paddle client token is not configured.';
+        this.showErrorMessage('Paddle client token is not configured.');
+    }
+
+    private showErrorMessage(message: string): void {
         this.errorMessage.set(message);
         this.toastService.error(message);
     }
@@ -350,32 +246,7 @@ export class PremiumAccessPageComponent {
     }
 
     private getErrorMessage(error: unknown): string {
-        if (error instanceof HttpErrorResponse) {
-            const payload: unknown = error.error;
-            const payloadMessage = getStringProperty(payload, 'message');
-            if (payloadMessage !== undefined) {
-                const message = payloadMessage.trim();
-                if (message.length > 0) {
-                    return message;
-                }
-            }
-
-            if (typeof payload === 'string') {
-                const message = payload.trim();
-                if (message.length > 0) {
-                    return message;
-                }
-            }
-        }
-
-        if (error instanceof Error) {
-            const message = error.message.trim();
-            if (message.length > 0) {
-                return message;
-            }
-        }
-
-        return this.translateService.instant('PREMIUM_PAGE.ERROR_GENERIC');
+        return resolvePremiumErrorMessage(error, this.translateService.instant('PREMIUM_PAGE.ERROR_GENERIC'));
     }
 
     private resolveCheckoutLocale(): string {
