@@ -11,7 +11,7 @@ import {
     PROTEIN_CALORIES_PER_GRAM,
 } from '../../../shared/lib/nutrition.constants';
 import { GoalsService } from '../api/goals.service';
-import { DAYS_OF_WEEK, type GoalsResponse, type UpdateGoalsRequest } from '../models/goals.data';
+import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 import {
     GOALS_AUTOSAVE_DEBOUNCE_MS,
     GOALS_DEFAULT_ZONE_ALPHA,
@@ -163,15 +163,7 @@ export class GoalsFacade {
     public readonly maxCalories = GOALS_MAX_CALORIES;
     public readonly calorieTarget = signal(0);
     public readonly calorieCyclingEnabled = signal(false);
-    public readonly dayCalories = signal<Record<string, number>>({
-        mondayCalories: 0,
-        tuesdayCalories: 0,
-        wednesdayCalories: 0,
-        thursdayCalories: 0,
-        fridayCalories: 0,
-        saturdayCalories: 0,
-        sundayCalories: 0,
-    });
+    public readonly dayCalories = signal<Record<DayCalorieKey, number>>(this.createDayCalories(0));
     public readonly macroValues = signal<Record<MacroKey, number>>({
         protein: 0,
         fats: 0,
@@ -382,21 +374,13 @@ export class GoalsFacade {
             const current = this.dayCalories();
             const allZero = Object.values(current).every(v => v === 0);
             if (allZero && base > 0) {
-                this.dayCalories.set({
-                    mondayCalories: base,
-                    tuesdayCalories: base,
-                    wednesdayCalories: base,
-                    thursdayCalories: base,
-                    fridayCalories: base,
-                    saturdayCalories: base,
-                    sundayCalories: base,
-                });
+                this.dayCalories.set(this.createDayCalories(base));
             }
         }
         this.queueAutosave();
     }
 
-    public updateDayCalories(key: string, value: number): void {
+    public updateDayCalories(key: DayCalorieKey, value: number): void {
         if (Number.isNaN(value)) {
             return;
         }
@@ -436,7 +420,7 @@ export class GoalsFacade {
             waist: goals?.desiredWaist ?? 0,
         });
         this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
-        this.dayCalories.set(Object.fromEntries(DAYS_OF_WEEK.map(day => [day.key, goals?.[day.key] ?? 0])));
+        this.dayCalories.set(this.createDayCaloriesFromGoals(goals));
         this.hasAutosaveError.set(false);
         this.hasPendingAutosave.set(false);
     }
@@ -554,6 +538,34 @@ export class GoalsFacade {
 
     private clampValue(value: number, max: number): number {
         return Math.min(max, Math.max(0, Math.round(value)));
+    }
+
+    private createDayCalories(value: number): Record<DayCalorieKey, number> {
+        return {
+            mondayCalories: value,
+            tuesdayCalories: value,
+            wednesdayCalories: value,
+            thursdayCalories: value,
+            fridayCalories: value,
+            saturdayCalories: value,
+            sundayCalories: value,
+        };
+    }
+
+    private createDayCaloriesFromGoals(goals: GoalsResponse | null): Record<DayCalorieKey, number> {
+        if (goals === null) {
+            return this.createDayCalories(0);
+        }
+
+        return {
+            mondayCalories: goals.mondayCalories ?? 0,
+            tuesdayCalories: goals.tuesdayCalories ?? 0,
+            wednesdayCalories: goals.wednesdayCalories ?? 0,
+            thursdayCalories: goals.thursdayCalories ?? 0,
+            fridayCalories: goals.fridayCalories ?? 0,
+            saturdayCalories: goals.saturdayCalories ?? 0,
+            sundayCalories: goals.sundayCalories ?? 0,
+        };
     }
 
     private pickZoneColor(cfg: SliderConfig | MacroItem, value: number): string {

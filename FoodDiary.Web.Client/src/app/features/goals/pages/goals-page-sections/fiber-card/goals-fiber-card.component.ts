@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
-import { GoalsMacroSliderComponent } from './goals-macro-slider.component';
-import type { MacroInputChange, MacroSliderView } from './goals-page.models';
+import type { MacroInputChange, MacroSliderView } from '../../goals-page-lib/goals-page.models';
+import { GoalsMacroSliderComponent } from '../macro-slider/goals-macro-slider.component';
 
 @Component({
     selector: 'fd-goals-fiber-card',
     imports: [TranslatePipe, FdUiCardComponent, GoalsMacroSliderComponent],
     templateUrl: './goals-fiber-card.component.html',
-    styleUrl: './goals-page.component.scss',
+    styleUrl: '../../goals-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsFiberCardComponent {

@@ -1,4 +1,5 @@
-import type { BodyTargetKey, MacroKey } from '../lib/goals.facade';
+import type { BodyTargetKey, MacroKey } from '../../lib/goals.facade';
+import type { DayCalorieKey } from '../../models/goals.data';
 
 export type BodyTarget = {
     key: BodyTargetKey;
@@ -10,7 +11,7 @@ export type BodyTarget = {
 };
 
 export type CyclingDayControl = {
-    key: string;
+    key: DayCalorieKey;
     labelKey: string;
     inputId: string;
 };
@@ -36,3 +37,15 @@ export type BodyTargetInputChange = {
     key: BodyTargetKey;
     event: Event;
 };
+
+export type DayCaloriesInputChange = {
+    key: DayCalorieKey;
+    event: Event;
+};
+
+export type PointerCoordinates = {
+    clientX: number;
+    clientY: number;
+};
+
+export type RingRect = Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>;

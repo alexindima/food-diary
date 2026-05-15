@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { MacroSliderView } from './goals-page.models';
+import type { MacroSliderView } from '../../goals-page-lib/goals-page.models';
 
 @Component({
     selector: 'fd-goals-macro-slider',
     imports: [TranslatePipe],
     templateUrl: './goals-macro-slider.component.html',
-    styleUrl: './goals-page.component.scss',
+    styleUrl: '../../goals-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsMacroSliderComponent {

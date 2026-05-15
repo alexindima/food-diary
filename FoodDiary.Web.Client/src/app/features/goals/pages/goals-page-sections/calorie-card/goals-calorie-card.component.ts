@@ -6,7 +6,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
     selector: 'fd-goals-calorie-card',
     imports: [TranslatePipe, FdUiCardComponent],
     templateUrl: './goals-calorie-card.component.html',
-    styleUrl: './goals-page.component.scss',
+    styleUrl: '../../goals-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsCalorieCardComponent {

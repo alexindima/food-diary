@@ -8,27 +8,25 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { MAX_BODY_TARGET } from '../lib/goals.constants';
 import { type BodyTargetKey, GoalsFacade, type MacroKey, type MacroPresetKey } from '../lib/goals.facade';
-import { DAYS_OF_WEEK } from '../models/goals.data';
-import { GoalsBodyTargetsComponent } from './goals-body-targets.component';
-import { GoalsCalorieCardComponent } from './goals-calorie-card.component';
-import { type DayCaloriesInputChange, GoalsCyclingCardComponent } from './goals-cycling-card.component';
-import { GoalsFiberCardComponent } from './goals-fiber-card.component';
-import { GoalsMacrosCardComponent } from './goals-macros-card.component';
-import type { BodyTarget, BodyTargetInputChange, MacroInputChange } from './goals-page.models';
-import { GoalsWaterCardComponent } from './goals-water-card.component';
-
-type TimeframeOption = {
-    value: 'weekly' | 'monthly' | 'yearly';
-    labelKey: string;
-};
-
-const HALF_CIRCLE_DEGREES = 180;
-const RING_START_ANGLE_OFFSET_DEGREES = 450;
-const FULL_CIRCLE_DEGREES = 360;
-const RING_THICKNESS_PX = 30;
+import { type DayCalorieKey, DAYS_OF_WEEK } from '../models/goals.data';
+import type { BodyTargetInputChange, DayCaloriesInputChange, MacroInputChange } from './goals-page-lib/goals-page.models';
+import {
+    buildBodyTargets,
+    buildCyclingDayControls,
+    buildMacroPresetOptions,
+    calculateCaloriesFromRingPointer,
+    calculateGoalRingDistances,
+    isPointInsideGoalRing,
+    withMacroProgressStyles,
+} from './goals-page-lib/goals-page-view.mapper';
+import { GoalsBodyTargetsComponent } from './goals-page-sections/body-targets/goals-body-targets.component';
+import { GoalsCalorieCardComponent } from './goals-page-sections/calorie-card/goals-calorie-card.component';
+import { GoalsCyclingCardComponent } from './goals-page-sections/cycling-card/goals-cycling-card.component';
+import { GoalsFiberCardComponent } from './goals-page-sections/fiber-card/goals-fiber-card.component';
+import { GoalsMacrosCardComponent } from './goals-page-sections/macros-card/goals-macros-card.component';
+import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-water-card.component';
 
 @Component({
     selector: 'fd-goals-page',
@@ -66,7 +64,6 @@ export class GoalsPageComponent {
     protected readonly saveStatusKey = this.facade.saveStatusKey;
     protected readonly macroPresets = this.facade.macroPresets;
     protected readonly selectedPreset = this.facade.selectedPreset;
-    protected readonly macroStates = this.facade.macroStates;
     protected readonly waterState = this.facade.waterState;
     protected readonly coreMacroStates = this.facade.coreMacroStates;
     protected readonly fiberMacroState = this.facade.fiberMacroState;
@@ -91,36 +88,26 @@ export class GoalsPageComponent {
         this.facade.reload();
     }
 
-    protected readonly currentBodyTargets = computed(() =>
-        this.bodyTargets.map(target => ({
-            ...target,
-            value: this.facade.bodyTargetValues()[target.key],
-        })),
-    );
+    protected readonly currentBodyTargets = computed(() => buildBodyTargets(this.facade.bodyTargetValues()));
     protected readonly ringProgressOffset = computed(() => `${this.progressPercent()}%`);
     protected readonly ringKnobAngle = computed(() => `${this.knobAngle()}deg`);
-    protected readonly cyclingDayControls = computed(() =>
-        this.daysOfWeek.map(day => ({
-            ...day,
-            inputId: `cycling-day-${day.key}`,
-        })),
-    );
-    protected readonly waterViewState = computed(() => this.withMacroProgressStyles(this.waterState()));
-    protected readonly coreMacroViewStates = computed(() => this.coreMacroStates().map(macro => this.withMacroProgressStyles(macro)));
+    protected readonly cyclingDayControls = computed(() => buildCyclingDayControls(this.daysOfWeek));
+    protected readonly waterViewState = computed(() => withMacroProgressStyles(this.waterState()));
+    protected readonly coreMacroViewStates = computed(() => this.coreMacroStates().map(macro => withMacroProgressStyles(macro)));
     protected readonly fiberMacroViewState = computed(() => {
         const fiber = this.fiberMacroState();
         if (fiber === undefined) {
             return null;
         }
 
-        return this.withMacroProgressStyles(fiber);
+        return withMacroProgressStyles(fiber);
     });
 
     protected toggleCalorieCycling(): void {
         this.facade.toggleCalorieCycling();
     }
 
-    protected onDayCaloriesInput(key: string, event: Event): void {
+    protected onDayCaloriesInput(key: DayCalorieKey, event: Event): void {
         const target = this.getInputTarget(event);
         if (target === null) {
             return;
@@ -174,18 +161,6 @@ export class GoalsPageComponent {
         }
 
         this.facade.updateCalories(Number(target.value));
-    }
-
-    protected onMacroPresetChange(event: Event): void {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            return;
-        }
-
-        const target = event.target;
-        const preset = this.macroPresetOptions.find(option => option.value === target.value)?.value;
-        if (preset !== undefined) {
-            this.facade.changeMacroPreset(preset);
-        }
     }
 
     protected onMacroPresetModelChange(value: MacroPresetKey | null): void {
@@ -252,9 +227,7 @@ export class GoalsPageComponent {
             return;
         }
 
-        const { distanceFromCenter, innerRadius, outerRadius } = this.calculateRingDistances(event, ring);
-        const isInBand = distanceFromCenter >= innerRadius && distanceFromCenter <= outerRadius;
-        ring.style.cursor = isInBand ? 'grab' : 'default';
+        ring.style.cursor = isPointInsideGoalRing(event, ring.getBoundingClientRect()) ? 'grab' : 'default';
     }
 
     protected onRingLeave(event: PointerEvent): void {
@@ -269,7 +242,7 @@ export class GoalsPageComponent {
         }
         const ring = possibleRing;
 
-        const { distanceFromCenter, innerRadius } = this.calculateRingDistances(event, ring);
+        const { distanceFromCenter, innerRadius } = calculateGoalRingDistances(event, ring.getBoundingClientRect());
 
         if (distanceFromCenter < innerRadius || target?.closest('.goals__ring-center') !== null) {
             return;
@@ -295,42 +268,13 @@ export class GoalsPageComponent {
     };
 
     private updateFromPointer(event: PointerEvent, ring: HTMLElement): void {
-        const { centerX, centerY } = this.calculateRingDistances(event, ring);
-        const dx = event.clientX - centerX;
-        const dy = event.clientY - centerY;
-        const radians = Math.atan2(dy, dx);
-        const degrees = (radians * HALF_CIRCLE_DEGREES) / Math.PI;
-        const normalized = (degrees + RING_START_ANGLE_OFFSET_DEGREES) % FULL_CIRCLE_DEGREES;
-        const ratio = normalized / FULL_CIRCLE_DEGREES;
-        const value = this.minCalories + ratio * (this.maxCalories - this.minCalories);
-        this.facade.updateCalories(Math.round(value));
-    }
-
-    private calculateRingDistances(
-        event: PointerEvent,
-        ring: HTMLElement,
-    ): {
-        rect: DOMRect;
-        centerX: number;
-        centerY: number;
-        distanceFromCenter: number;
-        innerRadius: number;
-        outerRadius: number;
-    } {
-        const rect = ring.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const distanceFromCenter = Math.hypot(event.clientX - centerX, event.clientY - centerY);
-        const outerRadius = Math.min(rect.width, rect.height) / 2;
-        const innerRadius = outerRadius - RING_THICKNESS_PX;
-        return { rect, centerX, centerY, distanceFromCenter, innerRadius, outerRadius };
+        this.facade.updateCalories(
+            calculateCaloriesFromRingPointer(event, ring.getBoundingClientRect(), this.minCalories, this.maxCalories),
+        );
     }
 
     private buildMacroPresetOptions(): void {
-        this.macroPresetOptions = this.macroPresets.map(preset => ({
-            value: preset.key,
-            label: this.translateService.instant(preset.labelKey),
-        }));
+        this.macroPresetOptions = buildMacroPresetOptions(this.macroPresets, key => this.translateService.instant(key));
     }
 
     private getInputTarget(event: Event): HTMLInputElement | null {
@@ -340,39 +284,4 @@ export class GoalsPageComponent {
     private getCurrentElementTarget(event: Event): HTMLElement | null {
         return event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
     }
-
-    private withMacroProgressStyles<T extends { percent: number }>(state: T): T & { progressOffset: string; progressRatio: number } {
-        return {
-            ...state,
-            progressOffset: `${state.percent}%`,
-            progressRatio: state.percent / PERCENT_MULTIPLIER,
-        };
-    }
-
-    protected readonly bodyTargets: BodyTarget[] = [
-        {
-            key: 'weight',
-            titleKey: 'GOALS_PAGE.BODY_TARGET_WEIGHT',
-            value: 0,
-            unit: 'kg',
-            current: null,
-            delta: null,
-        },
-        {
-            key: 'waist',
-            titleKey: 'GOALS_PAGE.BODY_TARGET_WAIST',
-            value: 0,
-            unit: 'cm',
-            current: null,
-            delta: null,
-        },
-    ];
-
-    protected readonly timeframeOptions: TimeframeOption[] = [
-        { value: 'weekly', labelKey: 'GOALS_PAGE.TIMEFRAMES.WEEKLY' },
-        { value: 'monthly', labelKey: 'GOALS_PAGE.TIMEFRAMES.MONTHLY' },
-        { value: 'yearly', labelKey: 'GOALS_PAGE.TIMEFRAMES.YEARLY' },
-    ];
-
-    protected readonly activeTimeframe: TimeframeOption['value'] = 'monthly';
 }

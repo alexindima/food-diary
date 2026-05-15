@@ -1,24 +1,23 @@
 <fd-ui-dialog class="calorie-goal-dialog" size="md" [title]="'USER_MANAGE.DAILY_CALORIES' | translate">
-    <form id="calorieGoalForm" [formGroup]="form" (ngSubmit)="save()">
+    <form [formGroup]="form" (ngSubmit)="save()">
         <fd-ui-input
             formControlName="dailyCalorieTarget"
             type="number"
-            floatLabel="always"
             [label]="'USER_MANAGE.CALORIE_TARGET_LABEL' | translate"
             [placeholder]="'USER_MANAGE.DAILY_CALORIES_PLACEHOLDER' | translate"
         />
+
+        <p class="calorie-goal-dialog__hint fd-ui-body-sm">
+            {{ 'USER_MANAGE.CALORIE_TARGET_HINT' | translate }}
+        </p>
+
+        <div fdUiDialogFooter class="calorie-goal-dialog__footer">
+            <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancel()">
+                {{ 'COMMON.CANCEL' | translate }}
+            </fd-ui-button>
+            <fd-ui-button type="submit" icon="save">
+                {{ 'COMMON.SAVE' | translate }}
+            </fd-ui-button>
+        </div>
     </form>
-
-    <p class="calorie-goal-dialog__hint fd-ui-body-sm">
-        {{ 'USER_MANAGE.CALORIE_TARGET_HINT' | translate }}
-    </p>
-
-    <div fdUiDialogFooter class="calorie-goal-dialog__footer">
-        <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancel()">
-            {{ 'COMMON.CANCEL' | translate }}
-        </fd-ui-button>
-        <fd-ui-button type="submit" icon="save" form="calorieGoalForm" (click)="save()">
-            {{ 'COMMON.SAVE' | translate }}
-        </fd-ui-button>
-    </div>
 </fd-ui-dialog>
