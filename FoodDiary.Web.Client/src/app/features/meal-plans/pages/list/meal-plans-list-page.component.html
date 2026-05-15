@@ -4,52 +4,9 @@
         <p class="meal-plans-list__subtitle fd-page-subtitle">{{ 'MEAL_PLANS.SUBTITLE' | translate }}</p>
     </header>
 
-    <div class="meal-plans-list__filters fd-row fd-wrap fd-gap-xs">
-        @for (dt of dietFilterOptions(); track dt.value) {
-            <fd-ui-button variant="secondary" size="sm" [fill]="dt.fill" (click)="filterByDiet(dt.value)">
-                {{ dt.labelKey | translate }}
-            </fd-ui-button>
-        }
-    </div>
+    <fd-meal-plan-list-filters [selectedType]="facade.dietTypeFilter()" (filterChange)="filterByDiet($event)" />
 
     <fd-page-body>
-        @if (facade.isLoading()) {
-            <fd-ui-loader />
-        } @else if (planCards().length === 0) {
-            <div class="meal-plans-list__empty fd-stack fd-align-center fd-gap-sm">
-                <fd-ui-icon name="restaurant_menu" size="xl" />
-                <span>{{ 'MEAL_PLANS.EMPTY' | translate }}</span>
-            </div>
-        } @else {
-            <div class="meal-plans-list__grid fd-grid fd-gap-lg">
-                @for (plan of planCards(); track plan.id) {
-                    <div
-                        class="meal-plan-card fd-stack fd-gap-xs"
-                        fdCardHover
-                        role="button"
-                        tabindex="0"
-                        (click)="openPlan(plan.id)"
-                        (keydown.enter)="openPlan(plan.id)"
-                    >
-                        <div class="meal-plan-card__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                            {{ plan.dietTypeKey | translate }}
-                        </div>
-                        <h3 class="meal-plan-card__name fd-ui-title-sm">{{ plan.name }}</h3>
-                        <p class="meal-plan-card__desc fd-ui-body" [hidden]="!plan.description">{{ plan.description }}</p>
-                        <div class="meal-plan-card__meta fd-row fd-wrap fd-gap-sm fd-ui-caption-strong">
-                            <span>{{ 'MEAL_PLANS.DAYS' | translate: { count: plan.durationDays } }}</span>
-                            <span>{{ 'MEAL_PLANS.RECIPES' | translate: { count: plan.totalRecipes } }}</span>
-                            <span [hidden]="!plan.targetCaloriesPerDay"
-                                >~{{ plan.targetCaloriesPerDay | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
-                            >
-                        </div>
-                        <div class="meal-plan-card__curated fd-ui-pill fd-ui-pill--compact fd-ui-action-text" [hidden]="!plan.isCurated">
-                            <fd-ui-icon name="verified" size="sm" />
-                            {{ 'MEAL_PLANS.CURATED' | translate }}
-                        </div>
-                    </div>
-                }
-            </div>
-        }
+        <fd-meal-plan-list-content [isLoading]="facade.isLoading()" [plans]="planCards()" (planOpen)="openPlan($event)" />
     </fd-page-body>
 </div>

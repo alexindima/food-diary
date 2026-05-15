@@ -7,48 +7,9 @@
         @if (facade.isDetailLoading()) {
             <fd-ui-loader />
         } @else if (selectedPlanView(); as plan) {
-            <header class="meal-plan-detail__header fd-stack fd-gap-xs">
-                <div class="meal-plan-detail__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">
-                    {{ plan.dietTypeKey | translate }}
-                </div>
-                <h1 class="meal-plan-detail__title fd-ui-display-sm">{{ plan.name }}</h1>
-                <p class="meal-plan-detail__desc fd-ui-body" [hidden]="!plan.description">{{ plan.description }}</p>
-                <div class="meal-plan-detail__actions fd-row fd-wrap fd-gap-sm">
-                    @if (plan.isCurated) {
-                        <fd-ui-button icon="content_copy" (click)="adopt()">
-                            {{ 'MEAL_PLANS.ADOPT' | translate }}
-                        </fd-ui-button>
-                    }
-                    <fd-ui-button variant="secondary" icon="shopping_cart" (click)="generateShoppingList()">
-                        {{ 'MEAL_PLANS.GENERATE_SHOPPING_LIST' | translate }}
-                    </fd-ui-button>
-                </div>
-            </header>
+            <fd-meal-plan-detail-header [plan]="plan.header" (adoptPlan)="adopt()" (generateShoppingList)="generateShoppingList()" />
 
-            <div class="meal-plan-detail__days fd-stack fd-gap-lg">
-                @for (day of plan.days; track day.id) {
-                    <div class="meal-plan-day">
-                        <h3 class="meal-plan-day__title fd-ui-section-title">
-                            {{ 'MEAL_PLANS.DAY' | translate: { number: day.dayNumber } }}
-                        </h3>
-                        <div class="meal-plan-day__meals fd-stack fd-gap-xs">
-                            @for (meal of day.meals; track meal.id) {
-                                <div class="meal-plan-meal fd-row fd-gap-md">
-                                    <div class="meal-plan-meal__type fd-ui-overline">
-                                        {{ meal.mealTypeKey | translate }}
-                                    </div>
-                                    <div class="meal-plan-meal__recipe fd-ui-helper-strong">{{ meal.recipeName ?? meal.recipeId }}</div>
-                                    <div class="meal-plan-meal__nutrition fd-row fd-gap-xs fd-ui-caption-strong">
-                                        @for (item of meal.nutritionItems; track item.prefix) {
-                                            <span>{{ item.prefix }}{{ item.value | number: '1.0-0' }} {{ item.unitKey | translate }}</span>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
-            </div>
+            <fd-meal-plan-detail-days [days]="plan.days" />
         }
     </fd-page-body>
 </div>

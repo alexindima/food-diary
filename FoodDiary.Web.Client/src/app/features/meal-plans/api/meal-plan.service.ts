@@ -4,6 +4,7 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
@@ -12,10 +13,9 @@ export class MealPlanService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.mealPlans;
 
     public getAll(dietType?: string): Observable<MealPlanSummary[]> {
-        const params: Record<string, string> = {};
-        if (dietType !== undefined && dietType.trim().length > 0) {
-            params['dietType'] = dietType;
-        }
+        const params: ApiQueryParams = {};
+        addOptionalStringParam(params, 'dietType', dietType);
+
         return super
             .get<MealPlanSummary[]>('', params)
             .pipe(catchError((error: unknown) => fallbackApiError('Get meal plans error', error, [])));

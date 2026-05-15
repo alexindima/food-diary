@@ -1,0 +1,7 @@
+<div class="meal-plans-list__filters fd-row fd-wrap fd-gap-xs">
+    @for (option of options(); track option.value) {
+        <fd-ui-button variant="secondary" size="sm" [fill]="option.fill" (click)="filterChange.emit(option.value)">
+            {{ option.labelKey | translate }}
+        </fd-ui-button>
+    }
+</div>

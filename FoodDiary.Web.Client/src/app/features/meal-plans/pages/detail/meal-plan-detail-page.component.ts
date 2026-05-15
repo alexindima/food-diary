@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -8,12 +7,21 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
-import type { MealPlan, MealPlanDay, MealPlanMeal } from '../../models/meal-plan.data';
+import { buildMealPlanDetailView } from '../../lib/meal-plan-view.mapper';
+import { MealPlanDetailDaysComponent } from './meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days.component';
+import { MealPlanDetailHeaderComponent } from './meal-plan-detail-sections/meal-plan-detail-header/meal-plan-detail-header.component';
 
 @Component({
     selector: 'fd-meal-plan-detail-page',
-    standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiButtonComponent, FdUiLoaderComponent, PageBodyComponent, FdPageContainerDirective],
+    imports: [
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiLoaderComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
+        MealPlanDetailHeaderComponent,
+        MealPlanDetailDaysComponent,
+    ],
     providers: [MealPlanFacade],
     templateUrl: './meal-plan-detail-page.component.html',
     styleUrl: './meal-plan-detail-page.component.scss',
@@ -23,25 +31,7 @@ export class MealPlanDetailPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     public readonly facade = inject(MealPlanFacade);
-    public readonly selectedPlanView = computed<MealPlanDetailViewModel | null>(() => {
-        const plan = this.facade.selectedPlan();
-        if (plan === null) {
-            return null;
-        }
-
-        return {
-            ...plan,
-            dietTypeKey: `MEAL_PLANS.DIET_TYPE.${plan.dietType.toUpperCase()}`,
-            days: plan.days.map(day => ({
-                ...day,
-                meals: day.meals.map(meal => ({
-                    ...meal,
-                    mealTypeKey: `MEAL_PLANS.MEAL_TYPE.${meal.mealType.toUpperCase()}`,
-                    nutritionItems: this.buildNutritionItems(meal),
-                })),
-            })),
-        };
-    });
+    public readonly selectedPlanView = computed(() => buildMealPlanDetailView(this.facade.selectedPlan()));
 
     public constructor() {
         const id = this.route.snapshot.paramMap.get('id');
@@ -69,33 +59,4 @@ export class MealPlanDetailPageComponent {
     public goBack(): void {
         void this.router.navigate(['/meal-plans']);
     }
-
-    private buildNutritionItems(meal: MealPlanMeal): MealPlanNutritionItem[] {
-        return [
-            { unitKey: 'GENERAL.UNITS.KCAL', value: meal.calories, prefix: '' },
-            { unitKey: 'GENERAL.UNITS.G', value: meal.proteins, prefix: 'P: ' },
-            { unitKey: 'GENERAL.UNITS.G', value: meal.fats, prefix: 'F: ' },
-            { unitKey: 'GENERAL.UNITS.G', value: meal.carbs, prefix: 'C: ' },
-        ].filter((item): item is MealPlanNutritionItem => item.value !== null && item.value !== undefined && item.value > 0);
-    }
 }
-
-type MealPlanDetailViewModel = {
-    dietTypeKey: string;
-    days: MealPlanDayViewModel[];
-} & Omit<MealPlan, 'days'>;
-
-type MealPlanDayViewModel = {
-    meals: MealPlanMealViewModel[];
-} & Omit<MealPlanDay, 'meals'>;
-
-type MealPlanMealViewModel = {
-    mealTypeKey: string;
-    nutritionItems: MealPlanNutritionItem[];
-} & MealPlanMeal;
-
-type MealPlanNutritionItem = {
-    unitKey: string;
-    value: number;
-    prefix: string;
-};

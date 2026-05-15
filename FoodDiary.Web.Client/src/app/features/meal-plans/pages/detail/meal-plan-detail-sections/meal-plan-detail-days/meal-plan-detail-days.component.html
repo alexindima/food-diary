@@ -1,0 +1,24 @@
+<div class="meal-plan-detail__days fd-stack fd-gap-lg">
+    @for (day of days(); track day.id) {
+        <div class="meal-plan-day">
+            <h3 class="meal-plan-day__title fd-ui-section-title">
+                {{ 'MEAL_PLANS.DAY' | translate: { number: day.dayNumber } }}
+            </h3>
+            <div class="meal-plan-day__meals fd-stack fd-gap-xs">
+                @for (meal of day.meals; track meal.id) {
+                    <div class="meal-plan-meal fd-row fd-gap-md">
+                        <div class="meal-plan-meal__type fd-ui-overline">
+                            {{ meal.mealTypeKey | translate }}
+                        </div>
+                        <div class="meal-plan-meal__recipe fd-ui-helper-strong">{{ meal.recipeName ?? meal.recipeId }}</div>
+                        <div class="meal-plan-meal__nutrition fd-row fd-gap-xs fd-ui-caption-strong">
+                            @for (item of meal.nutritionItems; track item.prefix) {
+                                <span>{{ item.prefix }}{{ item.value | number: '1.0-0' }} {{ item.unitKey | translate }}</span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

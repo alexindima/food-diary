@@ -1,30 +1,18 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
-import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
-import { DIET_TYPES, type DietType, type MealPlanSummary } from '../../models/meal-plan.data';
+import { buildMealPlanCards } from '../../lib/meal-plan-view.mapper';
+import type { DietType } from '../../models/meal-plan.data';
+import { MealPlanListContentComponent } from './meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content.component';
+import { MealPlanListFiltersComponent } from './meal-plan-list-sections/meal-plan-list-filters/meal-plan-list-filters.component';
 
 @Component({
     selector: 'fd-meal-plans-list-page',
-    standalone: true,
-    imports: [
-        CommonModule,
-        TranslatePipe,
-        FdUiButtonComponent,
-        FdUiIconComponent,
-        FdUiLoaderComponent,
-        PageBodyComponent,
-        FdPageContainerDirective,
-        FdCardHoverDirective,
-    ],
+    imports: [TranslatePipe, PageBodyComponent, FdPageContainerDirective, MealPlanListFiltersComponent, MealPlanListContentComponent],
     providers: [MealPlanFacade],
     templateUrl: './meal-plans-list-page.component.html',
     styleUrl: './meal-plans-list-page.component.scss',
@@ -33,28 +21,7 @@ import { DIET_TYPES, type DietType, type MealPlanSummary } from '../../models/me
 export class MealPlansListPageComponent {
     private readonly router = inject(Router);
     public readonly facade = inject(MealPlanFacade);
-    private readonly dietTypeDefinitions: MealPlanDietFilterViewModel[] = [
-        { value: null, labelKey: 'MEAL_PLANS.FILTER_ALL', fill: 'outline' },
-        ...DIET_TYPES.map(type => ({
-            value: type.value,
-            labelKey: type.labelKey,
-            fill: 'outline' as const,
-        })),
-    ];
-    public readonly dietFilterOptions = computed<MealPlanDietFilterViewModel[]>(() => {
-        const selectedType = this.facade.dietTypeFilter();
-
-        return this.dietTypeDefinitions.map(type => ({
-            ...type,
-            fill: selectedType === type.value ? 'solid' : 'outline',
-        }));
-    });
-    public readonly planCards = computed<MealPlanCardViewModel[]>(() =>
-        this.facade.plans().map(plan => ({
-            ...plan,
-            dietTypeKey: `MEAL_PLANS.DIET_TYPE.${plan.dietType.toUpperCase()}`,
-        })),
-    );
+    public readonly planCards = computed(() => buildMealPlanCards(this.facade.plans()));
 
     public constructor() {
         this.facade.loadPlans();
@@ -68,13 +35,3 @@ export class MealPlansListPageComponent {
         void this.router.navigate(['/meal-plans', id]);
     }
 }
-
-type MealPlanCardViewModel = {
-    dietTypeKey: string;
-} & MealPlanSummary;
-
-type MealPlanDietFilterViewModel = {
-    value: DietType | null;
-    labelKey: string;
-    fill: 'solid' | 'outline';
-};
