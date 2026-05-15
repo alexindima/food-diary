@@ -7,16 +7,16 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { AuthService } from '../../../services/auth.service';
-import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
-import { LocalizationService } from '../../../services/localization.service';
-import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
-import { PushNotificationService } from '../../../services/push-notification.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
-import type { User } from '../../../shared/models/user.data';
-import { DietologistService } from '../../dietologist/api/dietologist.service';
-import { ProfileManageFacade } from '../lib/profile-manage.facade';
+import { AuthService } from '../../../../services/auth.service';
+import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
+import { LocalizationService } from '../../../../services/localization.service';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../../services/notification.service';
+import { PushNotificationService } from '../../../../services/push-notification.service';
+import { ImageUploadService } from '../../../../shared/api/image-upload.service';
+import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
+import type { User } from '../../../../shared/models/user.data';
+import { DietologistService } from '../../../dietologist/api/dietologist.service';
+import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import { UserManageComponent } from './user-manage.component';
 
 let fixture: ComponentFixture<UserManageComponent>;

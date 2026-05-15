@@ -12,7 +12,7 @@ import {
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -23,7 +23,6 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     FD_VALIDATION_ERRORS,
     FdUiFormErrorComponent,
-    type FdValidationErrorConfig,
     type FdValidationErrors,
     getNumberProperty,
 } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
@@ -33,70 +32,59 @@ import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-ba
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 
-import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
-import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
-import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
-import { LocalizationService } from '../../../services/localization.service';
-import { NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
-import { PushNotificationService } from '../../../services/push-notification.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
+import { LocalizationService } from '../../../../services/localization.service';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../../services/notification.service';
+import { PushNotificationService } from '../../../../services/push-notification.service';
+import { ImageUploadService } from '../../../../shared/api/image-upload.service';
 import {
     FASTING_REMINDER_PRESETS,
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
-} from '../../../shared/lib/fasting-reminder-presets';
-import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import { parseIntegerInput } from '../../../shared/lib/number.utils';
-import type { DietologistPermissions, DietologistRelationship } from '../../../shared/models/dietologist.data';
-import type { ImageSelection } from '../../../shared/models/image-upload.data';
-import { type ActivityLevelOption, Gender, UpdateUserDto, type User } from '../../../shared/models/user.data';
+} from '../../../../shared/lib/fasting-reminder-presets';
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
+import { parseIntegerInput } from '../../../../shared/lib/number.utils';
+import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
+import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
+import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
+import { DietologistService } from '../../../dietologist/api/dietologist.service';
+import { PremiumBillingService } from '../../../premium/api/premium-billing.service';
+import type { BillingOverview } from '../../../premium/models/billing.models';
+import { ProfileManageFacade } from '../../lib/profile-manage.facade';
+import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card.component';
+import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card.component';
 import {
-    APP_THEMES,
-    APP_UI_STYLES,
-    type AppThemeName,
-    type AppUiStyleName,
-    isAppThemeName,
-    isAppUiStyleName,
-} from '../../../theme/app-theme.config';
-import { DietologistService } from '../../dietologist/api/dietologist.service';
-import { PremiumBillingService } from '../../premium/api/premium-billing.service';
-import type { BillingOverview, BillingPlan, BillingProvider } from '../../premium/models/billing.models';
-import { ProfileManageFacade } from '../lib/profile-manage.facade';
+    type FastingReminderHoursChange,
+    UserManageNotificationsCardComponent,
+} from '../user-manage-sections/notifications-card/user-manage-notifications-card.component';
+import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card.component';
+import {
+    DEFAULT_DIETOLOGIST_PERMISSIONS,
+    DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
+    DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,
+    MAX_FASTING_REMINDER_HOURS,
+    TEST_NOTIFICATION_DELAY_SECONDS,
+} from './user-manage.config';
 import type {
     BillingViewModel,
     ConnectedDeviceViewModel,
     DietologistFormData,
     DietologistPermissionChange,
     DietologistPermissionControlName,
+    ProfileStatusViewModel,
     UserFormData,
     UserFormValues,
 } from './user-manage.types';
-import { UserManageBillingCardComponent } from './user-manage-billing-card.component';
-import { UserManageDietologistCardComponent } from './user-manage-dietologist-card.component';
-import { type FastingReminderHoursChange, UserManageNotificationsCardComponent } from './user-manage-notifications-card.component';
-import { UserManagePrivacyCardComponent } from './user-manage-privacy-card.component';
-
-const DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS = 12;
-const DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
-const MAX_FASTING_REMINDER_HOURS = 168;
-const TEST_NOTIFICATION_DELAY_SECONDS = 20;
-const DATE_INPUT_PAD_LENGTH = 2;
-const BROWSER_LABEL_MATCHERS: ReadonlyArray<{ label: string; matches: (userAgent: string) => boolean }> = [
-    { label: 'Edge', matches: userAgent => userAgent.includes('edg/') },
-    { label: 'Opera', matches: userAgent => userAgent.includes('opr/') || userAgent.includes('opera') },
-    { label: 'Chrome', matches: userAgent => userAgent.includes('chrome/') && !userAgent.includes('edg/') && !userAgent.includes('opr/') },
-    { label: 'Firefox', matches: userAgent => userAgent.includes('firefox/') },
-    { label: 'Safari', matches: userAgent => userAgent.includes('safari/') && !userAgent.includes('chrome/') },
-];
-const PLATFORM_LABEL_MATCHERS: ReadonlyArray<{ label: string; matches: (userAgent: string) => boolean }> = [
-    { label: 'iOS', matches: userAgent => userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ios') },
-    { label: 'Android', matches: userAgent => userAgent.includes('android') },
-    { label: 'Windows', matches: userAgent => userAgent.includes('windows') },
-    { label: 'macOS', matches: userAgent => userAgent.includes('mac os') || userAgent.includes('macintosh') },
-    { label: 'Linux', matches: userAgent => userAgent.includes('linux') },
-];
+import { buildBillingView } from './user-manage-billing.mapper';
+import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-dietologist-form.mapper';
+import { buildUserManageSelectOptions, createDietologistForm, createUserManageForm, mapUserToForm } from './user-manage-form.mapper';
+import { buildConnectedDeviceItems, buildNotificationsStatusKey, isCurrentConnectedDevice } from './user-manage-notifications.mapper';
+import { buildProfileStatus } from './user-manage-profile-status.mapper';
+import { resolveTranslatedControlError } from './user-manage-validation.mapper';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -163,9 +151,6 @@ export class UserManageComponent {
     private readonly pendingPasswordSetupIntent = signal(false);
     private readonly languageVersion = signal(0);
 
-    public genders = Object.values(Gender);
-    public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
-    public languageCodes: string[] = ['en', 'ru'];
     public genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
     public activityLevelOptions: Array<FdUiSelectOption<ActivityLevelOption | null>> = [];
     public languageOptions: Array<FdUiSelectOption<string | null>> = [];
@@ -176,7 +161,7 @@ export class UserManageComponent {
     public readonly globalError = this.facade.globalError;
     public readonly dietologistRelationship = this.facade.dietologistRelationship;
     public readonly dietologistError = signal<string | null>(null);
-    public readonly dietologistPermissions = signal<DietologistPermissions>(this.createDefaultDietologistPermissions());
+    public readonly dietologistPermissions = signal<DietologistPermissions>(DEFAULT_DIETOLOGIST_PERMISSIONS);
     public readonly isLoadingDietologist = signal(false);
     public readonly isSavingDietologist = signal(false);
     public readonly billingOverview = signal<BillingOverview | null>(null);
@@ -224,12 +209,12 @@ export class UserManageComponent {
     });
     public readonly connectedDeviceItems = computed<ConnectedDeviceViewModel[]>(() => {
         this.languageVersion();
-        return this.connectedDevices().map(subscription => ({
-            subscription,
-            label: this.buildConnectedDeviceLabel(subscription),
-            meta: this.buildConnectedDeviceMeta(subscription),
-            isCurrent: this.isCurrentDevice(subscription),
-        }));
+        return buildConnectedDeviceItems(
+            this.connectedDevices(),
+            this.currentSubscriptionEndpoint(),
+            value => this.formatDateTime(value),
+            key => this.translateService.instant(key),
+        );
     });
     public readonly dietologistInviteEmailError = signal<string | null>(null);
     public readonly dietologistAcceptedDateLabel = computed(() => {
@@ -239,14 +224,6 @@ export class UserManageComponent {
     public readonly dietologistExpiresDateLabel = computed(() => {
         this.languageVersion();
         return this.formatLocalizedDate(this.dietologistRelationship()?.expiresAtUtc);
-    });
-    public readonly billingStatusLabelKey = computed(() =>
-        this.getBillingStatusLabelKey(this.billingOverview()?.subscriptionStatus ?? null),
-    );
-    public readonly billingPlanLabelKey = computed(() => this.getBillingPlanLabelKey(this.billingOverview()?.plan ?? null));
-    public readonly billingProviderLabel = computed(() => {
-        const overview = this.billingOverview();
-        return this.getBillingProviderLabel(overview?.subscriptionProvider ?? overview?.provider ?? null);
     });
     public readonly billingCurrentPeriodStartLabel = computed(() => {
         this.languageVersion();
@@ -260,39 +237,15 @@ export class UserManageComponent {
         this.languageVersion();
         return this.formatLocalizedDate(this.billingOverview()?.nextBillingAttemptUtc);
     });
-    public readonly billingRenewalLabelKey = computed(() => {
-        const overview = this.billingOverview();
-        if (overview?.isPremium !== true) {
-            return 'USER_MANAGE.BILLING_RENEWAL_FREE';
-        }
-
-        if (overview.cancelAtPeriodEnd) {
-            return 'USER_MANAGE.BILLING_RENEWAL_CANCELING';
-        }
-
-        if (overview.renewalEnabled) {
-            return 'USER_MANAGE.BILLING_RENEWAL_ENABLED';
-        }
-
-        return 'USER_MANAGE.BILLING_RENEWAL_MANUAL';
-    });
-    public readonly billingView = computed<BillingViewModel | null>(() => {
-        const overview = this.billingOverview();
-        if (overview === null) {
-            return null;
-        }
-
-        return {
-            overview,
-            statusTone: overview.isPremium ? 'success' : 'muted',
-            endLabelKey: overview.cancelAtPeriodEnd ? 'USER_MANAGE.BILLING_ACCESS_ENDS' : 'USER_MANAGE.BILLING_PERIOD_END',
-            showNextAttempt: !overview.cancelAtPeriodEnd,
-            premiumActionVariant: overview.isPremium ? 'secondary' : 'primary',
-            premiumActionLabelKey: overview.isPremium ? 'USER_MANAGE.BILLING_VIEW_PREMIUM' : 'USER_MANAGE.BILLING_UPGRADE',
-            showManagedSupportNote: overview.isPremium && !overview.manageBillingAvailable,
-        };
-    });
-    public readonly notificationsStatusKey = computed(() => this.buildNotificationsStatusKey());
+    public readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
+    public readonly notificationsStatusKey = computed(() =>
+        buildNotificationsStatusKey({
+            isSchedulingTestNotification: this.isSchedulingTestNotification(),
+            isRemovingConnectedDevice: this.removingConnectedDeviceEndpoint() !== null,
+            isPushNotificationsBusy: this.pushNotificationsBusy(),
+            isUpdatingNotifications: this.isUpdatingNotifications(),
+        }),
+    );
     public readonly connectedDevicesSectionState = computed<'loading' | 'content' | 'empty'>(() => {
         if (this.isLoadingConnectedDevices()) {
             return 'loading';
@@ -351,8 +304,8 @@ export class UserManageComponent {
     });
 
     public constructor() {
-        this.userForm = this.createUserForm();
-        this.dietologistForm = this.createDietologistForm();
+        this.userForm = createUserManageForm();
+        this.dietologistForm = createDietologistForm();
 
         this.buildSelectOptions();
         this.watchLanguageChanges();
@@ -368,38 +321,6 @@ export class UserManageComponent {
 
         this.facade.initialize();
         this.loadBillingOverview();
-    }
-
-    private createUserForm(): FormGroup<UserFormData> {
-        return new FormGroup<UserFormData>({
-            email: new FormControl<string | null>({ value: '', disabled: true }),
-            username: new FormControl<string | null>(null),
-            firstName: new FormControl<string | null>(null),
-            lastName: new FormControl<string | null>(null),
-            birthDate: new FormControl<string | null>(null),
-            gender: new FormControl<Gender | null>(null),
-            language: new FormControl<string | null>(null),
-            theme: new FormControl<AppThemeName | null>(null),
-            uiStyle: new FormControl<AppUiStyleName | null>(null),
-            height: new FormControl<number | null>(null),
-            activityLevel: new FormControl<ActivityLevelOption | null>(null),
-            stepGoal: new FormControl<number | null>(null),
-            profileImage: new FormControl<ImageSelection | null>(null),
-        });
-    }
-
-    private createDietologistForm(): FormGroup<DietologistFormData> {
-        return new FormGroup<DietologistFormData>({
-            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-            shareProfile: new FormControl<boolean>(true, { nonNullable: true }),
-            shareMeals: new FormControl<boolean>(true, { nonNullable: true }),
-            shareStatistics: new FormControl<boolean>(true, { nonNullable: true }),
-            shareWeight: new FormControl<boolean>(true, { nonNullable: true }),
-            shareWaist: new FormControl<boolean>(true, { nonNullable: true }),
-            shareGoals: new FormControl<boolean>(true, { nonNullable: true }),
-            shareHydration: new FormControl<boolean>(true, { nonNullable: true }),
-            shareFasting: new FormControl<boolean>(true, { nonNullable: true }),
-        });
     }
 
     private watchLanguageChanges(): void {
@@ -423,7 +344,7 @@ export class UserManageComponent {
                 return;
             }
 
-            const userData = this.mapUserToForm(user);
+            const userData = mapUserToForm(user);
             this.lastUserData = userData;
             this.applyUserData(userData);
             this.fastingCheckInReminderHours.set(user.fastingCheckInReminderHours);
@@ -715,24 +636,8 @@ export class UserManageComponent {
         this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVED_TOAST'));
     }
 
-    private buildConnectedDeviceLabel(subscription: WebPushSubscriptionItem): string {
-        const browser = this.getBrowserLabel(subscription.userAgent);
-        const platform = this.getPlatformLabel(subscription.userAgent);
-        return platform !== null ? `${browser} / ${platform}` : browser;
-    }
-
-    private buildConnectedDeviceMeta(subscription: WebPushSubscriptionItem): string {
-        const segments = [
-            subscription.endpointHost,
-            subscription.locale?.toUpperCase() ?? null,
-            this.formatDateTime(subscription.updatedAtUtc ?? subscription.createdAtUtc),
-        ].filter((value): value is string => value !== null && value.length > 0);
-
-        return segments.join(' | ');
-    }
-
     public isCurrentDevice(subscription: WebPushSubscriptionItem): boolean {
-        return subscription.endpoint.length > 0 && subscription.endpoint === this.currentSubscriptionEndpoint();
+        return isCurrentConnectedDevice(subscription, this.currentSubscriptionEndpoint());
     }
 
     public async toggleSocialPushNotificationsAsync(): Promise<void> {
@@ -804,7 +709,7 @@ export class UserManageComponent {
         this.dietologistService
             .invite({
                 dietologistEmail: this.dietologistForm.controls.email.getRawValue(),
-                permissions: this.getDietologistPermissions(),
+                permissions: getDietologistPermissions(this.dietologistForm),
             })
             .pipe(
                 finalize(() => {
@@ -827,7 +732,7 @@ export class UserManageComponent {
             return;
         }
 
-        const previousPermissions = this.getDietologistPermissions();
+        const previousPermissions = getDietologistPermissions(this.dietologistForm);
         this.dietologistForm.controls[controlName].setValue(nextValue);
         this.persistDietologistPermissions(previousPermissions);
     }
@@ -843,7 +748,7 @@ export class UserManageComponent {
 
         this.isSavingDietologist.set(true);
         this.dietologistService
-            .updatePermissions(this.getDietologistPermissions())
+            .updatePermissions(getDietologistPermissions(this.dietologistForm))
             .pipe(
                 finalize(() => {
                     this.isSavingDietologist.set(false);
@@ -907,7 +812,7 @@ export class UserManageComponent {
             this.dietologistForm.controls.shareProfile.setValue(nextValue);
             if (this.hasDietologistRelationship()) {
                 this.persistDietologistPermissions({
-                    ...this.getDietologistPermissions(),
+                    ...getDietologistPermissions(this.dietologistForm),
                     shareProfile: !nextValue,
                 });
             }
@@ -928,7 +833,7 @@ export class UserManageComponent {
             .afterClosed()
             .subscribe(confirmed => {
                 if (confirmed === true) {
-                    const previousPermissions = this.getDietologistPermissions();
+                    const previousPermissions = getDietologistPermissions(this.dietologistForm);
                     this.dietologistForm.controls.shareProfile.setValue(false);
                     if (this.hasDietologistRelationship()) {
                         this.persistDietologistPermissions(previousPermissions);
@@ -940,54 +845,14 @@ export class UserManageComponent {
     }
 
     private updateDietologistInviteEmailError(): void {
-        this.dietologistInviteEmailError.set(this.resolveControlError(this.dietologistForm.controls.email));
-    }
-
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (control?.invalid !== true) {
-            return null;
-        }
-
-        const shouldShow = control.touched || control.dirty;
-        if (!shouldShow) {
-            return null;
-        }
-
-        const errors = control.errors;
-        if (errors === null) {
-            return null;
-        }
-
-        for (const key of Object.keys(errors)) {
-            const resolver = this.validationErrors?.[key];
-            if (resolver === undefined) {
-                continue;
-            }
-
-            const controlError: unknown = errors[key];
-            const controlParams = this.getValidationParams(controlError);
-            const result = resolver(controlError);
-
-            return this.translateValidationResult(result, controlParams);
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    }
-
-    private translateValidationResult(result: FdValidationErrorConfig | string, controlParams: Record<string, unknown>): string {
-        if (typeof result === 'string') {
-            return this.translateService.instant(result, controlParams);
-        }
-
-        return this.translateService.instant(result.key, {
-            ...controlParams,
-            ...(result.params ?? {}),
-        });
+        this.dietologistInviteEmailError.set(
+            resolveTranslatedControlError(this.dietologistForm.controls.email, this.validationErrors, this.translateService),
+        );
     }
 
     public formatMetric(value: number | null | undefined): string {
         if (value === null || value === undefined || Number.isNaN(value)) {
-            return '—';
+            return '\u2014';
         }
 
         return Number.isInteger(value) ? `${value}` : value.toFixed(1);
@@ -1001,52 +866,13 @@ export class UserManageComponent {
         this.profileStatus.set(this.buildProfileStatus());
     }
 
-    private getValidationParams(error: unknown): Record<string, unknown> {
-        return this.isRecord(error) ? error : {};
-    }
-
-    private isRecord(value: unknown): value is Record<string, unknown> {
-        return typeof value === 'object' && value !== null && !Array.isArray(value);
-    }
-
     private buildProfileStatus(): ProfileStatusViewModel {
-        const globalError = this.globalError();
-        if (globalError !== null && globalError.length > 0 && this.userForm.dirty) {
-            return { key: 'USER_MANAGE.PROFILE_STATUS_ERROR', tone: 'danger' };
-        }
-
-        if (this.isSavingProfile()) {
-            return { key: 'USER_MANAGE.PROFILE_STATUS_SAVING', tone: 'muted' };
-        }
-
-        if (this.userForm.dirty) {
-            return {
-                key: this.userForm.valid ? 'USER_MANAGE.PROFILE_STATUS_PENDING' : 'USER_MANAGE.PROFILE_STATUS_INVALID',
-                tone: 'warning',
-            };
-        }
-
-        return { key: 'USER_MANAGE.PROFILE_STATUS_SAVED', tone: 'success' };
-    }
-
-    private buildNotificationsStatusKey(): string | null {
-        if (this.isSchedulingTestNotification()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING';
-        }
-
-        if (this.removingConnectedDeviceEndpoint() !== null) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_REMOVING';
-        }
-
-        if (this.pushNotificationsBusy()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_SYNCING';
-        }
-
-        if (this.isUpdatingNotifications()) {
-            return 'USER_MANAGE.NOTIFICATIONS_STATUS_SAVING';
-        }
-
-        return null;
+        return buildProfileStatus({
+            globalError: this.globalError(),
+            isSaving: this.isSavingProfile(),
+            isDirty: this.userForm.dirty,
+            isValid: this.userForm.valid,
+        });
     }
 
     public reloadBillingOverview(): void {
@@ -1151,112 +977,14 @@ export class UserManageComponent {
             });
     }
 
-    private getBillingPlanLabelKey(plan: BillingPlan | null): string {
-        if (this.billingOverview()?.isPremium !== true) {
-            return 'USER_MANAGE.BILLING_PLAN_FREE';
-        }
-
-        return plan === 'yearly' ? 'USER_MANAGE.BILLING_PLAN_PREMIUM_YEARLY' : 'USER_MANAGE.BILLING_PLAN_PREMIUM_MONTHLY';
-    }
-
-    private getBillingStatusLabelKey(status: string | null): string {
-        switch (status) {
-            case 'active':
-                return 'USER_MANAGE.BILLING_STATUS_ACTIVE';
-            case 'trialing':
-                return 'USER_MANAGE.BILLING_STATUS_TRIALING';
-            case 'past_due':
-                return 'USER_MANAGE.BILLING_STATUS_PAST_DUE';
-            case 'canceled':
-                return 'USER_MANAGE.BILLING_STATUS_CANCELED';
-            case 'unpaid':
-                return 'USER_MANAGE.BILLING_STATUS_UNPAID';
-            case 'incomplete':
-                return 'USER_MANAGE.BILLING_STATUS_INCOMPLETE';
-            case null:
-                return 'USER_MANAGE.BILLING_STATUS_FREE';
-            default:
-                return 'USER_MANAGE.BILLING_STATUS_FREE';
-        }
-    }
-
-    private getBillingProviderLabel(provider: BillingProvider | null): string {
-        const normalizedProvider = provider?.trim() ?? '';
-        if (normalizedProvider.length === 0) {
-            return this.translateService.instant('USER_MANAGE.BILLING_PROVIDER_NONE');
-        }
-
-        switch (normalizedProvider.toLowerCase()) {
-            case 'yookassa':
-                return 'YooKassa';
-            case 'paddle':
-                return 'Paddle';
-            case 'stripe':
-                return 'Stripe';
-            default:
-                return normalizedProvider;
-        }
-    }
-
     private syncDietologistFormFromRelationship(relationship: DietologistRelationship | null): void {
-        if (relationship !== null) {
-            this.dietologistForm.patchValue({
-                email: relationship.email,
-                ...relationship.permissions,
-            });
-            this.dietologistForm.controls.email.disable({ emitEvent: false });
-        } else {
-            this.dietologistForm.reset(
-                {
-                    email: '',
-                    shareProfile: true,
-                    shareMeals: true,
-                    shareStatistics: true,
-                    shareWeight: true,
-                    shareWaist: true,
-                    shareGoals: true,
-                    shareHydration: true,
-                    shareFasting: true,
-                },
-                { emitEvent: false },
-            );
-            this.dietologistForm.controls.email.enable({ emitEvent: false });
-        }
-
+        syncDietologistFormFromRelationship(this.dietologistForm, relationship);
         this.updateDietologistPermissionsState();
-        this.dietologistForm.markAsPristine();
-        this.dietologistForm.markAsUntouched();
         this.cdr.markForCheck();
     }
 
-    private getDietologistPermissions(): DietologistPermissions {
-        return {
-            shareProfile: this.dietologistForm.controls.shareProfile.getRawValue(),
-            shareMeals: this.dietologistForm.controls.shareMeals.getRawValue(),
-            shareStatistics: this.dietologistForm.controls.shareStatistics.getRawValue(),
-            shareWeight: this.dietologistForm.controls.shareWeight.getRawValue(),
-            shareWaist: this.dietologistForm.controls.shareWaist.getRawValue(),
-            shareGoals: this.dietologistForm.controls.shareGoals.getRawValue(),
-            shareHydration: this.dietologistForm.controls.shareHydration.getRawValue(),
-            shareFasting: this.dietologistForm.controls.shareFasting.getRawValue(),
-        };
-    }
-
     private updateDietologistPermissionsState(): void {
-        this.dietologistPermissions.set(this.getDietologistPermissions());
-    }
-
-    private createDefaultDietologistPermissions(): DietologistPermissions {
-        return {
-            shareProfile: true,
-            shareMeals: true,
-            shareStatistics: true,
-            shareWeight: true,
-            shareWaist: true,
-            shareGoals: true,
-            shareHydration: true,
-            shareFasting: true,
-        };
+        this.dietologistPermissions.set(getDietologistPermissions(this.dietologistForm));
     }
 
     private setDietologistError(errorKey: string): void {
@@ -1284,94 +1012,12 @@ export class UserManageComponent {
     }
 
     private buildSelectOptions(): void {
-        this.genderOptions = this.genders.map(gender => ({
-            label: this.translateService.instant(`USER_MANAGE.GENDER_OPTIONS.${gender}`),
-            value: gender,
-        }));
-
-        this.activityLevelOptions = this.activityLevels.map(level => ({
-            label: this.translateService.instant(`USER_MANAGE.ACTIVITY_LEVEL_OPTIONS.${level}`),
-            value: level,
-        }));
-
-        this.languageOptions = this.languageCodes.map(code => ({
-            label: this.translateService.instant(`USER_MANAGE.LANGUAGE_OPTIONS.${code.toUpperCase()}`),
-            value: code,
-        }));
-
-        this.themeOptions = APP_THEMES.map(theme => ({
-            label: this.translateService.instant(`USER_MANAGE.THEME_OPTIONS.${theme.name.toUpperCase()}`),
-            value: theme.name,
-        }));
-
-        this.uiStyleOptions = APP_UI_STYLES.map(style => ({
-            label: this.translateService.instant(`USER_MANAGE.UI_STYLE_OPTIONS.${style.name.toUpperCase()}`),
-            value: style.name,
-        }));
-    }
-
-    private normalizeLanguage(value: string | null | undefined): string | null {
-        if (value === null || value === undefined || value.length === 0) {
-            return null;
-        }
-
-        const normalized = value.trim().toLowerCase();
-        if (normalized.length === 0) {
-            return null;
-        }
-
-        const [code] = normalized.split(/[-_]/);
-        return code.length > 0 ? code : null;
-    }
-
-    private mapUserToForm(user: User): Partial<UserFormValues> {
-        return {
-            email: user.email,
-            username: user.username,
-            firstName: this.toNullable(user.firstName),
-            lastName: this.toNullable(user.lastName),
-            gender: this.normalizeGender(user.gender),
-            language: this.normalizeLanguage(user.language),
-            theme: this.normalizeTheme(user.theme),
-            uiStyle: this.normalizeUiStyle(user.uiStyle),
-            birthDate: this.mapUserBirthDate(user.birthDate),
-            height: this.toNullable(user.height),
-            activityLevel: this.mapUserActivityLevel(user.activityLevel),
-            stepGoal: this.toNullable(user.stepGoal),
-            profileImage: this.mapUserProfileImage(user),
-            pushNotificationsEnabled: user.pushNotificationsEnabled,
-            fastingPushNotificationsEnabled: user.fastingPushNotificationsEnabled,
-            socialPushNotificationsEnabled: user.socialPushNotificationsEnabled,
-        };
-    }
-
-    private mapUserBirthDate(value: Date | string | null | undefined): string | null {
-        return value !== null && value !== undefined ? this.formatDateInput(new Date(value)) : null;
-    }
-
-    private mapUserActivityLevel(value: string | null | undefined): ActivityLevelOption | null {
-        const normalized = value?.toUpperCase();
-        if (normalized === undefined || normalized.length === 0) {
-            return null;
-        }
-
-        return this.isActivityLevelOption(normalized) ? normalized : null;
-    }
-
-    private isActivityLevelOption(value: string): value is ActivityLevelOption {
-        return this.activityLevels.some(option => option === value);
-    }
-
-    private mapUserProfileImage(user: User): ImageSelection | null {
-        const profileImage = user.profileImage ?? '';
-        return profileImage.length > 0 ? { url: profileImage, assetId: this.toNullable(user.profileImageAssetId) } : null;
-    }
-
-    private formatDateInput(date: Date): string {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(DATE_INPUT_PAD_LENGTH, '0');
-        const day = String(date.getDate()).padStart(DATE_INPUT_PAD_LENGTH, '0');
-        return `${year}-${month}-${day}`;
+        const options = buildUserManageSelectOptions(key => this.translateService.instant(key));
+        this.genderOptions = options.genderOptions;
+        this.activityLevelOptions = options.activityLevelOptions;
+        this.languageOptions = options.languageOptions;
+        this.themeOptions = options.themeOptions;
+        this.uiStyleOptions = options.uiStyleOptions;
     }
 
     private async clearProfileIntentQueryParamAsync(): Promise<void> {
@@ -1381,52 +1027,6 @@ export class UserManageComponent {
             queryParamsHandling: 'merge',
             replaceUrl: true,
         });
-    }
-
-    private normalizeGender(value: string | null | undefined): Gender | null {
-        if (value === null || value === undefined || value.length === 0) {
-            return null;
-        }
-
-        const normalized = value.trim().toLowerCase();
-        const genderMap: Record<string, Gender> = {
-            m: Gender.Male,
-            male: Gender.Male,
-            f: Gender.Female,
-            female: Gender.Female,
-            o: Gender.Other,
-            other: Gender.Other,
-        };
-
-        return genderMap[normalized] ?? null;
-    }
-
-    private normalizeTheme(value: string | null | undefined): AppThemeName | null {
-        if (value === null || value === undefined || value.length === 0) {
-            return null;
-        }
-
-        const normalized = value.trim().toLowerCase();
-        const legacyThemeMap: Record<string, AppThemeName> = {
-            default: 'ocean',
-        };
-        const resolved = legacyThemeMap[normalized] ?? normalized;
-
-        return isAppThemeName(resolved) ? resolved : null;
-    }
-
-    private normalizeUiStyle(value: string | null | undefined): AppUiStyleName | null {
-        if (value === null || value === undefined || value.length === 0) {
-            return null;
-        }
-
-        const normalized = value.trim().toLowerCase();
-        const legacyUiStyleMap: Record<string, AppUiStyleName> = {
-            default: 'classic',
-        };
-        const resolved = legacyUiStyleMap[normalized] ?? normalized;
-
-        return isAppUiStyleName(resolved) ? resolved : null;
     }
 
     private readNotificationPermission(): NotificationPermission | 'unsupported' {
@@ -1468,19 +1068,6 @@ export class UserManageComponent {
         }).format(date);
     }
 
-    private getBrowserLabel(userAgent: string | null): string {
-        const normalized = userAgent?.toLowerCase() ?? '';
-        return (
-            BROWSER_LABEL_MATCHERS.find(item => item.matches(normalized))?.label ??
-            this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_GENERIC')
-        );
-    }
-
-    private getPlatformLabel(userAgent: string | null): string | null {
-        const normalized = userAgent?.toLowerCase() ?? '';
-        return PLATFORM_LABEL_MATCHERS.find(item => item.matches(normalized))?.label ?? null;
-    }
-
     private surfaceBusySignals(): boolean[] {
         return [
             this.isSavingProfile(),
@@ -1496,16 +1083,7 @@ export class UserManageComponent {
             this.removingConnectedDeviceEndpoint() !== null,
         ];
     }
-
-    private toNullable<T>(value: T | null | undefined): T | null {
-        return value ?? null;
-    }
 }
-
-type ProfileStatusViewModel = {
-    key: string;
-    tone: 'success' | 'warning' | 'danger' | 'muted';
-};
 
 type PasswordActionState = {
     buttonLabelKey: string;

@@ -27,7 +27,6 @@ type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-change-password-dialog',
-    standalone: true,
     templateUrl: './change-password-dialog.component.html',
     styleUrls: ['./change-password-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

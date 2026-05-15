@@ -4,8 +4,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
-import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
-import type { DietologistFormData } from './user-manage.types';
+import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
+import type { DietologistFormData } from '../../user-manage/user-manage.types';
 
 type DietologistSummaryAction = {
     fill: 'outline' | 'solid';
@@ -20,7 +20,7 @@ type DietologistSummaryAction = {
     selector: 'fd-user-manage-dietologist-summary',
     imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './user-manage-dietologist-summary.component.html',
-    styleUrl: './user-manage.component.scss',
+    styleUrl: '../../user-manage/user-manage.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageDietologistSummaryComponent {

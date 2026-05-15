@@ -4,10 +4,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 
-import type { DietologistPermissions, DietologistRelationship } from '../../../shared/models/dietologist.data';
-import type { DietologistFormData, DietologistPermissionChange } from './user-manage.types';
-import { UserManageDietologistPermissionsComponent } from './user-manage-dietologist-permissions.component';
-import { UserManageDietologistSummaryComponent } from './user-manage-dietologist-summary.component';
+import type { DietologistPermissions, DietologistRelationship } from '../../../../../shared/models/dietologist.data';
+import type { DietologistFormData, DietologistPermissionChange } from '../../user-manage/user-manage.types';
+import { UserManageDietologistPermissionsComponent } from '../dietologist-permissions/user-manage-dietologist-permissions.component';
+import { UserManageDietologistSummaryComponent } from '../dietologist-summary/user-manage-dietologist-summary.component';
 
 @Component({
     selector: 'fd-user-manage-dietologist-card',
@@ -20,7 +20,7 @@ import { UserManageDietologistSummaryComponent } from './user-manage-dietologist
         UserManageDietologistPermissionsComponent,
     ],
     templateUrl: './user-manage-dietologist-card.component.html',
-    styleUrl: './user-manage.component.scss',
+    styleUrl: '../../user-manage/user-manage.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageDietologistCardComponent {

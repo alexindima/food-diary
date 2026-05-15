@@ -7,10 +7,10 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 
-import type { WebPushSubscriptionItem } from '../../../services/notification.service';
-import type { FastingReminderPreset } from '../../../shared/lib/fasting-reminder-presets';
-import type { ConnectedDeviceViewModel } from './user-manage.types';
-import { UserManageConnectedDevicesComponent } from './user-manage-connected-devices.component';
+import type { WebPushSubscriptionItem } from '../../../../../services/notification.service';
+import type { FastingReminderPreset } from '../../../../../shared/lib/fasting-reminder-presets';
+import type { ConnectedDeviceViewModel } from '../../user-manage/user-manage.types';
+import { UserManageConnectedDevicesComponent } from '../connected-devices/user-manage-connected-devices.component';
 
 export type FastingReminderHoursChange = {
     value: string | number;
@@ -30,7 +30,7 @@ export type FastingReminderHoursChange = {
         UserManageConnectedDevicesComponent,
     ],
     templateUrl: './user-manage-notifications-card.component.html',
-    styleUrl: './user-manage.component.scss',
+    styleUrl: '../../user-manage/user-manage.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageNotificationsCardComponent {

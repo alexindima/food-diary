@@ -7,7 +7,6 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 @Component({
     selector: 'fd-user-manage-success-dialog',
-    standalone: true,
     templateUrl: './update-success-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],

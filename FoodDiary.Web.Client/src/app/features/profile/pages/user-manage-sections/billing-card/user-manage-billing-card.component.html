@@ -23,10 +23,6 @@
     } @else if (billingView(); as billing) {
         <fd-user-manage-billing-summary
             [billing]="billing"
-            [billingPlanLabelKey]="billingPlanLabelKey()"
-            [billingStatusLabelKey]="billingStatusLabelKey()"
-            [billingProviderLabel]="billingProviderLabel()"
-            [billingRenewalLabelKey]="billingRenewalLabelKey()"
             [billingCurrentPeriodStartLabel]="billingCurrentPeriodStartLabel()"
             [billingCurrentPeriodEndLabel]="billingCurrentPeriodEndLabel()"
             [billingNextAttemptLabel]="billingNextAttemptLabel()"

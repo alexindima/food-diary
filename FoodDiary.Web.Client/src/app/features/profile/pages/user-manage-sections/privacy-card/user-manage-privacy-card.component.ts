@@ -7,7 +7,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
     selector: 'fd-user-manage-privacy-card',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent],
     templateUrl: './user-manage-privacy-card.component.html',
-    styleUrl: './user-manage.component.scss',
+    styleUrl: '../../user-manage/user-manage.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManagePrivacyCardComponent {
