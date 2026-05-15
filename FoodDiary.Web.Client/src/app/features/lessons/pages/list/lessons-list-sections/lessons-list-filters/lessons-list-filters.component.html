@@ -1,0 +1,7 @@
+<div class="lessons-list__filters fd-row fd-gap-xs fd-wrap">
+    @for (category of options(); track category.value) {
+        <fd-ui-button variant="secondary" size="sm" [fill]="category.fill" (click)="filterChange.emit(category.value)">
+            {{ category.labelKey | translate }}
+        </fd-ui-button>
+    }
+</div>

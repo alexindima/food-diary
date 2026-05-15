@@ -1,0 +1,32 @@
+@if (isLoading()) {
+    <fd-ui-loader />
+} @else if (lesson(); as lesson) {
+    <article class="lesson-detail__article">
+        <div class="lesson-detail__meta-row fd-row fd-gap-sm">
+            <span class="lesson-detail__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">
+                {{ lesson.categoryLabelKey | translate }}
+            </span>
+            <span class="lesson-detail__difficulty fd-ui-field-label--floating">
+                {{ lesson.difficultyLabelKey | translate }}
+            </span>
+            <span class="lesson-detail__time fd-ui-field-label--floating">
+                {{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}
+            </span>
+        </div>
+        <h1 class="lesson-detail__title fd-ui-display-sm">{{ lesson.title }}</h1>
+        <div class="lesson-detail__content fd-ui-body">{{ lesson.content }}</div>
+
+        <div class="lesson-detail__actions">
+            @if (!lesson.isRead) {
+                <fd-ui-button icon="check" (click)="markRead.emit()">
+                    {{ 'LESSONS.MARK_READ' | translate }}
+                </fd-ui-button>
+            } @else {
+                <div class="lesson-detail__read-badge fd-ui-pill fd-ui-pill--compact fd-ui-action-text">
+                    <fd-ui-icon name="check_circle" />
+                    {{ 'LESSONS.ALREADY_READ' | translate }}
+                </div>
+            }
+        </div>
+    </article>
+}

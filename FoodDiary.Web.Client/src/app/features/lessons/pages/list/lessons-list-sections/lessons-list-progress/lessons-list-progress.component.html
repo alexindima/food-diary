@@ -1,0 +1,10 @@
+@if (progress(); as progress) {
+    <div class="lessons-list__progress fd-row fd-gap-sm">
+        <div class="lessons-list__progress-bar">
+            <div class="lessons-list__progress-fill" [style.width.%]="progress.percent"></div>
+        </div>
+        <span class="lessons-list__progress-text fd-ui-caption-strong">
+            {{ progress.read }}/{{ progress.total }} {{ 'LESSONS.COMPLETED' | translate }}
+        </span>
+    </div>
+}

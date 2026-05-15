@@ -2,25 +2,10 @@
     <header class="lessons-list__header">
         <h1 class="lessons-list__title fd-ui-display-sm">{{ 'LESSONS.TITLE' | translate }}</h1>
         <p class="lessons-list__subtitle fd-page-subtitle">{{ 'LESSONS.SUBTITLE' | translate }}</p>
-        @if (progress(); as p) {
-            <div class="lessons-list__progress fd-row fd-gap-sm">
-                <div class="lessons-list__progress-bar">
-                    <div class="lessons-list__progress-fill" [style.width.%]="p.percent"></div>
-                </div>
-                <span class="lessons-list__progress-text fd-ui-caption-strong">
-                    {{ p.read }}/{{ p.total }} {{ 'LESSONS.COMPLETED' | translate }}
-                </span>
-            </div>
-        }
+        <fd-lessons-list-progress [progress]="progress()" />
     </header>
 
-    <div class="lessons-list__filters fd-row fd-gap-xs fd-wrap">
-        @for (cat of categoryFilterOptions(); track cat.value) {
-            <fd-ui-button variant="secondary" size="sm" [fill]="cat.fill" (click)="filterByCategory(cat.value)">
-                {{ cat.labelKey | translate }}
-            </fd-ui-button>
-        }
-    </div>
+    <fd-lessons-list-filters [selectedCategory]="facade.categoryFilter()" (filterChange)="filterByCategory($event)" />
 
     <fd-page-body>
         <fd-lessons-list-grid [isLoading]="facade.isLoading()" [lessons]="lessons()" (lessonOpen)="openLesson($event)" />
