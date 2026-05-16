@@ -10,11 +10,6 @@
                 <fd-tdee-insight-card-content
                     [insight]="insight()"
                     [effectiveTdee]="currentEffectiveTdee"
-                    [confidenceLabel]="confidenceLabel()"
-                    [confidenceClass]="confidenceClass()"
-                    [weightTrendFormatted]="weightTrendFormatted()"
-                    [hintKey]="hintKey()"
-                    [showSuggestion]="showSuggestion()"
                     (applyGoal)="onApplyGoal($event)"
                 />
             } @else {

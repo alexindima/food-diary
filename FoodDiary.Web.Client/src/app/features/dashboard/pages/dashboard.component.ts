@@ -21,23 +21,14 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
-import { MealService } from '../../meals/api/meal.service';
-import { buildMealManageDtoFromAiResult } from '../../meals/lib/ai/ai-meal-result.mapper';
+import { AiMealCreateService } from '../../meals/lib/ai/ai-meal-create.service';
 import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
-import type { TdeeInsightDialogAction, TdeeInsightDialogData } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.types';
+import type {
+    TdeeInsightDialogAction,
+    TdeeInsightDialogData,
+} from '../dialogs/tdee-insight-dialog/tdee-insight-dialog-lib/tdee-insight-dialog.types';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
-import { DashboardAdviceBlockComponent } from './dashboard-advice-block.component';
-import { DashboardCycleBlockComponent } from './dashboard-cycle-block.component';
-import { DashboardEditHintComponent } from './dashboard-edit-hint.component';
-import { DashboardFastingBlockComponent } from './dashboard-fasting-block.component';
-import { DashboardHeaderComponent } from './dashboard-header.component';
-import { DashboardHydrationBlockComponent } from './dashboard-hydration-block.component';
-import { DashboardMealsBlockComponent } from './dashboard-meals-block.component';
-import { DashboardQuickAddComponent } from './dashboard-quick-add.component';
-import { DashboardSummaryBlockComponent } from './dashboard-summary-block.component';
-import { DashboardTdeeBlockComponent } from './dashboard-tdee-block.component';
-import { DashboardTrendBlockComponent } from './dashboard-trend-block.component';
 import type {
     DashboardBlockId,
     DashboardBlockState,
@@ -45,15 +36,30 @@ import type {
     DashboardHeaderState,
     DashboardMealsPreviewState,
     DashboardSummaryData,
-} from './dashboard-view.types';
+} from './dashboard-lib/dashboard-view.types';
+import {
+    buildDashboardBlockState,
+    buildDashboardHeaderState,
+    buildDashboardMealsPreviewState,
+    isDashboardAsideBlock,
+} from './dashboard-lib/dashboard-view-state.mapper';
+import { DashboardAdviceBlockComponent } from './dashboard-sections/dashboard-advice-block/dashboard-advice-block.component';
+import { DashboardCycleBlockComponent } from './dashboard-sections/dashboard-cycle-block/dashboard-cycle-block.component';
+import { DashboardEditHintComponent } from './dashboard-sections/dashboard-edit-hint/dashboard-edit-hint.component';
+import { DashboardFastingBlockComponent } from './dashboard-sections/dashboard-fasting-block/dashboard-fasting-block.component';
+import { DashboardHeaderComponent } from './dashboard-sections/dashboard-header/dashboard-header.component';
+import { DashboardHydrationBlockComponent } from './dashboard-sections/dashboard-hydration-block/dashboard-hydration-block.component';
+import { DashboardMealsBlockComponent } from './dashboard-sections/dashboard-meals-block/dashboard-meals-block.component';
+import { DashboardQuickAddComponent } from './dashboard-sections/dashboard-quick-add/dashboard-quick-add.component';
+import { DashboardSummaryBlockComponent } from './dashboard-sections/dashboard-summary-block/dashboard-summary-block.component';
+import { DashboardTdeeBlockComponent } from './dashboard-sections/dashboard-tdee-block/dashboard-tdee-block.component';
+import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-trend-block/dashboard-trend-block.component';
 
-const EMPTY_INDEX = -1;
 const FIRST_RESIZE_ENTRY_INDEX = 0;
 const LANGUAGE_VERSION_INCREMENT = 1;
 
 @Component({
     selector: 'fd-dashboard',
-    standalone: true,
     host: {
         class: 'dashboard-host',
     },
@@ -85,7 +91,7 @@ export class DashboardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
-    private readonly mealService = inject(MealService);
+    private readonly aiMealCreateService = inject(AiMealCreateService);
     private readonly facade = inject(DashboardFacade);
     public readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
@@ -97,16 +103,8 @@ export class DashboardComponent {
     public readonly isTodaySelected = this.facade.isTodaySelected;
     public readonly snapshot = this.facade.snapshot;
     public readonly isLoading = this.facade.isLoading;
-    public readonly dailyGoal = this.facade.dailyGoal;
-    public readonly todayCalories = this.facade.todayCalories;
     public readonly caloriesBurned = this.facade.caloriesBurned;
     public readonly meals = this.facade.meals;
-    public readonly latestWeight = this.facade.latestWeight;
-    public readonly previousWeight = this.facade.previousWeight;
-    public readonly desiredWeight = this.facade.desiredWeight;
-    public readonly latestWaist = this.facade.latestWaist;
-    public readonly previousWaist = this.facade.previousWaist;
-    public readonly desiredWaist = this.facade.desiredWaist;
     public readonly weeklyConsumed = this.facade.weeklyConsumed;
     public readonly hydration = this.facade.hydration;
     public readonly dailyAdvice = this.facade.dailyAdvice;
@@ -139,7 +137,7 @@ export class DashboardComponent {
         }
 
         const visibleBlocks = this.layout.visibleBlocks();
-        return visibleBlocks.some(block => this.isAsideBlock(block));
+        return visibleBlocks.some(block => isDashboardAsideBlock(block));
     });
     public readonly editSaveActionLabelKey = computed(() => (this.layout.hasLayoutChanges() ? 'DASHBOARD.SETTINGS.SAVE' : null));
     public readonly editSaveActionLabel = computed(() => {
@@ -151,24 +149,15 @@ export class DashboardComponent {
         const isToday = this.isTodaySelected();
         const selectedDateLabel = this.formatSelectedDate();
 
-        return {
-            fullTitleKey: isToday ? 'DASHBOARD.TITLE' : 'DASHBOARD.TITLE_FOR_DATE',
-            compactTitleKey: isToday ? 'DASHBOARD.TITLE_SHORT' : 'DASHBOARD.TITLE_FOR_DATE_SHORT',
-            titleParams: isToday ? null : { date: selectedDateLabel },
-            selectedDateLabel,
-        };
+        return buildDashboardHeaderState(isToday, selectedDateLabel);
     });
     public readonly mealsPreviewState = computed<DashboardMealsPreviewState>(() => {
         this.languageVersion();
         const isToday = this.isTodaySelected();
         const selectedDateLabel = this.formatSelectedDate();
+        const titleForDate = this.translateService.instant('DASHBOARD.MEALS_TITLE_FOR_DATE', { date: selectedDateLabel });
 
-        return {
-            titleText: isToday ? null : this.translateService.instant('DASHBOARD.MEALS_TITLE_FOR_DATE', { date: selectedDateLabel }),
-            emptyKey: isToday ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE',
-            showDateActions: isToday,
-            showEmptyState: !isToday,
-        };
+        return buildDashboardMealsPreviewState(isToday, titleForDate);
     });
     public readonly hydrationCardState = computed(() => {
         const hydration = this.hydration();
@@ -256,10 +245,6 @@ export class DashboardComponent {
         await this.navigationService.navigateToWeightHistoryAsync();
     }
 
-    public async openWaistHistoryAsync(): Promise<void> {
-        await this.navigationService.navigateToWaistHistoryAsync();
-    }
-
     public async openCycleTrackingAsync(): Promise<void> {
         await this.navigationService.navigateToCycleTrackingAsync();
     }
@@ -270,24 +255,6 @@ export class DashboardComponent {
 
     public async openProfileAsync(): Promise<void> {
         await this.navigationService.navigateToProfileAsync();
-    }
-
-    public async openCalorieGoalDialogAsync(): Promise<void> {
-        const { CalorieGoalDialogComponent } = await import('../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component');
-        this.dialogService
-            .open(CalorieGoalDialogComponent, {
-                preset: 'form',
-                data: {
-                    dailyCalorieTarget: this.dailyGoal() > 0 ? this.dailyGoal() : null,
-                },
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(saved => {
-                if (saved === true) {
-                    this.facade.reload();
-                }
-            });
     }
 
     public async openNotificationSettingsAsync(): Promise<void> {
@@ -333,9 +300,8 @@ export class DashboardComponent {
     }
 
     public onAiMealCreateRequested(result: AiInputBarResult): void {
-        const mealDate = result.date !== undefined && result.time !== undefined ? new Date(`${result.date}T${result.time}`) : undefined;
-        this.mealService
-            .create(buildMealManageDtoFromAiResult(result, mealDate))
+        this.aiMealCreateService
+            .createFromAiResult(result)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(meal => {
                 if (meal !== null) {
@@ -456,44 +422,18 @@ export class DashboardComponent {
         editing: boolean,
         options: DashboardBlockStateOptions,
     ): DashboardBlockState {
-        const isVisible = this.layout.isBlockVisible(blockId);
-        const isInteractive = this.isDashboardBlockInteractive(editing, options);
-        return {
-            hidden: editing && !isVisible,
-            role: isInteractive ? 'button' : null,
-            tabIndex: isInteractive ? 0 : EMPTY_INDEX,
-            ariaPressed: editing ? isVisible : null,
-            ariaDisabled: this.resolveDashboardBlockAriaDisabled(blockId, editing, options),
+        return buildDashboardBlockState({
+            blockId,
+            editing,
+            isVisible: this.layout.isBlockVisible(blockId),
+            canToggle: this.layout.canToggleBlock(blockId),
             ariaLabel: this.resolveDashboardBlockAriaLabel(editing, options),
-            inert: editing ? '' : null,
-        };
-    }
-
-    private isDashboardBlockInteractive(editing: boolean, options: DashboardBlockStateOptions): boolean {
-        return editing || options.alwaysInteractive === true;
-    }
-
-    private resolveDashboardBlockAriaDisabled(
-        blockId: DashboardBlockId,
-        editing: boolean,
-        options: DashboardBlockStateOptions,
-    ): boolean | null {
-        return editing && options.locked === true ? !this.layout.canToggleBlock(blockId) : null;
+            stateOptions: options,
+        });
     }
 
     private resolveDashboardBlockAriaLabel(editing: boolean, options: DashboardBlockStateOptions): string | null {
         const ariaLabelKey = editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null);
         return ariaLabelKey !== null ? this.translateService.instant(ariaLabelKey) : null;
-    }
-
-    private isAsideBlock(blockId: string): boolean {
-        return (
-            blockId === 'hydration' ||
-            blockId === 'cycle' ||
-            blockId === 'weight' ||
-            blockId === 'waist' ||
-            blockId === 'tdee' ||
-            blockId === 'advice'
-        );
     }
 }

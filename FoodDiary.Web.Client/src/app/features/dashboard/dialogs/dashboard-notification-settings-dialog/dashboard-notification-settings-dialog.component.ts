@@ -17,7 +17,6 @@ import { PushNotificationService } from '../../../../services/push-notification.
 
 @Component({
     selector: 'fd-dashboard-notification-settings-dialog',
-    standalone: true,
     templateUrl: './dashboard-notification-settings-dialog.component.html',
     styleUrl: './dashboard-notification-settings-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

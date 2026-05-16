@@ -4,13 +4,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
+import { MS_PER_DAY } from '../../../../shared/lib/time.constants';
 import type { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
-
-const MILLISECONDS_PER_DAY = 86_400_000;
 
 @Component({
     selector: 'fd-cycle-summary-card',
-    standalone: true,
     imports: [CommonModule, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
     templateUrl: './cycle-summary-card.component.html',
     styleUrl: './cycle-summary-card.component.scss',
@@ -32,7 +30,7 @@ export class CycleSummaryCardComponent {
         if (start === null || reference === null) {
             return null;
         }
-        const diff = Math.floor((reference.getTime() - start.getTime()) / MILLISECONDS_PER_DAY);
+        const diff = Math.floor((reference.getTime() - start.getTime()) / MS_PER_DAY);
         return Math.max(1, diff + 1);
     });
 
@@ -109,6 +107,6 @@ export class CycleSummaryCardComponent {
     }
 
     private daysBetween(from: Date, to: Date): number {
-        return Math.round((to.getTime() - from.getTime()) / MILLISECONDS_PER_DAY);
+        return Math.round((to.getTime() - from.getTime()) / MS_PER_DAY);
     }
 }

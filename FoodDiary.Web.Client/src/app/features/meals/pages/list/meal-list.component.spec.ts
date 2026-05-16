@@ -92,6 +92,7 @@ function createOverview(meals: Meal[]): MealOverview {
 }
 
 const mockMealService = {
+    create: vi.fn().mockReturnValue(of(createMockMeal())),
     queryOverview: vi.fn().mockReturnValue(of(createOverview([]))),
     query: vi.fn().mockReturnValue(of(createPageOf([]))),
     repeat: vi.fn().mockReturnValue(of(createMockMeal())),
@@ -140,6 +141,7 @@ describe('MealListComponent', () => {
 
     beforeEach(async () => {
         vi.clearAllMocks();
+        mockMealService.create.mockReturnValue(of(createMockMeal()));
         mockMealService.queryOverview.mockReturnValue(of(createOverview([])));
         mockMealService.query.mockReturnValue(of(createPageOf([])));
         mockMealService.repeat.mockReturnValue(of(createMockMeal()));

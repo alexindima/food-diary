@@ -12,6 +12,7 @@ import type { Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
+import { DASHBOARD_RESIZE_AUDIT_MS, DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import {
     createConsumptionRingSignal,
@@ -21,9 +22,6 @@ import {
     placeholderLabel,
 } from './dashboard-nutrition.utils';
 import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
-
-const DASHBOARD_TREND_DAYS = 7;
-const RESIZE_AUDIT_MS = 150;
 
 @Injectable({ providedIn: 'root' })
 export class DashboardFacade {
@@ -37,7 +35,7 @@ export class DashboardFacade {
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
     private readonly trendDays = DASHBOARD_TREND_DAYS;
-    private readonly resizeAuditMs = RESIZE_AUDIT_MS;
+    private readonly resizeAuditMs = DASHBOARD_RESIZE_AUDIT_MS;
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {

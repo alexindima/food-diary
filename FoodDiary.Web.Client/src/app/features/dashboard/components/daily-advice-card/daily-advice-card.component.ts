@@ -8,7 +8,6 @@ import type { DailyAdvice } from '../../models/daily-advice.data';
 
 @Component({
     selector: 'fd-daily-advice-card',
-    standalone: true,
     imports: [CommonModule, FdUiIconComponent, TranslatePipe, DashboardWidgetFrameComponent],
     templateUrl: './daily-advice-card.component.html',
     styleUrl: './daily-advice-card.component.scss',

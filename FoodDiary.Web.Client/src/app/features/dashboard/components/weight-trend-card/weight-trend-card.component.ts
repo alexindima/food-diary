@@ -5,21 +5,22 @@ import type { ChartConfiguration, ScaleOptionsByType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
-
-const CHART_BORDER_WIDTH = 4;
-const CHART_TENSION = 0.48;
-const ACTIVE_POINT_RADIUS = 5;
-const INACTIVE_POINT_RADIUS = 0;
-const ACTIVE_POINT_HOVER_RADIUS = 6;
-const POINT_BORDER_WIDTH = 2;
-const TOOLTIP_PADDING = 8;
-const POINT_HIT_RADIUS = 16;
-const TREND_EPSILON = 0.01;
-const DISPLAY_FRACTION_DIGITS = 1;
-const ROUNDING_FACTOR = 10;
-const FILL_COLOR_PERCENT = 15;
-const Y_AXIS_PADDING_MIN = 0.5;
-const Y_AXIS_PADDING_RATIO = 0.08;
+import {
+    WEIGHT_TREND_ACTIVE_POINT_HOVER_RADIUS,
+    WEIGHT_TREND_ACTIVE_POINT_RADIUS,
+    WEIGHT_TREND_CHART_BORDER_WIDTH,
+    WEIGHT_TREND_CHART_TENSION,
+    WEIGHT_TREND_DISPLAY_FRACTION_DIGITS,
+    WEIGHT_TREND_EPSILON,
+    WEIGHT_TREND_FILL_COLOR_PERCENT,
+    WEIGHT_TREND_INACTIVE_POINT_RADIUS,
+    WEIGHT_TREND_POINT_BORDER_WIDTH,
+    WEIGHT_TREND_POINT_HIT_RADIUS,
+    WEIGHT_TREND_ROUNDING_FACTOR,
+    WEIGHT_TREND_TOOLTIP_PADDING,
+    WEIGHT_TREND_Y_AXIS_PADDING_MIN,
+    WEIGHT_TREND_Y_AXIS_PADDING_RATIO,
+} from './weight-trend-card.config';
 
 export type WeightTrendPoint = {
     date: string | Date;
@@ -28,7 +29,6 @@ export type WeightTrendPoint = {
 
 @Component({
     selector: 'fd-weight-trend-card',
-    standalone: true,
     imports: [CommonModule, BaseChartDirective, TranslatePipe, DashboardWidgetFrameComponent],
     templateUrl: './weight-trend-card.component.html',
     styleUrl: './weight-trend-card.component.scss',
@@ -69,15 +69,19 @@ export class WeightTrendCardComponent {
                     data: values,
                     borderColor: this.accentColor(),
                     backgroundColor: this.getFillColor(),
-                    borderWidth: CHART_BORDER_WIDTH,
-                    tension: CHART_TENSION,
+                    borderWidth: WEIGHT_TREND_CHART_BORDER_WIDTH,
+                    tension: WEIGHT_TREND_CHART_TENSION,
                     fill: true,
                     spanGaps: true,
-                    pointRadius: values.map((_, index) => (index === lastIndex ? ACTIVE_POINT_RADIUS : INACTIVE_POINT_RADIUS)),
-                    pointHoverRadius: values.map((_, index) => (index === lastIndex ? ACTIVE_POINT_HOVER_RADIUS : INACTIVE_POINT_RADIUS)),
+                    pointRadius: values.map((_, index) =>
+                        index === lastIndex ? WEIGHT_TREND_ACTIVE_POINT_RADIUS : WEIGHT_TREND_INACTIVE_POINT_RADIUS,
+                    ),
+                    pointHoverRadius: values.map((_, index) =>
+                        index === lastIndex ? WEIGHT_TREND_ACTIVE_POINT_HOVER_RADIUS : WEIGHT_TREND_INACTIVE_POINT_RADIUS,
+                    ),
                     pointBackgroundColor: this.accentColor(),
                     pointBorderColor: 'var(--fd-color-white)',
-                    pointBorderWidth: POINT_BORDER_WIDTH,
+                    pointBorderWidth: WEIGHT_TREND_POINT_BORDER_WIDTH,
                 },
             ],
         };
@@ -96,10 +100,10 @@ export class WeightTrendCardComponent {
                         if (typeof value !== 'number') {
                             return '';
                         }
-                        return `${value.toFixed(DISPLAY_FRACTION_DIGITS)} kg`;
+                        return `${value.toFixed(WEIGHT_TREND_DISPLAY_FRACTION_DIGITS)} kg`;
                     },
                 },
-                padding: TOOLTIP_PADDING,
+                padding: WEIGHT_TREND_TOOLTIP_PADDING,
                 backgroundColor: 'var(--fd-color-slate-900)',
                 titleColor: 'var(--fd-color-slate-200)',
                 bodyColor: 'var(--fd-color-slate-200)',
@@ -117,7 +121,7 @@ export class WeightTrendCardComponent {
         },
         elements: {
             line: { borderCapStyle: 'round' },
-            point: { hitRadius: POINT_HIT_RADIUS },
+            point: { hitRadius: WEIGHT_TREND_POINT_HIT_RADIUS },
         },
     };
 
@@ -126,10 +130,10 @@ export class WeightTrendCardComponent {
         if (value === null) {
             return 'neutral';
         }
-        if (value < -TREND_EPSILON) {
+        if (value < -WEIGHT_TREND_EPSILON) {
             return 'positive';
         }
-        if (value > TREND_EPSILON) {
+        if (value > WEIGHT_TREND_EPSILON) {
             return 'negative';
         }
         return 'neutral';
@@ -140,9 +144,9 @@ export class WeightTrendCardComponent {
         if (delta === null) {
             return null;
         }
-        const rounded = Math.round(delta * ROUNDING_FACTOR) / ROUNDING_FACTOR;
+        const rounded = Math.round(delta * WEIGHT_TREND_ROUNDING_FACTOR) / WEIGHT_TREND_ROUNDING_FACTOR;
         const sign = rounded > 0 ? '+' : '';
-        return `${sign}${rounded.toFixed(DISPLAY_FRACTION_DIGITS)}`;
+        return `${sign}${rounded.toFixed(WEIGHT_TREND_DISPLAY_FRACTION_DIGITS)}`;
     });
 
     public readonly hasValue = computed(() => {
@@ -155,7 +159,7 @@ export class WeightTrendCardComponent {
         const numeric = values.filter(v => typeof v === 'number');
         const minVal = numeric.length > 0 ? Math.min(...numeric) : 0;
         const maxVal = numeric.length > 0 ? Math.max(...numeric) : 1;
-        const padding = Math.max(Y_AXIS_PADDING_MIN, (maxVal - minVal) * Y_AXIS_PADDING_RATIO);
+        const padding = Math.max(WEIGHT_TREND_Y_AXIS_PADDING_MIN, (maxVal - minVal) * WEIGHT_TREND_Y_AXIS_PADDING_RATIO);
         const suggestedMin = Math.max(0, minVal - padding);
         const baseOptions = this.baseChartOptions;
         const baseScales = baseOptions?.scales;
@@ -177,6 +181,6 @@ export class WeightTrendCardComponent {
     }
 
     private getFillColor(): string {
-        return `color-mix(in srgb, ${this.accentColor()} ${FILL_COLOR_PERCENT}%, transparent)`;
+        return `color-mix(in srgb, ${this.accentColor()} ${WEIGHT_TREND_FILL_COLOR_PERCENT}%, transparent)`;
     }
 }

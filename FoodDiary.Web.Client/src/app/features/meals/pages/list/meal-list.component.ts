@@ -19,10 +19,9 @@ import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
-import { MealService } from '../../api/meal.service';
 import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail.component';
 import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
-import { buildMealManageDtoFromAiResult } from '../../lib/ai/ai-meal-result.mapper';
+import { AiMealCreateService } from '../../lib/ai/ai-meal-create.service';
 import { MealListFacade } from '../../lib/list/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import {
@@ -59,7 +58,7 @@ export class MealListComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
     private readonly translateService = inject(TranslateService);
-    private readonly mealService = inject(MealService);
+    private readonly aiMealCreateService = inject(AiMealCreateService);
     private readonly filterDebounceMs = inject(APP_FILTER_DEBOUNCE_MS);
     private readonly languageVersion = signal(0);
 
@@ -151,9 +150,8 @@ export class MealListComponent {
     }
 
     public onAiMealCreateRequested(result: AiInputBarResult): void {
-        const mealDate = result.date !== undefined && result.time !== undefined ? new Date(`${result.date}T${result.time}`) : undefined;
-        this.mealService
-            .create(buildMealManageDtoFromAiResult(result, mealDate))
+        this.aiMealCreateService
+            .createFromAiResult(result)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(meal => {
                 if (meal !== null) {

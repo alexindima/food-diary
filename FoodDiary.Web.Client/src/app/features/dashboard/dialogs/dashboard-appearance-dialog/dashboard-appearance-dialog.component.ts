@@ -23,7 +23,6 @@ export type DashboardAppearanceDialogData = {
 
 @Component({
     selector: 'fd-dashboard-appearance-dialog',
-    standalone: true,
     templateUrl: './dashboard-appearance-dialog.component.html',
     styleUrl: './dashboard-appearance-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

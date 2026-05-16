@@ -9,11 +9,7 @@
     --dashboard-preview-ocean-line: linear-gradient(90deg, var(--fd-color-blue-500), var(--fd-color-sky-500));
     --dashboard-preview-leaf-line: linear-gradient(90deg, var(--fd-color-teal-700), var(--fd-color-green-500));
     --dashboard-preview-dark-surface: linear-gradient(135deg, var(--fd-color-slate-900), var(--fd-color-slate-800));
-    --dashboard-preview-dark-line: linear-gradient(
-        110deg,
-        var(--fd-color-white) 0 50%,
-        var(--fd-color-green-500) 50% 100%
-    );
+    --dashboard-preview-dark-line: linear-gradient(110deg, var(--fd-color-white) 0 50%, var(--fd-color-green-500) 50% 100%);
     --dashboard-style-preview-line-strong: var(--fd-color-primary);
     --dashboard-style-preview-line-mid: color-mix(in srgb, var(--fd-color-text-muted) 72%, var(--fd-color-surface-raised));
     --dashboard-style-preview-line-soft: color-mix(in srgb, var(--fd-color-border-strong) 82%, var(--fd-color-surface-raised));

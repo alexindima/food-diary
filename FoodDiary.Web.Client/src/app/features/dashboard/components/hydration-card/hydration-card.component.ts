@@ -6,21 +6,17 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
-
-const ADD_STEP_ML = 250;
-const MAX_PERCENT = 200;
-const TRACK_WIDTH_MAX_PERCENT = 130;
+import { HYDRATION_CARD_ADD_STEP_ML, HYDRATION_CARD_MAX_PERCENT, HYDRATION_CARD_TRACK_WIDTH_MAX_PERCENT } from './hydration-card.config';
 
 @Component({
     selector: 'fd-hydration-card',
-    standalone: true,
     imports: [CommonModule, FdUiButtonComponent, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
     templateUrl: './hydration-card.component.html',
     styleUrl: './hydration-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HydrationCardComponent {
-    private readonly addStep = ADD_STEP_ML;
+    private readonly addStep = HYDRATION_CARD_ADD_STEP_ML;
 
     public readonly total = input.required<number>();
     public readonly goal = input.required<number | null>();
@@ -39,10 +35,10 @@ export class HydrationCardComponent {
             return 0;
         }
         const value = (this.total() / (this.goal() ?? 1)) * PERCENT_MULTIPLIER;
-        return Math.max(0, Math.min(value, MAX_PERCENT)); // allow slight overflow visualization
+        return Math.max(0, Math.min(value, HYDRATION_CARD_MAX_PERCENT)); // allow slight overflow visualization
     });
 
-    public readonly trackWidth = computed(() => `${Math.min(this.percent(), TRACK_WIDTH_MAX_PERCENT)}%`);
+    public readonly trackWidth = computed(() => `${Math.min(this.percent(), HYDRATION_CARD_TRACK_WIDTH_MAX_PERCENT)}%`);
 
     public onAdd(): void {
         if (!this.canAdd()) {
