@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createClient } from '../../clients/dietologist-clients-lib/dietologist-clients.mapper.spec';
+import { createClient } from '../../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import { buildClientDashboardSections, buildClientProfileChips, getClientDashboardTitle } from './client-dashboard.mapper';
 
 describe('client dashboard mapper', () => {

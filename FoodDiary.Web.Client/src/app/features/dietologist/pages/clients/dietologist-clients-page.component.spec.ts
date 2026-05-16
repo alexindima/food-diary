@@ -6,7 +6,7 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DietologistService } from '../../api/dietologist.service';
-import { createClient } from './dietologist-clients-lib/dietologist-clients.mapper.spec';
+import { createClient } from './dietologist-clients-lib/dietologist-clients.test-data';
 import { DietologistClientsPageComponent } from './dietologist-clients-page.component';
 
 let fixture: ComponentFixture<DietologistClientsPageComponent>;

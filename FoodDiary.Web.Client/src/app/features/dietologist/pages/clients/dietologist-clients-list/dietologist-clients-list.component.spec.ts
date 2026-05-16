@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createClient } from '../dietologist-clients-lib/dietologist-clients.mapper.spec';
+import { createClient } from '../dietologist-clients-lib/dietologist-clients.test-data';
 import type { ClientCardViewModel } from '../dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientsListComponent } from './dietologist-clients-list.component';
 
