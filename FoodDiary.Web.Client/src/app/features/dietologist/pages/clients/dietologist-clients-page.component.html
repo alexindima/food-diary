@@ -1,5 +1,5 @@
 <div class="dietologist-clients">
-    <h1 class="dietologist-clients__title fd-page-title">My Clients</h1>
+    <h1 class="dietologist-clients__title fd-page-title">{{ 'DIETOLOGIST.CLIENTS.HEADING' | translate }}</h1>
 
     <fd-dietologist-clients-list [loading]="loading()" [items]="clientItems()" (clientOpen)="openClient($event)" />
 </div>

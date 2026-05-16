@@ -1,7 +1,7 @@
 @if (loading()) {
-    <p class="fd-ui-body-sm">Loading...</p>
+    <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENTS.LOADING' | translate }}</p>
 } @else if (items().length === 0) {
-    <p class="dietologist-clients__empty fd-ui-body-sm">No clients yet. Clients can invite you by email.</p>
+    <p class="dietologist-clients__empty fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENTS.EMPTY' | translate }}</p>
 } @else {
     <div class="dietologist-clients__list fd-stack fd-gap-sm">
         @for (item of items(); track item.client.userId) {

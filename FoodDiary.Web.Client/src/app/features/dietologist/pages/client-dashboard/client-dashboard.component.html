@@ -1,6 +1,8 @@
 <div class="client-dashboard">
     <div class="client-dashboard__header fd-stack fd-gap-xs">
-        <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">Back to clients</fd-ui-button>
+        <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">
+            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BACK' | translate }}
+        </fd-ui-button>
         @if (client(); as currentClient) {
             <h1 class="client-dashboard__title fd-page-title">{{ clientTitle() }}</h1>
             <span class="client-dashboard__email fd-ui-caption">{{ currentClient.email }}</span>
@@ -15,21 +17,21 @@
     </div>
 
     @if (loading()) {
-        <p class="fd-ui-body-sm">Loading client data...</p>
+        <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.LOADING' | translate }}</p>
     } @else if (!client()) {
-        <p class="fd-ui-body-sm">Client not found.</p>
+        <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NOT_FOUND' | translate }}</p>
     } @else {
         <div class="client-dashboard__sections fd-stack fd-gap-md">
-            @for (section of visibleSections(); track section.title) {
+            @for (section of visibleSections(); track section.titleKey) {
                 <fd-ui-card>
                     <div class="client-dashboard__section">
-                        <h2 class="fd-ui-card-title">{{ section.title }}</h2>
-                        <p class="client-dashboard__placeholder fd-ui-body-sm">{{ section.body }}</p>
+                        <h2 class="fd-ui-card-title">{{ section.titleKey | translate }}</h2>
+                        <p class="client-dashboard__placeholder fd-ui-body-sm">{{ section.bodyKey | translate }}</p>
                     </div>
                 </fd-ui-card>
             }
             @if (!hasAnyPermission()) {
-                <p class="client-dashboard__no-data fd-ui-body-sm">Client has not shared any data.</p>
+                <p class="client-dashboard__no-data fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NO_DATA' | translate }}</p>
             }
         </div>
     }

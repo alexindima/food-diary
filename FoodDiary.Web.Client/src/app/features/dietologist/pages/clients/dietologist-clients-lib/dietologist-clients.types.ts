@@ -1,4 +1,4 @@
-import type { ClientSummary } from '../../../../shared/models/dietologist.data';
+import type { ClientSummary } from '../../../../../shared/models/dietologist.data';
 
 export type ClientCardViewModel = {
     client: ClientSummary;

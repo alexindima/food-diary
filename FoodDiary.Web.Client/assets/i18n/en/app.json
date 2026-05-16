@@ -2227,6 +2227,40 @@
         "ALREADY_REPORTED": "You have already reported this content",
         "REASON_LABEL": "Reason"
     },
+    "DIETOLOGIST": {
+        "CLIENTS": {
+            "TITLE": "My clients",
+            "HEADING": "My clients",
+            "LOADING": "Loading clients...",
+            "EMPTY": "No clients yet. Clients can invite you by email.",
+            "CONNECTED": "Connected {{ date }}"
+        },
+        "CLIENT_DASHBOARD": {
+            "TITLE": "Client dashboard",
+            "BACK": "Back to clients",
+            "LOADING": "Loading client data...",
+            "NOT_FOUND": "Client not found.",
+            "NO_DATA": "Client has not shared any data.",
+            "SECTIONS": {
+                "PROFILE_TITLE": "Profile",
+                "PROFILE_BODY": "Client profile data will be displayed here.",
+                "STATISTICS_TITLE": "Statistics",
+                "STATISTICS_BODY": "Dashboard data will be displayed here.",
+                "MEALS_TITLE": "Meals",
+                "MEALS_BODY": "Meal data will be displayed here.",
+                "WEIGHT_TITLE": "Weight",
+                "WEIGHT_BODY": "Weight history will be displayed here.",
+                "WAIST_TITLE": "Waist",
+                "WAIST_BODY": "Waist history will be displayed here.",
+                "GOALS_TITLE": "Goals",
+                "GOALS_BODY": "Client goals will be displayed here.",
+                "HYDRATION_TITLE": "Hydration",
+                "HYDRATION_BODY": "Hydration data will be displayed here.",
+                "FASTING_TITLE": "Fasting",
+                "FASTING_BODY": "Fasting data will be displayed here."
+            }
+        }
+    },
     "DIETOLOGIST_INVITATION": {
         "TITLE": "Dietologist invitation",
         "LOADING": "Loading invitation...",

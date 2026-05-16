@@ -5,7 +5,6 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import type {
     ClientSummary,
-    DietologistInfo,
     DietologistInvitationForCurrentUser,
     DietologistPermissions,
     DietologistRelationship,
@@ -15,10 +14,6 @@ import type {
 @Injectable({ providedIn: 'root' })
 export class DietologistService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.dietologist;
-
-    public getMyDietologist(): Observable<DietologistInfo | null> {
-        return this.get<DietologistInfo | null>('my-dietologist');
-    }
 
     public getRelationship(): Observable<DietologistRelationship | null> {
         return this.get<DietologistRelationship | null>('relationship');
@@ -50,17 +45,5 @@ export class DietologistService extends ApiService {
 
     public revokeRelationship(): Observable<void> {
         return this.delete<void>('relationship');
-    }
-
-    public disconnectClient(clientUserId: string): Observable<void> {
-        return this.delete<void>(`clients/${clientUserId}`);
-    }
-
-    public getClientDashboard(clientUserId: string, date: string): Observable<unknown> {
-        return this.get<unknown>(`clients/${clientUserId}/dashboard`, { date });
-    }
-
-    public getClientGoals(clientUserId: string): Observable<unknown> {
-        return this.get<unknown>(`clients/${clientUserId}/goals`);
     }
 }
