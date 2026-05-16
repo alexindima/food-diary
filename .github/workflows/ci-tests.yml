@@ -445,10 +445,25 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/unit-tests.log"
           set +e
-          npx ng test 2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
+          npx ng test --watch=false > "$log_file" 2>&1
+          status=$?
           set -e
           if [ "$status" -ne 0 ]; then
+            echo "::group::Frontend unit test failure summary"
+            failure_summary=$(sed -n '/Failed Suites/,$p' "$log_file" | head -n 240 || true)
+            if [ -z "$failure_summary" ]; then
+              failure_summary=$(sed -n '/Failed Tests/,$p' "$log_file" | head -n 240 || true)
+            fi
+            if [ -z "$failure_summary" ]; then
+              failure_summary=$(grep -E -A 20 '(^|[[:space:]])FAIL[[:space:]]|Error:|AssertionError' "$log_file" | head -n 240 || true)
+            fi
+            if [ -n "$failure_summary" ]; then
+              printf '%s\n' "$failure_summary"
+            else
+              tail -n 160 "$log_file"
+            fi
+            echo "::endgroup::"
+            echo "Full frontend unit test log is uploaded as a CI artifact."
             {
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Run frontend unit tests"
@@ -456,6 +471,7 @@ jobs:
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
+          grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
       - name: Run fd-ui-kit unit tests
         shell: bash
@@ -464,10 +480,25 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-ui-kit-tests.log"
           set +e
-          npx ng test fd-ui-kit 2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
+          npx ng test fd-ui-kit --watch=false > "$log_file" 2>&1
+          status=$?
           set -e
           if [ "$status" -ne 0 ]; then
+            echo "::group::fd-ui-kit unit test failure summary"
+            failure_summary=$(sed -n '/Failed Suites/,$p' "$log_file" | head -n 240 || true)
+            if [ -z "$failure_summary" ]; then
+              failure_summary=$(sed -n '/Failed Tests/,$p' "$log_file" | head -n 240 || true)
+            fi
+            if [ -z "$failure_summary" ]; then
+              failure_summary=$(grep -E -A 20 '(^|[[:space:]])FAIL[[:space:]]|Error:|AssertionError' "$log_file" | head -n 240 || true)
+            fi
+            if [ -n "$failure_summary" ]; then
+              printf '%s\n' "$failure_summary"
+            else
+              tail -n 160 "$log_file"
+            fi
+            echo "::endgroup::"
+            echo "Full fd-ui-kit unit test log is uploaded as a CI artifact."
             {
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Run fd-ui-kit unit tests"
@@ -475,6 +506,7 @@ jobs:
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
+          grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
       - name: Build frontend
         shell: bash
