@@ -6,13 +6,14 @@ import type { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'ch
 import { distinctUntilChanged, fromEvent, map } from 'rxjs';
 
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import type { RecursivePartial } from '../../../shared/lib/common.data';
 import type { NutrientData } from '../../../shared/models/charts.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
-import { NutrientsSummaryChartsComponent } from './nutrients-summary-charts.component';
-
-const NUTRIENT_COLOR_WIDTH_MULTIPLIER = 2;
-const TOOLTIP_DECIMAL_PLACES = 2;
+import { NutrientsSummaryChartsComponent } from './nutrients-summary-charts/nutrients-summary-charts.component';
+import {
+    formatNutrientsSummaryTooltip,
+    mergeNutrientsSummaryConfig,
+    type NutrientsSummaryConfig,
+} from './nutrients-summary-lib/nutrients-summary.config';
 
 @Component({
     selector: 'fd-nutrients-summary',
@@ -37,7 +38,7 @@ export class NutrientsSummaryComponent {
     public readonly showBarChart = input<boolean>(false);
 
     public readonly config = input<NutrientsSummaryConfig>({});
-    public readonly mergedConfig = computed(() => this.mergeConfig(this.config()));
+    public readonly mergedConfig = computed(() => mergeNutrientsSummaryConfig(this.config()));
     private readonly viewportWidth = signal(window.innerWidth);
     public readonly isColumnLayout = computed(() => this.viewportWidth() <= this.mergedConfig().styles.charts.breakpoints.columnLayout);
     public readonly areChartsBelowInfo = computed(
@@ -58,10 +59,10 @@ export class NutrientsSummaryComponent {
         };
     });
     public readonly nutrientColorStyles = computed(() => {
-        const fontSize = this.mergedConfig().styles.info.lineStyles.nutrients.fontSize;
+        const { colorWidthMultiplier, fontSize } = this.mergedConfig().styles.info.lineStyles.nutrients;
         return {
             height: `${fontSize}px`,
-            width: `${fontSize * NUTRIENT_COLOR_WIDTH_MULTIPLIER}px`,
+            width: `${fontSize * colorWidthMultiplier}px`,
         };
     });
     public readonly chartsWrapperStyles = computed(() => {
@@ -131,148 +132,29 @@ export class NutrientsSummaryComponent {
             });
     }
 
-    private mergeConfig(userConfig: Partial<NutrientsSummaryConfig>): NutrientsSummaryConfigInternal {
-        const styles = userConfig.styles;
-        const commonStyles = styles?.common;
-        const infoBreakpoints = commonStyles?.infoBreakpoints;
-        const chartStyles = styles?.charts;
-        const chartBreakpoints = chartStyles?.breakpoints;
-        const infoStyles = styles?.info;
-        const nutrientLineStyles = infoStyles?.lineStyles?.nutrients;
-
-        return {
-            ...DEFAULT_CONFIG,
-            ...userConfig,
-            styles: {
-                ...DEFAULT_CONFIG.styles,
-                ...styles,
-                common: {
-                    ...DEFAULT_CONFIG.styles.common,
-                    ...commonStyles,
-                    infoBreakpoints: {
-                        ...DEFAULT_CONFIG.styles.common.infoBreakpoints,
-                        ...infoBreakpoints,
-                    },
-                },
-                charts: {
-                    ...DEFAULT_CONFIG.styles.charts,
-                    ...chartStyles,
-                    breakpoints: {
-                        ...DEFAULT_CONFIG.styles.charts.breakpoints,
-                        ...chartBreakpoints,
-                    },
-                },
-                info: {
-                    ...DEFAULT_CONFIG.styles.info,
-                    ...infoStyles,
-                    lineStyles: {
-                        nutrients: {
-                            ...DEFAULT_CONFIG.styles.info.lineStyles.nutrients,
-                            ...nutrientLineStyles,
-                        },
-                    },
-                },
-            },
-            content: {
-                ...DEFAULT_CONFIG.content,
-                ...userConfig.content,
-            },
-        };
-    }
-
-    public baseNutrientsChartOptions = {
+    public pieChartOptions: ChartOptions<'pie'> = {
         responsive: true,
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: (context: TooltipItem<'pie' | 'bar'>): string => this.getFormattedTooltip(context),
+                    label: (context: TooltipItem<'pie'>): string => this.getFormattedTooltip(context),
                 },
             },
         },
-    };
-
-    public pieChartOptions: ChartOptions<'pie'> = {
-        ...this.baseNutrientsChartOptions,
     };
 
     public barChartOptions: ChartOptions<'bar'> = {
-        ...this.baseNutrientsChartOptions,
-    };
-
-    private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>): string {
-        const label = context.label.length > 0 ? context.label : '';
-        const rawValue = Number(context.raw);
-        const value = Number.isNaN(rawValue) ? 0 : rawValue;
-        const formattedValue = parseFloat(value.toFixed(TOOLTIP_DECIMAL_PLACES));
-
-        return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
-    }
-}
-
-type NutrientsSummaryConfigInternal = {
-    styles: {
-        common: {
-            gap: number;
-            infoBreakpoints: {
-                columnLayout: number;
-                chartBlockSize: number;
-                gap: number;
-            };
-        };
-        charts: {
-            chartBlockSize: number;
-            gap: number;
-            breakpoints: {
-                columnLayout: number;
-                chartBlockSize: number;
-                gap: number;
-            };
-        };
-        info: {
-            lineStyles: {
-                nutrients: {
-                    fontSize: number;
-                    lineHeight: number;
-                };
-            };
-        };
-    };
-    content: {
-        hidePieChart: boolean;
-    };
-};
-
-export type NutrientsSummaryConfig = RecursivePartial<NutrientsSummaryConfigInternal>;
-
-const DEFAULT_CONFIG: NutrientsSummaryConfigInternal = {
-    styles: {
-        common: {
-            gap: 16,
-            infoBreakpoints: {
-                columnLayout: 600,
-                chartBlockSize: 256,
-                gap: 12,
-            },
-        },
-        charts: {
-            chartBlockSize: 192,
-            gap: 16,
-            breakpoints: {
-                columnLayout: 768,
-                chartBlockSize: 192,
-                gap: 12,
-            },
-        },
-        info: {
-            lineStyles: {
-                nutrients: {
-                    fontSize: 16,
-                    lineHeight: 20,
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: (context: TooltipItem<'bar'>): string => this.getFormattedTooltip(context),
                 },
             },
         },
-    },
-    content: {
-        hidePieChart: false,
-    },
-};
+    };
+
+    private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>): string {
+        return formatNutrientsSummaryTooltip(context, this.translateService.instant('STATISTICS.GRAMS'));
+    }
+}

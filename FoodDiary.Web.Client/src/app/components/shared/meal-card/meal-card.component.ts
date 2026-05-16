@@ -9,7 +9,7 @@ import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card.component';
-import type { EntityCardCollageImage } from '../entity-card/entity-card.types';
+import type { EntityCardCollageImage } from '../entity-card/entity-card-lib/entity-card.types';
 
 export type MealCardItem = {
     id: string;

@@ -10,7 +10,15 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { catchError, of } from 'rxjs';
 
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import { normalizeAiNutritionItemName, recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
+import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
+import {
+    buildAiEditableItems,
+    createEmptyAiEditableItem,
+    normalizeAiEditableItems,
+    requiresAiNutritionRecalculation,
+    resolveAiPhotoUnitKey,
+    updateAiEditableItem,
+} from '../../../../shared/lib/ai-photo-edit.utils';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
@@ -88,7 +96,7 @@ export class MealPhotoRecognitionDialogComponent {
             displayName: this.toDisplayName(item),
             amount: item.amount,
             unit: item.unit,
-            unitKey: this.resolveUnitKey(item.unit),
+            unitKey: resolveAiPhotoUnitKey(item.unit),
         })),
     );
     public readonly macroSummaryItems = computed<MacroSummaryItem[]>(() => {
@@ -140,29 +148,6 @@ export class MealPhotoRecognitionDialogComponent {
     private toDisplayName(item: FoodVisionItem): string {
         const rawName = item.nameLocal?.trim() ?? item.nameEn;
         return this.capitalizeLabel(rawName);
-    }
-
-    private resolveUnitKey(unit?: string | null): string | null {
-        if (unit === null || unit === undefined) {
-            return null;
-        }
-
-        const normalized = unit.trim().toLowerCase();
-        const unitMap: Record<string, string> = {
-            g: 'GENERAL.UNITS.G',
-            gram: 'GENERAL.UNITS.G',
-            grams: 'GENERAL.UNITS.G',
-            gr: 'GENERAL.UNITS.G',
-            ml: 'GENERAL.UNITS.ML',
-            l: 'GENERAL.UNITS.ML',
-            pcs: 'GENERAL.UNITS.PCS',
-            pc: 'GENERAL.UNITS.PCS',
-            piece: 'GENERAL.UNITS.PCS',
-            pieces: 'GENERAL.UNITS.PCS',
-            kcal: 'GENERAL.UNITS.KCAL',
-        };
-
-        return unitMap[normalized] ?? null;
     }
 
     private capitalizeLabel(value?: string | null): string {
@@ -332,25 +317,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     public startEditing(): void {
-        const items =
-            this.results().length > 0
-                ? this.results()
-                : (this.nutrition()?.items.map(item => ({
-                      nameEn: item.name,
-                      nameLocal: null,
-                      amount: item.amount,
-                      unit: item.unit,
-                      confidence: 1,
-                  })) ?? []);
-
-        const editable = items.map(item => ({
-            id: this.createEditId(),
-            name: item.nameLocal ?? item.nameEn,
-            nameEn: item.nameEn,
-            nameLocal: item.nameLocal ?? null,
-            amount: item.amount,
-            unit: item.unit,
-        }));
+        const editable = buildAiEditableItems(this.results(), this.nutrition(), () => this.createEditId());
         this.editItems.set(editable);
         this.sourceItems.set(editable.map(item => ({ ...item })));
         this.isEditing.set(true);
@@ -358,23 +325,13 @@ export class MealPhotoRecognitionDialogComponent {
 
     public applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
-        const normalized = edited.map(item => {
-            const localName = item.nameLocal?.trim() ?? '';
-            return {
-                nameEn: item.nameEn.trim().length > 0 ? item.nameEn.trim() : item.name.trim(),
-                nameLocal: localName.length > 0 ? localName : null,
-                amount: item.amount,
-                unit: item.unit,
-                confidence: 1,
-            };
-        });
-
-        const changes = this.analyzeEditChanges(this.sourceItems(), edited);
+        const normalized = normalizeAiEditableItems(edited);
+        const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
         this.results.set(normalized);
         this.hasAnalyzed.set(true);
         this.isEditing.set(false);
 
-        if (changes.requiresAi) {
+        if (requiresAi) {
             this.runNutrition(normalized);
             return;
         }
@@ -411,24 +368,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     public updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
-        this.editItems.update(items =>
-            items.map((item, idx) => {
-                if (idx !== index) {
-                    return item;
-                }
-
-                if (field === 'amount') {
-                    const parsed = Number.parseFloat(value);
-                    return { ...item, amount: Number.isNaN(parsed) ? 0 : parsed };
-                }
-
-                if (field === 'unit') {
-                    return { ...item, unit: value };
-                }
-
-                return { ...item, name: value, nameEn: value, nameLocal: value };
-            }),
-        );
+        this.editItems.update(items => updateAiEditableItem(items, index, field, value));
     }
 
     public removeEditItem(index: number): void {
@@ -436,7 +376,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     public addEditItem(): void {
-        this.editItems.update(items => [...items, { id: this.createEditId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit: 'g' }]);
+        this.editItems.update(items => [...items, createEmptyAiEditableItem(() => this.createEditId(), 'g')]);
     }
 
     private createEditId(): string {
@@ -498,44 +438,6 @@ export class MealPhotoRecognitionDialogComponent {
             })),
         };
     }
-
-    private analyzeEditChanges(source: EditableAiItem[], edited: EditableAiItem[]): EditChangeSummary {
-        const sourceById = new Map(source.map(item => [item.id, item]));
-        const editedById = new Map(edited.map(item => [item.id, item]));
-        const removedIds = source.filter(item => !editedById.has(item.id)).map(item => item.id);
-        const addedItems = edited.filter(item => !sourceById.has(item.id));
-
-        let requiresAi = addedItems.length > 0;
-        const amountChanges: AmountChange[] = [];
-
-        for (const item of edited) {
-            const previous = sourceById.get(item.id);
-            if (previous === undefined) {
-                continue;
-            }
-
-            const nameChanged = normalizeAiNutritionItemName(previous.name) !== normalizeAiNutritionItemName(item.name);
-            const unitChanged = previous.unit.trim().toLowerCase() !== item.unit.trim().toLowerCase();
-            if (nameChanged || unitChanged) {
-                requiresAi = true;
-            }
-
-            if (previous.amount !== item.amount) {
-                amountChanges.push({
-                    id: item.id,
-                    previousAmount: previous.amount,
-                    nextAmount: item.amount,
-                });
-            }
-        }
-
-        return {
-            requiresAi,
-            removedIds,
-            addedItems,
-            amountChanges,
-        };
-    }
     private toMacroSummaryItem(key: MacroSummaryItem['key'], labelKey: string, value: number, unitKey: string): MacroSummaryItem {
         const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
         return {
@@ -547,16 +449,3 @@ export class MealPhotoRecognitionDialogComponent {
         };
     }
 }
-
-type AmountChange = {
-    id: string;
-    previousAmount: number;
-    nextAmount: number;
-};
-
-type EditChangeSummary = {
-    requiresAi: boolean;
-    removedIds: string[];
-    addedItems: EditableAiItem[];
-    amountChanges: AmountChange[];
-};

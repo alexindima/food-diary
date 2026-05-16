@@ -22,7 +22,7 @@ import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premi
 import { buildPhotoAiInputBarResult, buildTextAiInputBarResult } from './ai-input-bar.mapper';
 import type { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
-import type { AiPhotoEditApplied } from './ai-photo-result/ai-photo-result.types';
+import type { AiPhotoEditApplied } from './ai-photo-result/ai-photo-result-lib/ai-photo-result.types';
 
 type AiInputBarChannelState = {
     analyzing: WritableSignal<boolean>;

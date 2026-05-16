@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PERCENT_MULTIPLIER as PERCENT_MAX } from '../../../shared/lib/nutrition.constants';
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
+import { DEFAULT_DASHBOARD_SUMMARY_CARD_CONFIG } from './dashboard-summary-card.config';
 import type { NutrientBar, NutrientBarViewModel } from './dashboard-summary-card.types';
 import {
     buildDefaultDashboardNutrientBars,
@@ -19,15 +20,6 @@ import {
     normalizeWeeklyGoal,
 } from './dashboard-summary-card.utils';
 
-const OUTER_RING_RADIUS = 112;
-const INNER_RING_RADIUS = 88;
-const RANDOM_ID_RADIX = 36;
-const RANDOM_ID_START = 2;
-const RANDOM_ID_END = 9;
-const GRADIENT_START_WHITE_MIX = 0.05;
-const GRADIENT_END_WHITE_MIX = 0.15;
-const ANIMATION_MS_PER_PERCENT = 10;
-
 @Component({
     selector: 'fd-dashboard-summary-card',
     imports: [CommonModule, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
@@ -36,6 +28,7 @@ const ANIMATION_MS_PER_PERCENT = 10;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardSummaryCardComponent {
+    private readonly config = DEFAULT_DASHBOARD_SUMMARY_CARD_CONFIG;
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
     private readonly languageVersion = signal(0);
@@ -49,10 +42,8 @@ export class DashboardSummaryCardComponent {
     public readonly caloriesBurned = input<number>(0);
     public readonly isDailyHovered = signal(false);
     public readonly isWeeklyHovered = signal(false);
-    private readonly outerRadius = OUTER_RING_RADIUS;
-    private readonly innerRadius = INNER_RING_RADIUS;
-    public readonly dailyCircumference = 2 * Math.PI * this.outerRadius;
-    public readonly weeklyCircumference = 2 * Math.PI * this.innerRadius;
+    private readonly outerRadius = this.config.ring.outerRadius;
+    private readonly innerRadius = this.config.ring.innerRadius;
     private readonly gradientIdDaily = `consumption-ring-daily-${this.createRandomIdPart()}`;
     private readonly gradientIdWeekly = `consumption-ring-weekly-${this.createRandomIdPart()}`;
     public readonly normalizedDailyGoal = computed(() => normalizeDailyGoal(this.dailyGoal()));
@@ -72,16 +63,16 @@ export class DashboardSummaryCardComponent {
     public readonly dailyStrokeColor = computed(() => getDashboardColorForPercent(this.animatedDailyPercent(), this.colorCache));
     public readonly weeklyStrokeColor = computed(() => getDashboardColorForPercent(this.animatedWeeklyPercent(), this.colorCache));
     public readonly dailyGradientStart = computed(() =>
-        mixDashboardColorWithWhite(this.dailyStrokeColor(), GRADIENT_START_WHITE_MIX, this.colorCache),
+        mixDashboardColorWithWhite(this.dailyStrokeColor(), this.config.gradient.startWhiteMix, this.colorCache),
     );
     public readonly dailyGradientEnd = computed(() =>
-        mixDashboardColorWithWhite(this.dailyStrokeColor(), GRADIENT_END_WHITE_MIX, this.colorCache),
+        mixDashboardColorWithWhite(this.dailyStrokeColor(), this.config.gradient.endWhiteMix, this.colorCache),
     );
     public readonly weeklyGradientStart = computed(() =>
-        mixDashboardColorWithWhite(this.weeklyStrokeColor(), GRADIENT_START_WHITE_MIX, this.colorCache),
+        mixDashboardColorWithWhite(this.weeklyStrokeColor(), this.config.gradient.startWhiteMix, this.colorCache),
     );
     public readonly weeklyGradientEnd = computed(() =>
-        mixDashboardColorWithWhite(this.weeklyStrokeColor(), GRADIENT_END_WHITE_MIX, this.colorCache),
+        mixDashboardColorWithWhite(this.weeklyStrokeColor(), this.config.gradient.endWhiteMix, this.colorCache),
     );
     public readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? buildDefaultDashboardNutrientBars());
     public readonly nutrientBarViewModels = computed<NutrientBarViewModel[]>(() =>
@@ -169,7 +160,7 @@ export class DashboardSummaryCardComponent {
     }
 
     private createRandomIdPart(): string {
-        return Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_START, RANDOM_ID_END);
+        return Math.random().toString(this.config.randomId.radix).slice(this.config.randomId.start, this.config.randomId.end);
     }
 
     public clampPercent(value: number): number {
@@ -181,7 +172,7 @@ export class DashboardSummaryCardComponent {
         targetSignal.set(0);
 
         const startTime = performance.now();
-        const duration = Math.max(target, 1) * ANIMATION_MS_PER_PERCENT;
+        const duration = Math.max(target, 1) * this.config.animation.msPerPercent;
 
         const step = (): void => {
             const elapsed = performance.now() - startTime;

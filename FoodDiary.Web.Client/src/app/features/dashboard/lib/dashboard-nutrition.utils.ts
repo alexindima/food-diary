@@ -1,7 +1,7 @@
 import { computed, type Signal } from '@angular/core';
 
 import type { NutrientBar } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.types';
-import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.types';
+import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview-lib/meals-preview.types';
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import type { Meal } from '../../meals/models/meal.data';
 import type { DashboardSnapshot } from '../models/dashboard.data';

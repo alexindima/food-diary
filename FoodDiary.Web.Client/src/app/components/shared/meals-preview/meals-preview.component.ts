@@ -4,8 +4,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit';
 
 import type { AiInputBarResult } from '../ai-input-bar/ai-input-bar.types';
 import type { MealCardItem } from '../meal-card/meal-card.component';
-import type { MealPreviewEntry } from './meals-preview.types';
-import { MealsPreviewEntryComponent } from './meals-preview-entry.component';
+import { MealsPreviewEntryComponent } from './meals-preview-entry/meals-preview-entry.component';
+import type { MealPreviewEntry } from './meals-preview-lib/meals-preview.types';
 
 @Component({
     selector: 'fd-meals-preview',

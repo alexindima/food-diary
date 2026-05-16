@@ -1,3 +1,4 @@
+import type { AiEditableFoodItem } from '../../../../../shared/lib/ai-photo-edit.utils';
 import type { FoodVisionItem } from '../../../../../shared/models/ai.data';
 
 export type RecognizedItemView = {
@@ -21,14 +22,7 @@ export type MacroSummaryItem = {
     numberFormat: string;
 };
 
-export type EditableAiItem = {
-    id: string;
-    name: string;
-    nameEn: string;
-    nameLocal: string | null;
-    amount: number;
-    unit: string;
-};
+export type EditableAiItem = AiEditableFoodItem;
 
 export type PhotoAiEditItemDrop = {
     previousIndex: number;

@@ -9,8 +9,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { type NotificationItem, NotificationService } from '../../../services/notification.service';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import type { NotificationViewModel } from './notifications-dialog.types';
-import { NotificationsDialogListComponent } from './notifications-dialog-list.component';
+import type { NotificationViewModel } from './notifications-dialog-lib/notifications-dialog.types';
+import { NotificationsDialogListComponent } from './notifications-dialog-list/notifications-dialog-list.component';
 
 @Component({
     selector: 'fd-notifications-dialog',

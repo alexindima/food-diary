@@ -4,6 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import { MediaCardComponent } from '../media-card/media-card.component';
+import { EntityCardActionsComponent } from './entity-card-actions/entity-card-actions.component';
+import { EntityCardBodyComponent } from './entity-card-body/entity-card-body.component';
+import { DEFAULT_ENTITY_CARD_CONFIG } from './entity-card-lib/entity-card.config';
 import type {
     EntityCardCollageImage,
     EntityCardCollageState,
@@ -12,12 +15,8 @@ import type {
     EntityCardOwnershipIcon,
     EntityCardPreviewInteractionState,
     EntityCardQuality,
-} from './entity-card.types';
-import { EntityCardActionsComponent } from './entity-card-actions.component';
-import { EntityCardBodyComponent } from './entity-card-body.component';
-import { EntityCardThumbComponent } from './entity-card-thumb.component';
-
-const COLLAGE_VISIBLE_LIMIT = 4;
+} from './entity-card-lib/entity-card.types';
+import { EntityCardThumbComponent } from './entity-card-thumb/entity-card-thumb.component';
 
 @Component({
     selector: 'fd-entity-card',
@@ -27,6 +26,7 @@ const COLLAGE_VISIBLE_LIMIT = 4;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityCardComponent {
+    private readonly config = DEFAULT_ENTITY_CARD_CONFIG;
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
     private readonly languageVersion = signal(0);
@@ -75,7 +75,7 @@ export class EntityCardComponent {
         };
     });
 
-    public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, COLLAGE_VISIBLE_LIMIT));
+    public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, this.config.collage.visibleLimit));
     public readonly collageState = computed<EntityCardCollageState>(() => {
         const images = this.visibleCollageImages();
 

@@ -3,14 +3,23 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
-import { normalizeAiNutritionItemName, recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
+import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
+import {
+    buildAiEditableItems,
+    createEmptyAiEditableItem,
+    normalizeAiEditableItems,
+    requiresAiNutritionRecalculation,
+    resolveAiPhotoUnitKey,
+    updateAiEditableItem,
+} from '../../../../shared/lib/ai-photo-edit.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { AiInputBarMealDetails } from '../ai-input-bar.types';
-import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel.component';
-import { AiPhotoEditListComponent } from './ai-photo-edit-list.component';
-import { AiPhotoNutritionSummaryComponent } from './ai-photo-nutrition-summary.component';
-import { AiPhotoPreviewComponent } from './ai-photo-preview.component';
+import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel/ai-photo-details-panel.component';
+import { AiPhotoEditListComponent } from './ai-photo-edit-list/ai-photo-edit-list.component';
+import { AiPhotoNutritionSummaryComponent } from './ai-photo-nutrition-summary/ai-photo-nutrition-summary.component';
+import { AiPhotoPreviewComponent } from './ai-photo-preview/ai-photo-preview.component';
+import { AiPhotoResultActionsComponent } from './ai-photo-result-actions/ai-photo-result-actions.component';
 import type {
     AiDetailsToggleView,
     AiEditActionView,
@@ -21,22 +30,8 @@ import type {
     AiPhotoEditApplied,
     AiResultRow,
     EditableAiItem,
-} from './ai-photo-result.types';
-import { AiPhotoResultActionsComponent } from './ai-photo-result-actions.component';
-import { AiPhotoResultRowsComponent } from './ai-photo-result-rows.component';
-
-type AmountChange = {
-    id: string;
-    previousAmount: number;
-    nextAmount: number;
-};
-
-type EditChangeSummary = {
-    requiresAi: boolean;
-    removedIds: string[];
-    addedItems: EditableAiItem[];
-    amountChanges: AmountChange[];
-};
+} from './ai-photo-result-lib/ai-photo-result.types';
+import { AiPhotoResultRowsComponent } from './ai-photo-result-rows/ai-photo-result-rows.component';
 
 const TIME_PAD_LENGTH = 2;
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
@@ -150,7 +145,7 @@ export class AiPhotoResultComponent {
 
     private resolveAmountLabel(item: FoodVisionItem): string {
         const amount = item.amount;
-        const unitKey = this.resolveUnitKey(item.unit);
+        const unitKey = resolveAiPhotoUnitKey(item.unit);
         const unitLabel = unitKey !== null ? this.translateService.instant(unitKey) : item.unit;
         return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
     }
@@ -167,30 +162,12 @@ export class AiPhotoResultComponent {
     }
 
     private resolveUnitLabel(unit: string): string {
-        const unitKey = this.resolveUnitKey(unit);
+        const unitKey = resolveAiPhotoUnitKey(unit);
         return unitKey !== null ? this.translateService.instant(unitKey) : unit;
     }
 
     public startEditing(): void {
-        const items =
-            this.results().length > 0
-                ? this.results()
-                : (this.nutrition()?.items.map(item => ({
-                      nameEn: item.name,
-                      nameLocal: null,
-                      amount: item.amount,
-                      unit: item.unit,
-                      confidence: 1,
-                  })) ?? []);
-
-        const editable = items.map(item => ({
-            id: this.createEditId(),
-            name: item.nameLocal ?? item.nameEn,
-            nameEn: item.nameEn,
-            nameLocal: item.nameLocal ?? null,
-            amount: item.amount,
-            unit: item.unit,
-        }));
+        const editable = buildAiEditableItems(this.results(), this.nutrition(), () => this.createEditId());
         this.editItems.set(editable);
         this.sourceItems.set(editable.map(item => ({ ...item })));
         this.isEditing.set(true);
@@ -198,21 +175,11 @@ export class AiPhotoResultComponent {
 
     public applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
-        const normalized: FoodVisionItem[] = edited.map(item => {
-            const localName = item.nameLocal?.trim() ?? '';
-            return {
-                nameEn: item.nameEn.trim().length > 0 ? item.nameEn.trim() : item.name.trim(),
-                nameLocal: localName.length > 0 ? localName : null,
-                amount: item.amount,
-                unit: item.unit,
-                confidence: 1,
-            };
-        });
-
-        const changes = this.analyzeEditChanges(this.sourceItems(), edited);
+        const normalized: FoodVisionItem[] = normalizeAiEditableItems(edited);
+        const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
         this.isEditing.set(false);
 
-        if (changes.requiresAi) {
+        if (requiresAi) {
             this.editApplied.emit({ items: normalized, nutrition: null });
             return;
         }
@@ -251,24 +218,7 @@ export class AiPhotoResultComponent {
     }
 
     public updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
-        this.editItems.update(items =>
-            items.map((item, idx) => {
-                if (idx !== index) {
-                    return item;
-                }
-
-                if (field === 'amount') {
-                    const parsed = Number.parseFloat(value);
-                    return { ...item, amount: Number.isNaN(parsed) ? 0 : parsed };
-                }
-
-                if (field === 'unit') {
-                    return { ...item, unit: value };
-                }
-
-                return { ...item, name: value, nameEn: value, nameLocal: value };
-            }),
-        );
+        this.editItems.update(items => updateAiEditableItem(items, index, field, value));
     }
 
     public removeEditItem(index: number): void {
@@ -276,7 +226,7 @@ export class AiPhotoResultComponent {
     }
 
     public addEditItem(): void {
-        this.editItems.update(items => [...items, { id: this.createEditId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit: 'g' }]);
+        this.editItems.update(items => [...items, createEmptyAiEditableItem(() => this.createEditId(), 'g')]);
     }
 
     public toggleDetails(): void {
@@ -303,29 +253,6 @@ export class AiPhotoResultComponent {
             preMealSatietyLevel: normalizeSatietyLevel(this.preMealSatietyLevel()),
             postMealSatietyLevel: normalizeSatietyLevel(this.postMealSatietyLevel()),
         });
-    }
-
-    private resolveUnitKey(unit?: string | null): string | null {
-        if (unit === null || unit === undefined) {
-            return null;
-        }
-
-        const normalized = unit.trim().toLowerCase();
-        const unitMap: Record<string, string> = {
-            g: 'GENERAL.UNITS.G',
-            gram: 'GENERAL.UNITS.G',
-            grams: 'GENERAL.UNITS.G',
-            gr: 'GENERAL.UNITS.G',
-            ml: 'GENERAL.UNITS.ML',
-            l: 'GENERAL.UNITS.ML',
-            pcs: 'GENERAL.UNITS.PCS',
-            pc: 'GENERAL.UNITS.PCS',
-            piece: 'GENERAL.UNITS.PCS',
-            pieces: 'GENERAL.UNITS.PCS',
-            kcal: 'GENERAL.UNITS.KCAL',
-        };
-
-        return unitMap[normalized] ?? null;
     }
 
     private capitalizeLabel(value?: string | null): string {
@@ -358,38 +285,5 @@ export class AiPhotoResultComponent {
         const hours = date.getHours().toString().padStart(TIME_PAD_LENGTH, '0');
         const minutes = date.getMinutes().toString().padStart(TIME_PAD_LENGTH, '0');
         return `${hours}:${minutes}`;
-    }
-
-    private analyzeEditChanges(source: EditableAiItem[], edited: EditableAiItem[]): EditChangeSummary {
-        const sourceById = new Map(source.map(item => [item.id, item]));
-        const editedById = new Map(edited.map(item => [item.id, item]));
-        const removedIds = source.filter(item => !editedById.has(item.id)).map(item => item.id);
-        const addedItems = edited.filter(item => !sourceById.has(item.id));
-
-        let requiresAi = addedItems.length > 0;
-        const amountChanges: AmountChange[] = [];
-
-        for (const item of edited) {
-            const previous = sourceById.get(item.id);
-            if (previous === undefined) {
-                continue;
-            }
-
-            const nameChanged = normalizeAiNutritionItemName(previous.name) !== normalizeAiNutritionItemName(item.name);
-            const unitChanged = previous.unit.trim().toLowerCase() !== item.unit.trim().toLowerCase();
-            if (nameChanged || unitChanged) {
-                requiresAi = true;
-            }
-
-            if (previous.amount !== item.amount) {
-                amountChanges.push({
-                    id: item.id,
-                    previousAmount: previous.amount,
-                    nextAmount: item.amount,
-                });
-            }
-        }
-
-        return { requiresAi, removedIds, addedItems, amountChanges };
     }
 }
