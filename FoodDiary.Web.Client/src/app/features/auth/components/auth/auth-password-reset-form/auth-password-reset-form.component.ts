@@ -5,13 +5,13 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
-import type { PasswordResetFieldErrors, PasswordResetForm } from './auth.types';
+import type { PasswordResetFieldErrors, PasswordResetForm } from '../auth-lib/auth.types';
 
 @Component({
     selector: 'fd-auth-password-reset-form',
     imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiFormErrorComponent, FdUiInputComponent],
     templateUrl: './auth-password-reset-form.component.html',
-    styleUrl: './auth.component.scss',
+    styleUrl: '../auth.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthPasswordResetFormComponent {

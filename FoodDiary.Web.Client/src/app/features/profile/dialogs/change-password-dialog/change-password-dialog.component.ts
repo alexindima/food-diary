@@ -13,10 +13,10 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { UserService } from '../../../../shared/api/user.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../auth/lib/auth.constants';
-import { resolveTranslatedControlError } from '../../lib/profile-validation-error.mapper';
 
 export type ChangePasswordDialogData = {
     hasPassword?: boolean;

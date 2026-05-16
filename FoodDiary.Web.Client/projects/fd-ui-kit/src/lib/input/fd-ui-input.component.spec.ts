@@ -297,6 +297,14 @@ describe('FdUiInputComponent attributes', () => {
 
         expect(input().getAttribute('type')).toBe('password');
     });
+
+    it('should set autocomplete attribute on input element', async () => {
+        const { fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('autocomplete', 'current-password');
+        fixture.detectChanges();
+
+        expect(input().getAttribute('autocomplete')).toBe('current-password');
+    });
 });
 
 describe('FdUiInputComponent with TestHost', () => {

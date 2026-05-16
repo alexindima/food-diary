@@ -26,6 +26,7 @@
             class="fd-ui-input__control"
             [id]="id()"
             [attr.type]="type()"
+            [attr.autocomplete]="autocomplete() ?? null"
             [value]="internalValue()"
             [required]="required()"
             [readonly]="readonly()"

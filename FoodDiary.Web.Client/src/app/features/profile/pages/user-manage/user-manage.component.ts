@@ -30,6 +30,7 @@ import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
@@ -37,7 +38,6 @@ import { DietologistService } from '../../../dietologist/api/dietologist.service
 import { PremiumBillingService } from '../../../premium/api/premium-billing.service';
 import type { BillingOverview } from '../../../premium/models/billing.models';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
-import { resolveTranslatedControlError } from '../../lib/profile-validation-error.mapper';
 import { UserManageAccountCardComponent } from '../user-manage-sections/account-card/user-manage-account-card.component';
 import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card.component';
 import { UserManageBodyCardComponent } from '../user-manage-sections/body-card/user-manage-body-card.component';

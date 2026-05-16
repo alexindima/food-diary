@@ -5,8 +5,6 @@ import {
     computed,
     DestroyRef,
     effect,
-    type ElementRef,
-    type FactoryProvider,
     inject,
     input,
     signal,
@@ -14,112 +12,67 @@ import {
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import {
-    FD_VALIDATION_ERRORS,
-    FdUiFormErrorComponent,
-    type FdValidationErrorConfig,
-    type FdValidationErrors,
-    getNumberProperty,
-} from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
+import { FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
-import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
-import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
-import { matchFieldValidator } from '../../../../validators/match-field.validator';
-import { AUTH_LOGIN_AUTOFILL_FIELD_COUNT, AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
-import { GoogleIdentityService } from '../../lib/google-identity.service';
-import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../models/auth.data';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
-import type { PasswordResetFieldErrors, PasswordResetFormGroup, RegisterFieldErrors, RegisterFormGroup } from './auth.types';
-import { AuthGoogleSectionComponent } from './auth-google-section.component';
-import { AuthPasswordResetFormComponent } from './auth-password-reset-form.component';
-import { AuthRegisterFieldsComponent } from './auth-register-fields.component';
-
-export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: FD_VALIDATION_ERRORS,
-    useFactory: (): FdValidationErrors => ({
-        required: () => 'FORM_ERRORS.REQUIRED',
-        requiredTrue: () => 'FORM_ERRORS.REQUIRED',
-        email: () => 'FORM_ERRORS.EMAIL',
-        matchField: () => 'FORM_ERRORS.PASSWORD.MATCH',
-        minlength: (error?: unknown) => ({
-            key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
-            params: { requiredLength: getNumberProperty(error, 'requiredLength') },
-        }),
-        userExists: () => 'FORM_ERRORS.USER_EXISTS',
-    }),
-};
-
-const LOGIN_ERROR_FIELDS = ['email', 'password'] as const;
-const REGISTER_ERROR_FIELDS = ['email', 'password', 'confirmPassword'] as const;
-const PASSWORD_RESET_ERROR_FIELDS = ['email'] as const;
-
-type LoginErrorField = (typeof LOGIN_ERROR_FIELDS)[number];
-type LoginFieldErrors = Record<LoginErrorField, string | null>;
+import { buildAdminUnauthorizedUrl, normalizeAdminReturnUrl } from './auth-lib/auth-admin-return-url.utils';
+import { startSecondsCountdown } from './auth-lib/auth-countdown.utils';
+import { AuthFlowFacade, type AuthLoginResult, type AuthRegisterResult } from './auth-lib/auth-flow.facade';
+import { AUTH_TABS } from './auth-lib/auth-form.config';
+import { AuthFormManager } from './auth-lib/auth-form.manager';
+import { AuthGoogleManager } from './auth-lib/auth-google.manager';
+import { getLoginAutofillFieldValues, hasCompleteLoginAutofill } from './auth-lib/auth-login-autofill.utils';
+import { AUTH_VALIDATION_ERRORS_PROVIDER } from './auth-lib/auth-validation-errors.provider';
+import { AuthLoginFormComponent } from './auth-login-form/auth-login-form.component';
+import { AuthPasswordResetFormComponent } from './auth-password-reset-form/auth-password-reset-form.component';
+import { AuthRegisterFormComponent } from './auth-register-form/auth-register-form.component';
 
 @Component({
     selector: 'fd-auth',
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss'],
-    providers: [VALIDATION_ERRORS_PROVIDER],
+    providers: [AUTH_VALIDATION_ERRORS_PROVIDER, AuthFormManager, AuthGoogleManager],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        TranslateModule,
-        ReactiveFormsModule,
-        FdUiInputComponent,
-        FdUiButtonComponent,
-        FdUiCheckboxComponent,
-        FdUiFormErrorComponent,
-        FdUiTabsComponent,
-        AuthPasswordResetFormComponent,
-        AuthRegisterFieldsComponent,
-        AuthGoogleSectionComponent,
-    ],
+    imports: [TranslateModule, FdUiTabsComponent, AuthLoginFormComponent, AuthPasswordResetFormComponent, AuthRegisterFormComponent],
 })
 export class AuthComponent {
     public readonly useRouting = input(true);
     public readonly initialMode = input<'login' | 'register'>('login');
     public readonly initialReturnUrl = input<string | null>(null);
     public readonly initialAdminReturnUrl = input<string | null>(null);
-    private readonly loginFormElement = viewChild<ElementRef<HTMLFormElement>>('loginFormElement');
-    private readonly googleLoginButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
-    private readonly googleRegisterButton = viewChild<ElementRef<HTMLElement>>('googleRegisterButton');
+    private readonly loginFormComponent = viewChild(AuthLoginFormComponent);
+    private readonly registerFormComponent = viewChild(AuthRegisterFormComponent);
 
     private readonly route = inject(ActivatedRoute, { optional: true });
     private readonly router = inject(Router, { optional: true });
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
-    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly cdr = inject(ChangeDetectorRef);
-    private readonly googleIdentityService = inject(GoogleIdentityService);
-    private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject(FdUiDialogRef<AuthComponent>, { optional: true });
     private readonly passwordResetCooldownSecondsDefault = inject(AUTH_PASSWORD_RESET_COOLDOWN_SECONDS);
     private readonly loginAutofillCheckDelaysMs = inject(AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS);
+    private readonly formManager = inject(AuthFormManager);
+    private readonly googleManager = inject(AuthGoogleManager);
+    private readonly authFlowFacade = inject(AuthFlowFacade);
 
     public authMode: 'login' | 'register' = 'login';
 
-    public loginForm!: FormGroup<LoginFormGroup>;
-    public registerForm!: FormGroup<RegisterFormGroup>;
-    public passwordResetForm!: FormGroup<PasswordResetFormGroup>;
+    public readonly loginForm = this.formManager.loginForm;
+    public readonly registerForm = this.formManager.registerForm;
+    public readonly passwordResetForm = this.formManager.passwordResetForm;
     public readonly globalError = signal<string | null>(null);
     public readonly isSubmitting = signal<boolean>(false);
-    public readonly googleReady = signal<boolean>(false);
+    public readonly googleReady = this.googleManager.ready;
     public readonly showRestoreAction = signal<boolean>(false);
     public readonly isRestoring = signal<boolean>(false);
     public readonly showPasswordReset = signal<boolean>(false);
@@ -127,105 +80,46 @@ export class AuthComponent {
     public readonly passwordResetSent = signal<boolean>(false);
     public readonly passwordResetCooldownSeconds = signal<number>(0);
     public readonly loginAutofillDetected = signal<boolean>(false);
-    public readonly loginFieldErrors = signal<LoginFieldErrors>(this.createEmptyLoginFieldErrors());
-    public readonly registerFieldErrors = signal<RegisterFieldErrors>(this.createEmptyRegisterFieldErrors());
-    public readonly passwordResetFieldErrors = signal<PasswordResetFieldErrors>(this.createEmptyPasswordResetFieldErrors());
+    public readonly loginFieldErrors = this.formManager.loginFieldErrors;
+    public readonly registerFieldErrors = this.formManager.registerFieldErrors;
+    public readonly passwordResetFieldErrors = this.formManager.passwordResetFieldErrors;
     public readonly loginSubmitLabelKey = computed(() => (this.isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN'));
-    private passwordResetCooldownTimerId: number | null = null;
+    private stopPasswordResetCooldown: (() => void) | null = null;
     private loginAutofillCheckTimerIds: number[] = [];
     private hasLoginNativeInteraction = false;
-    public authBenefits: string[] = ['AUTH.INFO.HIGHLIGHTS.SYNC', 'AUTH.INFO.HIGHLIGHTS.INSIGHTS', 'AUTH.INFO.HIGHLIGHTS.LIBRARY'];
-    public readonly authTabs: FdUiTab[] = [
-        { value: 'login', labelKey: 'AUTH.LOGIN.TITLE' },
-        { value: 'register', labelKey: 'AUTH.REGISTER.TITLE' },
-    ];
+    public readonly authTabs = AUTH_TABS;
 
     private returnUrl: string | null = null;
     private adminReturnUrl: string | null = null;
 
     public constructor() {
-        this.initializeForms();
         this.subscribeFormChanges();
-        this.subscribeValidationUpdates();
         this.registerRenderingEffects();
-        this.updateFieldErrors();
         afterNextRender(() => {
             this.startLoginAutofillDetection();
         });
-        void this.initializeGoogleAsync();
-    }
-
-    private initializeForms(): void {
-        this.loginForm = new FormGroup<LoginFormGroup>({
-            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-            password: new FormControl<string>('', {
-                nonNullable: true,
-                validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
-            }),
-            rememberMe: new FormControl<boolean>(false, { nonNullable: true }),
-        });
-
-        this.registerForm = new FormGroup<RegisterFormGroup>({
-            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-            password: new FormControl<string>('', {
-                nonNullable: true,
-                validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
-            }),
-            confirmPassword: new FormControl<string>('', {
-                nonNullable: true,
-                validators: [Validators.required, matchFieldValidator('password')],
-            }),
-            agreeTerms: new FormControl<boolean>(false, { nonNullable: true, validators: Validators.requiredTrue }),
-        });
-
-        this.passwordResetForm = new FormGroup<PasswordResetFormGroup>({
-            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+        void this.googleManager.initializeAsync(credential => {
+            this.onGoogleCredential(credential);
         });
     }
 
     private subscribeFormChanges(): void {
         this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.markDirtyControlsTouched(this.loginForm);
+            this.formManager.markDirtyControlsTouched(this.loginForm);
             this.updateLoginAutofillState();
             this.cdr.markForCheck();
         });
         this.registerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.markDirtyControlsTouched(this.registerForm);
+            this.formManager.markDirtyControlsTouched(this.registerForm);
             this.cdr.markForCheck();
         });
         this.passwordResetForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.markDirtyControlsTouched(this.passwordResetForm);
+            this.formManager.markDirtyControlsTouched(this.passwordResetForm);
             this.cdr.markForCheck();
         });
-
-        this.registerForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.registerForm.controls.confirmPassword.updateValueAndValidity();
-        });
-    }
-
-    private subscribeValidationUpdates(): void {
-        const loginFormEvents = (this.loginForm as { events?: Observable<unknown> }).events ?? EMPTY;
-        const registerFormEvents = (this.registerForm as { events?: Observable<unknown> }).events ?? EMPTY;
-        const passwordResetFormEvents = (this.passwordResetForm as { events?: Observable<unknown> }).events ?? EMPTY;
-        merge(
-            loginFormEvents,
-            this.loginForm.statusChanges,
-            this.loginForm.valueChanges,
-            registerFormEvents,
-            this.registerForm.statusChanges,
-            this.registerForm.valueChanges,
-            passwordResetFormEvents,
-            this.passwordResetForm.statusChanges,
-            this.passwordResetForm.valueChanges,
-            this.translateService.onLangChange,
-        )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.updateFieldErrors();
-            });
     }
 
     private registerRenderingEffects(): void {
@@ -263,20 +157,7 @@ export class AuthComponent {
             return;
         }
         this.authMode = mode;
-        this.loginForm.reset({
-            email: '',
-            password: '',
-            rememberMe: false,
-        });
-        this.registerForm.reset({
-            email: '',
-            password: '',
-            confirmPassword: '',
-            agreeTerms: false,
-        });
-        this.passwordResetForm.reset({
-            email: '',
-        });
+        this.formManager.resetAll();
         this.showPasswordReset.set(false);
         this.passwordResetSent.set(false);
         this.hasLoginNativeInteraction = false;
@@ -295,18 +176,16 @@ export class AuthComponent {
             return;
         }
 
-        const loginRequest = new LoginRequest(this.loginForm.value);
         this.isSubmitting.set(true);
 
-        this.authService.login(loginRequest).subscribe({
-            next: () => {
-                this.isSubmitting.set(false);
+        this.authFlowFacade.login(this.loginForm.value).subscribe(result => {
+            this.isSubmitting.set(false);
+            if (result === 'success') {
                 this.completeAuthenticatedNavigationAndClose();
-            },
-            error: (error: unknown) => {
-                this.isSubmitting.set(false);
-                this.handleLoginError(this.getApiErrorCode(error));
-            },
+                return;
+            }
+
+            this.handleLoginResult(result);
         });
     }
 
@@ -325,19 +204,17 @@ export class AuthComponent {
             return;
         }
 
-        const restoreRequest = new RestoreAccountRequest(this.loginForm.value);
         const rememberMe = this.loginForm.controls.rememberMe.value;
         this.isRestoring.set(true);
 
-        this.authService.restoreAccount(restoreRequest, rememberMe).subscribe({
-            next: () => {
-                this.isRestoring.set(false);
+        this.authFlowFacade.restoreAccount(this.loginForm.value, rememberMe).subscribe(success => {
+            this.isRestoring.set(false);
+            if (success) {
                 this.completeAuthenticatedNavigationAndClose();
-            },
-            error: () => {
-                this.isRestoring.set(false);
-                this.setGlobalError('FORM_ERRORS.UNKNOWN');
-            },
+                return;
+            }
+
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
         });
     }
 
@@ -346,74 +223,40 @@ export class AuthComponent {
             return;
         }
 
-        const registerRequest = new RegisterRequest({
-            ...this.registerForm.value,
-            language: this.localizationService.getCurrentLanguage(),
-        });
-
         this.isSubmitting.set(true);
 
-        this.authService.register(registerRequest).subscribe({
-            next: () => {
-                this.isSubmitting.set(false);
+        this.authFlowFacade.register(this.registerForm.value).subscribe(result => {
+            this.isSubmitting.set(false);
+            if (result === 'success') {
                 void this.navigationService.navigateToEmailVerificationPendingAsync();
                 this.closeDialogIfAny();
-            },
-            error: (error: unknown) => {
-                this.isSubmitting.set(false);
-                this.handleRegisterError(this.getApiErrorCode(error));
-            },
-        });
-    }
+                return;
+            }
 
-    private async initializeGoogleAsync(): Promise<void> {
-        const clientId = environment.googleClientId ?? '';
-        if (clientId.length === 0) {
-            return;
-        }
-        try {
-            await this.googleIdentityService.initializeAsync({
-                clientId,
-                callback: credential => {
-                    this.onGoogleCredential(credential);
-                },
-            });
-            this.googleReady.set(true);
-            this.googleIdentityService.prompt();
-        } catch {
-            this.googleReady.set(false);
-        }
+            this.handleRegisterResult(result);
+        });
     }
 
     private renderGoogleButton(): void {
-        if (!this.googleReady()) {
-            return;
-        }
-        const target = this.authMode === 'login' ? this.googleLoginButton()?.nativeElement : this.googleRegisterButton()?.nativeElement;
-        [this.googleLoginButton(), this.googleRegisterButton()].forEach(ref => {
-            const element = ref?.nativeElement;
-            if (element !== undefined) {
-                element.innerHTML = '';
-            }
-        });
-        if (target !== undefined) {
-            this.googleIdentityService.renderButton(target, 'filled_blue');
-        }
+        this.googleManager.renderButton(
+            this.authMode,
+            this.loginFormComponent()?.googleButton()?.nativeElement,
+            this.registerFormComponent()?.googleButton()?.nativeElement,
+        );
     }
 
     private onGoogleCredential(credential: string): void {
         this.isSubmitting.set(true);
         const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
         const request: GoogleLoginRequest = { credential, rememberMe: Boolean(rememberMe) };
-        this.authService.loginWithGoogle(request).subscribe({
-            next: () => {
-                this.isSubmitting.set(false);
+        this.authFlowFacade.loginWithGoogle(request).subscribe(success => {
+            this.isSubmitting.set(false);
+            if (success) {
                 this.completeAuthenticatedNavigationAndClose();
-            },
-            error: () => {
-                this.isSubmitting.set(false);
-                this.setGlobalError('FORM_ERRORS.UNKNOWN');
-            },
+                return;
+            }
+
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
         });
     }
 
@@ -443,46 +286,23 @@ export class AuthComponent {
             return;
         }
 
-        const request = new PasswordResetRequest(this.passwordResetForm.value);
         this.isPasswordResetting.set(true);
 
-        this.authService.requestPasswordReset(request).subscribe({
-            next: () => {
-                this.isPasswordResetting.set(false);
+        this.authFlowFacade.requestPasswordReset(this.passwordResetForm.value).subscribe(success => {
+            this.isPasswordResetting.set(false);
+            if (success) {
                 this.passwordResetSent.set(true);
                 this.startPasswordResetCooldown();
-            },
-            error: () => {
-                this.isPasswordResetting.set(false);
-                this.setGlobalError('FORM_ERRORS.UNKNOWN');
-            },
+                return;
+            }
+
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
         });
     }
 
     private startPasswordResetCooldown(seconds = this.passwordResetCooldownSecondsDefault): void {
-        this.passwordResetCooldownSeconds.set(seconds);
-        if (this.passwordResetCooldownTimerId !== null) {
-            window.clearInterval(this.passwordResetCooldownTimerId);
-        }
-        this.passwordResetCooldownTimerId = window.setInterval(() => {
-            const remaining = this.passwordResetCooldownSeconds();
-            if (remaining <= 1) {
-                this.passwordResetCooldownSeconds.set(0);
-                if (this.passwordResetCooldownTimerId !== null) {
-                    window.clearInterval(this.passwordResetCooldownTimerId);
-                    this.passwordResetCooldownTimerId = null;
-                }
-                return;
-            }
-            this.passwordResetCooldownSeconds.set(remaining - 1);
-        }, MS_PER_SECOND);
-
-        this.destroyRef.onDestroy(() => {
-            if (this.passwordResetCooldownTimerId !== null) {
-                window.clearInterval(this.passwordResetCooldownTimerId);
-                this.passwordResetCooldownTimerId = null;
-            }
-        });
+        this.stopPasswordResetCooldown?.();
+        this.stopPasswordResetCooldown = startSecondsCountdown(this.passwordResetCooldownSeconds, seconds, this.destroyRef);
     }
 
     private closeDialogIfAny(): void {
@@ -521,13 +341,13 @@ export class AuthComponent {
             return null;
         }
 
-        const adminPath = this.normalizeAdminReturnUrl(adminReturnUrl);
+        const adminPath = normalizeAdminReturnUrl(adminReturnUrl, adminAppUrl, window.location.origin);
         if (adminPath === null || adminPath.length === 0) {
             return null;
         }
 
         if (!this.authService.isAdmin()) {
-            return this.buildAdminUnauthorizedUrl(adminPath, 'forbidden');
+            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, window.location.origin);
         }
 
         try {
@@ -536,57 +356,15 @@ export class AuthComponent {
             adminUrl.searchParams.set('code', response.code);
             return adminUrl.toString();
         } catch {
-            return this.buildAdminUnauthorizedUrl(adminPath, 'forbidden');
+            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, window.location.origin);
         }
     }
 
-    private buildAdminUnauthorizedUrl(returnUrl: string, reason: 'forbidden' | 'unauthenticated'): string {
-        const unauthorizedUrl = new URL('/unauthorized', environment.adminAppUrl ?? window.location.origin);
-        unauthorizedUrl.searchParams.set('reason', reason);
-        unauthorizedUrl.searchParams.set('returnUrl', returnUrl);
-        return unauthorizedUrl.toString();
-    }
-
-    private normalizeAdminReturnUrl(value: string): string | null {
-        if (value.length === 0) {
-            return '/';
-        }
-
-        const decoded = this.safeDecode(value);
-        if (decoded.includes('returnUrl=')) {
-            return '/';
-        }
-
-        try {
-            const adminAppUrl = environment.adminAppUrl ?? '';
-            const parsed = new URL(decoded, adminAppUrl.length > 0 ? adminAppUrl : window.location.origin);
-            if (adminAppUrl.length > 0) {
-                const adminOrigin = new URL(adminAppUrl).origin;
-                if (parsed.origin !== adminOrigin) {
-                    return '/';
-                }
-            }
-
-            const search = parsed.searchParams.toString();
-            return search.length > 0 ? `${parsed.pathname}?${search}` : parsed.pathname;
-        } catch {
-            return decoded.startsWith('/') ? decoded : '/';
-        }
-    }
-
-    private safeDecode(value: string): string {
-        try {
-            return decodeURIComponent(value);
-        } catch {
-            return value;
-        }
-    }
-
-    private handleLoginError(errorCode?: string): void {
-        if (errorCode === 'User.InvalidCredentials' || errorCode === 'Authentication.InvalidCredentials') {
+    private handleLoginResult(result: AuthLoginResult): void {
+        if (result === 'invalidCredentials') {
             this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
             this.showRestoreAction.set(false);
-        } else if (errorCode === 'Authentication.AccountDeleted') {
+        } else if (result === 'accountDeleted') {
             this.setGlobalError('AUTH.LOGIN.ACCOUNT_DELETED');
             this.showRestoreAction.set(true);
         } else {
@@ -595,13 +373,13 @@ export class AuthComponent {
         }
     }
 
-    private handleRegisterError(errorCode?: string): void {
-        if (errorCode === 'User.EmailAlreadyExists' || errorCode === 'Validation.Conflict') {
+    private handleRegisterResult(result: AuthRegisterResult): void {
+        if (result === 'emailExists') {
             const emailField = this.registerForm.controls.email;
             emailField.updateValueAndValidity();
             emailField.setErrors({ userExists: true });
-            this.updateFieldErrors();
-        } else if (errorCode === 'Authentication.AccountDeleted') {
+            this.formManager.updateFieldErrors();
+        } else if (result === 'accountDeleted') {
             this.setGlobalError('AUTH.REGISTER.ACCOUNT_DELETED');
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
@@ -618,19 +396,18 @@ export class AuthComponent {
     }
 
     private syncLoginNativeValues(): void {
-        const form = this.loginFormElement()?.nativeElement;
+        const form = this.loginFormComponent()?.formElement()?.nativeElement;
 
         if (form === undefined) {
             return;
         }
 
-        const emailInput = form.querySelector<HTMLInputElement>('input[autocomplete="username"]');
-        const passwordInput = form.querySelector<HTMLInputElement>('input[autocomplete="current-password"]');
+        const fields = getLoginAutofillFieldValues(form);
 
         this.loginForm.patchValue(
             {
-                email: emailInput?.value ?? this.loginForm.controls.email.value,
-                password: passwordInput?.value ?? this.loginForm.controls.password.value,
+                email: fields.email.length > 0 ? fields.email : this.loginForm.controls.email.value,
+                password: fields.password.length > 0 ? fields.password : this.loginForm.controls.password.value,
             },
             { emitEvent: true },
         );
@@ -653,8 +430,8 @@ export class AuthComponent {
     }
 
     private updateLoginAutofillState(): void {
-        const form = this.loginFormElement()?.nativeElement;
-        const hasAutofill = this.hasCompleteLoginAutofill(form);
+        const form = this.loginFormComponent()?.formElement()?.nativeElement;
+        const hasAutofill = hasCompleteLoginAutofill(form, this.hasLoginNativeInteraction);
 
         if (this.loginAutofillDetected() === hasAutofill) {
             return;
@@ -663,161 +440,4 @@ export class AuthComponent {
         this.loginAutofillDetected.set(hasAutofill);
         this.cdr.markForCheck();
     }
-
-    private hasCompleteLoginAutofill(form: HTMLFormElement | undefined): boolean {
-        if (form === undefined) {
-            return false;
-        }
-
-        const fields = this.getLoginAutofillFieldValues(form);
-        if (this.hasFilledLoginAutofillFields(fields)) {
-            return true;
-        }
-
-        if (this.hasLoginNativeInteraction || this.hasPartialLoginAutofillFields(fields)) {
-            return false;
-        }
-
-        return this.hasDetectedLoginWebkitAutofill(form);
-    }
-
-    private getLoginAutofillFieldValues(form: HTMLFormElement): { email: string; password: string } {
-        return {
-            email: form.querySelector<HTMLInputElement>('input[autocomplete="username"]')?.value ?? '',
-            password: form.querySelector<HTMLInputElement>('input[autocomplete="current-password"]')?.value ?? '',
-        };
-    }
-
-    private hasFilledLoginAutofillFields(fields: { email: string; password: string }): boolean {
-        return fields.email.length > 0 && fields.password.length > 0;
-    }
-
-    private hasPartialLoginAutofillFields(fields: { email: string; password: string }): boolean {
-        return fields.email.length > 0 || fields.password.length > 0;
-    }
-
-    private hasDetectedLoginWebkitAutofill(form: HTMLFormElement): boolean {
-        try {
-            return form.querySelectorAll('input:-webkit-autofill').length >= AUTH_LOGIN_AUTOFILL_FIELD_COUNT;
-        } catch {
-            return false;
-        }
-    }
-
-    private updateFieldErrors(): void {
-        this.loginFieldErrors.set(
-            LOGIN_ERROR_FIELDS.reduce<LoginFieldErrors>((errors, field) => {
-                errors[field] = this.resolveControlError(this.loginForm.controls[field]);
-                return errors;
-            }, this.createEmptyLoginFieldErrors()),
-        );
-        this.registerFieldErrors.set(
-            REGISTER_ERROR_FIELDS.reduce<RegisterFieldErrors>((errors, field) => {
-                errors[field] = this.resolveControlError(this.registerForm.controls[field]);
-                return errors;
-            }, this.createEmptyRegisterFieldErrors()),
-        );
-        this.passwordResetFieldErrors.set(
-            PASSWORD_RESET_ERROR_FIELDS.reduce<PasswordResetFieldErrors>((errors, field) => {
-                errors[field] = this.resolveControlError(this.passwordResetForm.controls[field]);
-                return errors;
-            }, this.createEmptyPasswordResetFieldErrors()),
-        );
-    }
-
-    private createEmptyLoginFieldErrors(): LoginFieldErrors {
-        return {
-            email: null,
-            password: null,
-        };
-    }
-
-    private createEmptyRegisterFieldErrors(): RegisterFieldErrors {
-        return {
-            email: null,
-            password: null,
-            confirmPassword: null,
-        };
-    }
-
-    private createEmptyPasswordResetFieldErrors(): PasswordResetFieldErrors {
-        return {
-            email: null,
-        };
-    }
-
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (control?.invalid !== true) {
-            return null;
-        }
-
-        const shouldShow = control.touched || control.dirty;
-        if (!shouldShow) {
-            return null;
-        }
-
-        const errors = control.errors;
-        if (errors === null) {
-            return null;
-        }
-
-        for (const key of Object.keys(errors)) {
-            const resolver = this.validationErrors?.[key];
-            if (resolver === undefined) {
-                continue;
-            }
-
-            const controlError: unknown = errors[key];
-            const controlParams = this.getValidationParams(controlError);
-            const result = resolver(controlError);
-
-            return this.translateValidationResult(result, controlParams);
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    }
-
-    private translateValidationResult(result: FdValidationErrorConfig | string, controlParams: Record<string, unknown>): string {
-        if (typeof result === 'string') {
-            return this.translateService.instant(result, controlParams);
-        }
-
-        return this.translateService.instant(result.key, {
-            ...controlParams,
-            ...(result.params ?? {}),
-        });
-    }
-
-    private markDirtyControlsTouched(form: FormGroup): void {
-        Object.values(form.controls).forEach(control => {
-            if (control.dirty && !control.touched) {
-                control.markAsTouched();
-            }
-        });
-    }
-
-    private getApiErrorCode(error: unknown): string | undefined {
-        if (!this.isRecord(error)) {
-            return undefined;
-        }
-
-        const responseBody = error['error'];
-        return this.isRecord(responseBody) && typeof responseBody['error'] === 'string' ? responseBody['error'] : undefined;
-    }
-
-    private getValidationParams(error: unknown): Record<string, unknown> {
-        return this.isRecord(error) ? error : {};
-    }
-
-    private isRecord(value: unknown): value is Record<string, unknown> {
-        return typeof value === 'object' && value !== null && !Array.isArray(value);
-    }
 }
-
-type LoginFormValues = {
-    email: string;
-    password: string;
-    rememberMe: boolean;
-};
-
-type LoginFormGroup = FormGroupControls<LoginFormValues>;

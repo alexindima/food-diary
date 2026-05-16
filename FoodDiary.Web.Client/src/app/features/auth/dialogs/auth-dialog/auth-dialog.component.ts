@@ -6,7 +6,6 @@ import { AuthComponent } from '../../components/auth/auth.component';
 
 @Component({
     selector: 'fd-auth-dialog',
-    standalone: true,
     templateUrl: './auth-dialog.component.html',
     styleUrls: ['./auth-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

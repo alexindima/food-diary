@@ -1,0 +1,26 @@
+<form class="auth__form fd-stack fd-gap-md" [formGroup]="form()" [attr.aria-busy]="isSubmitting()" (ngSubmit)="registerSubmit.emit()">
+    <fd-auth-register-fields [form]="form()" [errors]="errors()" />
+
+    <div class="auth__actions fd-stack fd-gap-sm">
+        <fd-ui-button
+            type="submit"
+            appearance="brand-action"
+            size="lg"
+            variant="primary"
+            [disabled]="form().invalid || isSubmitting()"
+            [loading]="isSubmitting()"
+            [fullWidth]="true"
+        >
+            {{ 'AUTH.REGISTER.REGISTER' | translate }}
+        </fd-ui-button>
+        <fd-ui-form-error [error]="globalError()" />
+    </div>
+
+    <div class="auth__divider fd-row fd-gap-xs">
+        <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
+    </div>
+
+    <fd-auth-google-section unavailableKey="AUTH.GOOGLE.UNAVAILABLE" [isReady]="googleReady()">
+        <div #googleRegisterButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.REGISTER_BUTTON' | translate"></div>
+    </fd-auth-google-section>
+</form>

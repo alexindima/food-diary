@@ -3,13 +3,16 @@ import type { TranslateService } from '@ngx-translate/core';
 import type { FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { resolveTranslatedControlError } from './profile-validation-error.mapper';
+import { resolveTranslatedControlError } from './validation-error.utils';
 
 const MIN_LENGTH = 5;
 const OVERRIDDEN_MIN_LENGTH = 8;
 
 describe('resolveTranslatedControlError', () => {
-    const instant = vi.fn((key: string, params?: Record<string, unknown>) => `${key}:${JSON.stringify(params ?? {})}`);
+    const instant = vi.fn((key: string | string[], params?: Record<string, unknown>) => {
+        const normalizedKey = Array.isArray(key) ? key[0] : key;
+        return `${normalizedKey}:${JSON.stringify(params ?? {})}`;
+    });
     const translateService = {
         instant,
     } as unknown as TranslateService;

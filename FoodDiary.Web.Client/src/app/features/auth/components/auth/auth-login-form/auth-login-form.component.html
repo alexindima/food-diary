@@ -1,0 +1,77 @@
+<form
+    #loginFormElement
+    class="auth__form fd-stack fd-gap-md"
+    [formGroup]="form()"
+    [attr.aria-busy]="isSubmitting() || isRestoring()"
+    (ngSubmit)="loginSubmit.emit()"
+    (input)="loginNativeInput.emit()"
+>
+    @let loginErrors = errors();
+    <div class="auth__field fd-stack fd-gap-xs">
+        <fd-ui-input
+            appearance="auth"
+            formControlName="email"
+            type="email"
+            autocomplete="username"
+            id="auth-login-email"
+            [label]="'AUTH.LOGIN.EMAIL' | translate"
+            [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
+            [error]="loginErrors.email"
+        />
+    </div>
+
+    <div class="auth__field fd-stack fd-gap-xs">
+        <fd-ui-input
+            appearance="auth"
+            formControlName="password"
+            type="password"
+            autocomplete="current-password"
+            [label]="'AUTH.LOGIN.PASSWORD' | translate"
+            [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
+            [error]="loginErrors.password"
+        />
+    </div>
+
+    <fd-ui-checkbox formControlName="rememberMe" [label]="'AUTH.LOGIN.REMEMBER_ME' | translate" />
+
+    <fd-ui-button class="auth__link" type="button" variant="secondary" fill="text" (click)="passwordResetOpen.emit()">
+        {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
+    </fd-ui-button>
+
+    <div class="auth__actions fd-stack fd-gap-sm">
+        <fd-ui-button
+            type="submit"
+            appearance="brand-action"
+            size="lg"
+            variant="primary"
+            [disabled]="isSubmitDisabled()"
+            [loading]="isSubmitting()"
+            [fullWidth]="true"
+        >
+            {{ loginSubmitLabelKey() | translate }}
+        </fd-ui-button>
+        <fd-ui-form-error [error]="globalError()" />
+        @if (showRestoreAction()) {
+            <fd-ui-button
+                type="button"
+                size="lg"
+                variant="secondary"
+                fill="outline"
+                [disabled]="form().invalid || isRestoring() || isSubmitting()"
+                [loading]="isRestoring()"
+                [fullWidth]="true"
+                (click)="restoreSubmit.emit()"
+            >
+                {{ 'AUTH.LOGIN.RESTORE' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+
+    <div class="auth__divider fd-row fd-gap-xs">
+        <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
+    </div>
+
+    <fd-auth-google-section unavailableKey="AUTH.GOOGLE.UNAVAILABLE" [isReady]="googleReady()">
+        <div #googleLoginButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.LOGIN_BUTTON' | translate"></div>
+    </fd-auth-google-section>
+</form>

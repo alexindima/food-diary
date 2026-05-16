@@ -11,6 +11,21 @@ import { FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS } from './fd-ui-input.tokens';
 
 let uniqueId = 0;
 export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
+export type FdUiInputAutocomplete =
+    | 'off'
+    | 'on'
+    | 'name'
+    | 'email'
+    | 'username'
+    | 'current-password'
+    | 'new-password'
+    | 'one-time-code'
+    | 'tel'
+    | 'url'
+    | 'street-address'
+    | 'postal-code'
+    | 'country'
+    | 'birthday';
 
 @Component({
     selector: 'fd-ui-input',
@@ -37,6 +52,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
     public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'>('text');
+    public readonly autocomplete = input<FdUiInputAutocomplete>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
     public readonly readonly = input(false);

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -13,7 +13,9 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { AUTH_VALIDATION_ERRORS_PROVIDER } from '../../components/auth/auth-lib/auth-validation-errors.provider';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
@@ -24,7 +26,6 @@ type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-password-reset',
-    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -36,6 +37,7 @@ type FieldErrors = Record<ErrorField, string | null>;
     ],
     templateUrl: './password-reset.component.html',
     styleUrl: './password-reset.component.scss',
+    providers: [AUTH_VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordResetComponent {
@@ -121,7 +123,7 @@ export class PasswordResetComponent {
     private updateFieldErrors(): void {
         this.fieldErrors.set(
             ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
-                errors[field] = this.resolveControlError(this.form.controls[field]);
+                errors[field] = resolveTranslatedControlError(this.form.controls[field], this.validationErrors, this.translateService);
                 return errors;
             }, this.createEmptyFieldErrors()),
         );
@@ -134,49 +136,6 @@ export class PasswordResetComponent {
         };
     }
 
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (control?.invalid !== true) {
-            return null;
-        }
-
-        const shouldShow = control.touched || control.dirty;
-        if (!shouldShow) {
-            return null;
-        }
-        const errors = control.errors;
-        if (errors === null) {
-            return null;
-        }
-
-        for (const key of Object.keys(errors)) {
-            const message = this.resolveValidationErrorMessage(key, errors[key]);
-            if (message !== null) {
-                return message;
-            }
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    }
-
-    private resolveValidationErrorMessage(key: string, controlError: unknown): string | null {
-        const resolver = this.validationErrors?.[key];
-        if (resolver === undefined) {
-            return null;
-        }
-
-        const controlParams = this.getValidationParams(controlError);
-        const result = resolver(controlError);
-
-        if (typeof result === 'string') {
-            return this.translateService.instant(result, controlParams);
-        }
-
-        return this.translateService.instant(result.key, {
-            ...controlParams,
-            ...(result.params ?? {}),
-        });
-    }
-
     private resolveToken(): void {
         const params = this.route.snapshot.queryParamMap;
         const userId = params.get('userId') ?? params.get('user') ?? params.get('id');
@@ -187,14 +146,6 @@ export class PasswordResetComponent {
             this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
         }
-    }
-
-    private getValidationParams(error: unknown): Record<string, unknown> {
-        return this.isRecord(error) ? error : {};
-    }
-
-    private isRecord(value: unknown): value is Record<string, unknown> {
-        return typeof value === 'object' && value !== null && !Array.isArray(value);
     }
 }
 

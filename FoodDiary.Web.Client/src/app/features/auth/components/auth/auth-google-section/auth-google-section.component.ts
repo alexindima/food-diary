@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'fd-auth-google-section',
     imports: [TranslatePipe],
     templateUrl: './auth-google-section.component.html',
-    styleUrl: './auth.component.scss',
+    styleUrl: '../auth.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthGoogleSectionComponent {
