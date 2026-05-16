@@ -11,13 +11,12 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { ReportService } from '../../api/report.service';
 import type { CreateReportDto } from '../../models/report.data';
+import { REPORT_REASON_MAX_LENGTH } from './report-dialog.tokens';
 
 export type ReportDialogData = {
     targetType: 'Recipe' | 'Comment';
     targetId: string;
 };
-
-const REPORT_REASON_MAX_LENGTH = 1000;
 
 @Component({
     selector: 'fd-report-dialog',
@@ -33,12 +32,14 @@ export class ReportDialogComponent {
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly reportReasonMaxLength = inject(REPORT_REASON_MAX_LENGTH);
 
-    public readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(REPORT_REASON_MAX_LENGTH)]);
+    public readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(this.reportReasonMaxLength)]);
     public readonly isSubmitting = signal(false);
 
     public onSubmit(): void {
-        if (this.reasonControl.invalid || this.isSubmitting()) {
+        const reason = (this.reasonControl.value ?? '').trim();
+        if (reason.length === 0 || this.reasonControl.invalid || this.isSubmitting()) {
             return;
         }
 
@@ -46,7 +47,7 @@ export class ReportDialogComponent {
         const dto: CreateReportDto = {
             targetType: this.data.targetType,
             targetId: this.data.targetId,
-            reason: (this.reasonControl.value ?? '').trim(),
+            reason,
         };
 
         this.reportService

@@ -21,8 +21,7 @@ import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import type { Recipe } from '../../../recipes/models/recipe.data';
 import { ExploreService } from '../../api/explore.service';
 import type { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
-
-const EXPLORE_PAGE_SIZE = 20;
+import { EXPLORE_PAGE_SIZE, type ExploreSort, type ExploreSortAction } from './explore-page-lib/explore-page.constants';
 
 @Component({
     selector: 'fd-explore-page',
@@ -50,7 +49,7 @@ export class ExplorePageComponent {
     private readonly searchDebounceMs = inject(EXPLORE_SEARCH_DEBOUNCE_MS);
 
     public readonly searchControl = new FormControl('');
-    public readonly sortBy = signal<'newest' | 'popular'>('newest');
+    public readonly sortBy = signal<ExploreSort>('newest');
     public readonly sortActions = computed<ExploreSortAction[]>(() => {
         const selectedSort = this.sortBy();
 
@@ -76,7 +75,7 @@ export class ExplorePageComponent {
             });
     }
 
-    public onSortChange(sort: 'newest' | 'popular'): void {
+    public onSortChange(sort: ExploreSort): void {
         this.sortBy.set(sort);
         this.currentPageIndex.set(0);
         this.loadRecipes();
@@ -114,9 +113,3 @@ export class ExplorePageComponent {
             });
     }
 }
-
-type ExploreSortAction = {
-    value: 'newest' | 'popular';
-    labelKey: string;
-    variant: 'primary' | 'outline';
-};

@@ -3,15 +3,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
-import type { RecipeComment } from '../../models/comment.data';
-import { RecipeCommentItemComponent } from './recipe-comment-item.component';
-import type { RecipeCommentViewModel } from './recipe-comments.types';
+import type { RecipeComment } from '../../../models/comment.data';
+import { RecipeCommentItemComponent } from '../recipe-comment-item/recipe-comment-item.component';
+import type { RecipeCommentViewModel } from '../recipe-comments-lib/recipe-comments.types';
 
 @Component({
     selector: 'fd-recipe-comments-list',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiLoaderComponent, RecipeCommentItemComponent],
     templateUrl: './recipe-comments-list.component.html',
-    styleUrl: './recipe-comments.component.scss',
+    styleUrl: '../recipe-comments.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeCommentsListComponent {

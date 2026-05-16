@@ -8,14 +8,12 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { filter, finalize, switchMap } from 'rxjs';
 
-import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { CommentService } from '../../api/comment.service';
 import type { RecipeComment } from '../../models/comment.data';
-import type { RecipeCommentViewModel } from './recipe-comments.types';
-import { RecipeCommentsListComponent } from './recipe-comments-list.component';
-
-const COMMENTS_PAGE_SIZE = 10;
-const COMMENT_MAX_LENGTH = 2_000;
+import { COMMENT_MAX_LENGTH, COMMENTS_PAGE_SIZE } from './recipe-comments-lib/recipe-comments.constants';
+import { buildRecipeCommentViewModels } from './recipe-comments-lib/recipe-comments.mapper';
+import type { RecipeCommentViewModel } from './recipe-comments-lib/recipe-comments.types';
+import { RecipeCommentsListComponent } from './recipe-comments-list/recipe-comments-list.component';
 
 @Component({
     selector: 'fd-recipe-comments',
@@ -45,36 +43,31 @@ export class RecipeCommentsComponent {
     public readonly submitLabelKey = computed(() => (this.editingCommentId() !== null ? 'COMMON.SAVE' : 'COMMENTS.POST'));
     public readonly commentItems = computed<RecipeCommentViewModel[]>(() => {
         this.languageVersion();
-
-        return this.comments().map(comment => ({
-            comment,
-            authorLabel: comment.authorFirstName ?? comment.authorUsername ?? 'User',
-            dateLabel: this.formatShortDate(comment.createdAtUtc),
-        }));
-    });
-
-    private readonly recipeChangeEffect = effect(() => {
-        this.recipeId();
-        this.currentPage.set(1);
-        this.comments.set([]);
-        this.totalItems.set(0);
-        this.editingCommentId.set(null);
-        this.commentControl.reset();
-        this.loadComments(1);
+        return buildRecipeCommentViewModels(this.comments(), this.translateService.getCurrentLang());
     });
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
+
+        effect(() => {
+            this.recipeId();
+            this.currentPage.set(1);
+            this.comments.set([]);
+            this.totalItems.set(0);
+            this.editingCommentId.set(null);
+            this.commentControl.reset();
+            this.loadComments(1);
+        });
     }
 
     public onSubmit(): void {
-        if (this.commentControl.invalid || this.isSubmitting()) {
+        const text = (this.commentControl.value ?? '').trim();
+        if (text.length === 0 || this.commentControl.invalid || this.isSubmitting()) {
             return;
         }
 
-        const text = (this.commentControl.value ?? '').trim();
         const editId = this.editingCommentId();
         this.isSubmitting.set(true);
 
@@ -124,7 +117,7 @@ export class RecipeCommentsComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
-                this.loadComments();
+                this.loadComments(this.currentPage());
             });
     }
 
@@ -152,17 +145,5 @@ export class RecipeCommentsComponent {
                     this.comments.set(data.data);
                 }
             });
-    }
-
-    private formatShortDate(value: string): string {
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return value;
-        }
-
-        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
-            dateStyle: 'short',
-            timeStyle: 'short',
-        }).format(date);
     }
 }

@@ -9,14 +9,14 @@
         />
     </div>
     <div class="report-actions">
-        <fd-ui-button variant="outline" (click)="onCancelAsync()">
+        <fd-ui-button variant="outline" (click)="onCancel()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>
         <fd-ui-button
             variant="primary"
             [disabled]="reasonControl.invalid || isSubmitting()"
             [loading]="isSubmitting()"
-            (click)="onSubmitAsync()"
+            (click)="onSubmit()"
         >
             {{ 'REPORT.SUBMIT' | translate }}
         </fd-ui-button>
