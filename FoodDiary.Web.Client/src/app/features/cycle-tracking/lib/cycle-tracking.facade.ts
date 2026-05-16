@@ -4,17 +4,18 @@ import { finalize } from 'rxjs';
 
 import { CyclesService } from '../api/cycles.service';
 import type { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySymptoms } from '../models/cycle.data';
-
-const DEFAULT_AVERAGE_CYCLE_LENGTH = 28;
-const MIN_AVERAGE_CYCLE_LENGTH = 18;
-const MAX_AVERAGE_CYCLE_LENGTH = 60;
-const DEFAULT_LUTEAL_LENGTH = 14;
-const MIN_LUTEAL_LENGTH = 8;
-const MAX_LUTEAL_LENGTH = 18;
-const MIN_SYMPTOM_VALUE = 0;
-const MAX_SYMPTOM_VALUE = 9;
-const NEXT_MONTH_OFFSET = 1;
-const PADDED_DATE_PART_LENGTH = 2;
+import {
+    DATE_INPUT_MONTH_OFFSET,
+    DATE_INPUT_PART_LENGTH,
+    DEFAULT_AVERAGE_CYCLE_LENGTH,
+    DEFAULT_LUTEAL_LENGTH,
+    MAX_AVERAGE_CYCLE_LENGTH,
+    MAX_LUTEAL_LENGTH,
+    MAX_SYMPTOM_VALUE,
+    MIN_AVERAGE_CYCLE_LENGTH,
+    MIN_LUTEAL_LENGTH,
+    MIN_SYMPTOM_VALUE,
+} from './cycle-tracking.config';
 
 @Injectable({ providedIn: 'root' })
 export class CycleTrackingFacade {
@@ -53,10 +54,6 @@ export class CycleTrackingFacade {
     public readonly days = computed<CycleDay[]>(() => {
         const list = this.cycle()?.days ?? [];
         return [...list].sort((a, b) => b.date.localeCompare(a.date));
-    });
-    public readonly currentCycleTitle = computed(() => {
-        const cycle = this.cycle();
-        return cycle !== null ? 'CYCLE_TRACKING.CURRENT_CYCLE' : 'CYCLE_TRACKING.NO_CYCLE';
     });
 
     public initialize(): void {
@@ -173,8 +170,8 @@ export class CycleTrackingFacade {
 
     private formatDateInput(date: Date): string {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + NEXT_MONTH_OFFSET).padStart(PADDED_DATE_PART_LENGTH, '0');
-        const day = String(date.getDate()).padStart(PADDED_DATE_PART_LENGTH, '0');
+        const month = String(date.getMonth() + DATE_INPUT_MONTH_OFFSET).padStart(DATE_INPUT_PART_LENGTH, '0');
+        const day = String(date.getDate()).padStart(DATE_INPUT_PART_LENGTH, '0');
         return `${year}-${month}-${day}`;
     }
 }

@@ -36,12 +36,7 @@
                 </form>
             </fd-ui-card>
 
-            <fd-cycle-current-card
-                [titleKey]="currentCycleTitle()"
-                [isLoading]="isLoading()"
-                [current]="currentCycleView()"
-                [prediction]="predictionView()"
-            />
+            <fd-cycle-current-card [isLoading]="isLoading()" [current]="currentCycleView()" [prediction]="predictionView()" />
         </div>
 
         <div class="cycle-tracking__grid cycle-tracking__grid--log fd-grid fd-gap-card-content">

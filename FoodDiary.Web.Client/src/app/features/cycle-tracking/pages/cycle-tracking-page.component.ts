@@ -13,13 +13,13 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
-import { CycleCurrentCardComponent } from './cycle-current-card.component';
-import { CycleDaysCardComponent } from './cycle-days-card.component';
-import type { CycleDayViewModel, CyclePredictionViewModel, CycleViewModel } from './cycle-tracking-page.models';
+import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card.component';
+import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card.component';
+import { CYCLE_SYMPTOM_FIELDS } from './cycle-tracking-page-lib/cycle-tracking-page.config';
+import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
 
 @Component({
     selector: 'fd-cycle-tracking-page',
-    standalone: true,
     imports: [
         TranslatePipe,
         PageHeaderComponent,
@@ -51,58 +51,13 @@ export class CycleTrackingPageComponent {
     public readonly cycle = this.facade.cycle;
     public readonly startCycleForm = this.facade.startCycleForm;
     public readonly dayForm = this.facade.dayForm;
-
-    public readonly symptomFields = [
-        { key: 'pain', labelKey: 'CYCLE_TRACKING.SYMPTOM_PAIN' },
-        { key: 'mood', labelKey: 'CYCLE_TRACKING.SYMPTOM_MOOD' },
-        { key: 'edema', labelKey: 'CYCLE_TRACKING.SYMPTOM_EDEMA' },
-        { key: 'headache', labelKey: 'CYCLE_TRACKING.SYMPTOM_HEADACHE' },
-        { key: 'energy', labelKey: 'CYCLE_TRACKING.SYMPTOM_ENERGY' },
-        { key: 'sleepQuality', labelKey: 'CYCLE_TRACKING.SYMPTOM_SLEEP' },
-        { key: 'libido', labelKey: 'CYCLE_TRACKING.SYMPTOM_LIBIDO' },
-    ] as const;
+    public readonly symptomFields = CYCLE_SYMPTOM_FIELDS;
 
     public readonly predictions = this.facade.predictions;
     public readonly days = this.facade.days;
-    public readonly currentCycleTitle = this.facade.currentCycleTitle;
-    public readonly currentCycleView = computed<CycleViewModel | null>(() => {
-        this.languageVersion();
-        const cycle = this.cycle();
-        if (cycle === null) {
-            return null;
-        }
-
-        return {
-            cycle,
-            startDateLabel: this.formatDate(cycle.startDate, { day: 'numeric', month: 'short', year: 'numeric' }),
-        };
-    });
-    public readonly predictionView = computed<CyclePredictionViewModel | null>(() => {
-        this.languageVersion();
-        const prediction = this.predictions();
-        if (prediction === null) {
-            return null;
-        }
-
-        return {
-            prediction,
-            nextPeriodStartLabel: this.formatDate(prediction.nextPeriodStart, { day: 'numeric', month: 'short' }, 'UTC'),
-            ovulationDateLabel: this.formatDate(prediction.ovulationDate, { day: 'numeric', month: 'short' }, 'UTC'),
-            pmsStartLabel: this.formatDate(prediction.pmsStart, { day: 'numeric', month: 'short' }, 'UTC'),
-        };
-    });
-    public readonly dayItems = computed<CycleDayViewModel[]>(() => {
-        this.languageVersion();
-
-        return this.days().map(day => ({
-            day,
-            dateLabel: this.formatDate(day.date, { day: 'numeric', month: 'short', year: 'numeric' }),
-            accentColor: day.isPeriod
-                ? 'linear-gradient(135deg, var(--fd-color-red-600), var(--fd-color-orange-500))'
-                : 'var(--fd-color-sky-500)',
-            badgeLabelKey: day.isPeriod ? 'CYCLE_TRACKING.BADGE_PERIOD' : 'CYCLE_TRACKING.BADGE_FOLLICULAR',
-        }));
-    });
+    public readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
+    public readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
+    public readonly dayItems = computed(() => buildCycleDayItems(this.days(), this.appLocale()));
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -119,23 +74,8 @@ export class CycleTrackingPageComponent {
         this.facade.saveDay();
     }
 
-    private formatDate(
-        value: string | null | undefined,
-        options: Intl.DateTimeFormatOptions,
-        timeZone?: Intl.DateTimeFormatOptions['timeZone'],
-    ): string {
-        if (value === null || value === undefined || value === '') {
-            return '';
-        }
-
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return value;
-        }
-
-        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
-            ...options,
-            timeZone,
-        }).format(date);
+    private appLocale(): string {
+        this.languageVersion();
+        return resolveAppLocale(this.translateService.getCurrentLang());
     }
 }

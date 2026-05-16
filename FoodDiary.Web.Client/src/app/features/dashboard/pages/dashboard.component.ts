@@ -29,6 +29,7 @@ import type {
 } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog-lib/tdee-insight-dialog.types';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
+import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
     DashboardBlockId,
     DashboardBlockState,
@@ -54,9 +55,6 @@ import { DashboardQuickAddComponent } from './dashboard-sections/dashboard-quick
 import { DashboardSummaryBlockComponent } from './dashboard-sections/dashboard-summary-block/dashboard-summary-block.component';
 import { DashboardTdeeBlockComponent } from './dashboard-sections/dashboard-tdee-block/dashboard-tdee-block.component';
 import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-trend-block/dashboard-trend-block.component';
-
-const FIRST_RESIZE_ENTRY_INDEX = 0;
-const LANGUAGE_VERSION_INCREMENT = 1;
 
 @Component({
     selector: 'fd-dashboard',
@@ -213,7 +211,7 @@ export class DashboardComponent {
     public constructor() {
         this.facade.initialize();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + LANGUAGE_VERSION_INCREMENT);
+            this.languageVersion.update(version => version + DASHBOARD_LANGUAGE_VERSION_INCREMENT);
         });
         afterNextRender(() => {
             this.observeDashboardWidth();
@@ -401,7 +399,7 @@ export class DashboardComponent {
         }
 
         this.resizeObserver = new ResizeObserver(entries => {
-            const entry = entries[FIRST_RESIZE_ENTRY_INDEX] as ResizeObserverEntry | undefined;
+            const entry = entries[DASHBOARD_FIRST_RESIZE_ENTRY_INDEX] as ResizeObserverEntry | undefined;
             if (entry === undefined) {
                 return;
             }

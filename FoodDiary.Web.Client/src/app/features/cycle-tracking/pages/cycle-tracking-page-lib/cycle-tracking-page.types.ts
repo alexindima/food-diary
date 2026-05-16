@@ -1,4 +1,4 @@
-import type { CycleDay, CyclePredictions, CycleResponse } from '../models/cycle.data';
+import type { CycleDay, CyclePredictions, CycleResponse } from '../../models/cycle.data';
 
 export type CycleViewModel = {
     cycle: CycleResponse;
