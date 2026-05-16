@@ -5,7 +5,6 @@ export type NoticeVariant = 'info' | 'warning' | 'error';
 
 @Component({
     selector: 'fd-notice-banner',
-    standalone: true,
     imports: [FdUiButtonComponent],
     templateUrl: './notice-banner.component.html',
     styleUrl: './notice-banner.component.scss',

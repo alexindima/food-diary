@@ -7,7 +7,6 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 @Component({
     selector: 'fd-barcode-scanner',
-    standalone: true,
     imports: [TranslatePipe, FdUiDialogComponent, FdUiButtonComponent, FdUiLoaderComponent],
     templateUrl: './barcode-scanner.component.html',
     styleUrl: './barcode-scanner.component.scss',

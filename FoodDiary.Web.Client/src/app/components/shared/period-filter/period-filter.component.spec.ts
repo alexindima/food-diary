@@ -10,7 +10,6 @@ import { PeriodFilterComponent } from './period-filter.component';
 const NON_STRING_RANGE_VALUE = 42;
 
 @Component({
-    standalone: true,
     imports: [PeriodFilterComponent],
     template: `
         <fd-period-filter

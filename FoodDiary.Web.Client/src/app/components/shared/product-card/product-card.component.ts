@@ -28,7 +28,6 @@ export type ProductCardItem = {
 
 @Component({
     selector: 'fd-product-card',
-    standalone: true,
     imports: [TranslatePipe, EntityCardComponent],
     templateUrl: './product-card.component.html',
     styleUrl: './product-card.component.scss',

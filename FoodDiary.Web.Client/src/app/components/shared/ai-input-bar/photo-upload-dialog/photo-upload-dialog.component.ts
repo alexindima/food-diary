@@ -10,7 +10,6 @@ import { ImageUploadFieldComponent } from '../../image-upload-field/image-upload
 
 @Component({
     selector: 'fd-photo-upload-dialog',
-    standalone: true,
     imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, ImageUploadFieldComponent],
     templateUrl: './photo-upload-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,7 +5,6 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon.component';
 
 @Component({
     selector: 'fd-nutrient-badges',
-    standalone: true,
     imports: [CommonModule, TranslatePipe, FdUiIconComponent],
     templateUrl: './nutrient-badges.component.html',
     styleUrls: ['./nutrient-badges.component.scss'],

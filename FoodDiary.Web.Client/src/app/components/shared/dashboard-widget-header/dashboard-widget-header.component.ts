@@ -3,7 +3,6 @@ import { FdUiIconComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-dashboard-widget-header',
-    standalone: true,
     imports: [FdUiIconComponent],
     templateUrl: './dashboard-widget-header.component.html',
     styleUrl: './dashboard-widget-header.component.scss',

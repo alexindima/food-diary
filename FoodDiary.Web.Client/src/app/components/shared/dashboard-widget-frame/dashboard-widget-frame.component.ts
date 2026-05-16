@@ -4,7 +4,6 @@ import { DashboardWidgetHeaderComponent } from '../dashboard-widget-header/dashb
 
 @Component({
     selector: 'fd-dashboard-widget-frame',
-    standalone: true,
     imports: [DashboardWidgetHeaderComponent],
     templateUrl: './dashboard-widget-frame.component.html',
     styleUrl: './dashboard-widget-frame.component.scss',

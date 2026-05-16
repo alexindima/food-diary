@@ -34,7 +34,6 @@ export type RecipeCardItem = {
 
 @Component({
     selector: 'fd-recipe-card',
-    standalone: true,
     imports: [TranslatePipe, EntityCardComponent],
     templateUrl: './recipe-card.component.html',
     styleUrl: './recipe-card.component.scss',

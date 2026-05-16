@@ -5,7 +5,6 @@ import { describe, expect, it } from 'vitest';
 import { PageBodyComponent } from './page-body.component';
 
 @Component({
-    standalone: true,
     imports: [PageBodyComponent],
     template: '<fd-page-body><p class="projected">Projected content</p></fd-page-body>',
 })

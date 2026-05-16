@@ -1,4 +1,4 @@
-import type { NutrientBar } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import type { NutrientBar } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.types';
 import type { MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview.types';
 import type { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 import type { FastingSession } from '../../../fasting/models/fasting.data';

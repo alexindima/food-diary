@@ -17,7 +17,6 @@ export type ConfirmDeleteDialogData = {
 
 @Component({
     selector: 'fd-confirm-delete-dialog',
-    standalone: true,
     templateUrl: './confirm-delete-dialog.component.html',
     styleUrls: ['./confirm-delete-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DashboardSummaryCardComponent, type NutrientBar } from './dashboard-summary-card.component';
+import { DashboardSummaryCardComponent } from './dashboard-summary-card.component';
+import type { NutrientBar } from './dashboard-summary-card.types';
 
 const DAILY_GOAL = 2000;
 const DAILY_CONSUMED = 1500;

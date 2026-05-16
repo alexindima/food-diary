@@ -9,7 +9,6 @@ import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'fd-statistics-nutrition',
-    standalone: true,
     imports: [CommonModule, TranslateModule, FdUiSectionStateComponent, FdUiCardComponent, FdUiTabsComponent, BaseChartDirective],
     templateUrl: './statistics-nutrition.component.html',
     styleUrls: ['./statistics-nutrition.component.scss'],

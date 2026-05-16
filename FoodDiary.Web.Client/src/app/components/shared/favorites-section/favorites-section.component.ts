@@ -3,7 +3,6 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-favorites-section',
-    standalone: true,
     templateUrl: './favorites-section.component.html',
     styleUrl: './favorites-section.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

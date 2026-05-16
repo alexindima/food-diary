@@ -1,4 +1,4 @@
-import type { NutrientBar } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import type { NutrientBar } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.types';
 import type { MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview.types';
 import type { QuickMealItem } from '../../../meals/lib/quick/quick-meal.service';
 import type { Meal } from '../../../meals/models/meal.data';

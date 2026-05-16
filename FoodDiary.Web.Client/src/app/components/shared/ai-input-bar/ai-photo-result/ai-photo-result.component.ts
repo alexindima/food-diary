@@ -43,7 +43,6 @@ const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
 @Component({
     selector: 'fd-ai-photo-result',
-    standalone: true,
     imports: [
         TranslatePipe,
         FdUiHintDirective,

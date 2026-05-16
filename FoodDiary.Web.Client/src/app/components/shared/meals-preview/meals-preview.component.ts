@@ -9,7 +9,6 @@ import { MealsPreviewEntryComponent } from './meals-preview-entry.component';
 
 @Component({
     selector: 'fd-meals-preview',
-    standalone: true,
     imports: [TranslateModule, FdUiButtonComponent, MealsPreviewEntryComponent],
     templateUrl: './meals-preview.component.html',
     styleUrls: ['./meals-preview.component.scss'],

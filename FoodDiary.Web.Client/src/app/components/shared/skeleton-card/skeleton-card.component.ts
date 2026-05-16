@@ -4,7 +4,6 @@ import { SkeletonComponent } from '../skeleton/skeleton.component';
 
 @Component({
     selector: 'fd-skeleton-card',
-    standalone: true,
     imports: [SkeletonComponent],
     templateUrl: './skeleton-card.component.html',
     styleUrl: './skeleton-card.component.scss',

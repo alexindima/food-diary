@@ -5,7 +5,6 @@ export type SkeletonVariant = 'text' | 'circle' | 'rect';
 
 @Component({
     selector: 'fd-skeleton',
-    standalone: true,
     imports: [NgStyle],
     templateUrl: './skeleton.component.html',
     styleUrl: './skeleton.component.scss',

@@ -14,7 +14,6 @@ import { NotificationsDialogListComponent } from './notifications-dialog-list.co
 
 @Component({
     selector: 'fd-notifications-dialog',
-    standalone: true,
     imports: [
         TranslateModule,
         FdUiButtonComponent,

@@ -16,7 +16,6 @@ export type PremiumRequiredDialogData = {
 
 @Component({
     selector: 'fd-premium-required-dialog',
-    standalone: true,
     templateUrl: './premium-required-dialog.component.html',
     styleUrls: ['./premium-required-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

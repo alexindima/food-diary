@@ -37,7 +37,6 @@ const COLLAGE_IMAGE_LIMIT = 4;
 
 @Component({
     selector: 'fd-meal-card',
-    standalone: true,
     imports: [CommonModule, TranslatePipe, EntityCardComponent],
     templateUrl: './meal-card.component.html',
     styleUrls: ['./meal-card.component.scss'],

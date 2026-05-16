@@ -4,7 +4,6 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-error-state',
-    standalone: true,
     imports: [TranslatePipe, FdUiIconComponent, FdUiButtonComponent],
     templateUrl: './error-state.component.html',
     styleUrl: './error-state.component.scss',

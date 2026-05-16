@@ -36,7 +36,6 @@ export type StatisticsSummaryExportFormat = 'csv' | 'pdf';
 
 @Component({
     selector: 'fd-statistics-summary',
-    standalone: true,
     imports: [
         CommonModule,
         TranslateModule,

@@ -18,7 +18,6 @@ export type UnsavedChangesDialogData = {
 
 @Component({
     selector: 'fd-unsaved-changes-dialog',
-    standalone: true,
     imports: [TranslateModule, FdUiDialogShellComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
     templateUrl: './unsaved-changes-dialog.component.html',
     styleUrl: './unsaved-changes-dialog.component.scss',

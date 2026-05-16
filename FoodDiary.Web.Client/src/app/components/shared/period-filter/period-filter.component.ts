@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
 import { type FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
@@ -7,7 +7,6 @@ type DateRangeValue = { start: Date | null; end: Date | null } | null;
 
 @Component({
     selector: 'fd-period-filter',
-    standalone: true,
     imports: [FdUiTabsComponent, FdUiDateRangeInputComponent, ReactiveFormsModule],
     templateUrl: './period-filter.component.html',
     styleUrls: ['./period-filter.component.scss'],

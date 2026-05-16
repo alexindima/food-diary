@@ -21,7 +21,6 @@ const COLLAGE_VISIBLE_LIMIT = 4;
 
 @Component({
     selector: 'fd-entity-card',
-    standalone: true,
     imports: [MediaCardComponent, EntityCardThumbComponent, EntityCardBodyComponent, EntityCardActionsComponent],
     templateUrl: './entity-card.component.html',
     styleUrl: './entity-card.component.scss',

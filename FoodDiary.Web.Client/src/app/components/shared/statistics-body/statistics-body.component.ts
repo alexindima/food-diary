@@ -9,7 +9,6 @@ import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'fd-statistics-body',
-    standalone: true,
     imports: [CommonModule, TranslateModule, FdUiCardComponent, FdUiTabsComponent, FdUiSectionStateComponent, BaseChartDirective],
     templateUrl: './statistics-body.component.html',
     styleUrls: ['./statistics-body.component.scss'],

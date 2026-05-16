@@ -21,18 +21,20 @@ import { finalize, map, switchMap } from 'rxjs';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
+import {
+    calculateImageResizeDimensions,
+    canResizeImageType,
+    createImageUploadId,
+    getMaxImageUploadBytes,
+} from './image-upload-field.utils';
 
 const DEFAULT_MAX_SIZE_MB = 20;
 const DEFAULT_CROP_SIZE = 512;
 const DEFAULT_CROP_MAX_SIZE = 1024;
 const DEFAULT_RESIZE_QUALITY = 0.86;
-const RANDOM_ID_RADIX = 36;
-const RANDOM_ID_SLICE_START = 2;
-const BYTES_PER_KB = 1024;
 
 @Component({
     selector: 'fd-image-upload-field',
-    standalone: true,
     host: {
         '(dragover)': 'onDragOver($event)',
         '(dragleave)': 'onDragLeave($event)',
@@ -73,9 +75,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly imageChanged = output<ImageSelection | null>();
 
     private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
-    protected readonly errorId = ImageUploadFieldComponent.createId('image-upload-error');
-    protected readonly cropTitleId = ImageUploadFieldComponent.createId('image-upload-crop-title');
-    protected readonly cropSubtitleId = ImageUploadFieldComponent.createId('image-upload-crop-subtitle');
+    protected readonly errorId = createImageUploadId('image-upload-error');
+    protected readonly cropTitleId = createImageUploadId('image-upload-crop-title');
+    protected readonly cropSubtitleId = createImageUploadId('image-upload-crop-subtitle');
 
     public selection: ImageSelection = { url: null, assetId: null };
     public isDragging = false;
@@ -233,11 +235,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         void this.handleIncomingFileAsync(file);
     }
 
-    private static createId(prefix: string): string {
-        const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
-        return `${prefix}-${cryptoLike?.randomUUID?.() ?? Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_SLICE_START)}`;
-    }
-
     private async handleIncomingFileAsync(file: File): Promise<void> {
         if (this.disabled || this.isUploading) {
             return;
@@ -250,7 +247,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             return;
         }
 
-        const maxBytes = this.maxSizeMb() * BYTES_PER_KB * BYTES_PER_KB;
+        const maxBytes = getMaxImageUploadBytes(this.maxSizeMb());
 
         if (this.cropEnabled()) {
             this.startCropping(file);
@@ -276,17 +273,14 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
         try {
             const image = await this.loadImageAsync(file);
-            const largestSide = Math.max(image.naturalWidth, image.naturalHeight);
-            if (largestSide <= maxDimension) {
+            const dimensions = calculateImageResizeDimensions(image.naturalWidth, image.naturalHeight, maxDimension);
+            if (dimensions === null) {
                 return file;
             }
 
-            const scale = maxDimension / largestSide;
-            const targetWidth = Math.max(1, Math.round(image.naturalWidth * scale));
-            const targetHeight = Math.max(1, Math.round(image.naturalHeight * scale));
             const canvas = document.createElement('canvas');
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
+            canvas.width = dimensions.width;
+            canvas.height = dimensions.height;
             const ctx = canvas.getContext('2d');
             if (ctx === null) {
                 return file;
@@ -294,10 +288,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
             if (file.type === 'image/jpeg') {
                 ctx.fillStyle = '#fff';
-                ctx.fillRect(0, 0, targetWidth, targetHeight);
+                ctx.fillRect(0, 0, dimensions.width, dimensions.height);
             }
 
-            ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+            ctx.drawImage(image, 0, 0, dimensions.width, dimensions.height);
             const blob = await this.canvasToBlobAsync(canvas, file.type, this.resizeQuality());
             return new File([blob], file.name, { type: file.type, lastModified: file.lastModified });
         } catch (err) {
@@ -307,7 +301,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     private canResizeFile(file: File): boolean {
-        return ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+        return canResizeImageType(file.type);
     }
 
     private async loadImageAsync(file: File): Promise<HTMLImageElement> {
@@ -461,20 +455,22 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     private resizeCanvas(canvas: HTMLCanvasElement, maxSize: number): HTMLCanvasElement | null {
-        const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
-        const targetWidth = Math.max(1, Math.round(canvas.width * scale));
-        const targetHeight = Math.max(1, Math.round(canvas.height * scale));
+        const dimensions = calculateImageResizeDimensions(canvas.width, canvas.height, maxSize);
+        if (dimensions === null) {
+            return canvas;
+        }
+
         const resized = document.createElement('canvas');
-        resized.width = targetWidth;
-        resized.height = targetHeight;
+        resized.width = dimensions.width;
+        resized.height = dimensions.height;
         const ctx = resized.getContext('2d');
         if (ctx === null) {
             return null;
         }
 
         ctx.fillStyle = 'var(--fd-color-white)';
-        ctx.fillRect(0, 0, targetWidth, targetHeight);
-        ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
+        ctx.fillRect(0, 0, dimensions.width, dimensions.height);
+        ctx.drawImage(canvas, 0, 0, dimensions.width, dimensions.height);
         return resized;
     }
 

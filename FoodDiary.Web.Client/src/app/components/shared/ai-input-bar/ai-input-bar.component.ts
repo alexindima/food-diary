@@ -19,7 +19,7 @@ import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog.component';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field.component';
 import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premium-required-dialog.component';
-import { mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
+import { buildPhotoAiInputBarResult, buildTextAiInputBarResult } from './ai-input-bar.mapper';
 import type { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
 import type { AiPhotoEditApplied } from './ai-photo-result/ai-photo-result.types';
@@ -209,19 +209,17 @@ export class AiInputBarComponent {
             return;
         }
 
-        const results = this.textResults();
-        this.submitMeal({
-            source: this.lastTextSource,
-            mealType: this.mealType(),
-            recognizedAtUtc: new Date().toISOString(),
-            notes: this.textSubmittedQuery(),
-            date: details.date,
-            time: details.time,
-            comment: details.comment ?? null,
-            preMealSatietyLevel: details.preMealSatietyLevel ?? null,
-            postMealSatietyLevel: details.postMealSatietyLevel ?? null,
-            items: mapNutritionItemsToAiInputBarItems(nutrition, results),
-        });
+        this.submitMeal(
+            buildTextAiInputBarResult({
+                source: this.lastTextSource,
+                mealType: this.mealType(),
+                recognizedAtUtc: new Date().toISOString(),
+                query: this.textSubmittedQuery(),
+                details,
+                nutrition,
+                results: this.textResults(),
+            }),
+        );
     }
 
     public async onPhotoClickAsync(): Promise<void> {
@@ -261,22 +259,16 @@ export class AiInputBarComponent {
         }
 
         const selection = this.photoSelection();
-        const results = this.photoResults();
-
-        this.submitMeal({
-            source: 'Photo',
-            mealType: this.mealType(),
-            imageAssetId: selection?.assetId ?? null,
-            imageUrl: selection?.url ?? null,
-            recognizedAtUtc: new Date().toISOString(),
-            notes: nutrition.notes ?? null,
-            date: details.date,
-            time: details.time,
-            comment: details.comment ?? null,
-            preMealSatietyLevel: details.preMealSatietyLevel ?? null,
-            postMealSatietyLevel: details.postMealSatietyLevel ?? null,
-            items: mapNutritionItemsToAiInputBarItems(nutrition, results),
-        });
+        this.submitMeal(
+            buildPhotoAiInputBarResult({
+                mealType: this.mealType(),
+                selection,
+                recognizedAtUtc: new Date().toISOString(),
+                details,
+                nutrition,
+                results: this.photoResults(),
+            }),
+        );
     }
 
     public dismissTextResult(): void {

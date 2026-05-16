@@ -8,7 +8,6 @@ const TREND_DISPLAY_FRACTION_DIGITS = 1;
 
 @Component({
     selector: 'fd-waist-summary-card',
-    standalone: true,
     imports: [FdUiCardComponent, TranslatePipe, DecimalPipe],
     templateUrl: './waist-summary-card.component.html',
     styleUrls: ['./waist-summary-card.component.scss'],

@@ -30,7 +30,6 @@ export type NutritionMismatchWarning = {
 
 @Component({
     selector: 'fd-nutrition-editor',
-    standalone: true,
     imports: [CommonModule, ReactiveFormsModule, TranslatePipe, FdUiNutrientInputComponent],
     templateUrl: './nutrition-editor.component.html',
     styleUrls: ['./nutrition-editor.component.scss'],

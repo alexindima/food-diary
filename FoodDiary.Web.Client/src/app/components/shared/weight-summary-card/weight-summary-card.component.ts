@@ -8,7 +8,6 @@ const TREND_DISPLAY_FRACTION_DIGITS = 1;
 
 @Component({
     selector: 'fd-weight-summary-card',
-    standalone: true,
     imports: [FdUiCardComponent, TranslatePipe, DecimalPipe],
     templateUrl: './weight-summary-card.component.html',
     styleUrls: ['./weight-summary-card.component.scss'],
