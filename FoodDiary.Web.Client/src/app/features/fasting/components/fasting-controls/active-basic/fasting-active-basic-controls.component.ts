@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
     selector: 'fd-fasting-active-basic-controls',
     imports: [TranslatePipe, FdUiButtonComponent],
     templateUrl: './fasting-active-basic-controls.component.html',
-    styleUrl: './fasting-controls.component.scss',
+    styleUrl: '../fasting-controls.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         style: 'display: contents',

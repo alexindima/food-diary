@@ -5,8 +5,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { FastingService } from './fasting.service';
+import { FASTING_API_LIMITS } from './fasting-api.tokens';
 
 const BASE_URL = environment.apiUrls.fasting;
+const DEFAULT_HISTORY_PAGE_SIZE = 10;
+const CUSTOM_HISTORY_PAGE_SIZE = 7;
 const SESSION_RESPONSE = {
     id: 'session-1',
     startedAtUtc: '2026-04-12T06:00:00Z',
@@ -51,6 +54,22 @@ afterEach(() => {
     httpMock.verify();
 });
 
+function resetTestingModuleWithCustomHistoryLimit(historyPageSize: number): void {
+    httpMock.verify();
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+        providers: [
+            FastingService,
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            { provide: FASTING_API_LIMITS, useValue: { historyPageSize } },
+        ],
+    });
+
+    service = TestBed.inject(FastingService);
+    httpMock = TestBed.inject(HttpTestingController);
+}
+
 describe('FastingService overview', () => {
     it('should request fasting overview', () => {
         const overview = createOverview();
@@ -81,14 +100,21 @@ describe('FastingService history', () => {
         const payload = {
             data: [],
             page: 2,
-            limit: 10,
+            limit: DEFAULT_HISTORY_PAGE_SIZE,
             totalPages: 3,
             totalItems: 21,
         };
 
-        service.getHistory({ from: '2026-04-01T00:00:00.000Z', to: '2026-04-30T23:59:59.000Z', page: 2, limit: 10 }).subscribe(result => {
-            expect(result).toEqual(payload);
-        });
+        service
+            .getHistory({
+                from: '2026-04-01T00:00:00.000Z',
+                to: '2026-04-30T23:59:59.000Z',
+                page: 2,
+                limit: DEFAULT_HISTORY_PAGE_SIZE,
+            })
+            .subscribe(result => {
+                expect(result).toEqual(payload);
+            });
 
         const req = httpMock.expectOne(
             request =>
@@ -96,10 +122,24 @@ describe('FastingService history', () => {
                 request.params.get('from') === '2026-04-01T00:00:00.000Z' &&
                 request.params.get('to') === '2026-04-30T23:59:59.000Z' &&
                 request.params.get('page') === '2' &&
-                request.params.get('limit') === '10',
+                request.params.get('limit') === String(DEFAULT_HISTORY_PAGE_SIZE),
         );
         expect(req.request.method).toBe('GET');
         req.flush(payload);
+    });
+
+    it('should use configured default history limit when query limit is omitted', () => {
+        resetTestingModuleWithCustomHistoryLimit(CUSTOM_HISTORY_PAGE_SIZE);
+
+        service.getHistory({ from: '2026-04-01T00:00:00.000Z', to: '2026-04-30T23:59:59.000Z', page: 1 }).subscribe(result => {
+            expect(result.limit).toBe(CUSTOM_HISTORY_PAGE_SIZE);
+        });
+
+        const req = httpMock.expectOne(
+            request => request.url === `${BASE_URL}/history` && request.params.get('limit') === String(CUSTOM_HISTORY_PAGE_SIZE),
+        );
+        expect(req.request.method).toBe('GET');
+        req.flush({ data: [], page: 1, limit: CUSTOM_HISTORY_PAGE_SIZE, totalPages: 0, totalItems: 0 });
     });
 });
 

@@ -1,6 +1,6 @@
 <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
     <div class="fasting__history-content">
-        @if (history().length === 0) {
+        @if (historyItems().length === 0) {
             <p class="fasting__empty fd-ui-body-sm">{{ 'FASTING.NO_HISTORY' | translate }}</p>
         } @else {
             <div class="fasting__history fd-stack fd-gap-xs">

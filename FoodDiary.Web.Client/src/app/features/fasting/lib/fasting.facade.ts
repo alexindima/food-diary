@@ -7,7 +7,7 @@ import { UserService } from '../../../shared/api/user.service';
 import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
-import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from '../../../shared/lib/time.constants';
+import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND, SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from '../../../shared/lib/time.constants';
 import { FastingService } from '../api/fasting.service';
 import {
     FASTING_PROTOCOLS,
@@ -37,7 +37,6 @@ import {
 } from './fasting.constants';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
 
-const SECONDS_PER_HOUR = 3600;
 const DURATION_PART_LENGTH = 2;
 const DURATION_PART_PAD = '0';
 const DURATION_ROUNDING_FACTOR = 10;

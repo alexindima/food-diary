@@ -10,34 +10,17 @@ import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
-import type { FastingOccurrenceKind, FastingSession } from '../../models/fasting.data';
+import type { FastingSession } from '../../models/fasting.data';
 import { FastingControlsComponent } from '../fasting-controls/fasting-controls.component';
-import { type FastingTimerCardDisplayGroup, FastingTimerCardGroupsComponent } from './fasting-timer-card-groups.component';
-import { type FastingTimerCardDisplayItem, FastingTimerCardItemsComponent } from './fasting-timer-card-items.component';
-
-type FastingTimerCardState = {
-    isActive: boolean;
-    isOvertime: boolean;
-    currentSessionCompleted: boolean;
-    progressPercent: number;
-    elapsedFormatted: string;
-    remainingFormatted: string;
-    remainingLabelKey: string;
-    labelKey: string;
-    stateLabel: string | null;
-    occurrenceKind: FastingOccurrenceKind | null;
-    detailLabel: string | null;
-    metaLabel: string | null;
-    ringColor: string | null;
-    glowColor: string | null;
-    stageTitleKey: string | null;
-    stageDescriptionKey: string | null;
-    stageIndex: number | null;
-    totalStages: number;
-    nextStageTitleKey: string | null;
-    nextStageFormatted: string | null;
-    showGlow: boolean;
-};
+import { FastingTimerCardGroupsComponent } from './fasting-timer-card-groups/fasting-timer-card-groups.component';
+import { FastingTimerCardItemsComponent } from './fasting-timer-card-items/fasting-timer-card-items.component';
+import type {
+    FastingTimerCardChrome,
+    FastingTimerCardDisplayGroup,
+    FastingTimerCardDisplayItem,
+    FastingTimerCardLayout,
+    FastingTimerCardState,
+} from './fasting-timer-card-lib/fasting-timer-card.types';
 
 const RING_RADIUS = 90;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -45,7 +28,6 @@ const EMPTY_DURATION_MS = 0;
 
 @Component({
     selector: 'fd-fasting-timer-card',
-    standalone: true,
     imports: [
         NgTemplateOutlet,
         TranslatePipe,
@@ -76,7 +58,7 @@ export class FastingTimerCardComponent {
     protected readonly ringStrokeDashoffset = computed(
         () => RING_CIRCUMFERENCE * (1 - this.normalizedProgressPercent() / PERCENT_MULTIPLIER),
     );
-    public readonly layout = input<'dashboard' | 'page'>('page');
+    public readonly layout = input<FastingTimerCardLayout>('page');
     public readonly session = input<FastingSession | null>(null);
     private readonly usesFacadeTimer = computed(() => this.layout() === 'page' && this.facade !== null);
     protected readonly viewState = computed<FastingTimerCardState>(() => {
@@ -494,9 +476,3 @@ export class FastingTimerCardComponent {
         this.timerInterval = null;
     }
 }
-
-type FastingTimerCardChrome = {
-    density: 'compact' | 'default';
-    title: string;
-    showPageControls: boolean;
-};

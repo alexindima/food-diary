@@ -29,10 +29,9 @@ import {
     type FastingSafetyDialogData,
     type FastingSafetyDialogResult,
 } from '../fasting-safety-dialog/fasting-safety-dialog.component';
-import { FastingActiveBasicControlsComponent } from './fasting-active-basic-controls.component';
-import { FastingActiveExtendedControlsComponent } from './fasting-active-extended-controls.component';
-import type { FastingCustomActionState } from './fasting-controls.types';
-import { FastingSetupControlsComponent } from './fasting-setup-controls.component';
+import { FastingActiveBasicControlsComponent } from './active-basic/fasting-active-basic-controls.component';
+import { FastingActiveExtendedControlsComponent } from './active-extended/fasting-active-extended-controls.component';
+import { FastingSetupControlsComponent } from './setup/fasting-setup-controls.component';
 
 const CYCLIC_PRESET_SEPARATOR = ':';
 const FASTING_MODES: readonly FastingMode[] = ['intermittent', 'extended', 'cyclic'];
@@ -80,30 +79,6 @@ export class FastingControlsComponent {
     public readonly isCustomReduceExpanded = signal(false);
     public readonly isExtendPanelExpanded = signal(false);
     public readonly isReducePanelExpanded = signal(false);
-    public readonly extendPanelToggleLabel = computed(() => (this.isExtendPanelExpanded() ? '-' : '+'));
-    public readonly reducePanelToggleLabel = computed(() => (this.isReducePanelExpanded() ? '-' : '+'));
-    public readonly customExtendActionState = computed<FastingCustomActionState>(() =>
-        this.isCustomExtendExpanded()
-            ? {
-                  variant: 'primary',
-                  fill: 'solid',
-              }
-            : {
-                  variant: 'secondary',
-                  fill: 'outline',
-              },
-    );
-    public readonly customReduceActionState = computed<FastingCustomActionState>(() =>
-        this.isCustomReduceExpanded()
-            ? {
-                  variant: 'danger',
-                  fill: 'solid',
-              }
-            : {
-                  variant: 'secondary',
-                  fill: 'outline',
-              },
-    );
     public readonly isActiveExtendedSession = computed(() => this.currentSession()?.planType === 'Extended' && this.isActive());
     public readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');

@@ -1,8 +1,8 @@
+import { MINUTES_PER_HOUR } from '../../../shared/lib/time.constants';
 import type { WearableConnection, WearableDailySummary } from '../models/wearable.data';
 import { WEARABLE_PROVIDER_CONFIGS } from './wearable.config';
 import type { WearableMetric, WearableProviderConfig, WearableProviderRow } from './wearable.types';
 
-const MINUTES_PER_HOUR = 60;
 const HOURS_PRECISION_FACTOR = 10;
 const INTEGER_NUMBER_FORMAT = '1.0-0';
 const HOURS_NUMBER_FORMAT = '1.0-1';

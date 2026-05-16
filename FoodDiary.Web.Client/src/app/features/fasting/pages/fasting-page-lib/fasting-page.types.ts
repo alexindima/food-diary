@@ -1,12 +1,6 @@
 import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
 
-import type { FastingCheckIn, FastingMessage, FastingSession, FastingStats } from '../models/fasting.data';
-
-export type FastingStatsViewModel = {
-    stats: FastingStats;
-    hasPersonalSummary: boolean;
-    topSymptomLabel: string;
-};
+import type { FastingCheckIn, FastingMessage, FastingSession } from '../../models/fasting.data';
 
 export type FastingMessageViewModel = {
     message: FastingMessage;

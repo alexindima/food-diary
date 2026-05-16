@@ -1,5 +1,12 @@
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
-import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from '../../../shared/lib/time.constants';
+import {
+    HOURS_PER_DAY,
+    MINUTES_PER_HOUR,
+    MS_PER_HOUR,
+    MS_PER_SECOND,
+    SECONDS_PER_HOUR,
+    SECONDS_PER_MINUTE,
+} from '../../../shared/lib/time.constants';
 import { FASTING_PROTOCOLS, type FastingOccurrenceKind, type FastingSession } from '../models/fasting.data';
 import {
     DEFAULT_CYCLIC_EAT_FAST_HOURS,
@@ -11,7 +18,6 @@ import { type FastingStagePresentation, resolveFastingStage } from './fasting-st
 
 type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
 
-const SECONDS_PER_HOUR = 3_600;
 const TIME_PAD_LENGTH = 2;
 
 export type FastingTimerCardComputedState = {

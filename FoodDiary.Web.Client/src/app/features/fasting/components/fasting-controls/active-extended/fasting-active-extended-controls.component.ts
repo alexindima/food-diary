@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
-import type { FastingCustomActionState } from './fasting-controls.types';
+import type { FastingCustomActionState } from '../fasting-controls.types';
 
 @Component({
     selector: 'fd-fasting-active-extended-controls',
     imports: [FormsModule, TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './fasting-active-extended-controls.component.html',
-    styleUrl: './fasting-controls.component.scss',
+    styleUrl: '../fasting-controls.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         style: 'display: contents',
@@ -22,10 +22,6 @@ export class FastingActiveExtendedControlsComponent {
     public readonly isReducePanelExpanded = input.required<boolean>();
     public readonly isCustomExtendExpanded = input.required<boolean>();
     public readonly isCustomReduceExpanded = input.required<boolean>();
-    public readonly extendPanelToggleLabel = input.required<string>();
-    public readonly reducePanelToggleLabel = input.required<string>();
-    public readonly customExtendActionState = input.required<FastingCustomActionState>();
-    public readonly customReduceActionState = input.required<FastingCustomActionState>();
     public readonly extendHours = input.required<number>();
     public readonly reduceHours = input.required<number>();
     public readonly isExtending = input.required<boolean>();
@@ -48,6 +44,30 @@ export class FastingActiveExtendedControlsComponent {
     public readonly reduceCustom = output();
     public readonly end = output();
 
+    protected readonly extendPanelToggleLabel = computed(() => (this.isExtendPanelExpanded() ? '-' : '+'));
+    protected readonly reducePanelToggleLabel = computed(() => (this.isReducePanelExpanded() ? '-' : '+'));
+    protected readonly customExtendActionState = computed<FastingCustomActionState>(() =>
+        this.isCustomExtendExpanded()
+            ? {
+                  variant: 'primary',
+                  fill: 'solid',
+              }
+            : {
+                  variant: 'secondary',
+                  fill: 'outline',
+              },
+    );
+    protected readonly customReduceActionState = computed<FastingCustomActionState>(() =>
+        this.isCustomReduceExpanded()
+            ? {
+                  variant: 'danger',
+                  fill: 'solid',
+              }
+            : {
+                  variant: 'secondary',
+                  fill: 'outline',
+              },
+    );
     protected readonly extendActionsDisabled = (): boolean => this.isExtending() || this.isReducing() || this.isEnding();
     protected readonly reduceActionsDisabled = (): boolean => this.isReducing() || this.isExtending() || this.isEnding();
     protected readonly endDisabled = (): boolean => this.isEnding() || this.isReducing() || this.isExtending() || this.isUpdatingCycle();

@@ -4,13 +4,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
-import type { FastingProtocol } from '../../models/fasting.data';
+import type { FastingProtocol } from '../../../models/fasting.data';
 
 @Component({
     selector: 'fd-fasting-cyclic-setup-controls',
     imports: [FormsModule, TranslatePipe, FdUiSegmentedToggleComponent, FdUiInputComponent],
     templateUrl: './fasting-cyclic-setup-controls.component.html',
-    styleUrl: './fasting-controls.component.scss',
+    styleUrl: '../fasting-controls.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         style: 'display: contents',

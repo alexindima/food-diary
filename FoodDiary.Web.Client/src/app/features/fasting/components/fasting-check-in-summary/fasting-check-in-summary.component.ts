@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { FastingCheckInViewModel } from '../../pages/fasting-page.types';
+import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
 
 @Component({
     selector: 'fd-fasting-check-in-summary',

@@ -1,0 +1,16 @@
+@if (alerts().length > 0) {
+    <div class="fasting__alerts-section">
+        @for (alert of alerts(); track alert.message.id) {
+            <fd-ui-inline-alert
+                appearance="alert"
+                [severity]="alert.severity"
+                [title]="alert.title"
+                [message]="alert.body"
+                [primaryActionLabel]="'FASTING.PROMPTS.SNOOZE' | translate"
+                [secondaryActionLabel]="'FASTING.PROMPTS.DISMISS' | translate"
+                (primaryAction)="promptSnooze.emit(alert.message.id)"
+                (secondaryAction)="promptDismiss.emit(alert.message.id)"
+            />
+        }
+    </div>
+}

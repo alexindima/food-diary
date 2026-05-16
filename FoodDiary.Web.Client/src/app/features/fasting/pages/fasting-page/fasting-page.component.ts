@@ -1,78 +1,70 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import type { FdUiChipSelectOption, FdUiEmojiPickerOption } from 'fd-ui-kit';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInlineAlertComponent, type FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
+import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { EMPTY, type Observable } from 'rxjs';
 
-import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
-import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
-import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { LocalizationService } from '../../../services/localization.service';
-import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../shared/lib/time.constants';
-import { FastingCheckInCardComponent } from '../components/fasting-check-in-card/fasting-check-in-card.component';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { LocalizationService } from '../../../../services/localization.service';
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
+import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../../shared/lib/time.constants';
+import { FastingCheckInCardComponent } from '../../components/fasting-check-in-card/fasting-check-in-card.component';
 import {
     FastingCheckInChartDialogComponent,
     type FastingCheckInChartDialogData,
-} from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
-import { FastingHistoryCardComponent } from '../components/fasting-history-card/fasting-history-card.component';
-import { FastingInsightsSectionComponent } from '../components/fasting-insights-section/fasting-insights-section.component';
-import { FastingTimerCardComponent } from '../components/fasting-timer-card/fasting-timer-card.component';
+} from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
+import { FastingHistoryCardComponent } from '../../components/fasting-history-card/fasting-history-card.component';
+import { FastingInsightsSectionComponent } from '../../components/fasting-insights-section/fasting-insights-section.component';
+import { FastingTimerCardComponent } from '../../components/fasting-timer-card/fasting-timer-card.component';
 import {
     CURRENT_SESSION_RECENT_CHECK_INS_LIMIT,
     DEFAULT_CYCLIC_EAT_DAYS,
     DEFAULT_CYCLIC_EAT_FAST_HOURS,
     DEFAULT_CYCLIC_EAT_WINDOW_HOURS,
     DEFAULT_CYCLIC_FAST_DAYS,
-} from '../lib/fasting.constants';
-import { FastingFacade } from '../lib/fasting.facade';
+} from '../../lib/fasting.constants';
+import { FastingFacade } from '../../lib/fasting.facade';
 import {
     FASTING_ENERGY_EMOJI_SCALE,
     FASTING_HUNGER_EMOJI_SCALE,
     FASTING_MOOD_EMOJI_SCALE,
     FASTING_SESSION_CHECK_INS_PAGE_SIZE,
-    type FastingEmojiScaleOption,
-} from '../lib/fasting-page.constants';
+} from '../../lib/fasting-page.constants';
 import {
     FASTING_PROTOCOLS,
-    FASTING_SYMPTOM_OPTIONS,
     type FastingCheckIn,
     type FastingMessage,
     type FastingSession,
     type FastingSessionStatus,
-    type FastingStats,
-} from '../models/fasting.data';
+} from '../../models/fasting.data';
 import type {
     FastingCheckInViewModel,
     FastingHistorySessionViewModel,
     FastingMessageViewModel,
-    FastingStatsViewModel,
-} from './fasting-page.types';
+} from '../fasting-page-lib/fasting-page.types';
+import { FastingAlertsSectionComponent } from '../fasting-page-sections/alerts-section/fasting-alerts-section.component';
+import { FastingStatsCardComponent } from '../fasting-page-sections/stats-card/fasting-stats-card.component';
 
 @Component({
     selector: 'fd-fasting-page',
     standalone: true,
     imports: [
-        DecimalPipe,
         TranslatePipe,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         SkeletonCardComponent,
-        FdUiCardComponent,
-        FdUiAccentSurfaceComponent,
-        FdUiInlineAlertComponent,
         FastingTimerCardComponent,
         FastingHistoryCardComponent,
         FastingInsightsSectionComponent,
         FastingCheckInCardComponent,
+        FastingStatsCardComponent,
+        FastingAlertsSectionComponent,
     ],
     templateUrl: './fasting-page.component.html',
     styleUrl: './fasting-page.component.scss',
@@ -104,38 +96,8 @@ export class FastingPageComponent {
     public readonly hungerEmojiScale = FASTING_HUNGER_EMOJI_SCALE;
     public readonly energyEmojiScale = FASTING_ENERGY_EMOJI_SCALE;
     public readonly moodEmojiScale = FASTING_MOOD_EMOJI_SCALE;
-    public readonly hungerEmojiOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.HUNGER', this.hungerEmojiScale));
-    public readonly energyEmojiOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.ENERGY', this.energyEmojiScale));
-    public readonly moodEmojiOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.MOOD', this.moodEmojiScale));
-    public readonly symptomOptions = FASTING_SYMPTOM_OPTIONS;
-    public readonly symptomChipOptions = computed(() => {
-        this.currentLanguage();
-
-        return this.symptomOptions.map<FdUiChipSelectOption>(symptom => {
-            const label = this.translateService.instant(symptom.labelKey);
-            return {
-                value: symptom.value,
-                label,
-                ariaLabel: label,
-                hint: label,
-            };
-        });
-    });
     public readonly alerts = computed(() => this.facade.insightsData().alerts);
     public readonly insights = computed(() => this.facade.insightsData().insights);
-    public readonly statsView = computed<FastingStatsViewModel | null>(() => {
-        this.currentLanguage();
-        const stats = this.stats();
-        if (stats === null) {
-            return null;
-        }
-
-        return {
-            stats,
-            hasPersonalSummary: this.hasPersonalSummary(stats),
-            topSymptomLabel: this.getTopSymptomLabel(stats.topSymptom),
-        };
-    });
     public readonly visibleAlertItems = computed(() => {
         this.currentLanguage();
         const session = this.currentSession();
@@ -160,16 +122,12 @@ export class FastingPageComponent {
     public readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
     public readonly isCheckInExpanded = signal(false);
     public readonly expandedHistorySessionId = signal<string | null>(null);
-    public readonly hasCurrentCheckIn = computed(() => this.getCurrentSessionLatestCheckIn() !== null);
     public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
     public readonly currentSessionLatestCheckInView = computed<FastingCheckInViewModel | null>(() => {
         this.currentLanguage();
         const checkIn = this.currentSessionLatestCheckIn();
         return checkIn === null ? null : this.buildCheckInViewModel(checkIn);
     });
-    public readonly currentCheckInCtaKey = computed(() =>
-        this.hasCurrentCheckIn() ? 'FASTING.CHECK_IN.UPDATE_ACTION' : 'FASTING.CHECK_IN.ADD_ACTION',
-    );
     public readonly currentSessionRecentCheckIns = computed(() => {
         const session = this.currentSession();
         if (session === null) {
@@ -196,14 +154,6 @@ export class FastingPageComponent {
             this.isCheckInExpanded.set(false);
             this.toastService.success(this.translateService.instant('FASTING.CHECK_IN.SAVED_TOAST'));
         });
-    }
-
-    public toggleSymptom(symptom: string): void {
-        this.facade.toggleSymptom(symptom);
-    }
-
-    public onCheckInNotesChange(value: string): void {
-        this.facade.setCheckInNotes(value);
     }
 
     public saveCheckIn(): void {
@@ -333,20 +283,6 @@ export class FastingPageComponent {
         return `${baseLabel} (${addedHours} ${hoursLabel})`;
     }
 
-    public hasPersonalSummary(stats: FastingStats | null): boolean {
-        return (
-            stats !== null &&
-            (stats.completionRateLast30Days > 0 ||
-                stats.checkInRateLast30Days > 0 ||
-                stats.lastCheckInAtUtc !== null ||
-                stats.topSymptom !== null)
-        );
-    }
-
-    public getTopSymptomLabel(symptom: string | null): string {
-        return symptom === null ? this.translateService.instant('FASTING.PERSONAL_SUMMARY.NO_SYMPTOM') : this.getSymptomLabel(symptom);
-    }
-
     public hasCheckIn(session: FastingSession): boolean {
         return this.getSessionCheckIns(session).length > 0;
     }
@@ -440,21 +376,6 @@ export class FastingPageComponent {
 
     public getHistoryCheckInRegionId(sessionId: string): string {
         return `fasting-history-checkins-${sessionId}`;
-    }
-
-    private buildEmojiPickerOptions(labelKey: string, scale: FastingEmojiScaleOption[]): Array<FdUiEmojiPickerOption<number>> {
-        this.currentLanguage();
-
-        const label = this.translateService.instant(labelKey);
-        return scale.map(option => {
-            const text = `${label} ${option.value}/5`;
-            return {
-                value: option.value,
-                emoji: option.emoji,
-                ariaLabel: text,
-                hint: text,
-            };
-        });
     }
 
     private formatHistoryDuration(baseHours: number, addedHours: number, hoursLabel: string): string {

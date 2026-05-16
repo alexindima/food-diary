@@ -5,8 +5,8 @@ import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
-import type { FastingMode, FastingProtocol } from '../../models/fasting.data';
-import { FastingCyclicSetupControlsComponent } from './fasting-cyclic-setup-controls.component';
+import type { FastingMode, FastingProtocol } from '../../../models/fasting.data';
+import { FastingCyclicSetupControlsComponent } from '../cyclic-setup/fasting-cyclic-setup-controls.component';
 
 @Component({
     selector: 'fd-fasting-setup-controls',
@@ -19,7 +19,7 @@ import { FastingCyclicSetupControlsComponent } from './fasting-cyclic-setup-cont
         FastingCyclicSetupControlsComponent,
     ],
     templateUrl: './fasting-setup-controls.component.html',
-    styleUrl: './fasting-controls.component.scss',
+    styleUrl: '../fasting-controls.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         style: 'display: contents',

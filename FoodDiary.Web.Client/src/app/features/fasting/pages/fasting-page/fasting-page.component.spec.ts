@@ -6,10 +6,10 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LocalizationService } from '../../../services/localization.service';
-import type { FastingCheckInChartDialogData } from '../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
-import { FastingFacade } from '../lib/fasting.facade';
-import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
+import { LocalizationService } from '../../../../services/localization.service';
+import type { FastingCheckInChartDialogData } from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component';
+import { FastingFacade } from '../../lib/fasting.facade';
+import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../../models/fasting.data';
 import { FastingPageComponent } from './fasting-page.component';
 
 const SESSION_CHECK_INS_BEYOND_PAGE_SIZE = 6;
@@ -35,7 +35,7 @@ describe('FastingPageComponent setup and actions', () => {
         expect(facade.initialize).toHaveBeenCalledTimes(1);
     });
 
-    it('returns update CTA when current check-in exists', () => {
+    it('builds current check-in timeline when current check-in exists', () => {
         facade.currentSession.set({
             ...createSession(),
             checkIns: [
@@ -51,7 +51,6 @@ describe('FastingPageComponent setup and actions', () => {
             ],
         });
 
-        expect(component.currentCheckInCtaKey()).toBe('FASTING.CHECK_IN.UPDATE_ACTION');
         expect(component.hasCurrentSessionTimeline()).toBe(true);
         expect(component.currentSessionRecentCheckIns()).toHaveLength(1);
     });
