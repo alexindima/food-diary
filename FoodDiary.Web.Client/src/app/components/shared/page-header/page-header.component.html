@@ -5,8 +5,10 @@
             <p class="fd-page-subtitle">{{ subtitle() }}</p>
         }
     </div>
-    <div class="fd-page-header__actions fd-row fd-gap-page-header-actions fd-wrap">
-        <ng-content select="[fdPageHeaderActions]" />
+    <div class="fd-page-header__actions">
+        <fd-header-actions-overflow>
+            <ng-content select="[fdPageHeaderActions]" />
+        </fd-header-actions-overflow>
     </div>
     <div class="fd-page-header__extra">
         <ng-content select="[fdPageHeaderExtra]" />

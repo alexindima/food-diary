@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
+import { HeaderActionsOverflowComponent } from '../header-actions-overflow/header-actions-overflow.component';
+
 @Component({
     selector: 'fd-page-header',
+    imports: [HeaderActionsOverflowComponent],
     templateUrl: './page-header.component.html',
     styleUrls: ['./page-header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

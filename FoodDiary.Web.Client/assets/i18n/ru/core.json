@@ -24,7 +24,8 @@
         "DELETE": "Удалить",
         "SAVE": "Сохранить",
         "CONFIRM": "Подтвердить",
-        "LOADING": "Загрузка"
+        "LOADING": "Загрузка",
+        "MORE_ACTIONS": "Ещё действия"
     },
     "GENERAL": {
         "UNITS": {

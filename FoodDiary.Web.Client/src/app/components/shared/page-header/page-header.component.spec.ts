@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { PageHeaderComponent } from './page-header.component';
@@ -9,7 +10,7 @@ describe('PageHeaderComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [PageHeaderComponent],
+            imports: [PageHeaderComponent, TranslateModule.forRoot()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PageHeaderComponent);

@@ -24,7 +24,8 @@
         "DELETE": "Delete",
         "SAVE": "Save",
         "CONFIRM": "Confirm",
-        "LOADING": "Loading"
+        "LOADING": "Loading",
+        "MORE_ACTIONS": "More actions"
     },
     "GENERAL": {
         "UNITS": {

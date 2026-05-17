@@ -11,8 +11,12 @@
         <p class="dashboard__subtitle fd-ui-page-subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
     </div>
 
-    <div class="dashboard__header-actions fd-row fd-align-start fd-justify-end fd-wrap fd-gap-sm">
-        <div class="dashboard__date-group fd-inline-center">
+    <fd-header-actions-overflow class="dashboard__header-actions" gap="sm">
+        <div
+            class="dashboard__date-group fd-inline-center"
+            data-fd-overflow-icon="calendar_today"
+            [attr.data-fd-overflow-label]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
+        >
             <fd-ui-date-picker-button
                 class="dashboard__date-button"
                 [value]="selectedDate()"
@@ -59,5 +63,5 @@
             [attr.aria-pressed]="isEditingLayout()"
             (click)="settingsOpen.emit()"
         />
-    </div>
+    </fd-header-actions-overflow>
 </header>
