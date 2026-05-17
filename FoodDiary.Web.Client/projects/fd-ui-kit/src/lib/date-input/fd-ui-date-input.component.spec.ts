@@ -148,6 +148,27 @@ function registerStateTests(): void {
             expect(errorEl).toBeNull();
         });
 
+        it('should not apply error class when error is omitted', () => {
+            const container = requireElement('.fd-ui-date-input');
+            expect(container.classList).not.toContain('fd-ui-date-input--has-error');
+        });
+
+        it('should not apply error class when error is empty', () => {
+            fixture.componentRef.setInput('error', '');
+            fixture.detectChanges();
+
+            const container = requireElement('.fd-ui-date-input');
+            expect(container.classList).not.toContain('fd-ui-date-input--has-error');
+        });
+
+        it('should apply error class when error is provided', () => {
+            fixture.componentRef.setInput('error', 'Date is required');
+            fixture.detectChanges();
+
+            const container = requireElement('.fd-ui-date-input');
+            expect(container.classList).toContain('fd-ui-date-input--has-error');
+        });
+
         it('should apply size class', () => {
             fixture.componentRef.setInput('size', 'lg');
             fixture.detectChanges();

@@ -177,6 +177,31 @@ describe('FdUiSelectComponent classes', () => {
         const selectEl = requireElement('.fd-ui-select');
         expect(selectEl.classList).toContain('fd-ui-select--size-lg');
     });
+
+    it('should not apply error class when error is omitted', async () => {
+        const { requireElement } = await setupSelectAsync();
+
+        const selectEl = requireElement('.fd-ui-select');
+        expect(selectEl.classList).not.toContain('fd-ui-select--has-error');
+    });
+
+    it('should not apply error class when error is empty', async () => {
+        const { fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('error', '');
+        fixture.detectChanges();
+
+        const selectEl = requireElement('.fd-ui-select');
+        expect(selectEl.classList).not.toContain('fd-ui-select--has-error');
+    });
+
+    it('should apply error class when error is provided', async () => {
+        const { fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('error', 'Required');
+        fixture.detectChanges();
+
+        const selectEl = requireElement('.fd-ui-select');
+        expect(selectEl.classList).toContain('fd-ui-select--has-error');
+    });
 });
 
 describe('FdUiSelectComponent overlay', () => {

@@ -47,10 +47,15 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     protected readonly sizeClass = computed(() => `fd-ui-time-input--size-${this.size()}`);
+    protected readonly hasError = computed(() => {
+        const error = this.error();
+
+        return error !== null && error !== undefined && error.trim().length > 0;
+    });
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-time-input ${this.sizeClass()}${this.error() !== null ? ' fd-ui-time-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-time-input--floating' : ''}`,
+            `fd-ui-time-input ${this.sizeClass()}${this.hasError() ? ' fd-ui-time-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-time-input--floating' : ''}`,
     );
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? 'HH:mm') : null));

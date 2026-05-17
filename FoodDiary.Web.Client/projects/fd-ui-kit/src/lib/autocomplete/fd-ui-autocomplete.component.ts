@@ -67,10 +67,15 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     private onTouched: () => void = () => undefined;
 
     protected readonly sizeClass = computed(() => `fd-ui-autocomplete--size-${this.size()}`);
+    protected readonly hasError = computed(() => {
+        const error = this.error();
+
+        return error !== null && error !== undefined && error.trim().length > 0;
+    });
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.queryText().trim().length > 0);
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-autocomplete ${this.sizeClass()}${this.error() !== null ? ' fd-ui-autocomplete--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-autocomplete--floating' : ''}`,
+            `fd-ui-autocomplete ${this.sizeClass()}${this.hasError() ? ' fd-ui-autocomplete--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-autocomplete--floating' : ''}`,
     );
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.queryText().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
