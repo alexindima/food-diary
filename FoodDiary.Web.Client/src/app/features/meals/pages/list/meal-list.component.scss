@@ -114,13 +114,6 @@
         --fd-layout-page-horizontal-padding: 0;
         --fd-layout-page-vertical-padding: 0;
 
-        &__header {
-            padding: var(--fd-space-xs) var(--fd-space-sm);
-            margin: 0;
-            border-bottom: var(--fd-border-muted);
-            background: var(--fd-bg-surface-inset);
-        }
-
         &__mobile-toolbar {
             display: flex;
         }

@@ -291,7 +291,7 @@ $color-text-secondary: var(--fd-color-text-muted);
             margin: 0 calc(var(--fd-layout-page-horizontal-padding) * -1);
             width: calc(100% + var(--fd-layout-page-horizontal-padding) * 2);
             box-sizing: border-box;
-            border-bottom: var(--fd-border-muted);
+            border-bottom: var(--fd-border-width) solid var(--fd-page-header-mobile-border-color);
             background: var(--fd-page-header-mobile-background);
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
