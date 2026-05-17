@@ -288,7 +288,9 @@ $color-text-secondary: var(--fd-color-text-muted);
         // stylelint-disable-next-line rule-empty-line-before
         &__header {
             padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-xs);
-            margin: 0;
+            margin: 0 calc(var(--fd-layout-page-horizontal-padding) * -1);
+            width: calc(100% + var(--fd-layout-page-horizontal-padding) * 2);
+            box-sizing: border-box;
             border-bottom: var(--fd-border-muted);
             background: var(--fd-page-header-mobile-background);
             display: grid;
