@@ -53,7 +53,7 @@ describe('MealPlanService', () => {
             expect(result).toEqual(plan);
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}//plan-1`);
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/plan-1`);
         expect(request.request.method).toBe('GET');
         request.flush(plan);
     });
@@ -65,7 +65,7 @@ describe('MealPlanService', () => {
             expect(result).toEqual(plan);
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}//plan-1/adopt`);
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/plan-1/adopt`);
         expect(request.request.method).toBe('POST');
         request.flush(plan);
     });
@@ -77,7 +77,7 @@ describe('MealPlanService', () => {
             expect(result).toEqual(shoppingList);
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}//plan-1/shopping-list`);
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/plan-1/shopping-list`);
         expect(request.request.method).toBe('POST');
         request.flush(shoppingList);
     });

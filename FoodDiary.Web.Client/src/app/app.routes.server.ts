@@ -54,6 +54,22 @@ export const serverRoutes: ServerRoute[] = [
         renderMode: RenderMode.Prerender,
     },
     {
+        path: 'nutrition-tracker',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'food-log',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'protein-tracker',
+        renderMode: RenderMode.Prerender,
+    },
+    {
+        path: 'meal-prep-planner',
+        renderMode: RenderMode.Prerender,
+    },
+    {
         path: 'auth',
         renderMode: RenderMode.Client,
     },

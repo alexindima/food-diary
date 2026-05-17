@@ -34,6 +34,16 @@ describe('unsavedChangesGuard', () => {
         expect(handler.save).toHaveBeenCalled();
     });
 
+    it('should block navigation when save returns false', async () => {
+        const handler = createHandler({ hasChanges: true, saveResult: false });
+        setupGuard(handler, 'save');
+
+        const result = await runGuard();
+
+        expect(result).toBe(false);
+        expect(handler.save).toHaveBeenCalled();
+    });
+
     it('should discard changes when dialog returns discard', async () => {
         const handler = createHandler({ hasChanges: true });
         setupGuard(handler, 'discard');
@@ -74,10 +84,10 @@ function setupGuard(handler: UnsavedChangesHandler | null, dialogResult?: 'save'
     });
 }
 
-function createHandler(options: { hasChanges: boolean }): UnsavedChangesHandler {
+function createHandler(options: { hasChanges: boolean; saveResult?: boolean }): UnsavedChangesHandler {
     return {
         hasChanges: vi.fn().mockReturnValue(options.hasChanges),
-        save: vi.fn().mockResolvedValue(undefined),
+        save: vi.fn().mockResolvedValue(options.saveResult),
         discard: vi.fn(),
     };
 }

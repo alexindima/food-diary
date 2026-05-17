@@ -112,7 +112,7 @@
             "PASSWORD_PLACEHOLDER": "Придумайте надежный пароль",
             "CONFIRM_PASSWORD": "Подтвердите пароль",
             "CONFIRM_PASSWORD_PLACEHOLDER": "Повторите пароль",
-            "AGREE_TO_TERMS": "Я соглашаюсь с <a href='{{termsUrl}}'>Условиями использования</a> и <a href='{{privacyUrl}}'>Политикой конфиденциальности</a>",
+            "AGREE_TO_TERMS": "Я соглашаюсь с <a href='{{privacyUrl}}'>Политикой конфиденциальности</a>",
             "REGISTER": "Зарегистрироваться",
             "ACCOUNT_DELETED": "Этот email привязан к удаленному аккаунту. Пожалуйста, восстановите его."
         },

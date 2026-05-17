@@ -33,7 +33,7 @@ export const unsavedChangesGuard: CanDeactivateFn<unknown> = () => {
         .pipe(
             switchMap(result => {
                 if (result === 'save') {
-                    return toObservable(handler.save()).pipe(switchMap(() => of(true)));
+                    return toObservable(handler.save()).pipe(switchMap(saveResult => of(saveResult !== false)));
                 }
                 if (result === 'discard') {
                     handler.discard();

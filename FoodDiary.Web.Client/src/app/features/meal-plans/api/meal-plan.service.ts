@@ -22,18 +22,18 @@ export class MealPlanService extends ApiService {
     }
 
     public getById(id: string): Observable<MealPlan> {
-        return super.get<MealPlan>(`/${id}`).pipe(catchError((error: unknown) => rethrowApiError('Get meal plan error', error)));
+        return super.get<MealPlan>(id).pipe(catchError((error: unknown) => rethrowApiError('Get meal plan error', error)));
     }
 
     public adopt(id: string): Observable<MealPlan> {
         return super
-            .post<MealPlan>(`/${id}/adopt`, {})
+            .post<MealPlan>(`${id}/adopt`, {})
             .pipe(catchError((error: unknown) => rethrowApiError('Adopt meal plan error', error)));
     }
 
     public generateShoppingList(id: string): Observable<ShoppingList> {
         return super
-            .post<ShoppingList>(`/${id}/shopping-list`, {})
+            .post<ShoppingList>(`${id}/shopping-list`, {})
             .pipe(catchError((error: unknown) => rethrowApiError('Generate shopping list error', error)));
     }
 }

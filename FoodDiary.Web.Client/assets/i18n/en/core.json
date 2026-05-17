@@ -112,7 +112,7 @@
             "PASSWORD_PLACEHOLDER": "Choose a secure password",
             "CONFIRM_PASSWORD": "Confirm password",
             "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat the password",
-            "AGREE_TO_TERMS": "I agree to the <a href='{{termsUrl}}'>Terms of Use</a> and <a href='{{privacyUrl}}'>Privacy Policy</a>",
+            "AGREE_TO_TERMS": "I agree to the <a href='{{privacyUrl}}'>Privacy Policy</a>",
             "REGISTER": "Register",
             "ACCOUNT_DELETED": "This email belongs to a deleted account. Please restore it instead."
         },
