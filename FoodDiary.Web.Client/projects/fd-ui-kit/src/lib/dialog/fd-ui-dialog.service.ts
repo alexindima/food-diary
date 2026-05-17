@@ -51,6 +51,7 @@ export class FdUiDialogService {
             panelClass: this.withSizeClass(layout.panelClass, size),
             backdropClass: layout.backdropClass,
             autoFocus: config.autoFocus ?? 'first-tabbable',
+            scrollStrategy: config.scrollStrategy ?? this.overlay.scrollStrategies.block(),
             providers: cdkDialogRef => {
                 const wrappedRef = new FdUiDialogRef<T, R>(cdkDialogRef);
                 return [{ provide: FdUiDialogRef, useValue: wrappedRef }, ...baseProviders] as StaticProvider[];

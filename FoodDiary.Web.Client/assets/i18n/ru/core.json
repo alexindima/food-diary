@@ -59,6 +59,9 @@
         "WAIST_HISTORY": "История талии",
         "CYCLE_TRACKING": "Отслеживание цикла",
         "LOGOUT": "Выход",
+        "LOGOUT_CONFIRM_TITLE": "Выйти из аккаунта?",
+        "LOGOUT_CONFIRM_MESSAGE": "Чтобы продолжить пользоваться аккаунтом, нужно будет войти снова.",
+        "LOGOUT_CONFIRM_ACTION": "Выйти",
         "MENU": "Меню"
     },
     "FOOTER": {

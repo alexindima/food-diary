@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, type ElementRef, input, output, viewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 import type { MobileSheetId, SidebarActionId, SidebarDirectRouteRequest, SidebarRouteItem } from '../sidebar-lib/sidebar.models';
 import { BODY_TRACKING_ITEMS, FOOD_TRACKING_ITEMS, MOBILE_REPORT_ITEMS } from '../sidebar-lib/sidebar-navigation.config';
@@ -10,11 +10,11 @@ import {
     getSidebarMobileSheetLabelKey,
     getSidebarMobileSheetRouteItems,
 } from '../sidebar-lib/sidebar-view.utils';
-import { SidebarMobileSheetComponent } from '../sidebar-mobile-sheet/sidebar-mobile-sheet.component';
+import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route-links.component';
 
 @Component({
     selector: 'fd-sidebar-mobile',
-    imports: [RouterModule, FdUiIconComponent, SidebarMobileSheetComponent, TranslatePipe],
+    imports: [RouterModule, FdUiHintDirective, FdUiIconComponent, SidebarRouteLinksComponent, TranslatePipe],
     templateUrl: './sidebar-mobile.component.html',
     styleUrl: '../sidebar.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

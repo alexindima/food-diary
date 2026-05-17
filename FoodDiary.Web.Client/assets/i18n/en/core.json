@@ -59,6 +59,9 @@
         "WAIST_HISTORY": "Waist history",
         "CYCLE_TRACKING": "Cycle tracking",
         "LOGOUT": "Logout",
+        "LOGOUT_CONFIRM_TITLE": "Log out?",
+        "LOGOUT_CONFIRM_MESSAGE": "You will need to sign in again to continue using your account.",
+        "LOGOUT_CONFIRM_ACTION": "Log out",
         "MENU": "Menu"
     },
     "FOOTER": {

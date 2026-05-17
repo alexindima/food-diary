@@ -76,17 +76,28 @@ describe('SidebarComponent behavior', () => {
     it('does not logout when unsaved changes confirmation is cancelled', async () => {
         const { authService, component, dialogService } = createComponent();
         const harness = component as unknown as SidebarHarness;
-        dialogService.open.mockReturnValue({ afterClosed: () => of(null) });
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) }).mockReturnValueOnce({ afterClosed: () => of(null) });
 
         await harness.logoutAsync();
 
         expect(authService.onLogoutAsync).not.toHaveBeenCalled();
     });
 
+    it('does not logout when logout confirmation is cancelled', async () => {
+        const { authService, component, dialogService, unsavedHandler } = createComponent();
+        const harness = component as unknown as SidebarHarness;
+        dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
+
+        await harness.logoutAsync();
+
+        expect(unsavedHandler.hasChanges).not.toHaveBeenCalled();
+        expect(authService.onLogoutAsync).not.toHaveBeenCalled();
+    });
+
     it('discards unsaved changes before logout when confirmed', async () => {
         const { authService, component, dialogService, unsavedHandler } = createComponent();
         const harness = component as unknown as SidebarHarness;
-        dialogService.open.mockReturnValue({ afterClosed: () => of('discard') });
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) }).mockReturnValueOnce({ afterClosed: () => of('discard') });
 
         await harness.logoutAsync();
 

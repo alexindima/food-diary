@@ -5,6 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiDialogService } from './fd-ui-dialog.service';
+import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
 
 @Component({
     template: '',
@@ -21,13 +22,16 @@ type StrategyMock = {
 type DialogServiceTestContext = {
     open: DialogOpenMock;
     service: FdUiDialogService;
+    scrollStrategy: unknown;
     strategy: StrategyMock;
 };
 
 function createOverlayMock(): {
     overlayMock: Overlay;
+    scrollStrategy: unknown;
     strategy: StrategyMock;
 } {
+    const scrollStrategy = {};
     const strategy: StrategyMock = {
         centerHorizontally: vi.fn<() => GlobalPositionStrategy>(),
         top: vi.fn<(value: string) => GlobalPositionStrategy>(),
@@ -42,10 +46,14 @@ function createOverlayMock(): {
         position: vi.fn().mockReturnValue({
             global: vi.fn().mockReturnValue(strategy),
         }),
+        scrollStrategies: {
+            block: vi.fn().mockReturnValue(scrollStrategy),
+        },
     } as unknown as Overlay;
 
     return {
         overlayMock,
+        scrollStrategy,
         strategy,
     };
 }
@@ -75,7 +83,7 @@ function setupDialogService(matches: boolean): DialogServiceTestContext {
 
     const open = createDialogOpenMock();
     const dialogMock = createDialogMock(open);
-    const { overlayMock, strategy } = createOverlayMock();
+    const { overlayMock, scrollStrategy, strategy } = createOverlayMock();
 
     TestBed.configureTestingModule({
         providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
@@ -83,7 +91,7 @@ function setupDialogService(matches: boolean): DialogServiceTestContext {
 
     const service = TestBed.inject(FdUiDialogService);
 
-    return { open, service, strategy };
+    return { open, scrollStrategy, service, strategy };
 }
 
 afterEach(() => {
@@ -120,12 +128,26 @@ describe('FdUiDialogService panel classes', () => {
 });
 
 describe('FdUiDialogService options', () => {
+    it('uses the app mobile breakpoint for compact dialogs', () => {
+        TestBed.configureTestingModule({});
+
+        expect(TestBed.inject(FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY)).toBe('(max-width: 768px)');
+    });
+
     it('uses first tabbable autofocus by default', () => {
         const { open, service } = setupDialogService(false);
         service.open(DummyDialogComponent);
 
         expect(open).toHaveBeenCalledTimes(1);
         expect(latestConfig(open).autoFocus).toBe('first-tabbable');
+    });
+
+    it('blocks page scroll by default while a dialog is open', () => {
+        const { open, scrollStrategy, service } = setupDialogService(false);
+        service.open(DummyDialogComponent);
+
+        expect(open).toHaveBeenCalledTimes(1);
+        expect(latestConfig(open).scrollStrategy).toBe(scrollStrategy);
     });
 
     it('sets desktop panel width from the resolved dialog size', () => {

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
@@ -331,6 +332,11 @@ export class SidebarComponent {
     }
 
     protected async logoutAsync(): Promise<void> {
+        const confirmed = await this.confirmLogoutAsync();
+        if (!confirmed) {
+            return;
+        }
+
         const canLogout = await this.confirmUnsavedChangesAsync();
         if (!canLogout) {
             return;
@@ -339,6 +345,25 @@ export class SidebarComponent {
         await this.authService.onLogoutAsync(true);
         this.closeUserMenu();
         this.closeMobileMenus();
+    }
+
+    private async confirmLogoutAsync(): Promise<boolean> {
+        const result = await firstValueFrom(
+            this.dialogService
+                .open(FdUiConfirmDialogComponent, {
+                    preset: 'confirm',
+                    data: {
+                        title: this.translateService.instant('HEADER.LOGOUT_CONFIRM_TITLE'),
+                        message: this.translateService.instant('HEADER.LOGOUT_CONFIRM_MESSAGE'),
+                        confirmLabel: this.translateService.instant('HEADER.LOGOUT_CONFIRM_ACTION'),
+                        cancelLabel: this.translateService.instant('COMMON.CANCEL'),
+                        danger: true,
+                    },
+                })
+                .afterClosed(),
+        );
+
+        return result === true;
     }
 
     private async confirmUnsavedChangesAsync(): Promise<boolean> {

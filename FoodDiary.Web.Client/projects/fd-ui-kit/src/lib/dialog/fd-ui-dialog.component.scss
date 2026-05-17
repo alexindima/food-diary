@@ -310,7 +310,7 @@
     }
 }
 
-@media #{variables.$media-sm} {
+@media #{variables.$media-tablet} {
 
     /* stylelint-disable declaration-no-important -- Angular CDK writes inline overlay pane geometry for dialogs. */
 
