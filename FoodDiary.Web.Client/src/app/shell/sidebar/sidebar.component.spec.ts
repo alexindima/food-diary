@@ -20,6 +20,7 @@ const NAVIGATION_ID = 1;
 const ADMIN_LOADING_TTL_MS = 100;
 
 type SidebarHarness = {
+    closeMobileMenus: () => void;
     logoutAsync: () => Promise<void>;
     mobileSheet: WritableSignal<MobileSheetId>;
     onRouteSelected: (item: SidebarRouteItem) => void;
@@ -42,6 +43,7 @@ describe('SidebarComponent behavior', () => {
     });
 
     afterEach(() => {
+        document.body.classList.remove('fd-scroll-lock');
         vi.restoreAllMocks();
     });
 
@@ -71,6 +73,21 @@ describe('SidebarComponent behavior', () => {
 
         expect(harness.mobileSheet()).toBeNull();
         expect(focusSpy).toHaveBeenCalledOnce();
+    });
+
+    it('blocks page scroll while a mobile sheet is open', () => {
+        const { component } = createComponent({ isMobileViewport: true });
+        const harness = component as unknown as SidebarHarness;
+
+        harness.toggleMobileFood(document.createElement('button'));
+        TestBed.tick();
+
+        expect(document.body.classList.contains('fd-scroll-lock')).toBe(true);
+
+        harness.closeMobileMenus();
+        TestBed.tick();
+
+        expect(document.body.classList.contains('fd-scroll-lock')).toBe(false);
     });
 
     it('does not logout when unsaved changes confirmation is cancelled', async () => {
@@ -106,7 +123,7 @@ describe('SidebarComponent behavior', () => {
     });
 });
 
-function createComponent(): {
+function createComponent(options: { isMobileViewport?: boolean } = {}): {
     authService: { onLogoutAsync: ReturnType<typeof vi.fn> };
     component: SidebarComponent;
     dialogService: { open: ReturnType<typeof vi.fn> };
@@ -114,6 +131,15 @@ function createComponent(): {
     routerEvents: Subject<unknown>;
     unsavedHandler: { discard: ReturnType<typeof vi.fn>; hasChanges: ReturnType<typeof vi.fn>; save: ReturnType<typeof vi.fn> };
 } {
+    Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        value: vi.fn(() => ({
+            matches: options.isMobileViewport ?? false,
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+        })),
+    });
+
     const routerEvents = new Subject<unknown>();
     const router = { events: routerEvents, url: '/' };
     const authService = createAuthServiceMock();

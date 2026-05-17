@@ -140,6 +140,17 @@ export class SidebarComponent {
             }
         });
 
+        effect(onCleanup => {
+            if (!this.isMobileViewport() || !this.isMobileSheetOpen()) {
+                return;
+            }
+
+            this.document.body.classList.add('fd-scroll-lock');
+            onCleanup(() => {
+                this.document.body.classList.remove('fd-scroll-lock');
+            });
+        });
+
         const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia(this.mobileViewportQuery);
         const updateMobileViewport = (): void => {
             this.isMobileViewport.set(this.getIsMobileViewport());
