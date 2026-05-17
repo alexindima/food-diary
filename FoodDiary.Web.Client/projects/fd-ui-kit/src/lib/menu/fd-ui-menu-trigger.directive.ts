@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import type { FdUiMenuComponent } from './fd-ui-menu.component';
 
 const MENU_OFFSET_Y = 8;
+const MENU_VIEWPORT_MARGIN = 8;
 
 @Directive({
     selector: '[fdUiMenuTrigger]',
@@ -165,6 +166,7 @@ export class FdUiMenuTriggerDirective {
                 .withLockedPosition()
                 .withFlexibleDimensions(false)
                 .withPush(true)
+                .withViewportMargin(MENU_VIEWPORT_MARGIN)
                 .withPositions(this.positions),
             scrollStrategy: this.overlay.scrollStrategies.reposition(),
             panelClass: 'fd-ui-menu-panel',
