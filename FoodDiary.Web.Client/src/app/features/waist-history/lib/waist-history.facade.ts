@@ -5,6 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
+import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
+import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
@@ -54,9 +56,7 @@ export class WaistHistoryFacade {
         circumference: ['', [Validators.required, Validators.min(MIN_WAIST_CM), Validators.max(MAX_WAIST_CM)]],
     });
 
-    public readonly entriesDescending = computed(() =>
-        [...this.entries()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
-    );
+    public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
 
     public readonly chartData = computed(() =>
         buildWaistHistoryChartData(
@@ -237,8 +237,8 @@ export class WaistHistoryFacade {
             return null;
         }
 
-        const parsedValue = Number(rawValue.replace(',', '.'));
-        return Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > MAX_DESIRED_WAIST_CM ? undefined : parsedValue;
+        const parsedValue = parseDecimalInput(rawValue);
+        return parsedValue === null || parsedValue <= 0 || parsedValue > MAX_DESIRED_WAIST_CM ? undefined : parsedValue;
     }
 
     private loadEntries(showLoader = true, force = false): void {
@@ -267,7 +267,7 @@ export class WaistHistoryFacade {
             .subscribe(entries => {
                 this.entries.set(entries);
                 if (!this.isEditing() && entries.length > 0) {
-                    const latest = [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+                    const latest = [...entries].sort((a, b) => compareDatesDesc(a.date, b.date))[0];
                     this.form.patchValue({
                         circumference: latest.circumference.toString(),
                     });

@@ -1,6 +1,7 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 
+import { formatDateInputValue } from '../../../../../shared/lib/local-date.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { type ActivityLevelOption, Gender, type User } from '../../../../../shared/models/user.data';
 import {
@@ -13,8 +14,6 @@ import {
 } from '../../../../../theme/app-theme.config';
 import { ACTIVITY_LEVEL_OPTIONS, DEFAULT_DIETOLOGIST_PERMISSIONS, LANGUAGE_CODES } from './user-manage.config';
 import type { DietologistFormData, UserFormData, UserFormValues } from './user-manage.types';
-
-const DATE_INPUT_PAD_LENGTH = 2;
 
 export type UserManageSelectOptions = {
     genderOptions: Array<FdUiSelectOption<Gender | null>>;
@@ -163,7 +162,7 @@ function normalizeUiStyle(value: string | null | undefined): AppUiStyleName | nu
 }
 
 function mapUserBirthDate(value: Date | string | null | undefined): string | null {
-    return value !== null && value !== undefined ? formatDateInput(new Date(value)) : null;
+    return value !== null && value !== undefined ? formatDateInputValue(new Date(value)) : null;
 }
 
 function mapUserActivityLevel(value: string | null | undefined): ActivityLevelOption | null {
@@ -182,13 +181,6 @@ function isActivityLevelOption(value: string): value is ActivityLevelOption {
 function mapUserProfileImage(user: User): ImageSelection | null {
     const profileImage = user.profileImage ?? '';
     return profileImage.length > 0 ? { url: profileImage, assetId: toNullable(user.profileImageAssetId) } : null;
-}
-
-function formatDateInput(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(DATE_INPUT_PAD_LENGTH, '0');
-    const day = String(date.getDate()).padStart(DATE_INPUT_PAD_LENGTH, '0');
-    return `${year}-${month}-${day}`;
 }
 
 function toNullable<T>(value: T | null | undefined): T | null {

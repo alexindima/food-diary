@@ -17,6 +17,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { NavigationService } from '../../../../services/navigation.service';
 import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from '../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail.component';
@@ -275,7 +276,7 @@ export class MealListComponent {
     }
 
     private getDateRangeTimestamp(value: FdUiDateRangeValue | null, key: keyof FdUiDateRangeValue): number | null {
-        return value?.[key]?.getTime() ?? null;
+        return getDateTimestamp(value?.[key]);
     }
 
     protected scrollToTop(): void {
@@ -297,9 +298,9 @@ export class MealListComponent {
 
         for (const item of items) {
             const date = new Date(item.date);
-            const key = this.toLocalDateInputValue(date);
+            const key = formatDateInputValue(date);
             if (!buckets.has(key)) {
-                const groupDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                const groupDate = normalizeStartOfLocalDay(date);
                 buckets.set(key, { date: groupDate, dateLabel: this.formatGroupDate(groupDate), items: [] });
             }
             buckets.get(key)?.items.push(item);
@@ -314,13 +315,6 @@ export class MealListComponent {
             month: 'long',
             year: 'numeric',
         }).format(date);
-    }
-
-    private toLocalDateInputValue(date: Date): string {
-        const year = date.getFullYear();
-        const month = `${date.getMonth() + 1}`.padStart(2, '0');
-        const day = `${date.getDate()}`.padStart(2, '0');
-        return `${year}-${month}-${day}`;
     }
 }
 

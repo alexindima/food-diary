@@ -5,6 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, finalize, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
+import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
+import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import type {
     CreateWeightEntryPayload,
@@ -60,9 +62,7 @@ export class WeightHistoryFacade {
 
     public readonly desiredWeightControl = new FormControl<string>('');
 
-    public readonly entriesDescending = computed(() =>
-        [...this.entries()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
-    );
+    public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
 
     public readonly chartData = computed(() =>
         buildWeightHistoryChartData(
@@ -225,8 +225,8 @@ export class WeightHistoryFacade {
             return null;
         }
 
-        const parsedValue = Number(rawValue.replace(',', '.'));
-        return Number.isNaN(parsedValue) || parsedValue <= 0 || parsedValue > MAX_WEIGHT_KG ? undefined : parsedValue;
+        const parsedValue = parseDecimalInput(rawValue);
+        return parsedValue === null || parsedValue <= 0 || parsedValue > MAX_WEIGHT_KG ? undefined : parsedValue;
     }
 
     public changeRange(value: string): void {
@@ -273,7 +273,7 @@ export class WeightHistoryFacade {
             .subscribe(entries => {
                 this.entries.set(entries);
                 if (!this.isEditing() && entries.length > 0) {
-                    const latest = [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+                    const latest = [...entries].sort((a, b) => compareDatesDesc(a.date, b.date))[0];
                     this.form.patchValue({
                         weight: latest.weight.toString(),
                     });

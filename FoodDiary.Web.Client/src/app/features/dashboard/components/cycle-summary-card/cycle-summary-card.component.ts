@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
+import { normalizeStartOfUtcDay, parseDateValue } from '../../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../../shared/lib/time.constants';
 import type { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 
@@ -96,14 +97,8 @@ export class CycleSummaryCardComponent {
     }
 
     private normalizeDate(value: Date | string | null | undefined): Date | null {
-        if (value === null || value === undefined || value === '') {
-            return null;
-        }
-        const date = value instanceof Date ? value : new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return null;
-        }
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const date = parseDateValue(value);
+        return date !== null ? normalizeStartOfUtcDay(date) : null;
     }
 
     private daysBetween(from: Date, to: Date): number {

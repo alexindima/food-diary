@@ -1,3 +1,4 @@
+import { formatDateValue } from '../../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../../shared/lib/locale.constants';
 import type { RecipeComment } from '../../../models/comment.data';
 import { DEFAULT_COMMENT_AUTHOR_LABEL } from './recipe-comments.constants';
@@ -12,13 +13,10 @@ export function buildRecipeCommentViewModels(comments: RecipeComment[], language
 }
 
 export function formatRecipeCommentDate(value: string, language: string): string {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
-        return value;
-    }
-
-    return new Intl.DateTimeFormat(resolveAppLocale(language), {
-        dateStyle: 'short',
-        timeStyle: 'short',
-    }).format(date);
+    return (
+        formatDateValue(value, resolveAppLocale(language), {
+            dateStyle: 'short',
+            timeStyle: 'short',
+        }) ?? value
+    );
 }

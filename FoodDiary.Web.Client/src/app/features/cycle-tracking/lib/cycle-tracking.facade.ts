@@ -2,11 +2,10 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { CyclesService } from '../api/cycles.service';
 import type { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySymptoms } from '../models/cycle.data';
 import {
-    DATE_INPUT_MONTH_OFFSET,
-    DATE_INPUT_PART_LENGTH,
     DEFAULT_AVERAGE_CYCLE_LENGTH,
     DEFAULT_LUTEAL_LENGTH,
     MAX_AVERAGE_CYCLE_LENGTH,
@@ -28,7 +27,7 @@ export class CycleTrackingFacade {
     public readonly cycle = signal<CycleResponse | null>(null);
 
     public readonly startCycleForm = this.fb.group({
-        startDate: new FormControl<string | null>(this.formatDateInput(new Date()), { validators: [Validators.required] }),
+        startDate: new FormControl<string | null>(formatDateInputValue(new Date()), { validators: [Validators.required] }),
         averageLength: new FormControl<number | null>(DEFAULT_AVERAGE_CYCLE_LENGTH, {
             validators: [Validators.min(MIN_AVERAGE_CYCLE_LENGTH), Validators.max(MAX_AVERAGE_CYCLE_LENGTH)],
         }),
@@ -38,7 +37,7 @@ export class CycleTrackingFacade {
     });
 
     public readonly dayForm = this.fb.group({
-        date: new FormControl<string | null>(this.formatDateInput(new Date()), { validators: [Validators.required] }),
+        date: new FormControl<string | null>(formatDateInputValue(new Date()), { validators: [Validators.required] }),
         isPeriod: new FormControl<boolean>(false),
         pain: new FormControl<number>(0),
         mood: new FormControl<number>(0),
@@ -166,12 +165,5 @@ export class CycleTrackingFacade {
         }
 
         return Math.min(MAX_SYMPTOM_VALUE, Math.max(MIN_SYMPTOM_VALUE, value));
-    }
-
-    private formatDateInput(date: Date): string {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + DATE_INPUT_MONTH_OFFSET).padStart(DATE_INPUT_PART_LENGTH, '0');
-        const day = String(date.getDate()).padStart(DATE_INPUT_PART_LENGTH, '0');
-        return `${year}-${month}-${day}`;
     }
 }

@@ -4,14 +4,9 @@ import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar.component';
+import { fdUiFormatDateInputValue, fdUiParseLocalDate, fdUiStartOfLocalDay } from '../date/fd-ui-date.utils';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
-
-const DATE_MATCH_YEAR_INDEX = 1;
-const DATE_MATCH_MONTH_INDEX = 2;
-const DATE_MATCH_DAY_INDEX = 3;
-const NEXT_MONTH_OFFSET = 1;
-const PADDED_DATE_PART_LENGTH = 2;
 
 let uniqueId = 0;
 
@@ -74,7 +69,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     public writeValue(value: string | Date | null): void {
-        const parsed = this.parseDateValue(value);
+        const parsed = fdUiParseLocalDate(value);
         this.value.set(parsed);
         this.displayMonth.set(parsed ?? new Date());
     }
@@ -176,42 +171,14 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         }
     }
 
-    protected readonly minDate = computed(() => this.parseDateValue(this.min()));
-    protected readonly maxDate = computed(() => this.parseDateValue(this.max()));
-
-    private parseDateValue(value: string | Date | null | undefined): Date | null {
-        if (value === null || value === undefined) {
-            return null;
-        }
-
-        if (value instanceof Date) {
-            return Number.isNaN(value.getTime()) ? null : this.stripTime(value);
-        }
-
-        if (value.length === 0) {
-            return null;
-        }
-
-        const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
-        if (match !== null) {
-            const year = Number(match[DATE_MATCH_YEAR_INDEX]);
-            const month = Number(match[DATE_MATCH_MONTH_INDEX]);
-            const day = Number(match[DATE_MATCH_DAY_INDEX]);
-            return new Date(year, month - NEXT_MONTH_OFFSET, day);
-        }
-
-        const parsed = new Date(value);
-        return Number.isNaN(parsed.getTime()) ? null : this.stripTime(parsed);
-    }
+    protected readonly minDate = computed(() => fdUiParseLocalDate(this.min()));
+    protected readonly maxDate = computed(() => fdUiParseLocalDate(this.max()));
 
     private stripTime(date: Date): Date {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        return fdUiStartOfLocalDay(date);
     }
 
     private formatIsoDate(date: Date): string {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + NEXT_MONTH_OFFSET).padStart(PADDED_DATE_PART_LENGTH, '0');
-        const day = String(date.getDate()).padStart(PADDED_DATE_PART_LENGTH, '0');
-        return `${year}-${month}-${day}`;
+        return fdUiFormatDateInputValue(date);
     }
 }

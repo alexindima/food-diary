@@ -2,6 +2,13 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, model, signal } from '@angular/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
+import {
+    fdUiAddLocalDays,
+    fdUiAddLocalMonths,
+    fdUiFormatDateInputValue,
+    fdUiStartOfLocalDay,
+    fdUiStartOfLocalMonth,
+} from '../date/fd-ui-date.utils';
 
 const WEEK_DAYS_COUNT = 7;
 const CALENDAR_WEEKS_COUNT = 6;
@@ -188,15 +195,15 @@ export class FdUiCalendarComponent {
     }
 
     private startOfMonth(date: Date): Date {
-        return new Date(date.getFullYear(), date.getMonth(), 1);
+        return fdUiStartOfLocalMonth(date);
     }
 
     private addDays(date: Date, days: number): Date {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+        return fdUiAddLocalDays(date, days);
     }
 
     private addMonths(date: Date, months: number): Date {
-        return new Date(date.getFullYear(), date.getMonth() + months, date.getDate());
+        return fdUiAddLocalMonths(date, months);
     }
 
     private clampDate(date: Date, min: Date | null, max: Date | null): Date {
@@ -229,14 +236,10 @@ export class FdUiCalendarComponent {
             return this.today;
         }
 
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        return fdUiStartOfLocalDay(date);
     }
 
     private toIsoDate(date: Date | null): string {
-        const normalized = this.stripTime(date);
-        const year = normalized.getFullYear();
-        const month = String(normalized.getMonth() + NEXT_MONTH_OFFSET).padStart(2, '0');
-        const day = String(normalized.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return fdUiFormatDateInputValue(this.stripTime(date));
     }
 }

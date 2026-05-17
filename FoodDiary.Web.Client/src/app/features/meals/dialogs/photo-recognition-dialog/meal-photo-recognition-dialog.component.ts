@@ -19,6 +19,7 @@ import {
     resolveAiPhotoUnitKey,
     updateAiEditableItem,
 } from '../../../../shared/lib/ai-photo-edit.utils';
+import { createClientId } from '../../../../shared/lib/client-id.utils';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
@@ -380,8 +381,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private createEditId(): string {
-        const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
-        return cryptoLike?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+        return createClientId('ai-edit');
     }
 
     private applyInitialSession(session: MealAiSessionManageDto): void {

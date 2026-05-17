@@ -1,5 +1,5 @@
-const RANDOM_ID_RADIX = 36;
-const RANDOM_ID_SLICE_START = 2;
+import { createClientId } from '../../../shared/lib/client-id.utils';
+
 const BYTES_PER_KB = 1024;
 const MIN_DIMENSION = 1;
 const RESIZABLE_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -10,8 +10,7 @@ export type ImageResizeDimensions = {
 };
 
 export function createImageUploadId(prefix: string): string {
-    const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
-    return `${prefix}-${cryptoLike?.randomUUID?.() ?? Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_SLICE_START)}`;
+    return createClientId(prefix);
 }
 
 export function getMaxImageUploadBytes(maxSizeMb: number): number {

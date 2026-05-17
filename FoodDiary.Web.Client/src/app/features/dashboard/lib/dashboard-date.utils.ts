@@ -1,19 +1,15 @@
-import { END_OF_DAY_HOUR, END_OF_DAY_MILLISECOND, END_OF_DAY_MINUTE, END_OF_DAY_SECOND } from '../../../shared/lib/local-date.utils';
+import { normalizeEndOfUtcDay, normalizeStartOfLocalDay, normalizeStartOfUtcDay } from '../../../shared/lib/local-date.utils';
 
-const START_OF_DAY_HOUR = 0;
+const HYDRATION_DAY_HOUR = 12;
 const START_OF_DAY_MINUTE = 0;
 const START_OF_DAY_SECOND = 0;
-const START_OF_DAY_MS = 0;
-const HYDRATION_DAY_HOUR = 12;
 
 export function normalizeDate(date: Date): Date {
-    const normalized = new Date(date);
-    normalized.setHours(START_OF_DAY_HOUR, START_OF_DAY_MINUTE, START_OF_DAY_SECOND, START_OF_DAY_MS);
-    return normalized;
+    return normalizeStartOfLocalDay(date);
 }
 
 export function getDashboardDateUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    return normalizeStartOfUtcDay(date);
 }
 
 export function getHydrationDateUtc(date: Date): Date {
@@ -23,21 +19,11 @@ export function getHydrationDateUtc(date: Date): Date {
 }
 
 export function normalizeStartOfDayUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    return normalizeStartOfUtcDay(date);
 }
 
 export function normalizeEndOfDayUtc(date: Date): Date {
-    return new Date(
-        Date.UTC(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            END_OF_DAY_HOUR,
-            END_OF_DAY_MINUTE,
-            END_OF_DAY_SECOND,
-            END_OF_DAY_MILLISECOND,
-        ),
-    );
+    return normalizeEndOfUtcDay(date);
 }
 
 export function getWeightTrendRange(selectedDate: Date, trendDays: number): { start: Date; end: Date } {

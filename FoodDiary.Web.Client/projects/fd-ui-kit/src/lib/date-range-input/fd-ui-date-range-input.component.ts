@@ -4,6 +4,7 @@ import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
+import { fdUiFormatDateInputValue, fdUiParseLocalDate } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
@@ -95,16 +96,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     }
 
     private toDateValue(value: string | Date | null | undefined): Date | null {
-        if (value === null || value === undefined || value === '') {
-            return null;
-        }
-
-        if (value instanceof Date) {
-            return value;
-        }
-
-        const date = new Date(value);
-        return Number.isNaN(date.getTime()) ? null : date;
+        return fdUiParseLocalDate(value);
     }
 
     private formatDate(value: Date | null | undefined): string | null {
@@ -112,14 +104,11 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
             return null;
         }
 
-        const date = value instanceof Date ? value : new Date(value);
-        if (Number.isNaN(date.getTime())) {
+        const date = fdUiParseLocalDate(value);
+        if (date === null) {
             return null;
         }
 
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return fdUiFormatDateInputValue(date);
     }
 }

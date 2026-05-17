@@ -1,3 +1,4 @@
+import { formatDateValue } from '../../../../shared/lib/local-date.utils';
 import type { CycleDay, CyclePredictions, CycleResponse } from '../../models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import type { CycleDayViewModel, CyclePredictionViewModel, CycleViewModel } from './cycle-tracking-page.types';
@@ -45,17 +46,12 @@ function formatCycleDate(
     options: Intl.DateTimeFormatOptions,
     timeZone?: Intl.DateTimeFormatOptions['timeZone'],
 ): string {
-    if (value === null || value === undefined || value.length === 0) {
-        return '';
-    }
-
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
-        return value;
-    }
-
-    return new Intl.DateTimeFormat(locale, {
-        ...options,
-        timeZone,
-    }).format(date);
+    return (
+        formatDateValue(value, locale, {
+            ...options,
+            timeZone,
+        }) ??
+        value ??
+        ''
+    );
 }

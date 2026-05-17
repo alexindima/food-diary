@@ -1,5 +1,6 @@
 import type { ChartConfiguration } from 'chart.js';
 
+import { compareDatesAsc, parseDateValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { WaistEntry, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import type { WaistEntryViewModel } from './waist-history.types';
@@ -30,7 +31,7 @@ export function buildWaistHistoryChartData(
     label: string,
     locale: string,
 ): ChartConfiguration<'line'>['data'] {
-    const ordered = [...points].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
 
     return {
         labels: ordered.map(point => formatWaistHistoryDateLabel(point.startDate, locale)),
@@ -59,8 +60,8 @@ export function buildWaistEntryViewModels(entries: WaistEntry[], locale: string)
 }
 
 export function formatWaistHistoryNumericDate(value: string, language: string): string {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
+    const date = parseDateValue(value);
+    if (date === null) {
         return value;
     }
 
@@ -72,5 +73,6 @@ export function formatWaistHistoryNumericDate(value: string, language: string): 
 }
 
 function formatWaistHistoryDateLabel(dateString: string, locale: string): string {
-    return new Date(dateString).toLocaleDateString(resolveAppLocale(locale));
+    const date = parseDateValue(dateString);
+    return date !== null ? new Intl.DateTimeFormat(resolveAppLocale(locale)).format(date) : dateString;
 }

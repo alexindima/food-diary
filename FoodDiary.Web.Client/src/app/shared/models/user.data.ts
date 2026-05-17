@@ -1,3 +1,4 @@
+import { normalizeStartOfUtcDay, parseDateValue } from '../lib/local-date.utils';
 import type { ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
@@ -132,16 +133,8 @@ const normalizeString = (value: string | null | undefined): string | undefined =
 };
 
 const normalizeDate = (value: Date | string | null | undefined): Date | undefined => {
-    if (value === null || value === undefined || value === '') {
-        return undefined;
-    }
-
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
-        return undefined;
-    }
-
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const date = parseDateValue(value);
+    return date !== null ? normalizeStartOfUtcDay(date) : undefined;
 };
 
 const normalizeNumber = (value: number | null | undefined): number | undefined =>

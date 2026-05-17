@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, i
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
+import { fdUiFormatDateInputValue, fdUiFormatTimeInputValue, fdUiPadDatePart, fdUiParseLocalDateTime } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
 import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -11,13 +12,8 @@ const DEFAULT_TIME_VALUE = '00:00';
 const MIN_TIME_VALUE = 0;
 const MAX_HOURS_VALUE = 23;
 const MAX_MINUTES_VALUE = 59;
-const DATE_INDEX_YEAR = 1;
-const DATE_INDEX_MONTH = 2;
-const DATE_INDEX_DAY = 3;
-const DATE_INDEX_HOURS = 4;
-const DATE_INDEX_MINUTES = 5;
-const NEXT_MONTH_OFFSET = 1;
-const PADDED_NUMBER_LENGTH = 2;
+const TIME_INDEX_HOURS = 1;
+const TIME_INDEX_MINUTES = 2;
 
 let uniqueId = 0;
 
@@ -81,7 +77,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             return;
         }
 
-        const parsed = typeof value === 'string' ? this.parseDateTimeString(value) : value;
+        const parsed = fdUiParseLocalDateTime(value);
         if (parsed === null) {
             this.dateControl.setValue(null, { emitEvent: false });
             this.dateValue.set(null);
@@ -89,13 +85,11 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             return;
         }
 
-        const isoDate = this.formatDate(parsed);
-        const hours = this.padNumber(parsed.getHours());
-        const minutes = this.padNumber(parsed.getMinutes());
+        const isoDate = fdUiFormatDateInputValue(parsed);
 
         this.dateControl.setValue(isoDate, { emitEvent: false });
         this.dateValue.set(isoDate);
-        this.timeValue.set(`${hours}:${minutes}`);
+        this.timeValue.set(fdUiFormatTimeInputValue(parsed));
         this.lastValidTime = this.timeValue();
     }
 
@@ -127,7 +121,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             return;
         }
 
-        this.timeValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
+        this.timeValue.set(`${fdUiPadDatePart(parsed.hours)}:${fdUiPadDatePart(parsed.minutes)}`);
         this.lastValidTime = this.timeValue();
         this.emitValue();
     }
@@ -141,7 +135,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         } else {
             const parsed = this.parseTime(timeValue);
             if (parsed !== null) {
-                this.timeValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
+                this.timeValue.set(`${fdUiPadDatePart(parsed.hours)}:${fdUiPadDatePart(parsed.minutes)}`);
                 this.lastValidTime = this.timeValue();
                 this.emitValue();
             }
@@ -182,7 +176,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
         const time = this.parseTime(this.timeValue()) ??
             this.parseTime(this.lastValidTime) ?? { hours: MIN_TIME_VALUE, minutes: MIN_TIME_VALUE };
-        this.onChange(`${date}T${this.padNumber(time.hours)}:${this.padNumber(time.minutes)}`);
+        this.onChange(`${date}T${fdUiPadDatePart(time.hours)}:${fdUiPadDatePart(time.minutes)}`);
     }
 
     private parseTime(value: string): { hours: number; minutes: number } | null {
@@ -191,8 +185,8 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
             return null;
         }
 
-        const hours = Number(match[DATE_INDEX_YEAR]);
-        const minutes = Number(match[DATE_INDEX_MONTH]);
+        const hours = Number(match[TIME_INDEX_HOURS]);
+        const minutes = Number(match[TIME_INDEX_MINUTES]);
         if (Number.isNaN(hours) || Number.isNaN(minutes)) {
             return null;
         }
@@ -202,28 +196,5 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         }
 
         return { hours, minutes };
-    }
-
-    private parseDateTimeString(value: string): Date | null {
-        const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(value);
-        if (match === null) {
-            const date = new Date(value);
-            return Number.isNaN(date.getTime()) ? null : date;
-        }
-
-        const year = Number(match[DATE_INDEX_YEAR]);
-        const month = Number(match[DATE_INDEX_MONTH]);
-        const day = Number(match[DATE_INDEX_DAY]);
-        const hours = Number(match[DATE_INDEX_HOURS]);
-        const minutes = Number(match[DATE_INDEX_MINUTES]);
-        return new Date(year, month - NEXT_MONTH_OFFSET, day, hours, minutes);
-    }
-
-    private formatDate(value: Date): string {
-        return [value.getFullYear(), this.padNumber(value.getMonth() + NEXT_MONTH_OFFSET), this.padNumber(value.getDate())].join('-');
-    }
-
-    private padNumber(value: number): string {
-        return value.toString().padStart(PADDED_NUMBER_LENGTH, '0');
     }
 }

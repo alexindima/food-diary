@@ -1,3 +1,4 @@
+import { formatDateValue } from '../../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../../shared/lib/locale.constants';
 import type { ClientSummary } from '../../../../../shared/models/dietologist.data';
 import type { ClientCardViewModel } from './dietologist-clients.types';
@@ -31,12 +32,9 @@ export function getClientInitials(client: ClientSummary): string {
 }
 
 export function formatClientConnectedDate(value: string, language: string): string {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
-        return value;
-    }
-
-    return new Intl.DateTimeFormat(resolveAppLocale(language), {
-        dateStyle: 'medium',
-    }).format(date);
+    return (
+        formatDateValue(value, resolveAppLocale(language), {
+            dateStyle: 'medium',
+        }) ?? value
+    );
 }

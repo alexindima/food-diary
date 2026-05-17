@@ -5,6 +5,7 @@ import type { ChartConfiguration, ScaleOptionsByType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame.component';
+import { compareDatesAsc } from '../../../../shared/lib/local-date.utils';
 import {
     WEIGHT_TREND_ACTIVE_POINT_HOVER_RADIUS,
     WEIGHT_TREND_ACTIVE_POINT_RADIUS,
@@ -177,7 +178,7 @@ export class WeightTrendCardComponent {
     });
 
     private getOrderedValues(): Array<number | null> {
-        return [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map(point => point.value ?? null);
+        return [...this.points()].sort((a, b) => compareDatesAsc(a.date, b.date)).map(point => point.value ?? null);
     }
 
     private getFillColor(): string {

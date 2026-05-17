@@ -12,6 +12,8 @@ import {
     resolveAiPhotoUnitKey,
     updateAiEditableItem,
 } from '../../../../shared/lib/ai-photo-edit.utils';
+import { createClientId } from '../../../../shared/lib/client-id.utils';
+import { formatDateInputValue, formatTimeInputValue } from '../../../../shared/lib/local-date.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { AiInputBarMealDetails } from '../ai-input-bar.types';
@@ -33,7 +35,6 @@ import type {
 } from './ai-photo-result-lib/ai-photo-result.types';
 import { AiPhotoResultRowsComponent } from './ai-photo-result-rows/ai-photo-result-rows.component';
 
-const TIME_PAD_LENGTH = 2;
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
 @Component({
@@ -270,20 +271,14 @@ export class AiPhotoResultComponent {
     }
 
     private createEditId(): string {
-        const cryptoLike = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
-        return cryptoLike?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+        return createClientId('ai-edit');
     }
 
     private getDateInputValue(date: Date): string {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(TIME_PAD_LENGTH, '0');
-        const day = date.getDate().toString().padStart(TIME_PAD_LENGTH, '0');
-        return `${year}-${month}-${day}`;
+        return formatDateInputValue(date);
     }
 
     private getTimeInputValue(date: Date): string {
-        const hours = date.getHours().toString().padStart(TIME_PAD_LENGTH, '0');
-        const minutes = date.getMinutes().toString().padStart(TIME_PAD_LENGTH, '0');
-        return `${hours}:${minutes}`;
+        return formatTimeInputValue(date);
     }
 }

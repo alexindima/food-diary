@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
+import { createClientId } from '../../../shared/lib/client-id.utils';
 import type { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingList, ShoppingListItem, ShoppingListSummary } from '../models/shopping-list.data';
@@ -15,8 +16,6 @@ export type ShoppingListDraftItem = {
     unit: MeasurementUnit | null;
     category: string | null;
 };
-
-const TEMP_ID_RANDOM_RANGE = 10_000;
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingListFacade {
@@ -317,6 +316,6 @@ export class ShoppingListFacade {
     }
 
     private createTempId(): string {
-        return `temp-${Date.now()}-${Math.floor(Math.random() * TEMP_ID_RANDOM_RANGE)}`;
+        return createClientId('temp');
     }
 }
