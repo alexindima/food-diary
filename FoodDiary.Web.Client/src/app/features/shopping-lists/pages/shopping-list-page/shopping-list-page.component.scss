@@ -178,7 +178,6 @@
     }
 
     @media #{variables.$media-tablet} {
-        --fd-layout-page-horizontal-padding: 0;
         --fd-layout-page-vertical-padding: 0;
 
         &__mobile-toolbar {
@@ -206,23 +205,22 @@
         }
 
         &__items {
-            gap: 0;
-            border-top: var(--fd-border-muted);
-            border-bottom: var(--fd-border-muted);
-            background: var(--fd-bg-surface);
+            gap: var(--fd-space-sm);
+            border-top: none;
+            border-bottom: none;
+            background: transparent;
         }
 
         &__item {
             grid-template-columns: auto 1fr auto;
-            border: none;
-            border-bottom: var(--fd-border-muted);
-            border-radius: 0;
-            box-shadow: var(--fd-shadow-none);
+            border: var(--fd-border-default);
+            border-radius: var(--fd-radius-card);
+            box-shadow: var(--fd-shadow-sm);
             padding: var(--fd-space-xs) var(--fd-space-sm);
         }
 
         &__item:last-child {
-            border-bottom: none;
+            border-bottom: var(--fd-border-default);
         }
     }
 }

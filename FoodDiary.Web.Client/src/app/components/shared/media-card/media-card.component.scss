@@ -133,20 +133,20 @@
     .fd-media-card--raised {
         gap: var(--fd-space-sm);
         padding: 0 var(--fd-space-md) 0 0;
-        border: none;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: var(--fd-shadow-none);
+        border: var(--media-card-compact-border, none);
+        border-radius: var(--media-card-compact-border-radius, 0);
+        background: var(--media-card-compact-background, transparent);
+        box-shadow: var(--media-card-compact-shadow, var(--fd-shadow-none));
 
         &:hover {
-            box-shadow: var(--fd-shadow-none);
+            box-shadow: var(--media-card-compact-hover-shadow, var(--fd-shadow-none));
         }
 
         .media-card__media {
             inline-size: var(--fd-size-control-xl);
             min-inline-size: var(--fd-size-control-xl);
             block-size: var(--fd-size-control-xl);
-            border-radius: 0;
+            border-radius: var(--media-card-compact-media-radius, 0);
         }
 
         .media-card__content {
