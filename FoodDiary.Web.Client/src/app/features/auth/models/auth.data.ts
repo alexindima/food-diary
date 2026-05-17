@@ -60,16 +60,6 @@ export class ConfirmPasswordResetRequest {
     }
 }
 
-export type TelegramLoginWidgetRequest = {
-    id: number;
-    authDate: number;
-    hash: string;
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-    photoUrl?: string;
-};
-
 export type TelegramAuthRequest = {
     initData: string;
 };

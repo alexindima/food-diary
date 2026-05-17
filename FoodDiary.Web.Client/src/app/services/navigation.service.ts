@@ -72,16 +72,8 @@ export class NavigationService {
         await this.router.navigate([`/recipes/${id}/edit`]);
     }
 
-    public async navigateToShoppingListAsync(): Promise<void> {
-        await this.router.navigate(['/shopping-lists']);
-    }
-
     public async navigateToFastingAsync(): Promise<void> {
         await this.router.navigate(['/fasting']);
-    }
-
-    public async navigateToStatisticsAsync(): Promise<void> {
-        await this.router.navigate(['/statistics']);
     }
 
     public async navigateToProfileAsync(): Promise<void> {
@@ -100,19 +92,11 @@ export class NavigationService {
         await this.router.navigate(['/weight-history']);
     }
 
-    public async navigateToWaistHistoryAsync(): Promise<void> {
-        await this.router.navigate(['/waist-history']);
-    }
-
     public async navigateToGoalsAsync(): Promise<void> {
         await this.router.navigate(['/goals']);
     }
 
     public async navigateToCycleTrackingAsync(): Promise<void> {
         await this.router.navigate(['/cycle-tracking']);
-    }
-
-    public async navigateToExploreAsync(): Promise<void> {
-        await this.router.navigate(['/explore']);
     }
 }

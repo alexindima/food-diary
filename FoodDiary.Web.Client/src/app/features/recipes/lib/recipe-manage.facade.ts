@@ -6,11 +6,11 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { finalize, map, type Observable } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
-import {
-    ItemSelectDialogComponent,
-    type ItemSelectDialogData,
-    type ItemSelection,
-} from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import { ItemSelectDialogComponent } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import type {
+    ItemSelectDialogData,
+    ItemSelection,
+} from '../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constants';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormData, NutritionScaleMode, StepFormData } from '../components/manage/recipe-manage-lib/recipe-manage.types';

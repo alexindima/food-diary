@@ -14,11 +14,11 @@ import { firstValueFrom } from 'rxjs';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import {
-    ItemSelectDialogComponent,
-    type ItemSelectDialogData,
-    type ItemSelection,
-} from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import { ItemSelectDialogComponent } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import type {
+    ItemSelectDialogData,
+    ItemSelection,
+} from '../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { calculateCalorieMismatchWarning, getControlNumericValue, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import { isRecord } from '../../../../shared/lib/unknown-value.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';

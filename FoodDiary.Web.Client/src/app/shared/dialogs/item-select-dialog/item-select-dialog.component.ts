@@ -13,16 +13,10 @@ import { ProductListDialogComponent } from '../../../features/products/dialogs/p
 import type { Product } from '../../../features/products/models/product.data';
 import { RecipeSelectDialogComponent } from '../../../features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.component';
 import type { Recipe } from '../../../features/recipes/models/recipe.data';
-
-export type ItemSelection = { type: 'Product'; product: Product } | { type: 'Recipe'; recipe: Recipe };
-
-export type ItemSelectDialogData = {
-    initialTab?: 'Product' | 'Recipe';
-};
+import type { ItemSelectDialogData, ItemSelection } from './item-select-dialog-lib/item-select-dialog.types';
 
 @Component({
     selector: 'fd-item-select-dialog',
-    standalone: true,
     templateUrl: './item-select-dialog.component.html',
     styleUrls: ['./item-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,6 +64,14 @@ export class ItemSelectDialogComponent {
 
     public onCreateRecipeRequested(): void {
         this.completeWith(null);
+    }
+
+    public onTabChange(tab: string): void {
+        if (tab !== 'Product' && tab !== 'Recipe') {
+            return;
+        }
+
+        this.activeTab.set(tab);
     }
 
     public onCreateAction(): void {

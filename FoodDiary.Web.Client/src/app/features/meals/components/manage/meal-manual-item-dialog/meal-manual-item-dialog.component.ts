@@ -11,11 +11,11 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { firstValueFrom, merge } from 'rxjs';
 
-import {
-    ItemSelectDialogComponent,
-    type ItemSelectDialogData,
-    type ItemSelection,
-} from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import type {
+    ItemSelectDialogData,
+    ItemSelection,
+} from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { MealManageFacade } from '../../../lib/manage/meal-manage.facade';

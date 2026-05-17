@@ -142,12 +142,6 @@ export class NotificationService {
         });
     }
 
-    public getNotifications(): Observable<NotificationItem[]> {
-        return this.http.get<NotificationItem[]>(this.baseUrl, {
-            context: this.silentLoadingContext,
-        });
-    }
-
     public ensureNotificationsLoaded(): void {
         if (this.notificationsLoaded() || this.notificationsLoading()) {
             return;

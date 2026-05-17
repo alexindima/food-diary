@@ -5,15 +5,27 @@ type StorageScope = 'local' | 'session';
 @Injectable({ providedIn: 'root' })
 export class BrowserStorageService {
     public getItem(scope: StorageScope, key: string): string | null {
-        return this.getStorage(scope)?.getItem(key) ?? null;
+        try {
+            return this.getStorage(scope)?.getItem(key) ?? null;
+        } catch {
+            return null;
+        }
     }
 
     public setItem(scope: StorageScope, key: string, value: string): void {
-        this.getStorage(scope)?.setItem(key, value);
+        try {
+            this.getStorage(scope)?.setItem(key, value);
+        } catch {
+            // Storage persistence is optional and should fail silently.
+        }
     }
 
     public removeItem(scope: StorageScope, key: string): void {
-        this.getStorage(scope)?.removeItem(key);
+        try {
+            this.getStorage(scope)?.removeItem(key);
+        } catch {
+            // Storage persistence is optional and should fail silently.
+        }
     }
 
     public getJson(scope: StorageScope, key: string): unknown {
@@ -43,6 +55,10 @@ export class BrowserStorageService {
             return null;
         }
 
-        return scope === 'local' ? window.localStorage : window.sessionStorage;
+        try {
+            return scope === 'local' ? window.localStorage : window.sessionStorage;
+        } catch {
+            return null;
+        }
     }
 }

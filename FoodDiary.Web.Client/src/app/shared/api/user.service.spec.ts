@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
-import { type ChangePasswordRequest, UpdateUserDto, type User } from '../models/user.data';
+import { type ChangePasswordRequest, UpdateUserAppearanceDto, UpdateUserDto, type User } from '../models/user.data';
 import { UserService } from './user.service';
 
 const BASE_URL = environment.apiUrls.users;
@@ -14,6 +14,8 @@ const FASTING_CHECK_IN_REMINDER_HOURS = 12;
 const FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS = 20;
 const DESIRED_WEIGHT = 75;
 const UPDATED_DESIRED_WEIGHT = 70;
+const UPDATED_THEME = 'dark';
+const UPDATED_UI_STYLE = 'compact';
 const MOCK_USER: User = {
     id: 'user-1',
     email: 'test@example.com',
@@ -91,6 +93,22 @@ describe('UserService info', () => {
         const req = httpMock.expectOne(`${BASE_URL}/info`);
         expect(req.request.method).toBe('PATCH');
         expect(req.request.body).toEqual(updateData);
+        req.flush(updatedUser);
+
+        expect(service.user()).toEqual(updatedUser);
+    });
+
+    it('should update appearance and update signal', () => {
+        const appearance = new UpdateUserAppearanceDto({ theme: UPDATED_THEME, uiStyle: UPDATED_UI_STYLE });
+        const updatedUser: User = { ...MOCK_USER, theme: UPDATED_THEME, uiStyle: UPDATED_UI_STYLE };
+
+        service.updateAppearance(appearance).subscribe(result => {
+            expect(result).toEqual(updatedUser);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/preferences/appearance`);
+        expect(req.request.method).toBe('PATCH');
+        expect(req.request.body).toEqual(appearance);
         req.flush(updatedUser);
 
         expect(service.user()).toEqual(updatedUser);

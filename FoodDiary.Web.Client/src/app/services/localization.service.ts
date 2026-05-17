@@ -5,20 +5,19 @@ import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom } from 'rxjs';
 
-import type { MeasurementUnit } from '../features/products/models/product.data';
+import { environment } from '../../environments/environment';
 import { BrowserStorageService } from './browser-storage.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 
 @Injectable({ providedIn: 'root' })
 export class LocalizationService {
-    private static readonly russianDefaultHosts = new Set(['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrouc8l.xn--p1ai']);
-
     private readonly translateService = inject(TranslateService);
     private readonly document = inject(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
     private readonly router = inject(Router);
     private readonly storage = inject(BrowserStorageService);
     private readonly translationLoader = inject(FoodDiaryTranslationLoader);
+    private readonly russianDefaultHosts = new Set(environment.russianDefaultHosts ?? []);
     private readonly storageKey = 'fd_language';
     private readonly applicationTranslationLanguages = new Set<string>();
     private readonly routeTranslationKeys = new Set<string>();
@@ -112,10 +111,6 @@ export class LocalizationService {
         this.storage.removeItem('local', this.storageKey);
     }
 
-    public getServingUnitName(unit: MeasurementUnit): string {
-        return this.translateService.instant(`PRODUCT_MANAGE.DEFAULT_SERVING_UNITS.${unit}`);
-    }
-
     private normalizeLanguage(lang?: string | null): string {
         if (lang === null || lang === undefined || lang.length === 0) {
             return 'en';
@@ -158,7 +153,7 @@ export class LocalizationService {
             return null;
         }
 
-        return LocalizationService.russianDefaultHosts.has(hostname) ? 'ru' : null;
+        return this.russianDefaultHosts.has(hostname) ? 'ru' : null;
     }
 
     private setDocumentLang(lang: string): void {

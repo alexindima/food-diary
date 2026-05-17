@@ -23,16 +23,6 @@ export type ClientSummary = {
     acceptedAtUtc: string;
 };
 
-export type DietologistInfo = {
-    invitationId: string;
-    dietologistUserId: string;
-    email: string;
-    firstName: string | null;
-    lastName: string | null;
-    permissions: DietologistPermissions;
-    acceptedAtUtc: string;
-};
-
 export type DietologistRelationship = {
     invitationId: string;
     status: string;

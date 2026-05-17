@@ -8,15 +8,15 @@ import { ApiService } from '../../services/api.service';
 import type { NotificationPreferences, WebPushSubscriptionItem } from '../../services/notification.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import type { DietologistRelationship } from '../models/dietologist.data';
-import {
-    type ChangePasswordRequest,
-    type DashboardLayoutSettings,
-    type DesiredWaistResponse,
-    type DesiredWeightResponse,
-    type SetPasswordRequest,
+import type {
+    ChangePasswordRequest,
+    DashboardLayoutSettings,
+    DesiredWaistResponse,
+    DesiredWeightResponse,
+    SetPasswordRequest,
     UpdateUserAppearanceDto,
-    type UpdateUserDto,
-    type User,
+    UpdateUserDto,
+    User,
 } from '../models/user.data';
 
 export type UserProfileOverview = {
@@ -83,15 +83,6 @@ export class UserService extends ApiService {
                 this.userSignal.set(user);
             }),
             catchError((error: unknown) => fallbackApiError('Update user error', error, null)),
-        );
-    }
-
-    public updateTheme(theme: string): Observable<User | null> {
-        return this.updateAppearance(new UpdateUserAppearanceDto({ theme })).pipe(
-            tap(user => {
-                this.userSignal.set(user);
-            }),
-            catchError((error: unknown) => fallbackApiError('Update user theme error', error, null)),
         );
     }
 

@@ -3,10 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
+import { environment } from '../../environments/environment';
+
 const DEFAULT_TITLE = 'Food Diary';
-const ENGLISH_SITE_URL = 'https://fooddiary.club';
-const RUSSIAN_SITE_URL = 'https://xn--b1adbcbrouc8l.xn--p1ai';
-const RUSSIAN_HOSTS = new Set(['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrouc8l.xn--p1ai']);
+const DEFAULT_SITE_URLS = {
+    en: 'https://fooddiary.club',
+    ru: 'https://xn--b1adbcbrouc8l.xn--p1ai',
+} as const;
 const STRUCTURED_DATA_SELECTOR = 'script[data-seo-structured-data="app"]';
 const ROOT_PATHS = new Set(['', '/']);
 
@@ -26,6 +29,8 @@ export class SeoService {
     private readonly meta = inject(Meta);
     private readonly document = inject(DOCUMENT);
     private readonly translate = inject(TranslateService);
+    private readonly siteUrls = environment.siteUrls ?? DEFAULT_SITE_URLS;
+    private readonly russianHosts = new Set(environment.russianDefaultHosts ?? []);
 
     public update(data: SeoData): void {
         const currentSiteUrl = this.getCurrentSiteUrl();
@@ -70,7 +75,7 @@ export class SeoService {
 
     private getCurrentSiteUrl(): string {
         const hostname = this.document.location.hostname.toLowerCase();
-        return hostname.length > 0 && RUSSIAN_HOSTS.has(hostname) ? RUSSIAN_SITE_URL : ENGLISH_SITE_URL;
+        return hostname.length > 0 && this.russianHosts.has(hostname) ? this.siteUrls.ru : this.siteUrls.en;
     }
 
     private buildSiteUrl(baseUrl: string, path?: string): string {
@@ -114,9 +119,9 @@ export class SeoService {
 
     private updateAlternateLinks(path?: string): void {
         const alternates = [
-            { hreflang: 'en', href: this.buildSiteUrl(ENGLISH_SITE_URL, path) },
-            { hreflang: 'ru', href: this.buildSiteUrl(RUSSIAN_SITE_URL, path) },
-            { hreflang: 'x-default', href: this.buildSiteUrl(ENGLISH_SITE_URL, path) },
+            { hreflang: 'en', href: this.buildSiteUrl(this.siteUrls.en, path) },
+            { hreflang: 'ru', href: this.buildSiteUrl(this.siteUrls.ru, path) },
+            { hreflang: 'x-default', href: this.buildSiteUrl(this.siteUrls.en, path) },
         ];
 
         for (const alternate of alternates) {

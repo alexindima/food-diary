@@ -6,8 +6,15 @@ export type AppConfig = {
     buildVersion?: string;
     adminAppUrl?: string;
     supportEmail?: string;
+    siteUrls?: AppConfigSiteUrls;
+    russianDefaultHosts?: readonly string[];
     enableGlobalErrorHandler?: boolean;
     enableClientObservability?: boolean;
+};
+
+export type AppConfigSiteUrls = {
+    en: string;
+    ru: string;
 };
 
 export type AppConfigApiUrls = {

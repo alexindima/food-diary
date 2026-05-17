@@ -1,7 +1,12 @@
 @if (!embedded()) {
     <fd-ui-dialog size="lg" [title]="'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate">
         <div class="consumption-item-select fd-stack fd-gap-md">
-            <fd-ui-tabs class="consumption-item-select__tabs" [tabs]="tabs" [(selectedValue)]="activeTab" />
+            <fd-ui-tabs
+                class="consumption-item-select__tabs"
+                [tabs]="tabs"
+                [selectedValue]="activeTab()"
+                (selectedValueChange)="onTabChange($event)"
+            />
 
             <div class="consumption-item-select__content">
                 @if (activeTab() === 'Product') {
@@ -24,7 +29,12 @@
     </fd-ui-dialog>
 } @else {
     <div class="consumption-item-select fd-stack fd-gap-md">
-        <fd-ui-tabs class="consumption-item-select__tabs" [tabs]="tabs" [(selectedValue)]="activeTab" />
+        <fd-ui-tabs
+            class="consumption-item-select__tabs"
+            [tabs]="tabs"
+            [selectedValue]="activeTab()"
+            (selectedValueChange)="onTabChange($event)"
+        />
 
         <div class="consumption-item-select__content">
             @if (activeTab() === 'Product') {

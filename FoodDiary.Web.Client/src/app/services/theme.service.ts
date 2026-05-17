@@ -1,12 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
 import {
     APP_THEMES,
-    APP_UI_STYLES,
     type AppThemeDefinition,
     type AppThemeName,
-    type AppUiStyleDefinition,
     type AppUiStyleName,
     DEFAULT_APP_THEME,
     DEFAULT_APP_UI_STYLE,
@@ -45,9 +43,6 @@ export class ThemeService {
     public readonly theme = this.themeState.asReadonly();
     public readonly uiStyle = this.uiStyleState.asReadonly();
     public readonly themes = APP_THEMES;
-    public readonly uiStyles = APP_UI_STYLES;
-    public readonly activeThemeDefinition = computed(() => this.getThemeDefinition(this.themeState()));
-    public readonly activeUiStyleDefinition = computed(() => this.getUiStyleDefinition(this.uiStyleState()));
 
     public initializeTheme(): void {
         this.applyThemeForRoute(this.document.location.pathname);
@@ -156,10 +151,6 @@ export class ThemeService {
 
     private getThemeDefinition(themeName: AppThemeName): AppThemeDefinition {
         return APP_THEMES.find(theme => theme.name === themeName) ?? APP_THEMES[0];
-    }
-
-    private getUiStyleDefinition(styleName: AppUiStyleName): AppUiStyleDefinition {
-        return APP_UI_STYLES.find(style => style.name === styleName) ?? APP_UI_STYLES[0];
     }
 
     private resolveTheme(theme: string | null | undefined): AppThemeName {

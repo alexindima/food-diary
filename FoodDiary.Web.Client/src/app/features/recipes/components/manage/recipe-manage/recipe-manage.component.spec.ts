@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';

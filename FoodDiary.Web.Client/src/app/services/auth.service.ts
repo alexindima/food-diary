@@ -10,7 +10,6 @@ import type {
     RegisterRequest,
     RestoreAccountRequest,
     TelegramAuthRequest,
-    TelegramLoginWidgetRequest,
 } from '../features/auth/models/auth.data';
 import type { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
 import { QuickMealService } from '../features/meals/lib/quick/quick-meal.service';
@@ -59,7 +58,6 @@ export class AuthService extends ApiService {
     public readonly isPremium = computed(() => this.hasRole('Premium'));
     public readonly isDietologist = computed(() => this.hasRole('Dietologist'));
     public readonly isImpersonating = computed(() => this.jwtDecoder.isImpersonation(this.authTokenSignal()));
-    public readonly impersonationActorId = computed(() => this.jwtDecoder.extractImpersonationActorId(this.authTokenSignal()));
     public readonly impersonationReason = computed(() => this.jwtDecoder.extractImpersonationReason(this.authTokenSignal()));
     public readonly isAuthReady = this.authReadySignal.asReadonly();
 
@@ -195,15 +193,6 @@ export class AuthService extends ApiService {
                 this.onLogin(response, false);
             }),
             catchError((error: unknown) => rethrowApiError('Password reset confirm error', error)),
-        );
-    }
-
-    public loginWithTelegramWidget(data: TelegramLoginWidgetRequest, rememberMe: boolean): Observable<AuthResponse> {
-        return this.post<AuthResponse>('telegram/login-widget', data).pipe(
-            tap(response => {
-                this.onLogin(response, rememberMe);
-            }),
-            catchError((error: unknown) => rethrowApiError('Telegram login error', error)),
         );
     }
 

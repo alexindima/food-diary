@@ -77,16 +77,6 @@ export class JwtDecoderService {
         return payload?.['fd_impersonation'] === 'true';
     }
 
-    public extractImpersonationActorId(token: string | null): string | null {
-        if (token === null || token.length === 0) {
-            return null;
-        }
-
-        const payload = this.decodePayload(token);
-        const value = payload?.['fd_impersonated_by'];
-        return typeof value === 'string' ? value : null;
-    }
-
     public extractImpersonationReason(token: string | null): string | null {
         if (token === null || token.length === 0) {
             return null;
