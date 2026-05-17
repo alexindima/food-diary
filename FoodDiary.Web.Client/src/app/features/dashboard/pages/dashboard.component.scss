@@ -285,6 +285,8 @@ $color-text-secondary: var(--fd-color-text-muted);
     }
 
     @media #{variables.$media-mobile} {
+        --fd-layout-page-vertical-padding: 0;
+
         // stylelint-disable-next-line rule-empty-line-before
         &__header {
             padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-xs);
