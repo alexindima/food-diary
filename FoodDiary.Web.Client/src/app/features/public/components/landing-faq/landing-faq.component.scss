@@ -71,8 +71,8 @@
         &::after {
             content: '+';
             flex: 0 0 auto;
-            width: 28px;
-            height: 28px;
+            width: var(--fd-size-control-xxs);
+            height: var(--fd-size-control-xxs);
             border-radius: var(--fd-radius-pill);
             display: inline-flex;
             align-items: center;

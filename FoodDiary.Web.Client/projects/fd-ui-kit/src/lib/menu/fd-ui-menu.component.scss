@@ -25,7 +25,10 @@
     border-radius: var(--fd-radius-menu-item);
     background: transparent;
     color: var(--fd-color-text);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     line-height: var(--fd-text-body-sm-line-height);
     text-align: left;
     cursor: pointer;

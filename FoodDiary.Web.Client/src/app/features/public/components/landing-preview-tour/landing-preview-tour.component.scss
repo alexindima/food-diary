@@ -331,7 +331,7 @@
         span {
             display: inline-flex;
             align-items: center;
-            min-height: 38px;
+            min-height: var(--fd-size-control-toolbar);
             padding: var(--fd-space-xs) var(--fd-space-sm);
             border-radius: var(--fd-radius-pill);
             background: var(--fd-bg-surface-raised);

@@ -101,7 +101,10 @@
     outline: none;
     background: transparent;
     color: var(--fd-color-text);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
 }
 
 .fd-ui-date-input__control::placeholder {

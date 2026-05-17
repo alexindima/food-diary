@@ -65,7 +65,10 @@
     border-radius: var(--fd-radius-button);
     background: transparent;
     color: var(--fd-color-text);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     cursor: pointer;
     transition:
         background-color 160ms ease,

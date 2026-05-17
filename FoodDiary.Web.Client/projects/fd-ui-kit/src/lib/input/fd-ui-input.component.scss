@@ -109,7 +109,8 @@
     outline: none;
     background: transparent;
     color: var(--fd-color-text);
-    font: inherit;
+    font-family: inherit;
+    font-weight: inherit;
     font-size: var(--fd-input-control-font-size);
     line-height: var(--fd-input-control-line-height);
     margin-top: 0;

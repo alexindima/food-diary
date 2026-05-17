@@ -107,7 +107,10 @@
     padding: var(--fd-space-status-badge-padding);
     background: var(--fd-bg-surface-glass-medium);
     color: var(--fd-color-white);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     cursor: pointer;
 }
 

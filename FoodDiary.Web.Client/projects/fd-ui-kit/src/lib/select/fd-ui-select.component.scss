@@ -65,7 +65,9 @@
     outline: none;
     background: transparent;
     color: var(--fd-color-text);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
     padding: 0;
     min-width: 0;
     cursor: pointer;
@@ -161,7 +163,9 @@
     background: transparent;
     text-align: left;
     color: var(--fd-color-text);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
     cursor: pointer;
     border-radius: var(--fd-radius-menu-item);
     min-height: var(--fd-space-menu-item-min-height);

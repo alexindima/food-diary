@@ -14,8 +14,8 @@
 }
 
 .admin-shell__logo {
-    width: 44px;
-    height: 44px;
+    width: var(--fd-size-control-touch);
+    height: var(--fd-size-control-touch);
     border-radius: var(--fd-radius-lg);
     background: var(--fd-bg-brand);
     letter-spacing: var(--fd-letter-spacing-emphasis);

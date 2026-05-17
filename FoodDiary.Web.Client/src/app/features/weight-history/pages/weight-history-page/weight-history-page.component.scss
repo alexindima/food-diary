@@ -59,7 +59,7 @@
 
     &__bmi-segments {
         display: flex;
-        height: 18px;
+        height: var(--fd-size-checkbox-control);
         border-radius: var(--fd-radius-pill);
         overflow: hidden;
     }

@@ -69,7 +69,7 @@
 
 .ai-photo-result__text-preview-value {
     color: var(--fd-color-text);
-    word-break: break-word;
+    overflow-wrap: anywhere;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
@@ -203,11 +203,14 @@
 
 .ai-photo-result__edit-input,
 .ai-photo-result__edit-select {
-    height: 34px;
+    height: var(--fd-size-control-chip);
     border-radius: var(--fd-radius-md);
     border: var(--fd-border-muted);
     padding: 0 var(--fd-space-xs);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     background: var(--fd-bg-surface-raised);
 }
 

@@ -69,7 +69,9 @@
         border-radius: var(--fd-radius-pill);
         padding: var(--fd-space-sm) var(--fd-space-md);
         min-height: 52px;
-        font: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
         font-weight: var(--fd-font-weight-bold);
         white-space: nowrap;
         cursor: pointer;

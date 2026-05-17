@@ -123,7 +123,7 @@ fd-fasting-active-basic-controls {
     }
 
     &__custom-intermittent-summary {
-        min-width: 44px;
+        min-width: var(--fd-size-control-touch);
         flex: 0 0 auto;
         color: var(--fd-color-slate-600);
         font-size: var(--fd-text-body-sm-size);
@@ -197,7 +197,10 @@ fd-fasting-active-basic-controls {
         padding: 0;
         border: 0;
         color: inherit;
-        font: inherit;
+        font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
         background: transparent;
         cursor: pointer;
 

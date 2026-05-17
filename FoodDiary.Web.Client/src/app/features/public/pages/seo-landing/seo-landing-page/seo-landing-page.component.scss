@@ -217,8 +217,8 @@
     }
 
     &__step-index {
-        width: 38px;
-        height: 38px;
+        width: var(--fd-size-control-toolbar);
+        height: var(--fd-size-control-toolbar);
         margin-bottom: var(--fd-space-sm);
         border-radius: var(--fd-radius-lg);
         display: inline-flex;
@@ -260,8 +260,8 @@
 
         &::after {
             content: '+';
-            width: 28px;
-            height: 28px;
+            width: var(--fd-size-control-xxs);
+            height: var(--fd-size-control-xxs);
             flex: 0 0 auto;
             border-radius: var(--fd-radius-pill);
             display: inline-flex;

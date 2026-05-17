@@ -75,7 +75,7 @@
 }
 
 .dashboard-notification-settings-dialog__footer {
-    padding-inline: 1.25rem;
+    padding-inline: var(--fd-space-dialog-padding);
 }
 
 @media #{variables.$media-mobile} {

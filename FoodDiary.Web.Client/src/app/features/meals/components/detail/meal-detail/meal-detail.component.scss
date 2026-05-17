@@ -231,7 +231,9 @@
         background: transparent;
         color: var(--fd-color-text);
         cursor: pointer;
-        font: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
         font-weight: var(--fd-text-action-weight);
         overflow-wrap: anywhere;
         text-align: left;

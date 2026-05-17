@@ -28,7 +28,10 @@
         min-width: 0;
         border: none;
         outline: none;
-        font: inherit;
+        font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
         color: var(--fd-color-text);
         background: transparent;
         overflow: hidden;

@@ -25,7 +25,7 @@
 }
 
 .fd-ui-hint__content {
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 @keyframes fd-ui-hint-in {

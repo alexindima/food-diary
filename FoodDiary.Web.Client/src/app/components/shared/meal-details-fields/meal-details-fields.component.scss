@@ -38,7 +38,10 @@
     background: var(--fd-bg-surface-raised);
     color: var(--fd-color-text);
     outline: none;
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
 }
 
 .meal-details-fields__input {

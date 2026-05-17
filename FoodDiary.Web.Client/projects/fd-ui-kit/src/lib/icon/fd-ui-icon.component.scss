@@ -20,12 +20,12 @@
     color: inherit;
     overflow: visible;
     vertical-align: middle;
-    font-weight: 400;
+    font-weight: var(--fd-font-weight-regular);
     font-style: normal;
     letter-spacing: normal;
     text-transform: none;
     white-space: nowrap;
-    word-wrap: normal;
+    overflow-wrap: normal;
     direction: ltr;
     user-select: none;
     -webkit-font-smoothing: antialiased;

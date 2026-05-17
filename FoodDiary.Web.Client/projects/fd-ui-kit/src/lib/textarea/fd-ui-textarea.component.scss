@@ -67,7 +67,10 @@
     resize: vertical;
     background: transparent;
     color: var(--fd-color-text);
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     line-height: var(--fd-text-body-line-height);
     padding: 0;
 }

@@ -115,7 +115,7 @@
 
 .photo-ai-dialog__edit-input,
 .photo-ai-dialog__edit-select {
-    height: 38px;
+    height: var(--fd-size-control-toolbar);
     border-radius: var(--fd-radius-input);
     border: var(--fd-border-width) solid var(--photo-ai-border);
     padding: 0 var(--fd-space-sm);

@@ -142,7 +142,10 @@
         border: var(--fd-border-muted);
         border-radius: var(--fd-radius-card);
         padding: var(--fd-space-sm) var(--fd-space-md);
-        font: inherit;
+        font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
         color: var(--fd-color-slate-900);
         resize: vertical;
         background: var(--fd-bg-surface-raised);

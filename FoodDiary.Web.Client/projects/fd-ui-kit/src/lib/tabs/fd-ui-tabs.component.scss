@@ -47,7 +47,10 @@
         color 140ms ease,
         border-color 140ms ease,
         opacity 140ms ease;
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
 }
 
 .fd-ui-tabs__tab:hover {

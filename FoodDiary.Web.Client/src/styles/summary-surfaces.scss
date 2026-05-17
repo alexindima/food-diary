@@ -22,5 +22,5 @@
 
 .fd-ui-summary-surface__value {
     color: var(--fd-color-text);
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }

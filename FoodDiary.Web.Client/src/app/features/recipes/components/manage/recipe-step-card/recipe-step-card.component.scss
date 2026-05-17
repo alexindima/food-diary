@@ -17,8 +17,8 @@
 
 .recipe-step-card__drag {
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: var(--fd-size-checkbox-control);
+    height: var(--fd-size-checkbox-control);
     border-radius: var(--fd-radius-badge);
     background-image: radial-gradient(var(--fd-color-slate-400) 1.6px, transparent 1.6px);
     background-size: 6px 6px;

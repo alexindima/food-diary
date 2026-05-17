@@ -80,7 +80,10 @@
     border: 0;
     background: transparent;
     cursor: pointer;
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
 }
 
 .fd-ui-inline-alert__action {
