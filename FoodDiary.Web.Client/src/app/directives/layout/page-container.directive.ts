@@ -2,7 +2,6 @@ import { Directive } from '@angular/core';
 
 @Directive({
     selector: '[fdPageContainer]',
-    standalone: true,
     host: {
         class: 'fd-page-container',
         '[style.display]': '"flex"',

@@ -7,15 +7,15 @@ export default defineConfig({
     retries: 0,
     reporter: 'list',
     use: {
-        baseURL: 'http://127.0.0.1:4300',
+        baseURL: 'http://127.0.0.1:4301',
         trace: 'retain-on-failure',
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
         headless: true,
     },
     webServer: {
-        command: 'npx ng serve fooddiary-admin --host 127.0.0.1 --port 4300',
-        url: 'http://127.0.0.1:4300',
+        command: 'npx ng serve fooddiary-admin --host 127.0.0.1 --port 4301',
+        url: 'http://127.0.0.1:4301',
         reuseExistingServer: true,
         timeout: 120_000,
         cwd: '.',

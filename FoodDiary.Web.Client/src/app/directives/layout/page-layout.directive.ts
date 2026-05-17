@@ -5,7 +5,6 @@ const DEFAULT_PADDING = 'var(--fd-layout-page-vertical-padding) var(--fd-layout-
 
 @Directive({
     selector: '[fdLayoutPage]',
-    standalone: true,
     host: {
         class: 'fd-layout-page',
         '[style.background]': 'backgroundStyle()',
