@@ -4,14 +4,15 @@ import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
-import type { User } from '../../shared/models/user.data';
-import type { SidebarDirectRouteRequest } from './sidebar.models';
+import type { User } from '../../../shared/models/user.data';
+import type { SidebarDirectRouteRequest } from '../sidebar-lib/sidebar.models';
+import { focusFirstSidebarInteractiveElement } from '../sidebar-lib/sidebar-view.utils';
 
 @Component({
     selector: 'fd-sidebar-user-menu',
     imports: [NgOptimizedImage, RouterModule, FdUiButtonComponent, FdUiIconComponent, SlicePipe, TranslatePipe, UpperCasePipe],
     templateUrl: './sidebar-user-menu.component.html',
-    styleUrl: './sidebar.component.scss',
+    styleUrl: '../sidebar.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarUserMenuComponent {
@@ -33,17 +34,8 @@ export class SidebarUserMenuComponent {
             }
 
             queueMicrotask(() => {
-                this.focusFirstInteractive(this.userMenuRef()?.nativeElement);
+                focusFirstSidebarInteractiveElement(this.userMenuRef()?.nativeElement);
             });
         });
-    }
-
-    private focusFirstInteractive(container?: HTMLElement | null): void {
-        if (container === null || container === undefined) {
-            return;
-        }
-
-        const firstInteractive = container.querySelector<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])');
-        firstInteractive?.focus();
     }
 }

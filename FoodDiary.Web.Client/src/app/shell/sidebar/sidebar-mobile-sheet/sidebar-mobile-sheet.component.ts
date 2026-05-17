@@ -3,14 +3,14 @@ import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
-import type { MobileSheetId, SidebarActionId, SidebarDirectRouteRequest, SidebarRouteItem } from './sidebar.models';
-import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
+import type { MobileSheetId, SidebarActionId, SidebarDirectRouteRequest, SidebarRouteItem } from '../sidebar-lib/sidebar.models';
+import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route-links.component';
 
 @Component({
     selector: 'fd-sidebar-mobile-sheet',
     imports: [RouterModule, FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, SidebarRouteLinksComponent, TranslatePipe],
     templateUrl: './sidebar-mobile-sheet.component.html',
-    styleUrl: './sidebar.component.scss',
+    styleUrl: '../sidebar.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarMobileSheetComponent {

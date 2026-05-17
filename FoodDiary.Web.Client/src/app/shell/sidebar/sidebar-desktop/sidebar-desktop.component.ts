@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
-import type { User } from '../../shared/models/user.data';
-import type { SidebarActionId, SidebarActionItem, SidebarDirectRouteRequest, SidebarRouteItem } from './sidebar.models';
-import { SidebarRouteLinksComponent } from './sidebar-route-links.component';
-import { SidebarUserMenuComponent } from './sidebar-user-menu.component';
+import type { User } from '../../../shared/models/user.data';
+import type { SidebarActionId, SidebarActionItem, SidebarDirectRouteRequest, SidebarRouteItem } from '../sidebar-lib/sidebar.models';
+import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route-links.component';
+import { SidebarUserMenuComponent } from '../sidebar-user-menu/sidebar-user-menu.component';
 
 @Component({
     selector: 'fd-sidebar-desktop',
@@ -18,7 +18,7 @@ import { SidebarUserMenuComponent } from './sidebar-user-menu.component';
         TranslatePipe,
     ],
     templateUrl: './sidebar-desktop.component.html',
-    styleUrl: './sidebar.component.scss',
+    styleUrl: '../sidebar.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarDesktopComponent {

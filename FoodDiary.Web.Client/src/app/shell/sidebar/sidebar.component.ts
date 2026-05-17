@@ -18,7 +18,7 @@ import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UserService } from '../../shared/api/user.service';
-import { PERCENT_MULTIPLIER } from '../../shared/lib/nutrition.constants';
+import { SidebarDesktopComponent } from './sidebar-desktop/sidebar-desktop.component';
 import type {
     DesktopSectionId,
     MobileSheetId,
@@ -26,39 +26,17 @@ import type {
     SidebarDirectRouteRequest,
     SidebarNavItem,
     SidebarRouteItem,
-} from './sidebar.models';
-import { SidebarDesktopComponent } from './sidebar-desktop.component';
-import { SidebarMobileComponent } from './sidebar-mobile.component';
-
-const FOOD_TRACKING_ITEMS: SidebarRouteItem[] = [
-    { id: 'meals', icon: 'restaurant_menu', labelKey: 'SIDEBAR.FOOD_DIARY', route: '/meals' },
-    { id: 'products', icon: 'inventory_2', labelKey: 'SIDEBAR.PRODUCTS', route: '/products' },
-    { id: 'recipes', icon: 'restaurant', labelKey: 'SIDEBAR.RECIPES', route: '/recipes' },
-    { id: 'meal-plans', icon: 'restaurant_menu', labelKey: 'SIDEBAR.MEAL_PLANS', route: '/meal-plans' },
-    { id: 'shopping-lists', icon: 'shopping_cart', labelKey: 'SIDEBAR.SHOPPING_LIST', route: '/shopping-lists' },
-    { id: 'fasting', icon: 'timer', labelKey: 'SIDEBAR.FASTING', route: '/fasting' },
-];
-
-const BODY_TRACKING_ITEMS: SidebarRouteItem[] = [
-    { id: 'weight-history', icon: 'monitor_weight', labelKey: 'SIDEBAR.WEIGHT', route: '/weight-history' },
-    { id: 'waist-history', icon: 'straighten', labelKey: 'SIDEBAR.WAIST', route: '/waist-history' },
-    { id: 'cycle-tracking', icon: 'favorite', labelKey: 'SIDEBAR.CYCLE', route: '/cycle-tracking' },
-];
-
-const DESKTOP_BOTTOM_ITEMS: SidebarRouteItem[] = [
-    { id: 'statistics', icon: 'bar_chart', labelKey: 'SIDEBAR.REPORTS', route: '/statistics' },
-    { id: 'goals', icon: 'flag', labelKey: 'SIDEBAR.GOALS', route: '/goals' },
-    { id: 'gamification', icon: 'emoji_events', labelKey: 'SIDEBAR.ACHIEVEMENTS', route: '/gamification' },
-    { id: 'lessons', icon: 'school', labelKey: 'SIDEBAR.LESSONS', route: '/lessons' },
-    { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
-];
-
-const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
-    { id: 'statistics', icon: 'bar_chart', labelKey: 'SIDEBAR.REPORTS', route: '/statistics' },
-    { id: 'goals', icon: 'flag', labelKey: 'SIDEBAR.GOALS', route: '/goals' },
-    { id: 'gamification', icon: 'emoji_events', labelKey: 'SIDEBAR.ACHIEVEMENTS', route: '/gamification' },
-    { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },
-];
+} from './sidebar-lib/sidebar.models';
+import { BODY_TRACKING_ITEMS, DESKTOP_BOTTOM_ITEMS, FOOD_TRACKING_ITEMS } from './sidebar-lib/sidebar-navigation.config';
+import {
+    buildPrimarySidebarNavItems,
+    calculateSidebarDailyProgressPercent,
+    isSidebarActionItem,
+    isSidebarRouteActive,
+    isSidebarRouteItem,
+    normalizeSidebarPath,
+} from './sidebar-lib/sidebar-view.utils';
+import { SidebarMobileComponent } from './sidebar-mobile/sidebar-mobile.component';
 
 @Component({
     selector: 'fd-sidebar',
@@ -87,29 +65,14 @@ export class SidebarComponent {
     public isDietologist = this.authService.isDietologist;
     public isAdmin = this.authService.isAdmin;
     public unreadNotificationCount = this.notificationService.unreadCount;
-    protected readonly primaryNavItems = computed<SidebarNavItem[]>(() => {
-        const items: SidebarNavItem[] = [{ id: 'dashboard', icon: 'dashboard', labelKey: 'SIDEBAR.DASHBOARD', route: '/', exact: true }];
-
-        if (this.isDietologist()) {
-            items.push({ id: 'dietologist', icon: 'medical_services', labelKey: 'SIDEBAR.MY_CLIENTS', route: '/dietologist' });
-        }
-
-        if (this.isAdmin()) {
-            items.push({ id: 'admin', icon: 'admin_panel_settings', labelKey: 'SIDEBAR.ADMIN_PANEL', action: 'openAdminPanel' });
-        }
-
-        return items;
-    });
-    protected readonly primaryRouteItems = computed<SidebarRouteItem[]>(() =>
-        this.primaryNavItems().filter((item): item is SidebarRouteItem => 'route' in item),
+    protected readonly primaryNavItems = computed<SidebarNavItem[]>(() =>
+        buildPrimarySidebarNavItems(this.isDietologist(), this.isAdmin()),
     );
-    protected readonly primaryActionItems = computed<SidebarActionItem[]>(() =>
-        this.primaryNavItems().filter((item): item is SidebarActionItem => 'action' in item),
-    );
+    protected readonly primaryRouteItems = computed<SidebarRouteItem[]>(() => this.primaryNavItems().filter(isSidebarRouteItem));
+    protected readonly primaryActionItems = computed<SidebarActionItem[]>(() => this.primaryNavItems().filter(isSidebarActionItem));
     protected readonly foodTrackingItems = FOOD_TRACKING_ITEMS;
     protected readonly bodyTrackingItems = BODY_TRACKING_ITEMS;
     protected readonly desktopBottomItems = DESKTOP_BOTTOM_ITEMS;
-    protected readonly mobileReportItems = MOBILE_REPORT_ITEMS;
     protected readonly currentUser = this.userService.user;
     protected readonly brandStatusKey = computed(() => {
         if (this.isAdmin()) {
@@ -128,10 +91,6 @@ export class SidebarComponent {
     protected readonly mobileSheet = signal<MobileSheetId>(null);
     protected readonly isFoodTrackingOpen = computed(() => this.openDesktopSection() === 'food');
     protected readonly isBodyTrackingOpen = computed(() => this.openDesktopSection() === 'body');
-    protected readonly isMobileFoodOpen = computed(() => this.mobileSheet() === 'food');
-    protected readonly isMobileBodyOpen = computed(() => this.mobileSheet() === 'body');
-    protected readonly isMobileReportsOpen = computed(() => this.mobileSheet() === 'reports');
-    protected readonly isMobileUserOpen = computed(() => this.mobileSheet() === 'user');
     protected readonly isMobileSheetOpen = computed(() => this.mobileSheet() !== null);
     protected readonly isMobileViewport = signal(this.getIsMobileViewport());
     protected readonly currentPath = signal(this.getCurrentPath());
@@ -143,45 +102,13 @@ export class SidebarComponent {
         () => this.isAuthenticated() && this.isMobileViewport() && !this.isDashboardRoute(),
     );
     protected readonly pendingRoute = signal<string | null>(null);
-    protected readonly activeMobileSheetLabelKey = computed(() => {
-        switch (this.mobileSheet()) {
-            case 'food':
-                return 'SIDEBAR.FOOD_TRACKING';
-            case 'body':
-                return 'SIDEBAR.BODY_TRACKING';
-            case 'reports':
-                return 'SIDEBAR.REPORTS_AND_GOALS';
-            case 'user':
-                return 'SIDEBAR.USER_MENU';
-            case null:
-                return '';
-        }
-    });
-    protected readonly activeMobileSheetRouteItems = computed<SidebarRouteItem[]>(() => {
-        switch (this.mobileSheet()) {
-            case 'food':
-                return this.foodTrackingItems;
-            case 'body':
-                return this.bodyTrackingItems;
-            case 'reports':
-                return this.mobileReportItems;
-            case 'user':
-            case null:
-                return [];
-        }
-    });
     protected readonly dailyConsumedKcal = signal(0);
     protected readonly dailyGoalKcal = signal(0);
     protected readonly dailyConsumedKcalRounded = computed(() => Math.round(this.dailyConsumedKcal()));
     protected readonly dailyGoalKcalRounded = computed(() => Math.round(this.dailyGoalKcal()));
-    protected readonly dailyProgressPercent = computed(() => {
-        const goal = this.dailyGoalKcal();
-        if (goal <= 0) {
-            return 0;
-        }
-
-        return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER));
-    });
+    protected readonly dailyProgressPercent = computed(() =>
+        calculateSidebarDailyProgressPercent(this.dailyConsumedKcal(), this.dailyGoalKcal()),
+    );
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
 
@@ -296,8 +223,7 @@ export class SidebarComponent {
     }
 
     private getCurrentPath(url = this.router.url): string {
-        const path = url.split('?')[0].split('#')[0];
-        return path.length > 0 ? path : '/';
+        return normalizeSidebarPath(url);
     }
 
     protected toggleFoodTracking(): void {
@@ -460,13 +386,7 @@ export class SidebarComponent {
     }
 
     private isRouteActive(route: string, exact: boolean): boolean {
-        const rawPath = this.router.url.split('?')[0].split('#')[0];
-        const currentPath = rawPath.length > 0 ? rawPath : '/';
-        if (exact) {
-            return currentPath === route;
-        }
-
-        return currentPath === route || currentPath.startsWith(`${route}/`);
+        return isSidebarRouteActive(this.router.url, route, exact);
     }
 
     private readonly handleDocumentKeydown = (event: KeyboardEvent): void => {
