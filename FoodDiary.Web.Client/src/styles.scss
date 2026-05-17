@@ -36,6 +36,8 @@ body {
 }
 
 body.fd-scroll-lock {
+    position: fixed;
+    inline-size: 100%;
     overflow: hidden;
 }
 

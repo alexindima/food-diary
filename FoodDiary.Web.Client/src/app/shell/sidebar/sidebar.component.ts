@@ -112,6 +112,7 @@ export class SidebarComponent {
     );
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
+    private mobileSheetScrollTop = 0;
 
     public constructor() {
         effect(() => {
@@ -145,9 +146,9 @@ export class SidebarComponent {
                 return;
             }
 
-            this.document.body.classList.add('fd-scroll-lock');
+            this.lockMobileSheetScroll();
             onCleanup(() => {
-                this.document.body.classList.remove('fd-scroll-lock');
+                this.unlockMobileSheetScroll();
             });
         });
 
@@ -423,6 +424,30 @@ export class SidebarComponent {
 
     private isRouteActive(route: string, exact: boolean): boolean {
         return isSidebarRouteActive(this.router.url, route, exact);
+    }
+
+    private lockMobileSheetScroll(): void {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        const scrollbarWidth = Math.max(0, window.innerWidth - this.document.documentElement.clientWidth);
+        this.mobileSheetScrollTop = window.scrollY;
+        this.document.body.style.insetBlockStart = `-${this.mobileSheetScrollTop}px`;
+        this.document.body.style.paddingInlineEnd = `${scrollbarWidth}px`;
+        this.document.body.classList.add('fd-scroll-lock');
+    }
+
+    private unlockMobileSheetScroll(): void {
+        this.document.body.classList.remove('fd-scroll-lock');
+        this.document.body.style.removeProperty('inset-block-start');
+        this.document.body.style.removeProperty('padding-inline-end');
+
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        window.scrollTo(0, this.mobileSheetScrollTop);
     }
 
     private readonly handleDocumentKeydown = (event: KeyboardEvent): void => {

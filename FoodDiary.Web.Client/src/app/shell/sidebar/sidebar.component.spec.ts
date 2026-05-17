@@ -18,6 +18,7 @@ import type { MobileSheetId, SidebarRouteItem } from './sidebar-lib/sidebar.mode
 
 const NAVIGATION_ID = 1;
 const ADMIN_LOADING_TTL_MS = 100;
+const LOCKED_SCROLL_Y = 240;
 
 type SidebarHarness = {
     closeMobileMenus: () => void;
@@ -44,6 +45,8 @@ describe('SidebarComponent behavior', () => {
 
     afterEach(() => {
         document.body.classList.remove('fd-scroll-lock');
+        document.body.style.removeProperty('inset-block-start');
+        document.body.style.removeProperty('padding-inline-end');
         vi.restoreAllMocks();
     });
 
@@ -75,19 +78,24 @@ describe('SidebarComponent behavior', () => {
         expect(focusSpy).toHaveBeenCalledOnce();
     });
 
-    it('blocks page scroll while a mobile sheet is open', () => {
+    it('blocks page scroll without shifting content while a mobile sheet is open', () => {
         const { component } = createComponent({ isMobileViewport: true });
         const harness = component as unknown as SidebarHarness;
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
+        Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1200 });
+        Object.defineProperty(window, 'scrollY', { configurable: true, value: LOCKED_SCROLL_Y });
+        Object.defineProperty(document.documentElement, 'clientWidth', { configurable: true, value: 1183 });
 
         harness.toggleMobileFood(document.createElement('button'));
         TestBed.tick();
 
-        expect(document.body.classList.contains('fd-scroll-lock')).toBe(true);
+        expectScrollLockApplied();
 
         harness.closeMobileMenus();
         TestBed.tick();
 
-        expect(document.body.classList.contains('fd-scroll-lock')).toBe(false);
+        expectScrollLockReleased();
+        expect(scrollTo).toHaveBeenCalledWith(0, LOCKED_SCROLL_Y);
     });
 
     it('does not logout when unsaved changes confirmation is cancelled', async () => {
@@ -122,6 +130,18 @@ describe('SidebarComponent behavior', () => {
         expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
     });
 });
+
+function expectScrollLockApplied(): void {
+    expect(document.body.classList.contains('fd-scroll-lock')).toBe(true);
+    expect(document.body.style.insetBlockStart).toBe(`-${LOCKED_SCROLL_Y}px`);
+    expect(document.body.style.paddingInlineEnd).toBe('17px');
+}
+
+function expectScrollLockReleased(): void {
+    expect(document.body.classList.contains('fd-scroll-lock')).toBe(false);
+    expect(document.body.style.insetBlockStart).toBe('');
+    expect(document.body.style.paddingInlineEnd).toBe('');
+}
 
 function createComponent(options: { isMobileViewport?: boolean } = {}): {
     authService: { onLogoutAsync: ReturnType<typeof vi.fn> };
