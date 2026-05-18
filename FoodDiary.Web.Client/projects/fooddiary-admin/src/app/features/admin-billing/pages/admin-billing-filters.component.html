@@ -5,14 +5,14 @@
     @if (activeTab() === 'payments') {
         <fd-ui-input placeholder="Kind" [ngModel]="kind()" (ngModelChange)="kindChange.emit($event)" />
     }
-    <label class="fd-grid fd-gap-xxs" for="admin-billing-from-date">
-        <span>From</span>
+    <div class="fd-grid fd-gap-xxs">
+        <label for="admin-billing-from-date">From</label>
         <input id="admin-billing-from-date" type="date" [ngModel]="fromDate()" (ngModelChange)="fromDateChange.emit($event)" />
-    </label>
-    <label class="fd-grid fd-gap-xxs" for="admin-billing-to-date">
-        <span>To</span>
+    </div>
+    <div class="fd-grid fd-gap-xxs">
+        <label for="admin-billing-to-date">To</label>
         <input id="admin-billing-to-date" type="date" [ngModel]="toDate()" (ngModelChange)="toDateChange.emit($event)" />
-    </label>
+    </div>
     <fd-ui-button type="button" (click)="filtersApply.emit()"> Apply </fd-ui-button>
     <fd-ui-button type="button" variant="secondary" (click)="filtersReset.emit()"> Reset </fd-ui-button>
 </section>

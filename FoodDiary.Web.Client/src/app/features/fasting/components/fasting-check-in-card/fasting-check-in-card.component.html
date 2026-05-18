@@ -76,8 +76,10 @@
                     />
                 </div>
 
-                <label class="fasting__checkin-notes fd-stack fd-gap-xs" for="fasting-check-in-notes">
-                    <span class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
+                <div class="fasting__checkin-notes fd-stack fd-gap-xs">
+                    <label class="fasting__protocol-group-title fd-ui-overline" for="fasting-check-in-notes">
+                        {{ 'FASTING.CHECK_IN.NOTES' | translate }}
+                    </label>
                     <textarea
                         id="fasting-check-in-notes"
                         class="fasting__textarea"
@@ -86,7 +88,7 @@
                         [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
                         (ngModelChange)="notes().set($event)"
                     ></textarea>
-                </label>
+                </div>
 
                 <div class="fasting__actions fasting__actions--split fd-ui-actions fd-ui-actions--split">
                     <fd-ui-button variant="secondary" fill="outline" [disabled]="isSaving()" (click)="formClose.emit()">

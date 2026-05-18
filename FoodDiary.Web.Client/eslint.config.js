@@ -162,9 +162,50 @@ const hasProjectedText = nodes =>
         return false;
     });
 
+const labelWrappedControlNames = new Set(['input', 'select', 'textarea']);
+
+const hasLabelWrappedControl = nodes =>
+    (nodes ?? []).some(node => {
+        if (node.type === 'Element' && labelWrappedControlNames.has(node.name)) {
+            return true;
+        }
+
+        if (node.type === 'Element' || node.type === 'Template') {
+            return hasLabelWrappedControl(node.children);
+        }
+
+        return false;
+    });
+
 const localTemplatePlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
+        'no-label-wrapped-control': {
+            meta: {
+                type: 'problem',
+                docs: {
+                    description: 'Disallow wrapping native form controls inside labels.',
+                },
+                messages: {
+                    wrappedControl: 'Place native form controls outside `<label>` and associate them with explicit `for`/`id` attributes.',
+                },
+                schema: [],
+            },
+            create(context) {
+                return {
+                    Element(node) {
+                        if (node.name !== 'label' || !hasLabelWrappedControl(node.children)) {
+                            return;
+                        }
+
+                        context.report({
+                            node,
+                            messageId: 'wrappedControl',
+                        });
+                    },
+                };
+            },
+        },
         'fd-ui-button-accessible-name': {
             meta: {
                 type: 'problem',
@@ -1540,6 +1581,7 @@ export default [
             ],
             'local/fd-ui-button-accessible-name': 'error',
             'local/no-mojibake': 'error',
+            'local/no-label-wrapped-control': 'error',
         },
     },
 ];

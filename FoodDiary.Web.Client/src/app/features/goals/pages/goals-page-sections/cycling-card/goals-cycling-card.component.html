@@ -1,10 +1,10 @@
 <fd-ui-card class="goals__card goals__card--cycling" [title]="'GOALS_PAGE.CYCLING_TITLE' | translate">
     <div class="goals__card-inner goals__card-inner--column">
         <div class="goals__cycling-toggle">
-            <label class="goals__cycling-label fd-ui-body-sm" for="goals-cycling-enabled">
+            <div class="goals__cycling-label fd-ui-body-sm">
                 <input id="goals-cycling-enabled" type="checkbox" [checked]="enabled()" (change)="enabledToggle.emit()" />
-                <span>{{ 'GOALS_PAGE.CYCLING_ENABLE' | translate }}</span>
-            </label>
+                <label for="goals-cycling-enabled">{{ 'GOALS_PAGE.CYCLING_ENABLE' | translate }}</label>
+            </div>
         </div>
         @if (enabled()) {
             <div class="goals__cycling-days">

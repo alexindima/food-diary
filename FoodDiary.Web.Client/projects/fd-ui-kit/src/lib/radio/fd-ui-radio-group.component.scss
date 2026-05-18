@@ -24,6 +24,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-radio-group-gap);
+    position: relative;
 }
 
 .fd-ui-radio-group--horizontal .fd-ui-radio-group__control {
@@ -88,15 +89,15 @@
     transition: background-color 140ms ease;
 }
 
-.fd-ui-radio__input:checked + .fd-ui-radio__control {
+.fd-ui-radio__input:checked + .fd-ui-radio .fd-ui-radio__control {
     border-color: var(--fd-color-primary-600);
 }
 
-.fd-ui-radio__input:checked + .fd-ui-radio__control .fd-ui-radio__dot {
+.fd-ui-radio__input:checked + .fd-ui-radio .fd-ui-radio__dot {
     background: var(--fd-bg-primary);
 }
 
-.fd-ui-radio__input:focus-visible + .fd-ui-radio__control {
+.fd-ui-radio__input:focus-visible + .fd-ui-radio .fd-ui-radio__control {
     box-shadow: var(--fd-shadow-focus);
 }
 

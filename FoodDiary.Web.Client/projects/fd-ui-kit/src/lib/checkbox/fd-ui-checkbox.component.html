@@ -1,14 +1,14 @@
 <div class="fd-ui-checkbox">
+    <input
+        class="fd-ui-checkbox__input"
+        type="checkbox"
+        [id]="id()"
+        [checked]="checked"
+        [disabled]="disabled()"
+        (change)="handleChange($event)"
+        (blur)="handleBlur()"
+    />
     <label class="fd-ui-checkbox__label" [attr.for]="id()" [class.fd-ui-checkbox__label--disabled]="disabled()">
-        <input
-            class="fd-ui-checkbox__input"
-            type="checkbox"
-            [id]="id()"
-            [checked]="checked"
-            [disabled]="disabled()"
-            (change)="handleChange($event)"
-            (blur)="handleBlur()"
-        />
         <span class="fd-ui-checkbox__control" aria-hidden="true">
             <span class="fd-ui-checkbox__checkmark"></span>
         </span>

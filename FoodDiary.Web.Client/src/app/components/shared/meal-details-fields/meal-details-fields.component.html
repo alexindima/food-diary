@@ -4,10 +4,10 @@
     [class.meal-details-fields--regular]="density() === 'regular'"
 >
     <div class="meal-details-fields__date-time fd-grid fd-gap-xs">
-        <label class="meal-details-fields__field fd-grid fd-gap-xxs" for="meal-details-date">
-            <span class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating">
+        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
+            <label class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating" for="meal-details-date">
                 {{ 'MEAL_DETAILS.DATE' | translate }}
-            </span>
+            </label>
             <input
                 #dateInput
                 id="meal-details-date"
@@ -16,11 +16,11 @@
                 [value]="date()"
                 (input)="dateChange.emit(dateInput.value)"
             />
-        </label>
-        <label class="meal-details-fields__field fd-grid fd-gap-xxs" for="meal-details-time">
-            <span class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating">
+        </div>
+        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
+            <label class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating" for="meal-details-time">
                 {{ 'MEAL_DETAILS.TIME' | translate }}
-            </span>
+            </label>
             <input
                 #timeInput
                 id="meal-details-time"
@@ -29,13 +29,13 @@
                 [value]="time()"
                 (input)="timeChange.emit(timeInput.value)"
             />
-        </label>
+        </div>
     </div>
 
-    <label class="meal-details-fields__field fd-grid fd-gap-xxs" for="meal-details-comment">
-        <span class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating">
+    <div class="meal-details-fields__field fd-grid fd-gap-xxs">
+        <label class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating" for="meal-details-comment">
             {{ 'MEAL_DETAILS.COMMENT' | translate }}
-        </span>
+        </label>
         <textarea
             #commentInput
             id="meal-details-comment"
@@ -44,7 +44,7 @@
             [value]="comment()"
             (input)="commentChange.emit(commentInput.value)"
         ></textarea>
-    </label>
+    </div>
 
     <fd-meal-satiety-fields
         [layout]="satietyLayout() === 'columns' ? 'columns' : 'stacked'"
