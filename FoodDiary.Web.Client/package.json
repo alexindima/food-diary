@@ -94,7 +94,7 @@
         "@typescript-eslint/eslint-plugin": "^8.59.3",
         "@typescript-eslint/parser": "^8.59.3",
         "angular-eslint": "^21.4.0",
-        "baseline-browser-mapping": "^2.10.29",
+        "baseline-browser-mapping": "^2.10.30",
         "concurrently": "^9.2.1",
         "dependency-cruiser": "^17.4.0",
         "eslint": "^10.4.0",
