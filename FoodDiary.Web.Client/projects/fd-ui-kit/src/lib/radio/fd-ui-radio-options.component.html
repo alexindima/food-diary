@@ -1,8 +1,9 @@
 @for (option of options(); track trackByValue($index, option)) {
-    <label class="fd-ui-radio" [class.fd-ui-radio--disabled]="disabled()">
+    <label class="fd-ui-radio" [attr.for]="`${id()}-${$index}`" [class.fd-ui-radio--disabled]="disabled()">
         <input
             class="fd-ui-radio__input"
             type="radio"
+            [id]="`${id()}-${$index}`"
             [name]="id()"
             [value]="$index"
             [checked]="isEqual(value(), option.value)"

@@ -76,9 +76,10 @@
                     />
                 </div>
 
-                <label class="fasting__checkin-notes fd-stack fd-gap-xs">
+                <label class="fasting__checkin-notes fd-stack fd-gap-xs" for="fasting-check-in-notes">
                     <span class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
                     <textarea
+                        id="fasting-check-in-notes"
                         class="fasting__textarea"
                         rows="4"
                         [ngModel]="notes()()"
