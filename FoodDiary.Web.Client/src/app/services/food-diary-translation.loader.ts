@@ -1,18 +1,24 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, makeStateKey, PLATFORM_ID, type StateKey, TransferState } from '@angular/core';
 import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
-import { catchError, forkJoin, map, type Observable, of, shareReplay } from 'rxjs';
+import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
 type TranslationDictionary = TranslationObject;
 type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
 
+function makeTranslationStateKey(lang: string, bundle: TranslationBundle): StateKey<TranslationDictionary> {
+    return makeStateKey<TranslationDictionary>(`fd-i18n:${lang}:${bundle}`);
+}
+
 @Injectable({ providedIn: 'root' })
 export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly http = inject(HttpClient);
     private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly transferState = inject(TransferState);
     private readonly cache = new Map<string, Observable<TranslationDictionary>>();
 
     public getTranslation(lang: string): Observable<TranslationDictionary> {
@@ -46,9 +52,23 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
             return cached;
         }
 
+        const transferStateKey = makeTranslationStateKey(lang, bundle);
+        if (isPlatformBrowser(this.platformId) && this.transferState.hasKey(transferStateKey)) {
+            const transferred = this.transferState.get(transferStateKey, {});
+            this.transferState.remove(transferStateKey);
+            const request = of(transferred).pipe(shareReplay({ bufferSize: 1, refCount: false }));
+            this.cache.set(key, request);
+            return request;
+        }
+
         const url = `./assets/i18n/${lang}/${bundle}.json?v=${environment.buildVersion ?? 'dev'}`;
         const request = this.http.get<TranslationDictionary>(url).pipe(
             catchError(() => of({})),
+            tap(translations => {
+                if (isPlatformServer(this.platformId)) {
+                    this.transferState.set(transferStateKey, translations);
+                }
+            }),
             shareReplay({ bufferSize: 1, refCount: false }),
         );
         this.cache.set(key, request);
