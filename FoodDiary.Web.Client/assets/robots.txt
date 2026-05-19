@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /assets/i18n/
 
 Sitemap: https://fooddiary.club/sitemap.xml
