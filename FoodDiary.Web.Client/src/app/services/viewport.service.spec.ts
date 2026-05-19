@@ -11,24 +11,29 @@ const MOBILE_QUERY = '(max-width: 600px)';
 
 let breakpointState$: Subject<BreakpointState>;
 let breakpointObserver: { observe: ReturnType<typeof vi.fn> };
-let originalMatchMedia: typeof window.matchMedia;
+let originalMatchMediaDescriptor: PropertyDescriptor | undefined;
 
 beforeEach(() => {
     breakpointState$ = new Subject<BreakpointState>();
     breakpointObserver = {
         observe: vi.fn().mockReturnValue(breakpointState$),
     };
-    originalMatchMedia = window.matchMedia;
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false });
+    originalMatchMediaDescriptor = Object.getOwnPropertyDescriptor(window, 'matchMedia');
+    mockMatchMedia(false);
 });
 
 afterEach(() => {
-    window.matchMedia = originalMatchMedia;
+    if (originalMatchMediaDescriptor === undefined) {
+        delete (window as Partial<Window>).matchMedia;
+        return;
+    }
+
+    Object.defineProperty(window, 'matchMedia', originalMatchMediaDescriptor);
 });
 
 describe('ViewportService', () => {
     it('uses initial browser match and observes viewport changes', () => {
-        window.matchMedia = vi.fn().mockReturnValue({ matches: true });
+        mockMatchMedia(true);
         const service = setup('browser');
 
         expect(breakpointObserver.observe).toHaveBeenCalledWith(MOBILE_QUERY);
@@ -45,6 +50,13 @@ describe('ViewportService', () => {
         expect(window.matchMedia).not.toHaveBeenCalled();
     });
 });
+
+function mockMatchMedia(matches: boolean): void {
+    Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        value: vi.fn().mockReturnValue({ matches }),
+    });
+}
 
 function setup(platformId: object | string): ViewportService {
     TestBed.configureTestingModule({
