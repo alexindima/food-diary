@@ -1,20 +1,6 @@
-export type SeoPageSlug =
-    | 'food-diary'
-    | 'calorie-counter'
-    | 'meal-planner'
-    | 'macro-tracker'
-    | 'intermittent-fasting'
-    | 'meal-tracker'
-    | 'weight-loss-app'
-    | 'dietologist-collaboration'
-    | 'nutrition-planner'
-    | 'weight-tracker'
-    | 'body-progress-tracker'
-    | 'shopping-list-for-meal-planning'
-    | 'nutrition-tracker'
-    | 'food-log'
-    | 'protein-tracker'
-    | 'meal-prep-planner';
+import type { SeoPageSlug } from '../../../../../config/public-seo-landing-routes.config';
+
+export type { SeoPageSlug };
 
 export type SeoLandingPageData = {
     baseKey: string;

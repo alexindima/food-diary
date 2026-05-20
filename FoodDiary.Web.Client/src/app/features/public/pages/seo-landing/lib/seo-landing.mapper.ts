@@ -1,3 +1,4 @@
+import { SEO_PAGE_LABEL_KEYS } from '../../../../../config/public-seo-landing-routes.config';
 import { isRecord } from '../../../../../shared/lib/unknown-value.utils';
 import type {
     SeoLandingContentItemKeys,
@@ -9,24 +10,7 @@ import type {
     SeoPageSlug,
 } from './seo-landing.types';
 
-export const SEO_PAGE_LABEL_KEYS: Record<SeoPageSlug, string> = {
-    'food-diary': 'SEO.FOOD_DIARY_PAGE',
-    'calorie-counter': 'SEO.CALORIE_COUNTER_PAGE',
-    'meal-planner': 'SEO.MEAL_PLANNER_PAGE',
-    'macro-tracker': 'SEO.MACRO_TRACKER_PAGE',
-    'intermittent-fasting': 'SEO.INTERMITTENT_FASTING_PAGE',
-    'meal-tracker': 'SEO.MEAL_TRACKER_PAGE',
-    'weight-loss-app': 'SEO.WEIGHT_LOSS_APP_PAGE',
-    'dietologist-collaboration': 'SEO.DIETOLOGIST_COLLABORATION_PAGE',
-    'nutrition-planner': 'SEO.NUTRITION_PLANNER_PAGE',
-    'weight-tracker': 'SEO.WEIGHT_TRACKER_PAGE',
-    'body-progress-tracker': 'SEO.BODY_PROGRESS_TRACKER_PAGE',
-    'shopping-list-for-meal-planning': 'SEO.SHOPPING_LIST_MEAL_PLANNER_PAGE',
-    'nutrition-tracker': 'SEO.NUTRITION_TRACKER_PAGE',
-    'food-log': 'SEO.FOOD_LOG_PAGE',
-    'protein-tracker': 'SEO.PROTEIN_TRACKER_PAGE',
-    'meal-prep-planner': 'SEO.MEAL_PREP_PLANNER_PAGE',
-};
+export { SEO_PAGE_LABEL_KEYS };
 
 export function resolveSeoLandingPageData(value: unknown): SeoLandingPageData {
     if (

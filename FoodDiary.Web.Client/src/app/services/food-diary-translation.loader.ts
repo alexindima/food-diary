@@ -5,6 +5,7 @@ import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
 import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { PUBLIC_SEO_PATHS } from '../config/public-seo-landing-routes.config';
 
 type TranslationDictionary = TranslationObject;
 type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
@@ -102,28 +103,9 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
     }
 
     private isSeoPath(normalizedPath: string): boolean {
-        return SEO_PATHS.has(normalizedPath);
+        return PUBLIC_SEO_PATHS.has(normalizedPath);
     }
 }
-
-const SEO_PATHS = new Set([
-    '/food-diary',
-    '/calorie-counter',
-    '/meal-planner',
-    '/macro-tracker',
-    '/intermittent-fasting',
-    '/meal-tracker',
-    '/weight-loss-app',
-    '/dietologist-collaboration',
-    '/nutrition-planner',
-    '/weight-tracker',
-    '/body-progress-tracker',
-    '/shopping-list-for-meal-planning',
-    '/nutrition-tracker',
-    '/food-log',
-    '/protein-tracker',
-    '/meal-prep-planner',
-]);
 
 function normalizePath(pathname: string): string {
     return pathname.split(/[?#]/u, 1)[0].toLowerCase();
