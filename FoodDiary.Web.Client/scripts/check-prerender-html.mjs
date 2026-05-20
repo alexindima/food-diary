@@ -6,7 +6,7 @@ const browserDistDir = path.join(rootDir, 'dist', 'browser');
 const publicSeoRoutesConfigPath = path.join(rootDir, 'src', 'app', 'config', 'public-seo-landing-routes.config.ts');
 const translationKeyPattern = /\b[A-Z][A-Z0-9_]*(?:\.[A-Z0-9_]+)+\b/gu;
 const ignoredPathSegments = new Set(['assets']);
-const requiredSeoPaths = readPublicSeoLandingPaths();
+const requiredSeoPaths = ['', ...readPublicSeoLandingPaths()];
 
 if (!fs.existsSync(browserDistDir)) {
     console.error('Prerender HTML check failed: dist/browser does not exist. Run npm run build first.');
@@ -58,9 +58,8 @@ function readPublicSeoLandingPaths() {
 function assertSeoDocument(filePath, routePath, targetIssues) {
     const content = fs.readFileSync(filePath, 'utf8');
     const routeLabel = toRouteLabel(routePath);
-    const canonicalUrl = routePath.length === 0 ? 'https://fooddiary.club/' : `https://fooddiary.club/${routePath}`;
-    const ruAlternateUrl =
-        routePath.length === 0 ? 'https://xn--b1adbcbrouc8l.xn--p1ai/' : `https://xn--b1adbcbrouc8l.xn--p1ai/${routePath}`;
+    const canonicalUrl = buildCanonicalUrl('https://fooddiary.club', routePath);
+    const ruAlternateUrl = buildCanonicalUrl('https://xn--b1adbcbrouc8l.xn--p1ai', routePath);
 
     assertPattern(content, /<title>[^<]+<\/title>/iu, routeLabel, 'missing title tag.', targetIssues);
     assertPattern(content, /<meta\s+name="description"\s+content="[^"]+"\s*>/iu, routeLabel, 'missing meta description.', targetIssues);
@@ -75,6 +74,10 @@ function assertSeoDocument(filePath, routePath, targetIssues) {
         'missing SEO structured data.',
         targetIssues,
     );
+}
+
+function buildCanonicalUrl(baseUrl, routePath) {
+    return routePath.length === 0 ? baseUrl : `${baseUrl}/${routePath}`;
 }
 
 function assertPattern(content, pattern, routeLabel, message, targetIssues) {

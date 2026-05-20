@@ -1,14 +1,6 @@
 server {
-    if ($host = www.fooddiary.club) {
-        return 301 https://$host$request_uri;
-    }
-
-    if ($host = fooddiary.club) {
-        return 301 https://$host$request_uri;
-    }
-
     listen 80;
-    server_name fooddiary.club www.fooddiary.club xn--b1adbcbrouc8l.xn--p1ai www.xn--b1adbcbrouc8l.xn--p1ai;
+    server_name fooddiary.club xn--b1adbcbrouc8l.xn--p1ai;
 
     location ^~ /.well-known/acme-challenge/ {
         root /var/www/fooddiary.club;
@@ -24,10 +16,72 @@ server {
 }
 
 server {
+    listen 80;
+    server_name www.fooddiary.club;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        return 301 https://fooddiary.club$request_uri;
+    }
+
+    error_log /var/log/nginx/fooddiary.error.log;
+    access_log /var/log/nginx/fooddiary.access.log;
+}
+
+server {
+    listen 80;
+    server_name www.xn--b1adbcbrouc8l.xn--p1ai;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        return 301 https://xn--b1adbcbrouc8l.xn--p1ai$request_uri;
+    }
+
+    error_log /var/log/nginx/fooddiary.error.log;
+    access_log /var/log/nginx/fooddiary.access.log;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name www.fooddiary.club;
+    ssl_certificate /etc/letsencrypt/live/public.fooddiary.club/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/public.fooddiary.club/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    return 301 https://fooddiary.club$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name www.xn--b1adbcbrouc8l.xn--p1ai;
+    ssl_certificate /etc/letsencrypt/live/public.fooddiary.club/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/public.fooddiary.club/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    return 301 https://xn--b1adbcbrouc8l.xn--p1ai$request_uri;
+}
+
+server {
     listen 443 ssl;
     listen 443 quic reuseport;
     http2 on;
-    server_name fooddiary.club www.fooddiary.club xn--b1adbcbrouc8l.xn--p1ai www.xn--b1adbcbrouc8l.xn--p1ai;
+    server_name fooddiary.club xn--b1adbcbrouc8l.xn--p1ai;
     ssl_certificate /etc/letsencrypt/live/public.fooddiary.club/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/public.fooddiary.club/privkey.pem;
 
