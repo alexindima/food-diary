@@ -19,16 +19,13 @@ const PRODUCT_FATS = 4;
 const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
 const PAGE_SIZE = 10;
-const ASYNC_IMPORT_FLUSH_DELAY_MS = 0;
-const WAIT_ATTEMPTS = 20;
 
 describe('ProductListPageComponent', () => {
     it('reloads favorites and current page after favorite change in detail dialog', async () => {
         const { component, facade, dialogService } = setupComponent();
         dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'FavoriteChanged')) });
 
-        component.onProductClick(createProduct());
-        await waitForAsync(() => facade.loadFavorites.mock.calls.length > 0);
+        await handleProductClickAsync(component, createProduct());
 
         expect(facade.loadFavorites).toHaveBeenCalled();
         expect(facade.reloadCurrentPage).toHaveBeenCalled();
@@ -38,8 +35,7 @@ describe('ProductListPageComponent', () => {
         const { component, facade, dialogService } = setupComponent();
         dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Edit')) });
 
-        component.onProductClick(createProduct());
-        await waitForAsync(() => facade.navigationService.navigateToProductEditAsync.mock.calls.length > 0);
+        await handleProductClickAsync(component, createProduct());
 
         expect(facade.navigationService.navigateToProductEditAsync).toHaveBeenCalledWith('product-1');
     });
@@ -50,8 +46,7 @@ describe('ProductListPageComponent', () => {
         dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
         facade.deleteProductAndReload.mockReturnValue(of(undefined));
 
-        component.onProductClick(createProduct({ isOwnedByCurrentUser: true }));
-        await waitForAsync(() => facade.deleteProductAndReload.mock.calls.length > 0);
+        await handleProductClickAsync(component, createProduct({ isOwnedByCurrentUser: true }));
 
         expect(facade.deleteProductAndReload).toHaveBeenCalledWith('product-1');
         expect(scrollSpy).toHaveBeenCalled();
@@ -61,8 +56,7 @@ describe('ProductListPageComponent', () => {
         const { component, facade, dialogService } = setupComponent();
         dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
 
-        component.onProductClick(createProduct({ isOwnedByCurrentUser: false }));
-        await waitForAsync(() => dialogService.open.mock.calls.length > 0);
+        await handleProductClickAsync(component, createProduct({ isOwnedByCurrentUser: false }));
 
         expect(facade.deleteProductAndReload).not.toHaveBeenCalled();
     });
@@ -73,8 +67,7 @@ describe('ProductListPageComponent', () => {
         facade.deleteProductAndReload.mockReturnValue(throwError(() => new Error('Delete failed')));
         facade.productData.setLoading(true);
 
-        component.onProductClick(createProduct());
-        await waitForAsync(() => toastService.error.mock.calls.length > 0);
+        await handleProductClickAsync(component, createProduct());
 
         expect(facade.productData.isLoading()).toBe(false);
         expect(toastService.error).toHaveBeenCalledWith('PRODUCT_LIST.DELETE_ERROR');
@@ -174,21 +167,8 @@ function createProductListFacadeMock(): ProductListFacadeMock {
     } as unknown as ProductListFacadeMock;
 }
 
-async function flushPromisesAsync(): Promise<void> {
-    await Promise.resolve();
-    await new Promise(resolve => {
-        setTimeout(resolve, ASYNC_IMPORT_FLUSH_DELAY_MS);
-    });
-}
-
-async function waitForAsync(predicate: () => boolean): Promise<void> {
-    for (let attempt = 0; attempt < WAIT_ATTEMPTS; attempt++) {
-        if (predicate()) {
-            return;
-        }
-
-        await flushPromisesAsync();
-    }
+async function handleProductClickAsync(component: ProductListPageComponent, product: Product): Promise<void> {
+    await (component as unknown as { handleProductClickAsync: (product: Product) => Promise<void> }).handleProductClickAsync(product);
 }
 
 function createProduct(overrides: Partial<Product> = {}): Product {

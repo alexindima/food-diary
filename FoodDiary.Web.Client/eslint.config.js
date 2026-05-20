@@ -1074,9 +1074,6 @@ export default [
             'src/app/services/viewport.service.ts',
             'src/app/shell/app.component.ts',
             'src/app/shell/sidebar/sidebar.component.ts',
-            'projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.component.ts',
-            'projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.service.ts',
-            'projects/fd-ui-kit/src/lib/hint/fd-ui-hint.directive.ts',
         ],
         rules: {
             'local/no-browser-globals': 'error',

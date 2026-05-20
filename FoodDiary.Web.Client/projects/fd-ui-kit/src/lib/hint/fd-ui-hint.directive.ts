@@ -1,5 +1,6 @@
 import { type ConnectedPosition, Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
 import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, TemplateRef } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 
@@ -41,6 +42,7 @@ export class FdUiHintDirective {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
     private readonly tooltipId = `fd-ui-hint-${nextHintId++}`;
     private readonly initialAriaDescribedBy: string | null = this.elementRef.nativeElement.getAttribute('aria-describedby');
     private overlayRef: OverlayRef | null = null;
@@ -101,7 +103,13 @@ export class FdUiHintDirective {
             return;
         }
 
-        this.showTimeoutId = window.setTimeout(() => {
+        const browserWindow = this.document.defaultView;
+        if (browserWindow === null) {
+            this.show();
+            return;
+        }
+
+        this.showTimeoutId = browserWindow.setTimeout(() => {
             this.showTimeoutId = null;
             this.show();
         }, delay);
@@ -114,7 +122,13 @@ export class FdUiHintDirective {
             return;
         }
 
-        this.hideTimeoutId = window.setTimeout(() => {
+        const browserWindow = this.document.defaultView;
+        if (browserWindow === null) {
+            this.hide();
+            return;
+        }
+
+        this.hideTimeoutId = browserWindow.setTimeout(() => {
             this.hideTimeoutId = null;
             this.hide();
         }, this.fdUiHintHideDelay());
@@ -311,14 +325,14 @@ export class FdUiHintDirective {
 
     private clearShowTimer(): void {
         if (this.showTimeoutId !== null) {
-            window.clearTimeout(this.showTimeoutId);
+            this.document.defaultView?.clearTimeout(this.showTimeoutId);
             this.showTimeoutId = null;
         }
     }
 
     private clearHideTimer(): void {
         if (this.hideTimeoutId !== null) {
-            window.clearTimeout(this.hideTimeoutId);
+            this.document.defaultView?.clearTimeout(this.hideTimeoutId);
             this.hideTimeoutId = null;
         }
     }

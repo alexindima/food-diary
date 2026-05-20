@@ -1,8 +1,8 @@
 import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import type { ComponentType } from '@angular/cdk/portal';
-import type { StaticProvider } from '@angular/core';
-import { inject, Injectable } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID, type StaticProvider } from '@angular/core';
 
 import type { FdUiDialogSize } from './fd-ui-dialog.component';
 import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
@@ -35,6 +35,8 @@ type ResolvedDialogLayout = {
 export class FdUiDialogService {
     private readonly dialog = inject(Dialog);
     private readonly overlay = inject(Overlay);
+    private readonly document = inject(DOCUMENT);
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly compactViewportQuery = inject(FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY);
 
     public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
@@ -153,6 +155,7 @@ export class FdUiDialogService {
     }
 
     private isCompactMobile(): boolean {
-        return typeof window !== 'undefined' && window.matchMedia(this.compactViewportQuery).matches;
+        const matchMedia = this.document.defaultView?.matchMedia;
+        return this.isBrowser && matchMedia?.(this.compactViewportQuery).matches === true;
     }
 }

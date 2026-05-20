@@ -1,8 +1,9 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { type GlobalPositionStrategy, Overlay } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiDialogService } from './fd-ui-dialog.service';
 import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
@@ -77,26 +78,29 @@ function latestConfig(open: DialogOpenMock): DialogOpenConfig {
 }
 
 function setupDialogService(matches: boolean): DialogServiceTestContext {
-    vi.stubGlobal('window', {
-        matchMedia: vi.fn().mockReturnValue({ matches }),
-    });
+    const documentMock = {
+        defaultView: {
+            matchMedia: vi.fn().mockReturnValue({ matches }),
+        },
+    } as unknown as Document;
 
     const open = createDialogOpenMock();
     const dialogMock = createDialogMock(open);
     const { overlayMock, scrollStrategy, strategy } = createOverlayMock();
 
     TestBed.configureTestingModule({
-        providers: [FdUiDialogService, { provide: Dialog, useValue: dialogMock }, { provide: Overlay, useValue: overlayMock }],
+        providers: [
+            FdUiDialogService,
+            { provide: Dialog, useValue: dialogMock },
+            { provide: DOCUMENT, useValue: documentMock },
+            { provide: Overlay, useValue: overlayMock },
+        ],
     });
 
     const service = TestBed.inject(FdUiDialogService);
 
     return { open, scrollStrategy, service, strategy };
 }
-
-afterEach(() => {
-    vi.unstubAllGlobals();
-});
 
 describe('FdUiDialogService panel classes', () => {
     it('maps detail preset to semantic panel classes', () => {

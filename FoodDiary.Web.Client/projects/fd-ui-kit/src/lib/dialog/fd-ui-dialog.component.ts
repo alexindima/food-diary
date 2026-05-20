@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     booleanAttribute,
@@ -44,6 +44,7 @@ export class FdUiDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<FdUiDialogComponent>, { optional: true });
     private readonly injectedData = inject<FdUiDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
 
     public readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
 
@@ -82,7 +83,7 @@ export class FdUiDialogComponent {
                 this.isBodyScrollable.set(body.scrollHeight > body.clientHeight + 1);
             };
             const scheduleUpdate = (): void => {
-                window.requestAnimationFrame(updateScrollableState);
+                this.document.defaultView?.requestAnimationFrame(updateScrollableState) ?? updateScrollableState();
             };
             const resizeObserver = new ResizeObserver(scheduleUpdate);
             const mutationObserver = new MutationObserver(scheduleUpdate);
