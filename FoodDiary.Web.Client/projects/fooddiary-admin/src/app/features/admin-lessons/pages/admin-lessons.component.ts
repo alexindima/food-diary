@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -24,6 +24,7 @@ export class AdminLessonsComponent {
     private readonly lessonsService = inject(AdminLessonsService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
 
     public readonly lessons = signal<AdminLesson[]>([]);
     public readonly isLoading = signal(false);
@@ -128,7 +129,7 @@ export class AdminLessonsComponent {
         const fileName = `fooddiary-lessons-${new Date().toISOString().slice(0, EXPORT_DATE_LENGTH)}.json`;
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        const anchor = document.createElement('a');
+        const anchor = this.document.createElement('a');
         anchor.href = url;
         anchor.download = fileName;
         anchor.click();

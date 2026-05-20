@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -16,6 +17,7 @@ export class UnauthorizedComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly authService = inject(AdminAuthService);
+    private readonly document = inject(DOCUMENT);
 
     public readonly reason: string | null;
     public readonly returnUrl: string;
@@ -41,7 +43,7 @@ export class UnauthorizedComponent {
         if (adminReturnUrl.length > 0) {
             url.searchParams.set('adminReturnUrl', adminReturnUrl);
         }
-        window.location.assign(url.toString());
+        this.document.defaultView?.location.assign(url.toString());
     }
 
     private async tryRecoverFromSsoAsync(returnUrl: string): Promise<void> {

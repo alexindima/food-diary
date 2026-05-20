@@ -104,6 +104,65 @@ const noRedundantBooleanComparisonSyntax = [
     },
 ];
 
+const restrictedBrowserGlobals = new Set(['window', 'document', 'navigator', 'localStorage', 'sessionStorage']);
+const importIdentifierDeclarations = new Set(['ImportSpecifier', 'ImportDefaultSpecifier', 'ImportNamespaceSpecifier']);
+const namedIdentifierDeclarations = new Set(['VariableDeclarator', 'FunctionDeclaration', 'FunctionExpression']);
+
+const isTypeScriptIdentifier = node => node.parent?.type.startsWith('TS') === true;
+
+const isObjectIdentifierKey = (node, parent) =>
+    (parent.type === 'MemberExpression' && parent.property === node && !parent.computed) ||
+    ((parent.type === 'Property' || parent.type === 'PropertyDefinition' || parent.type === 'MethodDefinition') && parent.key === node);
+
+const isIdentifierDeclaration = (node, parent) =>
+    importIdentifierDeclarations.has(parent.type) ||
+    (namedIdentifierDeclarations.has(parent.type) && parent.id === node) ||
+    (parent.type === 'AssignmentPattern' && parent.left === node);
+
+const isIdentifierDeclarationOrKey = node => {
+    const parent = node.parent;
+    if (!parent) {
+        return false;
+    }
+
+    if (isTypeScriptIdentifier(node)) {
+        return true;
+    }
+
+    return isObjectIdentifierKey(node, parent) || isIdentifierDeclaration(node, parent);
+};
+
+const createNoBrowserGlobalsRule = context => ({
+    Identifier(node) {
+        if (!restrictedBrowserGlobals.has(node.name) || isIdentifierDeclarationOrKey(node)) {
+            return;
+        }
+
+        context.report({
+            node,
+            messageId: 'browserGlobal',
+            data: {
+                name: node.name,
+            },
+        });
+    },
+});
+
+const noBrowserGlobalsRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow direct browser globals in Angular runtime code.',
+        },
+        messages: {
+            browserGlobal:
+                'Do not use global `{{name}}` directly in runtime code. Inject DOCUMENT, use Renderer2/RendererFactory2 when mutating DOM, and guard browser-only work with isPlatformBrowser.',
+        },
+        schema: [],
+    },
+    create: createNoBrowserGlobalsRule,
+};
+
 const appBoundaryElements = [
     { type: 'app-shared-models', pattern: 'src/app/shared/models', mode: 'folder' },
     { type: 'app-shared-api', pattern: 'src/app/shared/api', mode: 'folder' },
@@ -424,6 +483,7 @@ const isAsyncLikeFunction = (context, node) => {
 const localTsPlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
+        'no-browser-globals': noBrowserGlobalsRule,
         'async-function-suffix': {
             meta: {
                 type: 'problem',
@@ -981,6 +1041,45 @@ export default [
             // These files augment the global Window interface for browser SDKs.
             // Type aliases cannot participate in declaration merging.
             '@typescript-eslint/consistent-type-definitions': 'off',
+        },
+    },
+    {
+        files: ['src/app/**/*.ts', 'projects/fooddiary-admin/src/app/**/*.ts', 'projects/fd-ui-kit/src/lib/**/*.ts'],
+        ignores: [
+            '**/*.spec.ts',
+            '**/*.stories.ts',
+            'src/app/app.config.ts',
+            'src/app/components/shared/ai-input-bar/ai-input-bar.component.ts',
+            'src/app/components/shared/barcode-scanner/barcode-scanner.component.ts',
+            'src/app/components/shared/dashboard-summary-card/dashboard-summary-card.component.ts',
+            'src/app/components/shared/nutrients-summary/nutrients-summary.component.ts',
+            'src/app/constants/chart-colors.ts',
+            'src/app/features/auth/components/auth/auth-lib/auth-countdown.utils.ts',
+            'src/app/features/auth/components/auth/auth.component.ts',
+            'src/app/features/auth/lib/google-identity.service.ts',
+            'src/app/features/auth/pages/email-verification-pending/email-verification-pending.component.ts',
+            'src/app/features/dashboard/lib/dashboard-layout.service.ts',
+            'src/app/features/dashboard/lib/dashboard.facade.ts',
+            'src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component.ts',
+            'src/app/features/goals/pages/goals-page.component.ts',
+            'src/app/features/premium/lib/paddle-checkout.service.ts',
+            'src/app/features/public/components/landing-preview-tour/landing-preview-tour.component.ts',
+            'src/app/features/statistics/lib/statistics-chart-config.ts',
+            'src/app/services/auth.service.ts',
+            'src/app/services/browser-storage.service.ts',
+            'src/app/services/error-handler.service.ts',
+            'src/app/services/frontend-observability.service.ts',
+            'src/app/services/push-notification.service.ts',
+            'src/app/services/theme.service.ts',
+            'src/app/services/viewport.service.ts',
+            'src/app/shell/app.component.ts',
+            'src/app/shell/sidebar/sidebar.component.ts',
+            'projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.component.ts',
+            'projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.service.ts',
+            'projects/fd-ui-kit/src/lib/hint/fd-ui-hint.directive.ts',
+        ],
+        rules: {
+            'local/no-browser-globals': 'error',
         },
     },
     {

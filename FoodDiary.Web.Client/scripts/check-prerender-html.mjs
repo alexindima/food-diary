@@ -14,6 +14,10 @@ if (!fs.existsSync(browserDistDir)) {
 const htmlFiles = collectHtmlFiles(browserDistDir);
 const issues = [];
 
+if (htmlFiles.length === 0) {
+    issues.push('dist/browser contains no HTML files to check. Run a prerendered production build before this check.');
+}
+
 for (const filePath of htmlFiles) {
     const content = fs.readFileSync(filePath, 'utf8');
     const matches = new Set(content.match(translationKeyPattern) ?? []);

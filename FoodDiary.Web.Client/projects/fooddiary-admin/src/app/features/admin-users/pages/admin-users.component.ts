@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -43,6 +43,7 @@ export class AdminUsersComponent {
     private readonly usersService = inject(AdminUsersService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
 
     public readonly users = signal<AdminUser[]>([]);
     public readonly totalPages = signal(1);
@@ -150,7 +151,7 @@ export class AdminUsersComponent {
                 this.loadSessions();
                 const targetUrl = new URL('/dashboard', environment.mainAppUrl);
                 targetUrl.searchParams.set('impersonationToken', response.accessToken);
-                window.open(targetUrl.toString(), '_blank', 'noopener,noreferrer');
+                this.document.defaultView?.open(targetUrl.toString(), '_blank', 'noopener,noreferrer');
             });
     }
 

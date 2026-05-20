@@ -1,5 +1,6 @@
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -11,10 +12,13 @@ const BASE64_REMAINDER_NONE = 0;
 export class AdminAuthService {
     private readonly authUrl = environment.apiUrls.auth;
     private readonly http = inject(HttpClient);
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly tokenSignal = signal<string | null>(this.getToken());
 
     public getToken(): string | null {
-        return localStorage.getItem('authToken') ?? sessionStorage.getItem('authToken');
+        return this.localStorageRef?.getItem('authToken') ?? this.sessionStorageRef?.getItem('authToken') ?? null;
     }
 
     public isAuthenticated(): boolean {
@@ -37,7 +41,11 @@ export class AdminAuthService {
     }
 
     public async applySsoFromQueryAsync(): Promise<void> {
-        const params = new URLSearchParams(window.location.search);
+        if (!this.isBrowser) {
+            return;
+        }
+
+        const params = new URLSearchParams(this.document.location.search);
         const code = params.get('code');
         if (code === null || code.length === 0) {
             return;
@@ -63,9 +71,7 @@ export class AdminAuthService {
             params.set('ssoError', '1');
         }
 
-        const nextQuery = params.toString();
-        const nextUrl = nextQuery.length > 0 ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
-        window.history.replaceState({}, '', nextUrl);
+        this.replaceCurrentUrl(params);
         this.tokenSignal.set(this.getToken());
     }
 
@@ -121,8 +127,8 @@ export class AdminAuthService {
                 return false;
             }
 
-            localStorage.setItem('authToken', response.accessToken);
-            localStorage.setItem('refreshToken', response.refreshToken);
+            this.localStorageRef?.setItem('authToken', response.accessToken);
+            this.localStorageRef?.setItem('refreshToken', response.refreshToken);
             return true;
         } catch {
             return false;
@@ -130,37 +136,47 @@ export class AdminAuthService {
     }
 
     private captureTokenFromQuery(): void {
-        const params = new URLSearchParams(window.location.search);
+        if (!this.isBrowser) {
+            return;
+        }
+
+        const params = new URLSearchParams(this.document.location.search);
         const token = params.get('authToken') ?? params.get('accessToken');
         if (token === null || token.length === 0) {
             return;
         }
 
-        localStorage.setItem('authToken', token);
+        this.localStorageRef?.setItem('authToken', token);
         this.clearTokenParams(params);
     }
 
     private clearCodeFromUrl(params: URLSearchParams): void {
         params.delete('code');
-        const nextQuery = params.toString();
-        const nextUrl = nextQuery.length > 0 ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
-        window.history.replaceState({}, '', nextUrl);
+        this.replaceCurrentUrl(params);
     }
 
     private clearTokenParams(params: URLSearchParams): void {
         params.delete('authToken');
         params.delete('accessToken');
+        this.replaceCurrentUrl(params);
+    }
+
+    private replaceCurrentUrl(params: URLSearchParams): void {
+        if (!this.isBrowser) {
+            return;
+        }
+
         const nextQuery = params.toString();
-        const nextUrl = nextQuery.length > 0 ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
-        window.history.replaceState({}, '', nextUrl);
+        const nextUrl = nextQuery.length > 0 ? `${this.document.location.pathname}?${nextQuery}` : this.document.location.pathname;
+        this.document.defaultView?.history.replaceState({}, '', nextUrl);
     }
 
     private wasCodeProcessed(code: string): boolean {
-        return sessionStorage.getItem('adminSsoCode') === code;
+        return this.sessionStorageRef?.getItem('adminSsoCode') === code;
     }
 
     private markCodeProcessed(code: string): void {
-        sessionStorage.setItem('adminSsoCode', code);
+        this.sessionStorageRef?.setItem('adminSsoCode', code);
     }
 
     private extractRolesFromToken(token: string): string[] {
@@ -193,7 +209,7 @@ export class AdminAuthService {
         }
 
         try {
-            const url = new URL(decoded, window.location.origin);
+            const url = new URL(decoded, this.document.location.origin);
             const code = url.searchParams.get('code');
             if (code === null || code.length === 0) {
                 return null;
@@ -238,6 +254,26 @@ export class AdminAuthService {
 
     private isRecord(value: unknown): value is Record<string, unknown> {
         return typeof value === 'object' && value !== null && !Array.isArray(value);
+    }
+
+    private get localStorageRef(): Storage | null {
+        return this.getBrowserStorage('localStorage');
+    }
+
+    private get sessionStorageRef(): Storage | null {
+        return this.getBrowserStorage('sessionStorage');
+    }
+
+    private getBrowserStorage(storageName: 'localStorage' | 'sessionStorage'): Storage | null {
+        if (!this.isBrowser) {
+            return null;
+        }
+
+        try {
+            return this.document.defaultView?.[storageName] ?? null;
+        } catch {
+            return null;
+        }
     }
 }
 
