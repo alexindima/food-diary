@@ -12,7 +12,6 @@ import { FdUiMenuTriggerDirective } from './fd-ui-menu-trigger.directive';
 const MENU_ITEM_COUNT = 3;
 
 @Component({
-    standalone: true,
     imports: [FdUiMenuTriggerDirective, FdUiMenuComponent, FdUiMenuItemComponent],
     template: `
         <button type="button" [fdUiMenuTrigger]="menu">Actions</button>

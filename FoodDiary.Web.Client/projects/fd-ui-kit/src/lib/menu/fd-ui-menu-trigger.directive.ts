@@ -10,7 +10,6 @@ const MENU_VIEWPORT_MARGIN = 8;
 
 @Directive({
     selector: '[fdUiMenuTrigger]',
-    standalone: true,
     host: {
         '[attr.aria-haspopup]': '"menu"',
         '[attr.aria-expanded]': 'overlayRef?.hasAttached() ? "true" : "false"',

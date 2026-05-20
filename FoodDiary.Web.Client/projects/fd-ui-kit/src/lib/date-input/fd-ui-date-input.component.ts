@@ -12,7 +12,6 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-date-input',
-    standalone: true,
     imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiCalendarComponent, FdUiIconComponent],
     templateUrl: './fd-ui-date-input.component.html',
     styleUrls: ['./fd-ui-date-input.component.scss'],

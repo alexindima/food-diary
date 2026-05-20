@@ -26,7 +26,6 @@ export type FdUiEmojiPickerSize = 'sm' | 'md';
 
 @Component({
     selector: 'fd-ui-emoji-picker',
-    standalone: true,
     imports: [CommonModule, FdUiHintDirective],
     templateUrl: './fd-ui-emoji-picker.component.html',
     styleUrls: ['./fd-ui-emoji-picker.component.scss'],

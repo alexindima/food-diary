@@ -52,7 +52,6 @@ import { FastingStatsCardComponent } from '../fasting-page-sections/stats-card/f
 
 @Component({
     selector: 'fd-fasting-page',
-    standalone: true,
     imports: [
         TranslatePipe,
         PageHeaderComponent,

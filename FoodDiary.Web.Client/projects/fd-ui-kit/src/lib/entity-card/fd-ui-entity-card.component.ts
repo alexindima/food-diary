@@ -6,7 +6,6 @@ import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.direct
 
 @Component({
     selector: 'fd-ui-entity-card',
-    standalone: true,
     imports: [CommonModule, FdUiCardComponent],
     templateUrl: './fd-ui-entity-card.component.html',
     styleUrls: ['./fd-ui-entity-card.component.scss'],

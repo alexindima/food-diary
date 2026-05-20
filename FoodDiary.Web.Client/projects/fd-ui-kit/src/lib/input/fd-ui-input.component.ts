@@ -29,7 +29,6 @@ export type FdUiInputAutocomplete =
 
 @Component({
     selector: 'fd-ui-input',
-    standalone: true,
     imports: [CommonModule, FdUiIconComponent],
     templateUrl: './fd-ui-input.component.html',
     styleUrls: ['./fd-ui-input.component.scss'],

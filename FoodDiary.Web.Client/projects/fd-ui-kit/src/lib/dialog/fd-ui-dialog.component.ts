@@ -35,7 +35,6 @@ export type FdUiDialogData = {
 
 @Component({
     selector: 'fd-ui-dialog',
-    standalone: true,
     imports: [CommonModule, FdUiIconComponent],
     templateUrl: './fd-ui-dialog.component.html',
     styleUrls: ['./fd-ui-dialog.component.scss'],

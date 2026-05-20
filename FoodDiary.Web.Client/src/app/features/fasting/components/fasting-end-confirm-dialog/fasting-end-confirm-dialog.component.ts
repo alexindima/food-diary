@@ -16,7 +16,6 @@ export type FastingEndConfirmDialogData = {
 
 @Component({
     selector: 'fd-fasting-end-confirm-dialog',
-    standalone: true,
     imports: [FdUiDialogShellComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
     templateUrl: './fasting-end-confirm-dialog.component.html',
     styleUrl: './fasting-end-confirm-dialog.component.scss',

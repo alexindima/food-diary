@@ -5,7 +5,6 @@ import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
 
 @Component({
     selector: 'fd-ui-menu-item',
-    standalone: true,
     imports: [RouterModule],
     templateUrl: './fd-ui-menu-item.component.html',
     styleUrls: ['./fd-ui-menu.component.scss'],

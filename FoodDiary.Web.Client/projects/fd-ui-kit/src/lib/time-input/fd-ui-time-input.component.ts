@@ -16,7 +16,6 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-time-input',
-    standalone: true,
     imports: [CommonModule, FdUiIconComponent],
     templateUrl: './fd-ui-time-input.component.html',
     styleUrls: ['./fd-ui-time-input.component.scss'],

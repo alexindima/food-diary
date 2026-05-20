@@ -30,7 +30,6 @@ const SHORT_ID_SUFFIX_START = -6;
 
 @Component({
     selector: 'fd-admin-billing',
-    standalone: true,
     imports: [
         CommonModule,
         FdUiButtonComponent,

@@ -10,7 +10,6 @@ let nextId = 0;
 
 @Component({
     selector: 'fd-ui-radio-group',
-    standalone: true,
     imports: [FdUiRadioOptionsComponent],
     templateUrl: './fd-ui-radio-group.component.html',
     styleUrls: ['./fd-ui-radio-group.component.scss'],

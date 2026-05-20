@@ -27,7 +27,6 @@ type AdminModerationActionDialogViewState = {
 
 @Component({
     selector: 'fd-admin-moderation-action-dialog',
-    standalone: true,
     imports: [FormsModule, FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
     templateUrl: './admin-moderation-action-dialog.component.html',
     styleUrls: ['./admin-moderation-action-dialog.component.scss'],

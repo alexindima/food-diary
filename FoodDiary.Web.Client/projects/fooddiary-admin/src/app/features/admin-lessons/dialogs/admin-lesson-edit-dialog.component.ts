@@ -34,7 +34,6 @@ const DEFAULT_SORT_ORDER = 0;
 
 @Component({
     selector: 'fd-admin-lesson-edit-dialog',
-    standalone: true,
     imports: [CommonModule, ReactiveFormsModule, FdUiInputComponent, FdUiTextareaComponent, FdUiButtonComponent, FdUiSelectComponent],
     templateUrl: './admin-lesson-edit-dialog.component.html',
     styleUrl: './admin-lesson-edit-dialog.component.scss',

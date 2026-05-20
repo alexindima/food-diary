@@ -17,7 +17,6 @@ import type { WeightEntry } from '../../models/weight-entry.data';
 
 @Component({
     selector: 'fd-weight-history-page',
-    standalone: true,
     imports: [
         TranslateModule,
         PageHeaderComponent,

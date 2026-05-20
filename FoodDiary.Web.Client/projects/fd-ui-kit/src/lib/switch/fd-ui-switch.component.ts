@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 
 @Component({
     selector: 'fd-ui-switch',
-    standalone: true,
     templateUrl: './fd-ui-switch.component.html',
     styleUrls: ['./fd-ui-switch.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

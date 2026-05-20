@@ -7,7 +7,6 @@ import { FdUiInputComponent } from './fd-ui-input.component';
 
 @Component({
     template: '<fd-ui-input [formControl]="ctrl" />',
-    standalone: true,
     imports: [FdUiInputComponent, ReactiveFormsModule],
 })
 class TestHostComponent {

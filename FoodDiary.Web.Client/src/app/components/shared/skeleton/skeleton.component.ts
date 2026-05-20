@@ -1,11 +1,9 @@
-import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 export type SkeletonVariant = 'text' | 'circle' | 'rect';
 
 @Component({
     selector: 'fd-skeleton',
-    imports: [NgStyle],
     templateUrl: './skeleton.component.html',
     styleUrl: './skeleton.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

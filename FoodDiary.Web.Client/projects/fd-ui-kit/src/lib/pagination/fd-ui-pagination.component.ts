@@ -6,7 +6,6 @@ const MAX_VISIBLE_PAGES = 5;
 
 @Component({
     selector: 'fd-ui-pagination',
-    standalone: true,
     templateUrl: './fd-ui-pagination.component.html',
     styleUrls: ['./fd-ui-pagination.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

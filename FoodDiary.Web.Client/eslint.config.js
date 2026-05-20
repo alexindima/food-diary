@@ -1061,8 +1061,12 @@ export default [
                     message: 'Use standalone components instead of NgModules.',
                 },
                 {
+                    selector: 'PropertyAssignment[key.name="standalone"][value.value=true]',
+                    message: 'Remove standalone: true. Standalone is the Angular default.',
+                },
+                {
                     selector: 'PropertyAssignment[key.name="standalone"][value.value=false]',
-                    message: 'Components must be standalone. Remove standalone: false.',
+                    message: 'Components, directives, and pipes must stay standalone. Remove standalone: false.',
                 },
                 {
                     selector: 'PropertyAssignment[key.name="changeDetection"][value.property.name="Default"]',
@@ -1547,7 +1551,7 @@ export default [
                 'error',
                 {
                     allowBindToStyle: true,
-                    allowNgStyle: true,
+                    allowNgStyle: false,
                 },
             ],
             '@angular-eslint/template/no-interpolation-in-attributes': 'error',

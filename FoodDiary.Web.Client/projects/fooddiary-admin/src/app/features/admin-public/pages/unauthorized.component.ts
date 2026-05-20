@@ -7,7 +7,6 @@ import { AdminAuthService } from '../../admin-auth/lib/admin-auth.service';
 
 @Component({
     selector: 'fd-admin-unauthorized',
-    standalone: true,
     imports: [FdUiButtonComponent],
     templateUrl: './unauthorized.component.html',
     styleUrl: './unauthorized.component.scss',

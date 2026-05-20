@@ -4,7 +4,6 @@ export type FdUiIconSize = 'sm' | 'md' | 'lg' | 'xl';
 
 @Component({
     selector: 'fd-ui-icon',
-    standalone: true,
     templateUrl: './fd-ui-icon.component.html',
     styleUrl: './fd-ui-icon.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

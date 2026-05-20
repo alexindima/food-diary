@@ -6,7 +6,6 @@ export type FdUiEmptyStateAppearance = 'default' | 'compact';
 
 @Component({
     selector: 'fd-ui-empty-state',
-    standalone: true,
     imports: [FdUiIconComponent],
     templateUrl: './fd-ui-empty-state.component.html',
     styleUrl: './fd-ui-empty-state.component.scss',

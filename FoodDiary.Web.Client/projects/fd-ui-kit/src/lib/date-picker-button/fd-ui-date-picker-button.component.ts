@@ -8,7 +8,6 @@ import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 
 @Component({
     selector: 'fd-ui-date-picker-button',
-    standalone: true,
     imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiHintDirective, FdUiButtonComponent, FdUiCalendarComponent],
     templateUrl: './fd-ui-date-picker-button.component.html',
     styleUrl: './fd-ui-date-picker-button.component.scss',

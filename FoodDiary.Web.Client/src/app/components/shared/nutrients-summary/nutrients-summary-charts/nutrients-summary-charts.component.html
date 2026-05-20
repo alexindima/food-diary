@@ -1,16 +1,17 @@
 <div
     class="charts-wrapper fd-row fd-justify-center fd-wrap fd-gap-md"
-    [ngStyle]="chartsWrapperStyles()"
+    [style.gap]="chartsWrapperStyles()['gap']"
     [class.column-layout]="isColumnLayout()"
 >
     @if (showPieChart()) {
-        <div class="chart fd-center" [ngStyle]="chartStyles()">
+        <div class="chart fd-center" [style.width]="chartStyles()['width']" [style.height]="chartStyles()['height']">
             <canvas
                 baseChart
                 type="pie"
                 [style.width.px]="chartsBlockSize()"
                 [style.height.px]="chartsBlockSize()"
-                [ngStyle]="chartCanvasStyles()"
+                [style.max-width]="chartCanvasStyles()['maxWidth']"
+                [style.max-height]="chartCanvasStyles()['maxHeight']"
                 [data]="pieChartData()"
                 [options]="pieChartOptions()"
                 [legend]="false"
@@ -18,13 +19,14 @@
         </div>
     }
     @if (showBarChart()) {
-        <div class="chart fd-center" [ngStyle]="chartStyles()">
+        <div class="chart fd-center" [style.width]="chartStyles()['width']" [style.height]="chartStyles()['height']">
             <canvas
                 baseChart
                 type="bar"
                 [style.width.px]="chartsBlockSize()"
                 [style.height.px]="chartsBlockSize()"
-                [ngStyle]="chartCanvasStyles()"
+                [style.max-width]="chartCanvasStyles()['maxWidth']"
+                [style.max-height]="chartCanvasStyles()['maxHeight']"
                 [data]="barChartData()"
                 [options]="barChartOptions()"
                 [legend]="false"

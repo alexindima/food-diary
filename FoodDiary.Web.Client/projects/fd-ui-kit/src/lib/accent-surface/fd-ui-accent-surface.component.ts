@@ -4,7 +4,6 @@ export type FdUiAccentSide = 'top' | 'right' | 'bottom' | 'left';
 
 @Component({
     selector: 'fd-ui-accent-surface, [fdUiAccentSurface]',
-    standalone: true,
     imports: [],
     templateUrl: './fd-ui-accent-surface.component.html',
     styleUrls: ['./fd-ui-accent-surface.component.scss'],

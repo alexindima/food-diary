@@ -9,7 +9,6 @@ export type FdUiInlineAlertAppearance = 'alert' | 'notice';
 
 @Component({
     selector: 'fd-ui-inline-alert',
-    standalone: true,
     imports: [CommonModule, FdUiIconComponent, FdUiInlineAlertActionsComponent],
     templateUrl: './fd-ui-inline-alert.component.html',
     styleUrls: ['./fd-ui-inline-alert.component.scss'],

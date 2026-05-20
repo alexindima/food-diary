@@ -5,7 +5,6 @@ let nextId = 0;
 
 @Component({
     selector: 'fd-ui-checkbox',
-    standalone: true,
     templateUrl: './fd-ui-checkbox.component.html',
     styleUrls: ['./fd-ui-checkbox.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

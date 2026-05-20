@@ -12,7 +12,6 @@ type ThemeHighlight = {
 
 @Component({
     selector: 'fd-theme-docs',
-    standalone: true,
     template: `
         <div
             style="

@@ -10,7 +10,6 @@ type GovernanceSection = {
 
 @Component({
     selector: 'fd-style-governance-docs',
-    standalone: true,
     template: `
         <div
             style="

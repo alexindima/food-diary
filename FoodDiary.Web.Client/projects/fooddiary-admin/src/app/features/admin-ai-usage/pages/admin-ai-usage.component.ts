@@ -8,7 +8,6 @@ import type { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 
 @Component({
     selector: 'fd-admin-ai-usage',
-    standalone: true,
     imports: [CommonModule, FdUiCardComponent],
     templateUrl: './admin-ai-usage.component.html',
     styleUrl: './admin-ai-usage.component.scss',

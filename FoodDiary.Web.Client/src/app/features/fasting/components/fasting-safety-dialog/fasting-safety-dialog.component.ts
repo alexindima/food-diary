@@ -17,7 +17,6 @@ export type FastingSafetyDialogData = {
 
 @Component({
     selector: 'fd-fasting-safety-dialog',
-    standalone: true,
     imports: [FdUiDialogShellComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
     templateUrl: './fasting-safety-dialog.component.html',
     styleUrl: './fasting-safety-dialog.component.scss',

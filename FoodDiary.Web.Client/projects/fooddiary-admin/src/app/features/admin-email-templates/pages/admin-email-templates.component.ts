@@ -10,7 +10,6 @@ import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 
 @Component({
     selector: 'fd-admin-email-templates',
-    standalone: true,
     imports: [CommonModule, FdUiButtonComponent],
     templateUrl: './admin-email-templates.component.html',
     styleUrl: './admin-email-templates.component.scss',

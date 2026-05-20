@@ -26,7 +26,6 @@ type TemplateForm = {
 
 @Component({
     selector: 'fd-admin-email-template-edit-dialog',
-    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,

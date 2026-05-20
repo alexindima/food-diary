@@ -19,7 +19,6 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-datetime-input',
-    standalone: true,
     imports: [CommonModule, ReactiveFormsModule, FdUiDateInputComponent, FdUiIconComponent],
     templateUrl: './fd-ui-datetime-input.component.html',
     styleUrls: ['./fd-ui-datetime-input.component.scss'],

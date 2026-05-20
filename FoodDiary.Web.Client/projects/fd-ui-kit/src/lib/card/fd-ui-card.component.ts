@@ -10,7 +10,6 @@ export type FdUiCardHeaderAlign = 'start' | 'center';
 
 @Component({
     selector: 'fd-ui-card',
-    standalone: true,
     imports: [],
     templateUrl: './fd-ui-card.component.html',
     styleUrls: ['./fd-ui-card.component.scss'],

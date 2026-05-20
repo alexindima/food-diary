@@ -11,7 +11,6 @@ import { GamificationStatsGridComponent } from '../gamification-page-sections/st
 
 @Component({
     selector: 'fd-gamification-page',
-    standalone: true,
     imports: [
         TranslatePipe,
         PageHeaderComponent,

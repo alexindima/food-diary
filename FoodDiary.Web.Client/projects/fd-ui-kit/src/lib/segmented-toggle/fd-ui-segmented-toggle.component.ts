@@ -11,7 +11,6 @@ export type FdUiSegmentedToggleSize = 'sm' | 'md';
 
 @Component({
     selector: 'fd-ui-segmented-toggle',
-    standalone: true,
     imports: [CommonModule],
     templateUrl: './fd-ui-segmented-toggle.component.html',
     styleUrls: ['./fd-ui-segmented-toggle.component.scss'],

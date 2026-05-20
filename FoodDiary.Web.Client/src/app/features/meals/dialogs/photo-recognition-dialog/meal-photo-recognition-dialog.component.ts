@@ -53,7 +53,6 @@ const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
 @Component({
     selector: 'fd-meal-photo-recognition-dialog',
-    standalone: true,
     templateUrl: './meal-photo-recognition-dialog.component.html',
     styleUrls: ['./meal-photo-recognition-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

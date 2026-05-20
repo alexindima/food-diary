@@ -21,7 +21,6 @@ export type FdUiSelectOption<T = unknown> = {
 
 @Component({
     selector: 'fd-ui-select',
-    standalone: true,
     imports: [CommonModule, FdUiIconComponent, CdkOverlayOrigin, CdkConnectedOverlay],
     templateUrl: './fd-ui-select.component.html',
     styleUrls: ['./fd-ui-select.component.scss'],

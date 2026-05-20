@@ -1,11 +1,10 @@
-import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'fd-nutrients-summary-charts',
-    imports: [BaseChartDirective, NgStyle],
+    imports: [BaseChartDirective],
     templateUrl: './nutrients-summary-charts.component.html',
     styleUrl: '../nutrients-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

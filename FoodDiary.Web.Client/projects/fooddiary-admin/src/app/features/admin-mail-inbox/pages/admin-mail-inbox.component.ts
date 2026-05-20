@@ -22,7 +22,6 @@ const MAX_MAIL_INBOX_LIMIT = 200;
 
 @Component({
     selector: 'fd-admin-mail-inbox',
-    standalone: true,
     imports: [CommonModule, FormsModule, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './admin-mail-inbox.component.html',
     styleUrl: './admin-mail-inbox.component.scss',

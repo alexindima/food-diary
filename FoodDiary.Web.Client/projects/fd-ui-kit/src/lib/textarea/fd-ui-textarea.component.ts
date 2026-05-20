@@ -9,7 +9,6 @@ const DEFAULT_ROWS = 4;
 
 @Component({
     selector: 'fd-ui-textarea',
-    standalone: true,
     imports: [CommonModule],
     templateUrl: './fd-ui-textarea.component.html',
     styleUrls: ['./fd-ui-textarea.component.scss'],

@@ -33,7 +33,6 @@ const HOURS_PER_DAY = 24;
 
 @Component({
     selector: 'fd-admin-dashboard',
-    standalone: true,
     imports: [CommonModule, FdUiCardComponent],
     templateUrl: './admin-dashboard.component.html',
     styleUrl: './admin-dashboard.component.scss',

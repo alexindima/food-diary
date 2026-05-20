@@ -22,7 +22,6 @@ const MAX_COLLAGE_IMAGES = 4;
 
 @Component({
     selector: 'fd-ui-image-preview-dialog',
-    standalone: true,
     imports: [NgOptimizedImage, CommonModule, TranslatePipe, FdUiDialogComponent],
     templateUrl: './fd-ui-image-preview-dialog.component.html',
     styleUrls: ['./fd-ui-image-preview-dialog.component.scss'],

@@ -14,7 +14,6 @@ export type FdUiChipSelectSize = 'sm' | 'md';
 
 @Component({
     selector: 'fd-ui-chip-select',
-    standalone: true,
     imports: [FdUiHintDirective],
     templateUrl: './fd-ui-chip-select.component.html',
     styleUrls: ['./fd-ui-chip-select.component.scss'],

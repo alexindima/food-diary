@@ -5,7 +5,6 @@ import { describe, expect, it } from 'vitest';
 import { type FdUiSectionState, FdUiSectionStateComponent } from './fd-ui-section-state.component';
 
 @Component({
-    standalone: true,
     imports: [FdUiSectionStateComponent],
     template: `
         <fd-ui-section-state

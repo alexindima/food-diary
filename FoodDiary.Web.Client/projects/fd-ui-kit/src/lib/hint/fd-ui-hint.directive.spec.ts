@@ -10,7 +10,6 @@ import { FdUiHintDirective } from './fd-ui-hint.directive';
 const HINT_SHOW_DELAY_MS = 500;
 
 @Component({
-    standalone: true,
     imports: [FdUiHintDirective],
     template: ' <button type="button" fdUiHint="Notifications" [fdUiHintShowDelay]="hintShowDelayMs">Open dialog</button> ',
 })

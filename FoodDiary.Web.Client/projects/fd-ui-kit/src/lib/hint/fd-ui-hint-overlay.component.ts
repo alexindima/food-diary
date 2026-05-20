@@ -4,7 +4,6 @@ import type { SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'fd-ui-hint-overlay',
-    standalone: true,
     imports: [CommonModule],
     templateUrl: './fd-ui-hint-overlay.component.html',
     styleUrls: ['./fd-ui-hint-overlay.component.scss'],

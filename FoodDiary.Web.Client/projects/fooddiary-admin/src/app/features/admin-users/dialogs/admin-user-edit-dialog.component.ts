@@ -18,7 +18,6 @@ type AdminUserForm = {
 
 @Component({
     selector: 'fd-admin-user-edit-dialog',
-    standalone: true,
     imports: [CommonModule, ReactiveFormsModule, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
     templateUrl: './admin-user-edit-dialog.component.html',
     styleUrl: './admin-user-edit-dialog.component.scss',

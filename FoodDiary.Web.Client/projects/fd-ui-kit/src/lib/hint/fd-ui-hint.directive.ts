@@ -16,7 +16,6 @@ let nextHintId = 0;
 
 @Directive({
     selector: '[fdUiHint]',
-    standalone: true,
     host: {
         '(mouseenter)': 'onMouseEnter()',
         '(mouseleave)': 'onMouseLeave()',

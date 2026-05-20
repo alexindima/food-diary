@@ -10,7 +10,6 @@ const TEXTAREA_ROWS = 8;
 
 @Component({
     template: '<fd-ui-textarea [formControl]="ctrl" />',
-    standalone: true,
     imports: [FdUiTextareaComponent, ReactiveFormsModule],
 })
 class TestHostComponent {

@@ -14,7 +14,6 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
 
 @Component({
     selector: 'fd-meal-manage-success-dialog',
-    standalone: true,
     templateUrl: './meal-manage-success-dialog.component.html',
     styleUrls: ['./meal-manage-success-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

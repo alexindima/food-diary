@@ -24,7 +24,6 @@ export type FdUiTabsAppearance = 'default' | 'wrap-compact';
 
 @Component({
     selector: 'fd-ui-tabs',
-    standalone: true,
     imports: [TranslateModule],
     templateUrl: './fd-ui-tabs.component.html',
     styleUrls: ['./fd-ui-tabs.component.scss'],

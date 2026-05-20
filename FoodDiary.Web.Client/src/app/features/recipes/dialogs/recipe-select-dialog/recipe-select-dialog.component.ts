@@ -36,7 +36,6 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
 
 @Component({
     selector: 'fd-recipe-select-dialog',
-    standalone: true,
     templateUrl: './recipe-select-dialog.component.html',
     styleUrls: ['./recipe-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,4 +1,4 @@
-import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ import {
 
 @Component({
     selector: 'fd-nutrients-summary',
-    imports: [DecimalPipe, TranslatePipe, NgStyle, CustomGroupComponent, NgTemplateOutlet, NutrientsSummaryChartsComponent],
+    imports: [DecimalPipe, TranslatePipe, CustomGroupComponent, NgTemplateOutlet, NutrientsSummaryChartsComponent],
     templateUrl: './nutrients-summary.component.html',
     styleUrl: './nutrients-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

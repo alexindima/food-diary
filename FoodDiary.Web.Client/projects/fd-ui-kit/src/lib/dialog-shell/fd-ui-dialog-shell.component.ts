@@ -5,7 +5,6 @@ import { type FdUiDialogBodyScrollInset, FdUiDialogComponent, type FdUiDialogSiz
 
 @Component({
     selector: 'fd-ui-dialog-shell',
-    standalone: true,
     imports: [CommonModule, FdUiDialogComponent],
     templateUrl: './fd-ui-dialog-shell.component.html',
     styleUrls: ['./fd-ui-dialog-shell.component.scss'],

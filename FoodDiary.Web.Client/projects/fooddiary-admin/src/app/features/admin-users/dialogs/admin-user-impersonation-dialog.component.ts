@@ -20,7 +20,6 @@ const REASON_MIN_LENGTH = 10;
 
 @Component({
     selector: 'fd-admin-user-impersonation-dialog',
-    standalone: true,
     imports: [ReactiveFormsModule, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiTextareaComponent],
     templateUrl: './admin-user-impersonation-dialog.component.html',
     styleUrl: './admin-user-impersonation-dialog.component.scss',

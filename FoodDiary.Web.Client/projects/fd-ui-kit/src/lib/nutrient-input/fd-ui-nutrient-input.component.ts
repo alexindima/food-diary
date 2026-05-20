@@ -7,7 +7,6 @@ const DEFAULT_MAX_INPUT_CHARS = 8;
 
 @Component({
     selector: 'fd-ui-nutrient-input',
-    standalone: true,
     imports: [FdUiIconComponent],
     templateUrl: './fd-ui-nutrient-input.component.html',
     styleUrls: ['./fd-ui-nutrient-input.component.scss'],

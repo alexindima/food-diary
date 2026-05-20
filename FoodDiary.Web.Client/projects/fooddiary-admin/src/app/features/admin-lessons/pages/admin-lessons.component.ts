@@ -15,7 +15,6 @@ const EXPORT_DATE_LENGTH = 10;
 
 @Component({
     selector: 'fd-admin-lessons',
-    standalone: true,
     imports: [CommonModule, FdUiButtonComponent],
     templateUrl: './admin-lessons.component.html',
     styleUrl: './admin-lessons.component.scss',

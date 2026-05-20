@@ -26,7 +26,6 @@ const ADMIN_USERS_PAGE_SIZE = 20;
 
 @Component({
     selector: 'fd-admin-users',
-    standalone: true,
     imports: [
         CommonModule,
         FormsModule,

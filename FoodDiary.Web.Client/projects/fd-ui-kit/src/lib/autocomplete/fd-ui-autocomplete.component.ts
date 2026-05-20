@@ -20,7 +20,6 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-autocomplete',
-    standalone: true,
     imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiIconComponent, FdUiAutocompleteMenuComponent],
     templateUrl: './fd-ui-autocomplete.component.html',
     styleUrls: ['./fd-ui-autocomplete.component.scss'],

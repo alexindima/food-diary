@@ -17,7 +17,6 @@ export type FdUiConfirmDialogData = {
 
 @Component({
     selector: 'fd-ui-confirm-dialog',
-    standalone: true,
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
     templateUrl: './fd-ui-confirm-dialog.component.html',
     styleUrls: ['./fd-ui-confirm-dialog.component.scss'],

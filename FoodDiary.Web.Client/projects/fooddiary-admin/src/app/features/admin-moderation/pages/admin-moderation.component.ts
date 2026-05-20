@@ -24,7 +24,6 @@ const ADMIN_MODERATION_PAGE_SIZE = 20;
 
 @Component({
     selector: 'fd-admin-moderation',
-    standalone: true,
     imports: [CommonModule, FormsModule, FdUiButtonComponent],
     templateUrl: './admin-moderation.component.html',
     styleUrl: './admin-moderation.component.scss',

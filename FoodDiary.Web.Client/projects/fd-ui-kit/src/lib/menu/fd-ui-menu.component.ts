@@ -4,7 +4,6 @@ import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
 
 @Component({
     selector: 'fd-ui-menu',
-    standalone: true,
     templateUrl: './fd-ui-menu.component.html',
     styleUrls: ['./fd-ui-menu.component.scss'],
     exportAs: 'fdUiMenu',

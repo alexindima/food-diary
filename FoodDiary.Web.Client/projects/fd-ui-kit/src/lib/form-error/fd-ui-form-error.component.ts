@@ -36,7 +36,6 @@ export const getNumberProperty = (value: unknown, property: string): number | un
 
 @Component({
     selector: 'fd-ui-form-error',
-    standalone: true,
     imports: [TranslateModule],
     templateUrl: './fd-ui-form-error.component.html',
     styleUrls: ['./fd-ui-form-error.component.scss'],

@@ -8,7 +8,6 @@ type TokenTableRow = { name: string; value: string };
 
 @Component({
     selector: 'fd-design-tokens-docs',
-    standalone: true,
     template: `
         <div
             style="

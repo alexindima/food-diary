@@ -5,7 +5,6 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
 
 @Component({
     selector: 'fd-ui-button',
-    standalone: true,
     imports: [CommonModule, FdUiIconComponent],
     templateUrl: './fd-ui-button.component.html',
     styleUrls: ['./fd-ui-button.component.scss'],

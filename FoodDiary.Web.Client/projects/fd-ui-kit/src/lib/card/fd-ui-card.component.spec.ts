@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { FdUiCardComponent } from './fd-ui-card.component';
 
 @Component({
-    standalone: true,
     imports: [FdUiCardComponent],
     template: '<fd-ui-card><p class="projected">Projected content</p></fd-ui-card>',
 })

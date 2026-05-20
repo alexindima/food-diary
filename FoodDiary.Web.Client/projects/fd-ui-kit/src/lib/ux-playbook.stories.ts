@@ -9,7 +9,6 @@ type PlaybookSection = {
 
 @Component({
     selector: 'fd-ux-playbook-docs',
-    standalone: true,
     template: `
         <div
             style="

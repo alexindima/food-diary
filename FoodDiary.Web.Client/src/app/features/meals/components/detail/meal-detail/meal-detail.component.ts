@@ -24,7 +24,6 @@ import { MealDetailSummaryComponent } from '../meal-detail-summary/meal-detail-s
 
 @Component({
     selector: 'fd-meal-detail',
-    standalone: true,
     templateUrl: './meal-detail.component.html',
     styleUrls: ['./meal-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

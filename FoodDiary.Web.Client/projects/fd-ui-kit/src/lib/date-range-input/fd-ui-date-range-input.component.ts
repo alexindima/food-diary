@@ -15,7 +15,6 @@ export type FdUiDateRangeValue = {
 
 @Component({
     selector: 'fd-ui-date-range-input',
-    standalone: true,
     imports: [CommonModule, ReactiveFormsModule, FdUiDateInputComponent],
     templateUrl: './fd-ui-date-range-input.component.html',
     styleUrls: ['./fd-ui-date-range-input.component.scss'],

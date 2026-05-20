@@ -8,7 +8,6 @@ import { FdUiDialogComponent, type FdUiDialogData } from './fd-ui-dialog.compone
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 
 @Component({
-    standalone: true,
     imports: [FdUiDialogComponent, FdUiDialogHeaderDirective],
     template: `
         <fd-ui-dialog title="Built In Title">

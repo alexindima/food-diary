@@ -4,7 +4,6 @@ export type FdUiStatusBadgeTone = 'muted' | 'success' | 'warning' | 'danger';
 
 @Component({
     selector: 'fd-ui-status-badge',
-    standalone: true,
     templateUrl: './fd-ui-status-badge.component.html',
     styleUrl: './fd-ui-status-badge.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

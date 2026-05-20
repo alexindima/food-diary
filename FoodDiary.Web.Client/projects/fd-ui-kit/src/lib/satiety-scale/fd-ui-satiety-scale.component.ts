@@ -94,7 +94,6 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
 
 @Component({
     selector: 'fd-ui-satiety-scale',
-    standalone: true,
     imports: [TranslateModule, FdUiAccentSurfaceComponent],
     templateUrl: './fd-ui-satiety-scale.component.html',
     styleUrls: ['./fd-ui-satiety-scale.component.scss'],

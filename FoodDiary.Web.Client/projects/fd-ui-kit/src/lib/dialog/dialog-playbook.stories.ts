@@ -9,7 +9,6 @@ type DialogPlaybookSection = {
 
 @Component({
     selector: 'fd-dialog-playbook-docs',
-    standalone: true,
     template: `
         <div
             style="

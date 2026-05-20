@@ -37,7 +37,6 @@ type QuickConsumptionToggleView = {
 
 @Component({
     selector: 'fd-quick-consumption-drawer',
-    standalone: true,
     imports: [CommonModule, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, MealDetailsFieldsComponent],
     templateUrl: './quick-consumption-drawer.component.html',
     styleUrls: ['./quick-consumption-drawer.component.scss'],

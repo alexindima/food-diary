@@ -18,7 +18,6 @@ export type SatietyLevelDialogData = {
 
 @Component({
     selector: 'fd-meal-satiety-level-dialog',
-    standalone: true,
     templateUrl: './meal-satiety-level-dialog.component.html',
     styleUrls: ['./meal-satiety-level-dialog.component.scss'],
     imports: [FormsModule, TranslateModule, FdUiSatietyScaleComponent, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],

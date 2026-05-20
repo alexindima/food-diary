@@ -30,7 +30,6 @@ type FastingCheckInChartPoint = {
 
 @Component({
     selector: 'fd-fasting-checkin-chart-dialog',
-    standalone: true,
     imports: [CommonModule, BaseChartDirective, FdUiDialogShellComponent],
     templateUrl: './fasting-checkin-chart-dialog.component.html',
     styleUrl: './fasting-checkin-chart-dialog.component.scss',

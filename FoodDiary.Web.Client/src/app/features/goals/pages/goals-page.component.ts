@@ -30,7 +30,6 @@ import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-
 
 @Component({
     selector: 'fd-goals-page',
-    standalone: true,
     providers: [GoalsFacade],
     imports: [
         TranslateModule,

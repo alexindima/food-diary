@@ -22,7 +22,6 @@ import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-de
 
 @Component({
     selector: 'fd-recipe-detail',
-    standalone: true,
     templateUrl: './recipe-detail.component.html',
     styleUrls: ['./recipe-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

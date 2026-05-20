@@ -36,7 +36,6 @@ type FdUiCalendarCell = {
 
 @Component({
     selector: 'fd-ui-calendar',
-    standalone: true,
     imports: [CommonModule, FdUiButtonComponent],
     templateUrl: './fd-ui-calendar.component.html',
     styleUrl: './fd-ui-calendar.component.scss',

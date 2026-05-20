@@ -9,7 +9,6 @@ export type FdUiSectionStateAppearance = 'default' | 'compact';
 
 @Component({
     selector: 'fd-ui-section-state',
-    standalone: true,
     imports: [FdUiEmptyStateComponent, FdUiSectionLoadingStateComponent, FdUiSectionErrorStateComponent],
     templateUrl: './fd-ui-section-state.component.html',
     styleUrl: './fd-ui-section-state.component.scss',
