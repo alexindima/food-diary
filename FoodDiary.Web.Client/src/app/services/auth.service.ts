@@ -346,6 +346,10 @@ export class AuthService extends ApiService {
     }
 
     private getTelegramInitData(): string | null {
+        if (typeof window === 'undefined') {
+            return null;
+        }
+
         const telegram = window.Telegram;
         const initData = telegram?.WebApp?.initData;
         if (typeof initData !== 'string' || initData.length === 0) {

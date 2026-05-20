@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID, RendererFactory2, signal } from '@angular/core';
 
 type GoogleInitOptions = {
     clientId: string;
@@ -28,6 +29,10 @@ declare global {
 
 @Injectable({ providedIn: 'root' })
 export class GoogleIdentityService {
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly renderer = inject(RendererFactory2).createRenderer(null, null);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly scriptUrl = 'https://accounts.google.com/gsi/client';
     private readonly scriptLoaded = signal<boolean>(false);
     private initializationPromise: Promise<void> | null = null;
@@ -35,6 +40,10 @@ export class GoogleIdentityService {
     private callback: ((credential: string) => void) | null = null;
 
     public async initializeAsync(options: GoogleInitOptions): Promise<void> {
+        if (!this.isBrowser) {
+            throw new Error('Google Identity Services are only available in the browser');
+        }
+
         if (this.initializedClientId === options.clientId && this.callback !== null) {
             this.callback = options.callback;
             return;
@@ -63,6 +72,10 @@ export class GoogleIdentityService {
     }
 
     public renderButton(target: HTMLElement, theme: 'outline' | 'filled_blue' = 'outline'): void {
+        if (!this.isBrowser) {
+            return;
+        }
+
         if (window.google?.accounts?.id === undefined) {
             return;
         }
@@ -78,22 +91,34 @@ export class GoogleIdentityService {
     }
 
     public prompt(): void {
+        if (!this.isBrowser) {
+            return;
+        }
+
         window.google?.accounts?.id?.prompt();
     }
 
     public cancel(): void {
+        if (!this.isBrowser) {
+            return;
+        }
+
         window.google?.accounts?.id?.cancel();
     }
 
     private async loadScriptAsync(): Promise<void> {
+        if (!this.isBrowser) {
+            throw new Error('Google Identity Services are only available in the browser');
+        }
+
         if (this.scriptLoaded()) {
             return;
         }
         this.initializationPromise ??= new Promise<void>((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = this.scriptUrl;
-            script.async = true;
-            script.defer = true;
+            const script = this.document.createElement('script');
+            this.renderer.setAttribute(script, 'src', this.scriptUrl);
+            this.renderer.setProperty(script, 'async', true);
+            this.renderer.setProperty(script, 'defer', true);
             script.onload = (): void => {
                 this.scriptLoaded.set(true);
                 resolve();
@@ -101,7 +126,7 @@ export class GoogleIdentityService {
             script.onerror = (): void => {
                 reject(new Error('Failed to load Google Identity script'));
             };
-            document.head.appendChild(script);
+            this.renderer.appendChild(this.document.head, script);
         });
         return this.initializationPromise;
     }

@@ -1,5 +1,5 @@
-import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { DecimalPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
@@ -27,6 +27,8 @@ export class NutrientsSummaryComponent {
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
 
     public readonly calories = input.required<number>();
     public readonly nutrientChartData = input.required<NutrientData>();
@@ -39,7 +41,7 @@ export class NutrientsSummaryComponent {
 
     public readonly config = input<NutrientsSummaryConfig>({});
     public readonly mergedConfig = computed(() => mergeNutrientsSummaryConfig(this.config()));
-    private readonly viewportWidth = signal(window.innerWidth);
+    private readonly viewportWidth = signal(this.isBrowser ? window.innerWidth : Number.MAX_SAFE_INTEGER);
     public readonly isColumnLayout = computed(() => this.viewportWidth() <= this.mergedConfig().styles.charts.breakpoints.columnLayout);
     public readonly areChartsBelowInfo = computed(
         () => this.viewportWidth() <= this.mergedConfig().styles.common.infoBreakpoints.columnLayout,
@@ -121,6 +123,10 @@ export class NutrientsSummaryComponent {
     }));
 
     public constructor() {
+        if (!this.isBrowser) {
+            return;
+        }
+
         fromEvent(window, 'resize')
             .pipe(
                 map(() => window.innerWidth),

@@ -1,5 +1,5 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -27,6 +27,7 @@ let uniqueId = 0;
 export class FdUiDateInputComponent implements ControlValueAccessor {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly locale = inject(LOCALE_ID);
+    private readonly document = inject(DOCUMENT);
 
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
     public readonly label = input<string>();
@@ -138,7 +139,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     }
 
     protected onFocusOut(): void {
-        const active = document.activeElement;
+        const active = this.document.activeElement;
         if (active !== null && this.host.nativeElement.contains(active)) {
             return;
         }

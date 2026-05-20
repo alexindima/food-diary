@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -48,6 +48,8 @@ import { SidebarMobileComponent } from './sidebar-mobile/sidebar-mobile.componen
 })
 export class SidebarComponent {
     private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly destroyRef = inject(DestroyRef);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
@@ -152,7 +154,7 @@ export class SidebarComponent {
             });
         });
 
-        const mobileMediaQuery = typeof window === 'undefined' ? null : window.matchMedia(this.mobileViewportQuery);
+        const mobileMediaQuery = this.isBrowser ? window.matchMedia(this.mobileViewportQuery) : null;
         const updateMobileViewport = (): void => {
             this.isMobileViewport.set(this.getIsMobileViewport());
         };
@@ -171,10 +173,12 @@ export class SidebarComponent {
                 this.pendingRoute.set(null);
             }
         });
-        this.document.addEventListener('keydown', this.handleDocumentKeydown);
-        this.destroyRef.onDestroy(() => {
-            this.document.removeEventListener('keydown', this.handleDocumentKeydown);
-        });
+        if (this.isBrowser) {
+            this.document.addEventListener('keydown', this.handleDocumentKeydown);
+            this.destroyRef.onDestroy(() => {
+                this.document.removeEventListener('keydown', this.handleDocumentKeydown);
+            });
+        }
     }
 
     protected onPrimaryAction(action: SidebarActionItem['action']): void {
@@ -228,7 +232,7 @@ export class SidebarComponent {
     }
 
     private getIsMobileViewport(): boolean {
-        if (typeof window === 'undefined') {
+        if (!this.isBrowser) {
             return false;
         }
 
@@ -270,7 +274,7 @@ export class SidebarComponent {
 
     protected openAdminPanel(): void {
         const adminAppUrl = environment.adminAppUrl;
-        if (!this.isAdmin() || adminAppUrl === undefined || adminAppUrl.length === 0) {
+        if (!this.isBrowser || !this.isAdmin() || adminAppUrl === undefined || adminAppUrl.length === 0) {
             return;
         }
 
@@ -427,7 +431,7 @@ export class SidebarComponent {
     }
 
     private lockMobileSheetScroll(): void {
-        if (typeof window === 'undefined') {
+        if (!this.isBrowser) {
             return;
         }
 
@@ -443,7 +447,7 @@ export class SidebarComponent {
         this.document.body.style.removeProperty('inset-block-start');
         this.document.body.style.removeProperty('padding-inline-end');
 
-        if (typeof window === 'undefined') {
+        if (!this.isBrowser) {
             return;
         }
 

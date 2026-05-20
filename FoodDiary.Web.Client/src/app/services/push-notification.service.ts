@@ -181,7 +181,7 @@ export class PushNotificationService {
                 auth: json.keys?.['auth'] ?? '',
             },
             locale: this.localizationService.getCurrentLanguage(),
-            userAgent: navigator.userAgent,
+            userAgent: typeof navigator === 'undefined' ? '' : navigator.userAgent,
         };
     }
 
@@ -209,6 +209,10 @@ export class PushNotificationService {
 
     private toAppUrl(url: string): string {
         if (!/^https?:\/\//i.test(url)) {
+            return url;
+        }
+
+        if (typeof window === 'undefined') {
             return url;
         }
 

@@ -1,4 +1,4 @@
-import { NgOptimizedImage } from '@angular/common';
+import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -56,6 +56,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly translateService = inject(TranslateService);
     private readonly logger = inject(FrontendLoggerService);
+    private readonly document = inject(DOCUMENT);
 
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
@@ -278,7 +279,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
                 return file;
             }
 
-            const canvas = document.createElement('canvas');
+            const canvas = this.document.createElement('canvas');
             canvas.width = dimensions.width;
             canvas.height = dimensions.height;
             const ctx = canvas.getContext('2d');
@@ -460,7 +461,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             return canvas;
         }
 
-        const resized = document.createElement('canvas');
+        const resized = this.document.createElement('canvas');
         resized.width = dimensions.width;
         resized.height = dimensions.height;
         const ctx = resized.getContext('2d');

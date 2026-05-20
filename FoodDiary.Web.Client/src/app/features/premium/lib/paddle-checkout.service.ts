@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID, RendererFactory2 } from '@angular/core';
 
 export type PaddleEnvironment = 'sandbox' | 'production';
 
@@ -44,12 +45,20 @@ declare global {
 
 @Injectable({ providedIn: 'root' })
 export class PaddleCheckoutService {
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly renderer = inject(RendererFactory2).createRenderer(null, null);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly scriptUrl = 'https://cdn.paddle.com/paddle/v2/paddle.js';
     private scriptLoadPromise: Promise<void> | null = null;
     private initializedToken: string | null = null;
     private initializedEnvironment: PaddleEnvironment | null = null;
 
     public async openTransactionCheckoutAsync(transactionId: string, options: PaddleInitOptions): Promise<void> {
+        if (!this.isBrowser) {
+            throw new Error('Paddle Checkout is only available in the browser');
+        }
+
         await this.initializeAsync(options);
 
         if (window.Paddle?.Checkout === undefined) {
@@ -69,6 +78,10 @@ export class PaddleCheckoutService {
     }
 
     private async initializeAsync(options: PaddleInitOptions): Promise<void> {
+        if (!this.isBrowser) {
+            throw new Error('Paddle Checkout is only available in the browser');
+        }
+
         if (this.initializedToken === options.token && this.initializedEnvironment === options.environment) {
             return;
         }
@@ -101,12 +114,16 @@ export class PaddleCheckoutService {
     }
 
     private async loadScriptAsync(): Promise<void> {
+        if (!this.isBrowser) {
+            return;
+        }
+
         if (this.scriptLoadPromise !== null) {
             return this.scriptLoadPromise;
         }
 
         this.scriptLoadPromise = new Promise<void>((resolve, reject) => {
-            const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${this.scriptUrl}"]`);
+            const existingScript = this.document.querySelector<HTMLScriptElement>(`script[src="${this.scriptUrl}"]`);
             if (existingScript !== null) {
                 if (window.Paddle !== undefined) {
                     resolve();
@@ -130,23 +147,23 @@ export class PaddleCheckoutService {
                 return;
             }
 
-            const script = document.createElement('script');
-            script.src = this.scriptUrl;
-            script.async = true;
-            script.defer = true;
+            const script = this.document.createElement('script');
+            this.renderer.setAttribute(script, 'src', this.scriptUrl);
+            this.renderer.setProperty(script, 'async', true);
+            this.renderer.setProperty(script, 'defer', true);
             script.onload = (): void => {
                 resolve();
             };
             script.onerror = (): void => {
                 reject(new Error('Failed to load Paddle.js'));
             };
-            document.head.appendChild(script);
+            this.renderer.appendChild(this.document.head, script);
         });
 
         return this.scriptLoadPromise;
     }
 
     private buildSuccessUrl(): string {
-        return `${window.location.origin}/premium?checkout=success`;
+        return `${this.document.location.origin}/premium?checkout=success`;
     }
 }

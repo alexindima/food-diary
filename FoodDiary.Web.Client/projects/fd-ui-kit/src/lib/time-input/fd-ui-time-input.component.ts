@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+﻿import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -41,6 +41,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     protected readonly isFocused = signal(false);
 
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly document = inject(DOCUMENT);
 
     private onChange: (value: string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -122,7 +123,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     }
 
     protected onFocusOut(): void {
-        const active = document.activeElement;
+        const active = this.document.activeElement;
         if (active !== null && this.host.nativeElement.contains(active)) {
             return;
         }

@@ -1,5 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    output,
+    PLATFORM_ID,
+    signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -31,6 +42,8 @@ export class DashboardSummaryCardComponent {
     private readonly config = DEFAULT_DASHBOARD_SUMMARY_CARD_CONFIG;
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly languageVersion = signal(0);
 
     public readonly goalAction = output();
@@ -169,31 +182,39 @@ export class DashboardSummaryCardComponent {
 
     private startAnimation(targetSignal: { set: (v: number) => void; (): number }, target: number): void {
         this.stopAnimation(targetSignal);
+
+        if (!this.isBrowser) {
+            targetSignal.set(target);
+            return;
+        }
+
         targetSignal.set(0);
 
-        const startTime = performance.now();
+        const startTime = window.performance.now();
         const duration = Math.max(target, 1) * this.config.animation.msPerPercent;
 
         const step = (): void => {
-            const elapsed = performance.now() - startTime;
+            const elapsed = window.performance.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const current = target * progress;
             targetSignal.set(current);
 
             if (progress < 1) {
-                const handle = requestAnimationFrame(step);
+                const handle = window.requestAnimationFrame(step);
                 this.animationHandles.set(targetSignal, handle);
             }
         };
 
-        const handle = requestAnimationFrame(step);
+        const handle = window.requestAnimationFrame(step);
         this.animationHandles.set(targetSignal, handle);
     }
 
     private stopAnimation(targetSignal: { (): number }): void {
         const handle = this.animationHandles.get(targetSignal);
         if (handle !== undefined) {
-            cancelAnimationFrame(handle);
+            if (this.isBrowser) {
+                window.cancelAnimationFrame(handle);
+            }
             this.animationHandles.delete(targetSignal);
         }
     }

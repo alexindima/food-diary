@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -19,6 +20,7 @@ import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
 export class FdUiMenuItemComponent {
     private readonly host = inject<ElementRef<HTMLButtonElement>>(ElementRef);
     private readonly parentMenu = inject(FD_UI_MENU, { optional: true });
+    private readonly document = inject(DOCUMENT);
 
     public readonly type = input<'button' | 'submit' | 'reset'>('button');
     public readonly routerLink = input<string | unknown[] | null>();
@@ -32,7 +34,7 @@ export class FdUiMenuItemComponent {
     }
 
     public isFocused(): boolean {
-        return document.activeElement === this.host.nativeElement;
+        return this.document.activeElement === this.host.nativeElement;
     }
 
     public onClick(event: Event): void {

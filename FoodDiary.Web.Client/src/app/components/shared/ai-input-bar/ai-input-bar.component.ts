@@ -1,6 +1,18 @@
+import { isPlatformBrowser } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import type { WritableSignal } from '@angular/core';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    inject,
+    input,
+    output,
+    PLATFORM_ID,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -78,6 +90,8 @@ export class AiInputBarComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
 
     public readonly isProcessing = input<boolean>(false);
@@ -97,8 +111,7 @@ export class AiInputBarComponent {
     public readonly hasTextResult = computed(() => this.textSubmittedQuery() !== null);
     public readonly isSubmittingMeal = signal(false);
     public readonly isListening = signal(false);
-    public readonly isSpeechSupported =
-        typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+    public readonly isSpeechSupported = this.isBrowser && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
     private lastTextSource: AiRecognitionSource = 'Text';
 
     public readonly photoSelection = signal<ImageSelection | null>(null);
@@ -168,6 +181,10 @@ export class AiInputBarComponent {
         }
 
         if (!(await this.ensureAiConsentAsync())) {
+            return;
+        }
+
+        if (!this.isSpeechSupported) {
             return;
         }
 

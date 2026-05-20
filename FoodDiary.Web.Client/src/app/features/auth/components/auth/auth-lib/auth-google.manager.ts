@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, RendererFactory2, signal } from '@angular/core';
 
 import { environment } from '../../../../../../environments/environment';
 import { GoogleIdentityService } from '../../../lib/google-identity.service';
@@ -8,6 +8,7 @@ export type AuthGoogleMode = 'login' | 'register';
 @Injectable({ providedIn: 'root' })
 export class AuthGoogleManager {
     private readonly googleIdentityService = inject(GoogleIdentityService);
+    private readonly renderer = inject(RendererFactory2).createRenderer(null, null);
 
     public readonly ready = signal<boolean>(false);
 
@@ -36,7 +37,7 @@ export class AuthGoogleManager {
 
         [loginButton, registerButton].forEach(element => {
             if (element !== undefined) {
-                element.innerHTML = '';
+                this.renderer.setProperty(element, 'innerHTML', '');
             }
         });
 

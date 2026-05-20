@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -16,12 +17,16 @@ export type ExportDiaryRequest = {
 
 @Injectable({ providedIn: 'root' })
 export class ExportService extends ApiService {
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
+
     protected readonly baseUrl = environment.apiUrls.export;
 
     public exportDiary(request: ExportDiaryRequest): Observable<void> {
         const { dateFrom, dateTo, format = 'csv', locale, timeZoneOffsetMinutes } = request;
         const ext = format === 'pdf' ? 'pdf' : 'csv';
-        const reportOrigin = typeof window === 'undefined' ? undefined : window.location.origin;
+        const reportOrigin = this.isBrowser ? this.document.location.origin : undefined;
         return this.getBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }).pipe(
             map(response => {
                 const blob = response.body;
@@ -32,8 +37,12 @@ export class ExportService extends ApiService {
                 const contentDisposition = response.headers.get('Content-Disposition');
                 const fileName = this.extractFileName(contentDisposition) ?? `food-diary.${ext}`;
 
+                if (!this.isBrowser) {
+                    return;
+                }
+
                 const url = URL.createObjectURL(blob);
-                const anchor = document.createElement('a');
+                const anchor = this.document.createElement('a');
                 anchor.href = url;
                 anchor.download = fileName;
                 anchor.click();

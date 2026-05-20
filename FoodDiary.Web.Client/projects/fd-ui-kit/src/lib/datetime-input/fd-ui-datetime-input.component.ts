@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -60,6 +60,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly document = inject(DOCUMENT);
 
     private onChange: (value: string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -162,7 +163,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     }
 
     protected onFocusOut(): void {
-        const active = document.activeElement;
+        const active = this.document.activeElement;
         if (active !== null && this.host.nativeElement.contains(active)) {
             return;
         }

@@ -1,3 +1,4 @@
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -7,6 +8,7 @@ import {
     effect,
     inject,
     input,
+    PLATFORM_ID,
     signal,
     viewChild,
 } from '@angular/core';
@@ -58,6 +60,9 @@ export class AuthComponent {
     private readonly translateService = inject(TranslateService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly dialogRef = inject(FdUiDialogRef<AuthComponent>, { optional: true });
     private readonly passwordResetCooldownSecondsDefault = inject(AUTH_PASSWORD_RESET_COOLDOWN_SECONDS);
     private readonly loginAutofillCheckDelaysMs = inject(AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS);
@@ -327,7 +332,9 @@ export class AuthComponent {
 
         const adminRedirectUrl = await this.tryBuildAdminRedirectUrlAsync();
         if (adminRedirectUrl !== null) {
-            window.location.assign(adminRedirectUrl);
+            if (this.isBrowser) {
+                this.document.location.assign(adminRedirectUrl);
+            }
             return;
         }
 
@@ -337,17 +344,17 @@ export class AuthComponent {
     private async tryBuildAdminRedirectUrlAsync(): Promise<string | null> {
         const adminReturnUrl = this.adminReturnUrl;
         const adminAppUrl = environment.adminAppUrl ?? '';
-        if (adminReturnUrl === null || adminReturnUrl.length === 0 || adminAppUrl.length === 0) {
+        if (!this.isBrowser || adminReturnUrl === null || adminReturnUrl.length === 0 || adminAppUrl.length === 0) {
             return null;
         }
 
-        const adminPath = normalizeAdminReturnUrl(adminReturnUrl, adminAppUrl, window.location.origin);
+        const adminPath = normalizeAdminReturnUrl(adminReturnUrl, adminAppUrl, this.document.location.origin);
         if (adminPath === null || adminPath.length === 0) {
             return null;
         }
 
         if (!this.authService.isAdmin()) {
-            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, window.location.origin);
+            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, this.document.location.origin);
         }
 
         try {
@@ -356,7 +363,7 @@ export class AuthComponent {
             adminUrl.searchParams.set('code', response.code);
             return adminUrl.toString();
         } catch {
-            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, window.location.origin);
+            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, this.document.location.origin);
         }
     }
 
@@ -414,6 +421,10 @@ export class AuthComponent {
     }
 
     private startLoginAutofillDetection(): void {
+        if (!this.isBrowser) {
+            return;
+        }
+
         this.updateLoginAutofillState();
         this.loginAutofillCheckTimerIds = this.loginAutofillCheckDelaysMs.map(delay =>
             window.setTimeout(() => {

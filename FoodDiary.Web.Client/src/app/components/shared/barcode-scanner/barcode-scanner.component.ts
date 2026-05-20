@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, PLATFORM_ID, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -15,6 +16,8 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 export class BarcodeScannerComponent {
     private readonly dialogRef = inject(FdUiDialogRef<BarcodeScannerComponent, string | null>);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('video');
 
     public readonly isCameraReady = signal(false);
@@ -26,7 +29,7 @@ export class BarcodeScannerComponent {
     private readonly detector: BarcodeDetector | null = null;
 
     public constructor() {
-        if (!('BarcodeDetector' in window)) {
+        if (!this.isBrowser || !('BarcodeDetector' in window)) {
             this.isUnsupported.set(true);
             return;
         }
@@ -84,7 +87,11 @@ export class BarcodeScannerComponent {
             return;
         }
 
-        this.animationFrameId = requestAnimationFrame(() => {
+        if (!this.isBrowser) {
+            return;
+        }
+
+        this.animationFrameId = window.requestAnimationFrame(() => {
             void this.scanFrameAsync(video);
         });
     }
@@ -110,7 +117,9 @@ export class BarcodeScannerComponent {
     }
 
     private stopCamera(): void {
-        cancelAnimationFrame(this.animationFrameId);
+        if (this.isBrowser) {
+            window.cancelAnimationFrame(this.animationFrameId);
+        }
         this.stream?.getTracks().forEach(track => {
             track.stop();
         });
