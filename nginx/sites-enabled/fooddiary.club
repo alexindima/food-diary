@@ -35,6 +35,7 @@ server {
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
     add_header Alt-Svc 'h3=":443"; ma=86400' always;
+    add_header_inherit merge;
 
     root /var/www/fooddiary.club;
     index index.html;
