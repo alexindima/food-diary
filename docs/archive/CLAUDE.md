@@ -117,7 +117,7 @@ Key patterns:
 
 ## Features Documentation
 
-- [Dietologist Feature](DIETOLOGIST_FEATURE.md) — Professional nutritionist role with client data access, invitations, granular permissions, recommendations, and notifications
+- [Dietologist Feature](../plans/DIETOLOGIST_FEATURE.md) — Professional nutritionist role with client data access, invitations, granular permissions, recommendations, and notifications
 
 ## Legacy Code
 

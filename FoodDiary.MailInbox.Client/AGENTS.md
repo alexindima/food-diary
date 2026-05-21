@@ -8,4 +8,9 @@ Typed client package for service-to-service calls into MailInbox.
 - Put public HTTP contract DTOs under `Models/`.
 - Keep DI wiring under `Extensions/`.
 - Keep configuration classes under `Options/`.
-- Do not add persistence, SMTP listener, or MediatR dependencies here.
+- Root files should stay limited to `IMailInboxClient.cs` and `MailInboxClient.cs`.
+- Do not add persistence, server-side transport implementation, ASP.NET server types, SMTP listener, MailKit/MimeKit, or MediatR dependencies here.
+- Keep request/response DTOs stable; changes can affect service-to-service callers.
+
+## Commands
+- Build: `dotnet build FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj`

@@ -14,6 +14,8 @@ Rules for `FoodDiary.Presentation.Api/`.
 - Do not put business logic in controllers.
 - Keep HTTP request/response mapping in `FoodDiary.Presentation.Api`, not in `FoodDiary.Application`.
 - Do not reference `FoodDiary.Infrastructure` or `FoodDiary.Web.Api` from this project.
+- Do not reference `FoodDiary.Domain` directly; map through application requests/models.
+- Do not introduce or revive `FoodDiary.Contracts` namespaces/projects.
 
 ## Structure
 - Base controllers and binders: `Controllers/`
@@ -46,6 +48,8 @@ Target shape:
 ## Current Conventions
 - Current-user access should use `[FromCurrentUser]` instead of manually parsing claims.
 - Controllers should prefer `Send(...)` from base controller so request cancellation uses `HttpContext.RequestAborted`.
+- Controllers should not call `Mediator.Send(...)` directly.
+- Controllers should not return ad-hoc `BadRequest`, `Unauthorized`, `Conflict`, `NotFound`, `Forbid`, or `StatusCode` responses. Use shared result/error mapping.
 - Error responses should use the standard `ApiErrorHttpResponse` contract.
 - Unhandled exceptions are normalized in `FoodDiary.Web.Api`; do not add ad-hoc try/catch in controllers unless behavior is endpoint-specific.
 - Expensive or abuse-prone endpoints may use presentation policy names from `Policies/PresentationPolicyNames.cs`.
@@ -63,8 +67,9 @@ Target shape:
 - Preserve OpenAPI and error-contract expectations unless the contract change is intentional.
 - If the public HTTP contract changes intentionally, update the matching snapshots in `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
 - For Swagger/OpenAPI changes, refresh at least `openapi-full-contract.json`, and update the narrower OpenAPI snapshots too when their selected endpoints changed.
+- Architecture tests enforce that only base controllers remain in `Controllers/`; new endpoint controllers belong in feature folders.
 
 ## Migration Rules
-- Do not introduce new HTTP request DTOs into `FoodDiary.Contracts`.
+- Do not introduce a new contracts project for HTTP request DTOs.
 - Do not move HTTP mapping logic into `FoodDiary.Application`.
 - When adding a new feature, follow the existing feature folder pattern immediately instead of using legacy flat layout.

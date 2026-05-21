@@ -20,6 +20,8 @@ Rules for `FoodDiary.MailRelay.WebApi/`.
 - Keep relay use cases and abstractions in `FoodDiary.MailRelay.Application`.
 - Keep PostgreSQL, RabbitMQ, SMTP, direct-to-MX, DNS, DKIM, hosted workers, and DI registration in `FoodDiary.MailRelay.Infrastructure`.
 - Do not move business-specific email composition into mail relay projects; templates and auth-flow semantics stay in `FoodDiary.Infrastructure` / upper layers.
+- Use MVC controller mapping from `FoodDiary.MailRelay.Presentation`; do not add minimal API `/api/email` endpoints in `Program.cs`.
+- Runtime configuration must use the separate MailRelay database (`fooddiary_mailrelay`) and its own initializer.
 
 ## Queue And Delivery Rules
 - Treat the database queue as the source of truth for relay state even when RabbitMQ is the active broker.
@@ -36,7 +38,8 @@ Rules for `FoodDiary.MailRelay.WebApi/`.
 
 ## Commands
 - Build: `dotnet build FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj`
-- Run: `dotnet run --project FoodDiary.MailRelay`
+- Run: `dotnet run --project FoodDiary.MailRelay.WebApi`
+- Tests: `dotnet test tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj`
 
 ## Near-Term Direction
 - Current broker is RabbitMQ with PostgreSQL as the delivery state store.

@@ -8,7 +8,7 @@ This document defines how database migrations are validated and how deployment-t
 
 - CI builds an EF Core migration bundle in `.github/workflows/deploy.yml`.
 - Deploy runs the bundle on the server with `ConnectionStrings__DefaultConnection` and `FOODDIARY_CONNECTION_STRING` set from the production secret.
-- The design-time context factory in [FoodDiaryDbContextFactory.cs](/C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs) supports the same environment variables used by the bundle.
+- The design-time context factory in [`FoodDiaryDbContextFactory.cs`](../../FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs) supports the same environment variables used by the bundle.
 
 ## Required Validation
 

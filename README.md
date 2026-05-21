@@ -5,15 +5,20 @@ FoodDiary is a food tracking platform with a .NET backend, Angular frontend, Tel
 ## Repository Structure
 
 - `FoodDiary.Domain` - domain model, aggregates, value objects, domain events
+- `FoodDiary.Application.Abstractions` - application-facing ports and shared models
 - `FoodDiary.Application` - use cases, application services, ports, validation
 - `FoodDiary.Infrastructure` - EF Core, PostgreSQL, auth, external providers, persistence adapters
+- `FoodDiary.Integrations` - external provider adapters and supporting service clients
 - `FoodDiary.Presentation.Api` - HTTP transport layer, controllers, request/response mappings
 - `FoodDiary.Web.Api` - ASP.NET Core host and composition root
 - `FoodDiary.JobManager` - background jobs host
-- `FoodDiary.MailRelay` - internal outbound email relay and queue processor
+- `FoodDiary.MailRelay.*` - internal outbound email relay, queue processor, client package, and initializer
+- `FoodDiary.MailInbox.*` - inbound email service, client package, and initializer
 - `FoodDiary.Telegram.Bot` - Telegram adapter/worker
-- `FoodDiary.Web.Client` - Angular web client and admin frontend
+- `FoodDiary.Web.Client` - Angular web client, admin frontend, and UI kit
+- `Shared/FoodDiary.Mediator` - lightweight shared mediator
 - `tests` - application, architecture, infrastructure, API, bot, jobs, and integration tests
+- `docs` - architecture, testing, backend governance, frontend architecture, ADRs, plans, and archived docs
 
 ## Backend Architecture
 
@@ -26,6 +31,12 @@ The backend follows a layered architecture with explicit dependency direction:
 5. `Web.Api` is the host that wires `Presentation.Api` and `Infrastructure` together.
 
 These constraints are enforced by architecture tests in `tests/FoodDiary.ArchitectureTests`.
+
+More detail:
+
+- `docs/ARCHITECTURE.md`
+- `docs/BACKEND_MODULE_MAP.md`
+- `docs/adr/`
 
 ## Main Flows
 
@@ -60,14 +71,17 @@ Backend tests:
 dotnet test FoodDiary.slnx
 ```
 
+Architecture guardrails:
+
+```bash
+dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
+```
+
 Frontend checks:
 
 ```bash
 cd FoodDiary.Web.Client
-npm run lint
-npm run stylelint
-npm run build:prod
-npm run build:admin
+npm run verify
 ```
 
 ## Configuration
@@ -91,16 +105,24 @@ dotnet user-secrets set "Jwt:SecretKey" "your-very-long-local-development-secret
 
 Backend work should follow these repository documents:
 
-- `BACKEND_TIME_POLICY.md`
-- `BACKEND_CRITICAL_FLOW_MATRIX.md`
-- `BACKEND_DEFINITION_OF_DONE.md`
-- `BACKEND_API_CONTRACT_GOVERNANCE.md`
-- `BACKEND_OBSERVABILITY_BASELINE.md`
-- `BACKEND_PERFORMANCE_REVIEW.md`
-- `BACKEND_MIGRATION_SAFETY.md`
-- `BACKEND_SECURITY_HARDENING.md`
-- `BACKEND_RUNBOOKS.md`
-- `FRONTEND_OBSERVABILITY_BASELINE.md`
+- `docs/backend/BACKEND_TIME_POLICY.md`
+- `docs/backend/BACKEND_CRITICAL_FLOW_MATRIX.md`
+- `docs/backend/BACKEND_DEFINITION_OF_DONE.md`
+- `docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
+- `docs/backend/BACKEND_OBSERVABILITY_BASELINE.md`
+- `docs/backend/BACKEND_PERFORMANCE_REVIEW.md`
+- `docs/backend/BACKEND_MIGRATION_SAFETY.md`
+- `docs/backend/BACKEND_SECURITY_HARDENING.md`
+- `docs/backend/BACKEND_RUNBOOKS.md`
+
+Frontend architecture and observability:
+
+- `docs/frontend/FRONTEND_ARCHITECTURE.md`
+- `docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md`
+
+Testing strategy:
+
+- `docs/TESTING_STRATEGY.md`
 
 ## Deployment Notes
 
@@ -108,8 +130,8 @@ Backend work should follow these repository documents:
 - Deploy is performed through GitHub Actions.
 - Deploy copies `docker-compose.yml` to `/opt/fooddiary`, uses `/etc/fooddiary/fooddiary.env` as the server env source, runs migrations through `db-init`, starts `api` and `telegram-bot`, and publishes client static files from the `client` image.
 - Host-level observability configuration such as the current `promtail` baseline lives in `infra/observability/`.
-- Backend and deploy recovery steps are documented in `BACKEND_RUNBOOKS.md`.
-- PR review discipline now expects the security/release checklist from `BACKEND_SECURITY_HARDENING.md` to be reflected in the PR template for security-relevant changes.
+- Backend and deploy recovery steps are documented in `docs/backend/BACKEND_RUNBOOKS.md`.
+- PR review discipline expects the security/release checklist from `docs/backend/BACKEND_SECURITY_HARDENING.md` to be reflected in the PR template for security-relevant changes.
 
 ## Status
 

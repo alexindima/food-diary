@@ -16,7 +16,7 @@ Examples from [`GetDashboardSnapshotQueryHandler.cs`](./Queries/GetDashboardSnap
 - `GetWeightSummaries`
 - `GetWaistSummaries`
 
-With the current DI setup, `FoodDiaryDbContext` is registered as scoped in [`FoodDiary.Infrastructure/DependencyInjection.cs`](../FoodDiary.Infrastructure/DependencyInjection.cs). Because of that, parallel EF Core operations inside one request can throw:
+With the current DI setup, `FoodDiaryDbContext` is registered as scoped in [`FoodDiary.Infrastructure/DependencyInjection.cs`](../../FoodDiary.Infrastructure/DependencyInjection.cs). Because of that, parallel EF Core operations inside one request can throw:
 
 - `System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed`
 

@@ -12,6 +12,9 @@ Rules for `FoodDiary.Web.Api/`.
 - Do not add feature controllers or HTTP transport models directly to this project unless there is a deliberate architectural change.
 - Keep startup/composition in extensions where practical.
 - Keep host policies and defaults explicit so production behavior is easy to audit.
+- `FoodDiary.Web.Api` is allowed to reference `FoodDiary.Application`, `FoodDiary.Infrastructure`, `FoodDiary.Integrations`, `FoodDiary.Presentation.Api`, and `FoodDiary.Resources`.
+- Do not reference `FoodDiary.Domain` directly from this host; use the wired modules.
+- Application, presentation, and resource projects must not reference host options or host extension methods.
 
 ## Structure
 - Program entrypoint: `Program.cs`
@@ -22,6 +25,7 @@ Rules for `FoodDiary.Web.Api/`.
 ## Commands
 - Build: `dotnet build FoodDiary.Web.Api/FoodDiary.Web.Api.csproj`
 - Run: `dotnet run --project FoodDiary.Web.Api`
+- Integration tests: `dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`
 
 ## Host Practices
 - Keep business logic and HTTP transport behavior out of this project; wire existing modules together instead.

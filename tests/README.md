@@ -20,7 +20,7 @@
 - New API endpoint flow/auth contract: `FoodDiary.Web.Api.IntegrationTests/*`
 - New mail relay broker/queue flow: `FoodDiary.MailRelay.Tests/*`
 - New architecture rule: `FoodDiary.ArchitectureTests/*`
-- Backend HTTP contract changes should also review/update snapshots and PR notes per `BACKEND_API_CONTRACT_GOVERNANCE.md`
+- Backend HTTP contract changes should also review/update snapshots and PR notes per `../docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
 - Swagger/OpenAPI contract changes must update the checked-in snapshot files in `FoodDiary.Web.Api.IntegrationTests/Snapshots/`
 - Presentation-layer filter/transport behavior such as idempotency, controller filters, and HTTP caching semantics belongs in `FoodDiary.Presentation.Api.Tests/*`
 
