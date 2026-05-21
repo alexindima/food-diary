@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const rootDir = process.cwd();
 const browserDistDir = path.join(rootDir, 'dist', 'browser');
+const ruPrerenderDir = path.join(browserDistDir, '__ru');
 const publicSeoRoutesConfigPath = path.join(rootDir, 'src', 'app', 'config', 'public-seo-landing-routes.config.ts');
 const translationKeyPattern = /\b[A-Z][A-Z0-9_]*(?:\.[A-Z0-9_]+)+\b/gu;
 const ignoredPathSegments = new Set(['assets']);
@@ -28,6 +29,14 @@ for (const routePath of requiredSeoPaths) {
     }
 
     assertSeoDocument(htmlFilePath, routePath, issues);
+
+    const ruHtmlFilePath = path.join(ruPrerenderDir, routePath, 'index.html');
+    if (!fs.existsSync(ruHtmlFilePath)) {
+        issues.push(`${toRouteLabel(routePath)} [ru]: missing Russian prerendered index.html.`);
+        continue;
+    }
+
+    assertSeoDocument(ruHtmlFilePath, routePath, issues, 'ru');
 }
 
 for (const filePath of htmlFiles) {
@@ -55,18 +64,20 @@ function readPublicSeoLandingPaths() {
     return [...matches].map(match => match[1]);
 }
 
-function assertSeoDocument(filePath, routePath, targetIssues) {
+function assertSeoDocument(filePath, routePath, targetIssues, locale = 'en') {
     const content = fs.readFileSync(filePath, 'utf8');
-    const routeLabel = toRouteLabel(routePath);
-    const canonicalUrl = buildCanonicalUrl('https://fooddiary.club', routePath);
+    const routeLabel = locale === 'ru' ? `${toRouteLabel(routePath)} [ru]` : toRouteLabel(routePath);
+    const canonicalUrl = buildCanonicalUrl(locale === 'ru' ? 'https://xn--b1adbcbrouc8l.xn--p1ai' : 'https://fooddiary.club', routePath);
+    const enAlternateUrl = buildCanonicalUrl('https://fooddiary.club', routePath);
     const ruAlternateUrl = buildCanonicalUrl('https://xn--b1adbcbrouc8l.xn--p1ai', routePath);
 
     assertPattern(content, /<title>[^<]+<\/title>/iu, routeLabel, 'missing title tag.', targetIssues);
     assertPattern(content, /<meta\s+name="description"\s+content="[^"]+"\s*>/iu, routeLabel, 'missing meta description.', targetIssues);
     assertIncludes(content, `<link rel="canonical" href="${canonicalUrl}">`, routeLabel, 'missing canonical link.', targetIssues);
-    assertIncludes(content, `hreflang="en" href="${canonicalUrl}"`, routeLabel, 'missing en alternate link.', targetIssues);
+    assertIncludes(content, `hreflang="en" href="${enAlternateUrl}"`, routeLabel, 'missing en alternate link.', targetIssues);
     assertIncludes(content, `hreflang="ru" href="${ruAlternateUrl}"`, routeLabel, 'missing ru alternate link.', targetIssues);
-    assertIncludes(content, `hreflang="x-default" href="${canonicalUrl}"`, routeLabel, 'missing x-default alternate link.', targetIssues);
+    assertIncludes(content, `hreflang="x-default" href="${enAlternateUrl}"`, routeLabel, 'missing x-default alternate link.', targetIssues);
+    assertIncludes(content, `property="og:locale" content="${locale === 'ru' ? 'ru_RU' : 'en_US'}"`, routeLabel, 'missing expected og:locale.', targetIssues);
     assertPattern(
         content,
         /<script\s+type="application\/ld\+json"\s+data-seo-structured-data="app">.+?<\/script>/isu,
