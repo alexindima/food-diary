@@ -6,14 +6,7 @@ public sealed class ApplicationGuardrailTests {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .SelectMany(path => File.ReadAllLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(static entry => entry.line.Contains("Enum.Parse(", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
-            .ToArray();
+        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["Enum.Parse("]);
 
         Assert.Empty(violations);
     }
@@ -23,14 +16,7 @@ public sealed class ApplicationGuardrailTests {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .SelectMany(path => File.ReadAllLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(static entry => entry.line.Contains("DateTime.UtcNow", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
-            .ToArray();
+        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["DateTime.UtcNow"]);
 
         Assert.Empty(violations);
     }
@@ -198,14 +184,7 @@ public sealed class ApplicationGuardrailTests {
             "HttpResponse",
         };
 
-        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .SelectMany(path => File.ReadAllLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
-            .ToArray();
+        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -224,14 +203,7 @@ public sealed class ApplicationGuardrailTests {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .SelectMany(path => File.ReadAllLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(static entry => entry.line.Contains("CancellationToken.None", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
-            .ToArray();
+        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["CancellationToken.None"]);
 
         Assert.Empty(violations);
     }
@@ -249,14 +221,7 @@ public sealed class ApplicationGuardrailTests {
             "using Microsoft.Extensions.Configuration",
         };
 
-        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .SelectMany(path => File.ReadAllLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
-            .ToArray();
+        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -276,16 +241,9 @@ public sealed class ApplicationGuardrailTests {
     }
 
     private static IEnumerable<string> GetAsyncMethodSignatures(string path) {
-        var content = File.ReadAllText(path);
-        var normalized = content.ReplaceLineEndings("\n");
-        var matches = System.Text.RegularExpressions.Regex.Matches(
-            normalized,
-            @"Task(?:<[^;]+?>)?\s+\w+Async\s*\((.*?)\)\s*;",
-            System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.CultureInvariant);
-
-        foreach (System.Text.RegularExpressions.Match match in matches) {
-            yield return match.Value.ReplaceLineEndings(" ").Replace('\n', ' ').Trim();
-        }
+        return CSharpSyntaxReader.ReadMethods(path)
+            .Where(static method => method.IsAsyncLike)
+            .Select(static method => $"{method.ReturnType} {method.Name}({method.Parameters})");
     }
 
     private static string[] FindRepositoryReferenceViolations(
@@ -293,9 +251,7 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot,
         string typeName,
         IReadOnlyCollection<string> allowedDirectories) {
-        return Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+        return SourceScanner.SourceFiles(applicationRoot)
             .Where(path => allowedDirectories.Any(directory => path.StartsWith(directory, StringComparison.OrdinalIgnoreCase)) is false)
             .SelectMany(path => File.ReadAllLines(path)
                 .Select((line, index) => new { path, index, line }))

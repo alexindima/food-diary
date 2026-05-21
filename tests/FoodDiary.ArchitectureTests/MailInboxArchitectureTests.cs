@@ -90,7 +90,7 @@ public sealed class MailInboxArchitectureTests {
             "HttpContext",
         };
 
-        var violations = FindSourcePatternViolations(root, domainRoot, forbiddenPatterns);
+        var violations = SourceScanner.FindLinePatternViolations(domainRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -114,7 +114,7 @@ public sealed class MailInboxArchitectureTests {
             "IEndpointRouteBuilder",
         };
 
-        var violations = FindSourcePatternViolations(root, applicationRoot, forbiddenPatterns);
+        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -131,7 +131,7 @@ public sealed class MailInboxArchitectureTests {
             "SmtpServer",
         };
 
-        var violations = FindSourcePatternViolations(root, presentationRoot, forbiddenPatterns);
+        var violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -254,34 +254,10 @@ public sealed class MailInboxArchitectureTests {
             .ToHashSet(StringComparer.Ordinal);
     }
 
-    private static string[] FindSourcePatternViolations(
-        string repositoryRoot,
-        string sourceRoot,
-        IReadOnlyCollection<string> forbiddenPatterns) {
-        if (!Directory.Exists(sourceRoot)) {
-            return [];
-        }
-
-        return Directory.GetFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => IsGeneratedPath(path) is false)
-            .SelectMany(path => File.ReadAllLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}")
-            .ToArray();
-    }
-
     private static IEnumerable<string> GetAsyncMethodSignatures(string path) {
-        var content = File.ReadAllText(path);
-        var normalized = content.ReplaceLineEndings("\n");
-        var matches = System.Text.RegularExpressions.Regex.Matches(
-            normalized,
-            @"Task(?:<[^;]+?>)?\s+\w+Async\s*\((.*?)\)\s*;",
-            System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.CultureInvariant);
-
-        foreach (System.Text.RegularExpressions.Match match in matches) {
-            yield return match.Value.ReplaceLineEndings(" ").Replace('\n', ' ').Trim();
-        }
+        return CSharpSyntaxReader.ReadMethods(path)
+            .Where(static method => method.IsAsyncLike)
+            .Select(static method => $"{method.ReturnType} {method.Name}({method.Parameters})");
     }
 
     private static string GetRepositoryRoot() {

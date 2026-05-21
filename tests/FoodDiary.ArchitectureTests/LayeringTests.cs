@@ -103,14 +103,7 @@ public class LayeringTests {
         var root = GetRepositoryRoot();
         var presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
 
-        var violations = Directory.GetFiles(presentationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-            .SelectMany(path => File.ReadAllLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(entry => entry.line.TrimStart().StartsWith("using FoodDiary.Domain", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
-            .ToArray();
+        var violations = SourceScanner.FindLinePatternViolations(presentationRoot, ["using FoodDiary.Domain"]);
 
         Assert.Empty(violations);
     }
