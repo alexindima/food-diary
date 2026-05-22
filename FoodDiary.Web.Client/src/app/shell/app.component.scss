@@ -178,6 +178,10 @@ html.cdk-global-scrollblock .fd-root__sidebar {
         padding-bottom: calc(var(--fd-layout-shell-mobile-viewport-bottom-padding) + env(safe-area-inset-bottom));
     }
 
+    .fd-root--no-sidebar .fd-root__viewport {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
     .fd-root__footer {
         display: none;
     }

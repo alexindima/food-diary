@@ -35,7 +35,7 @@
     }
 
     &--faq {
-        padding: var(--fd-landing-section-space-tight) 0 calc(var(--fd-landing-section-space) + var(--fd-space-xs));
+        padding: var(--fd-landing-section-space-tight) 0 var(--fd-space-md);
         background: transparent;
     }
 }
