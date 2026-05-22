@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Models;
 
@@ -9,5 +10,5 @@ public sealed record GetAdminUsersQuery(
     int Page,
     int Limit,
     string? Search,
-    bool IncludeDeleted)
+    UserAccountStatusFilter Status)
     : IQuery<Result<PagedResponse<AdminUserModel>>>;

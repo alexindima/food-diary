@@ -76,6 +76,14 @@ describe('FdUiConfirmDialogComponent', () => {
         expect(buttons[1].textContent).toContain('Yes, do it');
     });
 
+    it('should group footer actions with the confirm dialog footer class', () => {
+        createComponent({ title: 'Confirm', message: 'Sure?' });
+        const nativeEl = fixture.nativeElement as HTMLElement;
+        const footer = nativeEl.querySelector('[fdUiDialogFooter]');
+        expect(footer).toBeTruthy();
+        expect(footer?.classList).toContain('fd-ui-confirm-dialog__footer');
+    });
+
     it('should use default button texts when labels are not provided', () => {
         createComponent({ title: 'Confirm', message: 'Sure?' });
         const nativeEl = fixture.nativeElement as HTMLElement;

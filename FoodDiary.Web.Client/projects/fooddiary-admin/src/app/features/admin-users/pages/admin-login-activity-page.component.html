@@ -1,0 +1,14 @@
+<div class="admin-users fd-grid fd-gap-md">
+    <fd-admin-login-activity-section
+        [search]="loginEventsSearch()"
+        [summaryItems]="loginSummaryItems()"
+        [isLoading]="isLoginEventsLoading()"
+        [totalItems]="loginEventsTotalItems()"
+        [events]="loginEvents()"
+        [page]="loginEventsPage()"
+        [pageSize]="pageSize"
+        [totalPages]="loginEventsTotalPages()"
+        (searchChange)="onLoginEventsSearchChange($event)"
+        (pageChange)="goToLoginEventsPage($event)"
+    />
+</div>

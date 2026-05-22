@@ -1,49 +1,11 @@
 <div class="admin-shell fd-grid">
-    <aside class="admin-shell__sidebar fd-stack fd-gap-lg">
-        <div class="admin-shell__brand fd-row fd-gap-sm">
-            <div class="admin-shell__logo fd-place-center fd-ui-metric-lg">FD</div>
-            <div>
-                <div class="admin-shell__title fd-ui-body">FoodDiary</div>
-                <div class="admin-shell__subtitle fd-ui-body-xs">Admin</div>
-            </div>
-        </div>
-
-        <nav class="admin-shell__nav fd-stack fd-gap-xs">
-            <a
-                class="admin-shell__nav-item fd-ui-action-text"
-                routerLink="/"
-                routerLinkActive="admin-shell__nav-item--active"
-                [routerLinkActiveOptions]="{ exact: true }"
-            >
-                Dashboard
-            </a>
-            <a class="admin-shell__nav-item fd-ui-action-text" routerLink="/users" routerLinkActive="admin-shell__nav-item--active">
-                Users
-            </a>
-            <a class="admin-shell__nav-item fd-ui-action-text" routerLink="/ai-usage" routerLinkActive="admin-shell__nav-item--active">
-                AI Logs
-            </a>
-            <a class="admin-shell__nav-item fd-ui-action-text" routerLink="/billing" routerLinkActive="admin-shell__nav-item--active">
-                Billing
-            </a>
-            <a
-                class="admin-shell__nav-item fd-ui-action-text"
-                routerLink="/email-templates"
-                routerLinkActive="admin-shell__nav-item--active"
-            >
-                Email templates
-            </a>
-            <a class="admin-shell__nav-item fd-ui-action-text" routerLink="/mail-inbox" routerLinkActive="admin-shell__nav-item--active">
-                Mail inbox
-            </a>
-            <a class="admin-shell__nav-item fd-ui-action-text" routerLink="/lessons" routerLinkActive="admin-shell__nav-item--active">
-                Lessons
-            </a>
-            <a class="admin-shell__nav-item fd-ui-action-text" routerLink="/moderation" routerLinkActive="admin-shell__nav-item--active">
-                Moderation
-            </a>
-        </nav>
-    </aside>
+    <fd-ui-sidebar
+        brandTitle="FoodDiary"
+        brandSubtitle="Admin"
+        logoText="FD"
+        [sections]="sidebarSections()"
+        (sectionToggled)="onSidebarSectionToggled($event.section.id)"
+    />
 
     <main class="admin-shell__content">
         <router-outlet />

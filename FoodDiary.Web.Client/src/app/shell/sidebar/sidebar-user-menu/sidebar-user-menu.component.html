@@ -38,17 +38,15 @@
                 <fd-ui-icon name="settings" />
                 <span>{{ 'HEADER.PROFILE' | translate }}</span>
             </a>
-            <fd-ui-button
-                class="sidebar__logout"
+            <button
                 type="button"
-                variant="danger"
-                fill="outline"
-                icon="logout"
+                class="sidebar__user-menu-link sidebar__user-menu-link--danger fd-row fd-gap-xs"
                 role="menuitem"
                 (click)="logout.emit()"
             >
-                {{ 'HEADER.LOGOUT' | translate }}
-            </fd-ui-button>
+                <fd-ui-icon name="logout" />
+                <span>{{ 'HEADER.LOGOUT' | translate }}</span>
+            </button>
         </div>
     }
 </div>

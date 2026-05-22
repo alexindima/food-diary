@@ -12,6 +12,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminUsers;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -22,7 +23,15 @@ public static class AdminHttpQueryMappings {
     public static GetAdminLessonsQuery ToLessonsQuery() => new();
 
     public static GetAdminUsersQuery ToQuery(this GetAdminUsersHttpQuery query) {
-        return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, query.IncludeDeleted);
+        return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, ResolveUserStatus(query));
+    }
+
+    private static UserAccountStatusFilter ResolveUserStatus(GetAdminUsersHttpQuery query) {
+        if (Enum.TryParse<UserAccountStatusFilter>(query.Status, ignoreCase: true, out var status)) {
+            return status;
+        }
+
+        return query.IncludeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
     }
 
     public static GetAdminUserLoginEventsQuery ToQuery(this GetAdminUserLoginEventsHttpQuery query) {

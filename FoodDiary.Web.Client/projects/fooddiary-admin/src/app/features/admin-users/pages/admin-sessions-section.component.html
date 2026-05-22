@@ -39,14 +39,11 @@
             </tbody>
         </table>
 
-        <div class="pagination fd-row fd-gap-sm">
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="pageChange.emit(page() - 1)">
-                Previous
-            </fd-ui-button>
-            <span>Page {{ page() }} of {{ totalPages() }}</span>
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() >= totalPages()" (click)="pageChange.emit(page() + 1)">
-                Next
-            </fd-ui-button>
-        </div>
+        <fd-ui-pagination
+            [length]="totalItems()"
+            [pageSize]="pageSize()"
+            [pageIndex]="page() - 1"
+            (pageIndexChange)="pageChange.emit($event + 1)"
+        />
     }
 </section>

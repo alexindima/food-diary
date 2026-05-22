@@ -2,6 +2,7 @@ import { CommonModule, formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, LOCALE_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 
 import {
     type AdminBillingFilters,
@@ -33,6 +34,7 @@ const SHORT_ID_SUFFIX_START = -6;
     imports: [
         CommonModule,
         FdUiButtonComponent,
+        FdUiPaginationComponent,
         AdminBillingFiltersComponent,
         AdminBillingSubscriptionsTableComponent,
         AdminBillingPaymentsTableComponent,

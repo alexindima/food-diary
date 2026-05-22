@@ -2,9 +2,7 @@
     <div class="toolbar fd-row fd-gap-sm">
         <fd-ui-input placeholder="Search by email or username" [ngModel]="search()" (ngModelChange)="onSearchChange($event)" />
 
-        <fd-ui-button type="button" [variant]="includeDeleted() ? 'primary' : 'secondary'" (click)="toggleIncludeDeleted()">
-            {{ includeDeleted() ? 'Hide deleted' : 'Show deleted' }}
-        </fd-ui-button>
+        <fd-ui-select placeholder="User status" [options]="statusOptions" [ngModel]="status()" (ngModelChange)="onStatusChange($event)" />
     </div>
 
     @if (isLoading()) {
@@ -14,33 +12,11 @@
             [users]="users()"
             [totalItems]="totalItems()"
             [page]="page()"
+            [pageSize]="limit"
             [totalPages]="totalPages()"
             (edit)="openEdit($event)"
             (impersonate)="startImpersonation($event)"
             (pageChange)="goToPage($event)"
         />
     }
-
-    <fd-admin-login-activity-section
-        [search]="loginEventsSearch()"
-        [summaryItems]="loginSummaryItems()"
-        [isLoading]="isLoginEventsLoading()"
-        [totalItems]="loginEventsTotalItems()"
-        [events]="loginEvents()"
-        [page]="loginEventsPage()"
-        [totalPages]="loginEventsTotalPages()"
-        (searchChange)="onLoginEventsSearchChange($event)"
-        (pageChange)="goToLoginEventsPage($event)"
-    />
-
-    <fd-admin-sessions-section
-        [search]="sessionsSearch()"
-        [isLoading]="isSessionsLoading()"
-        [totalItems]="sessionsTotalItems()"
-        [sessions]="sessions()"
-        [page]="sessionsPage()"
-        [totalPages]="sessionsTotalPages()"
-        (searchChange)="onSessionsSearchChange($event)"
-        (pageChange)="goToSessionsPage($event)"
-    />
 </div>

@@ -149,3 +149,41 @@ internal sealed class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
+
+internal sealed class UserRoleAuditEventConfiguration : IEntityTypeConfiguration<UserRoleAuditEvent> {
+    public void Configure(EntityTypeBuilder<UserRoleAuditEvent> entity) {
+        entity.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        entity.Property(e => e.RoleId).HasConversion(
+            id => id.Value,
+            value => new RoleId(value));
+
+        entity.Property(e => e.ActorUserId).HasConversion(
+            id => id.HasValue ? id.Value.Value : (Guid?)null,
+            value => value.HasValue ? new UserId(value.Value) : null);
+
+        entity.Property(e => e.RoleName)
+            .IsRequired()
+            .HasMaxLength(64);
+
+        entity.Property(e => e.Action)
+            .HasConversion<string>()
+            .HasMaxLength(32);
+
+        entity.Property(e => e.Source)
+            .IsRequired()
+            .HasMaxLength(64);
+
+        entity.Property(e => e.OccurredAtUtc)
+            .HasColumnType("timestamp with time zone");
+
+        entity.HasIndex(e => e.UserId);
+        entity.HasIndex(e => e.ActorUserId);
+        entity.HasIndex(e => e.RoleId);
+        entity.HasIndex(e => e.RoleName);
+        entity.HasIndex(e => e.Action);
+        entity.HasIndex(e => e.OccurredAtUtc);
+    }
+}

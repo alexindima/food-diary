@@ -11,5 +11,6 @@ public sealed record UpdateAdminUserCommand(
     IReadOnlyList<string>? Roles,
     string? Language,
     long? AiInputTokenLimit,
-    long? AiOutputTokenLimit)
+    long? AiOutputTokenLimit,
+    Guid? ActorUserId = null)
     : ICommand<Result<AdminUserModel>>;

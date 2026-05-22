@@ -1,0 +1,41 @@
+.fd-ui-sidebar__section {
+    padding-top: var(--fd-space-xs);
+    border-top: var(--fd-border-default);
+}
+
+.fd-ui-sidebar__section--plain {
+    padding-top: 0;
+    border-top: none;
+}
+
+.fd-ui-sidebar__section-header {
+    width: 100%;
+    padding: var(--fd-space-xs) var(--fd-space-xxs);
+    background: transparent;
+    border: none;
+    color: var(--fd-ui-sidebar-section-title);
+    cursor: default;
+    letter-spacing: var(--fd-letter-spacing-subtle);
+}
+
+button.fd-ui-sidebar__section-header {
+    cursor: pointer;
+}
+
+.fd-ui-sidebar__section-header:focus-visible {
+    outline: var(--fd-outline-focus-strong);
+    outline-offset: var(--fd-outline-offset);
+    border-radius: var(--fd-radius-button);
+}
+
+.fd-ui-sidebar__section-header fd-ui-icon {
+    transition: transform 0.2s ease;
+}
+
+.fd-ui-sidebar__section-header fd-ui-icon.is-open {
+    transform: rotate(180deg);
+}
+
+.fd-ui-sidebar__nav {
+    margin-top: var(--fd-space-xxs);
+}

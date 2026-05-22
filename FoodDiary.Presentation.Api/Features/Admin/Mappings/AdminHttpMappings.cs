@@ -48,7 +48,7 @@ public static class AdminHttpMappings {
             IsActive: request.IsActive);
     }
 
-    public static UpdateAdminUserCommand ToCommand(this AdminUserUpdateHttpRequest request, Guid userId) {
+    public static UpdateAdminUserCommand ToCommand(this AdminUserUpdateHttpRequest request, Guid userId, Guid actorUserId) {
         return new UpdateAdminUserCommand(
             UserId: userId,
             IsActive: request.IsActive,
@@ -56,7 +56,8 @@ public static class AdminHttpMappings {
             Roles: request.Roles ?? [],
             Language: request.Language,
             AiInputTokenLimit: request.AiInputTokenLimit,
-            AiOutputTokenLimit: request.AiOutputTokenLimit);
+            AiOutputTokenLimit: request.AiOutputTokenLimit,
+            ActorUserId: actorUserId);
     }
 
     public static StartAdminImpersonationCommand ToCommand(
