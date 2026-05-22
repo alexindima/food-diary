@@ -132,7 +132,7 @@ export class AuthComponent {
             this.renderGoogleButton();
         });
         effect(() => {
-            const routeMode = this.route?.snapshot.paramMap.get('mode') === 'register' ? 'register' : 'login';
+            const routeMode = this.route?.snapshot.queryParamMap.get('auth') === 'register' ? 'register' : 'login';
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
             this.returnUrl = this.useRouting() ? (this.route?.snapshot.queryParamMap.get('returnUrl') ?? null) : this.initialReturnUrl();
             this.adminReturnUrl = this.useRouting()
@@ -168,7 +168,7 @@ export class AuthComponent {
         this.hasLoginNativeInteraction = false;
         this.loginAutofillDetected.set(false);
         if (this.useRouting() && this.router !== null) {
-            await this.router.navigate(['/auth', mode]);
+            await this.router.navigate(['/'], { queryParams: { auth: mode } });
         }
     }
 

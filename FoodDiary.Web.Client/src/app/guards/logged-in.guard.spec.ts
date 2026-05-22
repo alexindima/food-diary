@@ -38,7 +38,7 @@ describe('loggedInGuard', () => {
         });
 
         const routeStub = {};
-        const stateStub = { url: '/auth/login' };
+        const stateStub = { url: '/?auth=login' };
         route = routeStub as ActivatedRouteSnapshot;
         state = stateStub as RouterStateSnapshot;
     });
@@ -64,7 +64,7 @@ describe('loggedInGuard', () => {
 
     it('should allow access for authenticated user when adminReturnUrl is present', async () => {
         authServiceMock.isAuthenticated.set(true);
-        const adminRedirectState = { url: '/auth/login?adminReturnUrl=%2F' };
+        const adminRedirectState = { url: '/?auth=login&adminReturnUrl=%2F' };
         state = adminRedirectState as RouterStateSnapshot;
 
         const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));

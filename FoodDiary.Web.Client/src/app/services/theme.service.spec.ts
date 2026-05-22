@@ -53,7 +53,7 @@ describe('ThemeService public routes', () => {
         localStorage.setItem('fd_theme', 'leaf');
         localStorage.setItem('fd_ui_style', 'modern');
 
-        service.applyThemeForRoute('/auth/login');
+        service.applyThemeForRoute('/?auth=login');
 
         expect(service.theme()).toBe('ocean');
         expect(service.uiStyle()).toBe('classic');
@@ -67,7 +67,7 @@ describe('ThemeService public routes', () => {
         localStorage.setItem('fd_theme', 'leaf');
         localStorage.setItem('fd_ui_style', 'modern');
 
-        service.applyThemeForRoute('/auth/login');
+        service.applyThemeForRoute('/?auth=login');
         service.applyThemeForRoute('/dashboard');
 
         expect(service.theme()).toBe('leaf');

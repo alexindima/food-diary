@@ -46,8 +46,8 @@ describe('NavigationService', () => {
         const returnUrl = '/products';
 
         await service.navigateToAuthAsync(mode, returnUrl);
-        expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth', 'login'], {
-            queryParams: { returnUrl: '/products' },
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/'], {
+            queryParams: { auth: 'login', returnUrl: '/products' },
         });
     });
 
@@ -55,7 +55,7 @@ describe('NavigationService', () => {
         const mode: AuthMode = 'register';
 
         await service.navigateToAuthAsync(mode);
-        expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth', 'register'], { queryParams: {} });
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/'], { queryParams: { auth: 'register' } });
     });
 
     it('should navigate to email verification pending without auto resend', async () => {

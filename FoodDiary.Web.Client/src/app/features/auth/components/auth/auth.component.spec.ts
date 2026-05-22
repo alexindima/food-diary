@@ -62,8 +62,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
                 provide: ActivatedRoute,
                 useValue: {
                     snapshot: {
-                        paramMap: convertToParamMap({ mode }),
-                        queryParamMap: convertToParamMap({}),
+                        queryParamMap: convertToParamMap({ auth: mode }),
                     },
                 },
             },
@@ -105,7 +104,7 @@ describe('AuthComponent tabs', () => {
         expect(component.loginForm.controls.email.value).toBe('');
         expect(component.showPasswordReset()).toBe(false);
         expect(component.passwordResetSent()).toBe(false);
-        expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth', 'register']);
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/'], { queryParams: { auth: 'register' } });
     });
 });
 

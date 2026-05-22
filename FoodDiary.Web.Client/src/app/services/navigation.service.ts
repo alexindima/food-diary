@@ -16,8 +16,8 @@ export class NavigationService {
     }
 
     public async navigateToAuthAsync(mode: AuthMode, returnUrl?: string): Promise<void> {
-        const queryParams = returnUrl !== undefined && returnUrl.length > 0 ? { returnUrl } : {};
-        await this.router.navigate(['/auth', mode], { queryParams });
+        const queryParams = returnUrl !== undefined && returnUrl.length > 0 ? { auth: mode, returnUrl } : { auth: mode };
+        await this.router.navigate(['/'], { queryParams });
     }
 
     public async navigateToEmailVerificationPendingAsync(options?: { autoResend?: boolean }): Promise<void> {

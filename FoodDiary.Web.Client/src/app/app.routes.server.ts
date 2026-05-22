@@ -70,14 +70,6 @@ export const serverRoutes: ServerRoute[] = [
         renderMode: RenderMode.Prerender,
     },
     {
-        path: 'auth',
-        renderMode: RenderMode.Client,
-    },
-    {
-        path: 'auth/:mode',
-        renderMode: RenderMode.Client,
-    },
-    {
         path: 'verify-pending',
         renderMode: RenderMode.Client,
     },

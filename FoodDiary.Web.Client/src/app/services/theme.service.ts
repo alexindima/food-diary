@@ -163,12 +163,7 @@ export class ThemeService {
 
     private isPublicRoute(pathname: string): boolean {
         const normalizedPath = pathname.split(/[?#]/u, 1)[0].toLowerCase();
-        return (
-            normalizedPath === '/' ||
-            normalizedPath.startsWith('/auth') ||
-            normalizedPath === '/privacy-policy' ||
-            PUBLIC_SEO_PATHS.has(normalizedPath)
-        );
+        return normalizedPath === '/' || normalizedPath === '/privacy-policy' || PUBLIC_SEO_PATHS.has(normalizedPath);
     }
 
     private updateBrowserThemeColor(color: string): void {

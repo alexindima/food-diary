@@ -33,7 +33,7 @@
             <p class="seo-landing__section-subtitle">{{ cta().subtitleKey | translate }}</p>
         </div>
         <div class="seo-landing__actions">
-            <fd-ui-button routerLink="/auth/register" variant="primary" size="lg">
+            <fd-ui-button routerLink="/" variant="primary" size="lg" [queryParams]="{ auth: 'register' }">
                 {{ cta().primaryKey | translate }}
             </fd-ui-button>
             <fd-ui-button routerLink="/" variant="secondary" fill="outline" size="lg">

@@ -38,7 +38,8 @@ export class UnauthorizedComponent {
     }
 
     public goToLogin(): void {
-        const url = new URL('/auth/login', environment.mainAppUrl);
+        const url = new URL('/', environment.mainAppUrl);
+        url.searchParams.set('auth', 'login');
         const adminReturnUrl = this.normalizeReturnUrl(this.returnUrl);
         if (adminReturnUrl.length > 0) {
             url.searchParams.set('adminReturnUrl', adminReturnUrl);

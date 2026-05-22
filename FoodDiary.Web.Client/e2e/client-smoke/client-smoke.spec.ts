@@ -23,8 +23,8 @@ test.describe('client smoke', () => {
         await expect(page.locator('fd-features')).toBeVisible();
     });
 
-    test('opens auth dialog on auth route', async ({ page }) => {
-        await page.goto('/auth/login');
+    test('opens auth dialog from auth query param', async ({ page }) => {
+        await page.goto('/?auth=login');
 
         await expect(page.locator('fd-auth-dialog fd-auth')).toBeVisible();
         await expect(page.locator('fd-auth .auth__form')).toBeVisible();

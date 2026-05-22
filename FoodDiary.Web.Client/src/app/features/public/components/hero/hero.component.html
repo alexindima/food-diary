@@ -9,13 +9,21 @@
                 <fd-ui-button
                     class="hero__cta hero__cta--primary"
                     appearance="brand-action"
+                    routerLink="/"
                     size="lg"
                     variant="primary"
-                    (click)="goToRegister()"
+                    [queryParams]="{ auth: 'register' }"
                 >
                     {{ 'LANDING_HERO.REGISTER' | translate }}
                 </fd-ui-button>
-                <fd-ui-button class="hero__cta hero__cta--secondary" size="lg" variant="secondary" fill="outline" (click)="goToLogin()">
+                <fd-ui-button
+                    class="hero__cta hero__cta--secondary"
+                    routerLink="/"
+                    size="lg"
+                    variant="secondary"
+                    fill="outline"
+                    [queryParams]="{ auth: 'login' }"
+                >
                     {{ 'LANDING_HERO.LOGIN' | translate }}
                 </fd-ui-button>
             </div>

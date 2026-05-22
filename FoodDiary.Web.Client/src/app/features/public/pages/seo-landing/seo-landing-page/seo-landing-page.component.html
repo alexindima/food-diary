@@ -6,7 +6,7 @@
                 <h1 class="seo-landing__title">{{ hero.titleKey | translate }}</h1>
                 <p class="seo-landing__subtitle">{{ hero.subtitleKey | translate }}</p>
                 <div class="seo-landing__actions">
-                    <fd-ui-button routerLink="/auth/register" variant="primary" size="lg">
+                    <fd-ui-button routerLink="/" variant="primary" size="lg" [queryParams]="{ auth: 'register' }">
                         {{ hero.primaryActionKey | translate }}
                     </fd-ui-button>
                     <fd-ui-button routerLink="/" variant="secondary" fill="outline" size="lg">
