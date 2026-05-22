@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 
 @Component({
     selector: 'fd-landing-cta',
@@ -12,9 +13,9 @@ import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-a
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingCtaComponent {
-    private readonly authDialogService = inject(PublicAuthDialogService);
+    private readonly authNavigationService = inject(PublicAuthNavigationService);
 
-    public async openAuthAsync(mode: PublicAuthMode): Promise<void> {
-        await this.authDialogService.openAsync({ mode });
+    public async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authNavigationService.navigateAsync(mode);
     }
 }

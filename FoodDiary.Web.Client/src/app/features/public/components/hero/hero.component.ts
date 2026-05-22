@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
 import { LocalizationService } from '../../../../services/localization.service';
+import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 
 @Component({
     selector: 'fd-hero',
-    imports: [RouterLink, FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule],
+    imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,6 +18,7 @@ import { LocalizationService } from '../../../../services/localization.service';
 export class HeroComponent {
     private readonly translateService = inject(TranslateService);
     private readonly localizationService = inject(LocalizationService);
+    private readonly authNavigationService = inject(PublicAuthNavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -44,6 +46,10 @@ export class HeroComponent {
 
         this.currentLanguage = target;
         void this.localizationService.applyLanguagePreferenceAsync(target);
+    }
+
+    protected async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authNavigationService.navigateAsync(mode);
     }
 
     private getCurrentLanguage(): string {

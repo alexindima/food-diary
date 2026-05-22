@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
-import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 import { LANDING_STEPS } from './landing-steps.config';
 
 @Component({
@@ -13,11 +14,11 @@ import { LANDING_STEPS } from './landing-steps.config';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingStepsComponent {
-    private readonly authDialogService = inject(PublicAuthDialogService);
+    private readonly authNavigationService = inject(PublicAuthNavigationService);
 
     protected readonly steps = LANDING_STEPS;
 
-    public async openAuthAsync(mode: PublicAuthMode): Promise<void> {
-        await this.authDialogService.openAsync({ mode });
+    public async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authNavigationService.navigateAsync(mode);
     }
 }

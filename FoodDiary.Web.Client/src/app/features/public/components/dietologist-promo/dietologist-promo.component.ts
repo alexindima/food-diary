@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
-import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 import { DIETOLOGIST_PROMO_PERMISSIONS, DIETOLOGIST_PROMO_WORKFLOW_STEPS } from './dietologist-promo.config';
 
 @Component({
@@ -13,12 +14,12 @@ import { DIETOLOGIST_PROMO_PERMISSIONS, DIETOLOGIST_PROMO_WORKFLOW_STEPS } from 
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DietologistPromoComponent {
-    private readonly authDialogService = inject(PublicAuthDialogService);
+    private readonly authNavigationService = inject(PublicAuthNavigationService);
 
     protected readonly workflowSteps = DIETOLOGIST_PROMO_WORKFLOW_STEPS;
     protected readonly permissions = DIETOLOGIST_PROMO_PERMISSIONS;
 
-    protected async openAuthAsync(mode: PublicAuthMode): Promise<void> {
-        await this.authDialogService.openAsync({ mode });
+    protected async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authNavigationService.navigateAsync(mode);
     }
 }

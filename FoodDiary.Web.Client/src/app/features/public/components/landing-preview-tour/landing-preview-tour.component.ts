@@ -12,7 +12,8 @@ import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick
 import { type QuickMealItem, QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
-import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
+import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 import { buildLandingPreviewContent, type LandingPreviewContent } from './landing-preview-tour-data.mapper';
 
 @Component({
@@ -31,7 +32,7 @@ import { buildLandingPreviewContent, type LandingPreviewContent } from './landin
 })
 export class LandingPreviewTourComponent {
     private readonly authService = inject(AuthService);
-    private readonly authDialogService = inject(PublicAuthDialogService);
+    private readonly authNavigationService = inject(PublicAuthNavigationService);
     private readonly quickConsumptionService = inject(QuickMealService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
@@ -67,8 +68,8 @@ export class LandingPreviewTourComponent {
         this.scrollDraftIntoView();
     }
 
-    public async openAuthDialogAsync(mode: PublicAuthMode): Promise<void> {
-        await this.authDialogService.openAsync({ mode });
+    public async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+        await this.authNavigationService.navigateAsync(mode);
     }
 
     private refreshPreviewContent(): void {
