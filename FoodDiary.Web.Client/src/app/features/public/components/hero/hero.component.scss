@@ -289,6 +289,13 @@
             justify-content: center;
         }
 
+        &__language-toggle {
+            --fd-size-control-touch: var(--fd-size-control-sm);
+            --fd-space-segmented-toggle-gap: var(--fd-space-xxs);
+            --fd-space-segmented-toggle-padding: var(--fd-space-xxs);
+            --fd-space-segmented-toggle-item-padding: 0 var(--fd-space-xs);
+        }
+
         &__feature-panel {
             width: min(100%, 460px);
             min-height: 0;
@@ -326,11 +333,15 @@
 
         &__visual {
             order: -1;
-            margin-bottom: calc(var(--fd-space-sm) * -1);
+            margin-bottom: var(--fd-space-md);
         }
 
         &__grid {
             grid-template-columns: 1fr;
+        }
+
+        &__language-toggle {
+            width: 6rem;
         }
 
         &__blob,

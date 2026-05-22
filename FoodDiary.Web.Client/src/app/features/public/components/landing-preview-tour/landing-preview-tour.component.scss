@@ -189,11 +189,6 @@
 .landing-preview__showcase {
     display: grid;
     gap: var(--fd-landing-grid-gap);
-    padding: var(--fd-landing-surface-padding-lg);
-    border-radius: var(--fd-landing-radius-panel);
-    background: var(--fd-landing-surface);
-    border: var(--fd-border-width) solid var(--fd-landing-border-soft);
-    box-shadow: var(--fd-landing-shadow-medium);
     animation: landingFadeUp 720ms ease-out both;
 }
 
@@ -254,15 +249,6 @@
     gap: var(--fd-landing-grid-gap);
     align-items: start;
     min-width: 0;
-    padding: var(--fd-landing-surface-padding);
-    border-radius: var(--fd-landing-radius-panel);
-    background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--fd-color-primary-50) 74%, var(--fd-color-white)) 0%,
-        color-mix(in srgb, var(--fd-color-white) 90%, var(--fd-color-teal-50)) 100%
-    );
-    border: var(--fd-border-width) solid var(--fd-landing-border-soft);
-    box-shadow: var(--fd-landing-shadow-medium);
     color: var(--fd-color-text);
     animation: landingFadeUp 860ms ease-out both;
 
@@ -425,10 +411,6 @@
 
     :host {
         --fd-layout-page-horizontal-padding: var(--fd-space-md);
-    }
-
-    .landing-preview__showcase {
-        padding: var(--fd-space-md);
     }
 
     .landing-preview__showcase-grid {
