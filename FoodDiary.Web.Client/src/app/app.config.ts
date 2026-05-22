@@ -117,6 +117,6 @@ export const appConfig: ApplicationConfig = {
         LocalizationService,
         ThemeService,
         LoggingApiService,
-        ...(isBrowserEnvironment ? [provideClientHydration(withEventReplay())] : []),
+        provideClientHydration(withEventReplay()),
     ],
 };

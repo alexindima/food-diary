@@ -9,7 +9,7 @@ import type { SeoLandingCtaKeys, SeoLandingRelatedPage } from '../lib/seo-landin
     selector: 'fd-seo-landing-footer-sections',
     imports: [RouterLink, TranslatePipe, FdUiButtonComponent],
     templateUrl: './seo-landing-footer-sections.component.html',
-    styleUrl: '../seo-landing-page/seo-landing-page.component.scss',
+    styleUrl: './seo-landing-sections.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeoLandingFooterSectionsComponent {

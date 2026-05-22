@@ -1,0 +1,225 @@
+@use 'variables' as variables;
+
+:host {
+    display: contents;
+}
+
+.seo-landing {
+
+    &__container {
+        width: min(var(--seo-landing-container-max-width), calc(100% - var(--fd-space-md) - var(--fd-space-md)));
+        margin: 0 auto;
+    }
+
+    &__container--cta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--fd-space-lg);
+
+        @media #{variables.$media-tablet} {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    &__eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+        border-radius: var(--fd-radius-pill);
+        background: color-mix(in srgb, var(--fd-color-primary-500) 10%, transparent);
+        color: var(--fd-color-primary-700);
+        font-size: var(--fd-text-body-tiny-size);
+        font-weight: var(--fd-text-metric-lg-weight);
+        letter-spacing: var(--fd-letter-spacing-label);
+        text-transform: uppercase;
+    }
+
+    &__section-title {
+        margin: 0;
+        font-size: var(--fd-landing-seo-section-title-size);
+        line-height: 1.08;
+        letter-spacing: var(--fd-text-metric-hero-tracking);
+        color: inherit;
+    }
+
+    &__section-subtitle {
+        margin: 0;
+        max-width: 760px;
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-body-lg-size);
+        line-height: 1.7;
+    }
+
+    &__actions {
+        display: flex;
+        gap: var(--fd-space-sm);
+        flex-wrap: wrap;
+    }
+
+    &__section {
+        padding: var(--fd-space-lg) 0 var(--fd-space-sm);
+    }
+
+    &__section--steps,
+    &__section--faq,
+    &__section--trust,
+    &__section--related {
+        padding-top: calc(var(--fd-space-xxl) + var(--fd-space-xs));
+    }
+
+    &__section--cta {
+        padding: var(--fd-space-xxl) 0 var(--fd-space-md);
+    }
+
+    &__section-copy {
+        display: grid;
+        gap: var(--fd-space-xs);
+        margin-bottom: var(--fd-space-md);
+    }
+
+    &__audience-grid,
+    &__feature-grid,
+    &__steps,
+    &__related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--fd-space-md);
+    }
+
+    &__audience-card,
+    &__feature-card,
+    &__step-card,
+    &__related-card {
+        border-radius: var(--fd-radius-panel);
+        padding: var(--fd-space-lg);
+        background: var(--fd-bg-surface-panel);
+        border: var(--fd-border-width) solid var(--fd-color-border-primary-faint);
+        box-shadow: var(--fd-shadow-lg);
+    }
+
+    &__audience-card {
+        background: var(--fd-bg-surface-solid);
+    }
+
+    &__trust-panel {
+        display: grid;
+        gap: var(--fd-space-sm);
+        padding: var(--fd-space-lg);
+        border-radius: var(--fd-radius-panel);
+        background: color-mix(in srgb, var(--fd-color-primary-50) 68%, var(--fd-color-white));
+        border: var(--fd-border-width) solid var(--fd-color-border-primary-subtle);
+    }
+
+    &__feature-title,
+    &__step-title {
+        margin: 0 0 var(--fd-space-xs);
+        font-size: var(--fd-text-title-xs-size);
+        line-height: 1.3;
+        color: var(--fd-color-slate-900);
+    }
+
+    &__feature-text,
+    &__step-text {
+        margin: 0;
+        color: var(--fd-color-text-muted);
+        line-height: 1.65;
+    }
+
+    &__step-index {
+        width: var(--fd-size-control-toolbar);
+        height: var(--fd-size-control-toolbar);
+        margin-bottom: var(--fd-space-sm);
+        border-radius: var(--fd-radius-lg);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+        color: var(--fd-color-primary-700);
+        font-weight: var(--fd-text-metric-lg-weight);
+    }
+
+    &__faq {
+        display: grid;
+        gap: var(--fd-space-sm);
+    }
+
+    &__faq-item {
+        border-radius: var(--fd-radius-panel);
+        overflow: hidden;
+        background: var(--fd-bg-surface-solid);
+        border: var(--fd-border-width) solid var(--fd-color-border-primary-subtle);
+        box-shadow: var(--fd-shadow-md);
+    }
+
+    &__faq-question {
+        list-style: none;
+        cursor: pointer;
+        padding: var(--fd-space-md) var(--fd-space-lg);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-sm);
+        font-size: var(--fd-text-body-size);
+        line-height: 1.35;
+        font-weight: var(--fd-text-metric-lg-weight);
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &::after {
+            content: '+';
+            width: var(--fd-size-control-xxs);
+            height: var(--fd-size-control-xxs);
+            flex: 0 0 auto;
+            border-radius: var(--fd-radius-pill);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
+            color: var(--fd-color-primary-700);
+        }
+    }
+
+    &__faq-item[open] &__faq-question::after {
+        content: '-';
+    }
+
+    &__faq-answer {
+        margin: 0;
+        padding: 0 var(--fd-space-lg) var(--fd-space-lg);
+        color: var(--fd-color-text-muted);
+        line-height: 1.68;
+    }
+
+    &__related-card {
+        display: grid;
+        gap: var(--fd-space-xs);
+        text-decoration: none;
+        color: inherit;
+        transition:
+            transform 160ms ease,
+            box-shadow 160ms ease,
+            border-color 160ms ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            border-color: color-mix(in srgb, var(--fd-color-primary-500) 20%, transparent);
+            box-shadow: var(--fd-shadow-lg);
+        }
+    }
+
+    &__related-label {
+        font-size: var(--fd-text-card-title-size);
+        font-weight: var(--fd-text-metric-lg-weight);
+        line-height: 1.4;
+        color: var(--fd-color-slate-900);
+    }
+
+    &__related-arrow {
+        color: var(--fd-color-primary-700);
+        font-weight: var(--fd-text-section-title-weight);
+    }
+}

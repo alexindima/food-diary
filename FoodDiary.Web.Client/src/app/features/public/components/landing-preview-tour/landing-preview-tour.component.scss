@@ -82,108 +82,18 @@
     padding: var(--fd-landing-section-space-tight) 0 var(--fd-landing-section-space-compact);
 }
 
-.landing-preview {
+.landing-preview__hero-card {
+    animation: landingFadeUp 720ms ease-out both;
+}
 
-    &__hero-card {
-        animation: landingFadeUp 720ms ease-out both;
-    }
-
-    &__hero-card--embedded {
-        margin-top: 0;
-        height: 100%;
-    }
-
-    &__hero-card > * {
-        width: 100%;
-        margin: 0;
-    }
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--fd-landing-stack-gap);
+.landing-preview__hero-card--embedded {
     margin-top: 0;
+    height: 100%;
+}
 
-    &__item {
-        display: grid;
-        grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
-        gap: var(--fd-landing-grid-gap);
-        align-items: start;
-        min-width: 0;
-        padding: var(--fd-landing-surface-padding);
-        border-radius: var(--fd-landing-radius-panel);
-        background: var(--fd-bg-landing-surface-glass-strong);
-        border: var(--fd-border-width) solid var(--fd-color-border-slate-faint);
-        box-shadow: var(--fd-landing-shadow-medium);
-        animation: landingFadeUp 760ms ease-out both;
-    }
-
-    &__item--reverse {
-        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
-
-        .landing-preview__copy {
-            order: 2;
-        }
-
-        .landing-preview__card {
-            order: 1;
-            justify-content: flex-start;
-        }
-    }
-
-    &__copy {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-xs);
-        padding: var(--fd-landing-copy-padding);
-        min-width: 0;
-    }
-
-    &__eyebrow {
-        display: inline-flex;
-        align-self: flex-start;
-        padding: var(--fd-space-xxs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-pill);
-        background: color-mix(in srgb, var(--fd-color-sky-500) 10%, transparent);
-        color: var(--fd-color-sky-700);
-        @include landing.marketing-eyebrow(0.84rem, 0.03em);
-    }
-
-    &__title {
-        @include landing.marketing-title(var(--fd-landing-title-size-xs), 1.1, -0.015em, var(--fd-color-slate-900));
-    }
-
-    &__subtitle {
-        @include landing.marketing-body(1rem, 1.6, var(--fd-color-slate-600), 520px);
-    }
-
-    &__card {
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-start;
-        min-width: 0;
-    }
-
-    &__card > * {
-        width: min(680px, 100%);
-    }
-
-    @media #{variables.$media-desktop} {
-
-        &__item {
-            grid-template-columns: 1fr;
-        }
-
-        &__item--reverse {
-
-            .landing-preview__copy,
-            .landing-preview__card {
-                order: initial;
-            }
-        }
-
-        &__card {
-            justify-content: center;
-        }
-    }
+.landing-preview__hero-card > * {
+    width: 100%;
+    margin: 0;
 }
 
 .landing-preview__showcase {
@@ -237,14 +147,8 @@
     @include landing.marketing-eyebrow(0.8rem, 0.03em);
 }
 
-.landing-preview__stack {
-    display: grid;
-    gap: var(--fd-landing-stack-gap);
-    margin-top: var(--fd-space-md);
-}
-
 .landing-tour-block {
-    margin-top: 0;
+    margin-top: var(--fd-space-md);
     display: grid;
     gap: var(--fd-landing-grid-gap);
     align-items: start;
@@ -363,29 +267,6 @@
     grid-template-columns: 1fr;
     gap: var(--fd-space-md);
 
-    &__catalog {
-        display: grid;
-        gap: var(--fd-space-md);
-        align-content: start;
-    }
-
-    &__group {
-        @include preview-muted-surface(var(--fd-landing-surface-padding-sm));
-    }
-
-    &__group-title {
-        font-weight: var(--fd-text-metric-lg-weight);
-        color: var(--fd-color-slate-900);
-        letter-spacing: var(--fd-letter-spacing-tight-sm);
-    }
-
-    &__cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: var(--fd-space-sm);
-        justify-items: stretch;
-    }
-
     &__card {
         cursor: pointer;
     }
@@ -417,28 +298,14 @@
         grid-template-columns: 1fr;
     }
 
-    .landing-tour__cards {
-        grid-template-columns: 1fr;
-    }
 }
 
 @media #{variables.$media-sm} {
-
-    .landing-tour__cards {
-        grid-template-columns: 1fr;
-    }
 
     .landing-tour__card {
         max-width: 100%;
         width: 100%;
         min-width: 0;
-    }
-}
-
-@media #{variables.$media-mobile} {
-
-    .landing-tour__cards {
-        grid-template-columns: 1fr;
     }
 }
 

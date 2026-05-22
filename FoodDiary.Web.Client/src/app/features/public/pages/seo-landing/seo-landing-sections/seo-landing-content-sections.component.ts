@@ -7,7 +7,7 @@ import type { SeoLandingFaqSectionKeys, SeoLandingSectionKeys } from '../lib/seo
     selector: 'fd-seo-landing-content-sections',
     imports: [TranslatePipe],
     templateUrl: './seo-landing-content-sections.component.html',
-    styleUrl: '../seo-landing-page/seo-landing-page.component.scss',
+    styleUrl: './seo-landing-sections.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeoLandingContentSectionsComponent {
