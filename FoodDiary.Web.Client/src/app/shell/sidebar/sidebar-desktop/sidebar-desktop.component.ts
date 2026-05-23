@@ -63,6 +63,9 @@ export class SidebarDesktopComponent {
             collapsible: true,
             secondary: true,
         },
+    ]);
+
+    protected readonly sidebarBottomSections = computed<FdUiSidebarSection[]>(() => [
         {
             id: 'bottom',
             items: this.translateRouteItems(this.desktopBottomItems()),

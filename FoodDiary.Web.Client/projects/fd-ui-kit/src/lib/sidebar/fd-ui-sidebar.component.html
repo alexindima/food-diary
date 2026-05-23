@@ -30,8 +30,10 @@
         }
     </div>
 
-    @for (section of sections(); track section.id) {
+    @for (section of allSections(); track section.id) {
         <fd-ui-sidebar-section
+            class="fd-ui-sidebar__section-slot"
+            [class.fd-ui-sidebar__section-slot--bottom]="bottomSectionIds().has(section.id)"
             [section]="section"
             [pendingRoute]="pendingRoute()"
             (routeSelected)="routeSelected.emit({ item: $event })"
@@ -42,5 +44,7 @@
 
     <div class="fd-ui-sidebar__spacer"></div>
 
-    <ng-content select="[fdUiSidebarFooter]" />
+    <div class="fd-ui-sidebar__footer">
+        <ng-content select="[fdUiSidebarFooter]" />
+    </div>
 </aside>

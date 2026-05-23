@@ -31,6 +31,7 @@
 }
 
 .fd-ui-sidebar__brand {
+    order: 0;
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-card);
     background: var(--fd-ui-sidebar-brand-background);
@@ -121,6 +122,19 @@
     box-shadow: var(--fd-shadow-ring-light);
 }
 
+.fd-ui-sidebar__section-slot {
+    order: 1;
+}
+
+.fd-ui-sidebar__section-slot--bottom {
+    order: 3;
+}
+
 .fd-ui-sidebar__spacer {
+    order: 2;
     flex: 1 1 auto;
+}
+
+.fd-ui-sidebar__footer {
+    order: 4;
 }

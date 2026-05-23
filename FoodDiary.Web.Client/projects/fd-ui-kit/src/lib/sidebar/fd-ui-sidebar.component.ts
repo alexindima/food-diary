@@ -27,11 +27,15 @@ export class FdUiSidebarComponent {
     public readonly notificationBadge = input(0);
     public readonly pendingRoute = input<string | null>(null);
     public readonly sections = input.required<FdUiSidebarSection[]>();
+    public readonly bottomSections = input<FdUiSidebarSection[]>([]);
 
     public readonly notificationClick = output();
     public readonly routeSelected = output<FdUiSidebarRouteRequest>();
     public readonly actionSelected = output<FdUiSidebarActionRequest>();
     public readonly sectionToggled = output<FdUiSidebarSectionRequest>();
+
+    protected readonly allSections = computed(() => [...this.sections(), ...this.bottomSections()]);
+    protected readonly bottomSectionIds = computed(() => new Set(this.bottomSections().map(section => section.id)));
 
     protected readonly logoMaskStyle = computed(() => {
         const url = this.logoMaskUrl();

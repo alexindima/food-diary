@@ -40,6 +40,16 @@ const meta: Meta<FdUiSidebarComponent> = {
                 ],
             },
         ],
+        bottomSections: [
+            {
+                id: 'bottom',
+                secondary: true,
+                items: [
+                    { id: 'reports', icon: 'bar_chart', label: 'Reports', route: '/reports' },
+                    { id: 'goals', icon: 'flag', label: 'Goals', route: '/goals' },
+                ],
+            },
+        ],
     },
     render: args => ({
         props: args,
@@ -52,6 +62,7 @@ const meta: Meta<FdUiSidebarComponent> = {
                     [pendingRoute]="pendingRoute"
                     [notificationBadge]="notificationBadge"
                     [sections]="sections"
+                    [bottomSections]="bottomSections"
                 >
                     <div fdUiSidebarFooter style="padding: var(--fd-space-xs) var(--fd-space-sm); color: var(--fd-color-text-muted);">
                         Footer slot
