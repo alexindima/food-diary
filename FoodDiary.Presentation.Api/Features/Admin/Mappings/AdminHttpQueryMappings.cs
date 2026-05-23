@@ -9,6 +9,8 @@ using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 using FoodDiary.Application.Admin.Queries.GetAdminLessons;
 using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
 using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
+using FoodDiary.Application.Admin.Queries.GetAdminUser;
+using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminUsers;
@@ -24,6 +26,14 @@ public static class AdminHttpQueryMappings {
 
     public static GetAdminUsersQuery ToQuery(this GetAdminUsersHttpQuery query) {
         return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, ResolveUserStatus(query));
+    }
+
+    public static GetAdminUserQuery ToAdminUserQuery(this Guid id) {
+        return new GetAdminUserQuery(id);
+    }
+
+    public static GetAdminUserRoleAuditQuery ToRoleAuditQuery(this GetAdminUserRoleAuditHttpQuery query, Guid userId) {
+        return new GetAdminUserRoleAuditQuery(userId, query.Limit);
     }
 
     private static UserAccountStatusFilter ResolveUserStatus(GetAdminUsersHttpQuery query) {

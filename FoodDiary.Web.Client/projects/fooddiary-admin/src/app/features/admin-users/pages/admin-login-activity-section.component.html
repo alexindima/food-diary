@@ -7,17 +7,6 @@
         <fd-ui-input placeholder="Search logins" [ngModel]="search()" (ngModelChange)="searchChange.emit($event)" />
     </div>
 
-    @if (summaryItems().length) {
-        <div class="login-summary">
-            @for (item of summaryItems(); track item.key) {
-                <div class="login-summary__item">
-                    <span class="login-summary__label">{{ item.label }}</span>
-                    <strong>{{ item.count }}</strong>
-                </div>
-            }
-        </div>
-    }
-
     @if (isLoading()) {
         <p>Loading login activity...</p>
     } @else {

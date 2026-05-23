@@ -40,6 +40,7 @@ export * from './menu/fd-ui-menu-item.component';
 export * from './menu/fd-ui-menu-trigger.directive';
 export * from './nutrient-input/fd-ui-nutrient-input.component';
 export * from './pagination/fd-ui-pagination.component';
+export * from './pie-chart/fd-ui-pie-chart.component';
 export * from './radio/fd-ui-radio-group.component';
 export * from './satiety-scale/fd-ui-satiety-scale.component';
 export * from './section-state/fd-ui-section-state.component';

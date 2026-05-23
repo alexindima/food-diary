@@ -21,6 +21,20 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     public Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType<AdminUserHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetUser(Guid id) =>
+        HandleOk(id.ToAdminUserQuery(), static value => value.ToHttpResponse());
+
+    [HttpGet("{id:guid}/role-audit")]
+    [ProducesResponseType<IReadOnlyList<AdminUserRoleAuditEventHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetUserRoleAudit(Guid id, [FromQuery] GetAdminUserRoleAuditHttpQuery query) =>
+        HandleOk(query.ToRoleAuditQuery(id), static value => value.Select(item => item.ToHttpResponse()).ToList());
+
     [HttpGet("impersonation-sessions")]
     [ProducesResponseType<PagedHttpResponse<AdminImpersonationSessionHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

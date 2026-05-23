@@ -13,7 +13,6 @@ describe('AdminLoginActivityPageComponent', () => {
     let fixture: ComponentFixture<AdminLoginActivityPageComponent>;
     let usersService: {
         getLoginEvents: ReturnType<typeof vi.fn>;
-        getLoginSummary: ReturnType<typeof vi.fn>;
     };
 
     beforeEach(async () => {
@@ -27,7 +26,6 @@ describe('AdminLoginActivityPageComponent', () => {
                     totalItems: 0,
                 }),
             ),
-            getLoginSummary: vi.fn(() => of([])),
         };
 
         await TestBed.configureTestingModule({
@@ -43,6 +41,5 @@ describe('AdminLoginActivityPageComponent', () => {
     it('should create and load login activity', () => {
         expect(component).toBeTruthy();
         expect(usersService.getLoginEvents).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null);
-        expect(usersService.getLoginSummary).toHaveBeenCalled();
     });
 });

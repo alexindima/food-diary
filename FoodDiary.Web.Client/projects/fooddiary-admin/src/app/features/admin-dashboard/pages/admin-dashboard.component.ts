@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiCardComponent, type FdUiPieChartSegment, FdUiPieChartComponent } from 'fd-ui-kit';
 
 import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
+import { type AdminUserLoginDeviceSummary, AdminUsersService } from '../../admin-users/api/admin-users.service';
 import type { AdminAiUsageSummary } from '../../admin-ai-usage/models/admin-ai-usage.data';
 import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminTelemetryService } from '../api/admin-telemetry.service';
@@ -27,13 +28,15 @@ type FastingTelemetryPresetViewModel = {
     completionRatePercentText: string;
 } & FastingTelemetryPresetSummary;
 
+type LoginSummaryCategory = 'device' | 'os' | 'browser';
+
 const MS_PER_MINUTE = 60_000;
 const MINUTES_PER_HOUR = 60;
 const HOURS_PER_DAY = 24;
 
 @Component({
     selector: 'fd-admin-dashboard',
-    imports: [CommonModule, FdUiCardComponent],
+    imports: [CommonModule, FdUiCardComponent, FdUiPieChartComponent],
     templateUrl: './admin-dashboard.component.html',
     styleUrl: './admin-dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,11 +45,16 @@ export class AdminDashboardComponent {
     private readonly dashboardService = inject(AdminDashboardService);
     private readonly aiUsageService = inject(AdminAiUsageService);
     private readonly telemetryService = inject(AdminTelemetryService);
+    private readonly usersService = inject(AdminUsersService);
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly summary = signal<AdminDashboardSummary | null>(null);
     public readonly aiUsage = signal<AdminAiUsageSummary | null>(null);
     public readonly fastingTelemetry = signal<FastingTelemetrySummary | null>(null);
+    public readonly loginSummary = signal<AdminUserLoginDeviceSummary[]>([]);
+    public readonly loginDeviceSegments = computed(() => this.buildLoginSegments('device'));
+    public readonly loginOperatingSystemSegments = computed(() => this.buildLoginSegments('os'));
+    public readonly loginBrowserSegments = computed(() => this.buildLoginSegments('browser'));
     public readonly fastingTelemetryView = computed<FastingTelemetryViewModel | null>(() => {
         const telemetry = this.fastingTelemetry();
         if (telemetry === null) {
@@ -114,6 +122,43 @@ export class AdminDashboardComponent {
                     this.fastingTelemetry.set(null);
                 },
             });
+
+        this.usersService
+            .getLoginSummary()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: response => {
+                    this.loginSummary.set(response);
+                },
+                error: () => {
+                    this.loginSummary.set([]);
+                },
+            });
+    }
+
+    private buildLoginSegments(category: LoginSummaryCategory): FdUiPieChartSegment[] {
+        return this.loginSummary()
+            .map(item => ({
+                ...this.parseLoginSummaryKey(item.key),
+                count: item.count,
+            }))
+            .filter(item => item.category === category)
+            .sort((first, second) => second.count - first.count)
+            .map(item => ({
+                label: item.label,
+                value: item.count,
+            }));
+    }
+
+    private parseLoginSummaryKey(key: string): { category: string; label: string } {
+        const separatorIndex = key.indexOf(':');
+        if (separatorIndex < 0) {
+            return { category: key.toLowerCase(), label: 'Unknown' };
+        }
+
+        const category = key.slice(0, separatorIndex).trim().toLowerCase();
+        const label = key.slice(separatorIndex + 1).trim();
+        return { category, label: label.length > 0 ? label : 'Unknown' };
     }
 
     private formatMetric(value: number | null | undefined): string {

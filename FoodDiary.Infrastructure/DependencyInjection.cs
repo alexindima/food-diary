@@ -141,6 +141,7 @@ public static class DependencyInjection {
         services.AddScoped<IBillingWebhookEventRepository, BillingWebhookEventRepository>();
         services.AddScoped<IAdminBillingRepository, AdminBillingRepository>();
         services.AddScoped<IAdminImpersonationSessionRepository, AdminImpersonationSessionRepository>();
+        services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();
         services.AddScoped<ProductRepository>();
         services.AddScoped<IProductRepository, CachedProductRepository>();
         services.AddScoped<IProductLookupService, ProductLookupService>();

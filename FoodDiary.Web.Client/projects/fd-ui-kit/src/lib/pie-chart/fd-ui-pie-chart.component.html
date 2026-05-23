@@ -1,0 +1,42 @@
+<div class="fd-ui-pie-chart" role="img" [attr.aria-label]="ariaLabel()">
+    <div class="fd-ui-pie-chart__visual">
+        <svg class="fd-ui-pie-chart__svg" viewBox="0 0 42 42" aria-hidden="true" focusable="false">
+            <circle class="fd-ui-pie-chart__track" cx="21" cy="21" r="15.9155" />
+
+            @for (segment of segmentViews(); track segment.label) {
+                <circle
+                    class="fd-ui-pie-chart__segment"
+                    cx="21"
+                    cy="21"
+                    r="15.9155"
+                    [attr.stroke-dasharray]="segment.dashArray"
+                    [attr.stroke-dashoffset]="segment.dashOffset"
+                    [style.stroke]="segment.color"
+                >
+                    <title>{{ segment.tooltip }}</title>
+                </circle>
+            }
+        </svg>
+
+        <div class="fd-ui-pie-chart__center">
+            @if (title()) {
+                <strong>{{ title() }}</strong>
+            } @else {
+                <strong>{{ total() }}</strong>
+            }
+        </div>
+    </div>
+
+    @if (segmentViews().length) {
+        <div class="fd-ui-pie-chart__legend">
+            @for (segment of segmentViews(); track segment.label) {
+                <div class="fd-ui-pie-chart__legend-item" [attr.title]="segment.tooltip">
+                    <span class="fd-ui-pie-chart__swatch" [style.background]="segment.color"></span>
+                    <span class="fd-ui-pie-chart__legend-label">{{ segment.label }}</span>
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="fd-ui-pie-chart__empty">{{ emptyLabel() }}</div>
+    }
+</div>

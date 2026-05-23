@@ -100,4 +100,53 @@ describe('AdminUsersService', () => {
             roles: ['Support'],
         });
     });
+
+    it('should request user details by id', () => {
+        service.getUser('u1').subscribe(result => {
+            expect(result.id).toBe('u1');
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/u1`);
+        expect(req.request.method).toBe('GET');
+        req.flush({
+            id: 'u1',
+            email: 'user@example.com',
+            isActive: true,
+            isEmailConfirmed: true,
+            createdOnUtc: '2026-01-01T00:00:00Z',
+            roles: [],
+        });
+    });
+
+    it('should filter login events by user id', () => {
+        service.getLoginEvents(1, 3, null, 'u1').subscribe(result => {
+            expect(result.items).toEqual([]);
+        });
+
+        const req = httpMock.expectOne(
+            r =>
+                r.url === `${baseUrl}/login-events` &&
+                r.params.get('page') === '1' &&
+                r.params.get('limit') === '3' &&
+                r.params.get('userId') === 'u1',
+        );
+        expect(req.request.method).toBe('GET');
+        req.flush({
+            data: [],
+            page: 1,
+            limit: 3,
+            totalPages: 0,
+            totalItems: 0,
+        });
+    });
+
+    it('should request user role audit by user id', () => {
+        service.getUserRoleAudit('u1', 10).subscribe(result => {
+            expect(result).toEqual([]);
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${baseUrl}/u1/role-audit` && r.params.get('limit') === '10');
+        expect(req.request.method).toBe('GET');
+        req.flush([]);
+    });
 });

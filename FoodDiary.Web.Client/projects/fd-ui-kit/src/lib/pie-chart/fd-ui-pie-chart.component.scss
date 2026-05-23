@@ -1,0 +1,109 @@
+:host {
+    display: block;
+}
+
+.fd-ui-pie-chart {
+    display: grid;
+    grid-template-columns: minmax(104px, 132px) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--fd-space-md);
+    min-width: 0;
+}
+
+.fd-ui-pie-chart__visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    min-width: 104px;
+}
+
+.fd-ui-pie-chart__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.fd-ui-pie-chart__track,
+.fd-ui-pie-chart__segment {
+    fill: none;
+    stroke-width: 5.5;
+}
+
+.fd-ui-pie-chart__track {
+    stroke: var(--fd-bg-muted-tint-strong);
+}
+
+.fd-ui-pie-chart__segment {
+    cursor: help;
+    transition:
+        stroke-dasharray 180ms ease,
+        stroke-dashoffset 180ms ease;
+}
+
+.fd-ui-pie-chart__center {
+    position: absolute;
+    inset: 24%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    text-align: center;
+    color: var(--fd-color-text);
+}
+
+.fd-ui-pie-chart__center strong {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: 600;
+    color: var(--fd-color-text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fd-ui-pie-chart__legend {
+    display: grid;
+    gap: var(--fd-space-xs);
+    min-width: 0;
+}
+
+.fd-ui-pie-chart__legend-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--fd-space-xs);
+    color: var(--fd-color-text);
+    cursor: help;
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+}
+
+.fd-ui-pie-chart__swatch {
+    width: var(--fd-space-sm);
+    height: var(--fd-space-sm);
+    border-radius: 999px;
+}
+
+.fd-ui-pie-chart__legend-label {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--fd-color-text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fd-ui-pie-chart__empty {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+}
+
+@media (max-width: 720px) {
+    .fd-ui-pie-chart {
+        grid-template-columns: 1fr;
+    }
+
+    .fd-ui-pie-chart__visual {
+        max-width: 160px;
+    }
+}

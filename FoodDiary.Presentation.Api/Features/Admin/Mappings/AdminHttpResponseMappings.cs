@@ -11,10 +11,45 @@ public static class AdminHttpResponseMappings {
         return new AdminUserHttpResponse(
             model.Id,
             model.Email,
+            model.HasPassword,
             model.Username,
             model.FirstName,
             model.LastName,
+            model.BirthDate,
+            model.Gender,
+            model.Weight,
+            model.DesiredWeight,
+            model.DesiredWaist,
+            model.Height,
+            model.ActivityLevel,
+            model.DailyCalorieTarget,
+            model.ProteinTarget,
+            model.FatTarget,
+            model.CarbTarget,
+            model.FiberTarget,
+            model.StepGoal,
+            model.WaterGoal,
+            model.HydrationGoal,
+            model.CalorieCyclingEnabled,
+            model.MondayCalories,
+            model.TuesdayCalories,
+            model.WednesdayCalories,
+            model.ThursdayCalories,
+            model.FridayCalories,
+            model.SaturdayCalories,
+            model.SundayCalories,
+            model.ProfileImage,
+            model.ProfileImageAssetId,
+            model.DashboardLayoutJson,
             model.Language,
+            model.Theme,
+            model.UiStyle,
+            model.PushNotificationsEnabled,
+            model.FastingPushNotificationsEnabled,
+            model.SocialPushNotificationsEnabled,
+            model.FastingCheckInReminderHours,
+            model.FastingCheckInFollowUpReminderHours,
+            model.TelegramUserId,
             model.IsActive,
             model.IsEmailConfirmed,
             model.CreatedOnUtc,
@@ -22,7 +57,8 @@ public static class AdminHttpResponseMappings {
             model.LastLoginAtUtc,
             model.Roles,
             model.AiInputTokenLimit,
-            model.AiOutputTokenLimit
+            model.AiOutputTokenLimit,
+            model.AiConsentAcceptedAt
         );
     }
 
@@ -68,6 +104,18 @@ public static class AdminHttpResponseMappings {
             model.Key,
             model.Count,
             model.LastSeenAtUtc);
+    }
+
+    public static AdminUserRoleAuditEventHttpResponse ToHttpResponse(this AdminUserRoleAuditEventReadModel model) {
+        return new AdminUserRoleAuditEventHttpResponse(
+            model.Id,
+            model.UserId,
+            model.RoleName,
+            model.Action,
+            model.ActorUserId,
+            model.ActorEmail,
+            model.Source,
+            model.OccurredAtUtc);
     }
 
     public static AdminAiPromptHttpResponse ToAiPromptHttpResponse(this AdminAiPromptModel model) {

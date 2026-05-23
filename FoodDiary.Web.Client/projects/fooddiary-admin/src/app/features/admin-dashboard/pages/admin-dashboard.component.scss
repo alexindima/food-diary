@@ -14,6 +14,10 @@
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }
 
+.admin-dashboard__login-charts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .admin-dashboard__meta-list {
     color: var(--fd-color-slate-600);
     font-size: var(--fd-text-body-sm-size);
@@ -29,4 +33,20 @@
 .admin-dashboard__preset-meta {
     color: var(--fd-color-slate-600);
     font-size: var(--fd-text-stat-value-size);
+}
+
+@media (max-width: 920px) {
+    .admin-dashboard__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-dashboard__login-charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-dashboard__grid {
+        grid-template-columns: 1fr;
+    }
 }

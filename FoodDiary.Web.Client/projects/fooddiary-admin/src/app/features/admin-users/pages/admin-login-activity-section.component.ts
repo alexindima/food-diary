@@ -5,7 +5,6 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 
 import type { AdminUserLoginEvent } from '../api/admin-users.service';
-import type { AdminUserLoginDeviceSummaryViewModel } from './admin-users.types';
 
 @Component({
     selector: 'fd-admin-login-activity-section',
@@ -16,7 +15,6 @@ import type { AdminUserLoginDeviceSummaryViewModel } from './admin-users.types';
 })
 export class AdminLoginActivitySectionComponent {
     public readonly search = input.required<string>();
-    public readonly summaryItems = input.required<AdminUserLoginDeviceSummaryViewModel[]>();
     public readonly isLoading = input.required<boolean>();
     public readonly totalItems = input.required<number>();
     public readonly events = input.required<AdminUserLoginEvent[]>();

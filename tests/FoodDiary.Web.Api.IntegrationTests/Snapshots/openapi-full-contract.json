@@ -389,6 +389,18 @@
       "Path": "/api/v{version}/admin/users/{id}",
       "Operations": [
         {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        },
+        {
           "Method": "patch",
           "HasRequestBody": true,
           "ResponseCodes": [
@@ -408,6 +420,23 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/users/{id}/role-audit",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
           "ResponseCodes": [
             "200",
             "400",

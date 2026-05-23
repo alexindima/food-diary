@@ -8,6 +8,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 
 import { environment } from '../../../../environments/environment';
 import { type AdminImpersonationStart, type AdminUser, AdminUsersService, type AdminUserStatusFilter } from '../api/admin-users.service';
+import { AdminUserDetailsDialogComponent, type AdminUserDetailsDialogResult } from '../dialogs/admin-user-details-dialog.component';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog.component';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog.component';
 import { AdminUsersTableComponent } from './admin-users-table.component';
@@ -85,6 +86,25 @@ export class AdminUsersComponent {
 
         this.page.set(page);
         this.loadUsers();
+    }
+
+    public openDetails(user: AdminUser): void {
+        this.dialogService
+            .open<AdminUserDetailsDialogComponent, AdminUser, AdminUserDetailsDialogResult>(AdminUserDetailsDialogComponent, {
+                size: 'xl',
+                data: user,
+            })
+            .afterClosed()
+            .subscribe(action => {
+                if (action === 'edit') {
+                    this.openEdit(user);
+                    return;
+                }
+
+                if (action === 'impersonate') {
+                    this.startImpersonation(user);
+                }
+            });
     }
 
     public openEdit(user: AdminUser): void {

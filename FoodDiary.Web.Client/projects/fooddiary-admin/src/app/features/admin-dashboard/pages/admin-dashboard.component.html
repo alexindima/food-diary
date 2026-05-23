@@ -43,6 +43,25 @@
             <div class="admin-dashboard__section fd-grid fd-gap-md">
                 <div class="admin-dashboard__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
                     <div>
+                        <div class="admin-dashboard__section-title fd-ui-title-sm">Login clients</div>
+                        <div class="admin-dashboard__section-subtitle fd-ui-body-xs">
+                            Authentication events grouped by device, operating system, and browser
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-dashboard__login-charts fd-grid fd-gap-md">
+                    <fd-ui-pie-chart title="Devices" [segments]="loginDeviceSegments()" />
+                    <fd-ui-pie-chart title="OS" [segments]="loginOperatingSystemSegments()" />
+                    <fd-ui-pie-chart title="Browsers" [segments]="loginBrowserSegments()" />
+                </div>
+            </div>
+        </fd-ui-card>
+
+        <fd-ui-card>
+            <div class="admin-dashboard__section fd-grid fd-gap-md">
+                <div class="admin-dashboard__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
+                    <div>
                         <div class="admin-dashboard__section-title fd-ui-title-sm">Fasting telemetry</div>
                         <div class="admin-dashboard__section-subtitle fd-ui-body-xs">
                             Internal product metrics for fasting adoption and check-ins

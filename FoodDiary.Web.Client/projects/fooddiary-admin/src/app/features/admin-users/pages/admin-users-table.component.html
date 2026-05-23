@@ -8,32 +8,26 @@
             <th>Roles</th>
             <th>Last login</th>
             <th>Confirmed</th>
-            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @for (user of users(); track user.id) {
-            <tr>
+            <tr
+                class="users-table__row"
+                tabindex="0"
+                (click)="details.emit(user)"
+                (keydown.enter)="details.emit(user)"
+                (keydown.space)="$event.preventDefault(); details.emit(user)"
+            >
                 <td>{{ user.email }}</td>
                 <td>{{ user.username || '-' }}</td>
                 <td>{{ user.roles.join(', ') || '-' }}</td>
                 <td>{{ user.lastLoginAtUtc ? (user.lastLoginAtUtc | date: 'medium') : '-' }}</td>
                 <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
-                <td class="users-table__actions fd-row fd-gap-xs fd-wrap">
-                    <fd-ui-button type="button" variant="secondary" (click)="edit.emit(user)"> Edit </fd-ui-button>
-                    <fd-ui-button
-                        type="button"
-                        variant="secondary"
-                        [disabled]="user.deletedAt || user.roles.includes('Admin')"
-                        (click)="impersonate.emit(user)"
-                    >
-                        Impersonate
-                    </fd-ui-button>
-                </td>
             </tr>
         } @empty {
             <tr>
-                <td colspan="6">No users found.</td>
+                <td colspan="5">No users found.</td>
             </tr>
         }
     </tbody>

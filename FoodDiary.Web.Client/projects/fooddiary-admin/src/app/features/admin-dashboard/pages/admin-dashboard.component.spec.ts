@@ -3,6 +3,7 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
+import { AdminUsersService } from '../../admin-users/api/admin-users.service';
 import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminTelemetryService } from '../api/admin-telemetry.service';
 import { AdminDashboardComponent } from './admin-dashboard.component';
@@ -33,12 +34,14 @@ type DashboardTestContext = {
     dashboardService: DashboardServiceMock;
     fixture: ComponentFixture<AdminDashboardComponent>;
     telemetryService: { getFastingSummary: ReturnType<typeof vi.fn> };
+    usersService: { getLoginSummary: ReturnType<typeof vi.fn> };
 };
 
 async function setupDashboardAsync(): Promise<DashboardTestContext> {
     const dashboardService = { getSummary: vi.fn().mockReturnValue(of(createDashboardSummary())) };
     const aiUsageService = { getSummary: vi.fn().mockReturnValue(of(createAiUsageSummary())) };
     const telemetryService = { getFastingSummary: vi.fn().mockReturnValue(of(createFastingSummary())) };
+    const usersService = { getLoginSummary: vi.fn().mockReturnValue(of(createLoginSummary())) };
 
     await TestBed.configureTestingModule({
         imports: [AdminDashboardComponent],
@@ -46,6 +49,7 @@ async function setupDashboardAsync(): Promise<DashboardTestContext> {
             { provide: AdminDashboardService, useValue: dashboardService },
             { provide: AdminAiUsageService, useValue: aiUsageService },
             { provide: AdminTelemetryService, useValue: telemetryService },
+            { provide: AdminUsersService, useValue: usersService },
         ],
     }).compileComponents();
 
@@ -53,7 +57,7 @@ async function setupDashboardAsync(): Promise<DashboardTestContext> {
     const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    return { aiUsageService, component, dashboardService, fixture, telemetryService };
+    return { aiUsageService, component, dashboardService, fixture, telemetryService, usersService };
 }
 
 describe('AdminDashboardComponent', () => {
@@ -63,15 +67,22 @@ describe('AdminDashboardComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should load dashboard summary, ai usage, and fasting telemetry on init', async () => {
-        const { aiUsageService, component, dashboardService, telemetryService } = await setupDashboardAsync();
+    it('should load dashboard summary, ai usage, fasting telemetry, and login summary on init', async () => {
+        const { aiUsageService, component, dashboardService, telemetryService, usersService } = await setupDashboardAsync();
 
         expect(dashboardService.getSummary).toHaveBeenCalledTimes(1);
         expect(aiUsageService.getSummary).toHaveBeenCalledTimes(1);
         expect(telemetryService.getFastingSummary).toHaveBeenCalledTimes(1);
+        expect(usersService.getLoginSummary).toHaveBeenCalledTimes(1);
         expect(component.summary()?.totalUsers).toBe(TOTAL_USERS);
         expect(component.aiUsage()?.totalTokens).toBe(TOTAL_TOKENS);
         expect(component.fastingTelemetry()?.startedSessions).toBe(STARTED_SESSIONS);
+        expect(component.loginDeviceSegments()).toEqual([{ label: 'Desktop', value: 21 }]);
+        expect(component.loginOperatingSystemSegments()).toEqual([{ label: 'Windows', value: 21 }]);
+        expect(component.loginBrowserSegments()).toEqual([
+            { label: 'Opera', value: 19 },
+            { label: 'Chrome', value: 2 },
+        ]);
         expect(component.isLoading()).toBe(false);
     });
 
@@ -161,4 +172,13 @@ function createFastingSummary(): {
         lastEventAtUtc: '2026-04-12T09:40:00Z',
         topPresets: [],
     };
+}
+
+function createLoginSummary(): { key: string; count: number; lastSeenAtUtc: string }[] {
+    return [
+        { key: 'device:Desktop', count: 21, lastSeenAtUtc: '2026-05-23T20:29:10Z' },
+        { key: 'os:Windows', count: 21, lastSeenAtUtc: '2026-05-23T20:29:10Z' },
+        { key: 'browser:Opera', count: 19, lastSeenAtUtc: '2026-05-23T20:29:10Z' },
+        { key: 'browser:Chrome', count: 2, lastSeenAtUtc: '2026-05-23T18:53:14Z' },
+    ];
 }

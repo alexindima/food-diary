@@ -31,21 +31,11 @@
     white-space: nowrap;
 }
 
-.login-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: var(--fd-space-sm);
+.users-table__row {
+    cursor: pointer;
 }
 
-.login-summary__item {
-    display: grid;
-    gap: var(--fd-space-xxs);
-    padding: var(--fd-space-sm);
-    border: var(--fd-border-default);
-    border-radius: var(--fd-radius-sm);
-}
-
-.login-summary__label {
-    color: var(--fd-color-text-muted);
-    font-size: var(--fd-text-caption-size);
+.users-table__row:focus-visible {
+    outline: var(--fd-outline-focus);
+    outline-offset: -2px;
 }

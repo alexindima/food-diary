@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { type AdminUserLoginDeviceSummary, type AdminUserLoginEvent, AdminUsersService } from '../api/admin-users.service';
+import { type AdminUserLoginEvent, AdminUsersService } from '../api/admin-users.service';
 import { AdminLoginActivitySectionComponent } from './admin-login-activity-section.component';
-import type { AdminUserLoginDeviceSummaryViewModel } from './admin-users.types';
 
 const ADMIN_LOGIN_ACTIVITY_PAGE_SIZE = 20;
 
@@ -19,22 +18,14 @@ export class AdminLoginActivityPageComponent {
     protected readonly pageSize = ADMIN_LOGIN_ACTIVITY_PAGE_SIZE;
 
     protected readonly loginEvents = signal<AdminUserLoginEvent[]>([]);
-    protected readonly loginSummary = signal<AdminUserLoginDeviceSummary[]>([]);
     protected readonly loginEventsPage = signal(1);
     protected readonly loginEventsTotalPages = signal(1);
     protected readonly loginEventsTotalItems = signal(0);
     protected readonly loginEventsSearch = signal('');
     protected readonly isLoginEventsLoading = signal(false);
-    protected readonly loginSummaryItems = computed<AdminUserLoginDeviceSummaryViewModel[]>(() =>
-        this.loginSummary().map(item => ({
-            ...item,
-            label: this.formatSummaryKey(item.key),
-        })),
-    );
 
     public constructor() {
         this.loadLoginEvents();
-        this.loadLoginSummary();
     }
 
     protected onLoginEventsSearchChange(value: string): void {
@@ -71,25 +62,6 @@ export class AdminLoginActivityPageComponent {
                     this.isLoginEventsLoading.set(false);
                 },
             });
-    }
-
-    private loadLoginSummary(): void {
-        this.usersService
-            .getLoginSummary()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.loginSummary.set(response);
-                },
-                error: () => {
-                    this.loginSummary.set([]);
-                },
-            });
-    }
-
-    private formatSummaryKey(key: string): string {
-        const [category, value] = key.split(':', 2);
-        return `${category.toUpperCase()} / ${value.length > 0 ? value : 'Unknown'}`;
     }
 
     private resolveSearchQuery(value: string): string | null {

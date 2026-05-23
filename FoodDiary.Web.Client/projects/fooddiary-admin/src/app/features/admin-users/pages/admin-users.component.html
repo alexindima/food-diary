@@ -14,8 +14,7 @@
             [page]="page()"
             [pageSize]="limit"
             [totalPages]="totalPages()"
-            (edit)="openEdit($event)"
-            (impersonate)="startImpersonation($event)"
+            (details)="openDetails($event)"
             (pageChange)="goToPage($event)"
         />
     }
