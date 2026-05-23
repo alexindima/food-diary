@@ -26,6 +26,7 @@ describe('sidebar view utils', () => {
         expect(adminItems.map(item => item.id)).toEqual(['dashboard', 'dietologist', 'admin']);
         expect(adminItems.filter(isSidebarRouteItem).map(item => item.id)).toEqual(['dashboard', 'dietologist']);
         expect(adminItems.filter(isSidebarActionItem).map(item => item.id)).toEqual(['admin']);
+        expect(adminItems.find(item => item.id === 'dashboard')).toMatchObject({ route: '/dashboard', exact: true });
     });
 
     it('normalizes paths and matches routes', () => {
@@ -33,6 +34,7 @@ describe('sidebar view utils', () => {
         expect(normalizeSidebarPath('')).toBe('/');
         expect(isSidebarRouteActive('/meals/123?tab=info', '/meals', false)).toBe(true);
         expect(isSidebarRouteActive('/meals/123', '/meals', true)).toBe(false);
+        expect(isSidebarRouteActive('/dashboard?date=today', '/dashboard', true)).toBe(true);
     });
 
     it('calculates clamped daily progress', () => {

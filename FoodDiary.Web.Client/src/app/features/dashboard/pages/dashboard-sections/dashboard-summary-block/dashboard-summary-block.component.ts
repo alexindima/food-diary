@@ -3,11 +3,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { DashboardSummaryCardComponent } from '../../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell.component';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardSummaryData } from '../../dashboard-lib/dashboard-view.types';
 
 @Component({
     selector: 'fd-dashboard-summary-block',
-    imports: [TranslatePipe, DashboardCardShellComponent, DashboardSummaryCardComponent],
+    imports: [
+        TranslatePipe,
+        DashboardBlockContentDirective,
+        DashboardBlockHostDirective,
+        DashboardCardShellComponent,
+        DashboardSummaryCardComponent,
+    ],
     templateUrl: './dashboard-summary-block.component.html',
     styleUrl: '../../dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,9 @@ import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import type { MobileSheetId, SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
 
 export function buildPrimarySidebarNavItems(isDietologist: boolean, isAdmin: boolean): SidebarNavItem[] {
-    const items: SidebarNavItem[] = [{ id: 'dashboard', icon: 'dashboard', labelKey: 'SIDEBAR.DASHBOARD', route: '/', exact: true }];
+    const items: SidebarNavItem[] = [
+        { id: 'dashboard', icon: 'dashboard', labelKey: 'SIDEBAR.DASHBOARD', route: '/dashboard', exact: true },
+    ];
 
     if (isDietologist) {
         items.push({ id: 'dietologist', icon: 'medical_services', labelKey: 'SIDEBAR.MY_CLIENTS', route: '/dietologist' });

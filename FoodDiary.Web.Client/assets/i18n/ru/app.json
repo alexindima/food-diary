@@ -848,6 +848,9 @@
         "MANAGE_PRODUCTS": "Управлять продуктами",
         "VIEW_STATISTICS": "Посмотреть статистику"
     },
+    "MEALS_PREVIEW": {
+        "ADD_MANUAL_HINT": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432\u0440\u0443\u0447\u043d\u0443\u044e"
+    },
     "DASHBOARD": {
         "SUBTITLE": "Личный обзор",
         "TITLE": "Потребление за сегодня",
@@ -865,6 +868,7 @@
         "MEALS_EMPTY_FOR_DATE": "Нет приёмов пищи за эту дату.",
         "MEALS_VIEW_ALL": "Открыть все приёмы",
         "ADD_WITH_AI_BUTTON": "Добавить с AI",
+        "QUICK_ADD_ARIA": "\u0411\u044b\u0441\u0442\u0440\u043e\u0435 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u043f\u0440\u0438\u0451\u043c\u0430 \u043f\u0438\u0449\u0438",
         "MEAL_FALLBACK": "Приём пищи",
         "QUICK_ACTIONS_TITLE": "Быстрые действия",
         "LOADING": "Загружаем данные...",

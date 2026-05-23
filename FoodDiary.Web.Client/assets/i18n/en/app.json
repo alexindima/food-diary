@@ -1246,6 +1246,9 @@
         "MANAGE_PRODUCTS": "Manage Products",
         "VIEW_STATISTICS": "View Statistics"
     },
+    "MEALS_PREVIEW": {
+        "ADD_MANUAL_HINT": "Add manually"
+    },
     "DASHBOARD": {
         "SUBTITLE": "Daily overview",
         "TITLE": "Consumption for today",
@@ -1263,6 +1266,7 @@
         "MEALS_EMPTY_FOR_DATE": "No meals logged for this date.",
         "MEALS_VIEW_ALL": "Open consumptions",
         "ADD_WITH_AI_BUTTON": "Add with AI",
+        "QUICK_ADD_ARIA": "Quick meal add",
         "MEAL_FALLBACK": "Meal",
         "QUICK_ACTIONS_TITLE": "Quick actions",
         "LOADING": "Loading dashboard...",

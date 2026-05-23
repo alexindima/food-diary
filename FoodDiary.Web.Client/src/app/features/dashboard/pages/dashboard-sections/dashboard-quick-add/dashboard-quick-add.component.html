@@ -1,20 +1,7 @@
-<section class="dashboard__quick-add fd-stack fd-gap-card-profile" aria-label="Quick meal add">
+<section class="dashboard__quick-add fd-stack fd-gap-card-profile" [attr.aria-label]="'DASHBOARD.QUICK_ADD_ARIA' | translate">
     @defer (on idle) {
-        <fd-ai-input-bar mode="create" (mealCreateRequested)="mealCreateRequested.emit($event)" />
+        <fd-ai-input-action-bar mode="create" (mealCreateRequested)="mealCreateRequested.emit($event)" (manualAction)="manualAdd.emit()" />
     } @placeholder {
         <div class="dashboard__quick-add-placeholder" aria-hidden="true"></div>
     }
-    <div class="dashboard__manual-add fd-row fd-wrap fd-gap-xs">
-        <span class="dashboard__manual-add-label fd-ui-action-text">{{ 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate }}</span>
-        <fd-ui-button
-            type="button"
-            class="dashboard__manual-add-button fd-ui-action-text"
-            variant="secondary"
-            fill="text"
-            icon="add"
-            (click)="manualAdd.emit()"
-        >
-            {{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}
-        </fd-ui-button>
-    </div>
 </section>

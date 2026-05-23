@@ -1,7 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { auditTime, fromEvent } from 'rxjs';
 
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
@@ -12,7 +11,7 @@ import type { Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
-import { DASHBOARD_RESIZE_AUDIT_MS, DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
+import { DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import {
     createConsumptionRingSignal,
@@ -35,7 +34,6 @@ export class DashboardFacade {
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
     private readonly trendDays = DASHBOARD_TREND_DAYS;
-    private readonly resizeAuditMs = DASHBOARD_RESIZE_AUDIT_MS;
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {
@@ -94,14 +92,6 @@ export class DashboardFacade {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.loadDashboardSnapshot(false);
         });
-
-        if (typeof window !== 'undefined') {
-            fromEvent(window, 'resize')
-                .pipe(auditTime(this.resizeAuditMs), takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                    this.layout.updateViewportWidth(window.innerWidth);
-                });
-        }
     }
 
     public setSelectedDate(date: Date): void {

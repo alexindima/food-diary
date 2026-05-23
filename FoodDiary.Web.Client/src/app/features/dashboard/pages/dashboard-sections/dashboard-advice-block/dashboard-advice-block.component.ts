@@ -3,11 +3,18 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import { DailyAdviceCardComponent } from '../../../components/daily-advice-card/daily-advice-card.component';
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell.component';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardDailyAdvice } from '../../dashboard-lib/dashboard-view.types';
 
 @Component({
     selector: 'fd-dashboard-advice-block',
-    imports: [FdUiLoaderComponent, DashboardCardShellComponent, DailyAdviceCardComponent],
+    imports: [
+        FdUiLoaderComponent,
+        DashboardBlockContentDirective,
+        DashboardBlockHostDirective,
+        DashboardCardShellComponent,
+        DailyAdviceCardComponent,
+    ],
     templateUrl: './dashboard-advice-block.component.html',
     styleUrl: '../../dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

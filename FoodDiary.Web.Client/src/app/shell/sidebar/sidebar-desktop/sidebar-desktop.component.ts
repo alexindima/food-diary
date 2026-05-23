@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { type FdUiSidebarActionItem, FdUiSidebarComponent, type FdUiSidebarRouteItem, type FdUiSidebarSection } from 'fd-ui-kit';
-import { startWith } from 'rxjs';
+import { merge, startWith } from 'rxjs';
 
 import type { User } from '../../../shared/models/user.data';
 import type { SidebarActionId, SidebarActionItem, SidebarDirectRouteRequest, SidebarRouteItem } from '../sidebar-lib/sidebar.models';
@@ -17,7 +17,10 @@ import { SidebarUserMenuComponent } from '../sidebar-user-menu/sidebar-user-menu
 })
 export class SidebarDesktopComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly languageChange = toSignal(this.translateService.onLangChange.pipe(startWith(null)), { initialValue: null });
+    private readonly translationChange = toSignal(
+        merge(this.translateService.onLangChange, this.translateService.onTranslationChange).pipe(startWith(null)),
+        { initialValue: null },
+    );
 
     public readonly brandStatusKey = input.required<string>();
     public readonly unreadNotificationCount = input.required<number>();
@@ -122,7 +125,7 @@ export class SidebarDesktopComponent {
     }
 
     private translateKey(key: string): string {
-        this.languageChange();
+        this.translationChange();
 
         return this.translateService.instant(key);
     }

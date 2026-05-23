@@ -3,11 +3,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { FastingTimerCardComponent } from '../../../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell.component';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardFastingSession } from '../../dashboard-lib/dashboard-view.types';
 
 @Component({
     selector: 'fd-dashboard-fasting-block',
-    imports: [TranslatePipe, DashboardCardShellComponent, FastingTimerCardComponent],
+    imports: [
+        TranslatePipe,
+        DashboardBlockContentDirective,
+        DashboardBlockHostDirective,
+        DashboardCardShellComponent,
+        FastingTimerCardComponent,
+    ],
     templateUrl: './dashboard-fasting-block.component.html',
     styleUrl: '../../dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

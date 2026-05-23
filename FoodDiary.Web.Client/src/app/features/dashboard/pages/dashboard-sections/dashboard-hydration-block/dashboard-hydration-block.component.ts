@@ -3,11 +3,18 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell.component';
 import { HydrationCardComponent } from '../../../components/hydration-card/hydration-card.component';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardHydrationCardState } from '../../dashboard-lib/dashboard-view.types';
 
 @Component({
     selector: 'fd-dashboard-hydration-block',
-    imports: [FdUiLoaderComponent, DashboardCardShellComponent, HydrationCardComponent],
+    imports: [
+        FdUiLoaderComponent,
+        DashboardBlockContentDirective,
+        DashboardBlockHostDirective,
+        DashboardCardShellComponent,
+        HydrationCardComponent,
+    ],
     templateUrl: './dashboard-hydration-block.component.html',
     styleUrl: '../../dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

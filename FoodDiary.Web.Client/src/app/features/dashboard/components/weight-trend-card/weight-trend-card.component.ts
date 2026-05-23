@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { ChartConfiguration, ScaleOptionsByType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -36,6 +36,8 @@ export type WeightTrendPoint = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightTrendCardComponent {
+    private readonly translateService = inject(TranslateService);
+
     public readonly title = input<string>('WEIGHT_CARD.TITLE');
     public readonly currentWeight = input.required<number | null>();
     public readonly change = input.required<number | null>();
@@ -101,7 +103,7 @@ export class WeightTrendCardComponent {
                         if (typeof value !== 'number') {
                             return '';
                         }
-                        return `${value.toFixed(WEIGHT_TREND_DISPLAY_FRACTION_DIGITS)} kg`;
+                        return `${value.toFixed(WEIGHT_TREND_DISPLAY_FRACTION_DIGITS)} ${this.translateService.instant(this.unitKey())}`;
                     },
                 },
                 padding: WEIGHT_TREND_TOOLTIP_PADDING,

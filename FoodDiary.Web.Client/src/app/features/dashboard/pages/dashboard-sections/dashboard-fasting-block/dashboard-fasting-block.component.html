@@ -1,16 +1,11 @@
 @if (shouldRender()) {
     <div
+        fdDashboardBlockHost
         class="dashboard__block dashboard__block--fasting fd-row"
-        [class.dashboard__block--hidden]="state().hidden"
-        [attr.role]="state().role"
-        [attr.tabindex]="state().tabIndex"
-        [attr.aria-pressed]="state().ariaPressed"
-        [attr.aria-label]="state().ariaLabel"
-        (click)="blockClick.emit()"
-        (keydown.enter)="blockClick.emit()"
-        (keydown.space)="$event.preventDefault(); blockClick.emit()"
+        [state]="state()"
+        (blockActivated)="blockClick.emit()"
     >
-        <fd-dashboard-card-shell [attr.inert]="state().inert">
+        <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
             <fd-fasting-timer-card
                 class="dashboard__card dashboard__card--clickable dashboard__card--fasting dashboard__card--fasting-hero"
                 layout="dashboard"

@@ -1,0 +1,23 @@
+<div class="ai-input-action-bar fd-stack fd-gap-card-profile">
+    <fd-ai-input-bar
+        [mode]="mode()"
+        [mealType]="mealType()"
+        [isProcessing]="isProcessing()"
+        (mealRecognized)="mealRecognized.emit($event)"
+        (mealCreateRequested)="mealCreateRequested.emit($event)"
+    />
+
+    <div class="ai-input-action-bar__manual fd-row fd-wrap fd-gap-xs">
+        <span class="ai-input-action-bar__manual-label fd-ui-action-text">{{ manualPrefixLabelKey() | translate }}</span>
+        <fd-ui-button
+            type="button"
+            class="ai-input-action-bar__manual-button fd-ui-action-text"
+            variant="secondary"
+            fill="text"
+            [icon]="manualActionIcon()"
+            (click)="manualAction.emit()"
+        >
+            {{ manualActionLabelKey() | translate }}
+        </fd-ui-button>
+    </div>
+</div>

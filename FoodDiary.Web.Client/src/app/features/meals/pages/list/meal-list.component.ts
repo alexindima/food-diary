@@ -8,7 +8,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { debounceTime, EMPTY, type Observable, switchMap } from 'rxjs';
 
-import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
+import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar.component';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
@@ -46,7 +46,7 @@ import { MealListFavoritesComponent } from './meal-list-sections/meal-list-favor
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        AiInputBarComponent,
+        AiInputActionBarComponent,
         MealListContentComponent,
         MealListFavoritesComponent,
     ],

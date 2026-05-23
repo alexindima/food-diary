@@ -1,2 +1,1 @@
 export const DASHBOARD_TREND_DAYS = 7;
-export const DASHBOARD_RESIZE_AUDIT_MS = 150;

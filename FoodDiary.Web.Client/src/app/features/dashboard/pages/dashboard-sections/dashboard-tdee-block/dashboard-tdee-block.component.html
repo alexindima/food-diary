@@ -1,17 +1,7 @@
 @if (shouldRender()) {
-    <div
-        class="dashboard__block"
-        [class.dashboard__block--hidden]="state().hidden"
-        [attr.role]="state().role"
-        [attr.tabindex]="state().tabIndex"
-        [attr.aria-pressed]="state().ariaPressed"
-        [attr.aria-label]="state().ariaLabel"
-        (click)="blockClick.emit($event)"
-        (keydown.enter)="blockClick.emit($event)"
-        (keydown.space)="$event.preventDefault(); blockClick.emit($event)"
-    >
+    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockClick.emit($event)">
         @defer (on viewport) {
-            <fd-dashboard-card-shell [attr.inert]="state().inert">
+            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
                 <fd-tdee-insight-card
                     class="dashboard__card dashboard__card--tdee"
                     [insight]="insight()"

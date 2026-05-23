@@ -3,11 +3,18 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell.component';
 import { TdeeInsightCardComponent } from '../../../components/tdee-insight-card/tdee-insight-card.component';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardTdeeInsight } from '../../dashboard-lib/dashboard-view.types';
 
 @Component({
     selector: 'fd-dashboard-tdee-block',
-    imports: [FdUiLoaderComponent, DashboardCardShellComponent, TdeeInsightCardComponent],
+    imports: [
+        FdUiLoaderComponent,
+        DashboardBlockContentDirective,
+        DashboardBlockHostDirective,
+        DashboardCardShellComponent,
+        TdeeInsightCardComponent,
+    ],
     templateUrl: './dashboard-tdee-block.component.html',
     styleUrl: '../../dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

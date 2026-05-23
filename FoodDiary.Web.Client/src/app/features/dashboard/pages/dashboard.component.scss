@@ -28,6 +28,10 @@ $color-text-secondary: var(--fd-color-text-muted);
         grid-column: 1;
     }
 
+    &__column > :empty {
+        display: none;
+    }
+
     &__block--fasting {
         position: relative;
         min-width: 0;
@@ -196,7 +200,7 @@ $color-text-secondary: var(--fd-color-text-muted);
     }
 
     &__quick-add-placeholder {
-        min-height: 76px;
+        min-height: calc(var(--fd-size-control-xl) + var(--fd-space-card-profile-gap) + var(--fd-size-control-sm));
     }
 
     .consumption-card__meta {
@@ -340,10 +344,6 @@ $color-text-secondary: var(--fd-color-text-muted);
 
         &__quick-add {
             margin-bottom: var(--fd-space-lg);
-        }
-
-        &__manual-add {
-            padding-left: var(--fd-space-micro);
         }
 
         &__grid {

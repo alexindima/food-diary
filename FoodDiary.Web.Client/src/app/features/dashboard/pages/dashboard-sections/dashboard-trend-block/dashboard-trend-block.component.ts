@@ -4,11 +4,19 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell.component';
 import { WeightTrendCardComponent } from '../../../components/weight-trend-card/weight-trend-card.component';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardWeightTrendPoint } from '../../dashboard-lib/dashboard-view.types';
 
 @Component({
     selector: 'fd-dashboard-trend-block',
-    imports: [TranslatePipe, FdUiLoaderComponent, DashboardCardShellComponent, WeightTrendCardComponent],
+    imports: [
+        TranslatePipe,
+        FdUiLoaderComponent,
+        DashboardBlockContentDirective,
+        DashboardBlockHostDirective,
+        DashboardCardShellComponent,
+        WeightTrendCardComponent,
+    ],
     templateUrl: './dashboard-trend-block.component.html',
     styleUrl: '../../dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

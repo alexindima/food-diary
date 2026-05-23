@@ -1,15 +1,7 @@
 @if (shouldRender()) {
-    <div
-        class="dashboard__block"
-        [class.dashboard__block--hidden]="state().hidden"
-        [attr.role]="state().role"
-        [attr.tabindex]="state().tabIndex"
-        [attr.aria-pressed]="state().ariaPressed"
-        (click)="blockToggle.emit()"
-        (keydown.enter)="blockToggle.emit()"
-    >
+    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
         @defer (on viewport) {
-            <fd-dashboard-card-shell [attr.inert]="state().inert">
+            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
                 <fd-daily-advice-card class="dashboard__card dashboard__card--advice" [advice]="advice()" [isLoading]="isLoading()" />
             </fd-dashboard-card-shell>
         } @placeholder {

@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 
 import type { AiInputBarResult } from '../../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { MealsPreviewComponent } from '../../../../../components/shared/meals-preview/meals-preview.component';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
 import type { DashboardBlockState, DashboardMealPreviewEntry, DashboardMealsPreviewState } from '../../dashboard-lib/dashboard-view.types';
 
 @Component({
     selector: 'fd-dashboard-meals-block',
-    imports: [MealsPreviewComponent],
+    imports: [DashboardBlockContentDirective, DashboardBlockHostDirective, MealsPreviewComponent],
     templateUrl: './dashboard-meals-block.component.html',
     styleUrl: '../../dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

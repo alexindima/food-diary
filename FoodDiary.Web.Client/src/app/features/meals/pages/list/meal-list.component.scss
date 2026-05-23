@@ -35,20 +35,6 @@
         min-height: 76px;
     }
 
-    &__manual-add {
-        margin-top: calc(0px - var(--fd-space-xxs));
-        margin-bottom: var(--fd-space-xxs);
-    }
-
-    &__manual-add-label {
-        font-size: var(--fd-text-body-micro-size);
-        font-weight: var(--fd-font-weight-bold);
-        color: var(--fd-color-slate-400);
-        line-height: 1;
-        align-self: center;
-        padding-left: var(--fd-space-xxs);
-    }
-
     &__loader {
         display: block;
         margin: var(--fd-space-lg) auto;
@@ -89,6 +75,8 @@
     }
 
     &__pagination {
+        display: flex;
+        justify-content: center;
         margin-top: var(--fd-space-lg);
     }
 
@@ -129,13 +117,6 @@
 
         &__groups {
             gap: var(--fd-space-sm);
-        }
-
-        &__manual-add {
-            padding-left: var(--fd-space-sm);
-            padding-right: var(--fd-space-sm);
-            align-items: center;
-            margin-top: calc(0px - var(--fd-space-xxs));
         }
 
         &__day {

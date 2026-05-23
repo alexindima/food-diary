@@ -18,7 +18,7 @@ export class DashboardLayoutService {
 
     private readonly layoutInitialized = signal<boolean>(false);
     private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
-    private readonly viewportWidth = signal<number>(typeof window === 'undefined' ? this.config.defaultViewportWidth : window.innerWidth);
+    private readonly viewportWidth = signal<number>(this.config.defaultViewportWidth);
 
     public readonly layoutSettings = signal<DashboardLayoutSettings>({
         web: [...(DEFAULT_LAYOUT.web ?? [])],
