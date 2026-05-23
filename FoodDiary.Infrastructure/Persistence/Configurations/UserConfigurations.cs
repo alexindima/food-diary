@@ -179,6 +179,17 @@ internal sealed class UserRoleAuditEventConfiguration : IEntityTypeConfiguration
         entity.Property(e => e.OccurredAtUtc)
             .HasColumnType("timestamp with time zone");
 
+        entity.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(e => e.ActorUserId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
+
         entity.HasIndex(e => e.UserId);
         entity.HasIndex(e => e.ActorUserId);
         entity.HasIndex(e => e.RoleId);
