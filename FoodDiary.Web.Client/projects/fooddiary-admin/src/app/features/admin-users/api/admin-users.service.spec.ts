@@ -54,7 +54,7 @@ describe('AdminUsersService', () => {
             totalItems: number;
         };
 
-        service.getUsers(USERS_PAGE, USERS_LIMIT, 'alex', true).subscribe(result => {
+        service.getUsers(USERS_PAGE, USERS_LIMIT, 'alex', 'inactive').subscribe(result => {
             expect(result.items).toEqual(response.data);
             expect(result.page).toBe(USERS_PAGE);
             expect(result.limit).toBe(USERS_LIMIT);
@@ -68,7 +68,7 @@ describe('AdminUsersService', () => {
                 r.params.get('page') === String(USERS_PAGE) &&
                 r.params.get('limit') === String(USERS_LIMIT) &&
                 r.params.get('search') === 'alex' &&
-                r.params.get('includeDeleted') === 'true',
+                r.params.get('status') === 'inactive',
         );
         expect(req.request.method).toBe('GET');
         req.flush(response);

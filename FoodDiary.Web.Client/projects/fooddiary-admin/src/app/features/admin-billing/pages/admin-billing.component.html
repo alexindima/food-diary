@@ -48,15 +48,13 @@
             <fd-admin-billing-webhooks-table [items]="webhookEventItems()" (metadataOpen)="showMetadata($event)" />
         }
 
-        <div class="admin-billing__pagination fd-row fd-gap-sm fd-wrap">
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
-                Previous
-            </fd-ui-button>
-            <span>Page {{ page() }} of {{ totalPages() }}</span>
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">
-                Next
-            </fd-ui-button>
-        </div>
+        <fd-ui-pagination
+            class="admin-billing__pagination"
+            [length]="totalItems()"
+            [pageSize]="limit"
+            [pageIndex]="page() - 1"
+            (pageIndexChange)="goToPage($event + 1)"
+        />
     }
 
     @if (selectedMetadata(); as metadata) {

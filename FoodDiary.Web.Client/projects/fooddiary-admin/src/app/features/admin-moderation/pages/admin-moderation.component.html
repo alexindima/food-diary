@@ -57,14 +57,6 @@
             </tbody>
         </table>
 
-        <div class="pagination fd-row fd-gap-sm fd-justify-center">
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
-                Previous
-            </fd-ui-button>
-            <span>Page {{ page() }} of {{ totalPages() }}</span>
-            <fd-ui-button type="button" variant="secondary" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">
-                Next
-            </fd-ui-button>
-        </div>
+        <fd-ui-pagination [length]="totalItems()" [pageSize]="limit" [pageIndex]="page() - 1" (pageIndexChange)="goToPage($event + 1)" />
     }
 </div>

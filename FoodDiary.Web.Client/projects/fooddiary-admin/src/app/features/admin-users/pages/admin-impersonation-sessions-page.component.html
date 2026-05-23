@@ -1,0 +1,13 @@
+<div class="admin-users fd-grid fd-gap-md">
+    <fd-admin-sessions-section
+        [search]="sessionsSearch()"
+        [isLoading]="isSessionsLoading()"
+        [totalItems]="sessionsTotalItems()"
+        [sessions]="sessions()"
+        [page]="sessionsPage()"
+        [pageSize]="pageSize"
+        [totalPages]="sessionsTotalPages()"
+        (searchChange)="onSessionsSearchChange($event)"
+        (pageChange)="goToSessionsPage($event)"
+    />
+</div>

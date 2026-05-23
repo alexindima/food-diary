@@ -5,3 +5,10 @@
     line-height: var(--fd-text-body-sm-line-height);
     font-weight: var(--fd-text-body-sm-weight);
 }
+
+.fd-ui-confirm-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--fd-space-dialog-footer-gap);
+    flex-wrap: wrap;
+}

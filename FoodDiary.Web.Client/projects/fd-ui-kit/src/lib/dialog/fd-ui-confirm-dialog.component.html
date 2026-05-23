@@ -1,7 +1,7 @@
 <fd-ui-dialog size="sm" [title]="data.title" [dismissible]="false">
     <p class="fd-ui-confirm-dialog__message">{{ data.message }}</p>
 
-    <div fdUiDialogFooter>
+    <div fdUiDialogFooter class="fd-ui-confirm-dialog__footer">
         <fd-ui-button variant="secondary" fill="text" size="sm" (click)="onCancel()">
             {{ data.cancelLabel || ('COMMON.CANCEL' | translate) }}
         </fd-ui-button>

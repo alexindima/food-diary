@@ -41,13 +41,26 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         int limit,
         bool includeDeleted,
         CancellationToken cancellationToken = default) {
+        var status = includeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
+        return await GetPagedAsync(search, page, limit, status, cancellationToken);
+    }
+
+    public async Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
+        string? search,
+        int page,
+        int limit,
+        UserAccountStatusFilter status,
+        CancellationToken cancellationToken = default) {
         var pageNumber = Math.Max(page, 1);
         var pageSize = Math.Max(limit, 1);
         var filteredQuery = context.Users.AsQueryable();
 
-        if (!includeDeleted) {
-            filteredQuery = filteredQuery.Where(u => u.DeletedAt == null);
-        }
+        filteredQuery = status switch {
+            UserAccountStatusFilter.Active => filteredQuery.Where(u => u.IsActive && u.DeletedAt == null),
+            UserAccountStatusFilter.Inactive => filteredQuery.Where(u => !u.IsActive && u.DeletedAt == null),
+            UserAccountStatusFilter.Deleted => filteredQuery.Where(u => u.DeletedAt != null),
+            _ => filteredQuery
+        };
 
         if (!string.IsNullOrWhiteSpace(search)) {
             var term = $"%{EscapeLikePattern(search.Trim())}%";
@@ -126,6 +139,18 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
 
     public async Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Update(user);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task UpdateAsync(
+        User user,
+        IReadOnlyCollection<UserRoleAuditEvent> roleAuditEvents,
+        CancellationToken cancellationToken = default) {
+        context.Users.Update(user);
+        if (roleAuditEvents.Count > 0) {
+            await context.UserRoleAuditEvents.AddRangeAsync(roleAuditEvents, cancellationToken);
+        }
+
         await context.SaveChangesAsync(cancellationToken);
     }
 

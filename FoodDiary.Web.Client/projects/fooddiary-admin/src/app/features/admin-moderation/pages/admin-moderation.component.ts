@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 
 import { AdminModerationService } from '../api/admin-moderation.service';
 import {
@@ -24,7 +25,7 @@ const ADMIN_MODERATION_PAGE_SIZE = 20;
 
 @Component({
     selector: 'fd-admin-moderation',
-    imports: [CommonModule, FormsModule, FdUiButtonComponent],
+    imports: [CommonModule, FormsModule, FdUiButtonComponent, FdUiPaginationComponent],
     templateUrl: './admin-moderation.component.html',
     styleUrl: './admin-moderation.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

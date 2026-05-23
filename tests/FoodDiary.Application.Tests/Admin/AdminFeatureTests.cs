@@ -159,7 +159,7 @@ public class AdminFeatureTests {
     public async Task UpdateAdminUserHandler_WithUnknownRoleFromRepository_Fails() {
         var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
         var command = new UpdateAdminUserCommand(
             user.Id.Value,
             IsActive: null,
@@ -182,7 +182,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -206,7 +206,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
         var beforeRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x).ToArray();
 
         var result = await handler.Handle(
@@ -232,7 +232,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -255,7 +255,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -280,7 +280,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -305,7 +305,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -330,7 +330,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -355,7 +355,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -380,7 +380,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
         var modifiedBefore = user.ModifiedOnUtc;
 
         var result = await handler.Handle(
@@ -399,6 +399,48 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WithRoleChanges_StoresRoleAuditEvents() {
+        var actorUserId = UserId.New();
+        var timestamp = new DateTime(2026, 3, 26, 11, 0, 0, DateTimeKind.Utc);
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(
+            userRepository,
+            new NullAuditLogger(),
+            new FixedDateTimeProvider(timestamp));
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Admin, RoleNames.Support],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null,
+                ActorUserId: actorUserId.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Collection(
+            userRepository.RoleAuditEvents.OrderBy(auditEvent => auditEvent.RoleName),
+            auditEvent => {
+                Assert.Equal(UserRoleAuditAction.Removed, auditEvent.Action);
+                Assert.Equal(RoleNames.Premium, auditEvent.RoleName);
+                Assert.Equal(actorUserId, auditEvent.ActorUserId);
+                Assert.Equal(timestamp, auditEvent.OccurredAtUtc);
+            },
+            auditEvent => {
+                Assert.Equal(UserRoleAuditAction.Added, auditEvent.Action);
+                Assert.Equal(RoleNames.Support, auditEvent.RoleName);
+                Assert.Equal(actorUserId, auditEvent.ActorUserId);
+                Assert.Equal(timestamp, auditEvent.OccurredAtUtc);
+            });
+    }
+
+    [Fact]
     public async Task UpdateAdminUserHandler_WithUnchangedAdminAccountFields_DoesNotSetModifiedOnUtc() {
         var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         user.SetEmailConfirmed(true);
@@ -410,7 +452,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -434,7 +476,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+        var handler = CreateUpdateAdminUserHandler(userRepository);
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -561,6 +603,9 @@ public class AdminFeatureTests {
         return user;
     }
 
+    private static UpdateAdminUserCommandHandler CreateUpdateAdminUserHandler(InMemoryUserRepository userRepository) =>
+        new(userRepository, new NullAuditLogger(), new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
+
     private sealed class NullAuditLogger : IAuditLogger {
         public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
     }
@@ -568,6 +613,8 @@ public class AdminFeatureTests {
     private sealed class InMemoryUserRepository : IUserRepository {
         private readonly User _user;
         private readonly Dictionary<string, Role> _roles;
+
+        public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
 
         public InMemoryUserRepository(User user, IEnumerable<string> availableRoles) {
             _user = user;
@@ -606,6 +653,14 @@ public class AdminFeatureTests {
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task UpdateAsync(
+            User user,
+            IReadOnlyCollection<UserRoleAuditEvent> roleAuditEvents,
+            CancellationToken cancellationToken = default) {
+            RoleAuditEvents.AddRange(roleAuditEvents);
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class RecordingAiUsageRepository : IAiUsageRepository {

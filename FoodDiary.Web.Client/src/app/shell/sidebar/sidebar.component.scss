@@ -273,6 +273,7 @@
     }
 
     &__user-menu-link {
+        appearance: none;
         width: 100%;
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-menu-item);
@@ -281,8 +282,13 @@
         color: var(--fd-color-text-strong);
         font-weight: var(--fd-text-section-title-weight);
         text-decoration: none;
+        text-align: left;
+        cursor: pointer;
+        font-family: inherit;
         transition:
             background 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease,
             transform 0.15s ease,
             box-shadow 0.15s ease;
 
@@ -318,34 +324,27 @@
             border-color: var(--fd-color-border-primary-strong);
             box-shadow: var(--fd-shadow-accent);
         }
+
+        &--danger {
+            background: var(--fd-bg-danger-tint);
+            border-color: color-mix(in srgb, var(--fd-color-danger) 34%, transparent);
+            color: var(--fd-color-notice-danger-action);
+
+            fd-ui-icon {
+                color: var(--fd-color-notice-danger-action);
+            }
+
+            &:hover {
+                background: var(--fd-bg-danger-tint-strong);
+                border-color: color-mix(in srgb, var(--fd-color-danger) 48%, transparent);
+                color: var(--fd-color-notice-danger-action);
+                box-shadow: var(--fd-shadow-ring-danger);
+            }
+        }
     }
 
-    &__logout {
-        --fd-button-host-width: 100%;
-        --fd-button-host-min-width: 0;
-        --fd-button-width: 100%;
-        --fd-button-min-width: 0;
-        --fd-button-height: auto;
-        --fd-button-height-explicit: auto;
-        --fd-button-padding-x: var(--fd-space-sm);
-        --fd-button-justify-content: flex-start;
-        --fd-button-danger-outline-background-default: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-bg-surface-raised));
-        --fd-button-danger-outline-background-hover: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-bg-surface-raised));
-        --fd-button-danger-outline-background-active: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-bg-surface-raised));
-        --fd-button-danger-outline-background-disabled: color-mix(in srgb, var(--fd-color-danger) 10%, var(--fd-bg-surface-raised));
-        --fd-button-danger-outline-border-default: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
-        --fd-button-danger-outline-border-hover: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
-        --fd-button-danger-outline-border-active: color-mix(in srgb, var(--fd-color-danger) 22%, transparent);
-        --fd-button-danger-outline-border-disabled: color-mix(in srgb, var(--fd-color-danger) 18%, transparent);
-        --fd-button-danger-outline-text-default: var(--fd-color-red-700);
-        --fd-button-danger-outline-text-hover: var(--fd-color-red-700);
-        --fd-button-danger-outline-text-active: var(--fd-color-red-700);
-        --fd-button-danger-outline-text-disabled: color-mix(in srgb, var(--fd-color-red-700) 70%, transparent);
-        --fd-button-shadow-default: var(--fd-shadow-none);
-        --fd-button-shadow-hover: var(--fd-shadow-none);
-        --fd-button-shadow-active: var(--fd-shadow-none);
-        --fd-button-transform-hover: var(--fd-transform-control-hover);
-        --fd-button-transform-active: translateY(0);
+    @media #{variables.$media-tablet} {
+        display: none;
     }
 }
 
@@ -361,6 +360,10 @@
     border-top: var(--fd-border-default);
     box-shadow: var(--fd-shadow-xl);
     z-index: var(--fd-z-index-floating-panel);
+
+    @media #{variables.$media-tablet} {
+        display: grid;
+    }
 
     &__progress {
         display: grid;
@@ -469,6 +472,10 @@
 
     &__label {
         line-height: 1;
+
+        @media #{variables.$media-phablet} {
+            display: none;
+        }
     }
 
     &__backdrop {
@@ -530,7 +537,6 @@
                 font-size: var(--fd-text-card-title-size);
             }
         }
-
     }
 
     &__user-row {
@@ -612,20 +618,8 @@
     }
 }
 
-@media #{variables.$media-tablet} {
-
-    .sidebar {
-        display: none;
-    }
-
-    .sidebar-mobile {
-        display: grid;
-    }
-}
-
-@media #{variables.$media-phablet} {
-
-    .sidebar-mobile__label {
+fd-ui-sidebar {
+    @media #{variables.$media-tablet} {
         display: none;
     }
 }

@@ -4,4 +4,5 @@ public sealed record GetAdminUsersHttpQuery(
     int Page = 1,
     int Limit = 20,
     string? Search = null,
+    string? Status = null,
     bool IncludeDeleted = false);

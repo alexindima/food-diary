@@ -480,10 +480,41 @@ const isAsyncLikeFunction = (context, node) => {
     return isThenableType(checker, checker.getReturnTypeOfSignature(signature));
 };
 
+const isFdUiKitSelfImport = source => source === 'fd-ui-kit' || source.startsWith('fd-ui-kit/');
+
+const createNoFdUiKitSelfImportRule = context => ({
+    ImportDeclaration(node) {
+        const source = node.source.value;
+        if (typeof source !== 'string' || !isFdUiKitSelfImport(source)) {
+            return;
+        }
+
+        context.report({
+            node: node.source,
+            messageId: 'selfImport',
+        });
+    },
+});
+
+const noFdUiKitSelfImportRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow fd-ui-kit source files from importing the package through its own public alias.',
+        },
+        messages: {
+            selfImport: 'Use a relative import inside fd-ui-kit source files; do not import fd-ui-kit through its own package alias.',
+        },
+        schema: [],
+    },
+    create: createNoFdUiKitSelfImportRule,
+};
+
 const localTsPlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
         'no-browser-globals': noBrowserGlobalsRule,
+        'no-fd-ui-kit-self-import': noFdUiKitSelfImportRule,
         'async-function-suffix': {
             meta: {
                 type: 'problem',
@@ -1028,6 +1059,13 @@ export default [
         rules: {
             '@typescript-eslint/consistent-type-definitions': 'off',
             '@typescript-eslint/method-signature-style': 'off',
+        },
+    },
+    {
+        files: ['projects/fd-ui-kit/src/lib/**/*.ts'],
+        ignores: ['projects/fd-ui-kit/src/lib/**/*.spec.ts', 'projects/fd-ui-kit/src/lib/**/*.stories.ts'],
+        rules: {
+            'local/no-fd-ui-kit-self-import': 'error',
         },
     },
     {

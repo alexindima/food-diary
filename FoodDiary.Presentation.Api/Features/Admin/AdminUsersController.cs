@@ -43,8 +43,11 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesResponseType<AdminUserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) =>
-        HandleOk(request.ToCommand(id), static value => value.ToHttpResponse());
+    public Task<IActionResult> UpdateUser(
+        Guid id,
+        [FromCurrentUser] Guid actorUserId,
+        [FromBody] AdminUserUpdateHttpRequest request) =>
+        HandleOk(request.ToCommand(id, actorUserId), static value => value.ToHttpResponse());
 
     [HttpPost("{id:guid}/impersonation")]
     [ProducesResponseType<AdminImpersonationStartHttpResponse>(StatusCodes.Status200OK)]

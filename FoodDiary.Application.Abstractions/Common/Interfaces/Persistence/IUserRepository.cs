@@ -3,6 +3,13 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
+public enum UserAccountStatusFilter {
+    All,
+    Active,
+    Inactive,
+    Deleted
+}
+
 public interface IUserRepository {
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
     Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default);
@@ -18,10 +25,24 @@ public interface IUserRepository {
         bool includeDeleted,
         CancellationToken cancellationToken = default);
 
+    Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
+        string? search,
+        int page,
+        int limit,
+        UserAccountStatusFilter status,
+        CancellationToken cancellationToken = default) =>
+        GetPagedAsync(search, page, limit, status is UserAccountStatusFilter.All or UserAccountStatusFilter.Deleted, cancellationToken);
+
     Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
         GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default);
     Task<User> AddAsync(User user, CancellationToken cancellationToken = default);
     Task UpdateAsync(User user, CancellationToken cancellationToken = default);
+
+    Task UpdateAsync(
+        User user,
+        IReadOnlyCollection<UserRoleAuditEvent> roleAuditEvents,
+        CancellationToken cancellationToken = default) =>
+        UpdateAsync(user, cancellationToken);
 }

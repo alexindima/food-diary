@@ -45,6 +45,8 @@ export * from './satiety-scale/fd-ui-satiety-scale.component';
 export * from './section-state/fd-ui-section-state.component';
 export * from './segmented-toggle/fd-ui-segmented-toggle.component';
 export * from './select/fd-ui-select.component';
+export * from './sidebar/fd-ui-sidebar.component';
+export * from './sidebar/fd-ui-sidebar.models';
 export * from './status-badge/fd-ui-status-badge.component';
 export * from './switch/fd-ui-switch.component';
 export * from './tabs/fd-ui-tabs.component';

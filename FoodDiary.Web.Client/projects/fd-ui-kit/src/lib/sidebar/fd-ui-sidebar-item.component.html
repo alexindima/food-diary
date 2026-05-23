@@ -1,0 +1,24 @@
+@if (routeItem(); as item) {
+    <a
+        routerLinkActive="is-active"
+        [routerLink]="item.route"
+        [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+        [class]="itemClasses(item)"
+        [class.is-pending]="isPending()"
+        (click)="routeSelected.emit(item)"
+    >
+        <fd-ui-icon [name]="item.icon" />
+        <span class="fd-ui-action-text">{{ item.label }}</span>
+        @if (hasBadge(item)) {
+            <span class="fd-ui-sidebar__badge fd-ui-caption">{{ item.badge }}</span>
+        }
+    </a>
+} @else if (actionItem(); as item) {
+    <button type="button" [class]="itemClasses(item)" (click)="actionSelected.emit(item)">
+        <fd-ui-icon [name]="item.icon" />
+        <span class="fd-ui-action-text">{{ item.label }}</span>
+        @if (hasBadge(item)) {
+            <span class="fd-ui-sidebar__badge fd-ui-caption">{{ item.badge }}</span>
+        }
+    </button>
+}

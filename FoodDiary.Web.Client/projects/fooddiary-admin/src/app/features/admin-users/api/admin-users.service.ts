@@ -19,6 +19,8 @@ export type AdminUser = {
     roles: string[];
 };
 
+export type AdminUserStatusFilter = 'active' | 'inactive' | 'deleted';
+
 export type AdminUserUpdate = {
     isActive?: boolean | null;
     isEmailConfirmed?: boolean | null;
@@ -87,8 +89,13 @@ export class AdminUsersService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/users`;
 
-    public getUsers(page: number, limit: number, search?: string | null, includeDeleted = false): Observable<PagedResponse<AdminUser>> {
-        let params = new HttpParams().set('page', page).set('limit', limit).set('includeDeleted', includeDeleted);
+    public getUsers(
+        page: number,
+        limit: number,
+        search?: string | null,
+        status: AdminUserStatusFilter = 'active',
+    ): Observable<PagedResponse<AdminUser>> {
+        let params = new HttpParams().set('page', page).set('limit', limit).set('status', status);
 
         if (search !== null && search !== undefined && search.length > 0) {
             params = params.set('search', search);
