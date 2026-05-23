@@ -173,6 +173,15 @@ export const routes: Routes = [
         data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
     },
     {
+        path: 'recommendations',
+        canActivate: [authGuard],
+        loadComponent: async () =>
+            import('./features/recommendations/pages/recommendations-page/recommendations-page.component').then(
+                m => m.RecommendationsPageComponent,
+            ),
+        data: { seo: { titleKey: 'RECOMMENDATIONS.TITLE', noIndex: true } },
+    },
+    {
         path: 'privacy-policy',
         loadComponent: async () =>
             import('./features/public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),

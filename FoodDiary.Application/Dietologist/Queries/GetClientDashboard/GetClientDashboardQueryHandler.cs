@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
@@ -29,9 +30,9 @@ public class GetClientDashboardQueryHandler(
             return Result.Failure<DashboardSnapshotModel>(accessResult.Error);
         }
 
-        var permissionError = DietologistAccessPolicy.EnsurePermission(accessResult.Value, "Statistics");
-        if (permissionError is not null) {
-            return Result.Failure<DashboardSnapshotModel>(permissionError);
+        var permissions = accessResult.Value;
+        if (!DietologistAccessPolicy.HasAnyDashboardPermission(permissions)) {
+            return Result.Failure<DashboardSnapshotModel>(Errors.Dietologist.PermissionDenied);
         }
 
         var dashboardQuery = new GetDashboardSnapshotQuery(
@@ -42,6 +43,36 @@ public class GetClientDashboardQueryHandler(
             query.Locale,
             query.TrendDays);
 
-        return await mediator.Send(dashboardQuery, cancellationToken);
+        var dashboardResult = await mediator.Send(dashboardQuery, cancellationToken);
+        if (dashboardResult.IsFailure) {
+            return dashboardResult;
+        }
+
+        return Result.Success(ApplyPermissions(dashboardResult.Value, permissions));
+    }
+
+    private static DashboardSnapshotModel ApplyPermissions(
+        DashboardSnapshotModel dashboard,
+        DietologistPermissionsModel permissions) {
+        return dashboard with {
+            DailyGoal = permissions.ShareStatistics ? dashboard.DailyGoal : 0,
+            WeeklyCalorieGoal = permissions.ShareStatistics ? dashboard.WeeklyCalorieGoal : 0,
+            Statistics = permissions.ShareStatistics
+                ? dashboard.Statistics
+                : new DashboardStatisticsModel(0, 0, 0, 0, 0, null, null, null, null),
+            WeeklyCalories = permissions.ShareStatistics ? dashboard.WeeklyCalories : [],
+            Weight = permissions.ShareWeight ? dashboard.Weight : new DashboardWeightModel(null, null, null),
+            Waist = permissions.ShareWaist ? dashboard.Waist : new DashboardWaistModel(null, null, null),
+            Meals = permissions.ShareMeals ? dashboard.Meals : new DashboardMealsModel([], 0),
+            Hydration = permissions.ShareHydration ? dashboard.Hydration : null,
+            Advice = null,
+            CurrentFastingSession = permissions.ShareFasting ? dashboard.CurrentFastingSession : null,
+            WeightTrend = permissions.ShareWeight ? dashboard.WeightTrend : [],
+            WaistTrend = permissions.ShareWaist ? dashboard.WaistTrend : [],
+            DashboardLayout = null,
+            CaloriesBurned = 0,
+            TdeeInsight = null,
+            CurrentCycle = null
+        };
     }
 }

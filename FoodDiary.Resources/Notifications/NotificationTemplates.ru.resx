@@ -19,7 +19,7 @@
     <value>Установите пароль, чтобы у вас был резервный способ входа помимо Google.</value>
   </data>
   <data name="NewRecommendation_Title" xml:space="preserve">
-    <value>Новая рекомендация от {0}</value>
+    <value>Новая рекомендация от вашего диетолога{0}</value>
   </data>
   <data name="DietologistInvitationReceived_Title" xml:space="preserve">
     <value>Новое приглашение стать диетологом</value>

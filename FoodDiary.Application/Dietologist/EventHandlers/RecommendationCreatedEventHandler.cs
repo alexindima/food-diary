@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Mediator;
 
@@ -10,17 +11,11 @@ public class RecommendationCreatedEventHandler(
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
     IUserRepository userRepository)
-    : INotificationHandler<RecommendationCreatedNotification> {
-    public async Task Handle(RecommendationCreatedNotification wrapper, CancellationToken cancellationToken) {
-        var domainEvent = wrapper.DomainEvent;
+    : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
+    public async Task Handle(NotificationEnvelope<RecommendationCreatedDomainEvent> envelope, CancellationToken cancellationToken) {
+        var domainEvent = envelope.Value;
         var dietologist = await userRepository.GetByIdAsync(domainEvent.DietologistUserId, cancellationToken);
-        var dietologistName = dietologist is not null
-            ? $"{dietologist.FirstName} {dietologist.LastName}".Trim()
-            : "Your dietologist";
-
-        if (string.IsNullOrWhiteSpace(dietologistName)) {
-            dietologistName = "Your dietologist";
-        }
+        var dietologistName = ResolveDietologistLabel(dietologist);
 
         var notification = NotificationFactory.CreateNewRecommendation(
             domainEvent.ClientUserId,
@@ -32,6 +27,16 @@ public class RecommendationCreatedEventHandler(
         var unreadCount = await notificationRepository.GetUnreadCountAsync(domainEvent.ClientUserId, cancellationToken);
         await notificationPusher.PushUnreadCountAsync(domainEvent.ClientUserId.Value, unreadCount, cancellationToken);
     }
-}
 
-public sealed record RecommendationCreatedNotification(RecommendationCreatedDomainEvent DomainEvent) : INotification;
+    private static string ResolveDietologistLabel(User? dietologist) {
+        if (dietologist is null) {
+            return string.Empty;
+        }
+
+        var fullName = $"{dietologist.FirstName} {dietologist.LastName}".Trim();
+
+        return string.IsNullOrWhiteSpace(fullName)
+            ? dietologist.Email
+            : $"{fullName} ({dietologist.Email})";
+    }
+}

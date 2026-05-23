@@ -96,6 +96,19 @@ describe('NotificationsDialogComponent password reminders', () => {
     });
 });
 
+describe('NotificationsDialogComponent recommendations', () => {
+    it('renders recommendation notification as an actionable dietologist card', () => {
+        const { component, fixture } = setupNotificationsDialog([createRecommendationNotification()]);
+
+        const host = fixture.nativeElement as HTMLElement;
+        const card = host.querySelector('.notifications-dialog__item--dietologist');
+        expect(card).toBeTruthy();
+        expect(host.textContent).toContain('NOTIFICATIONS.RECOMMENDATION_BADGE');
+        expect(host.textContent).toContain('NOTIFICATIONS.RECOMMENDATION_ACTION');
+        expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('medical_information');
+    });
+});
+
 function createInvitationNotification(): NotificationItem {
     return {
         id: 'n1',
@@ -117,6 +130,19 @@ function createPasswordSetupNotification(): NotificationItem {
         body: 'Set a password to keep a backup sign-in method besides Google.',
         targetUrl: '/profile?intent=set-password',
         referenceId: 'password-setup:user-1',
+        isRead: false,
+        createdAtUtc: '2026-04-15T00:00:00Z',
+    };
+}
+
+function createRecommendationNotification(): NotificationItem {
+    return {
+        id: 'n3',
+        type: 'NewRecommendation',
+        title: 'New recommendation',
+        body: null,
+        targetUrl: '/recommendations?recommendationId=rec-1',
+        referenceId: 'rec-1',
         isRead: false,
         createdAtUtc: '2026-04-15T00:00:00Z',
     };

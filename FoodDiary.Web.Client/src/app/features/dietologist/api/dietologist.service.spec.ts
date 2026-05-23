@@ -67,6 +67,40 @@ describe('DietologistService relationship reads', () => {
     });
 });
 
+describe('DietologistService client workspace', () => {
+    it('loads client dashboard, goals and recommendations', () => {
+        service.getClientDashboard('client-1', { date: new Date('2026-05-23T00:00:00.000Z'), locale: 'en' }).subscribe();
+        const dashboardReq = httpMock.expectOne(
+            `${BASE_URL}/clients/client-1/dashboard?date=2026-05-23T00:00:00.000Z&page=1&pageSize=5&trendDays=14&locale=en`,
+        );
+        expect(dashboardReq.request.method).toBe('GET');
+        dashboardReq.flush({});
+
+        service.getClientGoals('client-1').subscribe();
+        const goalsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/goals`);
+        expect(goalsReq.request.method).toBe('GET');
+        goalsReq.flush({});
+
+        service.getRecommendationsForClient('client-1').subscribe();
+        const recommendationsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations`);
+        expect(recommendationsReq.request.method).toBe('GET');
+        recommendationsReq.flush([]);
+    });
+
+    it('creates recommendations and disconnects client', () => {
+        service.createRecommendation('client-1', { text: 'Please add more protein.' }).subscribe();
+        const createReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations`);
+        expect(createReq.request.method).toBe('POST');
+        expect(createReq.request.body).toEqual({ text: 'Please add more protein.' });
+        createReq.flush({});
+
+        service.disconnectClient('client-1').subscribe();
+        const disconnectReq = httpMock.expectOne(`${BASE_URL}/clients/client-1`);
+        expect(disconnectReq.request.method).toBe('DELETE');
+        disconnectReq.flush(null);
+    });
+});
+
 describe('DietologistService invitations', () => {
     it('posts invite and current-user accept decline commands', () => {
         service.invite({ dietologistEmail: 'diet@example.com', permissions: INVITE_PERMISSIONS }).subscribe();

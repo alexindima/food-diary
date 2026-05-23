@@ -1,10 +1,9 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { type ActivatedRouteSnapshot, Router, type RouterStateSnapshot } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../services/auth.service';
-import { NavigationService } from '../services/navigation.service';
 import { loggedInGuard } from './logged-in.guard';
 
 describe('loggedInGuard', () => {
@@ -13,7 +12,8 @@ describe('loggedInGuard', () => {
         isAuthenticated: ReturnType<typeof signal>;
         ensureSessionReadyAsync: ReturnType<typeof vi.fn>;
     };
-    let navigationServiceMock: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
+    let routerMock: { createUrlTree: ReturnType<typeof vi.fn> };
+    let dashboardUrlTree: object;
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
 
@@ -27,13 +27,13 @@ describe('loggedInGuard', () => {
         };
         authServiceMock.ensureSessionReadyAsync.mockResolvedValue(undefined);
 
-        navigationServiceMock = { navigateToHomeAsync: vi.fn() };
-        navigationServiceMock.navigateToHomeAsync.mockReturnValue(Promise.resolve());
+        dashboardUrlTree = { toString: (): string => '/dashboard' };
+        routerMock = { createUrlTree: vi.fn().mockReturnValue(dashboardUrlTree) };
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: AuthService, useValue: authServiceMock },
-                { provide: NavigationService, useValue: navigationServiceMock },
+                { provide: Router, useValue: routerMock },
             ],
         });
 
@@ -50,26 +50,26 @@ describe('loggedInGuard', () => {
 
         expect(result).toBe(true);
         expect(authServiceMock.ensureSessionReadyAsync).toHaveBeenCalled();
-        expect(navigationServiceMock.navigateToHomeAsync).not.toHaveBeenCalled();
+        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
     });
 
-    it('should redirect to dashboard when authenticated', async () => {
+    it('should return dashboard url tree when authenticated', async () => {
         authServiceMock.isAuthenticated.set(true);
 
         const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
 
-        expect(result).toBe(false);
-        expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
+        expect(result).toBe(dashboardUrlTree);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/dashboard']);
     });
 
-    it('should allow access for authenticated user when adminReturnUrl is present', async () => {
+    it('should still redirect authenticated user when adminReturnUrl is present', async () => {
         authServiceMock.isAuthenticated.set(true);
         const adminRedirectState = { url: '/?auth=login&adminReturnUrl=%2F' };
         state = adminRedirectState as RouterStateSnapshot;
 
         const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
 
-        expect(result).toBe(true);
-        expect(navigationServiceMock.navigateToHomeAsync).not.toHaveBeenCalled();
+        expect(result).toBe(dashboardUrlTree);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/dashboard']);
     });
 });

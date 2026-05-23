@@ -19,7 +19,7 @@
     <value>Set a password to keep a backup sign-in method besides Google.</value>
   </data>
   <data name="NewRecommendation_Title" xml:space="preserve">
-    <value>New recommendation from {0}</value>
+    <value>New recommendation from your dietologist{0}</value>
   </data>
   <data name="DietologistInvitationReceived_Title" xml:space="preserve">
     <value>New dietologist invitation</value>

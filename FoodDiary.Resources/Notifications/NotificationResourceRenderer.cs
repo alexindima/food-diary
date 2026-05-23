@@ -67,8 +67,9 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
     private NotificationText RenderNewRecommendation(string payloadJson, string? locale) {
         var payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(payloadJson);
         var dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
-            ? "Your dietologist"
-            : payload.DietologistName;
+            || string.Equals(payload.DietologistName, "Your dietologist", StringComparison.OrdinalIgnoreCase)
+            ? string.Empty
+            : $" {payload.DietologistName}";
 
         return Render(NotificationTypes.NewRecommendation, locale, dietologistName);
     }

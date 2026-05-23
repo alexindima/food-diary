@@ -1200,7 +1200,24 @@
         "EMPTY_TEXT": "New updates will appear here.",
         "MARK_ALL_READ": "Mark all as read",
         "DIETOLOGIST_INVITATION_BADGE": "Dietologist invite",
-        "DIETOLOGIST_INVITATION_ACTION": "Review invitation"
+        "DIETOLOGIST_INVITATION_ACTION": "Review invitation",
+        "RECOMMENDATION_BADGE": "Recommendation",
+        "RECOMMENDATION_ACTION": "Open recommendation"
+    },
+    "RECOMMENDATIONS": {
+        "EYEBROW": "Dietologist",
+        "TITLE": "Recommendations",
+        "SUBTITLE": "Review recommendations sent by your dietologist and keep track of what you have already read.",
+        "LOADING": "Loading recommendations...",
+        "LOAD_ERROR": "Could not load recommendations.",
+        "MARK_READ_ERROR": "Could not mark the recommendation as read.",
+        "EMPTY_TITLE": "No recommendations yet",
+        "EMPTY_TEXT": "New recommendations from your dietologist will appear here.",
+        "FROM_NAMED": "From {{ name }}",
+        "FROM_GENERIC": "From your dietologist",
+        "STATUS_UNREAD": "New",
+        "STATUS_READ": "Read",
+        "STATUS_MARKING": "Marking..."
     },
     "SHOPPING_LIST": {
         "TITLE": "Shopping list",
@@ -2243,13 +2260,75 @@
             "TITLE": "Client dashboard",
             "BACK": "Back to clients",
             "LOADING": "Loading client data...",
+            "DETAILS_LOADING": "Loading shared client details...",
+            "LOAD_ERROR": "Failed to load client data.",
             "NOT_FOUND": "Client not found.",
             "NO_DATA": "Client has not shared any data.",
+            "DISCONNECT": "Disconnect client",
+            "DISCONNECTED": "Client connection removed.",
+            "DISCONNECT_ERROR": "Failed to disconnect client.",
+            "METRICS": {
+                "CALORIES": "Calories today",
+                "PROTEIN": "Protein",
+                "FATS": "Fats",
+                "CARBS": "Carbs",
+                "WEIGHT": "Latest weight",
+                "WAIST": "Latest waist",
+                "HYDRATION": "Water today",
+                "MEALS": "Meals today",
+                "CALORIE_GOAL": "Calorie goal",
+                "PROTEIN_GOAL": "Protein goal",
+                "WATER_GOAL": "Water goal",
+                "DESIRED_WEIGHT": "Desired weight"
+            },
+            "RECOMMENDATIONS": {
+                "TITLE": "Recommendations",
+                "TEXT_LABEL": "Recommendation",
+                "TEXT_PLACEHOLDER": "Write a recommendation for this client...",
+                "LIMIT": "Up to 2000 characters.",
+                "SEND": "Send recommendation",
+                "SENT": "Recommendation sent.",
+                "SEND_ERROR": "Failed to send recommendation.",
+                "EMPTY": "No recommendations sent yet.",
+                "READ": "Read",
+                "UNREAD": "Unread"
+            },
+            "PROFILE": {
+                "EMAIL": "Email",
+                "HEIGHT": "Height",
+                "GENDER": "Gender",
+                "ACTIVITY": "Activity",
+                "BIRTH_DATE": "Birth date"
+            },
+            "MEALS": {
+                "COUNT": "{{count}} meals",
+                "EMPTY": "No meals shared for the selected day."
+            },
+            "BODY": {
+                "DELTA": "{{delta}} since previous entry"
+            },
+            "DATE_FILTER": {
+                "LABEL": "Day",
+                "PLACEHOLDER": "Select day",
+                "PREVIOUS": "Previous day",
+                "TODAY": "Today",
+                "NEXT": "Next day",
+                "APPLY": "Apply"
+            },
+            "HYDRATION": {
+                "GOAL": "Goal: {{goal}}"
+            },
+            "FASTING": {
+                "PROTOCOL": "Protocol",
+                "STARTED": "Started",
+                "PLANNED": "Planned"
+            },
             "SECTIONS": {
                 "PROFILE_TITLE": "Profile",
                 "PROFILE_BODY": "Client profile data will be displayed here.",
                 "STATISTICS_TITLE": "Statistics",
                 "STATISTICS_BODY": "Dashboard data will be displayed here.",
+                "PROGRESS_TITLE": "Progress",
                 "MEALS_TITLE": "Meals",
                 "MEALS_BODY": "Meal data will be displayed here.",
                 "WEIGHT_TITLE": "Weight",

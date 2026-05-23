@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
@@ -10,6 +11,8 @@ using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 using FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
+using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dietologist.EventHandlers;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
@@ -68,6 +71,29 @@ public class DietologistFeatureTests {
         var invitation = CreatePendingInvitation(clientId, permissions: permissions);
         invitation.Accept(dietologistId);
         return invitation;
+    }
+
+    private static DashboardSnapshotModel CreateDashboardSnapshot() {
+        var date = DateTime.UtcNow;
+        return new DashboardSnapshotModel(
+            date,
+            DailyGoal: 2000,
+            WeeklyCalorieGoal: 14000,
+            new DashboardStatisticsModel(
+                TotalCalories: 1200,
+                AverageProteins: 80,
+                AverageFats: 40,
+                AverageCarbs: 150,
+                AverageFiber: 20,
+                ProteinGoal: null,
+                FatGoal: null,
+                CarbGoal: null,
+                FiberGoal: null),
+            [new DailyCaloriesModel(date, 1200)],
+            new DashboardWeightModel(new WeightPointModel(date, 72), null, 70),
+            new DashboardWaistModel(new WaistPointModel(date, 82), null, 80),
+            new DashboardMealsModel([], 2),
+            Hydration: null);
     }
 
     private static InviteDietologistCommandHandler CreateInviteHandler(
@@ -1017,11 +1043,49 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task GetClientDashboard_WhenStatisticsDenied_ReturnsFailure() {
+    public async Task GetClientDashboard_WhenMealsAllowedAndStatisticsDenied_ReturnsMaskedDashboard() {
         var dietologistId = UserId.New();
         var clientId = UserId.New();
-        var noStatsPermissions = new DietologistPermissions(true, false, true, true, true, true);
+        var noStatsPermissions = new DietologistPermissions(
+            ShareMeals: true,
+            ShareStatistics: false,
+            ShareWeight: false,
+            ShareWaist: false,
+            ShareGoals: false,
+            ShareHydration: false,
+            ShareProfile: false,
+            ShareFasting: false);
         var invitation = CreateAcceptedInvitation(clientId, dietologistId, noStatsPermissions);
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+
+        var handler = new GetClientDashboardQueryHandler(invRepo, new DashboardMediator(CreateDashboardSnapshot()));
+
+        var result = await handler.Handle(
+            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, 1, 10, "en", 7),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Meals.Total);
+        Assert.Equal(0, result.Value.Statistics.TotalCalories);
+        Assert.Null(result.Value.Weight.Latest);
+        Assert.Null(result.Value.Hydration);
+    }
+
+    [Fact]
+    public async Task GetClientDashboard_WhenNoDashboardPermissions_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var noDashboardPermissions = new DietologistPermissions(
+            ShareMeals: false,
+            ShareStatistics: false,
+            ShareWeight: false,
+            ShareWaist: false,
+            ShareGoals: true,
+            ShareHydration: false,
+            ShareProfile: true,
+            ShareFasting: false);
+        var invitation = CreateAcceptedInvitation(clientId, dietologistId, noDashboardPermissions);
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
@@ -1198,15 +1262,16 @@ public class DietologistFeatureTests {
             userRepo);
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
 
-        await handler.Handle(
-            new RecommendationCreatedNotification(domainEvent), CancellationToken.None);
+        await handler.Handle(new NotificationEnvelope<RecommendationCreatedDomainEvent>(domainEvent), CancellationToken.None);
 
         Assert.Single(notifRepo.Added);
+        var payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(notifRepo.Added[0].PayloadJson);
+        Assert.Equal("diet@example.com", payload?.DietologistName);
         Assert.True(pusher.PushCalled);
     }
 
     [Fact]
-    public async Task RecommendationCreatedEventHandler_WhenDietologistNotFound_UsesDefaultName() {
+    public async Task RecommendationCreatedEventHandler_WhenDietologistNotFound_UsesEmptyName() {
         var recId = RecommendationId.New();
         var clientId = UserId.New();
         var dietologistId = UserId.New();
@@ -1218,10 +1283,20 @@ public class DietologistFeatureTests {
             notifRepo, pusher, new InMemoryUserRepository());
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
 
-        await handler.Handle(
-            new RecommendationCreatedNotification(domainEvent), CancellationToken.None);
+        await handler.Handle(new NotificationEnvelope<RecommendationCreatedDomainEvent>(domainEvent), CancellationToken.None);
 
         Assert.Single(notifRepo.Added);
+        var payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(notifRepo.Added[0].PayloadJson);
+        Assert.Equal(string.Empty, payload?.DietologistName);
+    }
+
+    [Fact]
+    public void NotificationTargetUrlResolver_ForRecommendation_ReturnsRecommendationsPage() {
+        var recommendationId = Guid.NewGuid().ToString();
+
+        var targetUrl = NotificationTargetUrlResolver.Resolve(NotificationTypes.NewRecommendation, recommendationId);
+
+        Assert.Equal($"/recommendations?recommendationId={recommendationId}", targetUrl);
     }
 
     // ── Test Doubles ──
@@ -1439,6 +1514,29 @@ public class DietologistFeatureTests {
     private sealed class StubMediator : ISender {
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken ct = default) =>
             throw new NotSupportedException();
+
+        public Task Send<TRequest>(TRequest request, CancellationToken ct = default) where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
+            IStreamRequest<TResponse> request, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class DashboardMediator(DashboardSnapshotModel snapshot) : ISender {
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken ct = default) {
+            if (request is GetDashboardSnapshotQuery) {
+                return Task.FromResult((TResponse)(object)Result.Success(snapshot));
+            }
+
+            throw new NotSupportedException();
+        }
 
         public Task Send<TRequest>(TRequest request, CancellationToken ct = default) where TRequest : IRequest =>
             throw new NotSupportedException();

@@ -47,6 +47,7 @@ function createNotificationViewModel(): NotificationViewModel {
         },
         isPasswordSetupSuggestion: true,
         isDietologistInvitation: false,
+        isDietologistRecommendation: false,
         hasAccentIcon: true,
         icon: 'password',
         badgeKey: 'BADGE',

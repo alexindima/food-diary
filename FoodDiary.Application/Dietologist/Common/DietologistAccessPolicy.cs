@@ -43,4 +43,13 @@ public static class DietologistAccessPolicy {
             _ => null
         };
     }
+
+    public static bool HasAnyDashboardPermission(DietologistPermissionsModel permissions) {
+        return permissions.ShareMeals ||
+               permissions.ShareStatistics ||
+               permissions.ShareWeight ||
+               permissions.ShareWaist ||
+               permissions.ShareHydration ||
+               permissions.ShareFasting;
+    }
 }

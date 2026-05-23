@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AuthService } from '../../../../services/auth.service';
+import { NavigationService } from '../../../../services/navigation.service';
 import { DietologistPromoComponent } from '../../components/dietologist-promo/dietologist-promo.component';
 import { FeaturesComponent } from '../../components/features/features.component';
 import { HeroComponent } from '../../components/hero/hero.component';
@@ -26,7 +28,9 @@ import { LANDING_FAQ_ITEMS, LANDING_SEO_GUIDES } from './landing-main.config';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
+    private readonly authService = inject(AuthService);
     private readonly authDialogService = inject(PublicAuthDialogService);
+    private readonly navigationService = inject(NavigationService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
@@ -35,6 +39,14 @@ export class MainComponent {
     private authDialogOpen = false;
 
     public constructor() {
+        effect(() => {
+            if (!this.authService.isAuthReady() || !this.authService.isAuthenticated()) {
+                return;
+            }
+
+            void this.navigationService.navigateToHomeAsync();
+        });
+
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             const authParam = params.get('auth');
             if (authParam === null) {

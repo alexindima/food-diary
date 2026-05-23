@@ -13,6 +13,8 @@ public interface IRequestHandler<in TRequest, TResponse>
 
 public interface INotification;
 
+public sealed record NotificationEnvelope<TNotification>(TNotification Value) : INotification;
+
 public interface INotificationHandler<in TNotification>
     where TNotification : INotification {
     Task Handle(TNotification notification, CancellationToken cancellationToken);

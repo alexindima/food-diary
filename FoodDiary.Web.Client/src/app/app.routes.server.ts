@@ -158,6 +158,10 @@ export const serverRoutes: ServerRoute[] = [
         renderMode: RenderMode.Client,
     },
     {
+        path: 'recommendations',
+        renderMode: RenderMode.Client,
+    },
+    {
         path: 'privacy-policy',
         renderMode: RenderMode.Prerender,
     },

@@ -39,32 +39,7 @@ export class NotificationsDialogComponent {
     protected readonly isMarkingAllRead = signal(false);
     protected readonly hasUnreadNotifications = computed(() => this.notifications().some(item => !item.isRead));
     protected readonly notificationItems = computed<NotificationViewModel[]>(() =>
-        this.notifications().map(notification => {
-            this.languageVersion();
-            const isDietologistInvitation = notification.type === 'DietologistInvitationReceived';
-            const isPasswordSetupSuggestion = notification.type === 'PasswordSetupSuggested';
-            const hasAccentIcon = isDietologistInvitation || isPasswordSetupSuggestion;
-
-            return {
-                notification,
-                isDietologistInvitation,
-                isPasswordSetupSuggestion,
-                hasAccentIcon,
-                icon: isDietologistInvitation ? 'medical_information' : isPasswordSetupSuggestion ? 'password' : 'notifications',
-                badgeKey: isDietologistInvitation
-                    ? 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE'
-                    : isPasswordSetupSuggestion
-                      ? 'NOTIFICATIONS.PASSWORD_SETUP_BADGE'
-                      : null,
-                actionKey: isDietologistInvitation
-                    ? 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION'
-                    : isPasswordSetupSuggestion
-                      ? 'NOTIFICATIONS.PASSWORD_SETUP_ACTION'
-                      : null,
-                ariaLabel: [notification.title.trim(), notification.body?.trim()].filter(Boolean).join('. '),
-                dateLabel: this.formatDateTime(notification.createdAtUtc),
-            };
-        }),
+        this.notifications().map(notification => this.buildNotificationViewModel(notification)),
     );
 
     public constructor() {
@@ -121,6 +96,27 @@ export class NotificationsDialogComponent {
             });
     }
 
+    private buildNotificationViewModel(notification: NotificationItem): NotificationViewModel {
+        this.languageVersion();
+        const isDietologistInvitation = notification.type === 'DietologistInvitationReceived';
+        const isDietologistRecommendation = notification.type === 'NewRecommendation';
+        const isPasswordSetupSuggestion = notification.type === 'PasswordSetupSuggested';
+        const hasAccentIcon = isDietologistInvitation || isDietologistRecommendation || isPasswordSetupSuggestion;
+
+        return {
+            notification,
+            isDietologistInvitation,
+            isDietologistRecommendation,
+            isPasswordSetupSuggestion,
+            hasAccentIcon,
+            icon: this.resolveNotificationIcon(notification.type),
+            badgeKey: this.resolveNotificationBadgeKey(notification.type),
+            actionKey: this.resolveNotificationActionKey(notification.type),
+            ariaLabel: [notification.title.trim(), notification.body?.trim()].filter(Boolean).join('. '),
+            dateLabel: this.formatDateTime(notification.createdAtUtc),
+        };
+    }
+
     private formatDateTime(value: string): string {
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) {
@@ -138,5 +134,49 @@ export class NotificationsDialogComponent {
 
     private resolveLocale(): string {
         return resolveAppLocale(this.translateService.getCurrentLang());
+    }
+
+    private resolveNotificationIcon(type: string): string {
+        if (type === 'DietologistInvitationReceived' || type === 'NewRecommendation') {
+            return 'medical_information';
+        }
+
+        if (type === 'PasswordSetupSuggested') {
+            return 'password';
+        }
+
+        return 'notifications';
+    }
+
+    private resolveNotificationBadgeKey(type: string): string | null {
+        if (type === 'DietologistInvitationReceived') {
+            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE';
+        }
+
+        if (type === 'NewRecommendation') {
+            return 'NOTIFICATIONS.RECOMMENDATION_BADGE';
+        }
+
+        if (type === 'PasswordSetupSuggested') {
+            return 'NOTIFICATIONS.PASSWORD_SETUP_BADGE';
+        }
+
+        return null;
+    }
+
+    private resolveNotificationActionKey(type: string): string | null {
+        if (type === 'DietologistInvitationReceived') {
+            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION';
+        }
+
+        if (type === 'NewRecommendation') {
+            return 'NOTIFICATIONS.RECOMMENDATION_ACTION';
+        }
+
+        if (type === 'PasswordSetupSuggested') {
+            return 'NOTIFICATIONS.PASSWORD_SETUP_ACTION';
+        }
+
+        return null;
     }
 }

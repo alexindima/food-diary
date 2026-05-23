@@ -23,6 +23,36 @@ export type ClientSummary = {
     acceptedAtUtc: string;
 };
 
+export type DietologistClientGoals = {
+    id: string;
+    email: string;
+    dailyCalorieTarget?: number | null;
+    proteinTarget?: number | null;
+    fatTarget?: number | null;
+    carbTarget?: number | null;
+    fiberTarget?: number | null;
+    waterGoal?: number | null;
+    hydrationGoal?: number | null;
+    desiredWeight?: number | null;
+    desiredWaist?: number | null;
+    stepGoal?: number | null;
+};
+
+export type DietologistRecommendation = {
+    id: string;
+    dietologistUserId: string;
+    dietologistFirstName: string | null;
+    dietologistLastName: string | null;
+    text: string;
+    isRead: boolean;
+    createdAtUtc: string;
+    readAtUtc: string | null;
+};
+
+export type CreateRecommendationRequest = {
+    text: string;
+};
+
 export type DietologistRelationship = {
     invitationId: string;
     status: string;

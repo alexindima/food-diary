@@ -1,13 +1,21 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { AuthService } from '../../../../services/auth.service';
+import { NavigationService } from '../../../../services/navigation.service';
 import { PublicAuthDialogService } from '../../lib/public-auth-dialog.service';
 import { MainComponent } from './main.component';
 
 let fixture: ComponentFixture<MainComponent>;
 let authDialogServiceMock: { openAsync: ReturnType<typeof vi.fn> };
+let authServiceMock: {
+    isAuthenticated: ReturnType<typeof signal<boolean>>;
+    isAuthReady: ReturnType<typeof signal<boolean>>;
+};
+let navigationServiceMock: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
 let queryParamMapSubject: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
 let routerMock: { navigate: ReturnType<typeof vi.fn> };
 let routeStub: object;
@@ -16,6 +24,13 @@ beforeEach(() => {
     TestBed.resetTestingModule();
     authDialogServiceMock = {
         openAsync: vi.fn().mockResolvedValue({ afterClosed: () => of(undefined) }),
+    };
+    authServiceMock = {
+        isAuthenticated: signal(false),
+        isAuthReady: signal(true),
+    };
+    navigationServiceMock = {
+        navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
     };
     queryParamMapSubject = new BehaviorSubject(convertToParamMap({}));
     routerMock = { navigate: vi.fn().mockResolvedValue(true) };
@@ -50,6 +65,8 @@ async function createComponentAsync(
         imports: [MainComponent],
         providers: [
             { provide: PublicAuthDialogService, useValue: authDialogServiceMock },
+            { provide: AuthService, useValue: authServiceMock },
+            { provide: NavigationService, useValue: navigationServiceMock },
             { provide: Router, useValue: routerMock },
             { provide: ActivatedRoute, useValue: routeStub },
         ],
@@ -95,6 +112,15 @@ describe('MainComponent', () => {
         fixture.detectChanges();
 
         expect(authDialogServiceMock.openAsync).not.toHaveBeenCalled();
+    });
+
+    it('redirects to dashboard if landing is mounted while authenticated', async () => {
+        authServiceMock.isAuthenticated.set(true);
+        await createComponentAsync('');
+
+        fixture.detectChanges();
+
+        expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
     });
 
     it('clears auth query params when dialog closes', async () => {

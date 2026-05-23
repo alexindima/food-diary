@@ -6,7 +6,7 @@
         class="notifications-dialog__item fd-grid fd-gap-xxs"
         [class.is-read]="itemView.notification.isRead"
         [class.notifications-dialog__item--without-icon]="!itemView.hasAccentIcon"
-        [class.notifications-dialog__item--dietologist]="itemView.isDietologistInvitation"
+        [class.notifications-dialog__item--dietologist]="itemView.isDietologistInvitation || itemView.isDietologistRecommendation"
         [class.notifications-dialog__item--security]="itemView.isPasswordSetupSuggestion"
         [attr.aria-label]="itemView.ariaLabel"
         (click)="notificationOpen.emit(itemView.notification)"
@@ -14,7 +14,9 @@
         @if (itemView.hasAccentIcon) {
             <span
                 class="notifications-dialog__item-icon fd-place-center"
-                [class.notifications-dialog__item-icon--dietologist]="itemView.isDietologistInvitation"
+                [class.notifications-dialog__item-icon--dietologist]="
+                    itemView.isDietologistInvitation || itemView.isDietologistRecommendation
+                "
                 [class.notifications-dialog__item-icon--security]="itemView.isPasswordSetupSuggestion"
             >
                 <fd-ui-icon [name]="itemView.icon" />
