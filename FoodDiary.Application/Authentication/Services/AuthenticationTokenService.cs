@@ -23,7 +23,7 @@ public sealed class AuthenticationTokenService(
         CancellationToken cancellationToken,
         AuthenticationClientContext? clientContext = null) {
         var roles = GetRoles(user);
-        var accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
+        var accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
         var nowUtc = dateTimeProvider.UtcNow;
 
@@ -53,7 +53,7 @@ public sealed class AuthenticationTokenService(
 
     public string IssueAccessToken(User user) {
         var roles = GetRoles(user);
-        return jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
+        return jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
     }
 
     private string[] GetRoles(User user) {
@@ -64,5 +64,14 @@ public sealed class AuthenticationTokenService(
         }
 
         return roles.ToArray();
+    }
+
+    private DateTime? ResolveAccessTokenCapUtc(User user) {
+        if (user.HasRole(RoleNames.Premium) ||
+            !user.HasActivePremiumTrial(dateTimeProvider.UtcNow)) {
+            return null;
+        }
+
+        return user.PremiumTrialEndsAtUtc;
     }
 }

@@ -133,10 +133,13 @@ describe('PremiumAccessPageComponent overview and portal', () => {
 
     it('handles successful checkout return state and removes query params', async () => {
         queryParams = { checkout: 'success' };
+        const premiumOverview = { ...createOverview(), isPremium: true, subscriptionStatus: 'active' };
+        billingService.getOverview.mockReturnValue(of(premiumOverview));
         const { component } = setupComponent();
         await settleAsync();
 
         expect(authService.refreshToken).toHaveBeenCalled();
+        expect(component.overview()).toEqual(premiumOverview);
         expect(component.checkoutReturnState()).toBe('success');
         expect(toastService.success).toHaveBeenCalledWith('PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE');
         expect(router.navigate).toHaveBeenCalledWith([], {

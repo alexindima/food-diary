@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace FoodDiary.Infrastructure.Persistence.Billing;
 
@@ -19,7 +20,19 @@ public sealed class BillingWebhookEventRepository(FoodDiaryDbContext context) : 
         BillingWebhookEvent webhookEvent,
         CancellationToken cancellationToken = default) {
         context.BillingWebhookEvents.Add(webhookEvent);
-        await context.SaveChangesAsync(cancellationToken);
+        try {
+            await context.SaveChangesAsync(cancellationToken);
+        } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
+            context.Entry(webhookEvent).State = EntityState.Detached;
+            throw new BillingWebhookEventAlreadyProcessedException(webhookEvent.Provider, webhookEvent.EventId);
+        }
+
         return webhookEvent;
     }
+
+    private static bool IsDuplicateWebhookEvent(DbUpdateException exception) =>
+        exception.InnerException is PostgresException {
+            SqlState: PostgresErrorCodes.UniqueViolation,
+            ConstraintName: "IX_BillingWebhookEvents_Provider_EventId"
+        };
 }

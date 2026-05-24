@@ -28,10 +28,12 @@ public sealed class CreatePortalSessionCommandHandler(
         }
 
         var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
-        var billingProvider = billingProviderGatewayAccessor.GetActiveProvider();
-        if (subscription is null ||
-            !string.Equals(subscription.Provider, billingProvider.Provider, StringComparison.OrdinalIgnoreCase) ||
-            string.IsNullOrWhiteSpace(subscription.ExternalCustomerId)) {
+        if (subscription is null || string.IsNullOrWhiteSpace(subscription.ExternalCustomerId)) {
+            return Result.Failure<BillingPortalSessionModel>(Errors.Billing.CustomerPortalUnavailable);
+        }
+
+        var billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(subscription.Provider);
+        if (billingProvider is null) {
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.CustomerPortalUnavailable);
         }
 

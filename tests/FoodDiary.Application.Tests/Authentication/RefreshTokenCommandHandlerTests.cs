@@ -108,6 +108,11 @@ public sealed class RefreshTokenCommandHandlerTests {
             UserId generatedUserId,
             string generatedEmail,
             IReadOnlyCollection<string> roles,
+            DateTime? expiresAtUtc) => "unused-access-token";
+        public string GenerateAccessToken(
+            UserId generatedUserId,
+            string generatedEmail,
+            IReadOnlyCollection<string> roles,
             JwtImpersonationContext impersonation) => "unused-impersonation-access-token";
         public string GenerateRefreshToken(UserId generatedUserId, string generatedEmail, IReadOnlyCollection<string> roles) => "unused-refresh-token";
         public (UserId userId, string email)? ValidateToken(string token) =>

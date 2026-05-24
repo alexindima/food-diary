@@ -44,17 +44,24 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
     }
 
     public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
-        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, impersonation: null);
+        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, expiresAtUtc: null, impersonation: null);
+
+    public string GenerateAccessToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        DateTime? expiresAtUtc) =>
+        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, expiresAtUtc, impersonation: null);
 
     public string GenerateAccessToken(
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
         JwtImpersonationContext impersonation) =>
-        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, impersonation);
+        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, expiresAtUtc: null, impersonation);
 
     public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
-        GenerateToken(userId, email, roles, _refreshTokenExpirationMinutes, impersonation: null);
+        GenerateToken(userId, email, roles, _refreshTokenExpirationMinutes, expiresAtUtc: null, impersonation: null);
 
     public (UserId userId, string email)? ValidateToken(string token) {
         try {
@@ -85,6 +92,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         string email,
         IReadOnlyCollection<string> roles,
         int expirationMinutes,
+        DateTime? expiresAtUtc,
         JwtImpersonationContext? impersonation) {
         var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
@@ -104,11 +112,16 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
+        var configuredExpiresAtUtc = _dateTimeProvider.UtcNow.AddMinutes(expirationMinutes);
+        var tokenExpiresAtUtc = expiresAtUtc.HasValue && expiresAtUtc.Value < configuredExpiresAtUtc
+            ? expiresAtUtc.Value.ToUniversalTime()
+            : configuredExpiresAtUtc;
+
         var token = new JwtSecurityToken(
             issuer: _issuer,
             audience: _audience,
             claims: claims,
-            expires: _dateTimeProvider.UtcNow.AddMinutes(expirationMinutes),
+            expires: tokenExpiresAtUtc,
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

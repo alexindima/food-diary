@@ -1,4 +1,5 @@
 using FoodDiary.Domain.ValueObjects.Ids;
+using System.IdentityModel.Tokens.Jwt;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Options;
@@ -43,6 +44,19 @@ public sealed class JwtTokenGeneratorTests {
     }
 
     [Fact]
+    public void GenerateAccessToken_WithEarlierExpirationCap_UsesCap() {
+        var now = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        var cap = now.AddMinutes(5);
+        var generator = new JwtTokenGenerator(CreateOptions(expirationMinutes: 60), new StubDateTimeProvider(now));
+        var userId = UserId.New();
+
+        var token = generator.GenerateAccessToken(userId, "trial@example.com", ["Premium"], cap);
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        Assert.Equal(cap, jwt.ValidTo);
+    }
+
+    [Fact]
     public void Constructor_WithoutSecretKey_Throws() {
         var options = CreateOptions(includeSecret: false);
 
@@ -64,6 +78,14 @@ public sealed class JwtTokenGeneratorTests {
     }
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow { get; } = new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        public StubDateTimeProvider()
+            : this(new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)) {
+        }
+
+        public StubDateTimeProvider(DateTime utcNow) {
+            UtcNow = utcNow;
+        }
+
+        public DateTime UtcNow { get; }
     }
 }

@@ -43,6 +43,9 @@ import { buildPremiumOverviewCardViewModel, buildPremiumPlanCards } from './prem
     ],
 })
 export class PremiumAccessPageComponent {
+    private static readonly CheckoutActivationPollAttempts = 6;
+    private static readonly CheckoutActivationPollDelayMs = 1500;
+
     private readonly billingService = inject(PremiumBillingService);
     private readonly paddleCheckoutService = inject(PaddleCheckoutService);
     private readonly authService = inject(AuthService);
@@ -179,8 +182,8 @@ export class PremiumAccessPageComponent {
         }
 
         if (checkoutState === 'success') {
-            await firstValueFrom(this.authService.refreshToken());
             this.checkoutReturnState.set('success');
+            await this.refreshTokenWhenPremiumEntitlementVisibleAsync();
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE'));
         } else if (checkoutState === 'canceled') {
             this.checkoutReturnState.set('canceled');
@@ -211,6 +214,32 @@ export class PremiumAccessPageComponent {
         } finally {
             this.isLoading.set(false);
         }
+    }
+
+    private async refreshTokenWhenPremiumEntitlementVisibleAsync(): Promise<void> {
+        try {
+            for (let attempt = 0; attempt < PremiumAccessPageComponent.CheckoutActivationPollAttempts; attempt++) {
+                const overview = await firstValueFrom(this.billingService.getOverview());
+                this.overview.set(overview);
+                if (overview.isPremium) {
+                    await firstValueFrom(this.authService.refreshToken());
+                    return;
+                }
+
+                await this.delayCheckoutActivationPollAsync();
+            }
+        } catch {
+            await firstValueFrom(this.authService.refreshToken());
+            return;
+        }
+
+        await firstValueFrom(this.authService.refreshToken());
+    }
+
+    private async delayCheckoutActivationPollAsync(): Promise<void> {
+        await new Promise<void>(resolve => {
+            setTimeout(resolve, PremiumAccessPageComponent.CheckoutActivationPollDelayMs);
+        });
     }
 
     private async handlePaddleTransactionCheckoutAsync(): Promise<void> {

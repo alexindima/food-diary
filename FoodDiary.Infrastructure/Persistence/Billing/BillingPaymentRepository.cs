@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace FoodDiary.Infrastructure.Persistence.Billing;
 
@@ -17,7 +18,19 @@ public sealed class BillingPaymentRepository(FoodDiaryDbContext context) : IBill
 
     public async Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
         context.BillingPayments.Add(payment);
-        await context.SaveChangesAsync(cancellationToken);
+        try {
+            await context.SaveChangesAsync(cancellationToken);
+        } catch (DbUpdateException ex) when (IsDuplicatePayment(ex)) {
+            context.Entry(payment).State = EntityState.Detached;
+            throw new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
+        }
+
         return payment;
     }
+
+    private static bool IsDuplicatePayment(DbUpdateException exception) =>
+        exception.InnerException is PostgresException {
+            SqlState: PostgresErrorCodes.UniqueViolation,
+            ConstraintName: "IX_BillingPayments_Provider_ExternalPaymentId"
+        };
 }

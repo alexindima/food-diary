@@ -8,6 +8,11 @@ public interface IJwtTokenGenerator {
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
+        DateTime? expiresAtUtc);
+    string GenerateAccessToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
         JwtImpersonationContext impersonation);
     string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles);
     (UserId userId, string email)? ValidateToken(string token);

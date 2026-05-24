@@ -78,7 +78,8 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         return subscription.Status.Trim().ToLowerInvariant() switch {
-            "trialing" => true,
+            "trialing" => subscription.CurrentPeriodEndUtc.HasValue &&
+                subscription.CurrentPeriodEndUtc > dateTimeProvider.UtcNow,
             "active" => true,
             "past_due" => !subscription.CurrentPeriodEndUtc.HasValue ||
                 subscription.CurrentPeriodEndUtc > dateTimeProvider.UtcNow,

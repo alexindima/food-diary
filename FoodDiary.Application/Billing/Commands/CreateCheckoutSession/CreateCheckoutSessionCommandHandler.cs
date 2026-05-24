@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
@@ -14,7 +15,8 @@ public sealed class CreateCheckoutSessionCommandHandler(
     IUserRepository userRepository,
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPaymentRepository billingPaymentRepository,
-    IBillingProviderGatewayAccessor billingProviderGatewayAccessor)
+    IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
+    IDateTimeProvider dateTimeProvider)
     : ICommandHandler<CreateCheckoutSessionCommand, Result<BillingCheckoutSessionModel>> {
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
         CreateCheckoutSessionCommand command,
@@ -30,11 +32,11 @@ public sealed class CreateCheckoutSessionCommandHandler(
             return Result.Failure<BillingCheckoutSessionModel>(accessError);
         }
 
-        if (user!.HasRole(RoleNames.Premium)) {
+        var existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
+        if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.UtcNow)) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
 
-        var existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
         var billingProvider = ResolveBillingProvider(command.Provider);
         if (billingProvider is null) {
             return Result.Failure<BillingCheckoutSessionModel>(
@@ -81,6 +83,19 @@ public sealed class CreateCheckoutSessionCommandHandler(
         string.IsNullOrWhiteSpace(provider)
             ? billingProviderGatewayAccessor.GetActiveProvider()
             : billingProviderGatewayAccessor.GetProviderOrDefault(provider);
+
+    private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) {
+        if (subscription is null || string.IsNullOrWhiteSpace(subscription.Status)) {
+            return false;
+        }
+
+        return subscription.Status.Trim().ToLowerInvariant() switch {
+            "trialing" => subscription.CurrentPeriodEndUtc.HasValue && subscription.CurrentPeriodEndUtc > nowUtc,
+            "active" => true,
+            "past_due" => !subscription.CurrentPeriodEndUtc.HasValue || subscription.CurrentPeriodEndUtc > nowUtc,
+            _ => false
+        };
+    }
 
     private async Task AddCheckoutPaymentAsync(
         BillingSubscription subscription,

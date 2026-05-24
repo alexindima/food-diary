@@ -24,6 +24,7 @@ public sealed class BillingSubscription : Entity<Guid> {
     public string? ProviderMetadataJson { get; private set; }
     public string? LastWebhookEventId { get; private set; }
     public DateTime? LastSyncedAtUtc { get; private set; }
+    public bool PremiumRoleManagedByBilling { get; private set; }
 
     private BillingSubscription() {
     }
@@ -95,6 +96,29 @@ public sealed class BillingSubscription : Entity<Guid> {
         ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
         LastWebhookEventId = NormalizeRequired(webhookEventId, nameof(webhookEventId));
         LastSyncedAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+        SetModified(LastSyncedAtUtc.Value);
+    }
+
+    public void MarkPremiumRoleManagedByBilling(bool value, DateTime changedAtUtc) {
+        var normalizedChangedAt = NormalizeRequiredUtc(changedAtUtc, nameof(changedAtUtc));
+        if (PremiumRoleManagedByBilling == value) {
+            return;
+        }
+
+        PremiumRoleManagedByBilling = value;
+        SetModified(normalizedChangedAt);
+    }
+
+    public void MarkRenewalFailed(
+        DateTime nextBillingAttemptUtc,
+        string eventId,
+        DateTime syncedAtUtc,
+        string? providerMetadataJson = null) {
+        Status = "past_due";
+        NextBillingAttemptUtc = NormalizeRequiredUtc(nextBillingAttemptUtc, nameof(nextBillingAttemptUtc));
+        LastWebhookEventId = NormalizeRequired(eventId, nameof(eventId));
+        LastSyncedAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+        ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
         SetModified(LastSyncedAtUtc.Value);
     }
 

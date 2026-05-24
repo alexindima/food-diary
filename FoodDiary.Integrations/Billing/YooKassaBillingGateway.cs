@@ -45,6 +45,7 @@ public sealed class YooKassaBillingGateway(
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                 }),
+            null,
             cancellationToken);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(paymentResponse.Error);
@@ -97,6 +98,7 @@ public sealed class YooKassaBillingGateway(
                     ["plan"] = request.Plan,
                     ["renewal"] = "true",
                 }),
+            request.IdempotenceKey,
             cancellationToken);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingRecurringPaymentModel>(paymentResponse.Error);
@@ -193,18 +195,19 @@ public sealed class YooKassaBillingGateway(
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {
         ConfigureClient();
-        return await SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", null, cancellationToken);
+        return await SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", null, null, cancellationToken);
     }
 
     private async Task<Result<TResponse>> SendAsync<TResponse>(
         HttpMethod method,
         string path,
         object? body,
+        string? idempotenceKey,
         CancellationToken cancellationToken)
         where TResponse : class {
         using var request = new HttpRequestMessage(method, path);
         if (method != HttpMethod.Get) {
-            request.Headers.Add("Idempotence-Key", Guid.NewGuid().ToString("N"));
+            request.Headers.Add("Idempotence-Key", ResolveIdempotenceKey(idempotenceKey));
         }
         if (body is not null) {
             request.Content = JsonContent.Create(body, options: JsonOptions);
@@ -299,6 +302,11 @@ public sealed class YooKassaBillingGateway(
 
     private static string NormalizeAmount(string value) =>
         decimal.Parse(value, NumberStyles.Number, CultureInfo.InvariantCulture).ToString("0.00", CultureInfo.InvariantCulture);
+
+    private static string ResolveIdempotenceKey(string? idempotenceKey) =>
+        string.IsNullOrWhiteSpace(idempotenceKey)
+            ? Guid.NewGuid().ToString("N")
+            : idempotenceKey.Trim();
 
     private sealed record CreatePaymentRequest(
         [property: JsonPropertyName("amount")] AmountRequest Amount,

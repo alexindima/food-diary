@@ -11,9 +11,12 @@ public sealed class BillingRenewalService(
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPaymentRepository billingPaymentRepository,
     IUserRepository userRepository,
+    IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,
     BillingAccessService billingAccessService,
     IDateTimeProvider dateTimeProvider) {
+    private static readonly TimeSpan FailedRenewalRetryDelay = TimeSpan.FromHours(1);
+
     private readonly Dictionary<string, IBillingRecurringProviderGateway> _recurringGateways = recurringProviderGateways
         .ToDictionary(gateway => gateway.Provider, StringComparer.OrdinalIgnoreCase);
 
@@ -47,62 +50,98 @@ public sealed class BillingRenewalService(
             var renewalResult = await recurringGateway.CreateRecurringPaymentAsync(
                 new BillingRecurringPaymentRequestModel(
                     subscription.UserId.Value,
+                    subscription.Id,
                     subscription.ExternalCustomerId,
                     subscription.ExternalPaymentMethodId,
                     subscription.Plan,
-                    subscription.CurrentPeriodEndUtc),
+                    subscription.CurrentPeriodEndUtc,
+                    BuildRenewalIdempotenceKey(subscription)),
                 cancellationToken);
 
             if (renewalResult.IsFailure) {
+                await billingTransactionRunner.ExecuteAsync(async ct => {
+                    subscription.MarkRenewalFailed(
+                        now.Add(FailedRenewalRetryDelay),
+                        BuildRenewalFailureEventId(subscription, now),
+                        now,
+                        renewalResult.Error.Message);
+                    await billingSubscriptionRepository.UpdateAsync(subscription, ct);
+
+                    var failedRenewalUser = await userRepository.GetByIdAsync(subscription.UserId, ct);
+                    if (failedRenewalUser is not null) {
+                        var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+                            subscription.Status,
+                            subscription.CurrentPeriodEndUtc);
+                        await billingAccessService.EnsurePremiumRoleAsync(
+                            failedRenewalUser,
+                            subscription,
+                            shouldHavePremium,
+                            ct);
+                    }
+                }, cancellationToken);
+
                 failed++;
                 continue;
             }
 
             var renewal = renewalResult.Value;
-            subscription.ApplyProviderSnapshot(
-                recurringGateway.Provider,
-                renewal.PaymentId,
-                renewal.PaymentMethodId,
-                renewal.PriceId,
-                renewal.Plan,
-                renewal.Status,
-                renewal.CurrentPeriodStartUtc,
-                renewal.CurrentPeriodEndUtc,
-                false,
-                null,
-                null,
-                null,
-                renewal.EventId,
-                now,
-                renewal.ProviderMetadataJson);
-            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
+            try {
+                await billingTransactionRunner.ExecuteAsync(async ct => {
+                    subscription.ApplyProviderSnapshot(
+                        recurringGateway.Provider,
+                        renewal.PaymentId,
+                        renewal.PaymentMethodId,
+                        renewal.PriceId,
+                        renewal.Plan,
+                        renewal.Status,
+                        renewal.CurrentPeriodStartUtc,
+                        renewal.CurrentPeriodEndUtc,
+                        false,
+                        null,
+                        null,
+                        null,
+                        renewal.EventId,
+                        now,
+                        renewal.ProviderMetadataJson);
+                    await billingSubscriptionRepository.UpdateAsync(subscription, ct);
 
-            var payment = BillingPayment.Create(
-                subscription.UserId,
-                subscription.Id,
-                recurringGateway.Provider,
-                renewal.PaymentId,
-                subscription.ExternalCustomerId,
-                subscription.ExternalSubscriptionId,
-                renewal.PaymentMethodId,
-                renewal.PriceId,
-                renewal.Plan,
-                renewal.Status,
-                BillingPaymentKinds.Renewal,
-                renewal.Amount,
-                renewal.Currency,
-                renewal.CurrentPeriodStartUtc,
-                renewal.CurrentPeriodEndUtc,
-                renewal.EventId,
-                renewal.ProviderMetadataJson);
-            await billingPaymentRepository.AddAsync(payment, cancellationToken);
+                    var existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
+                        recurringGateway.Provider,
+                        renewal.PaymentId,
+                        ct);
+                    if (existingPayment is null) {
+                        var payment = BillingPayment.Create(
+                            subscription.UserId,
+                            subscription.Id,
+                            recurringGateway.Provider,
+                            renewal.PaymentId,
+                            subscription.ExternalCustomerId,
+                            subscription.ExternalSubscriptionId,
+                            renewal.PaymentMethodId,
+                            renewal.PriceId,
+                            renewal.Plan,
+                            renewal.Status,
+                            BillingPaymentKinds.Renewal,
+                            renewal.Amount,
+                            renewal.Currency,
+                            renewal.CurrentPeriodStartUtc,
+                            renewal.CurrentPeriodEndUtc,
+                            renewal.EventId,
+                            renewal.ProviderMetadataJson);
+                        await billingPaymentRepository.AddAsync(payment, ct);
+                    }
 
-            var user = await userRepository.GetByIdAsync(subscription.UserId, cancellationToken);
-            if (user is not null) {
-                var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
-                    renewal.Status,
-                    renewal.CurrentPeriodEndUtc);
-                await billingAccessService.EnsurePremiumRoleAsync(user, shouldHavePremium, cancellationToken);
+                    var user = await userRepository.GetByIdAsync(subscription.UserId, ct);
+                    if (user is not null) {
+                        var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+                            renewal.Status,
+                            renewal.CurrentPeriodEndUtc);
+                        await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, ct);
+                    }
+                }, cancellationToken);
+            } catch (BillingPaymentAlreadyExistsException) {
+                renewed++;
+                continue;
             }
 
             if (string.Equals(renewal.Status, "active", StringComparison.OrdinalIgnoreCase)) {
@@ -114,4 +153,12 @@ public sealed class BillingRenewalService(
 
         return new BillingRenewalRunResult(subscriptions.Count, renewed, failed);
     }
+
+    private static string BuildRenewalIdempotenceKey(BillingSubscription subscription) {
+        var periodKey = subscription.CurrentPeriodEndUtc?.ToUniversalTime().ToString("yyyyMMddHHmmss") ?? "initial";
+        return $"billing-renewal:{subscription.Id:N}:{periodKey}:{subscription.Plan}";
+    }
+
+    private static string BuildRenewalFailureEventId(BillingSubscription subscription, DateTime failedAtUtc) =>
+        $"billing-renewal-failed:{subscription.Id:N}:{failedAtUtc:yyyyMMddHHmmss}";
 }

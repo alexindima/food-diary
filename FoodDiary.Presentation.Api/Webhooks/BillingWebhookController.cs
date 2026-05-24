@@ -1,16 +1,19 @@
 using System.Text;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Billing.Mappings;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Webhooks;
 
 [ApiController]
 [AllowAnonymous]
+[EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
 [Route("api/v{version:apiVersion}/billing/webhooks/{provider}")]
 public sealed class BillingWebhookController(ISender mediator) : BaseApiController(mediator) {
     private const string PaddleProvider = "Paddle";

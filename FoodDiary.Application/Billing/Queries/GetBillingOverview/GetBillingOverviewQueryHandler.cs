@@ -37,9 +37,16 @@ public sealed class GetBillingOverviewQueryHandler(
         var hasPaidPremium = user.HasRole(RoleNames.Premium);
         var paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
         var isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive;
-        var subscriptionStatus = subscription?.Status ?? (isTrialActive ? "trialing" : null);
-        var currentPeriodStartUtc = subscription?.CurrentPeriodStartUtc ?? (isTrialActive ? user.PremiumTrialStartedAtUtc : null);
-        var currentPeriodEndUtc = subscription?.CurrentPeriodEndUtc ?? (isTrialActive ? user.PremiumTrialEndsAtUtc : null);
+        var providerTrialExpired = IsExpiredProviderTrial(subscription, nowUtc);
+        var subscriptionStatus = providerTrialExpired
+            ? (isTrialActive ? "trialing" : null)
+            : subscription?.Status ?? (isTrialActive ? "trialing" : null);
+        var currentPeriodStartUtc = providerTrialExpired
+            ? (isTrialActive ? user.PremiumTrialStartedAtUtc : null)
+            : subscription?.CurrentPeriodStartUtc ?? (isTrialActive ? user.PremiumTrialStartedAtUtc : null);
+        var currentPeriodEndUtc = providerTrialExpired
+            ? (isTrialActive ? user.PremiumTrialEndsAtUtc : null)
+            : subscription?.CurrentPeriodEndUtc ?? (isTrialActive ? user.PremiumTrialEndsAtUtc : null);
         var publicConfig = billingPublicConfigProvider.GetPublicConfig();
         var renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
@@ -74,10 +81,19 @@ public sealed class GetBillingOverviewQueryHandler(
         }
 
         return subscription.Status.Trim().ToLowerInvariant() switch {
-            "trialing" => true,
+            "trialing" => subscription.CurrentPeriodEndUtc.HasValue && subscription.CurrentPeriodEndUtc > nowUtc,
             "active" => true,
             "past_due" => !subscription.CurrentPeriodEndUtc.HasValue || subscription.CurrentPeriodEndUtc > nowUtc,
             _ => false
         };
+    }
+
+    private static bool IsExpiredProviderTrial(BillingSubscription? subscription, DateTime nowUtc) {
+        if (subscription is null ||
+            !string.Equals(subscription.Status, "trialing", StringComparison.OrdinalIgnoreCase)) {
+            return false;
+        }
+
+        return !subscription.CurrentPeriodEndUtc.HasValue || subscription.CurrentPeriodEndUtc <= nowUtc;
     }
 }

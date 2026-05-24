@@ -287,10 +287,12 @@ public sealed class BillingGatewayTests {
         var result = await gateway.CreateRecurringPaymentAsync(
             new BillingRecurringPaymentRequestModel(
                 Guid.NewGuid(),
+                Guid.NewGuid(),
                 "customer",
                 "pm_123",
                 "monthly",
-                CurrentPeriodEndUtc: new DateTime(2026, 5, 5, 0, 0, 0, DateTimeKind.Utc)),
+                CurrentPeriodEndUtc: new DateTime(2026, 5, 5, 0, 0, 0, DateTimeKind.Utc),
+                IdempotenceKey: "billing-renewal:test"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -303,6 +305,7 @@ public sealed class BillingGatewayTests {
         Assert.Equal("RUB", result.Value.Currency);
         Assert.NotNull(handler.LastRequest);
         Assert.Equal("https://api.yookassa.test/v3/payments", handler.LastRequest.RequestUri?.ToString());
+        Assert.Equal("billing-renewal:test", handler.LastRequest.Headers.GetValues("Idempotence-Key").Single());
         Assert.Contains("\"renewal\":\"true\"", handler.LastRequestBody);
         Assert.Contains("\"payment_method_id\":\"pm_123\"", handler.LastRequestBody);
     }
@@ -322,7 +325,7 @@ public sealed class BillingGatewayTests {
             }));
 
         var result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), "customer", "", "monthly", null),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "", "monthly", null, "renewal"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

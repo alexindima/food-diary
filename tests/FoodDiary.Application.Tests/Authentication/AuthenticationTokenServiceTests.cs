@@ -68,6 +68,26 @@ public class AuthenticationTokenServiceTests {
         Assert.Equal(user.Id, jwt.LastAccessUserId);
         Assert.Equal(user.Email, jwt.LastAccessEmail);
         Assert.Equal(["Admin", "Support"], jwt.LastAccessRoles);
+        Assert.Null(jwt.LastAccessExpiresAtUtc);
+    }
+
+    [Fact]
+    public void IssueAccessToken_WhenTrialIsOnlyPremiumSource_CapsAccessTokenAtTrialEnd() {
+        var now = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        var user = CreateUser("trial@example.com");
+        user.StartPremiumTrial(now, TimeSpan.FromDays(7));
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator();
+        var service = new AuthenticationTokenService(
+            repository,
+            new InMemoryUserLoginEventRepository(),
+            jwt,
+            new StubDateTimeProvider(now));
+
+        _ = service.IssueAccessToken(user);
+
+        Assert.Contains("Premium", jwt.LastAccessRoles);
+        Assert.Equal(now.AddDays(7), jwt.LastAccessExpiresAtUtc);
     }
 
     private static User CreateUser(string email, params string[] roles) {
@@ -144,11 +164,25 @@ public class AuthenticationTokenServiceTests {
         public UserId LastAccessUserId { get; private set; }
         public string LastAccessEmail { get; private set; } = string.Empty;
         public IReadOnlyCollection<string> LastAccessRoles { get; private set; } = [];
+        public DateTime? LastAccessExpiresAtUtc { get; private set; }
 
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) {
             LastAccessUserId = userId;
             LastAccessEmail = email;
             LastAccessRoles = roles.ToArray();
+            LastAccessExpiresAtUtc = null;
+            return "access-token";
+        }
+
+        public string GenerateAccessToken(
+            UserId userId,
+            string email,
+            IReadOnlyCollection<string> roles,
+            DateTime? expiresAtUtc) {
+            LastAccessUserId = userId;
+            LastAccessEmail = email;
+            LastAccessRoles = roles.ToArray();
+            LastAccessExpiresAtUtc = expiresAtUtc;
             return "access-token";
         }
 
@@ -171,6 +205,14 @@ public class AuthenticationTokenServiceTests {
     }
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow { get; } = new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        public StubDateTimeProvider()
+            : this(new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)) {
+        }
+
+        public StubDateTimeProvider(DateTime utcNow) {
+            UtcNow = utcNow;
+        }
+
+        public DateTime UtcNow { get; }
     }
 }

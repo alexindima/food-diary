@@ -66,6 +66,9 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
         entity.Property(e => e.LastSyncedAtUtc)
             .HasColumnType("timestamp with time zone");
 
+        entity.Property(e => e.PremiumRoleManagedByBilling)
+            .HasDefaultValue(false);
+
         entity.HasIndex(e => e.UserId)
             .IsUnique();
 
@@ -143,7 +146,8 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
         entity.Property(e => e.ProviderMetadataJson)
             .HasColumnType("jsonb");
 
-        entity.HasIndex(e => new { e.Provider, e.ExternalPaymentId });
+        entity.HasIndex(e => new { e.Provider, e.ExternalPaymentId })
+            .IsUnique();
 
         entity.HasIndex(e => new { e.Provider, e.ExternalCustomerId });
 
