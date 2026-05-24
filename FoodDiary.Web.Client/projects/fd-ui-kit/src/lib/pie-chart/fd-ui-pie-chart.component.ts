@@ -67,14 +67,15 @@ export class FdUiPieChartComponent {
     public readonly ariaLabel = computed(() => {
         const title = this.title();
         const total = this.total();
+        const hasTitle = title !== undefined && title.trim().length > 0;
         if (total <= 0) {
-            return title ? `${title}: ${this.emptyLabel()}` : this.emptyLabel();
+            return hasTitle ? `${title}: ${this.emptyLabel()}` : this.emptyLabel();
         }
 
         const details = this.segmentViews()
             .map(segment => `${segment.label} ${segment.value}`)
             .join(', ');
-        return title ? `${title}: ${details}` : details;
+        return hasTitle ? `${title}: ${details}` : details;
     });
 
     private readonly normalizedSegments = computed(() =>

@@ -4,6 +4,8 @@ import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 
+const DEFAULT_ROLE_AUDIT_LIMIT = 20;
+
 export type AdminUser = {
     id: string;
     email: string;
@@ -169,7 +171,7 @@ export class AdminUsersService {
         return this.http.get<AdminUser>(`${this.baseUrl}/${userId}`);
     }
 
-    public getUserRoleAudit(userId: string, limit = 20): Observable<AdminUserRoleAuditEvent[]> {
+    public getUserRoleAudit(userId: string, limit = DEFAULT_ROLE_AUDIT_LIMIT): Observable<AdminUserRoleAuditEvent[]> {
         const params = new HttpParams().set('limit', limit);
         return this.http.get<AdminUserRoleAuditEvent[]>(`${this.baseUrl}/${userId}/role-audit`, { params });
     }

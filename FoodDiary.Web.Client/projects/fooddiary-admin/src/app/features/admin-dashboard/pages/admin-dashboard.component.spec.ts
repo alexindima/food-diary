@@ -174,7 +174,7 @@ function createFastingSummary(): {
     };
 }
 
-function createLoginSummary(): { key: string; count: number; lastSeenAtUtc: string }[] {
+function createLoginSummary(): Array<{ key: string; count: number; lastSeenAtUtc: string }> {
     return [
         { key: 'device:Desktop', count: 21, lastSeenAtUtc: '2026-05-23T20:29:10Z' },
         { key: 'os:Windows', count: 21, lastSeenAtUtc: '2026-05-23T20:29:10Z' },

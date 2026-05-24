@@ -10,6 +10,8 @@ import { forkJoin } from 'rxjs';
 
 import { type AdminUser, type AdminUserLoginEvent, type AdminUserRoleAuditEvent, AdminUsersService } from '../api/admin-users.service';
 
+const ACTIVITY_PREVIEW_LIMIT = 3;
+
 type DetailField = {
     label: string;
     value: string;
@@ -46,6 +48,7 @@ export class AdminUserDetailsDialogComponent {
         return currentUser.deletedAt === null || currentUser.deletedAt === undefined ? !currentUser.roles.includes('Admin') : false;
     });
 
+    // eslint-disable-next-line max-lines-per-function -- Admin detail sections are static field metadata kept together for scanability.
     public readonly sections = computed<DetailSection[]>(() => {
         const currentUser = this.user();
         return [
@@ -55,7 +58,7 @@ export class AdminUserDetailsDialogComponent {
                     { label: 'User ID', value: currentUser.id },
                     { label: 'Email', value: currentUser.email },
                     { label: 'Username', value: this.text(currentUser.username) },
-                    { label: 'Roles', value: currentUser.roles.join(', ') || '-' },
+                    { label: 'Roles', value: this.text(currentUser.roles.join(', ')) },
                     { label: 'Active', value: this.boolean(currentUser.isActive) },
                     { label: 'Email confirmed', value: this.boolean(currentUser.isEmailConfirmed) },
                     { label: 'Has password', value: this.boolean(currentUser.hasPassword) },
@@ -171,7 +174,7 @@ export class AdminUserDetailsDialogComponent {
 
     private loadActivity(userId: string): void {
         forkJoin({
-            loginEvents: this.usersService.getLoginEvents(1, 3, null, userId),
+            loginEvents: this.usersService.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, userId),
             roleAuditEvents: this.usersService.getUserRoleAudit(userId),
         })
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -204,7 +207,13 @@ export class AdminUserDetailsDialogComponent {
     private buildInitials(user: AdminUser): string {
         const first = user.firstName?.trim()[0] ?? '';
         const last = user.lastName?.trim()[0] ?? '';
-        const value = `${first}${last}` || user.email.trim()[0] || '?';
+        const initials = `${first}${last}`;
+        if (initials.length > 0) {
+            return initials.toUpperCase();
+        }
+
+        const emailInitial = user.email.trim()[0];
+        const value = emailInitial.length > 0 ? emailInitial : '?';
         return value.toUpperCase();
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function -- Service contract spec intentionally groups endpoint cases. */
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -6,6 +7,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { type AdminUser, AdminUsersService } from './admin-users.service';
 
+const LOGIN_EVENTS_PAGE = 1;
+const LOGIN_EVENTS_LIMIT = 3;
+const ROLE_AUDIT_LIMIT = 10;
 const USERS_PAGE = 2;
 const USERS_LIMIT = 20;
 const USERS_TOTAL_PAGES = 3;
@@ -119,33 +123,33 @@ describe('AdminUsersService', () => {
     });
 
     it('should filter login events by user id', () => {
-        service.getLoginEvents(1, 3, null, 'u1').subscribe(result => {
+        service.getLoginEvents(LOGIN_EVENTS_PAGE, LOGIN_EVENTS_LIMIT, null, 'u1').subscribe(result => {
             expect(result.items).toEqual([]);
         });
 
         const req = httpMock.expectOne(
             r =>
                 r.url === `${baseUrl}/login-events` &&
-                r.params.get('page') === '1' &&
-                r.params.get('limit') === '3' &&
+                r.params.get('page') === String(LOGIN_EVENTS_PAGE) &&
+                r.params.get('limit') === String(LOGIN_EVENTS_LIMIT) &&
                 r.params.get('userId') === 'u1',
         );
         expect(req.request.method).toBe('GET');
         req.flush({
             data: [],
-            page: 1,
-            limit: 3,
+            page: LOGIN_EVENTS_PAGE,
+            limit: LOGIN_EVENTS_LIMIT,
             totalPages: 0,
             totalItems: 0,
         });
     });
 
     it('should request user role audit by user id', () => {
-        service.getUserRoleAudit('u1', 10).subscribe(result => {
+        service.getUserRoleAudit('u1', ROLE_AUDIT_LIMIT).subscribe(result => {
             expect(result).toEqual([]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${baseUrl}/u1/role-audit` && r.params.get('limit') === '10');
+        const req = httpMock.expectOne(r => r.url === `${baseUrl}/u1/role-audit` && r.params.get('limit') === String(ROLE_AUDIT_LIMIT));
         expect(req.request.method).toBe('GET');
         req.flush([]);
     });

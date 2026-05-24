@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/cyclomatic-complexity -- Admin detail dialog renders several static conditional sections in one modal. -->
 <fd-ui-dialog title="User details" size="xl" bodyScrollInset="edge">
     <div class="admin-user-details">
         @if (hasError()) {
@@ -5,7 +6,7 @@
         } @else {
             <header class="admin-user-details__header">
                 @if (user().profileImage) {
-                    <img class="admin-user-details__avatar" [src]="user().profileImage" alt="" />
+                    <img class="admin-user-details__avatar" alt="" [src]="user().profileImage" />
                 } @else {
                     <div class="admin-user-details__avatar admin-user-details__avatar--initials">{{ initials() }}</div>
                 }

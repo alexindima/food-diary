@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiCardComponent, type FdUiPieChartSegment, FdUiPieChartComponent } from 'fd-ui-kit';
+import { FdUiCardComponent, FdUiPieChartComponent, type FdUiPieChartSegment } from 'fd-ui-kit';
 
 import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
-import { type AdminUserLoginDeviceSummary, AdminUsersService } from '../../admin-users/api/admin-users.service';
 import type { AdminAiUsageSummary } from '../../admin-ai-usage/models/admin-ai-usage.data';
+import { type AdminUserLoginDeviceSummary, AdminUsersService } from '../../admin-users/api/admin-users.service';
 import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminTelemetryService } from '../api/admin-telemetry.service';
 import type { AdminDashboardSummary } from '../models/admin-dashboard.data';

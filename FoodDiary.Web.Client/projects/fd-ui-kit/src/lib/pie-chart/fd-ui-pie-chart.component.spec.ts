@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiPieChartComponent } from './fd-ui-pie-chart.component';
 
+const CHART_TOTAL = 10;
+const SEGMENT_COUNT = 2;
+
 describe('FdUiPieChartComponent', () => {
     let component: FdUiPieChartComponent;
     let fixture: ComponentFixture<FdUiPieChartComponent>;
@@ -26,10 +29,10 @@ describe('FdUiPieChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component.total()).toBe(10);
-        expect(host().querySelectorAll('.fd-ui-pie-chart__segment')).toHaveLength(2);
-        expect(host().querySelector('.fd-ui-pie-chart__center strong')?.textContent?.trim()).toBe('Browsers');
-        expect(host().querySelector('.fd-ui-pie-chart__segment title')?.textContent?.trim()).toBe('Opera: 8');
+        expect(component.total()).toBe(CHART_TOTAL);
+        expect(host().querySelectorAll('.fd-ui-pie-chart__segment')).toHaveLength(SEGMENT_COUNT);
+        expect(host().querySelector('.fd-ui-pie-chart__center strong')?.textContent.trim()).toBe('Browsers');
+        expect(host().querySelector('.fd-ui-pie-chart__segment title')?.textContent.trim()).toBe('Opera: 8');
         expect(host().querySelector('.fd-ui-pie-chart__legend-item')?.getAttribute('title')).toBe('Opera: 8');
         expect(component.ariaLabel()).toContain('Browsers: Opera 8, Chrome 2');
     });
@@ -40,6 +43,6 @@ describe('FdUiPieChartComponent', () => {
 
         expect(component.total()).toBe(0);
         expect(host().querySelectorAll('.fd-ui-pie-chart__segment')).toHaveLength(0);
-        expect(host().querySelector('.fd-ui-pie-chart__empty')?.textContent?.trim()).toBe('No data');
+        expect(host().querySelector('.fd-ui-pie-chart__empty')?.textContent.trim()).toBe('No data');
     });
 });
