@@ -3,6 +3,7 @@ import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import type {
     ClientSummary,
     CreateRecommendationRequest,
@@ -53,8 +54,8 @@ export class DietologistService extends ApiService {
             trendDays = DEFAULT_CLIENT_DASHBOARD_TREND_DAYS,
         } = query;
         const params: Record<string, string | number> = {
-            dateFrom: dateFrom.toISOString(),
-            dateTo: (dateTo ?? dateFrom).toISOString(),
+            dateFrom: formatDateInputValue(dateFrom),
+            dateTo: formatDateInputValue(dateTo ?? dateFrom),
             page,
             pageSize,
             trendDays,

@@ -114,6 +114,10 @@ export class ClientDashboardComponent {
     public readonly hasAnyPermission = computed(() => {
         return this.visibleSections().length > 0;
     });
+    public readonly hasPeriodFilterPermission = computed(() => {
+        const client = this.client();
+        return client !== null && this.shouldLoadDashboardSnapshot(client);
+    });
     public readonly nutritionTiles = computed<ClientMetricTile[]>(() =>
         this.client()?.permissions.shareStatistics === true ? buildNutritionTiles(this.dashboard()) : [],
     );

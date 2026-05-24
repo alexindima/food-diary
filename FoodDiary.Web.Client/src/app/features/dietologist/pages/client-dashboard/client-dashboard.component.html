@@ -29,7 +29,7 @@
             </fd-ui-button>
         </div>
 
-        @if (hasAnyPermission()) {
+        @if (hasPeriodFilterPermission()) {
             <fd-ui-card>
                 <form class="client-dashboard__date-filter" [formGroup]="dateFilterForm" (ngSubmit)="applyDateFilter()">
                     <div class="client-dashboard__date-field">

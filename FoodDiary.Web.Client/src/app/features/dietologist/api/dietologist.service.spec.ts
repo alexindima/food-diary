@@ -27,6 +27,10 @@ const INVITE_PERMISSIONS = {
     shareProfile: true,
     shareFasting: true,
 };
+const LOCAL_DATE_YEAR = 2026;
+const MAY_MONTH_INDEX = 4;
+const PERIOD_START_DAY = 17;
+const PERIOD_END_DAY = 23;
 
 let service: DietologistService;
 let httpMock: HttpTestingController;
@@ -71,13 +75,13 @@ describe('DietologistService client workspace', () => {
     it('loads client dashboard, goals and recommendations', () => {
         service
             .getClientDashboard('client-1', {
-                dateFrom: new Date('2026-05-17T00:00:00.000Z'),
-                dateTo: new Date('2026-05-23T00:00:00.000Z'),
+                dateFrom: new Date(LOCAL_DATE_YEAR, MAY_MONTH_INDEX, PERIOD_START_DAY),
+                dateTo: new Date(LOCAL_DATE_YEAR, MAY_MONTH_INDEX, PERIOD_END_DAY),
                 locale: 'en',
             })
             .subscribe();
         const dashboardReq = httpMock.expectOne(
-            `${BASE_URL}/clients/client-1/dashboard?dateFrom=2026-05-17T00:00:00.000Z&dateTo=2026-05-23T00:00:00.000Z&page=1&pageSize=5&trendDays=14&locale=en`,
+            `${BASE_URL}/clients/client-1/dashboard?dateFrom=2026-05-17&dateTo=2026-05-23&page=1&pageSize=5&trendDays=14&locale=en`,
         );
         expect(dashboardReq.request.method).toBe('GET');
         dashboardReq.flush({});

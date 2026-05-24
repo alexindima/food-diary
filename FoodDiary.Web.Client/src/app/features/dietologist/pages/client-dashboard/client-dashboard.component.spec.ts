@@ -115,6 +115,28 @@ function registerLoadingTests(): void {
         expect(component.goalTiles()).toHaveLength(EXPECTED_METRIC_TILE_COUNT);
     });
 
+    it('hides period filter when only profile and goals are shared', () => {
+        dietologistService.getMyClients.mockReturnValueOnce(
+            of([
+                createClient({
+                    userId: 'client-1',
+                    permissions: {
+                        ...createClient().permissions,
+                        shareMeals: false,
+                        shareGoals: true,
+                    },
+                }),
+            ]),
+        );
+
+        createComponent('client-1');
+
+        expect(component.hasAnyPermission()).toBe(true);
+        expect(component.hasPeriodFilterPermission()).toBe(false);
+        expect(dietologistService.getClientDashboard).not.toHaveBeenCalled();
+        expect(dietologistService.getClientGoals).toHaveBeenCalledWith('client-1');
+    });
+
     it('loads meal details when meal sharing is enabled', () => {
         createComponent('client-1');
 
