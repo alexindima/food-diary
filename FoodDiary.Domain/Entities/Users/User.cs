@@ -70,6 +70,8 @@ public sealed partial class User : AggregateRoot<UserId> {
     public long AiInputTokenLimit { get; private set; } = DefaultAiInputTokenLimit;
     public long AiOutputTokenLimit { get; private set; } = DefaultAiOutputTokenLimit;
     public DateTime? AiConsentAcceptedAt { get; private set; }
+    public DateTime? PremiumTrialStartedAtUtc { get; private set; }
+    public DateTime? PremiumTrialEndsAtUtc { get; private set; }
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
 
@@ -570,5 +572,34 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
 
         return _userRoles.Any(userRole => string.Equals(userRole.Role.Name, roleName.Trim(), StringComparison.Ordinal));
+    }
+
+    public bool HasUsedPremiumTrial() => PremiumTrialStartedAtUtc is not null;
+
+    public bool HasActivePremiumTrial(DateTime nowUtc) {
+        if (PremiumTrialStartedAtUtc is null || PremiumTrialEndsAtUtc is null) {
+            return false;
+        }
+
+        var normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        return PremiumTrialStartedAtUtc.Value <= normalizedNow && PremiumTrialEndsAtUtc.Value > normalizedNow;
+    }
+
+    public void StartPremiumTrial(DateTime startedAtUtc, TimeSpan duration) {
+        EnsureNotDeleted();
+
+        if (duration <= TimeSpan.Zero) {
+            throw new ArgumentOutOfRangeException(nameof(duration), "Premium trial duration must be positive.");
+        }
+
+        if (PremiumTrialStartedAtUtc is not null) {
+            throw new InvalidOperationException("Premium trial has already been used.");
+        }
+
+        var normalizedStartedAt = NormalizeUtcTimestamp(startedAtUtc, nameof(startedAtUtc));
+        PremiumTrialStartedAtUtc = normalizedStartedAt;
+        PremiumTrialEndsAtUtc = normalizedStartedAt.Add(duration);
+
+        SetModified();
     }
 }

@@ -21,6 +21,13 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToBillingOverviewQuery(), static value => value.ToHttpResponse());
 
+    [HttpPost("trial")]
+    [ProducesResponseType<BillingOverviewHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [BlockImpersonatedAccess]
+    public Task<IActionResult> StartPremiumTrial([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToStartPremiumTrialCommand(), static value => value.ToHttpResponse());
+
     [HttpPost("checkout-session")]
     [ProducesResponseType<CheckoutSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

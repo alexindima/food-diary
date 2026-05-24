@@ -12,6 +12,11 @@ export type BillingOverview = {
     cancelAtPeriodEnd: boolean;
     renewalEnabled: boolean;
     manageBillingAvailable: boolean;
+    premiumTrialStartUtc: string | null;
+    premiumTrialEndUtc: string | null;
+    premiumTrialActive: boolean;
+    premiumTrialUsed: boolean;
+    canStartPremiumTrial: boolean;
     provider: string;
     paddleClientToken: string | null;
     availableProviders: BillingProvider[];

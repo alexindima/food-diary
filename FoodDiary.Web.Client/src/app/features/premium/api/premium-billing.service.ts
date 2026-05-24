@@ -20,6 +20,12 @@ export class PremiumBillingService extends ApiService {
         return this.get<BillingOverview>('overview').pipe(catchError((error: unknown) => rethrowApiError('Billing overview error', error)));
     }
 
+    public startPremiumTrial(): Observable<BillingOverview> {
+        return this.post<BillingOverview>('trial', {}).pipe(
+            catchError((error: unknown) => rethrowApiError('Start premium trial error', error)),
+        );
+    }
+
     public createCheckoutSession(plan: BillingPlan, provider?: BillingProvider): Observable<CheckoutSessionResponse> {
         const payload = provider !== undefined ? { plan, provider } : { plan };
         return this.post<CheckoutSessionResponse>('checkout-session', payload).pipe(

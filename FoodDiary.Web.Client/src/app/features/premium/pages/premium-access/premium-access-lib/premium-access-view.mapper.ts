@@ -14,13 +14,15 @@ export function buildPremiumOverviewCardViewModel(
     currentPeriodEndLabel: string | null,
 ): PremiumOverviewCardViewModel {
     const showManageBilling = (overview?.manageBillingAvailable ?? false) && isPremium;
+    const showStartTrial = !isPremium && (overview?.canStartPremiumTrial ?? false);
 
     return {
         copyState: buildPremiumOverviewCopyState(overview, isPremium),
         badges: buildPremiumOverviewBadges(overview, isPremium),
         currentPeriodEndLabel,
-        hintKey: getPremiumOverviewHintKey(showManageBilling, checkoutAvailable),
+        hintKey: getPremiumOverviewHintKey(showManageBilling, showStartTrial, checkoutAvailable),
         showManageBilling,
+        showStartTrial,
     };
 }
 
@@ -32,9 +34,18 @@ export function buildPremiumOverviewBadges(overview: BillingOverview | null, isP
 }
 
 export function buildPremiumOverviewCopyState(overview: BillingOverview | null, isPremium: boolean): PremiumOverviewCopyState {
+    const isTrialActive = overview?.premiumTrialActive === true;
     return {
-        stateLabelKey: isPremium ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE' : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE',
-        periodLabelKey: overview?.cancelAtPeriodEnd === true ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
+        stateLabelKey: isTrialActive
+            ? 'PREMIUM_PAGE.OVERVIEW.TRIAL_STATE'
+            : isPremium
+              ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE'
+              : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE',
+        periodLabelKey: isTrialActive
+            ? 'PREMIUM_PAGE.OVERVIEW.TRIAL_ENDS_ON'
+            : overview?.cancelAtPeriodEnd === true
+              ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON'
+              : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
         showCancelAtPeriodEndBanner: overview?.cancelAtPeriodEnd ?? false,
     };
 }
@@ -111,9 +122,13 @@ export function getPremiumProviderLabel(provider: BillingProvider): string {
     }
 }
 
-function getPremiumOverviewHintKey(showManageBilling: boolean, checkoutAvailable: boolean): string {
+function getPremiumOverviewHintKey(showManageBilling: boolean, showStartTrial: boolean, checkoutAvailable: boolean): string {
     if (showManageBilling) {
         return 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT';
+    }
+
+    if (showStartTrial) {
+        return 'PREMIUM_PAGE.OVERVIEW.TRIAL_HINT';
     }
 
     return checkoutAvailable ? 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_UNAVAILABLE_HINT';

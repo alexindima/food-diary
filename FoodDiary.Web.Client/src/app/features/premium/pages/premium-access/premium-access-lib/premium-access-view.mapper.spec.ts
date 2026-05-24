@@ -21,6 +21,11 @@ const overview: BillingOverview = {
     cancelAtPeriodEnd: false,
     renewalEnabled: true,
     manageBillingAvailable: true,
+    premiumTrialStartUtc: null,
+    premiumTrialEndUtc: null,
+    premiumTrialActive: false,
+    premiumTrialUsed: false,
+    canStartPremiumTrial: false,
     provider: 'paddle',
     paddleClientToken: 'test_token',
     availableProviders: ['paddle'],
@@ -60,6 +65,26 @@ describe('premium access view mapper', () => {
             currentPeriodEndLabel: 'Jun 1, 2026',
             hintKey: 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT',
             showManageBilling: true,
+            showStartTrial: false,
+        });
+    });
+
+    it('builds overview card model with trial action', () => {
+        const freeOverview = {
+            ...overview,
+            isPremium: false,
+            subscriptionStatus: null,
+            plan: null,
+            currentPeriodStartUtc: null,
+            currentPeriodEndUtc: null,
+            manageBillingAvailable: false,
+            canStartPremiumTrial: true,
+        };
+
+        expect(buildPremiumOverviewCardViewModel(freeOverview, false, true, null)).toMatchObject({
+            hintKey: 'PREMIUM_PAGE.OVERVIEW.TRIAL_HINT',
+            showManageBilling: false,
+            showStartTrial: true,
         });
     });
 

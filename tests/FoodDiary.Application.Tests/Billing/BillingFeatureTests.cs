@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+using FoodDiary.Application.Billing.Commands.StartPremiumTrial;
 using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Domain.Entities.Billing;
@@ -280,7 +281,8 @@ public sealed class BillingFeatureTests {
         var handler = new GetBillingOverviewQueryHandler(
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(subscription),
-            new FakeBillingPublicConfigProvider());
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
 
         var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
@@ -294,6 +296,46 @@ public sealed class BillingFeatureTests {
         Assert.Equal(Now.AddYears(1), result.Value.NextBillingAttemptUtc);
         Assert.True(result.Value.RenewalEnabled);
         Assert.False(result.Value.ManageBillingAvailable);
+    }
+
+    [Fact]
+    public async Task StartPremiumTrial_ForEligibleUser_SetsTrialAndReturnsTrialOverview() {
+        var user = User.Create("trial@example.com", "hash");
+        var userRepository = new FakeUserRepository(user);
+        var handler = new StartPremiumTrialCommandHandler(
+            userRepository,
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(Now, user.PremiumTrialStartedAtUtc);
+        Assert.Equal(Now.AddDays(7), user.PremiumTrialEndsAtUtc);
+        Assert.True(user.HasActivePremiumTrial(Now));
+        Assert.Equal("trialing", result.Value.SubscriptionStatus);
+        Assert.True(result.Value.IsPremium);
+        Assert.True(result.Value.PremiumTrialActive);
+        Assert.True(result.Value.PremiumTrialUsed);
+        Assert.False(result.Value.CanStartPremiumTrial);
+        Assert.Equal(1, userRepository.UpdateCount);
+    }
+
+    [Fact]
+    public async Task StartPremiumTrial_WhenAlreadyUsed_ReturnsConflict() {
+        var user = User.Create("trial-used@example.com", "hash");
+        user.StartPremiumTrial(Now.AddDays(-8), TimeSpan.FromDays(7));
+        var handler = new StartPremiumTrialCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.TrialAlreadyUsed", result.Error.Code);
     }
 
     private static ProcessBillingWebhookCommandHandler CreateWebhookHandler(

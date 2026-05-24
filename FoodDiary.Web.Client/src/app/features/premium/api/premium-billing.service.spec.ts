@@ -53,6 +53,25 @@ describe('PremiumBillingService', () => {
         });
     });
 
+    it('starts premium trial', () => {
+        service.startPremiumTrial().subscribe();
+
+        const req = httpMock.expectOne(`${baseUrl}/trial`);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body).toEqual({});
+        req.flush({
+            isPremium: true,
+            subscriptionStatus: 'trialing',
+            plan: null,
+            currentPeriodEndUtc: '2026-06-01T00:00:00Z',
+            cancelAtPeriodEnd: false,
+            manageBillingAvailable: false,
+            premiumTrialActive: true,
+            premiumTrialUsed: true,
+            canStartPremiumTrial: false,
+        });
+    });
+
     it('creates checkout session for selected provider', () => {
         service.createCheckoutSession('monthly', 'paddle').subscribe();
 

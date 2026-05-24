@@ -1,6 +1,7 @@
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 using FoodDiary.Application.Billing.Commands.CreatePortalSession;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+using FoodDiary.Application.Billing.Commands.StartPremiumTrial;
 using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Presentation.Api.Features.Billing.Requests;
 
@@ -11,6 +12,8 @@ public static class BillingHttpMappings {
         new(userId, request.Plan, request.Provider);
 
     public static CreatePortalSessionCommand ToPortalSessionCommand(this Guid userId) => new(userId);
+
+    public static StartPremiumTrialCommand ToStartPremiumTrialCommand(this Guid userId) => new(userId);
 
     public static GetBillingOverviewQuery ToBillingOverviewQuery(this Guid userId) => new(userId);
 

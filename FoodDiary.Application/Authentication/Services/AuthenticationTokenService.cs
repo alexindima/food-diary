@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Authentication.Services.UserAgents;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Authentication.Services;
 
@@ -55,7 +56,13 @@ public sealed class AuthenticationTokenService(
         return jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
     }
 
-    private static string[] GetRoles(User user) {
-        return user.GetRoleNames().ToArray();
+    private string[] GetRoles(User user) {
+        var roles = user.GetRoleNames().ToList();
+        if (user.HasActivePremiumTrial(dateTimeProvider.UtcNow) &&
+            !roles.Contains(RoleNames.Premium, StringComparer.Ordinal)) {
+            roles.Add(RoleNames.Premium);
+        }
+
+        return roles.ToArray();
     }
 }

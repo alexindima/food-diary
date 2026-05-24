@@ -24,6 +24,7 @@ const PORTAL_URL = 'https://portal.example/session';
 
 type BillingServiceMock = {
     getOverview: ReturnType<typeof vi.fn<() => Observable<BillingOverview>>>;
+    startPremiumTrial: ReturnType<typeof vi.fn<() => Observable<BillingOverview>>>;
     createCheckoutSession: ReturnType<typeof vi.fn<(plan: BillingPlan, provider?: BillingProvider) => Observable<CheckoutSessionResponse>>>;
     createPortalSession: ReturnType<typeof vi.fn<() => Observable<PortalSessionResponse>>>;
 };
@@ -108,6 +109,28 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         expect(component.isLoading()).toBe(false);
     });
 
+    it('starts premium trial and refreshes token', async () => {
+        const trialOverview = {
+            ...createOverview(),
+            isPremium: true,
+            subscriptionStatus: 'trialing',
+            premiumTrialActive: true,
+            premiumTrialUsed: true,
+            canStartPremiumTrial: false,
+        };
+        billingService.startPremiumTrial.mockReturnValue(of(trialOverview));
+        const { component } = setupComponent();
+        await settleAsync();
+
+        await component.startTrialAsync();
+
+        expect(billingService.startPremiumTrial).toHaveBeenCalled();
+        expect(authService.refreshToken).toHaveBeenCalled();
+        expect(component.overview()).toEqual(trialOverview);
+        expect(component.trialLoading()).toBe(false);
+        expect(toastService.success).toHaveBeenCalledWith('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE');
+    });
+
     it('handles successful checkout return state and removes query params', async () => {
         queryParams = { checkout: 'success' };
         const { component } = setupComponent();
@@ -127,6 +150,7 @@ describe('PremiumAccessPageComponent overview and portal', () => {
 function resetMocks(): void {
     billingService = {
         getOverview: vi.fn(() => of(createOverview())),
+        startPremiumTrial: vi.fn(() => of(createOverview())),
         createCheckoutSession: vi.fn(() => of({ sessionId: 'session-1', url: CHECKOUT_URL, plan: 'monthly' })),
         createPortalSession: vi.fn(() => of({ url: PORTAL_URL })),
     };
@@ -224,6 +248,11 @@ function createOverview(): BillingOverview {
         cancelAtPeriodEnd: false,
         renewalEnabled: false,
         manageBillingAvailable: false,
+        premiumTrialStartUtc: null,
+        premiumTrialEndUtc: null,
+        premiumTrialActive: false,
+        premiumTrialUsed: false,
+        canStartPremiumTrial: true,
         provider: 'none',
         paddleClientToken: null,
         availableProviders: ['paddle'],

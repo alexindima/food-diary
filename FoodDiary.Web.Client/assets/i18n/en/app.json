@@ -1988,18 +1988,23 @@
             "CHECKOUT_SUCCESS_MESSAGE": "Your subscription is updating. Premium access should appear in a few seconds.",
             "CHECKOUT_CANCELED_TITLE": "Checkout canceled",
             "CHECKOUT_CANCELED_MESSAGE": "No payment was charged. You can return anytime and choose a plan again.",
+            "TRIAL_STARTED_MESSAGE": "Your 7-day Premium trial is active.",
             "CANCEL_AT_PERIOD_END_TITLE": "Subscription ends later",
             "CANCEL_AT_PERIOD_END_MESSAGE": "Auto-renewal is disabled. Premium remains active until the end of the current period."
         },
         "OVERVIEW": {
             "TITLE": "Your access",
             "PREMIUM_STATE": "Premium is active on this account.",
+            "TRIAL_STATE": "Your 7-day Premium trial is active.",
             "FREE_STATE": "You are currently using the free plan.",
             "RENEWS_ON": "Renews on",
+            "TRIAL_ENDS_ON": "Trial ends on",
             "ENDS_ON": "Access ends on",
             "MANAGE_HINT": "Open the billing portal to update payment details, cancel renewal, or switch plans.",
+            "TRIAL_HINT": "Start a 7-day trial without a card and try every Premium AI feature.",
             "CHECKOUT_HINT": "Choose a plan below to start Premium through the payment form.",
             "CHECKOUT_UNAVAILABLE_HINT": "Premium checkout is temporarily unavailable.",
+            "START_TRIAL_ACTION": "Start 7-day trial",
             "MANAGE_ACTION": "Manage subscription"
         },
         "STATUS": {

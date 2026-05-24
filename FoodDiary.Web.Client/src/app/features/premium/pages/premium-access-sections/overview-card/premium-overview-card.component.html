@@ -17,6 +17,10 @@
             >
                 {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
             </fd-ui-button>
+        } @else if (viewModel().showStartTrial) {
+            <fd-ui-button variant="primary" [loading]="trialLoading()" [disabled]="trialLoading()" (click)="startTrial.emit()">
+                {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
+            </fd-ui-button>
         }
     </div>
 

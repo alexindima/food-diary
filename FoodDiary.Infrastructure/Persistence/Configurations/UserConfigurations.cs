@@ -62,6 +62,10 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         entity.Property(e => e.AiOutputTokenLimit)
             .HasDefaultValue(1_000_000L);
         entity.Property(e => e.AiConsentAcceptedAt);
+        entity.Property(e => e.PremiumTrialStartedAtUtc)
+            .HasColumnType("timestamp with time zone");
+        entity.Property(e => e.PremiumTrialEndsAtUtc)
+            .HasColumnType("timestamp with time zone");
 
         entity.HasMany(e => e.WeightEntries)
             .WithOne(w => w.User)

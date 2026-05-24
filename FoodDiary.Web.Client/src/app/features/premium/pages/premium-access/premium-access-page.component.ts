@@ -60,6 +60,7 @@ export class PremiumAccessPageComponent {
     public readonly isLoading = signal(true);
     public readonly checkoutLoadingPlan = signal<BillingPlan | null>(null);
     public readonly portalLoading = signal(false);
+    public readonly trialLoading = signal(false);
     public readonly errorMessage = signal<string | null>(null);
     public readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
     private readonly languageVersion = signal(0);
@@ -70,7 +71,9 @@ export class PremiumAccessPageComponent {
         return overview?.availableProviders.filter(provider => provider.trim().length > 0) ?? [];
     });
     public readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
-    public readonly showPlans = computed(() => !this.isLoading() && !this.isPremium() && this.checkoutAvailable());
+    public readonly showPlans = computed(
+        () => !this.isLoading() && (!this.isPremium() || this.overview()?.premiumTrialActive === true) && this.checkoutAvailable(),
+    );
     public readonly currentPeriodEndLabel = computed(() => {
         this.languageVersion();
         return this.formatMediumDate(this.overview()?.currentPeriodEndUtc);
@@ -114,6 +117,22 @@ export class PremiumAccessPageComponent {
 
     public async startCheckoutFromViewAsync(request: PremiumCheckoutRequest): Promise<void> {
         await this.startCheckoutAsync(request.plan, request.provider);
+    }
+
+    public async startTrialAsync(): Promise<void> {
+        this.errorMessage.set(null);
+        this.trialLoading.set(true);
+
+        try {
+            const overview = await firstValueFrom(this.billingService.startPremiumTrial());
+            this.overview.set(overview);
+            await firstValueFrom(this.authService.refreshToken());
+            this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE'));
+        } catch (error) {
+            this.showErrorMessage(this.getErrorMessage(error));
+        } finally {
+            this.trialLoading.set(false);
+        }
     }
 
     public async openPortalAsync(): Promise<void> {

@@ -17,6 +17,11 @@ public static class BillingHttpResponseMappings {
             model.CancelAtPeriodEnd,
             model.RenewalEnabled,
             model.ManageBillingAvailable,
+            model.PremiumTrialStartUtc,
+            model.PremiumTrialEndUtc,
+            model.PremiumTrialActive,
+            model.PremiumTrialUsed,
+            model.CanStartPremiumTrial,
             model.Provider,
             model.PaddleClientToken,
             model.AvailableProviders);

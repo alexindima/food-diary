@@ -17,6 +17,7 @@ export type PremiumOverviewCardViewModel = {
     currentPeriodEndLabel: string | null;
     hintKey: string;
     showManageBilling: boolean;
+    showStartTrial: boolean;
 };
 
 export type PremiumPlanCardViewModel = {

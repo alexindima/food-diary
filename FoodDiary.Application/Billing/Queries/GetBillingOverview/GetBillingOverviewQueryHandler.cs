@@ -3,6 +3,7 @@ using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
@@ -13,7 +14,8 @@ namespace FoodDiary.Application.Billing.Queries.GetBillingOverview;
 public sealed class GetBillingOverviewQueryHandler(
     IUserRepository userRepository,
     IBillingSubscriptionRepository billingSubscriptionRepository,
-    IBillingPublicConfigProvider billingPublicConfigProvider)
+    IBillingPublicConfigProvider billingPublicConfigProvider,
+    IDateTimeProvider dateTimeProvider)
     : IQueryHandler<GetBillingOverviewQuery, Result<BillingOverviewModel>> {
     public async Task<Result<BillingOverviewModel>> Handle(
         GetBillingOverviewQuery query,
@@ -30,26 +32,52 @@ public sealed class GetBillingOverviewQueryHandler(
         }
 
         var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
-        var isPremium = user!.HasRole(RoleNames.Premium);
+        var nowUtc = dateTimeProvider.UtcNow;
+        var isTrialActive = user!.HasActivePremiumTrial(nowUtc);
+        var hasPaidPremium = user.HasRole(RoleNames.Premium);
+        var paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
+        var isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive;
+        var subscriptionStatus = subscription?.Status ?? (isTrialActive ? "trialing" : null);
+        var currentPeriodStartUtc = subscription?.CurrentPeriodStartUtc ?? (isTrialActive ? user.PremiumTrialStartedAtUtc : null);
+        var currentPeriodEndUtc = subscription?.CurrentPeriodEndUtc ?? (isTrialActive ? user.PremiumTrialEndsAtUtc : null);
         var publicConfig = billingPublicConfigProvider.GetPublicConfig();
         var renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
+        var canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !user.HasUsedPremiumTrial();
 
         return Result.Success(new BillingOverviewModel(
             isPremium,
-            subscription?.Status,
+            subscriptionStatus,
             subscription?.Plan,
             subscription?.Provider,
-            subscription?.CurrentPeriodStartUtc,
-            subscription?.CurrentPeriodEndUtc,
+            currentPeriodStartUtc,
+            currentPeriodEndUtc,
             subscription?.NextBillingAttemptUtc,
             subscription?.CancelAtPeriodEnd ?? false,
             renewalEnabled,
             subscription is not null &&
                 !string.Equals(subscription.Provider, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase) &&
                 !string.IsNullOrWhiteSpace(subscription.ExternalCustomerId),
+            user.PremiumTrialStartedAtUtc,
+            user.PremiumTrialEndsAtUtc,
+            isTrialActive,
+            user.HasUsedPremiumTrial(),
+            canStartTrial,
             publicConfig.Provider,
             publicConfig.PaddleClientToken,
             publicConfig.AvailableProviders));
+    }
+
+    private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) {
+        if (subscription is null || string.IsNullOrWhiteSpace(subscription.Status)) {
+            return false;
+        }
+
+        return subscription.Status.Trim().ToLowerInvariant() switch {
+            "trialing" => true,
+            "active" => true,
+            "past_due" => !subscription.CurrentPeriodEndUtc.HasValue || subscription.CurrentPeriodEndUtc > nowUtc,
+            _ => false
+        };
     }
 }

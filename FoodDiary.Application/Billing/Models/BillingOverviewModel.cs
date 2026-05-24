@@ -11,6 +11,11 @@ public sealed record BillingOverviewModel(
     bool CancelAtPeriodEnd,
     bool RenewalEnabled,
     bool ManageBillingAvailable,
+    DateTime? PremiumTrialStartUtc,
+    DateTime? PremiumTrialEndUtc,
+    bool PremiumTrialActive,
+    bool PremiumTrialUsed,
+    bool CanStartPremiumTrial,
     string Provider,
     string? PaddleClientToken,
     IReadOnlyList<string> AvailableProviders);

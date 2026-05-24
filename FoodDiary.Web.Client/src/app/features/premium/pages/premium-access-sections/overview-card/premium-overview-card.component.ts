@@ -16,8 +16,10 @@ import type { PremiumOverviewCardViewModel } from '../../premium-access/premium-
 export class PremiumOverviewCardComponent {
     public readonly viewModel = input.required<PremiumOverviewCardViewModel>();
     public readonly portalLoading = input.required<boolean>();
+    public readonly trialLoading = input.required<boolean>();
     public readonly isLoading = input.required<boolean>();
     public readonly overview = input.required<BillingOverview | null>();
 
     public readonly manageBilling = output();
+    public readonly startTrial = output();
 }

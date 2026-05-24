@@ -803,6 +803,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/billing/trial",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "409",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/billing/webhooks/{provider}",
       "Operations": [
         {

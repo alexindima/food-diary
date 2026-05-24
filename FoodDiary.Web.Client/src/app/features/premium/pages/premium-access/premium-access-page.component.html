@@ -11,9 +11,11 @@
     <fd-premium-overview-card
         [viewModel]="overviewViewModel()"
         [portalLoading]="portalLoading()"
+        [trialLoading]="trialLoading()"
         [isLoading]="isLoading()"
         [overview]="overview()"
         (manageBilling)="openPortalAsync()"
+        (startTrial)="startTrialAsync()"
     />
 
     @if (showPlans()) {
