@@ -171,7 +171,9 @@
 }
 
 @media (max-width: 720px) {
+
     .client-dashboard {
+
         &__date-filter {
             grid-template-columns: 1fr;
         }

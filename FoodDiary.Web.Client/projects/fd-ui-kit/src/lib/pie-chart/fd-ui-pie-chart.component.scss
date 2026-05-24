@@ -56,7 +56,7 @@
     overflow: hidden;
     font-size: var(--fd-text-body-sm-size);
     line-height: var(--fd-text-body-sm-line-height);
-    font-weight: 600;
+    font-weight: var(--fd-text-body-sm-weight);
     color: var(--fd-color-text-muted);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -82,7 +82,7 @@
 .fd-ui-pie-chart__swatch {
     width: var(--fd-space-sm);
     height: var(--fd-space-sm);
-    border-radius: 999px;
+    border-radius: var(--fd-radius-pill);
 }
 
 .fd-ui-pie-chart__legend-label {
@@ -99,6 +99,7 @@
 }
 
 @media (max-width: 720px) {
+
     .fd-ui-pie-chart {
         grid-template-columns: 1fr;
     }
