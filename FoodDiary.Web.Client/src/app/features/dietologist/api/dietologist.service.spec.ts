@@ -69,9 +69,15 @@ describe('DietologistService relationship reads', () => {
 
 describe('DietologistService client workspace', () => {
     it('loads client dashboard, goals and recommendations', () => {
-        service.getClientDashboard('client-1', { date: new Date('2026-05-23T00:00:00.000Z'), locale: 'en' }).subscribe();
+        service
+            .getClientDashboard('client-1', {
+                dateFrom: new Date('2026-05-17T00:00:00.000Z'),
+                dateTo: new Date('2026-05-23T00:00:00.000Z'),
+                locale: 'en',
+            })
+            .subscribe();
         const dashboardReq = httpMock.expectOne(
-            `${BASE_URL}/clients/client-1/dashboard?date=2026-05-23T00:00:00.000Z&page=1&pageSize=5&trendDays=14&locale=en`,
+            `${BASE_URL}/clients/client-1/dashboard?dateFrom=2026-05-17T00:00:00.000Z&dateTo=2026-05-23T00:00:00.000Z&page=1&pageSize=5&trendDays=14&locale=en`,
         );
         expect(dashboardReq.request.method).toBe('GET');
         dashboardReq.flush({});

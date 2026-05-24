@@ -7,7 +7,7 @@ import type { DietologistRecommendation } from '../../../shared/models/dietologi
 
 @Injectable({ providedIn: 'root' })
 export class RecommendationsService extends ApiService {
-    protected readonly baseUrl = environment.apiUrls.auth.replace('/auth', '/recommendations');
+    protected readonly baseUrl = environment.apiUrls.recommendations;
 
     public getMyRecommendations(): Observable<DietologistRecommendation[]> {
         return this.get<DietologistRecommendation[]>('');

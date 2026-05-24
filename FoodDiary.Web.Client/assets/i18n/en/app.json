@@ -2262,20 +2262,21 @@
             "LOADING": "Loading client data...",
             "DETAILS_LOADING": "Loading shared client details...",
             "LOAD_ERROR": "Failed to load client data.",
+            "PARTIAL_LOAD_ERROR": "Some shared sections could not be loaded. The empty blocks below may be incomplete.",
             "NOT_FOUND": "Client not found.",
             "NO_DATA": "Client has not shared any data.",
             "DISCONNECT": "Disconnect client",
             "DISCONNECTED": "Client connection removed.",
             "DISCONNECT_ERROR": "Failed to disconnect client.",
             "METRICS": {
-                "CALORIES": "Calories today",
+                "CALORIES": "Calories in period",
                 "PROTEIN": "Protein",
                 "FATS": "Fats",
                 "CARBS": "Carbs",
                 "WEIGHT": "Latest weight",
                 "WAIST": "Latest waist",
-                "HYDRATION": "Water today",
-                "MEALS": "Meals today",
+                "HYDRATION": "Water in period",
+                "MEALS": "Meals in period",
                 "CALORIE_GOAL": "Calorie goal",
                 "PROTEIN_GOAL": "Protein goal",
                 "WATER_GOAL": "Water goal",
@@ -2302,17 +2303,22 @@
             },
             "MEALS": {
                 "COUNT": "{{count}} meals",
-                "EMPTY": "No meals shared for the selected day."
+                "EMPTY": "No meals shared for the selected period."
             },
             "BODY": {
                 "DELTA": "{{delta}} since previous entry"
             },
             "DATE_FILTER": {
-                "LABEL": "Day",
-                "PLACEHOLDER": "Select day",
-                "PREVIOUS": "Previous day",
+                "FROM_LABEL": "From",
+                "FROM_PLACEHOLDER": "Start date",
+                "TO_LABEL": "To",
+                "TO_PLACEHOLDER": "End date",
+                "PREVIOUS_PERIOD": "Previous period",
                 "TODAY": "Today",
-                "NEXT": "Next day",
+                "LAST_7": "7 days",
+                "LAST_14": "14 days",
+                "LAST_30": "30 days",
+                "NEXT_PERIOD": "Next period",
                 "APPLY": "Apply"
             },
             "HYDRATION": {

@@ -49,9 +49,13 @@ public class AcceptInvitationCommandHandler(
             return Result.Failure(Errors.Dietologist.InvitationInvalidToken);
         }
 
+        var user = (await userRepository.GetByIdAsync(dietologistUserId, cancellationToken))!;
+        if (!string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
+            return Result.Failure(Errors.Dietologist.InvitationNotFound);
+        }
+
         invitation.Accept(dietologistUserId);
 
-        var user = (await userRepository.GetByIdAsync(dietologistUserId, cancellationToken))!;
         if (!user.HasRole(RoleNames.Dietologist)) {
             var roles = user.GetRoleNames().ToList();
             roles.Add(RoleNames.Dietologist);

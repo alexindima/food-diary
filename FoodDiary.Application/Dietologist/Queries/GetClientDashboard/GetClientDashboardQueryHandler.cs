@@ -1,18 +1,17 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 
 public class GetClientDashboardQueryHandler(
     IDietologistInvitationRepository invitationRepository,
-    ISender mediator)
+    IDashboardSnapshotBuilder snapshotBuilder)
     : IQueryHandler<GetClientDashboardQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(
         GetClientDashboardQuery query, CancellationToken cancellationToken) {
@@ -35,15 +34,28 @@ public class GetClientDashboardQueryHandler(
             return Result.Failure<DashboardSnapshotModel>(Errors.Dietologist.PermissionDenied);
         }
 
-        var dashboardQuery = new GetDashboardSnapshotQuery(
-            query.ClientUserId,
-            query.Date,
-            query.Page,
-            query.PageSize,
-            query.Locale,
-            query.TrendDays);
-
-        var dashboardResult = await mediator.Send(dashboardQuery, cancellationToken);
+        var dashboardResult = await snapshotBuilder.BuildAsync(
+            new DashboardSnapshotRequest(
+                query.ClientUserId,
+                query.Date,
+                query.DateTo,
+                query.Locale,
+                query.TrendDays,
+                query.Page,
+                query.PageSize,
+                new DashboardSnapshotSections(
+                    IncludeStatistics: permissions.ShareStatistics,
+                    IncludeMeals: permissions.ShareMeals,
+                    IncludeWeight: permissions.ShareWeight,
+                    IncludeWaist: permissions.ShareWaist,
+                    IncludeHydration: permissions.ShareHydration,
+                    IncludeFasting: permissions.ShareFasting,
+                    IncludeAdvice: false,
+                    IncludeLayout: false,
+                    IncludeExercise: false,
+                    IncludeTdee: false,
+                    IncludeCycle: false)),
+            cancellationToken);
         if (dashboardResult.IsFailure) {
             return dashboardResult;
         }

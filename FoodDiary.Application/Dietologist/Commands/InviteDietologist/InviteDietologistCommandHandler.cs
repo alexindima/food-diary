@@ -61,7 +61,8 @@ public class InviteDietologistCommandHandler(
         var permissions = command.Permissions.ToPermissions();
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
-        await invitationRepository.AddAsync(invitation, cancellationToken);
+        var registeredDietologist = await userRepository.GetByEmailAsync(normalizedEmail, cancellationToken);
+        var emailSent = false;
 
         try {
             await emailSender.SendDietologistInvitationAsync(
@@ -73,11 +74,19 @@ public class InviteDietologistCommandHandler(
                     user.LastName,
                     user.Language),
                 cancellationToken);
+            emailSent = true;
         } catch (Exception ex) {
             logger.LogWarning(ex, "Dietologist invitation email dispatch failed for {DietologistEmail}", normalizedEmail);
         }
 
-        var registeredDietologist = await userRepository.GetByEmailAsync(normalizedEmail, cancellationToken);
+        if (!emailSent && registeredDietologist is null) {
+            return Result.Failure(Errors.Validation.Invalid(
+                nameof(command.DietologistEmail),
+                "Failed to deliver dietologist invitation email."));
+        }
+
+        await invitationRepository.AddAsync(invitation, cancellationToken);
+
         if (registeredDietologist is not null) {
             var clientName = $"{user.FirstName} {user.LastName}".Trim();
             if (string.IsNullOrWhiteSpace(clientName)) {

@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
@@ -22,6 +23,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubUserRepository(),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
             new StubFastingOccurrenceRepository(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
@@ -30,6 +32,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new DashboardSnapshotRequest(
                 Guid.Empty,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                null,
                 "en",
                 7,
                 1,
@@ -90,6 +93,21 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<ExerciseEntry?> GetByIdAsync(ExerciseEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
+    }
+
+    private sealed class StubHydrationEntryRepository : IHydrationEntryRepository {
+        public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     private sealed class StubFastingOccurrenceRepository : IFastingOccurrenceRepository {

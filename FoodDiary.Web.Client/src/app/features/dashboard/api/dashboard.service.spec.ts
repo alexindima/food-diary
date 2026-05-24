@@ -12,6 +12,7 @@ const BASE_URL = environment.apiUrls.dashboard;
 const TEST_DATE = new Date('2026-03-15T00:00:00.000Z');
 const MOCK_SNAPSHOT: DashboardSnapshot = {
     date: '2026-03-15',
+    dateTo: '2026-03-15',
     dailyGoal: 2200,
     weeklyCalorieGoal: 15400,
     statistics: {

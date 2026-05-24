@@ -40,7 +40,8 @@ public static class DietologistAccessPolicy {
             "Goals" when !permissions.ShareGoals => Errors.Dietologist.PermissionDenied,
             "Hydration" when !permissions.ShareHydration => Errors.Dietologist.PermissionDenied,
             "Fasting" when !permissions.ShareFasting => Errors.Dietologist.PermissionDenied,
-            _ => null
+            "Profile" or "Meals" or "Statistics" or "Weight" or "Waist" or "Goals" or "Hydration" or "Fasting" => null,
+            _ => Errors.Dietologist.PermissionDenied
         };
     }
 

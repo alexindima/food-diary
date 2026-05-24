@@ -10,6 +10,7 @@ import type { TdeeInsight } from './tdee-insight.data';
 
 export type DashboardSnapshot = {
     date: string;
+    dateTo: string;
     dailyGoal: number;
     weeklyCalorieGoal: number;
     statistics: DashboardStatistics;

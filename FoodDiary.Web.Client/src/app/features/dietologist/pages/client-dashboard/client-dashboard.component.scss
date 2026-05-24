@@ -13,7 +13,7 @@
 
     &__date-filter {
         display: grid;
-        grid-template-columns: minmax(180px, 240px) 1fr;
+        grid-template-columns: repeat(2, minmax(180px, 220px)) 1fr;
         gap: var(--fd-space-sm);
         align-items: end;
         padding: var(--fd-space-md);
@@ -73,7 +73,8 @@
     &__detail-label,
     &__placeholder,
     &__no-data,
-    &__error {
+    &__error,
+    &__warning {
         color: var(--fd-color-text-muted);
     }
 

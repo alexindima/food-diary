@@ -41,7 +41,17 @@ import {
 
 const RECOMMENDATION_MAX_LENGTH = 2000;
 const CLIENT_DASHBOARD_TREND_DAYS = 14;
-const DAY_STEP = 1;
+const DEFAULT_PERIOD_DAYS = 7;
+const HOURS_PER_DAY = 24;
+const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
+const MILLISECONDS_PER_SECOND = 1000;
+const MILLISECONDS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND;
+const PERIOD_PRESET_DAYS = {
+    week: 7,
+    twoWeeks: 14,
+    month: 30,
+} as const;
 
 @Component({
     selector: 'fd-client-dashboard',
@@ -67,6 +77,7 @@ export class ClientDashboardComponent {
     private readonly toastService = inject(FdUiToastService);
     private readonly destroyRef = inject(DestroyRef);
 
+    public readonly periodPresetDays = PERIOD_PRESET_DAYS;
     public readonly client = signal<ClientSummary | null>(null);
     public readonly dashboard = signal<DashboardSnapshot | null>(null);
     public readonly goals = signal<DietologistClientGoals | null>(null);
@@ -75,9 +86,12 @@ export class ClientDashboardComponent {
     public readonly detailsLoading = signal(false);
     public readonly savingRecommendation = signal(false);
     public readonly error = signal<string | null>(null);
-    public readonly selectedDate = signal(formatDateInputValue(new Date()));
+    public readonly sectionLoadError = signal<string | null>(null);
+    public readonly selectedDateTo = signal(formatDateInputValue(new Date()));
+    public readonly selectedDateFrom = signal(formatDateInputValue(this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1))));
     public readonly dateFilterForm = this.formBuilder.group({
-        date: [this.selectedDate(), [Validators.required]],
+        dateFrom: [this.selectedDateFrom(), [Validators.required]],
+        dateTo: [this.selectedDateTo(), [Validators.required]],
     });
     public readonly recommendationForm = this.formBuilder.group({
         text: ['', [Validators.required, Validators.maxLength(RECOMMENDATION_MAX_LENGTH)]],
@@ -159,35 +173,39 @@ export class ClientDashboardComponent {
 
     public applyDateFilter(): void {
         const client = this.client();
-        const nextDate = this.dateFilterForm.controls.date.value;
-        if (client === null || this.dateFilterForm.invalid || nextDate === this.selectedDate()) {
+        const nextPeriod = this.getPeriodFromForm();
+        if (
+            client === null ||
+            this.dateFilterForm.invalid ||
+            nextPeriod === null ||
+            (nextPeriod.dateFrom === this.selectedDateFrom() && nextPeriod.dateTo === this.selectedDateTo())
+        ) {
             this.dateFilterForm.markAllAsTouched();
             return;
         }
 
-        this.selectedDate.set(nextDate);
+        this.selectedDateFrom.set(nextPeriod.dateFrom);
+        this.selectedDateTo.set(nextPeriod.dateTo);
         this.reloadDashboard(client);
     }
 
-    public showPreviousDay(): void {
-        this.shiftSelectedDate(-DAY_STEP);
+    public showPreviousPeriod(): void {
+        this.shiftSelectedPeriod(-this.getSelectedPeriodLength());
     }
 
-    public showNextDay(): void {
-        this.shiftSelectedDate(DAY_STEP);
+    public showNextPeriod(): void {
+        this.shiftSelectedPeriod(this.getSelectedPeriodLength());
+    }
+
+    public showRecentDays(days: number): void {
+        const dateTo = new Date();
+        const dateFrom = this.addDays(dateTo, -(days - 1));
+        this.applyPeriod(formatDateInputValue(dateFrom), formatDateInputValue(dateTo));
     }
 
     public showToday(): void {
         const today = formatDateInputValue(new Date());
-        this.dateFilterForm.controls.date.setValue(today);
-
-        const client = this.client();
-        if (client === null || today === this.selectedDate()) {
-            return;
-        }
-
-        this.selectedDate.set(today);
-        this.reloadDashboard(client);
+        this.applyPeriod(today, today);
     }
 
     public submitRecommendation(): void {
@@ -248,15 +266,20 @@ export class ClientDashboardComponent {
         recommendations: DietologistRecommendation[];
     }> {
         const language = this.translateService.getCurrentLang();
+        this.sectionLoadError.set(null);
 
         return forkJoin({
             dashboard: this.shouldLoadDashboardSnapshot(client)
-                ? this.loadDashboardSnapshot(client, language).pipe(catchError(() => of(null)))
+                ? this.loadDashboardSnapshot(client, language).pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
                 : of(null),
             goals: client.permissions.shareGoals
-                ? this.dietologistService.getClientGoals(client.userId).pipe(catchError(() => of(null)))
+                ? this.dietologistService
+                      .getClientGoals(client.userId)
+                      .pipe(this.handleSectionLoadError<DietologistClientGoals, null>(null))
                 : of(null),
-            recommendations: this.dietologistService.getRecommendationsForClient(client.userId).pipe(catchError(() => of([]))),
+            recommendations: this.dietologistService
+                .getRecommendationsForClient(client.userId)
+                .pipe(this.handleSectionLoadError<DietologistRecommendation[], DietologistRecommendation[]>([])),
         }).pipe(
             tap(result => {
                 this.dashboard.set(result.dashboard);
@@ -273,8 +296,9 @@ export class ClientDashboardComponent {
         }
 
         this.detailsLoading.set(true);
+        this.sectionLoadError.set(null);
         this.loadDashboardSnapshot(client, this.translateService.getCurrentLang())
-            .pipe(catchError(() => of(null)))
+            .pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
                 this.dashboard.set(result);
@@ -283,8 +307,10 @@ export class ClientDashboardComponent {
     }
 
     private loadDashboardSnapshot(client: ClientSummary, language: string): Observable<DashboardSnapshot> {
+        const period = this.getSelectedPeriodValue();
         return this.dietologistService.getClientDashboard(client.userId, {
-            date: this.getSelectedDateValue(),
+            dateFrom: period.dateFrom,
+            dateTo: period.dateTo,
             locale: language,
             trendDays: CLIENT_DASHBOARD_TREND_DAYS,
         });
@@ -301,23 +327,67 @@ export class ClientDashboardComponent {
         );
     }
 
-    private shiftSelectedDate(days: number): void {
-        const current = this.getSelectedDateValue();
-        current.setDate(current.getDate() + days);
-        const nextDate = formatDateInputValue(current);
-        this.dateFilterForm.controls.date.setValue(nextDate);
+    private shiftSelectedPeriod(days: number): void {
+        const period = this.getSelectedPeriodValue();
+        const nextFrom = formatDateInputValue(this.addDays(period.dateFrom, days));
+        const nextTo = formatDateInputValue(this.addDays(period.dateTo, days));
+        this.applyPeriod(nextFrom, nextTo);
+    }
 
+    private applyPeriod(dateFrom: string, dateTo: string): void {
+        this.dateFilterForm.setValue({ dateFrom, dateTo });
         const client = this.client();
         if (client === null) {
-            this.selectedDate.set(nextDate);
+            this.selectedDateFrom.set(dateFrom);
+            this.selectedDateTo.set(dateTo);
             return;
         }
 
-        this.selectedDate.set(nextDate);
+        this.selectedDateFrom.set(dateFrom);
+        this.selectedDateTo.set(dateTo);
         this.reloadDashboard(client);
     }
 
-    private getSelectedDateValue(): Date {
-        return parseLocalDateInputValue(this.dateFilterForm.controls.date.value) ?? new Date();
+    private getSelectedPeriodValue(): { dateFrom: Date; dateTo: Date } {
+        const parsed = this.getPeriodFromForm();
+        return {
+            dateFrom:
+                parseLocalDateInputValue(parsed?.dateFrom ?? this.selectedDateFrom()) ??
+                this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1)),
+            dateTo: parseLocalDateInputValue(parsed?.dateTo ?? this.selectedDateTo()) ?? new Date(),
+        };
+    }
+
+    private getPeriodFromForm(): { dateFrom: string; dateTo: string } | null {
+        const dateFrom = this.dateFilterForm.controls.dateFrom.value;
+        const dateTo = this.dateFilterForm.controls.dateTo.value;
+        const parsedFrom = parseLocalDateInputValue(dateFrom);
+        const parsedTo = parseLocalDateInputValue(dateTo);
+        if (parsedFrom === null || parsedTo === null || parsedFrom > parsedTo) {
+            return null;
+        }
+
+        return { dateFrom, dateTo };
+    }
+
+    private getSelectedPeriodLength(): number {
+        const period = this.getSelectedPeriodValue();
+        return Math.max(1, Math.round((period.dateTo.getTime() - period.dateFrom.getTime()) / MILLISECONDS_PER_DAY) + 1);
+    }
+
+    private addDays(date: Date, days: number): Date {
+        const next = new Date(date);
+        next.setDate(next.getDate() + days);
+        return next;
+    }
+
+    private handleSectionLoadError<T, TFallback>(fallback: TFallback): (source: Observable<T>) => Observable<T | TFallback> {
+        return source =>
+            source.pipe(
+                catchError(() => {
+                    this.sectionLoadError.set('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
+                    return of(fallback);
+                }),
+            );
     }
 }

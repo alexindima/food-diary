@@ -40,6 +40,7 @@ function buildSnapshot(
     };
     return {
         date: '2026-03-15',
+        dateTo: '2026-03-15',
         dailyGoal: 0,
         weeklyCalorieGoal: 0,
         weeklyCalories: [],

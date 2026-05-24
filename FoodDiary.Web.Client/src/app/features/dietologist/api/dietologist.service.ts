@@ -19,7 +19,8 @@ const DEFAULT_CLIENT_DASHBOARD_PAGE_SIZE = 5;
 const DEFAULT_CLIENT_DASHBOARD_TREND_DAYS = 14;
 
 export type DietologistClientDashboardQuery = {
-    date: Date;
+    dateFrom: Date;
+    dateTo?: Date;
     page?: number;
     pageSize?: number;
     locale?: string;
@@ -44,14 +45,16 @@ export class DietologistService extends ApiService {
 
     public getClientDashboard(clientUserId: string, query: DietologistClientDashboardQuery): Observable<DashboardSnapshot> {
         const {
-            date,
+            dateFrom,
+            dateTo,
             page = 1,
             pageSize = DEFAULT_CLIENT_DASHBOARD_PAGE_SIZE,
             locale,
             trendDays = DEFAULT_CLIENT_DASHBOARD_TREND_DAYS,
         } = query;
         const params: Record<string, string | number> = {
-            date: date.toISOString(),
+            dateFrom: dateFrom.toISOString(),
+            dateTo: (dateTo ?? dateFrom).toISOString(),
             page,
             pageSize,
             trendDays,

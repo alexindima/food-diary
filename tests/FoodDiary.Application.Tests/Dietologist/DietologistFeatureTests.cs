@@ -12,7 +12,7 @@ using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 using FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.EventHandlers;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
@@ -76,6 +76,7 @@ public class DietologistFeatureTests {
     private static DashboardSnapshotModel CreateDashboardSnapshot() {
         var date = DateTime.UtcNow;
         return new DashboardSnapshotModel(
+            date,
             date,
             DailyGoal: 2000,
             WeeklyCalorieGoal: 14000,
@@ -167,6 +168,19 @@ public class DietologistFeatureTests {
             notificationRepository ?? new InMemoryNotificationRepository(),
             notificationPusher ?? new FakeNotificationPusher(),
             webPushNotificationSender ?? new FakeWebPushNotificationSender());
+
+    private static CreateRecommendationCommandHandler CreateRecommendationHandler(
+        IDietologistInvitationRepository? invitationRepository = null,
+        IRecommendationRepository? recommendationRepository = null,
+        INotificationRepository? notificationRepository = null,
+        INotificationPusher? notificationPusher = null,
+        IUserRepository? userRepository = null) =>
+        new(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            recommendationRepository ?? new InMemoryRecommendationRepository(),
+            notificationRepository ?? new InMemoryNotificationRepository(),
+            notificationPusher ?? new FakeNotificationPusher(),
+            userRepository ?? new InMemoryUserRepository());
 
     // ── InviteDietologist ──
 
@@ -300,13 +314,15 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task InviteDietologist_WhenEmailDispatchFails_StillSucceeds() {
+    public async Task InviteDietologist_WhenEmailDispatchFailsForUnregisteredDietologist_ReturnsFailure() {
         var userId = UserId.New();
         var user = CreateUser(userId);
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
+        var invitationRepo = new InMemoryInvitationRepository();
 
         var handler = CreateInviteHandler(
+            invitationRepository: invitationRepo,
             userRepository: userRepo,
             emailSender: new ThrowingEmailSender());
 
@@ -314,7 +330,34 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
+        Assert.True(result.IsFailure);
+        Assert.Empty(invitationRepo.Added);
+    }
+
+    [Fact]
+    public async Task InviteDietologist_WhenEmailDispatchFailsForRegisteredDietologist_UsesNotificationFallback() {
+        var userId = UserId.New();
+        var client = CreateUser(userId, "client@example.com");
+        var dietologist = CreateUser(UserId.New(), "diet@example.com");
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(client);
+        userRepo.Seed(dietologist);
+        var invitationRepo = new InMemoryInvitationRepository();
+        var notificationRepo = new InMemoryNotificationRepository();
+
+        var handler = CreateInviteHandler(
+            invitationRepository: invitationRepo,
+            userRepository: userRepo,
+            emailSender: new ThrowingEmailSender(),
+            notificationRepository: notificationRepo);
+
+        var result = await handler.Handle(
+            new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
+            CancellationToken.None);
+
         Assert.True(result.IsSuccess);
+        Assert.Single(invitationRepo.Added);
+        Assert.Single(notificationRepo.Added);
     }
 
     // ── AcceptInvitation ──
@@ -371,6 +414,30 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task AcceptInvitation_WhenCurrentUserEmailDoesNotMatchInvitation_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var user = CreateUser(dietologistId, "other@example.com");
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(user);
+
+        var clientId = UserId.New();
+        var invitation = CreatePendingInvitation(clientId, "diet@example.com");
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+
+        var handler = CreateAcceptHandler(
+            invitationRepository: invRepo,
+            userRepository: userRepo);
+
+        var result = await handler.Handle(
+            new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(DietologistInvitationStatus.Pending, invitation.Status);
+    }
+
+    [Fact]
     public async Task AcceptInvitation_WithExpiredInvitation_ReturnsFailure() {
         var dietologistId = UserId.New();
         var user = CreateUser(dietologistId);
@@ -396,7 +463,7 @@ public class DietologistFeatureTests {
     [Fact]
     public async Task AcceptInvitation_WithValidData_Succeeds() {
         var dietologistId = UserId.New();
-        var user = CreateUser(dietologistId);
+        var user = CreateUser(dietologistId, "diet@example.com");
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
         userRepo.SeedRoles(new[] { RoleNames.Dietologist });
@@ -759,8 +826,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task CreateRecommendation_WithNullUserId_ReturnsFailure() {
-        var handler = new CreateRecommendationCommandHandler(
-            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository());
+        var handler = CreateRecommendationHandler();
 
         var result = await handler.Handle(
             new CreateRecommendationCommand(null, Guid.NewGuid(), "Eat more veggies"),
@@ -771,8 +837,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task CreateRecommendation_WhenNoAccess_ReturnsFailure() {
-        var handler = new CreateRecommendationCommandHandler(
-            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository());
+        var handler = CreateRecommendationHandler();
 
         var result = await handler.Handle(
             new CreateRecommendationCommand(Guid.NewGuid(), Guid.NewGuid(), "Eat more veggies"),
@@ -790,7 +855,11 @@ public class DietologistFeatureTests {
         invRepo.Seed(invitation);
 
         var recRepo = new InMemoryRecommendationRepository();
-        var handler = new CreateRecommendationCommandHandler(invRepo, recRepo);
+        var notificationRepo = new InMemoryNotificationRepository();
+        var notificationPusher = new FakeNotificationPusher();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var handler = CreateRecommendationHandler(invRepo, recRepo, notificationRepo, notificationPusher, userRepo);
 
         var result = await handler.Handle(
             new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
@@ -799,6 +868,9 @@ public class DietologistFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("Eat more veggies", result.Value.Text);
         Assert.Single(recRepo.Added);
+        var notification = Assert.Single(notificationRepo.Added);
+        Assert.Equal(NotificationTypes.NewRecommendation, notification.Type);
+        Assert.True(notificationPusher.PushCalled);
     }
 
     // ── MarkRecommendationRead ──
@@ -1021,10 +1093,10 @@ public class DietologistFeatureTests {
     [Fact]
     public async Task GetClientDashboard_WithNullUserId_ReturnsFailure() {
         var handler = new GetClientDashboardQueryHandler(
-            new InMemoryInvitationRepository(), new StubMediator());
+            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder());
 
         var result = await handler.Handle(
-            new GetClientDashboardQuery(null, Guid.NewGuid(), DateTime.UtcNow, 1, 10, "en", 7),
+            new GetClientDashboardQuery(null, Guid.NewGuid(), DateTime.UtcNow, null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1033,10 +1105,10 @@ public class DietologistFeatureTests {
     [Fact]
     public async Task GetClientDashboard_WhenNoAccess_ReturnsFailure() {
         var handler = new GetClientDashboardQueryHandler(
-            new InMemoryInvitationRepository(), new StubMediator());
+            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder());
 
         var result = await handler.Handle(
-            new GetClientDashboardQuery(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, 1, 10, "en", 7),
+            new GetClientDashboardQuery(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1059,10 +1131,13 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetClientDashboardQueryHandler(invRepo, new DashboardMediator(CreateDashboardSnapshot()));
+        var snapshotBuilder = new RecordingDashboardSnapshotBuilder(CreateDashboardSnapshot());
+        var handler = new GetClientDashboardQueryHandler(invRepo, snapshotBuilder);
+        var dateFrom = DateTime.UtcNow.Date;
+        var dateTo = dateFrom.AddDays(6);
 
         var result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, 1, 10, "en", 7),
+            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, dateFrom, dateTo, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1070,6 +1145,12 @@ public class DietologistFeatureTests {
         Assert.Equal(0, result.Value.Statistics.TotalCalories);
         Assert.Null(result.Value.Weight.Latest);
         Assert.Null(result.Value.Hydration);
+        var request = Assert.IsType<DashboardSnapshotRequest>(snapshotBuilder.LastRequest);
+        Assert.NotNull(request.Sections);
+        Assert.True(request.Sections.IncludeMeals);
+        Assert.False(request.Sections.IncludeStatistics);
+        Assert.False(request.Sections.IncludeWeight);
+        Assert.Equal(dateTo, request.DateTo?.Date);
     }
 
     [Fact]
@@ -1089,10 +1170,10 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetClientDashboardQueryHandler(invRepo, new StubMediator());
+        var handler = new GetClientDashboardQueryHandler(invRepo, new ThrowingDashboardSnapshotBuilder());
 
         var result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, 1, 10, "en", 7),
+            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1511,44 +1592,21 @@ public class DietologistFeatureTests {
         }
     }
 
-    private sealed class StubMediator : ISender {
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken ct = default) =>
-            throw new NotSupportedException();
-
-        public Task Send<TRequest>(TRequest request, CancellationToken ct = default) where TRequest : IRequest =>
-            throw new NotSupportedException();
-
-        public Task<object?> Send(object request, CancellationToken ct = default) =>
-            throw new NotSupportedException();
-
-        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request, CancellationToken ct = default) =>
-            throw new NotSupportedException();
-
-        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken ct = default) =>
+    private sealed class ThrowingDashboardSnapshotBuilder : IDashboardSnapshotBuilder {
+        public Task<Result<DashboardSnapshotModel>> BuildAsync(
+            DashboardSnapshotRequest request,
+            CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 
-    private sealed class DashboardMediator(DashboardSnapshotModel snapshot) : ISender {
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken ct = default) {
-            if (request is GetDashboardSnapshotQuery) {
-                return Task.FromResult((TResponse)(object)Result.Success(snapshot));
-            }
+    private sealed class RecordingDashboardSnapshotBuilder(DashboardSnapshotModel snapshot) : IDashboardSnapshotBuilder {
+        public DashboardSnapshotRequest? LastRequest { get; private set; }
 
-            throw new NotSupportedException();
+        public Task<Result<DashboardSnapshotModel>> BuildAsync(
+            DashboardSnapshotRequest request,
+            CancellationToken cancellationToken = default) {
+            LastRequest = request;
+            return Task.FromResult(Result.Success(snapshot));
         }
-
-        public Task Send<TRequest>(TRequest request, CancellationToken ct = default) where TRequest : IRequest =>
-            throw new NotSupportedException();
-
-        public Task<object?> Send(object request, CancellationToken ct = default) =>
-            throw new NotSupportedException();
-
-        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request, CancellationToken ct = default) =>
-            throw new NotSupportedException();
-
-        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken ct = default) =>
-            throw new NotSupportedException();
     }
 }

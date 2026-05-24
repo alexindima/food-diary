@@ -129,6 +129,7 @@ function setupFacade(): {
 function createSnapshot(): DashboardSnapshot {
     return {
         date: '2026-03-15',
+        dateTo: '2026-03-15',
         dailyGoal: 2100,
         weeklyCalorieGoal: 14700,
         statistics: {

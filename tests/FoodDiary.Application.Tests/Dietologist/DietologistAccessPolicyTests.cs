@@ -93,10 +93,10 @@ public class DietologistAccessPolicyTests {
     }
 
     [Fact]
-    public void EnsurePermission_WithUnknownCategory_ReturnsNull() {
+    public void EnsurePermission_WithUnknownCategory_ReturnsError() {
         var perms = new DietologistPermissionsModel(false, false, false, false, false, false, false, false);
 
-        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Unknown"));
+        Assert.NotNull(DietologistAccessPolicy.EnsurePermission(perms, "Unknown"));
     }
 
     private sealed class StubInvitationRepository(DietologistInvitation? invitation) : IDietologistInvitationRepository {

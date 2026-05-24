@@ -8,6 +8,7 @@ public record GetClientDashboardQuery(
     Guid? UserId,
     Guid ClientUserId,
     DateTime Date,
+    DateTime? DateTo,
     int Page,
     int PageSize,
     string Locale,

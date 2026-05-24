@@ -124,6 +124,7 @@ describe('client dashboard detail mapper', () => {
 function createDashboardSnapshot(): unknown {
     return {
         date: '2026-05-23T00:00:00Z',
+        dateTo: '2026-05-23T00:00:00Z',
         dailyGoal: 2000,
         weeklyCalorieGoal: 14000,
         statistics: {

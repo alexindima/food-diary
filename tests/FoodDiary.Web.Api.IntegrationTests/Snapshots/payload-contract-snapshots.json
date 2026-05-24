@@ -181,6 +181,7 @@
       "dailyGoal",
       "dashboardLayout",
       "date",
+      "dateTo",
       "hydration",
       "meals",
       "statistics",

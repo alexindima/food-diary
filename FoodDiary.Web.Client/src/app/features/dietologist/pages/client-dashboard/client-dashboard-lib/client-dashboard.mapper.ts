@@ -332,7 +332,7 @@ function formatMealTitle(meal: Meal): string {
     }
 
     const comment = meal.comment?.trim();
-    return comment !== undefined && comment.length > 0 ? comment : 'Meal';
+    return comment !== undefined && comment.length > 0 ? comment : '-';
 }
 
 function formatMealItems(meal: Meal): string {
@@ -341,7 +341,7 @@ function formatMealItems(meal: Meal): string {
         .filter((value): value is string => value !== null && value.trim().length > 0);
 
     if (names.length === 0) {
-        return `${meal.items.length} item${meal.items.length === 1 ? '' : 's'}`;
+        return String(meal.items.length);
     }
 
     return names.slice(0, MEAL_ITEM_PREVIEW_LIMIT).join(', ');
@@ -373,5 +373,5 @@ function formatFastingCheckIn(session: FastingSession): string | null {
         return null;
     }
 
-    return `Hunger ${session.hungerLevel ?? '-'} / Energy ${session.energyLevel ?? '-'} / Mood ${session.moodLevel ?? '-'}`;
+    return `${session.hungerLevel ?? '-'} / ${session.energyLevel ?? '-'} / ${session.moodLevel ?? '-'}`;
 }

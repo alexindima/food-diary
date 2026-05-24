@@ -15,6 +15,7 @@ let component: ClientDashboardComponent;
 const EXPECTED_METRIC_TILE_COUNT = 4;
 const SELECTED_YEAR = 2026;
 const SELECTED_DAY = 22;
+const PERIOD_START_DAY = 16;
 const MAY_MONTH_INDEX = 4;
 let dietologistService: {
     getMyClients: ReturnType<typeof vi.fn>;
@@ -58,6 +59,11 @@ beforeEach(() => {
 });
 
 describe('ClientDashboardComponent', () => {
+    registerLoadingTests();
+    registerActionTests();
+});
+
+function registerLoadingTests(): void {
     it('loads selected client by route id', () => {
         createComponent('client-1');
 
@@ -117,26 +123,42 @@ describe('ClientDashboardComponent', () => {
         expect(component.mealItems()[0]).toEqual(expect.objectContaining({ id: 'meal-1', title: 'Lunch', calories: '640 kcal' }));
         expect(component.bodyTiles().map(tile => tile.value)).toEqual(['1']);
     });
+}
 
-    it('reloads dashboard for selected day', () => {
+function registerActionTests(): void {
+    it('reloads dashboard for selected period', () => {
         createComponent('client-1');
 
-        component.dateFilterForm.controls.date.setValue('2026-05-22');
+        component.dateFilterForm.setValue({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
         component.applyDateFilter();
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
-        expect(getLastDashboardDate()).toEqual(new Date(SELECTED_YEAR, MAY_MONTH_INDEX, SELECTED_DAY));
+        expect(getLastDashboardPeriod()).toEqual(
+            expect.objectContaining({
+                dateFrom: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, PERIOD_START_DAY),
+                dateTo: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, SELECTED_DAY),
+            }),
+        );
     });
 
-    it('moves dashboard date with day navigation', () => {
+    it('moves dashboard dates with period navigation', () => {
         createComponent('client-1');
 
-        component.dateFilterForm.controls.date.setValue('2026-05-23');
+        component.dateFilterForm.setValue({ dateFrom: '2026-05-17', dateTo: '2026-05-23' });
         component.applyDateFilter();
-        component.showPreviousDay();
+        component.showPreviousPeriod();
 
-        expect(component.selectedDate()).toBe('2026-05-22');
-        expect(getLastDashboardDate()).toEqual(new Date(SELECTED_YEAR, MAY_MONTH_INDEX, SELECTED_DAY));
+        expect(component.selectedDateFrom()).toBe('2026-05-10');
+        expect(component.selectedDateTo()).toBe('2026-05-16');
+    });
+
+    it('shows section load warning when optional details fail', () => {
+        dietologistService.getClientDashboard.mockReturnValueOnce(throwError(() => new Error('failed')));
+
+        createComponent('client-1');
+
+        expect(component.sectionLoadError()).toBe('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
+        expect(component.dashboard()).toBeNull();
     });
 
     it('sends recommendation and prepends it to the list', () => {
@@ -158,7 +180,7 @@ describe('ClientDashboardComponent', () => {
         expect(dietologistService.disconnectClient).toHaveBeenCalledWith('client-1');
         expect(router.navigate).toHaveBeenCalledWith(['/dietologist']);
     });
-});
+}
 
 function createComponent(clientId: string): void {
     TestBed.configureTestingModule({
@@ -186,6 +208,7 @@ function createComponent(clientId: string): void {
 function createDashboardSnapshot(): unknown {
     return {
         date: '2026-05-23T00:00:00Z',
+        dateTo: '2026-05-23T00:00:00Z',
         dailyGoal: 2000,
         weeklyCalorieGoal: 14000,
         statistics: {
@@ -256,8 +279,8 @@ function createDashboardSnapshot(): unknown {
     };
 }
 
-function getLastDashboardDate(): Date | undefined {
+function getLastDashboardPeriod(): { dateFrom: Date; dateTo?: Date } | undefined {
     const calls = dietologistService.getClientDashboard.mock.calls;
-    const lastCall = calls.at(-1) as [string, { date: Date }] | undefined;
-    return lastCall?.[1].date;
+    const lastCall = calls.at(-1) as [string, { dateFrom: Date; dateTo?: Date }] | undefined;
+    return lastCall?.[1];
 }
