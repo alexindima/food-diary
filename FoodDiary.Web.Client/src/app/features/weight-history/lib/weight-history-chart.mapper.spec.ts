@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { WeightEntrySummaryPoint } from '../models/weight-entry.data';
-import { buildWeightEntryViewModels, buildWeightHistoryChartData } from './weight-history-chart.mapper';
+import { buildWeightEntryViewModels, buildWeightHistoryChartPoints } from './weight-history-chart.mapper';
 
 const AVERAGE_WEIGHT = 72;
 const POINTS: WeightEntrySummaryPoint[] = [
@@ -11,11 +11,12 @@ const POINTS: WeightEntrySummaryPoint[] = [
 
 describe('weight history chart mapper', () => {
     it('sorts summary points and maps empty averages to gaps', () => {
-        const data = buildWeightHistoryChartData(POINTS, 'Weight', 'en');
+        const points = buildWeightHistoryChartPoints(POINTS, 'en');
 
-        expect(data.labels).toEqual(['5/1/2026', '5/2/2026']);
-        expect(data.datasets[0].label).toBe('Weight');
-        expect(data.datasets[0].data).toEqual([null, AVERAGE_WEIGHT]);
+        expect(points).toEqual([
+            { label: '5/1/2026', value: null },
+            { label: '5/2/2026', value: AVERAGE_WEIGHT },
+        ]);
     });
 
     it('builds entry view models with localized numeric dates', () => {

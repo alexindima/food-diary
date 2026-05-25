@@ -46,7 +46,7 @@ export class WaistHistoryPageComponent {
     public readonly isDesiredWaistSaving = this.facade.isDesiredWaistSaving;
     public readonly desiredWaistControl = this.facade.desiredWaistControl;
     public readonly entriesDescending = this.facade.entriesDescending;
-    public readonly chartData = this.facade.chartData;
+    public readonly chartPoints = this.facade.chartPoints;
     public readonly form = this.facade.form;
     public readonly whtViewModel = this.facade.whtViewModel;
 

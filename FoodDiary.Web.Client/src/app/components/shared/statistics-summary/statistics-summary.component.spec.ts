@@ -13,9 +13,8 @@ async function setupStatisticsSummaryAsync(): Promise<ComponentFixture<Statistic
 
     const fixture = TestBed.createComponent(StatisticsSummaryComponent);
     fixture.componentRef.setInput('summary', null);
-    fixture.componentRef.setInput('summarySparklineData', null);
-    fixture.componentRef.setInput('summarySparklineOptions', null);
-    fixture.componentRef.setInput('macroSparklineData', null);
+    fixture.componentRef.setInput('summarySparklinePoints', []);
+    fixture.componentRef.setInput('macroSparklinePoints', null);
     fixture.componentRef.setInput('exportingFormat', null);
     return fixture;
 }

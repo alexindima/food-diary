@@ -1,0 +1,45 @@
+<div class="fd-ui-line-chart" role="img" [attr.aria-label]="ariaLabel()">
+    @if (pointViews().length) {
+        <div class="fd-ui-line-chart__plot" [class.fd-ui-line-chart__plot--with-axis-labels]="showAxisLabels()">
+            @if (showAxisLabels()) {
+                <div class="fd-ui-line-chart__y-axis" aria-hidden="true">
+                    <span>{{ axisMaxLabel() }}</span>
+                    <span>{{ axisMinLabel() }}</span>
+                </div>
+            }
+
+            <svg class="fd-ui-line-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">
+                @if (showGrid()) {
+                    @for (gridLine of gridLines(); track $index) {
+                        <line class="fd-ui-line-chart__grid-line" x1="0" x2="100" [attr.y1]="gridLine.y" [attr.y2]="gridLine.y" />
+                    }
+                }
+
+                <line class="fd-ui-line-chart__axis" x1="0" x2="100" [attr.y1]="chartBottom" [attr.y2]="chartBottom" />
+
+                @if (showArea()) {
+                    <path class="fd-ui-line-chart__area" [attr.d]="areaPath()" [style.fill]="fillColor()" />
+                }
+
+                <path class="fd-ui-line-chart__line" [attr.d]="linePath()" [style.stroke]="lineColor()" />
+
+                @if (showPoints()) {
+                    @for (point of pointViews(); track $index) {
+                        <circle class="fd-ui-line-chart__point" r="2" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="lineColor()">
+                            <title>{{ point.tooltip }}</title>
+                        </circle>
+                    }
+                }
+            </svg>
+
+            @if (showAxisLabels()) {
+                <div class="fd-ui-line-chart__x-axis" aria-hidden="true">
+                    <span>{{ axisStartLabel() }}</span>
+                    <span>{{ axisEndLabel() }}</span>
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="fd-ui-line-chart__empty">{{ emptyLabel() }}</div>
+    }
+</div>

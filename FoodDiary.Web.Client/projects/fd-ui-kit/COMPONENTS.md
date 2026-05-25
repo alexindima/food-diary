@@ -10,11 +10,7 @@ For tooltip and accessible-name rules, see `ACCESSIBILITY_AND_TOOLTIPS.md`.
 Prefer importing from the barrel:
 
 ```ts
-import {
-  FdUiInputComponent,
-  FdUiSelectComponent,
-  FdUiButtonComponent,
-} from 'fd-ui-kit';
+import { FdUiInputComponent, FdUiSelectComponent, FdUiButtonComponent } from 'fd-ui-kit';
 ```
 
 All components are **standalone** and can be listed in a component `imports` array.
@@ -46,12 +42,61 @@ Back these classes with CSS variables from `src/styles/design-tokens.scss`. Comp
 
 ## Components
 
+### Charts
+
+The chart primitives are SVG-based and intended for Food Diary UI needs rather than general-purpose analytics. They do not depend on Chart.js and should be preferred for compact dashboard cards, mobile views, and simple nutrition/body trend visuals.
+
+#### `fd-ui-pie-chart`
+
+Circular distribution chart.
+
+**Inputs**
+
+- `title?: string`
+- `segments?: FdUiPieChartSegment[]`
+- `emptyLabel?: string`
+
+#### `fd-ui-bar-chart`
+
+Responsive bar chart for simple category or short time-range comparisons.
+
+**Inputs**
+
+- `title?: string`
+- `items?: FdUiBarChartItem[]`
+- `emptyLabel?: string`
+- `showLabels?: boolean`
+
+**CSS variables**
+
+- `--fd-bar-chart-height`
+
+#### `fd-ui-line-chart`
+
+Responsive line chart for compact trends and sparklines.
+
+**Inputs**
+
+- `title?: string`
+- `points?: FdUiLineChartPoint[]`
+- `emptyLabel?: string`
+- `lineColor?: string`
+- `fillColor?: string`
+- `showArea?: boolean`
+- `showPoints?: boolean`
+
+**CSS variables**
+
+- `--fd-line-chart-height`
+
 ### Inputs
 
 #### `fd-ui-input`
+
 Universal single-line input.
 
 **Inputs**
+
 - `label?: string`
 - `placeholder?: string`
 - `type?: 'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'` (default `text`)
@@ -67,6 +112,7 @@ Universal single-line input.
 - `suffixButtonAriaLabel?: string`
 
 **CSS variables**
+
 - `--fd-input-height`
 - `--fd-input-radius`
 - `--fd-input-border`
@@ -80,24 +126,28 @@ Universal single-line input.
 - `--fd-input-control-font-size`
 
 **Outputs**
+
 - `suffixButtonClicked`
 
 **Example**
+
 ```html
 <fd-ui-input
-  label="Name"
-  placeholder="Enter name"
-  [required]="true"
-  [suffixButtonIcon]="'close'"
-  (suffixButtonClicked)="clear()"
-  formControlName="name"
+    label="Name"
+    placeholder="Enter name"
+    [required]="true"
+    [suffixButtonIcon]="'close'"
+    (suffixButtonClicked)="clear()"
+    formControlName="name"
 ></fd-ui-input>
 ```
 
 #### `fd-ui-textarea`
+
 Multi-line input.
 
 **Inputs**
+
 - `label?: string`
 - `placeholder?: string`
 - `error?: string | null`
@@ -109,9 +159,11 @@ Multi-line input.
 - `fillColor?: string | null`
 
 #### `fd-ui-select`
+
 Dropdown select based on the design-system menu/overlay primitives.
 
 **Inputs**
+
 - `label?: string`
 - `placeholder?: string`
 - `error?: string | null`
@@ -121,24 +173,28 @@ Dropdown select based on the design-system menu/overlay primitives.
 - `options?: FdUiSelectOption<T>[]`
 
 **CSS variables**
+
 - `--fd-select-height`
 - `--fd-select-radius`
 - `--fd-select-border`
 - `--fd-select-surface`
 
 **Types**
+
 ```ts
 export interface FdUiSelectOption<T = unknown> {
-  value: T;
-  label: string;
-  hint?: string;
+    value: T;
+    label: string;
+    hint?: string;
 }
 ```
 
 #### `fd-ui-calendar`
+
 Inline calendar primitive for custom date pickers and date popovers.
 
 **Inputs**
+
 - `value?: Date | null`
 - `displayMonth?: Date | null`
 - `min?: Date | null`
@@ -146,9 +202,11 @@ Inline calendar primitive for custom date pickers and date popovers.
 - `weekStartsOn?: 0 | 1`
 
 #### `fd-ui-date-input`
+
 Date input (value as `YYYY-MM-DD`).
 
 **Inputs**
+
 - `label?: string`
 - `placeholder?: string`
 - `error?: string | null`
@@ -156,9 +214,11 @@ Date input (value as `YYYY-MM-DD`).
 - `size?: 'sm' | 'md' | 'lg'`
 
 #### `fd-ui-time-input`
+
 Time input (`HH:mm`).
 
 **Inputs**
+
 - `label?: string`
 - `placeholder?: string`
 - `error?: string | null`
@@ -166,9 +226,11 @@ Time input (`HH:mm`).
 - `size?: 'sm' | 'md' | 'lg'`
 
 #### `fd-ui-datetime-input`
+
 Date + time input (value as `YYYY-MM-DDTHH:mm`).
 
 **Inputs**
+
 - `label?: string`
 - `placeholder?: string`
 - `error?: string | null`
@@ -176,9 +238,11 @@ Date + time input (value as `YYYY-MM-DDTHH:mm`).
 - `size?: 'sm' | 'md' | 'lg'`
 
 #### `fd-ui-date-range-input`
+
 Date range wrapper with two date inputs.
 
 **Inputs**
+
 - `startLabel?: string`
 - `endLabel?: string`
 - `startPlaceholder?: string`
@@ -186,14 +250,17 @@ Date range wrapper with two date inputs.
 - `size?: 'sm' | 'md' | 'lg'`
 
 **Type**
+
 ```ts
 export type FdUiDateRangeValue = { start: Date | null; end: Date | null };
 ```
 
 #### `fd-ui-date-picker-button`
+
 Compact date trigger with overlay calendar.
 
 **Inputs**
+
 - `value?: Date | null`
 - `min?: Date | null`
 - `max?: Date | null`
@@ -202,9 +269,11 @@ Compact date trigger with overlay calendar.
 - `icon?: string`
 
 #### `fd-ui-nutrient-input`
+
 Specialized numeric input for nutrition cards.
 
 **Inputs**
+
 - `label: string`
 - `icon?: string` (icon name)
 - `placeholder?: string` (default `0`)
@@ -226,9 +295,11 @@ Specialized numeric input for nutrition cards.
 ### Buttons
 
 #### `fd-ui-icon`
+
 Shared ligature icon wrapper used by the design system.
 
 **Inputs**
+
 - `name: string`
 - `size?: 'sm' | 'md' | 'lg' | 'xl' | number`
 - `decorative?: boolean` (default `true`)
@@ -236,9 +307,11 @@ Shared ligature icon wrapper used by the design system.
 - `fontSet?: string | null`
 
 #### `fd-ui-button`
+
 Primary button component.
 
 **Inputs**
+
 - `type?: 'button' | 'submit' | 'reset'`
 - `variant?: 'primary' | 'secondary' | 'danger' | 'info' | 'ghost' | 'outline'`
 - `fill?: 'solid' | 'outline' | 'text' | 'ghost'`
@@ -254,12 +327,15 @@ Primary button component.
 ### Cards
 
 #### `fd-ui-card`
+
 Base container with consistent radius and padding.
 
 **Inputs**
+
 - `subtle?: boolean`
 
 **CSS variables**
+
 - `--fd-card-height`
 - `--fd-card-content-width`
 - `--fd-card-content-height`
@@ -269,33 +345,41 @@ Base container with consistent radius and padding.
 - `--fd-card-density-relaxed-padding-bottom`
 
 #### `fd-ui-card-actions` (directive)
+
 Use inside `fd-ui-card` for action rows.
 
 #### `fd-ui-entity-card`
+
 Entity tile/card (e.g. product/recipe cards).
 
 **Inputs**
+
 - `fallbackImage?: string`
 
 #### `fd-ui-entity-card-header` (directive)
+
 Header slot for `fd-ui-entity-card`.
 
 ### Dialogs
 
 #### `fd-ui-dialog`
+
 Dialog wrapper used with `FdUiDialogService`.
 
 **Inputs**
+
 - `dismissible?: boolean`
 - `size?: 'sm' | 'md' | 'lg' | 'xl'`
 - `bodyScrollInset?: 'default' | 'edge'`
 
 **Slots**
+
 - default `ng-content` for dialog body
 - `[fdUiDialogFooter]` for action rows
 - `[fdUiDialogHeader]` for a fully custom header that replaces the built-in `title/subtitle` block
 
 **Service presets**
+
 - `confirm` for short confirmations and destructive actions
 - `form` for standard forms and settings flows
 - `list` for dense selectable lists or notification feeds
@@ -305,57 +389,69 @@ Dialog wrapper used with `FdUiDialogService`.
 `preset` is optional. If you omit it, `FdUiDialogService` uses the explicit `size` you pass; if `size` is also omitted, it falls back to `md`.
 
 **Size guidance**
+
 - `sm` for short confirmations and destructive actions
 - `md` for standard forms and auth/settings flows
 - `lg` for multi-step forms, richer detail dialogs, and AI flows
 - `xl` for dense review, table-like, or multi-column dialog content
 
 #### `fd-ui-dialog-shell`
+
 Layout wrapper for dialog content.
 
 **Inputs**
+
 - `dismissible?: boolean`
 - `flush?: boolean`
 - `size?: 'sm' | 'md' | 'lg' | 'xl'`
 - `bodyScrollInset?: 'default' | 'edge'`
 
 **Recommended usage**
+
 - Use `title` and `subtitle` for standard dialogs.
 - Use `[fdUiDialogFooter]` for footer actions.
 - Use `[fdUiDialogHeader]` only when the header needs badges, counters, tabs, or richer composition than the standard heading block.
 - Use `bodyScrollInset="edge"` when the body scrollbar should sit flush against the dialog edge, such as list-heavy or feed-like dialogs.
 
 **Dialog Token Policy**
+
 - Dialog surfaces, borders, text, and state colors should use semantic tokens such as `--fd-color-dialog-surface`, `--fd-color-surface-raised`, `--fd-color-text`, `--fd-color-text-muted`, `--fd-color-danger`, and `--fd-color-border-strong`.
 - Dialog radii should use semantic radius tokens such as `--fd-radius-dialog`, `--fd-radius-panel`, `--fd-radius-card`, `--fd-radius-input`, and `--fd-radius-button`.
 - Dialog typography should use semantic text tokens such as `--fd-text-section-title-*`, `--fd-text-card-title-*`, `--fd-text-body-*`, `--fd-text-body-sm-*`, `--fd-text-helper-*`, and `--fd-text-action-*`.
 - Allowed local exceptions: `999px` pill/circle radii, `0` radius for fullscreen or edge-attached layouts, explicit icon sizes, and illustrative preview palettes that intentionally demonstrate theme or style variants.
 
 #### `fd-ui-confirm-dialog`
+
 Standard confirm dialog (uses dialog service).
 
 ### Form helpers
 
 #### `fd-ui-form-error`
+
 Displays validation errors.
 
 **Inputs**
+
 - `showOnDirty?: boolean`
 
 ### Selection
 
 #### `fd-ui-checkbox`
+
 Checkbox with label + hint.
 
 **Inputs**
+
 - `label?: string`
 - `hint?: string`
 - `disabled?: boolean` (model)
 
 #### `fd-ui-radio-group`
+
 Radio group for a list of options.
 
 **Inputs**
+
 - `label?: string`
 - `hint?: string`
 - `error?: string | null`
@@ -364,18 +460,21 @@ Radio group for a list of options.
 - `options?: FdUiRadioOption<T>[]`
 
 **Types**
+
 ```ts
 export interface FdUiRadioOption<T = unknown> {
-  label: string;
-  value: T;
-  description?: string;
+    label: string;
+    value: T;
+    description?: string;
 }
 ```
 
 #### `fd-ui-segmented-toggle`
+
 Segmented toggle control.
 
 **Inputs**
+
 - `options?: FdUiSegmentedToggleOption[]`
 - `selectedValue: string`
 - `ariaLabel?: string | null`
@@ -385,29 +484,34 @@ Segmented toggle control.
 - `shrinkItems?: boolean`
 
 #### `fd-ui-chip-select`
+
 Compact multi-select chip group for filters, tags, and symptom pickers.
 
 **Inputs**
+
 - `options?: FdUiChipSelectOption[]`
 - `selectedValues?: string[]`
 - `ariaLabel?: string | null`
 - `size?: 'sm' | 'md'`
 
 **Types**
+
 ```ts
 export interface FdUiChipSelectOption {
-  value: string;
-  label: string;
-  disabled?: boolean;
-  ariaLabel?: string | null;
-  hint?: string | null;
+    value: string;
+    label: string;
+    disabled?: boolean;
+    ariaLabel?: string | null;
+    hint?: string | null;
 }
 ```
 
 #### `fd-ui-emoji-picker`
+
 Compact emoji-based single-choice picker.
 
 **Inputs**
+
 - `options?: FdUiEmojiPickerOption[]`
 - `selectedValue?: string | number | null`
 - `ariaLabel?: string | null`
@@ -417,22 +521,25 @@ Compact emoji-based single-choice picker.
 - `showDescriptions?: boolean`
 
 **Types**
+
 ```ts
 export interface FdUiEmojiPickerOption<T = string | number> {
-  value: T;
-  emoji: string;
-  label?: string;
-  description?: string;
-  ariaLabel?: string;
-  hint?: string;
-  disabled?: boolean;
+    value: T;
+    emoji: string;
+    label?: string;
+    description?: string;
+    ariaLabel?: string;
+    hint?: string;
+    disabled?: boolean;
 }
 ```
 
 #### `fd-ui-switch`
+
 Compact boolean switch for settings and permission rows.
 
 **Inputs**
+
 - `checked?: boolean`
 - `disabled?: boolean`
 - `ariaLabel?: string`
@@ -443,6 +550,7 @@ Compact boolean switch for settings and permission rows.
 ### Navigation / UX
 
 #### `fdUiHint`
+
 Tooltip directive for short helper text attached to an existing element.
 
 Use for:
@@ -454,6 +562,7 @@ Use for:
 Do not use for long or interactive content. Prefer a popover or inline help for those cases.
 
 **Inputs**
+
 - `fdUiHint: string | TemplateRef | null`
 - `fdUiHintHtml?: boolean`
 - `fdUiHintContext?: Record<string, unknown> | null`
@@ -464,12 +573,15 @@ Do not use for long or interactive content. Prefer a popover or inline help for 
 - `fdUiHintDisabled?: boolean`
 
 #### `fd-ui-tabs`
+
 Tabs component.
 
 #### `fd-ui-pagination`
+
 Pagination control.
 
 **Inputs**
+
 - `length?: number`
 - `pageSize?: number`
 - `pageIndex?: number`
@@ -477,22 +589,28 @@ Pagination control.
 ### Misc
 
 #### `fd-ui-accent-surface`
+
 Toned surface container.
 
 **Inputs**
+
 - `active?: boolean`
 - `tinted?: boolean`
 
 #### `fd-ui-satiety-scale`
+
 Hunger/satiety scale widget.
 
 **Inputs**
+
 - `required?: boolean`
 
 #### `fd-ui-inline-alert`
+
 Inline alert/banner for actionable warnings, info states, or success notices.
 
 **Inputs**
+
 - `appearance?: 'alert' | 'notice'`
 - `severity?: 'info' | 'warning' | 'success' | 'danger'`
 - `title?: string`
@@ -502,29 +620,36 @@ Inline alert/banner for actionable warnings, info states, or success notices.
 - `dismissible?: boolean`
 
 **Outputs**
+
 - `primaryAction`
 - `secondaryAction`
 - `dismiss`
 
 #### `fd-ui-status-badge`
+
 Compact neutral status badge for short async-state labels such as saved, syncing, pending, or failed.
 
 **Inputs**
+
 - `tone?: 'muted' | 'success' | 'warning' | 'danger'`
 
 #### `fd-ui-empty-state`
+
 Reusable empty/no-data placeholder for pages, cards, and compact sections.
 
 **Inputs**
+
 - `title?: string | null`
 - `message: string`
 - `icon?: string`
 - `appearance?: 'default' | 'compact'`
 
 #### `fd-ui-section-state`
+
 Reusable section wrapper for `content`, `loading`, `empty`, and `error` states inside cards, settings blocks, and dashboard widgets.
 
 **Inputs**
+
 - `state?: 'content' | 'loading' | 'empty' | 'error'`
 - `appearance?: 'default' | 'compact'`
 - `loadingLabel?: string | null`
@@ -537,27 +662,35 @@ Reusable section wrapper for `content`, `loading`, `empty`, and `error` states i
 - `retryLabel?: string | null`
 
 **Outputs**
+
 - `retry`
 
 #### `fd-ui-menu`, `fd-ui-menu-item`, `fd-ui-menu-trigger`, `fd-ui-menu-divider`
+
 Context menu components.
 
 #### `fd-ui-loader`
+
 Loading indicator.
 
 #### `fd-ui-top-loader`
+
 Global top-edge loading bar for long-running background requests.
 
 **Inputs**
+
 - `visible?: boolean`
 
 #### `fd-ui-toast-host`
+
 Global toast host. Mount once near the app root.
 
 #### `fd-ui-toast` (service)
+
 Toast notifications service.
 
 **Methods**
+
 - `open(message, options?)`
 - `success(message, options?)`
 - `error(message, options?)`
@@ -565,6 +698,7 @@ Toast notifications service.
 - `dismissAll()`
 
 **Usage guide**
+
 - Use `success()` for completed user actions that keep the user on the same screen: save, add, delete, toggle on/off.
 - Use `info()` for neutral background feedback: scheduled work, sync started/completed, capability status.
 - Use `error()` for short recoverable failures where the user may retry without extra context.
@@ -587,7 +721,9 @@ Place new UI kit components under:
 `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/<component-name>/`
 
 Update exports in:
+
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/index.ts`
 
 If the component should be available via `FdUiKitModule`, add it to:
+
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/fd-ui-kit.module.ts`

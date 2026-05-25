@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state.component';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state.component';
@@ -15,15 +15,6 @@ import { StatisticsSummaryComponent } from '../../../components/shared/statistic
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import type { ExportFormat } from '../../meals/api/export.service';
 import { StatisticsFacade } from '../lib/statistics.facade';
-import {
-    barChartOptions,
-    bodyChartOptions,
-    createCaloriesLineChartOptions,
-    createPieChartOptions,
-    nutrientsLineChartOptions,
-    radarChartOptions,
-    summarySparklineOptions,
-} from '../lib/statistics-chart-config';
 import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
 import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';
 
@@ -50,7 +41,6 @@ import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS 
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsComponent {
-    private readonly translateService = inject(TranslateService);
     protected readonly facade = inject(StatisticsFacade);
 
     public constructor() {
@@ -71,29 +61,16 @@ export class StatisticsComponent {
     public readonly hasLoadError = this.facade.hasLoadError;
     public readonly hasBodyLoadError = this.facade.hasBodyLoadError;
     public readonly summaryMetrics = this.facade.summaryMetrics;
-    public readonly summarySparklineData = this.facade.summarySparklineData;
-    public readonly macroSparklineData = this.facade.macroSparklineData;
+    public readonly summarySparklinePoints = this.facade.summarySparklinePoints;
+    public readonly macroSparklinePoints = this.facade.macroSparklinePoints;
     public readonly hasStatisticsData = this.facade.hasStatisticsData;
-    public readonly caloriesLineChartData = this.facade.caloriesLineChartData;
-    public readonly nutrientsLineChartData = this.facade.nutrientsLineChartData;
-    public readonly nutrientsPieChartData = this.facade.nutrientsPieChartData;
-    public readonly nutrientsRadarChartData = this.facade.nutrientsRadarChartData;
-    public readonly nutrientsBarChartData = this.facade.nutrientsBarChartData;
-    public readonly bodyChartData = this.facade.bodyChartData;
+    public readonly caloriesTrendPoints = this.facade.caloriesTrendPoints;
+    public readonly nutrientTrendGroups = this.facade.nutrientTrendGroups;
+    public readonly nutrientPieSegments = this.facade.nutrientPieSegments;
+    public readonly nutrientBarItems = this.facade.nutrientBarItems;
+    public readonly bodyChartPoints = this.facade.bodyChartPoints;
     public readonly hasBodyData = this.facade.hasBodyData;
     public readonly exportingFormat = this.facade.exportingFormat;
-
-    public readonly caloriesLineChartOptions = createCaloriesLineChartOptions(
-        (label, value) => `${label}: ${parseFloat(value.toFixed(2))} ${this.translateService.instant('GENERAL.UNITS.KCAL')}`,
-    );
-    public readonly nutrientsLineChartOptions = nutrientsLineChartOptions;
-    public readonly pieChartOptions = createPieChartOptions(
-        (label, value) => `${label}: ${parseFloat(value.toFixed(2))} ${this.translateService.instant('GENERAL.UNITS.G')}`,
-    );
-    public readonly radarChartOptions = radarChartOptions;
-    public readonly barChartOptions = barChartOptions;
-    public readonly bodyChartOptions = bodyChartOptions;
-    public readonly summarySparklineOptions = summarySparklineOptions;
 
     public changeRange(value: unknown): void {
         if (isStatisticsRange(value)) {

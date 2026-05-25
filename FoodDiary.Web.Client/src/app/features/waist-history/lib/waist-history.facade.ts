@@ -11,7 +11,7 @@ import { WaistEntriesService } from '../api/waist-entries.service';
 import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
 import type { WaistHistoryCustomRange, WaistHistoryDateRange, WaistHistoryRange } from './waist-history.types';
-import { buildWaistHistoryChartData } from './waist-history-chart.mapper';
+import { buildWaistHistoryChartPoints } from './waist-history-chart.mapper';
 import {
     buildDefaultWaistHistoryCustomRange,
     buildWaistHistoryFiltersForRange,
@@ -58,13 +58,7 @@ export class WaistHistoryFacade {
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
 
-    public readonly chartData = computed(() =>
-        buildWaistHistoryChartData(
-            this.summaryPoints(),
-            this.translate.instant('WAIST_HISTORY.CHART_LABEL'),
-            this.translate.getCurrentLang(),
-        ),
-    );
+    public readonly chartPoints = computed(() => buildWaistHistoryChartPoints(this.summaryPoints(), this.translate.getCurrentLang()));
 
     public readonly latestWaist = computed<number | null>(() => {
         const entries = this.entriesDescending();

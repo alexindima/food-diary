@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    @if (segmentViews().length) {
+    @if (showLegend() && segmentViews().length) {
         <div class="fd-ui-pie-chart__legend">
             @for (segment of segmentViews(); track segment.label) {
                 <div class="fd-ui-pie-chart__legend-item" [attr.title]="segment.tooltip">
@@ -36,7 +36,7 @@
                 </div>
             }
         </div>
-    } @else {
+    } @else if (segmentViews().length === 0) {
         <div class="fd-ui-pie-chart__empty">{{ emptyLabel() }}</div>
     }
 </div>

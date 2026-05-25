@@ -1,55 +1,20 @@
-import type { ChartConfiguration } from 'chart.js';
-
 import { compareDatesAsc, parseDateValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { WeightEntry, WeightEntrySummaryPoint } from '../models/weight-entry.data';
 import type { WeightEntryViewModel } from './weight-history.types';
 
-export const WEIGHT_HISTORY_CHART_OPTIONS: ChartConfiguration<'line'>['options'] = {
-    responsive: true,
-    scales: {
-        x: {
-            ticks: {
-                maxRotation: 0,
-                autoSkip: true,
-                maxTicksLimit: 6,
-            },
-        },
-        y: {
-            beginAtZero: true,
-        },
-    },
-    plugins: {
-        legend: {
-            display: false,
-        },
-    },
+export type WeightHistoryChartPoint = {
+    label: string;
+    value: number | null;
 };
 
-export function buildWeightHistoryChartData(
-    points: WeightEntrySummaryPoint[],
-    label: string,
-    locale: string,
-): ChartConfiguration<'line'>['data'] {
+export function buildWeightHistoryChartPoints(points: WeightEntrySummaryPoint[], locale: string): WeightHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
 
-    return {
-        labels: ordered.map(point => formatWeightHistoryDateLabel(point.startDate, locale)),
-        datasets: [
-            {
-                data: ordered.map(point => (point.averageWeight > 0 ? point.averageWeight : null)),
-                label,
-                borderColor: 'var(--fd-color-primary-600)',
-                backgroundColor: 'transparent',
-                fill: false,
-                tension: 0.35,
-                pointRadius: 4,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                borderWidth: 2,
-                spanGaps: true,
-            },
-        ],
-    };
+    return ordered.map(point => ({
+        label: formatWeightHistoryDateLabel(point.startDate, locale),
+        value: point.averageWeight > 0 ? point.averageWeight : null,
+    }));
 }
 
 export function buildWeightEntryViewModels(entries: WeightEntry[], locale: string): WeightEntryViewModel[] {

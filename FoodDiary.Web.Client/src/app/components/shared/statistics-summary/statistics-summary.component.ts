@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import type { ChartConfiguration } from 'chart.js';
 import {
     FdUiIconComponent,
+    FdUiLineChartComponent,
     FdUiMenuComponent,
     FdUiMenuItemComponent,
     FdUiMenuTriggerDirective,
@@ -13,7 +13,6 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.directive';
-import { BaseChartDirective } from 'ng2-charts';
 
 export type SummaryMacro = {
     key: string;
@@ -34,6 +33,11 @@ export type SummaryMetrics = {
 
 export type StatisticsSummaryExportFormat = 'csv' | 'pdf';
 
+export type SummarySparklinePoint = {
+    label: string;
+    value: number | null;
+};
+
 @Component({
     selector: 'fd-statistics-summary',
     imports: [
@@ -48,7 +52,7 @@ export type StatisticsSummaryExportFormat = 'csv' | 'pdf';
         FdUiMenuComponent,
         FdUiMenuItemComponent,
         FdUiMenuTriggerDirective,
-        BaseChartDirective,
+        FdUiLineChartComponent,
     ],
     templateUrl: './statistics-summary.component.html',
     styleUrls: ['./statistics-summary.component.scss'],
@@ -56,9 +60,8 @@ export type StatisticsSummaryExportFormat = 'csv' | 'pdf';
 })
 export class StatisticsSummaryComponent {
     public readonly summary = input.required<SummaryMetrics | null>();
-    public readonly summarySparklineData = input.required<ChartConfiguration<'line'>['data'] | null>();
-    public readonly summarySparklineOptions = input.required<ChartConfiguration['options'] | null>();
-    public readonly macroSparklineData = input.required<Record<string, ChartConfiguration<'line'>['data']> | null>();
+    public readonly summarySparklinePoints = input.required<readonly SummarySparklinePoint[]>();
+    public readonly macroSparklinePoints = input.required<Record<string, readonly SummarySparklinePoint[]> | null>();
     public readonly emptyKey = input<string>('STATISTICS.NO_DATA');
     public readonly exportingFormat = input.required<StatisticsSummaryExportFormat | null>();
     public readonly exportRequested = output<StatisticsSummaryExportFormat>();

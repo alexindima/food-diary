@@ -2,7 +2,6 @@ import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angul
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import type { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
@@ -17,15 +16,14 @@ import { StatisticsService } from '../api/statistics.service';
 import type { MappedStatistics } from '../models/statistics.data';
 import {
     type BodyChartTab,
-    buildBodyChartData,
-    buildCaloriesLineChartData,
-    buildMacroSparklineData,
-    buildNutrientsBarChartData,
-    buildNutrientsLineChartData,
-    buildNutrientsPieChartData,
-    buildNutrientsRadarChartData,
+    buildBodyChartPoints,
+    buildCaloriesTrendPoints,
+    buildMacroSparklinePoints,
+    buildNutrientBarItems,
+    buildNutrientPieSegments,
+    buildNutrientTrendGroups,
     buildSummaryMetrics,
-    buildSummarySparklineData,
+    buildSummarySparklinePoints,
     type DateRange,
     getCurrentDateRange,
     getQuantizationDays,
@@ -68,65 +66,60 @@ export class StatisticsFacade {
 
     public readonly currentRange = computed<DateRange>(() => getCurrentDateRange(this.selectedRange(), this.customRangeControl.value));
     public readonly summaryMetrics = computed(() => buildSummaryMetrics(this.chartStatisticsData()));
-    public readonly macroSparklineData = computed(() =>
-        buildMacroSparklineData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
+    public readonly macroSparklinePoints = computed(() =>
+        buildMacroSparklinePoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
     );
     public readonly hasStatisticsData = computed(() => (this.chartStatisticsData()?.calories.length ?? 0) > 0);
-    public readonly caloriesLineChartData = computed(() =>
-        buildCaloriesLineChartData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
+    public readonly caloriesTrendPoints = computed(() =>
+        buildCaloriesTrendPoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
     );
-    public readonly nutrientsLineChartData = computed(() =>
-        buildNutrientsLineChartData(
+    public readonly nutrientTrendGroups = computed(() =>
+        buildNutrientTrendGroups(
             this.chartStatisticsData(),
             date => this.formatDateLabel(date),
             key => this.translateService.instant(key),
         ),
     );
-    public readonly summarySparklineData = computed(() =>
-        buildSummarySparklineData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
+    public readonly summarySparklinePoints = computed(() =>
+        buildSummarySparklinePoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
     );
-    public readonly nutrientsPieChartData = computed(() =>
-        buildNutrientsPieChartData(this.chartStatisticsData(), key => this.translateService.instant(key)),
+    public readonly nutrientPieSegments = computed(() =>
+        buildNutrientPieSegments(this.chartStatisticsData(), key => this.translateService.instant(key)),
     );
-    public readonly nutrientsRadarChartData = computed(() =>
-        buildNutrientsRadarChartData(this.chartStatisticsData(), key => this.translateService.instant(key)),
+    public readonly nutrientBarItems = computed(() =>
+        buildNutrientBarItems(this.chartStatisticsData(), key => this.translateService.instant(key)),
     );
-    public readonly nutrientsBarChartData = computed(() =>
-        buildNutrientsBarChartData(this.chartStatisticsData(), key => this.translateService.instant(key)),
-    );
-    public readonly bodyChartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
+    public readonly bodyChartPoints = computed(() => {
         const selectedTab = this.selectedBodyTab();
         const formatLabel = (dateString: string): string => this.formatSummaryLabel(dateString);
 
         if (selectedTab === 'weight') {
-            return buildBodyChartData(this.weightSummaryPoints(), point => point.averageWeight, formatLabel);
+            return buildBodyChartPoints(this.weightSummaryPoints(), point => point.averageWeight, formatLabel);
         }
 
         if (selectedTab === 'waist') {
-            return buildBodyChartData(this.waistSummaryPoints(), point => point.averageCircumference, formatLabel);
+            return buildBodyChartPoints(this.waistSummaryPoints(), point => point.averageCircumference, formatLabel);
         }
 
         if (selectedTab === 'bmi') {
             const heightCm = this.userHeightCm();
             if (heightCm === null || heightCm <= 0) {
-                return null;
+                return [];
             }
 
             const heightM = heightCm / CENTIMETERS_PER_METER;
-            return buildBodyChartData(this.weightSummaryPoints(), point => point.averageWeight / (heightM * heightM), formatLabel);
+            return buildBodyChartPoints(this.weightSummaryPoints(), point => point.averageWeight / (heightM * heightM), formatLabel);
         }
 
         const heightCm = this.userHeightCm();
         if (heightCm === null || heightCm <= 0) {
-            return null;
+            return [];
         }
 
-        return buildBodyChartData(this.waistSummaryPoints(), point => point.averageCircumference / heightCm, formatLabel);
+        return buildBodyChartPoints(this.waistSummaryPoints(), point => point.averageCircumference / heightCm, formatLabel);
     });
     public readonly hasBodyData = computed(() => {
-        const bodyChartData = this.bodyChartData();
-        const values = bodyChartData?.datasets[0].data;
-        return Array.isArray(values) && values.some(value => value !== null);
+        return this.bodyChartPoints().some(point => point.value !== null);
     });
 
     private readonly customRangeValue = toSignal(

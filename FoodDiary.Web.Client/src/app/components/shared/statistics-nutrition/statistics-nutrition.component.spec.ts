@@ -19,16 +19,10 @@ async function setupStatisticsNutritionAsync(): Promise<StatisticsNutritionTestC
     fixture.componentRef.setInput('tabs', [{ value: 'calories', label: 'Calories' }]);
     fixture.componentRef.setInput('selectedTab', 'calories');
     fixture.componentRef.setInput('hasData', true);
-    fixture.componentRef.setInput('caloriesLineChartData', null);
-    fixture.componentRef.setInput('caloriesLineChartOptions', null);
-    fixture.componentRef.setInput('nutrientsLineChartData', null);
-    fixture.componentRef.setInput('nutrientsLineChartOptions', null);
-    fixture.componentRef.setInput('nutrientsPieChartData', null);
-    fixture.componentRef.setInput('pieChartOptions', null);
-    fixture.componentRef.setInput('nutrientsRadarChartData', null);
-    fixture.componentRef.setInput('radarChartOptions', null);
-    fixture.componentRef.setInput('nutrientsBarChartData', null);
-    fixture.componentRef.setInput('barChartOptions', null);
+    fixture.componentRef.setInput('caloriesTrendPoints', []);
+    fixture.componentRef.setInput('nutrientTrendGroups', []);
+    fixture.componentRef.setInput('nutrientPieSegments', []);
+    fixture.componentRef.setInput('nutrientBarItems', []);
 
     return { component, fixture };
 }

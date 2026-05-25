@@ -1,0 +1,63 @@
+:host {
+    --fd-bar-chart-height: 180px;
+    display: block;
+    min-width: 0;
+}
+
+.fd-ui-bar-chart {
+    display: grid;
+    gap: var(--fd-space-xs);
+    width: 100%;
+    min-width: 0;
+}
+
+.fd-ui-bar-chart__svg {
+    display: block;
+    width: 100%;
+    height: var(--fd-bar-chart-height);
+    overflow: visible;
+}
+
+.fd-ui-bar-chart__axis {
+    stroke: var(--fd-color-border);
+    stroke-width: 1;
+}
+
+.fd-ui-bar-chart__bar {
+    cursor: help;
+    transition:
+        height 180ms ease,
+        y 180ms ease,
+        opacity 120ms ease;
+}
+
+.fd-ui-bar-chart__bar:hover {
+    opacity: 0.82;
+}
+
+.fd-ui-bar-chart__labels {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--fd-space-xxs);
+    min-width: 0;
+}
+
+.fd-ui-bar-chart__label {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fd-ui-bar-chart__empty {
+    display: grid;
+    min-height: var(--fd-bar-chart-height);
+    place-items: center;
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+}

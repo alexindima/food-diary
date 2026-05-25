@@ -45,4 +45,13 @@ describe('FdUiPieChartComponent', () => {
         expect(host().querySelectorAll('.fd-ui-pie-chart__segment')).toHaveLength(0);
         expect(host().querySelector('.fd-ui-pie-chart__empty')?.textContent.trim()).toBe('No data');
     });
+
+    it('should hide legend when requested', () => {
+        fixture.componentRef.setInput('segments', [{ label: 'Opera', value: 8 }]);
+        fixture.componentRef.setInput('showLegend', false);
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-pie-chart__legend')).toBeNull();
+        expect(host().querySelector('.fd-ui-pie-chart__empty')).toBeNull();
+    });
 });

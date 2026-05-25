@@ -17,7 +17,7 @@ import type {
 import { MAX_WEIGHT_KG, MIN_WEIGHT_KG } from './weight-history.constants';
 import type { WeightHistoryCustomRange, WeightHistoryDateRange, WeightHistoryRange } from './weight-history.types';
 import { buildBmiViewModel } from './weight-history-bmi.mapper';
-import { buildWeightHistoryChartData } from './weight-history-chart.mapper';
+import { buildWeightHistoryChartPoints } from './weight-history-chart.mapper';
 import {
     buildDefaultWeightHistoryCustomRange,
     buildWeightHistoryFiltersForRange,
@@ -64,13 +64,7 @@ export class WeightHistoryFacade {
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
 
-    public readonly chartData = computed(() =>
-        buildWeightHistoryChartData(
-            this.summaryPoints(),
-            this.translate.instant('WEIGHT_HISTORY.CHART_LABEL'),
-            this.translate.getCurrentLang(),
-        ),
-    );
+    public readonly chartPoints = computed(() => buildWeightHistoryChartPoints(this.summaryPoints(), this.translate.getCurrentLang()));
 
     public readonly latestWeight = computed<number | null>(() => {
         const entries = this.entriesDescending();

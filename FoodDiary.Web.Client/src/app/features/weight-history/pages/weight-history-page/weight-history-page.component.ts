@@ -49,7 +49,7 @@ export class WeightHistoryPageComponent {
     public readonly isSummaryLoading = this.facade.isSummaryLoading;
     public readonly customRangeControl = this.facade.customRangeControl;
     public readonly entriesDescending = this.facade.entriesDescending;
-    public readonly chartData = this.facade.chartData;
+    public readonly chartPoints = this.facade.chartPoints;
     public readonly form = this.facade.form;
     public readonly desiredWeightControl = this.facade.desiredWeightControl;
     public readonly bmiViewModel = this.facade.bmiViewModel;

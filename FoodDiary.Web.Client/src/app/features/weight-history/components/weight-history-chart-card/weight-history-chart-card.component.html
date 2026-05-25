@@ -5,20 +5,16 @@
         </div>
     } @else {
         @if (hasPoints()) {
-            @defer (when hasPoints()) {
-                <canvas
-                    baseChart
-                    class="weight-history-page__chart-canvas"
-                    type="line"
-                    [data]="chartData()"
-                    [options]="chartOptions"
-                    [legend]="false"
-                ></canvas>
-            } @placeholder {
-                <fd-ui-loader />
-            } @loading (minimum 300ms) {
-                <fd-ui-loader />
-            }
+            <fd-ui-line-chart
+                class="weight-history-page__chart"
+                lineColor="var(--fd-color-primary-600)"
+                [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate"
+                [points]="chartPoints()"
+                [showArea]="false"
+                [showAxisLabels]="true"
+                [showGrid]="true"
+                [valueSuffix]="'GENERAL.UNITS.KG' | translate"
+            />
         } @else {
             <p class="weight-history-page__empty-chart fd-ui-body-sm">
                 {{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}

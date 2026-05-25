@@ -19,7 +19,7 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-waist-history-chart-card [isLoading]="isSummaryLoading()" [chartData]="chartData()" />
+        <fd-waist-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
 
         @defer (on viewport) {
             <fd-waist-history-wht-card [viewModel]="whtViewModel()" />

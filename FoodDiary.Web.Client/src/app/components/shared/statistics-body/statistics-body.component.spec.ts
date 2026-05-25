@@ -22,8 +22,7 @@ async function setupStatisticsBodyAsync(
     fixture.componentRef.setInput('selectedTab', 'weight');
     fixture.componentRef.setInput('isLoading', overrides.isLoading ?? false);
     fixture.componentRef.setInput('hasLoadError', overrides.hasLoadError ?? false);
-    fixture.componentRef.setInput('bodyChartData', null);
-    fixture.componentRef.setInput('bodyChartOptions', null);
+    fixture.componentRef.setInput('bodyChartPoints', []);
     fixture.componentRef.setInput('hasBodyData', overrides.hasBodyData ?? true);
 
     return { component, fixture };

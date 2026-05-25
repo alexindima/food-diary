@@ -1,55 +1,20 @@
-import type { ChartConfiguration } from 'chart.js';
-
 import { compareDatesAsc, parseDateValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { WaistEntry, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import type { WaistEntryViewModel } from './waist-history.types';
 
-export const WAIST_HISTORY_CHART_OPTIONS: ChartConfiguration<'line'>['options'] = {
-    responsive: true,
-    scales: {
-        x: {
-            ticks: {
-                maxRotation: 0,
-                autoSkip: true,
-                maxTicksLimit: 6,
-            },
-        },
-        y: {
-            beginAtZero: true,
-        },
-    },
-    plugins: {
-        legend: {
-            display: false,
-        },
-    },
+export type WaistHistoryChartPoint = {
+    label: string;
+    value: number | null;
 };
 
-export function buildWaistHistoryChartData(
-    points: WaistEntrySummaryPoint[],
-    label: string,
-    locale: string,
-): ChartConfiguration<'line'>['data'] {
+export function buildWaistHistoryChartPoints(points: WaistEntrySummaryPoint[], locale: string): WaistHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
 
-    return {
-        labels: ordered.map(point => formatWaistHistoryDateLabel(point.startDate, locale)),
-        datasets: [
-            {
-                data: ordered.map(point => (point.averageCircumference > 0 ? point.averageCircumference : null)),
-                label,
-                borderColor: 'var(--fd-color-sky-500)',
-                backgroundColor: 'transparent',
-                fill: false,
-                tension: 0.35,
-                pointRadius: 4,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                borderWidth: 2,
-                spanGaps: true,
-            },
-        ],
-    };
+    return ordered.map(point => ({
+        label: formatWaistHistoryDateLabel(point.startDate, locale),
+        value: point.averageCircumference > 0 ? point.averageCircumference : null,
+    }));
 }
 
 export function buildWaistEntryViewModels(entries: WaistEntry[], locale: string): WaistEntryViewModel[] {

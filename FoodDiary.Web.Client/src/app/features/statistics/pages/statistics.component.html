@@ -32,9 +32,8 @@
 
             <fd-statistics-summary
                 [summary]="summaryMetrics()"
-                [summarySparklineData]="summarySparklineData()"
-                [summarySparklineOptions]="summarySparklineOptions"
-                [macroSparklineData]="macroSparklineData()"
+                [summarySparklinePoints]="summarySparklinePoints()"
+                [macroSparklinePoints]="macroSparklinePoints()"
                 [exportingFormat]="exportingFormat()"
                 (exportRequested)="exportDiary($event)"
             />
@@ -44,16 +43,10 @@
                 [tabs]="nutritionTabs"
                 [selectedTab]="selectedNutritionTab()"
                 [hasData]="hasStatisticsData()"
-                [caloriesLineChartData]="caloriesLineChartData()"
-                [caloriesLineChartOptions]="caloriesLineChartOptions"
-                [nutrientsLineChartData]="nutrientsLineChartData()"
-                [nutrientsLineChartOptions]="nutrientsLineChartOptions"
-                [nutrientsPieChartData]="nutrientsPieChartData()"
-                [pieChartOptions]="pieChartOptions"
-                [nutrientsRadarChartData]="nutrientsRadarChartData()"
-                [radarChartOptions]="radarChartOptions"
-                [nutrientsBarChartData]="nutrientsBarChartData()"
-                [barChartOptions]="barChartOptions"
+                [caloriesTrendPoints]="caloriesTrendPoints()"
+                [nutrientTrendGroups]="nutrientTrendGroups()"
+                [nutrientPieSegments]="nutrientPieSegments()"
+                [nutrientBarItems]="nutrientBarItems()"
                 (selectedTabChange)="changeNutritionTab($event)"
             />
 
@@ -63,8 +56,7 @@
                 [selectedTab]="selectedBodyTab()"
                 [isLoading]="isBodyLoading()"
                 [hasLoadError]="hasBodyLoadError()"
-                [bodyChartData]="bodyChartData()"
-                [bodyChartOptions]="bodyChartOptions"
+                [bodyChartPoints]="bodyChartPoints()"
                 [hasBodyData]="hasBodyData()"
                 (retry)="reload()"
                 (selectedTabChange)="changeBodyTab($event)"

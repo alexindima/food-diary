@@ -1,17 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, inject, NgZone, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import type { ChartConfiguration } from 'chart.js';
+import { FdUiLineChartComponent, type FdUiLineChartPoint } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell.component';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { BaseChartDirective } from 'ng2-charts';
 
 import { LocalizationService } from '../../../../services/localization.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { FastingCheckIn } from '../../models/fasting.data';
 
-const INITIAL_CHART_RESIZE_DELAY_MS = 180;
+const FASTING_CHECK_IN_MIN_LEVEL = 1;
+const FASTING_CHECK_IN_MAX_LEVEL = 5;
 
 export type FastingCheckInChartDialogData = {
     title: string;
@@ -28,23 +27,28 @@ type FastingCheckInChartPoint = {
     notes: string | null;
 };
 
+type FastingCheckInChartSeries = {
+    key: string;
+    label: string;
+    color: string;
+    points: readonly FdUiLineChartPoint[];
+};
+
 @Component({
     selector: 'fd-fasting-checkin-chart-dialog',
-    imports: [CommonModule, BaseChartDirective, FdUiDialogShellComponent],
+    imports: [CommonModule, FdUiDialogShellComponent, FdUiLineChartComponent],
     templateUrl: './fasting-checkin-chart-dialog.component.html',
     styleUrl: './fasting-checkin-chart-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [provideCharts(withDefaultRegisterables())],
 })
 export class FastingCheckInChartDialogComponent {
-    private readonly chartDirective = viewChild(BaseChartDirective);
-
     public readonly data = inject<FastingCheckInChartDialogData>(FD_UI_DIALOG_DATA);
 
     private readonly translateService = inject(TranslateService);
     private readonly localizationService = inject(LocalizationService);
-    private readonly ngZone = inject(NgZone);
-    private hasScheduledInitialChartResize = false;
+
+    protected readonly minLevel = FASTING_CHECK_IN_MIN_LEVEL;
+    protected readonly maxLevel = FASTING_CHECK_IN_MAX_LEVEL;
 
     public readonly points = computed<FastingCheckInChartPoint[]>(() =>
         [...this.data.checkIns]
@@ -59,180 +63,35 @@ export class FastingCheckInChartDialogComponent {
             })),
     );
 
-    public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => ({
-        labels: this.points().map(point => this.formatAxisLabel(point.checkedInAtUtc)),
-        datasets: [
+    public readonly chartSeries = computed<FastingCheckInChartSeries[]>(() => {
+        const points = this.points();
+        const buildPoints = (getValue: (point: FastingCheckInChartPoint) => number): FdUiLineChartPoint[] =>
+            points.map(point => ({
+                label: this.formatAxisLabel(point.checkedInAtUtc),
+                value: getValue(point),
+            }));
+
+        return [
             {
+                key: 'hunger',
                 label: this.translateService.instant('FASTING.CHECK_IN.HUNGER'),
-                data: this.points().map(point => point.hungerLevel),
-                borderColor: 'var(--fd-color-orange-500)',
-                backgroundColor: 'color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent)',
-                tension: 0.3,
-                borderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 5,
-                fill: false,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: 'var(--fd-color-orange-500)',
-                pointBorderWidth: 2,
+                color: 'var(--fd-color-orange-500)',
+                points: buildPoints(point => point.hungerLevel),
             },
             {
+                key: 'energy',
                 label: this.translateService.instant('FASTING.CHECK_IN.ENERGY'),
-                data: this.points().map(point => point.energyLevel),
-                borderColor: 'var(--fd-color-primary-600)',
-                backgroundColor: 'color-mix(in srgb, var(--fd-color-primary-600) 12%, transparent)',
-                tension: 0.3,
-                borderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 5,
-                fill: false,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: 'var(--fd-color-primary-600)',
-                pointBorderWidth: 2,
+                color: 'var(--fd-color-primary-600)',
+                points: buildPoints(point => point.energyLevel),
             },
             {
+                key: 'mood',
                 label: this.translateService.instant('FASTING.CHECK_IN.MOOD'),
-                data: this.points().map(point => point.moodLevel),
-                borderColor: 'var(--fd-color-purple-500)',
-                backgroundColor: 'color-mix(in srgb, var(--fd-color-purple-500) 12%, transparent)',
-                tension: 0.3,
-                borderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 5,
-                fill: false,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: 'var(--fd-color-purple-500)',
-                pointBorderWidth: 2,
+                color: 'var(--fd-color-purple-500)',
+                points: buildPoints(point => point.moodLevel),
             },
-        ],
-    }));
-
-    public readonly chartOptions: ChartConfiguration<'line'>['options'] = {
-        responsive: true,
-        maintainAspectRatio: true,
-        aspectRatio: 3.2,
-        animation: false,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'bottom',
-                labels: {
-                    usePointStyle: true,
-                    boxWidth: 10,
-                    color: 'var(--fd-color-slate-700)',
-                    font: {
-                        size: 12,
-                        weight: 600,
-                    },
-                },
-            },
-            tooltip: {
-                displayColors: true,
-                backgroundColor: 'var(--fd-color-slate-900)',
-                titleColor: 'var(--fd-color-slate-200)',
-                bodyColor: 'var(--fd-color-slate-200)',
-                footerColor: 'var(--fd-color-slate-300)',
-                padding: 10,
-                callbacks: {
-                    title: items => {
-                        const point = this.getTooltipPoint(items);
-                        return point === undefined ? '' : this.formatTooltipTitle(point.checkedInAtUtc);
-                    },
-                    footer: items => {
-                        const point = this.getTooltipPoint(items);
-                        if (point === undefined) {
-                            return '';
-                        }
-
-                        const parts: string[] = [];
-                        if (point.symptoms.length > 0) {
-                            parts.push(
-                                this.translateService.instant('FASTING.CHECK_IN.CHART_TOOLTIP_SYMPTOMS', {
-                                    value: point.symptoms.map(symptom => this.getSymptomLabel(symptom)).join(', '),
-                                }),
-                            );
-                        }
-
-                        if (point.notes !== null && point.notes.length > 0) {
-                            parts.push(
-                                this.translateService.instant('FASTING.CHECK_IN.CHART_TOOLTIP_NOTES', {
-                                    value: point.notes,
-                                }),
-                            );
-                        }
-
-                        return parts;
-                    },
-                },
-            },
-        },
-        scales: {
-            x: {
-                grid: {
-                    color: 'color-mix(in srgb, var(--fd-color-slate-200) 80%, transparent)',
-                },
-                ticks: {
-                    color: 'var(--fd-color-slate-500)',
-                    maxRotation: 0,
-                    autoSkip: true,
-                    maxTicksLimit: 8,
-                    autoSkipPadding: 24,
-                },
-            },
-            y: {
-                min: 1,
-                max: 5,
-                ticks: {
-                    stepSize: 1,
-                    color: 'var(--fd-color-slate-500)',
-                },
-                grid: {
-                    color: 'color-mix(in srgb, var(--fd-color-slate-200) 90%, transparent)',
-                },
-            },
-        },
-    };
-
-    public constructor() {
-        effect(() => {
-            const chartDirective = this.chartDirective();
-            if (chartDirective === undefined || this.hasScheduledInitialChartResize) {
-                return;
-            }
-
-            this.scheduleInitialChartResize();
-        });
-    }
-
-    private scheduleInitialChartResize(): void {
-        this.hasScheduledInitialChartResize = true;
-        afterNextRender(() => {
-            this.ngZone.runOutsideAngular(() => {
-                this.resizeChartLater();
-            });
-        });
-    }
-
-    private resizeChartLater(): void {
-        window.setTimeout(() => {
-            const chartDirective = this.chartDirective();
-            if (chartDirective === undefined) {
-                return;
-            }
-
-            chartDirective.chart?.resize();
-            chartDirective.update();
-        }, INITIAL_CHART_RESIZE_DELAY_MS);
-    }
-
-    private getTooltipPoint(items: ReadonlyArray<{ dataIndex: number }>): FastingCheckInChartPoint | undefined {
-        const tooltipItem = (items as ReadonlyArray<{ dataIndex: number } | undefined>)[0];
-        if (tooltipItem === undefined) {
-            return undefined;
-        }
-
-        return (this.points() as ReadonlyArray<FastingCheckInChartPoint | undefined>)[tooltipItem.dataIndex];
-    }
+        ];
+    });
 
     private formatAxisLabel(value: string): string {
         return new Intl.DateTimeFormat(this.getLocale(), {
@@ -241,21 +100,7 @@ export class FastingCheckInChartDialogComponent {
         }).format(new Date(value));
     }
 
-    private formatTooltipTitle(value: string): string {
-        return new Intl.DateTimeFormat(this.getLocale(), {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        }).format(new Date(value));
-    }
-
     private getLocale(): string {
         return resolveAppLocale(this.localizationService.getCurrentLanguage());
-    }
-
-    private getSymptomLabel(symptom: string): string {
-        return this.translateService.instant(`FASTING.CHECK_IN.SYMPTOMS.${symptom.toUpperCase()}`);
     }
 }

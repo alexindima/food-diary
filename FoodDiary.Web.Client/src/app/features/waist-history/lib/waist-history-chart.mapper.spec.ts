@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { WaistEntrySummaryPoint } from '../models/waist-entry.data';
-import { buildWaistEntryViewModels, buildWaistHistoryChartData } from './waist-history-chart.mapper';
+import { buildWaistEntryViewModels, buildWaistHistoryChartPoints } from './waist-history-chart.mapper';
 
 const AVERAGE_CIRCUMFERENCE = 82;
 const POINTS: WaistEntrySummaryPoint[] = [
@@ -11,11 +11,12 @@ const POINTS: WaistEntrySummaryPoint[] = [
 
 describe('waist history chart mapper', () => {
     it('sorts summary points and maps empty averages to gaps', () => {
-        const data = buildWaistHistoryChartData(POINTS, 'Waist', 'en');
+        const points = buildWaistHistoryChartPoints(POINTS, 'en');
 
-        expect(data.labels).toEqual(['5/1/2026', '5/2/2026']);
-        expect(data.datasets[0].label).toBe('Waist');
-        expect(data.datasets[0].data).toEqual([null, AVERAGE_CIRCUMFERENCE]);
+        expect(points).toEqual([
+            { label: '5/1/2026', value: null },
+            { label: '5/2/2026', value: AVERAGE_CIRCUMFERENCE },
+        ]);
     });
 
     it('builds entry view models with localized numeric dates', () => {

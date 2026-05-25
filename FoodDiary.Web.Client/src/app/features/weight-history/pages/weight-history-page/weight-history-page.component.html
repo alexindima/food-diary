@@ -19,7 +19,7 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-weight-history-chart-card [isLoading]="isSummaryLoading()" [chartData]="chartData()" />
+        <fd-weight-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
 
         @defer (on viewport) {
             <fd-weight-history-bmi-card [viewModel]="bmiViewModel()" />

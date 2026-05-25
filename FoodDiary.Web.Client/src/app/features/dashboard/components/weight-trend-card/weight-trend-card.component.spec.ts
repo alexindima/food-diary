@@ -7,7 +7,6 @@ import { WeightTrendCardComponent, type WeightTrendPoint } from './weight-trend-
 const CURRENT_WEIGHT = 80;
 const WEIGHT_CHANGE = -1.24;
 const EXPECTED_FORMATTED_CHANGE = '-1.2';
-const CHART_MIN_WITH_PADDING = 78.5;
 
 describe('WeightTrendCardComponent', () => {
     it('formats change tone and value', async () => {
@@ -19,7 +18,7 @@ describe('WeightTrendCardComponent', () => {
         expect(component.formattedChangeValue()).toBe(EXPECTED_FORMATTED_CHANGE);
     });
 
-    it('builds chart data from ordered points and pads y axis', async () => {
+    it('builds chart points from ordered weight points', async () => {
         const { component, fixture } = await setupComponentAsync({
             points: [
                 { date: '2026-05-03', value: CURRENT_WEIGHT },
@@ -30,11 +29,12 @@ describe('WeightTrendCardComponent', () => {
 
         fixture.detectChanges();
 
-        const chartData = component.chartData();
-        const yScale = component.dynamicChartOptions()?.scales?.['y'];
-
-        expect(chartData?.datasets[0]?.data).toEqual([CURRENT_WEIGHT - 1, null, CURRENT_WEIGHT]);
-        expect(yScale).toMatchObject({ min: CHART_MIN_WITH_PADDING });
+        expect(component.chartPoints()).toEqual([
+            { label: '2026-05-01', value: CURRENT_WEIGHT - 1 },
+            { label: '2026-05-02', value: null },
+            { label: '2026-05-03', value: CURRENT_WEIGHT },
+        ]);
+        expect(component.hasChartData()).toBe(true);
     });
 });
 

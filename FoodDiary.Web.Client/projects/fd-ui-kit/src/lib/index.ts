@@ -1,5 +1,6 @@
 export * from './accent-surface/fd-ui-accent-surface.component';
 export * from './autocomplete/fd-ui-autocomplete.component';
+export * from './bar-chart/fd-ui-bar-chart.component';
 export * from './button/fd-ui-button.component';
 export * from './calendar/fd-ui-calendar.component';
 export * from './card/fd-ui-card.component';
@@ -33,6 +34,7 @@ export * from './image-preview-dialog/fd-ui-image-preview-dialog.component';
 export * from './inline-alert/fd-ui-inline-alert.component';
 export * from './input/fd-ui-input.component';
 export * from './input/fd-ui-input.tokens';
+export * from './line-chart/fd-ui-line-chart.component';
 export * from './loader/fd-ui-loader.component';
 export * from './menu/fd-ui-menu.component';
 export * from './menu/fd-ui-menu-divider.component';

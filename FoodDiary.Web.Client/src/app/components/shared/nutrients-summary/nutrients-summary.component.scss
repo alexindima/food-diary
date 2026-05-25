@@ -7,6 +7,16 @@
     }
 }
 
+.chart {
+    --fd-bar-chart-height: 100%;
+    min-width: 0;
+
+    fd-ui-pie-chart,
+    fd-ui-bar-chart {
+        width: 100%;
+    }
+}
+
 .fiber-highlight {
     margin: 0 0 var(--fd-space-md);
     color: var(--fd-color-text);

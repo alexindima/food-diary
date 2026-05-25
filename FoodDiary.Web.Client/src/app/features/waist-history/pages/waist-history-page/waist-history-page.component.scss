@@ -47,9 +47,9 @@
         gap: var(--fd-space-card-content-gap);
     }
 
-    &__chart-canvas {
+    &__chart {
+        --fd-line-chart-height: 260px;
         width: 100%;
-        min-height: 260px;
     }
 
     &__placeholder {

@@ -33,7 +33,8 @@
             "G": "g",
             "ML": "ml",
             "PCS": "pcs",
-            "KG": "kg"
+            "KG": "kg",
+            "CM": "cm"
         },
         "NUTRIENTS": {
             "CALORIES": "Calories",

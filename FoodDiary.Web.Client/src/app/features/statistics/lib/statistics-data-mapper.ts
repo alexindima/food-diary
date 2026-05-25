@@ -1,11 +1,12 @@
-import type { ChartConfiguration } from 'chart.js';
+import type { FdUiBarChartItem, FdUiLineChartPoint, FdUiPieChartSegment } from 'fd-ui-kit';
 
-import type { SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
+import type { StatisticsBodyChartPoint } from '../../../components/shared/statistics-body/statistics-body.component';
+import type { NutritionTrendGroup } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
+import type { SummaryMetrics, SummarySparklinePoint } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { normalizeEndOfLocalDay, normalizeStartOfLocalDay } from '../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../shared/lib/time.constants';
 import type { MappedStatistics } from '../models/statistics.data';
-import { applyAlpha } from './statistics-chart-config';
 
 export type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 export type NutritionChartTab = 'calories' | 'macros' | 'distribution';
@@ -42,8 +43,13 @@ const MONTH_QUANTIZATION_DAYS = 3;
 const TWO_WEEK_DAYS = 14;
 const TWO_WEEK_QUANTIZATION_DAYS = 2;
 const WEEK_DAY_OFFSET = 6;
-const DEFAULT_FILL_ALPHA = 0.16;
-const MACRO_SPARKLINE_FILL_ALPHA = 0.18;
+
+function buildChartPoints(labels: readonly string[], series: ReadonlyArray<number | null> | undefined): FdUiLineChartPoint[] {
+    return labels.map((label, index) => ({
+        label,
+        value: series?.[index] ?? null,
+    }));
+}
 
 export function getQuantizationDays(start: Date, end: Date): number {
     const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / MS_PER_DAY));
@@ -114,152 +120,76 @@ export function getCurrentDateRange(
     return { start, end };
 }
 
-export function buildCaloriesLineChartData(
-    stats: MappedStatistics | null,
-    formatLabel: (date: Date) => string,
-): ChartConfiguration<'line'>['data'] {
-    return {
-        labels: stats?.date.map(date => formatLabel(date)) ?? [],
-        datasets: [
-            {
-                data: stats?.calories ?? [],
-                borderColor: CHART_COLORS.primaryLine,
-                backgroundColor: 'transparent',
-                tension: 0.35,
-                pointRadius: 4,
-                pointHoverRadius: 5,
-                borderWidth: 2,
-                fill: false,
-                spanGaps: true,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: CHART_COLORS.primaryLine,
-                pointBorderWidth: 2,
-            },
-        ],
-    };
+export function buildCaloriesTrendPoints(stats: MappedStatistics | null, formatLabel: (date: Date) => string): FdUiLineChartPoint[] {
+    const labels = stats?.date.map(date => formatLabel(date)) ?? [];
+
+    return buildChartPoints(labels, stats?.calories);
 }
 
-export function buildNutrientsLineChartData(
+export function buildNutrientTrendGroups(
     stats: MappedStatistics | null,
     formatLabel: (date: Date) => string,
     translate: (key: string) => string,
-): ChartConfiguration<'line'>['data'] {
+): NutritionTrendGroup[] {
+    const labels = stats?.date.map(date => formatLabel(date)) ?? [];
     const nutrients = stats?.nutrientsStatistic;
 
-    return {
-        labels: stats?.date.map(date => formatLabel(date)) ?? [],
-        datasets: [
-            {
-                data: nutrients?.proteins ?? [],
-                label: translate('NUTRIENTS.PROTEINS'),
-                borderColor: CHART_COLORS.proteins,
-                backgroundColor: CHART_COLORS.proteins,
-                tension: 0.3,
-                fill: false,
-                spanGaps: true,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: CHART_COLORS.proteins,
-                pointBorderWidth: 2,
-                pointRadius: 4,
-            },
-            {
-                data: nutrients?.fats ?? [],
-                label: translate('NUTRIENTS.FATS'),
-                borderColor: CHART_COLORS.fats,
-                backgroundColor: CHART_COLORS.fats,
-                tension: 0.3,
-                fill: false,
-                spanGaps: true,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: CHART_COLORS.fats,
-                pointBorderWidth: 2,
-                pointRadius: 4,
-            },
-            {
-                data: nutrients?.carbs ?? [],
-                label: translate('NUTRIENTS.CARBS'),
-                borderColor: CHART_COLORS.carbs,
-                backgroundColor: CHART_COLORS.carbs,
-                tension: 0.3,
-                fill: false,
-                spanGaps: true,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: CHART_COLORS.carbs,
-                pointBorderWidth: 2,
-                pointRadius: 4,
-            },
-        ],
-    };
+    return [
+        {
+            key: 'proteins',
+            label: translate('NUTRIENTS.PROTEINS'),
+            color: CHART_COLORS.proteins,
+            points: buildChartPoints(labels, nutrients?.proteins),
+        },
+        {
+            key: 'fats',
+            label: translate('NUTRIENTS.FATS'),
+            color: CHART_COLORS.fats,
+            points: buildChartPoints(labels, nutrients?.fats),
+        },
+        {
+            key: 'carbs',
+            label: translate('NUTRIENTS.CARBS'),
+            color: CHART_COLORS.carbs,
+            points: buildChartPoints(labels, nutrients?.carbs),
+        },
+        {
+            key: 'fiber',
+            label: translate('SHARED.NUTRIENTS_SUMMARY.FIBER'),
+            color: CHART_COLORS.fiber,
+            points: buildChartPoints(labels, nutrients?.fiber),
+        },
+    ];
 }
 
-export function buildNutrientsPieChartData(
-    stats: MappedStatistics | null,
-    translate: (key: string) => string,
-): ChartConfiguration<'pie'>['data'] {
+export function buildNutrientPieSegments(stats: MappedStatistics | null, translate: (key: string) => string): FdUiPieChartSegment[] {
     const aggregated = stats?.aggregatedNutrients;
 
-    return {
-        labels: [translate('NUTRIENTS.PROTEINS'), translate('NUTRIENTS.FATS'), translate('NUTRIENTS.CARBS')],
-        datasets: [
-            {
-                data: [aggregated?.proteins ?? 0, aggregated?.fats ?? 0, aggregated?.carbs ?? 0],
-                backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
-                borderWidth: 0,
-            },
-        ],
-    };
+    return [
+        { label: translate('NUTRIENTS.PROTEINS'), value: aggregated?.proteins ?? 0, color: CHART_COLORS.proteins },
+        { label: translate('NUTRIENTS.FATS'), value: aggregated?.fats ?? 0, color: CHART_COLORS.fats },
+        { label: translate('NUTRIENTS.CARBS'), value: aggregated?.carbs ?? 0, color: CHART_COLORS.carbs },
+    ];
 }
 
-export function buildNutrientsRadarChartData(
-    stats: MappedStatistics | null,
-    translate: (key: string) => string,
-): ChartConfiguration<'radar'>['data'] {
+export function buildNutrientBarItems(stats: MappedStatistics | null, translate: (key: string) => string): FdUiBarChartItem[] {
     const aggregated = stats?.aggregatedNutrients;
 
-    return {
-        labels: [translate('NUTRIENTS.PROTEINS'), translate('NUTRIENTS.FATS'), translate('NUTRIENTS.CARBS')],
-        datasets: [
-            {
-                data: [aggregated?.proteins ?? 0, aggregated?.fats ?? 0, aggregated?.carbs ?? 0],
-                backgroundColor: CHART_COLORS.radarBackground,
-                borderColor: CHART_COLORS.radarBorder,
-                borderWidth: 2,
-                pointBackgroundColor: CHART_COLORS.primaryLine,
-            },
-        ],
-    };
+    return [
+        { label: translate('NUTRIENTS.PROTEINS'), value: aggregated?.proteins ?? 0, color: CHART_COLORS.proteins },
+        { label: translate('NUTRIENTS.FATS'), value: aggregated?.fats ?? 0, color: CHART_COLORS.fats },
+        { label: translate('NUTRIENTS.CARBS'), value: aggregated?.carbs ?? 0, color: CHART_COLORS.carbs },
+        { label: translate('SHARED.NUTRIENTS_SUMMARY.FIBER'), value: aggregated?.fiber ?? 0, color: CHART_COLORS.fiber },
+    ];
 }
 
-export function buildNutrientsBarChartData(
-    stats: MappedStatistics | null,
-    translate: (key: string) => string,
-): ChartConfiguration<'bar'>['data'] {
-    const aggregated = stats?.aggregatedNutrients;
-
-    return {
-        labels: [
-            translate('NUTRIENTS.PROTEINS'),
-            translate('NUTRIENTS.FATS'),
-            translate('NUTRIENTS.CARBS'),
-            translate('SHARED.NUTRIENTS_SUMMARY.FIBER'),
-        ],
-        datasets: [
-            {
-                data: [aggregated?.proteins ?? 0, aggregated?.fats ?? 0, aggregated?.carbs ?? 0, aggregated?.fiber ?? 0],
-                backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs, CHART_COLORS.fiber],
-                borderRadius: 6,
-            },
-        ],
-    };
-}
-
-export function buildBodyChartData<T extends { startDate: string }>(
+export function buildBodyChartPoints<T extends { startDate: string }>(
     points: T[],
     getValue: (point: T) => number | null | undefined,
     formatLabel: (dateString: string) => string,
-): ChartConfiguration<'line'>['data'] | null {
+): StatisticsBodyChartPoint[] {
     if (points.length === 0) {
-        return null;
+        return [];
     }
 
     const labels: string[] = [];
@@ -276,29 +206,12 @@ export function buildBodyChartData<T extends { startDate: string }>(
     });
 
     if (data.every(value => value === null)) {
-        return null;
+        return [];
     }
 
     const chartData = interpolateMissingBodyValues(data);
 
-    return {
-        labels,
-        datasets: [
-            {
-                data: chartData,
-                borderColor: CHART_COLORS.primaryLine,
-                backgroundColor: 'transparent',
-                tension: 0.3,
-                pointRadius: 4,
-                borderWidth: 2,
-                spanGaps: true,
-                fill: false,
-                pointBackgroundColor: 'var(--fd-color-white)',
-                pointBorderColor: CHART_COLORS.primaryLine,
-                pointBorderWidth: 2,
-            },
-        ],
-    };
+    return buildChartPoints(labels, chartData);
 }
 
 function interpolateMissingBodyValues(data: Array<number | null>): Array<number | null> {
@@ -376,58 +289,21 @@ export function buildSummaryMetrics(stats: MappedStatistics | null): SummaryMetr
     };
 }
 
-export function buildMacroSparklineData(
+export function buildMacroSparklinePoints(
     stats: MappedStatistics | null,
     formatLabel: (date: Date) => string,
-): Record<MacroKey, ChartConfiguration<'line'>['data']> {
+): Record<MacroKey, SummarySparklinePoint[]> {
     const labels = stats?.date.map(date => formatLabel(date)) ?? [];
     const nutrients = stats?.nutrientsStatistic;
 
-    const buildData = (
-        series: number[] | undefined,
-        color: string,
-        fillAlpha = DEFAULT_FILL_ALPHA,
-    ): ChartConfiguration<'line'>['data'] => ({
-        labels,
-        datasets: [
-            {
-                data: series ?? [],
-                borderColor: color,
-                backgroundColor: applyAlpha(color, fillAlpha),
-                tension: 0.35,
-                borderWidth: 2,
-                fill: true,
-                pointRadius: 0,
-                spanGaps: true,
-            },
-        ],
-    });
-
     return {
-        proteins: buildData(nutrients?.proteins, CHART_COLORS.proteins, MACRO_SPARKLINE_FILL_ALPHA),
-        fats: buildData(nutrients?.fats, CHART_COLORS.fats, MACRO_SPARKLINE_FILL_ALPHA),
-        carbs: buildData(nutrients?.carbs, CHART_COLORS.carbs, MACRO_SPARKLINE_FILL_ALPHA),
-        fiber: buildData(nutrients?.fiber, CHART_COLORS.fiber, MACRO_SPARKLINE_FILL_ALPHA),
+        proteins: buildChartPoints(labels, nutrients?.proteins),
+        fats: buildChartPoints(labels, nutrients?.fats),
+        carbs: buildChartPoints(labels, nutrients?.carbs),
+        fiber: buildChartPoints(labels, nutrients?.fiber),
     };
 }
 
-export function buildSummarySparklineData(
-    stats: MappedStatistics | null,
-    formatLabel: (date: Date) => string,
-): ChartConfiguration<'line'>['data'] {
-    return {
-        labels: stats?.date.map(date => formatLabel(date)) ?? [],
-        datasets: [
-            {
-                data: stats?.calories ?? [],
-                borderColor: CHART_COLORS.primaryLine,
-                backgroundColor: CHART_COLORS.primaryFill,
-                tension: 0.3,
-                borderWidth: 2,
-                fill: true,
-                pointRadius: 0,
-                spanGaps: true,
-            },
-        ],
-    };
+export function buildSummarySparklinePoints(stats: MappedStatistics | null, formatLabel: (date: Date) => string): SummarySparklinePoint[] {
+    return buildCaloriesTrendPoints(stats, formatLabel);
 }

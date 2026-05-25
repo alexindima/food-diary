@@ -13,15 +13,19 @@
 }
 
 .stats-nutrition-card__chart-area {
+    --fd-line-chart-height: 320px;
     min-height: 320px;
     width: 100%;
 }
 
+.stats-nutrition-card__trend-grid,
 .stats-nutrition-card__distribution-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .stats-nutrition-card__chart-card {
+    --fd-bar-chart-height: 220px;
+    --fd-line-chart-height: 220px;
     background: var(--fd-bg-surface-inset);
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-md);
@@ -30,28 +34,11 @@
         margin: 0;
         color: var(--fd-color-text);
     }
-
-    /* stylelint-disable declaration-no-important -- Chart.js writes inline canvas dimensions. */
-
-    canvas {
-        width: 100% !important;
-        height: 220px !important;
-        display: block;
-    }
-    /* stylelint-enable declaration-no-important */
 }
-
-/* stylelint-disable declaration-no-important -- Chart.js writes inline canvas dimensions. */
-
-.stats-nutrition-card__chart-area canvas {
-    width: 100% !important;
-    height: 100% !important;
-    display: block;
-}
-/* stylelint-enable declaration-no-important */
 
 @media #{variables.$media-compact} {
 
+    .stats-nutrition-card__trend-grid,
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
@@ -59,6 +46,7 @@
 
 @media #{variables.$media-sm} {
 
+    .stats-nutrition-card__trend-grid,
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: 1fr;
     }

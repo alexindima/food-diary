@@ -18,9 +18,17 @@
         [retryLabel]="'ERRORS.RETRY' | translate"
         (retry)="onRetry()"
     >
-        @if (bodyChartData(); as bodyData) {
+        @if (hasBodyData()) {
             <div class="stats-body-card__chart-area">
-                <canvas baseChart type="line" [data]="bodyData" [options]="bodyChartOptions() || {}" [legend]="false"></canvas>
+                <fd-ui-line-chart
+                    lineColor="var(--fd-color-primary-600)"
+                    [title]="'STATISTICS.BODY_CHARTS_TITLE' | translate"
+                    [points]="bodyChartPoints()"
+                    [showArea]="false"
+                    [showAxisLabels]="true"
+                    [showGrid]="true"
+                    [valueSuffix]="bodyChartUnitKey().length > 0 ? (bodyChartUnitKey() | translate) : ''"
+                />
             </div>
         }
     </fd-ui-section-state>

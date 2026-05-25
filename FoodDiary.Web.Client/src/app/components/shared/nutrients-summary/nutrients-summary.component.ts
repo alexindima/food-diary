@@ -2,18 +2,14 @@ import { DecimalPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/commo
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import type { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
+import type { FdUiBarChartItem, FdUiPieChartSegment } from 'fd-ui-kit';
 import { distinctUntilChanged, fromEvent, map } from 'rxjs';
 
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import type { NutrientData } from '../../../shared/models/charts.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 import { NutrientsSummaryChartsComponent } from './nutrients-summary-charts/nutrients-summary-charts.component';
-import {
-    formatNutrientsSummaryTooltip,
-    mergeNutrientsSummaryConfig,
-    type NutrientsSummaryConfig,
-} from './nutrients-summary-lib/nutrients-summary.config';
+import { mergeNutrientsSummaryConfig, type NutrientsSummaryConfig } from './nutrients-summary-lib/nutrients-summary.config';
 
 @Component({
     selector: 'fd-nutrients-summary',
@@ -87,40 +83,12 @@ export class NutrientsSummaryComponent {
         width: `${this.chartsBlockSize()}px`,
         height: `${this.chartsBlockSize()}px`,
     }));
-    public readonly chartCanvasStyles = computed(() => ({
-        maxWidth: `${this.chartsBlockSize()}px`,
-        maxHeight: `${this.chartsBlockSize()}px`,
-    }));
     public readonly hasNutrientData = computed(() => {
         const data = this.nutrientChartData();
         return data.proteins + data.fats + data.carbs > 0;
     });
-    public readonly nutrientsPieChartData = computed<ChartData<'pie', number[], string>>(() => ({
-        labels: [
-            this.translateService.instant('NUTRIENTS.PROTEINS'),
-            this.translateService.instant('NUTRIENTS.FATS'),
-            this.translateService.instant('NUTRIENTS.CARBS'),
-        ],
-        datasets: [
-            {
-                data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
-                backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
-            },
-        ],
-    }));
-    public readonly nutrientsBarChartData = computed<ChartData<'bar', number[], string>>(() => ({
-        labels: [
-            this.translateService.instant('NUTRIENTS.PROTEINS'),
-            this.translateService.instant('NUTRIENTS.FATS'),
-            this.translateService.instant('NUTRIENTS.CARBS'),
-        ],
-        datasets: [
-            {
-                data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
-                backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
-            },
-        ],
-    }));
+    public readonly nutrientPieSegments = computed<FdUiPieChartSegment[]>(() => this.buildNutrientChartItems());
+    public readonly nutrientBarItems = computed<FdUiBarChartItem[]>(() => this.buildNutrientChartItems());
 
     public constructor() {
         if (!this.isBrowser) {
@@ -138,29 +106,13 @@ export class NutrientsSummaryComponent {
             });
     }
 
-    public pieChartOptions: ChartOptions<'pie'> = {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: (context: TooltipItem<'pie'>): string => this.getFormattedTooltip(context),
-                },
-            },
-        },
-    };
+    private buildNutrientChartItems(): FdUiPieChartSegment[] {
+        const data = this.nutrientChartData();
 
-    public barChartOptions: ChartOptions<'bar'> = {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: (context: TooltipItem<'bar'>): string => this.getFormattedTooltip(context),
-                },
-            },
-        },
-    };
-
-    private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>): string {
-        return formatNutrientsSummaryTooltip(context, this.translateService.instant('STATISTICS.GRAMS'));
+        return [
+            { label: this.translateService.instant('NUTRIENTS.PROTEINS'), value: data.proteins, color: CHART_COLORS.proteins },
+            { label: this.translateService.instant('NUTRIENTS.FATS'), value: data.fats, color: CHART_COLORS.fats },
+            { label: this.translateService.instant('NUTRIENTS.CARBS'), value: data.carbs, color: CHART_COLORS.carbs },
+        ];
     }
 }

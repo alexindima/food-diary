@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import type { ChartData, ChartOptions } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+import { FdUiBarChartComponent, type FdUiBarChartItem, FdUiPieChartComponent, type FdUiPieChartSegment } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-nutrients-summary-charts',
-    imports: [BaseChartDirective],
+    imports: [FdUiPieChartComponent, FdUiBarChartComponent],
     templateUrl: './nutrients-summary-charts.component.html',
     styleUrl: '../nutrients-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,9 +15,6 @@ export class NutrientsSummaryChartsComponent {
     public readonly chartsBlockSize = input.required<number>();
     public readonly chartsWrapperStyles = input.required<Record<string, string>>();
     public readonly chartStyles = input.required<Record<string, string>>();
-    public readonly chartCanvasStyles = input.required<Record<string, string>>();
-    public readonly pieChartData = input.required<ChartData<'pie', number[], string>>();
-    public readonly barChartData = input.required<ChartData<'bar', number[], string>>();
-    public readonly pieChartOptions = input.required<ChartOptions<'pie'>>();
-    public readonly barChartOptions = input.required<ChartOptions<'bar'>>();
+    public readonly pieSegments = input.required<readonly FdUiPieChartSegment[]>();
+    public readonly barItems = input.required<readonly FdUiBarChartItem[]>();
 }

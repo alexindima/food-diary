@@ -13,7 +13,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
@@ -77,7 +76,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         DashboardTdeeBlockComponent,
         DashboardAdviceBlockComponent,
     ],
-    providers: [DashboardLayoutService, DashboardFacade, provideCharts(withDefaultRegisterables())],
+    providers: [DashboardLayoutService, DashboardFacade],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

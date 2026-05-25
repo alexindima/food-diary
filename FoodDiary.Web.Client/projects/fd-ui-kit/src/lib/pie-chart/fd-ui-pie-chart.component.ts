@@ -37,6 +37,7 @@ export class FdUiPieChartComponent {
     public readonly title = input<string>();
     public readonly segments = input<readonly FdUiPieChartSegment[]>([]);
     public readonly emptyLabel = input('No data');
+    public readonly showLegend = input(true);
 
     public readonly total = computed(() => this.normalizedSegments().reduce((sum, segment) => sum + segment.value, 0));
 
