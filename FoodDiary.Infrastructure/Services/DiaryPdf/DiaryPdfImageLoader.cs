@@ -1,12 +1,6 @@
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using ImageSharpImage = SixLabors.ImageSharp.Image;
-using ImageSharpRgbaImage = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>;
-using ImageSharpSize = SixLabors.ImageSharp.Size;
+using SkiaSharp;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
@@ -167,16 +161,13 @@ internal sealed partial class DiaryPdfGenerator {
 
     private static byte[]? PrepareMealImage(byte[] imageBytes) {
         try {
-            using var image = ImageSharpImage.Load(imageBytes);
-            image.Mutate(context => context.Resize(new ResizeOptions {
-                Size = new ImageSharpSize(MealImageThumbnailSize, MealImageThumbnailSize),
-                Mode = ResizeMode.Crop,
-                Position = AnchorPositionMode.Center
-            }));
+            using var image = SKBitmap.Decode(imageBytes);
+            if (image is null) {
+                return null;
+            }
 
-            using var output = new MemoryStream();
-            image.Save(output, new JpegEncoder { Quality = 86 });
-            return output.ToArray();
+            using var preparedImage = CreateCroppedBitmap(image, MealImageThumbnailSize, MealImageThumbnailSize);
+            return EncodeMealImage(preparedImage);
         } catch {
             return null;
         }
@@ -192,27 +183,27 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         try {
-            using var canvas = new ImageSharpRgbaImage(
+            using var canvas = new SKBitmap(
                 MealImageThumbnailSize,
                 MealImageThumbnailSize,
-                new Rgba32(27, 34, 43));
+                SKColorType.Rgba8888,
+                SKAlphaType.Premul);
+            using var skCanvas = new SKCanvas(canvas);
+            skCanvas.Clear(new SKColor(27, 34, 43));
             var slots = GetCollageSlots(images.Count);
 
             for (var index = 0; index < Math.Min(images.Count, slots.Length); index++) {
-                using var tile = ImageSharpImage.Load<Rgba32>(images[index]);
-                var slot = slots[index];
-                tile.Mutate(context => context.Resize(new ResizeOptions {
-                    Size = new ImageSharpSize(slot.Width, slot.Height),
-                    Mode = ResizeMode.Crop,
-                    Position = AnchorPositionMode.Center
-                }));
+                using var tile = SKBitmap.Decode(images[index]);
+                if (tile is null) {
+                    continue;
+                }
 
-                CopyImage(tile, canvas, slot.X, slot.Y);
+                var slot = slots[index];
+                using var resizedTile = CreateCroppedBitmap(tile, slot.Width, slot.Height);
+                skCanvas.DrawBitmap(resizedTile, slot.X, slot.Y);
             }
 
-            using var output = new MemoryStream();
-            canvas.Save(output, new JpegEncoder { Quality = 86 });
-            return output.ToArray();
+            return EncodeMealImage(canvas);
         } catch {
             return null;
         }
@@ -239,12 +230,28 @@ internal sealed partial class DiaryPdfGenerator {
         };
     }
 
-    private static void CopyImage(ImageSharpRgbaImage source, ImageSharpRgbaImage target, int targetX, int targetY) {
-        for (var y = 0; y < source.Height; y++) {
-            var sourceRow = source.DangerousGetPixelRowMemory(y).Span;
-            var targetRow = target.DangerousGetPixelRowMemory(targetY + y).Span[targetX..(targetX + source.Width)];
-            sourceRow.CopyTo(targetRow);
-        }
+    private static SKBitmap CreateCroppedBitmap(SKBitmap source, int width, int height) {
+        var scale = Math.Max((float)width / source.Width, (float)height / source.Height);
+        var scaledWidth = source.Width * scale;
+        var scaledHeight = source.Height * scale;
+        var destination = new SKRect(
+            (width - scaledWidth) / 2,
+            (height - scaledHeight) / 2,
+            (width + scaledWidth) / 2,
+            (height + scaledHeight) / 2);
+        var bitmap = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
+
+        using var canvas = new SKCanvas(bitmap);
+        canvas.Clear(SKColors.Transparent);
+        canvas.DrawBitmap(source, destination);
+
+        return bitmap;
     }
+
+    private static byte[] EncodeMealImage(SKBitmap image) {
+        using var encoded = image.Encode(SKEncodedImageFormat.Jpeg, 86);
+        return encoded.ToArray();
+    }
+
     private readonly record struct CollageSlot(int X, int Y, int Width, int Height);
 }
