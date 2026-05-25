@@ -70,6 +70,10 @@ export class MainComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.authDialogOpen = false;
+                if (this.authService.isAuthenticated()) {
+                    return;
+                }
+
                 void this.router.navigate([], {
                     relativeTo: this.route,
                     queryParams: { auth: null, returnUrl: null, adminReturnUrl: null },

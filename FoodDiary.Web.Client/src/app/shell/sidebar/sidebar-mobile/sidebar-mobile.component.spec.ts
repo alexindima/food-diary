@@ -39,9 +39,26 @@ describe('SidebarMobileComponent', () => {
 
         expect(foodToggle).toHaveBeenCalledWith(foodButton);
     });
+
+    it('hides admin panel action from non-admin users', () => {
+        const fixture = createComponent('user', false);
+        const host = fixture.nativeElement as HTMLElement;
+
+        expect(host.querySelector('.sidebar-mobile__sheet-link--admin')).toBeNull();
+    });
+
+    it('shows admin panel action for admin users', () => {
+        const fixture = createComponent('user', true);
+        const host = fixture.nativeElement as HTMLElement;
+
+        expect(host.querySelector('.sidebar-mobile__sheet-link--admin')).not.toBeNull();
+    });
 });
 
-function createComponent(mobileSheet: 'food' | 'body' | 'reports' | 'user' | null): ComponentFixture<SidebarMobileComponent> {
+function createComponent(
+    mobileSheet: 'food' | 'body' | 'reports' | 'user' | null,
+    isAdmin = false,
+): ComponentFixture<SidebarMobileComponent> {
     TestBed.configureTestingModule({
         imports: [SidebarMobileComponent, TranslateModule.forRoot()],
         providers: [provideRouter([])],
@@ -55,7 +72,7 @@ function createComponent(mobileSheet: 'food' | 'body' | 'reports' | 'user' | nul
     fixture.componentRef.setInput('pendingRoute', null);
     fixture.componentRef.setInput('unreadNotificationCount', 0);
     fixture.componentRef.setInput('mobileSheet', mobileSheet);
-    fixture.componentRef.setInput('isAdmin', false);
+    fixture.componentRef.setInput('isAdmin', isAdmin);
     fixture.detectChanges();
 
     return fixture;

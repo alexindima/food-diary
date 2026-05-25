@@ -7,7 +7,7 @@
             appearance="brand-action"
             size="lg"
             variant="primary"
-            [disabled]="form().invalid || isSubmitting()"
+            [disabled]="isSubmitting()"
             [loading]="isSubmitting()"
             [fullWidth]="true"
         >

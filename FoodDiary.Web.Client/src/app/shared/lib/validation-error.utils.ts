@@ -6,13 +6,13 @@ export function resolveTranslatedControlError(
     control: AbstractControl | null,
     validationErrors: FdValidationErrors | null | undefined,
     translateService: TranslateService,
+    options: { showOnDirty?: boolean } = {},
 ): string | null {
     if (control?.invalid !== true) {
         return null;
     }
 
-    const shouldShow = control.touched || control.dirty;
-    if (!shouldShow) {
+    if (!shouldShowControlError(control, options.showOnDirty ?? true)) {
         return null;
     }
 
@@ -35,6 +35,10 @@ export function resolveTranslatedControlError(
     }
 
     return translateService.instant('FORM_ERRORS.UNKNOWN');
+}
+
+function shouldShowControlError(control: AbstractControl, showOnDirty: boolean): boolean {
+    return control.touched || (showOnDirty && control.dirty);
 }
 
 function translateValidationResult(

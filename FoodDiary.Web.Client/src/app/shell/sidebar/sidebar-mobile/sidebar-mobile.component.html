@@ -115,15 +115,16 @@
                     </button>
                 </div>
 
-                <button
-                    class="sidebar-mobile__sheet-link sidebar-mobile__sheet-link--admin sidebar-mobile__sheet-action fd-row fd-gap-xs"
-                    type="button"
-                    [hidden]="!isAdmin()"
-                    (click)="mobileAction.emit('openAdminPanel')"
-                >
-                    <fd-ui-icon name="admin_panel_settings" />
-                    <span class="fd-ui-action-text">{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
-                </button>
+                @if (isAdmin()) {
+                    <button
+                        class="sidebar-mobile__sheet-link sidebar-mobile__sheet-link--admin sidebar-mobile__sheet-action fd-row fd-gap-xs"
+                        type="button"
+                        (click)="mobileAction.emit('openAdminPanel')"
+                    >
+                        <fd-ui-icon name="admin_panel_settings" />
+                        <span class="fd-ui-action-text">{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
+                    </button>
+                }
 
                 <button
                     class="sidebar-mobile__sheet-link sidebar-mobile__sheet-link--danger sidebar-mobile__sheet-logout fd-row fd-gap-xs"

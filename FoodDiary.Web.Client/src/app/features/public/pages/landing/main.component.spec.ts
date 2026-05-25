@@ -138,4 +138,18 @@ describe('MainComponent', () => {
             replaceUrl: true,
         });
     });
+
+    it('does not clear auth query params after successful authentication redirects away', async () => {
+        authServiceMock.isAuthenticated.set(true);
+        await createComponentAsync('', {}, { auth: 'login', returnUrl: '/dashboard' });
+        queryParamMapSubject.next(convertToParamMap({ auth: 'login', returnUrl: '/dashboard' }));
+
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
+        });
+
+        expect(routerMock.navigate).not.toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
+    });
 });

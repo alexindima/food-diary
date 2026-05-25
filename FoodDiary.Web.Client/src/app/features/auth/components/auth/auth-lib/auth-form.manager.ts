@@ -1,6 +1,5 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { EMPTY, merge, type Observable } from 'rxjs';
@@ -58,7 +57,14 @@ export class AuthFormManager {
     public updateFieldErrors(): void {
         this.loginFieldErrors.set(
             LOGIN_ERROR_FIELDS.reduce<LoginFieldErrors>((errors, field) => {
-                errors[field] = resolveTranslatedControlError(this.loginForm.controls[field], this.validationErrors, this.translateService);
+                errors[field] = resolveTranslatedControlError(
+                    this.loginForm.controls[field],
+                    this.validationErrors,
+                    this.translateService,
+                    {
+                        showOnDirty: false,
+                    },
+                );
                 return errors;
             }, createEmptyLoginFieldErrors()),
         );
@@ -68,6 +74,7 @@ export class AuthFormManager {
                     this.registerForm.controls[field],
                     this.validationErrors,
                     this.translateService,
+                    { showOnDirty: false },
                 );
                 return errors;
             }, createEmptyRegisterFieldErrors()),
@@ -78,18 +85,11 @@ export class AuthFormManager {
                     this.passwordResetForm.controls[field],
                     this.validationErrors,
                     this.translateService,
+                    { showOnDirty: false },
                 );
                 return errors;
             }, createEmptyPasswordResetFieldErrors()),
         );
-    }
-
-    public markDirtyControlsTouched(form: FormGroup): void {
-        Object.values(form.controls).forEach(control => {
-            if (control.dirty && !control.touched) {
-                control.markAsTouched();
-            }
-        });
     }
 
     private subscribeValidationUpdates(): void {

@@ -23,6 +23,7 @@ type AuthComponentTestContext = {
     };
     component: AuthComponent;
     fixture: ComponentFixture<AuthComponent>;
+    formManager: AuthFormManager;
     routerSpy: { navigate: ReturnType<typeof vi.fn> };
 };
 
@@ -82,9 +83,10 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
 
     const fixture = TestBed.createComponent(AuthComponent);
     const component = fixture.componentInstance;
+    const formManager = fixture.debugElement.injector.get(AuthFormManager);
     fixture.detectChanges();
 
-    return { authFlowFacadeSpy, component, fixture, routerSpy };
+    return { authFlowFacadeSpy, component, fixture, formManager, routerSpy };
 }
 
 beforeEach(() => {
@@ -124,6 +126,38 @@ describe('AuthComponent login', () => {
 });
 
 describe('AuthComponent register', () => {
+    it('should not show register field errors while typing before blur or submit', () => {
+        const { component, formManager } = createComponent('register');
+
+        component.registerForm.controls.password.setValue('abc');
+        component.registerForm.controls.password.markAsDirty();
+        formManager.updateFieldErrors();
+
+        expect(component.registerForm.controls.password.dirty).toBe(true);
+        expect(component.registerForm.controls.password.touched).toBe(false);
+        expect(component.registerFieldErrors().password).toBeNull();
+    });
+
+    it('should show register field errors after blur', () => {
+        const { component, formManager } = createComponent('register');
+
+        component.registerForm.controls.password.setValue('abc');
+        component.registerForm.controls.password.markAsTouched();
+        formManager.updateFieldErrors();
+
+        expect(component.registerFieldErrors().password).toContain('FORM_ERRORS.PASSWORD.MIN_LENGTH');
+    });
+
+    it('should show register field errors after invalid submit', () => {
+        const { authFlowFacadeSpy, component } = createComponent('register');
+
+        component.onRegisterSubmit();
+
+        expect(component.registerForm.controls.email.touched).toBe(true);
+        expect(component.registerFieldErrors().email).toContain('FORM_ERRORS.REQUIRED');
+        expect(authFlowFacadeSpy.register).not.toHaveBeenCalled();
+    });
+
     it('should mark email as existing when register returns conflict', () => {
         const { authFlowFacadeSpy, component } = createComponent('register');
         authFlowFacadeSpy.register.mockReturnValue(of('emailExists'));

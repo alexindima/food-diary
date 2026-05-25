@@ -111,18 +111,15 @@ export class AuthComponent {
     private subscribeFormChanges(): void {
         this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.formManager.markDirtyControlsTouched(this.loginForm);
             this.updateLoginAutofillState();
             this.cdr.markForCheck();
         });
         this.registerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.formManager.markDirtyControlsTouched(this.registerForm);
             this.cdr.markForCheck();
         });
         this.passwordResetForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.formManager.markDirtyControlsTouched(this.passwordResetForm);
             this.cdr.markForCheck();
         });
     }
@@ -177,6 +174,7 @@ export class AuthComponent {
 
         if (!this.loginForm.valid || this.isSubmitting()) {
             this.loginForm.markAllAsTouched();
+            this.formManager.updateFieldErrors();
             this.cdr.markForCheck();
             return;
         }
@@ -195,7 +193,7 @@ export class AuthComponent {
     }
 
     public isLoginSubmitDisabled(): boolean {
-        return this.isSubmitting() || (this.loginForm.invalid && !this.loginAutofillDetected());
+        return this.isSubmitting();
     }
 
     public onLoginNativeInput(): void {
@@ -225,6 +223,9 @@ export class AuthComponent {
 
     public onRegisterSubmit(): void {
         if (!this.registerForm.valid || this.isSubmitting()) {
+            this.registerForm.markAllAsTouched();
+            this.formManager.updateFieldErrors();
+            this.cdr.markForCheck();
             return;
         }
 
@@ -285,6 +286,9 @@ export class AuthComponent {
 
     public onPasswordResetSubmit(): void {
         if (!this.passwordResetForm.valid || this.isPasswordResetting()) {
+            this.passwordResetForm.markAllAsTouched();
+            this.formManager.updateFieldErrors();
+            this.cdr.markForCheck();
             return;
         }
         if (this.passwordResetCooldownSeconds() > 0) {

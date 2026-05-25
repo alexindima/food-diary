@@ -64,6 +64,17 @@ describe('resolveTranslatedControlError', () => {
         );
     });
 
+    it('should allow callers to suppress dirty-only errors', () => {
+        const control = new FormControl('abc', Validators.minLength(MIN_LENGTH));
+        control.markAsDirty();
+
+        const result = resolveTranslatedControlError(control, { minlength: () => 'FORM_ERRORS.PASSWORD.MIN_LENGTH' }, translateService, {
+            showOnDirty: false,
+        });
+
+        expect(result).toBeNull();
+    });
+
     it('should return unknown error when no resolver matches', () => {
         const control = new FormControl('', Validators.required);
         control.markAsTouched();
