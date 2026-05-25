@@ -45,16 +45,17 @@ export class FdUiBarChartComponent {
         const items = this.normalizedItems();
         const maxValue = this.maxValue();
 
-        if (items.length === 0 || maxValue <= 0) {
+        if (items.length === 0) {
             return [];
         }
 
+        const effectiveMaxValue = maxValue > 0 ? maxValue : 1;
         const totalGap = Math.max(0, items.length - 1) * BAR_CHART_GAP;
         const width = Math.max(2, (BAR_CHART_VIEWBOX_WIDTH - totalGap) / items.length);
         const availableHeight = BAR_CHART_VIEWBOX_HEIGHT - BAR_CHART_PADDING_TOP - BAR_CHART_PADDING_BOTTOM;
 
         return items.map((item, index) => {
-            const height = (item.value / maxValue) * availableHeight;
+            const height = (item.value / effectiveMaxValue) * availableHeight;
             const x = index * (width + BAR_CHART_GAP);
             const y = this.chartBottom - height;
 
@@ -86,11 +87,11 @@ export class FdUiBarChartComponent {
 
     private readonly normalizedItems = computed(() =>
         this.items()
+            .filter(item => Number.isFinite(item.value))
             .map(item => ({
                 ...item,
                 label: item.label.trim().length > 0 ? item.label : this.emptyLabel(),
-                value: Number.isFinite(item.value) && item.value > 0 ? item.value : 0,
-            }))
-            .filter(item => item.value > 0),
+                value: item.value > 0 ? item.value : 0,
+            })),
     );
 }

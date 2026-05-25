@@ -23,6 +23,7 @@ const LINE_CHART_VIEWBOX_HEIGHT = 64;
 const LINE_CHART_PADDING = 6;
 const LINE_CHART_GRID_LINE_COUNT = 3;
 const DEFAULT_AXIS_DECIMAL_PLACES = 1;
+const FLAT_RANGE_PADDING_RATIO = 0.05;
 const DEFAULT_LINE_COLOR = 'var(--fd-color-primary-500)';
 const DEFAULT_FILL_COLOR = 'color-mix(in srgb, var(--fd-color-primary-500) 14%, transparent)';
 
@@ -57,10 +58,29 @@ export class FdUiLineChartComponent {
             .map(point => point.value)
             .filter((value): value is number => typeof value === 'number' && Number.isFinite(value)),
     );
-    private readonly resolvedMinValue = computed(() => this.minValue() ?? Math.min(...this.numericValues()));
+    private readonly resolvedMinValue = computed(() => {
+        const minValue = this.minValue();
+        if (minValue !== null) {
+            return minValue;
+        }
+
+        const numeric = this.numericValues();
+        const actualMinValue = Math.min(...numeric);
+        const actualMaxValue = Math.max(...numeric);
+        if (numeric.length > 0 && actualMinValue === actualMaxValue && actualMinValue !== 0) {
+            return Math.max(0, actualMinValue - this.getFlatRangePadding(actualMinValue));
+        }
+
+        return actualMinValue;
+    });
     private readonly resolvedMaxValue = computed(() => {
         const minValue = this.resolvedMinValue();
+        const numeric = this.numericValues();
         const maxValue = this.maxValue() ?? Math.max(...this.numericValues());
+        if (this.shouldPadFlatRange(numeric, maxValue)) {
+            return maxValue + this.getFlatRangePadding(maxValue);
+        }
+
         if (maxValue > minValue) {
             return maxValue;
         }
@@ -68,6 +88,10 @@ export class FdUiLineChartComponent {
         const defaultMaxValue = this.defaultMaxValue();
         if (defaultMaxValue !== null && defaultMaxValue > minValue) {
             return defaultMaxValue;
+        }
+
+        if (minValue !== 0) {
+            return minValue + this.getFlatRangePadding(minValue);
         }
 
         return minValue + 1;
@@ -171,5 +195,15 @@ export class FdUiLineChartComponent {
         const suffix = this.valueSuffix().trim();
 
         return suffix.length > 0 ? `${formatted} ${suffix}` : formatted;
+    }
+
+    private getFlatRangePadding(value: number): number {
+        return Math.max(1, Math.abs(value) * FLAT_RANGE_PADDING_RATIO);
+    }
+
+    private shouldPadFlatRange(values: readonly number[], maxValue: number): boolean {
+        return (
+            this.minValue() === null && this.maxValue() === null && values.length > 0 && Math.min(...values) === maxValue && maxValue !== 0
+        );
     }
 }

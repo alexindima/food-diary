@@ -9,7 +9,9 @@ const CHART_BOTTOM_Y = 58;
 const EXPLICIT_MAX_VALUE = 5;
 const GRID_LINE_COUNT = 3;
 const DEFAULT_MAX_VALUE = 100;
+const FLAT_VALUE = 80;
 
+// eslint-disable-next-line max-lines-per-function -- Line chart primitive behaviors are easier to scan in one component suite.
 describe('FdUiLineChartComponent', () => {
     let component: FdUiLineChartComponent;
     let fixture: ComponentFixture<FdUiLineChartComponent>;
@@ -92,6 +94,18 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelectorAll('.fd-ui-line-chart__grid-line')).toHaveLength(GRID_LINE_COUNT);
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('100');
         expect(component.pointViews().every(point => point.y === CHART_BOTTOM_Y)).toBe(true);
+    });
+
+    it('adds visual range around flat non-zero data', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'Mon', value: FLAT_VALUE },
+            { label: 'Tue', value: FLAT_VALUE },
+        ]);
+        fixture.detectChanges();
+
+        const yValues = component.pointViews().map(point => point.y);
+
+        expect(yValues.every(y => y > CHART_TOP_Y && y < CHART_BOTTOM_Y)).toBe(true);
     });
 
     it('shows empty state without numeric values', () => {

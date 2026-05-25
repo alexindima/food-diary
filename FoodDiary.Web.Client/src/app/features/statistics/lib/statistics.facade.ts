@@ -48,6 +48,7 @@ export class StatisticsFacade {
     private dateLabelFormatterCache: { locale: string; formatter: Intl.DateTimeFormat } | null = null;
     private lastLoadedRangeKey: string | null = null;
     private readonly initialized = signal(false);
+    private readonly currentLocale = signal(this.resolveCurrentLocale());
 
     public readonly selectedRange = signal<StatisticsRange>('week');
     public readonly selectedNutritionTab = signal<NutritionChartTab>('calories');
@@ -77,18 +78,16 @@ export class StatisticsFacade {
         buildNutrientTrendGroups(
             this.chartStatisticsData(),
             date => this.formatDateLabel(date),
-            key => this.translateService.instant(key),
+            key => this.translateKey(key),
         ),
     );
     public readonly summarySparklinePoints = computed(() =>
         buildSummarySparklinePoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
     );
     public readonly nutrientPieSegments = computed(() =>
-        buildNutrientPieSegments(this.chartStatisticsData(), key => this.translateService.instant(key)),
+        buildNutrientPieSegments(this.chartStatisticsData(), key => this.translateKey(key)),
     );
-    public readonly nutrientBarItems = computed(() =>
-        buildNutrientBarItems(this.chartStatisticsData(), key => this.translateService.instant(key)),
-    );
+    public readonly nutrientBarItems = computed(() => buildNutrientBarItems(this.chartStatisticsData(), key => this.translateKey(key)));
     public readonly bodyChartPoints = computed(() => {
         const selectedTab = this.selectedBodyTab();
         const formatLabel = (dateString: string): string => this.formatSummaryLabel(dateString);
@@ -136,6 +135,11 @@ export class StatisticsFacade {
     );
 
     public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.dateLabelFormatterCache = null;
+            this.currentLocale.set(this.resolveCurrentLocale());
+        });
+
         effect(() => {
             if (!this.initialized()) {
                 return;
@@ -326,7 +330,7 @@ export class StatisticsFacade {
     }
 
     private getDateLabelFormatter(): Intl.DateTimeFormat {
-        const locale = this.getCurrentLocale();
+        const locale = this.currentLocale();
         if (this.dateLabelFormatterCache?.locale !== locale) {
             this.dateLabelFormatterCache = {
                 locale,
@@ -337,7 +341,7 @@ export class StatisticsFacade {
         return this.dateLabelFormatterCache.formatter;
     }
 
-    private getCurrentLocale(): string {
+    private resolveCurrentLocale(): string {
         const currentLang = this.translateService.getCurrentLang();
         if (currentLang.length > 0) {
             return resolveAppLocale(currentLang);
@@ -345,6 +349,11 @@ export class StatisticsFacade {
 
         const fallbackLang = this.translateService.getFallbackLang();
         return resolveAppLocale(fallbackLang);
+    }
+
+    private translateKey(key: string): string {
+        this.currentLocale();
+        return this.translateService.instant(key);
     }
 
     private formatSummaryLabel(dateString: string): string {

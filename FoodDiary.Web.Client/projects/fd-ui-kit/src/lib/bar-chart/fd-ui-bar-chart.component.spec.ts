@@ -6,6 +6,7 @@ import { FdUiBarChartComponent } from './fd-ui-bar-chart.component';
 const PROTEIN_VALUE = 50;
 const FAT_VALUE = 25;
 const BAR_COUNT = 2;
+const ZERO_HEIGHT = 0;
 
 describe('FdUiBarChartComponent', () => {
     let component: FdUiBarChartComponent;
@@ -41,12 +42,20 @@ describe('FdUiBarChartComponent', () => {
         expect(component.ariaLabel()).toBe('Macros: Protein 50, Fat 25');
     });
 
-    it('shows empty state without positive values', () => {
+    it('keeps zero value categories visible', () => {
         fixture.componentRef.setInput('items', [{ label: 'Calories', value: 0 }]);
         fixture.detectChanges();
 
         expect(component.maxValue()).toBe(0);
-        expect(host().querySelectorAll('.fd-ui-bar-chart__bar')).toHaveLength(0);
+        expect(host().querySelectorAll('.fd-ui-bar-chart__bar')).toHaveLength(1);
+        expect(Number(host().querySelector('.fd-ui-bar-chart__bar')?.getAttribute('height'))).toBe(ZERO_HEIGHT);
+        expect(getText('.fd-ui-bar-chart__label')).toBe('Calories');
+    });
+
+    it('shows empty state without items', () => {
+        fixture.componentRef.setInput('items', []);
+        fixture.detectChanges();
+
         expect(getText('.fd-ui-bar-chart__empty')).toBe('No data');
     });
 

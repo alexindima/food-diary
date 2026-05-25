@@ -20,6 +20,14 @@ let weightEntriesService: { getSummary: ReturnType<typeof vi.fn> };
 let waistEntriesService: { getSummary: ReturnType<typeof vi.fn> };
 let userService: { getInfo: ReturnType<typeof vi.fn> };
 let exportService: { exportDiary: ReturnType<typeof vi.fn> };
+let currentLanguage: string;
+let languageChanges: Subject<unknown>;
+let translateService: {
+    instant: ReturnType<typeof vi.fn>;
+    getCurrentLang: ReturnType<typeof vi.fn>;
+    getFallbackLang: ReturnType<typeof vi.fn>;
+    onLangChange: Subject<unknown>;
+};
 
 beforeEach(() => {
     statisticsService = {
@@ -53,6 +61,14 @@ beforeEach(() => {
     exportService = {
         exportDiary: vi.fn().mockReturnValue(of(undefined)),
     };
+    currentLanguage = 'en';
+    languageChanges = new Subject<unknown>();
+    translateService = {
+        instant: vi.fn((key: string) => `${currentLanguage}:${key}`),
+        getCurrentLang: vi.fn(() => currentLanguage),
+        getFallbackLang: vi.fn(() => 'en'),
+        onLangChange: languageChanges,
+    };
 
     TestBed.configureTestingModule({
         providers: [
@@ -62,14 +78,7 @@ beforeEach(() => {
             { provide: WaistEntriesService, useValue: waistEntriesService },
             { provide: UserService, useValue: userService },
             { provide: ExportService, useValue: exportService },
-            {
-                provide: TranslateService,
-                useValue: {
-                    instant: vi.fn((key: string) => key),
-                    getCurrentLang: vi.fn(() => 'en'),
-                    getFallbackLang: vi.fn(() => 'en'),
-                },
-            },
+            { provide: TranslateService, useValue: translateService },
         ],
     });
 
@@ -105,6 +114,19 @@ describe('StatisticsFacade loading', () => {
         expect(weightEntriesService.getSummary).toHaveBeenCalledTimes(1);
         expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
         expect(facade.selectedRange()).toBe('month');
+    });
+
+    it('rebuilds translated chart labels when language changes', () => {
+        facade.initialize();
+        TestBed.tick();
+
+        expect(facade.nutrientTrendGroups()[0]?.label).toBe('en:NUTRIENTS.PROTEINS');
+
+        currentLanguage = 'ru';
+        languageChanges.next({});
+        TestBed.tick();
+
+        expect(facade.nutrientTrendGroups()[0]?.label).toBe('ru:NUTRIENTS.PROTEINS');
     });
 });
 
