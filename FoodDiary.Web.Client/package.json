@@ -95,7 +95,7 @@
         "angular-eslint": "^21.4.0",
         "baseline-browser-mapping": "^2.10.30",
         "concurrently": "^9.2.1",
-        "dependency-cruiser": "^17.4.0",
+        "dependency-cruiser": "^17.4.2",
         "eslint": "^10.4.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-boundaries": "^6.0.2",
