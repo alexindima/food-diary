@@ -71,9 +71,7 @@
             (click)="userToggle.emit(mobileUserButton)"
         >
             <fd-ui-icon name="person" />
-            @if (unreadNotificationCount() > 0) {
-                <span class="sidebar-mobile__item-dot" aria-hidden="true"></span>
-            }
+            <span class="sidebar-mobile__item-dot" aria-hidden="true" [hidden]="unreadNotificationCount() <= 0"></span>
             <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.USER' | translate }}</span>
         </button>
     </div>
@@ -109,9 +107,9 @@
                         (click)="mobileAction.emit('openNotifications')"
                     >
                         <fd-ui-icon name="notifications" />
-                        @if (unreadNotificationCount() > 0) {
-                            <span class="sidebar-mobile__notifications-badge fd-ui-caption">{{ unreadNotificationCount() }}</span>
-                        }
+                        <span class="sidebar-mobile__notifications-badge fd-ui-caption" [hidden]="unreadNotificationCount() <= 0">
+                            {{ unreadNotificationCount() }}
+                        </span>
                     </button>
                 </div>
 
