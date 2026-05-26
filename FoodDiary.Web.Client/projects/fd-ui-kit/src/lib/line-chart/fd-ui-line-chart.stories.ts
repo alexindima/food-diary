@@ -13,6 +13,8 @@ const meta: Meta<FdUiLineChartComponent> = {
         fillColor: { control: 'text' },
         showArea: { control: 'boolean' },
         showPoints: { control: 'boolean' },
+        showAxisLabels: { control: 'boolean' },
+        showGrid: { control: 'boolean' },
     },
 };
 
@@ -49,5 +51,26 @@ export const Sparkline: Story = {
         ],
         showArea: false,
         showPoints: false,
+    },
+};
+
+export const AxisLabels: Story = {
+    args: {
+        title: 'Calories',
+        points: [
+            { label: '20 мая', value: 0 },
+            { label: '21 мая', value: 0 },
+            { label: '22 мая', value: 0 },
+            { label: '24 мая', value: 0 },
+            { label: '25 мая', value: 0 },
+            { label: '26 мая', value: 0 },
+        ],
+        defaultMaxValue: 2000,
+        valueSuffix: 'ккал',
+        axisDecimalPlaces: 0,
+        showArea: true,
+        showAxisLabels: true,
+        showGrid: true,
+        showPoints: true,
     },
 };

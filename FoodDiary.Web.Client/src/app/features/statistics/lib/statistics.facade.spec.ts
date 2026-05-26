@@ -116,6 +116,20 @@ describe('StatisticsFacade loading', () => {
         expect(facade.selectedRange()).toBe('month');
     });
 
+    it('uses capitalized month-only chart labels for year range', () => {
+        currentLanguage = 'ru';
+        languageChanges.next({});
+        facade.initialize();
+        TestBed.tick();
+
+        expect(facade.caloriesTrendPoints()[0]?.label).toBe('1 апр.');
+
+        facade.changeRange('year');
+        TestBed.tick();
+
+        expect(facade.caloriesTrendPoints()[0]?.label).toBe('Апр.');
+    });
+
     it('rebuilds translated chart labels when language changes', () => {
         facade.initialize();
         TestBed.tick();

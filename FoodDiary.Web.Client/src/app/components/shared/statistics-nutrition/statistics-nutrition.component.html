@@ -13,51 +13,59 @@
         [state]="hasData() ? 'content' : 'empty'"
         [emptyMessage]="'STATISTICS.NO_DATA' | translate"
     >
-        <div class="stats-nutrition-card__chart-area" [hidden]="selectedTab() !== 'calories'">
-            <fd-ui-line-chart
-                lineColor="var(--fd-color-primary-600)"
-                fillColor="var(--fd-color-chart-primary-fill)"
-                [title]="'STATISTICS.TOTAL_CALORIES' | translate"
-                [points]="caloriesTrendPoints()"
-                [showArea]="true"
-                [minValue]="0"
-                [showAxisLabels]="true"
-                [showGrid]="true"
-                [axisDecimalPlaces]="0"
-                [defaultMaxValue]="2000"
-                [valueSuffix]="'GENERAL.UNITS.KCAL' | translate"
-            />
-        </div>
+        @if (selectedTab() === 'calories') {
+            <div class="stats-nutrition-card__chart-area">
+                <fd-ui-line-chart
+                    class="stats-nutrition-card__calories-chart"
+                    lineColor="var(--fd-color-primary-600)"
+                    fillColor="var(--fd-color-chart-primary-fill)"
+                    [title]="'STATISTICS.TOTAL_CALORIES' | translate"
+                    [points]="caloriesTrendPoints()"
+                    [showArea]="true"
+                    [minValue]="0"
+                    [showAxisLabels]="true"
+                    [showGrid]="true"
+                    [axisDecimalPlaces]="0"
+                    [defaultMaxValue]="2000"
+                    [valueSuffix]="'GENERAL.UNITS.KCAL' | translate"
+                />
+            </div>
+        }
 
-        <div class="stats-nutrition-card__trend-grid fd-grid fd-gap-md" [hidden]="selectedTab() !== 'macros'">
-            @for (group of nutrientTrendGroups(); track group.key) {
+        @if (selectedTab() === 'macros') {
+            <div class="stats-nutrition-card__trend-grid fd-grid fd-gap-md">
+                @for (group of nutrientTrendGroups(); track group.key) {
+                    <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
+                        <h4 class="fd-ui-card-title">{{ group.label }}</h4>
+                        <fd-ui-line-chart
+                            class="stats-nutrition-card__macro-chart"
+                            [title]="group.label"
+                            [points]="group.points"
+                            [lineColor]="group.color"
+                            [showArea]="false"
+                            [minValue]="0"
+                            [showAxisLabels]="true"
+                            [showGrid]="true"
+                            [axisDecimalPlaces]="0"
+                            [defaultMaxValue]="100"
+                            [valueSuffix]="'GENERAL.UNITS.G' | translate"
+                        />
+                    </div>
+                }
+            </div>
+        }
+
+        @if (selectedTab() === 'distribution') {
+            <div class="stats-nutrition-card__distribution-grid fd-grid fd-gap-md">
                 <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
-                    <h4 class="fd-ui-card-title">{{ group.label }}</h4>
-                    <fd-ui-line-chart
-                        [title]="group.label"
-                        [points]="group.points"
-                        [lineColor]="group.color"
-                        [showArea]="false"
-                        [minValue]="0"
-                        [showAxisLabels]="true"
-                        [showGrid]="true"
-                        [axisDecimalPlaces]="0"
-                        [defaultMaxValue]="100"
-                        [valueSuffix]="'GENERAL.UNITS.G' | translate"
-                    />
+                    <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
+                    <fd-ui-pie-chart [title]="'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate" [segments]="nutrientPieSegments()" />
                 </div>
-            }
-        </div>
-
-        <div class="stats-nutrition-card__distribution-grid fd-grid fd-gap-md" [hidden]="selectedTab() !== 'distribution'">
-            <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
-                <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
-                <fd-ui-pie-chart [title]="'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate" [segments]="nutrientPieSegments()" />
+                <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
+                    <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
+                    <fd-ui-bar-chart [title]="'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate" [items]="nutrientBarItems()" />
+                </div>
             </div>
-            <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
-                <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
-                <fd-ui-bar-chart [title]="'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate" [items]="nutrientBarItems()" />
-            </div>
-        </div>
+        }
     </fd-ui-section-state>
 </fd-ui-card>

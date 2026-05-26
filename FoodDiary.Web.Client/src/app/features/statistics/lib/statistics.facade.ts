@@ -45,7 +45,7 @@ export class StatisticsFacade {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    private dateLabelFormatterCache: { locale: string; formatter: Intl.DateTimeFormat } | null = null;
+    private dateLabelFormatterCache: { locale: string; range: StatisticsRange; formatter: Intl.DateTimeFormat } | null = null;
     private lastLoadedRangeKey: string | null = null;
     private readonly initialized = signal(false);
     private readonly currentLocale = signal(this.resolveCurrentLocale());
@@ -326,15 +326,19 @@ export class StatisticsFacade {
     }
 
     private formatDateLabel(date: Date): string {
-        return this.getDateLabelFormatter().format(date);
+        const label = this.getDateLabelFormatter().format(date);
+
+        return this.selectedRange() === 'year' ? this.capitalizeFirstLetter(label) : label;
     }
 
     private getDateLabelFormatter(): Intl.DateTimeFormat {
         const locale = this.currentLocale();
-        if (this.dateLabelFormatterCache?.locale !== locale) {
+        const range = this.selectedRange();
+        if (this.dateLabelFormatterCache?.locale !== locale || this.dateLabelFormatterCache.range !== range) {
             this.dateLabelFormatterCache = {
                 locale,
-                formatter: new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }),
+                range,
+                formatter: new Intl.DateTimeFormat(locale, range === 'year' ? { month: 'short' } : { month: 'short', day: 'numeric' }),
             };
         }
 
@@ -354,6 +358,14 @@ export class StatisticsFacade {
     private translateKey(key: string): string {
         this.currentLocale();
         return this.translateService.instant(key);
+    }
+
+    private capitalizeFirstLetter(value: string): string {
+        if (value.length === 0) {
+            return value;
+        }
+
+        return `${value[0].toLocaleUpperCase(this.currentLocale())}${value.slice(1)}`;
     }
 
     private formatSummaryLabel(dateString: string): string {

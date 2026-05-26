@@ -1,5 +1,6 @@
 :host {
     --fd-line-chart-height: 180px;
+    container-type: inline-size;
     display: block;
     min-width: 0;
 }
@@ -15,18 +16,25 @@
 }
 
 .fd-ui-line-chart__plot--with-axis-labels {
-    grid-template-columns: minmax(42px, max-content) minmax(0, 1fr);
+    grid-template-columns: fit-content(112px) minmax(0, 1fr);
     grid-template-areas:
         'y-axis chart'
         '. x-axis';
-    gap: var(--fd-space-xs);
+    column-gap: 0;
+    row-gap: 0;
+}
+
+.fd-ui-line-chart__surface {
+    grid-area: chart;
+    position: relative;
+    min-width: 0;
+    height: var(--fd-line-chart-height);
 }
 
 .fd-ui-line-chart__svg {
-    grid-area: chart;
     display: block;
     width: 100%;
-    height: var(--fd-line-chart-height);
+    height: 100%;
     overflow: visible;
 }
 
@@ -39,9 +47,7 @@
 
 .fd-ui-line-chart__y-axis {
     grid-area: y-axis;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    position: relative;
     min-width: 0;
     height: var(--fd-line-chart-height);
     text-align: right;
@@ -49,17 +55,94 @@
 
 .fd-ui-line-chart__x-axis {
     grid-area: x-axis;
-    display: flex;
-    justify-content: space-between;
-    gap: var(--fd-space-xs);
+    position: relative;
+    min-height: var(--fd-text-caption-line-height);
 }
 
 .fd-ui-line-chart__x-axis span,
-.fd-ui-line-chart__y-axis span {
+.fd-ui-line-chart__y-axis-label,
+.fd-ui-line-chart__y-axis-sizer span {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.fd-ui-line-chart__y-axis-label {
+    position: absolute;
+    right: 0;
+    max-width: 112px;
+    transform: translateY(-50%);
+}
+
+.fd-ui-line-chart__y-axis-sizer {
+    display: grid;
+    visibility: hidden;
+}
+
+.fd-ui-line-chart__x-axis span {
+    position: absolute;
+    top: 0;
+    display: block;
+    max-width: 72px;
+    text-align: center;
+    transform: translateX(-50%);
+}
+
+.fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--start {
+    transform: translateX(-50%);
+}
+
+.fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--end {
+    transform: translateX(-50%);
+}
+
+.fd-ui-line-chart__x-axis--angled {
+    min-height: 40px;
+}
+
+.fd-ui-line-chart__x-axis--angled span {
+    top: -6px;
+    max-width: 96px;
+    text-align: center;
+    transform: translateX(-0.35em) rotate(45deg);
+    transform-origin: 0.35em top;
+}
+
+.fd-ui-line-chart__x-axis--angled .fd-ui-line-chart__x-axis-label--start {
+    transform: translateX(-0.35em) rotate(45deg);
+}
+
+.fd-ui-line-chart__x-axis--angled .fd-ui-line-chart__x-axis-label--end {
+    transform: translateX(-0.35em) rotate(45deg);
+}
+
+@container (max-width: 560px) {
+    .fd-ui-line-chart__x-axis {
+        min-height: 40px;
+    }
+
+    .fd-ui-line-chart__x-axis span {
+        top: -6px;
+        max-width: 88px;
+        text-align: center;
+        transform: translateX(-0.35em) rotate(45deg);
+        transform-origin: 0.35em top;
+    }
+
+    .fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--start {
+        transform: translateX(-0.35em) rotate(45deg);
+    }
+
+    .fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--end {
+        transform: translateX(-0.35em) rotate(45deg);
+    }
+}
+
+@container (max-width: 380px) {
+    .fd-ui-line-chart__x-axis span:nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end) {
+        display: none;
+    }
 }
 
 .fd-ui-line-chart__axis {
@@ -69,10 +152,14 @@
 
 .fd-ui-line-chart__grid-line {
     stroke: var(--fd-color-border);
-    stroke-dasharray: 2 3;
-    stroke-linecap: round;
     stroke-opacity: 0.75;
     stroke-width: 0.8;
+}
+
+.fd-ui-line-chart__axis,
+.fd-ui-line-chart__grid-line,
+.fd-ui-line-chart__line {
+    vector-effect: non-scaling-stroke;
 }
 
 .fd-ui-line-chart__line,
@@ -88,9 +175,14 @@
 }
 
 .fd-ui-line-chart__point {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--fd-bg-surface);
+    border-radius: 50%;
     cursor: help;
-    stroke: var(--fd-bg-surface);
-    stroke-width: 1.5;
+    transform: translate(-50%, -50%);
 }
 
 .fd-ui-line-chart__empty {

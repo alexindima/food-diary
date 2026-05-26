@@ -10,18 +10,53 @@ type FdUiLineChartPointViewModel = {
     value: number;
     x: number;
     y: number;
+    xPercent: string;
+    yPercent: string;
     tooltip: string;
 };
 
 type FdUiLineChartGridLine = {
     y: number;
+    yPercent: string;
     label: string;
+};
+
+type FdUiLineChartVerticalGridLine = {
+    x: number;
+};
+
+type FdUiLineChartXAxisLabel = {
+    label: string;
+    xPercent: string;
+    position: 'start' | 'middle' | 'end';
 };
 
 const LINE_CHART_VIEWBOX_WIDTH = 100;
 const LINE_CHART_VIEWBOX_HEIGHT = 64;
 const LINE_CHART_PADDING = 6;
-const LINE_CHART_GRID_LINE_COUNT = 3;
+const LINE_CHART_HORIZONTAL_PADDING = 2;
+const LINE_CHART_LEFT_X = LINE_CHART_HORIZONTAL_PADDING;
+const LINE_CHART_RIGHT_X = LINE_CHART_VIEWBOX_WIDTH - LINE_CHART_HORIZONTAL_PADDING;
+const LINE_CHART_GRID_LINE_COUNT = 5;
+const LINE_CHART_X_AXIS_LABEL_COUNT = 14;
+const LINE_CHART_PERCENTAGE_SCALE = 100;
+const LINE_CHART_CURVE_CONTROL_DIVISOR = 6;
+const NICE_STEP_ONE = 1;
+const NICE_STEP_ONE_AND_QUARTER = 1.25;
+const NICE_STEP_ONE_AND_HALF = 1.5;
+const NICE_STEP_TWO = 2;
+const NICE_STEP_TWO_AND_HALF = 2.5;
+const NICE_STEP_FIVE = 5;
+const NICE_STEP_TEN = 10;
+const LINE_CHART_NICE_STEP_MULTIPLIERS = [
+    NICE_STEP_ONE,
+    NICE_STEP_ONE_AND_QUARTER,
+    NICE_STEP_ONE_AND_HALF,
+    NICE_STEP_TWO,
+    NICE_STEP_TWO_AND_HALF,
+    NICE_STEP_FIVE,
+    NICE_STEP_TEN,
+] as const;
 const DEFAULT_AXIS_DECIMAL_PLACES = 1;
 const FLAT_RANGE_PADDING_RATIO = 0.05;
 const DEFAULT_LINE_COLOR = 'var(--fd-color-primary-500)';
@@ -51,6 +86,9 @@ export class FdUiLineChartComponent {
     public readonly axisDecimalPlaces = input(DEFAULT_AXIS_DECIMAL_PLACES);
 
     protected readonly viewBox = `0 0 ${LINE_CHART_VIEWBOX_WIDTH} ${LINE_CHART_VIEWBOX_HEIGHT}`;
+    protected readonly chartLeft = LINE_CHART_LEFT_X;
+    protected readonly chartRight = LINE_CHART_RIGHT_X;
+    protected readonly chartTop = LINE_CHART_PADDING;
     protected readonly chartBottom = LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_PADDING;
 
     private readonly numericValues = computed(() =>
@@ -75,33 +113,29 @@ export class FdUiLineChartComponent {
     });
     private readonly resolvedMaxValue = computed(() => {
         const minValue = this.resolvedMinValue();
-        const numeric = this.numericValues();
-        const maxValue = this.maxValue() ?? Math.max(...this.numericValues());
-        if (this.shouldPadFlatRange(numeric, maxValue)) {
-            return maxValue + this.getFlatRangePadding(maxValue);
+        const explicitMaxValue = this.maxValue();
+        if (explicitMaxValue !== null && explicitMaxValue > minValue) {
+            return explicitMaxValue;
         }
+
+        const numeric = this.numericValues();
+        const actualMaxValue = Math.max(...numeric);
+        const paddedMaxValue = this.shouldPadFlatRange(numeric, actualMaxValue)
+            ? actualMaxValue + this.getFlatRangePadding(actualMaxValue)
+            : actualMaxValue;
+        const defaultMaxValue = this.defaultMaxValue();
+        const maxValue = defaultMaxValue !== null ? Math.max(paddedMaxValue, defaultMaxValue) : paddedMaxValue;
 
         if (maxValue > minValue) {
-            return maxValue;
-        }
-
-        const defaultMaxValue = this.defaultMaxValue();
-        if (defaultMaxValue !== null && defaultMaxValue > minValue) {
-            return defaultMaxValue;
+            return this.getNiceMaxValue(minValue, maxValue);
         }
 
         if (minValue !== 0) {
-            return minValue + this.getFlatRangePadding(minValue);
+            return this.getNiceMaxValue(minValue, minValue + this.getFlatRangePadding(minValue));
         }
 
-        return minValue + 1;
+        return this.getNiceMaxValue(minValue, minValue + 1);
     });
-    protected readonly axisStartLabel = computed(() => this.points().find(point => point.label.trim().length > 0)?.label ?? '');
-    protected readonly axisEndLabel = computed(
-        () => [...this.points()].reverse().find(point => point.label.trim().length > 0)?.label ?? '',
-    );
-    protected readonly axisMinLabel = computed(() => this.formatAxisValue(this.resolvedMinValue()));
-    protected readonly axisMaxLabel = computed(() => this.formatAxisValue(this.resolvedMaxValue()));
     protected readonly gridLines = computed<readonly FdUiLineChartGridLine[]>(() => {
         const minValue = this.resolvedMinValue();
         const maxValue = this.resolvedMaxValue();
@@ -114,9 +148,60 @@ export class FdUiLineChartComponent {
 
             return {
                 y: LINE_CHART_PADDING + step * index,
+                yPercent: `${((LINE_CHART_PADDING + step * index) / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
                 label: this.formatAxisValue(minValue + valueStep * reversedIndex),
             };
         });
+    });
+    protected readonly xAxisLabels = computed<readonly FdUiLineChartXAxisLabel[]>(() => {
+        const points = this.points();
+        if (points.length === 0) {
+            return [];
+        }
+
+        if (points.length === 1) {
+            const label = points[0]?.label.trim() ?? '';
+            return label.length > 0 ? [{ label, xPercent: '50%', position: 'middle' }] : [];
+        }
+
+        const labelCount = Math.min(LINE_CHART_X_AXIS_LABEL_COUNT, points.length);
+        const xStep = (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (points.length - 1);
+        const indexes = Array.from({ length: labelCount }, (_, index) => Math.round((index * (points.length - 1)) / (labelCount - 1)));
+        const uniqueIndexes = [...new Set(indexes)];
+
+        return uniqueIndexes.flatMap(index => {
+            const label = points[index]?.label.trim() ?? '';
+            if (label.length === 0) {
+                return [];
+            }
+
+            const x = LINE_CHART_LEFT_X + index * xStep;
+            const position = index === 0 ? 'start' : index === points.length - 1 ? 'end' : 'middle';
+
+            return [
+                {
+                    label,
+                    xPercent: `${x}%`,
+                    position,
+                },
+            ];
+        });
+    });
+    protected readonly verticalGridLines = computed<readonly FdUiLineChartVerticalGridLine[]>(() => {
+        const points = this.points();
+        if (points.length === 0) {
+            return [];
+        }
+
+        if (points.length === 1) {
+            return [{ x: LINE_CHART_VIEWBOX_WIDTH / 2 }];
+        }
+
+        const xStep = (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (points.length - 1);
+
+        return Array.from({ length: points.length }, (_, index) => ({
+            x: LINE_CHART_LEFT_X + index * xStep,
+        }));
     });
 
     public readonly pointViews = computed<readonly FdUiLineChartPointViewModel[]>(() => {
@@ -131,7 +216,7 @@ export class FdUiLineChartComponent {
         const maxValue = this.resolvedMaxValue();
         const valueRange = maxValue - minValue;
         const effectiveRange = valueRange > 0 ? valueRange : 1;
-        const xStep = points.length > 1 ? (LINE_CHART_VIEWBOX_WIDTH - LINE_CHART_PADDING * 2) / (points.length - 1) : 0;
+        const xStep = points.length > 1 ? (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (points.length - 1) : 0;
         const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_PADDING * 2;
 
         return points.flatMap((point, index) => {
@@ -140,7 +225,7 @@ export class FdUiLineChartComponent {
                 return [];
             }
 
-            const x = points.length > 1 ? LINE_CHART_PADDING + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
+            const x = points.length > 1 ? LINE_CHART_LEFT_X + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
             const y = this.chartBottom - ((value - minValue) / effectiveRange) * availableHeight;
             const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
 
@@ -150,6 +235,8 @@ export class FdUiLineChartComponent {
                     value,
                     x,
                     y,
+                    xPercent: `${x}%`,
+                    yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
                     tooltip: `${label}: ${value}`,
                 },
             ];
@@ -158,7 +245,43 @@ export class FdUiLineChartComponent {
 
     public readonly linePath = computed(() => {
         const points = this.pointViews();
-        return points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
+        if (points.length === 0) {
+            return '';
+        }
+
+        if (points.length === 1) {
+            const point = points[0];
+            return `M ${point.x} ${point.y}`;
+        }
+
+        const [firstPoint, ...remainingPoints] = points;
+        const segments = remainingPoints.map((point, index) => {
+            const currentIndex = index + 1;
+            const previousPoint = points[currentIndex - 1];
+            const beforePreviousPoint = points[currentIndex - 2] ?? previousPoint;
+            const nextPoint = points[currentIndex + 1] ?? point;
+            const [minY, maxY] = previousPoint.y < point.y ? [previousPoint.y, point.y] : [point.y, previousPoint.y];
+            const controlStartX = this.clamp(
+                previousPoint.x + (point.x - beforePreviousPoint.x) / LINE_CHART_CURVE_CONTROL_DIVISOR,
+                previousPoint.x,
+                point.x,
+            );
+            const controlStartY = this.clamp(
+                previousPoint.y + (point.y - beforePreviousPoint.y) / LINE_CHART_CURVE_CONTROL_DIVISOR,
+                minY,
+                maxY,
+            );
+            const controlEndX = this.clamp(
+                point.x - (nextPoint.x - previousPoint.x) / LINE_CHART_CURVE_CONTROL_DIVISOR,
+                previousPoint.x,
+                point.x,
+            );
+            const controlEndY = this.clamp(point.y - (nextPoint.y - previousPoint.y) / LINE_CHART_CURVE_CONTROL_DIVISOR, minY, maxY);
+
+            return `C ${controlStartX} ${controlStartY}, ${controlEndX} ${controlEndY}, ${point.x} ${point.y}`;
+        });
+
+        return [`M ${firstPoint.x} ${firstPoint.y}`, ...segments].join(' ');
     });
 
     public readonly areaPath = computed(() => {
@@ -201,9 +324,33 @@ export class FdUiLineChartComponent {
         return Math.max(1, Math.abs(value) * FLAT_RANGE_PADDING_RATIO);
     }
 
+    private getNiceMaxValue(minValue: number, maxValue: number): number {
+        const tickCount = LINE_CHART_GRID_LINE_COUNT - 1;
+        const rawStep = (maxValue - minValue) / tickCount;
+        const step = this.getNiceStep(rawStep);
+
+        return minValue + step * tickCount;
+    }
+
+    private getNiceStep(rawStep: number): number {
+        if (!Number.isFinite(rawStep) || rawStep <= 0) {
+            return 1;
+        }
+
+        const magnitude = NICE_STEP_TEN ** Math.floor(Math.log10(rawStep));
+        const normalizedStep = rawStep / magnitude;
+        const multiplier = LINE_CHART_NICE_STEP_MULTIPLIERS.find(value => normalizedStep <= value) ?? NICE_STEP_TEN;
+
+        return multiplier * magnitude;
+    }
+
     private shouldPadFlatRange(values: readonly number[], maxValue: number): boolean {
         return (
             this.minValue() === null && this.maxValue() === null && values.length > 0 && Math.min(...values) === maxValue && maxValue !== 0
         );
+    }
+
+    private clamp(value: number, minValue: number, maxValue: number): number {
+        return Math.min(Math.max(value, minValue), maxValue);
     }
 }
