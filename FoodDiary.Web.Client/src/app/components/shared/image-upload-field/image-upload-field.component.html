@@ -98,16 +98,53 @@
                         {{ 'IMAGE_UPLOAD_FIELD.CROP_SUBTITLE' | translate }}
                     </div>
                 </div>
-                <div class="image-upload-field__cropper-body">
+                <div
+                    #cropSurface
+                    class="image-upload-field__cropper-body"
+                    (pointermove)="onCropPointerMove($event)"
+                    (pointerup)="onCropPointerUp($event)"
+                    (pointercancel)="onCropPointerUp($event)"
+                >
                     <img
                         #cropImage
                         class="image-upload-field__cropper-image"
                         width="512"
                         height="512"
-                        [ngSrc]="cropPreviewUrl"
+                        [src]="cropPreviewUrl"
                         [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
-                        (load)="onCropperImageLoadedAsync(cropImage)"
+                        (load)="onCropImageLoaded(cropImage)"
                     />
+                    @if (cropImageBounds && cropSelection) {
+                        <div
+                            class="image-upload-field__crop-selection"
+                            role="group"
+                            tabindex="0"
+                            [attr.aria-label]="'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate"
+                            [style.left.px]="cropSelection.x"
+                            [style.top.px]="cropSelection.y"
+                            [style.width.px]="cropSelection.width"
+                            [style.height.px]="cropSelection.height"
+                            (keydown)="onCropKeydown($event)"
+                            (pointerdown)="onCropPointerDown($event, 'move')"
+                        >
+                            <span
+                                class="image-upload-field__crop-handle image-upload-field__crop-handle--nw"
+                                (pointerdown)="onCropPointerDown($event, 'resize-nw')"
+                            ></span>
+                            <span
+                                class="image-upload-field__crop-handle image-upload-field__crop-handle--ne"
+                                (pointerdown)="onCropPointerDown($event, 'resize-ne')"
+                            ></span>
+                            <span
+                                class="image-upload-field__crop-handle image-upload-field__crop-handle--sw"
+                                (pointerdown)="onCropPointerDown($event, 'resize-sw')"
+                            ></span>
+                            <span
+                                class="image-upload-field__crop-handle image-upload-field__crop-handle--se"
+                                (pointerdown)="onCropPointerDown($event, 'resize-se')"
+                            ></span>
+                        </div>
+                    }
                 </div>
                 <div class="image-upload-field__cropper-actions fd-row fd-justify-end fd-wrap fd-gap-xs">
                     <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{
