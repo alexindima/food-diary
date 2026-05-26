@@ -24,7 +24,7 @@ public sealed class StatisticsHttpMappingsTests {
     public void AggregatedStatisticsModel_ToHttpResponse_MapsAllFields() {
         var from = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 3, 7, 0, 0, 0, DateTimeKind.Utc);
-        var model = new AggregatedStatisticsModel(from, to, 14000, 120, 80, 250, 25);
+        var model = new AggregatedStatisticsModel(from, to, 14000, 120, 80, 250, 25, 840, 560, 1750, 175);
 
         var response = model.ToHttpResponse();
 
@@ -35,5 +35,9 @@ public sealed class StatisticsHttpMappingsTests {
         Assert.Equal(80, response.AverageFats);
         Assert.Equal(250, response.AverageCarbs);
         Assert.Equal(25, response.AverageFiber);
+        Assert.Equal(840, response.TotalProteins);
+        Assert.Equal(560, response.TotalFats);
+        Assert.Equal(1750, response.TotalCarbs);
+        Assert.Equal(175, response.TotalFiber);
     }
 }

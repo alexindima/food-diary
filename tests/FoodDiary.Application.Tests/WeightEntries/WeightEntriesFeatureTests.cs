@@ -87,6 +87,23 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWeightSummariesQueryHandler_WithDateOnlyValues_PreservesRequestedCalendarDates() {
+        var repository = new InMemoryWeightEntryRepository();
+        var user = User.Create("weight-summary@example.com", "hash");
+        var handler = new GetWeightSummariesQueryHandler(repository, new StubUserRepository(user));
+        var from = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
+        var to = new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(
+            new GetWeightSummariesQuery(user.Id.Value, from, to, 1),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateFrom);
+        Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateTo);
+    }
+
+    [Fact]
     public async Task GetWeightEntriesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWeightEntriesQueryHandler(
             new InMemoryWeightEntryRepository(),
@@ -159,6 +176,8 @@ public class WeightEntriesFeatureTests {
         private readonly List<WeightEntry> _entries = [];
 
         public DateTime LastGetByDateDate { get; private set; }
+        public DateTime LastPeriodDateFrom { get; private set; }
+        public DateTime LastPeriodDateTo { get; private set; }
 
         public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
             _entries.Add(entry);
@@ -216,6 +235,8 @@ public class WeightEntriesFeatureTests {
             DateTime dateFrom,
             DateTime dateTo,
             CancellationToken cancellationToken = default) {
+            LastPeriodDateFrom = dateFrom;
+            LastPeriodDateTo = dateTo;
             var items = _entries
                 .Where(x => x.UserId == userId && x.Date >= dateFrom && x.Date <= dateTo)
                 .OrderBy(x => x.Date)

@@ -43,6 +43,7 @@ const MONTH_QUANTIZATION_DAYS = 3;
 const TWO_WEEK_DAYS = 14;
 const TWO_WEEK_QUANTIZATION_DAYS = 2;
 const WEEK_DAY_OFFSET = 6;
+const MINIMUM_DAY_COUNT = 1;
 
 function buildChartPoints(labels: readonly string[], series: ReadonlyArray<number | null> | undefined): FdUiLineChartPoint[] {
     return labels.map((label, index) => ({
@@ -94,6 +95,13 @@ export function normalizeStartOfDay(date: Date): Date {
 
 export function normalizeEndOfDay(date: Date): Date {
     return normalizeEndOfLocalDay(date);
+}
+
+export function getDateRangeDayCount(range: DateRange): number {
+    const start = normalizeStartOfDay(range.start);
+    const end = normalizeEndOfDay(range.end);
+
+    return Math.max(MINIMUM_DAY_COUNT, Math.round((end.getTime() - start.getTime()) / MS_PER_DAY));
 }
 
 export function getCurrentDateRange(
@@ -250,14 +258,14 @@ function interpolateMissingBodyValues(data: Array<number | null>): Array<number 
     return result;
 }
 
-export function buildSummaryMetrics(stats: MappedStatistics | null): SummaryMetrics | null {
+export function buildSummaryMetrics(stats: MappedStatistics | null, dayCount: number): SummaryMetrics | null {
     if (stats === null) {
         return null;
     }
 
     const totalCalories = stats.calories.reduce((sum, value) => sum + value, 0);
-    const entries = stats.calories.length > 0 ? stats.calories.length : 1;
-    const averageCalories = totalCalories / entries;
+    const effectiveDayCount = Math.max(MINIMUM_DAY_COUNT, dayCount);
+    const averageCalories = totalCalories / effectiveDayCount;
     const aggregated = stats.aggregatedNutrients;
 
     return {

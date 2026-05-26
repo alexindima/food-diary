@@ -52,7 +52,36 @@ public class StatisticsFeatureTests {
         Assert.True(result.IsSuccess);
         var bucket = Assert.Single(result.Value);
         Assert.Equal(0, bucket.TotalCalories);
+        Assert.Equal(0, bucket.TotalProteins);
+        Assert.Equal(0, bucket.TotalFats);
+        Assert.Equal(0, bucket.TotalCarbs);
+        Assert.Equal(0, bucket.TotalFiber);
         Assert.Equal(from, bucket.DateFrom);
+    }
+
+    [Fact]
+    public async Task GetStatisticsQueryHandler_WithMultiDayBucket_ReturnsTotalsAndDailyAverages() {
+        var userId = UserId.New();
+        var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+        var to = new DateTime(2026, 2, 2, 23, 59, 59, DateTimeKind.Utc);
+        var meal = Meal.Create(userId, from.AddHours(12), MealType.Lunch);
+        meal.ApplyNutrition(new MealNutritionUpdate(1000, 100, 50, 200, 20, 0, true));
+        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([meal]));
+        var query = new GetStatisticsQuery(userId.Value, from, to, 2);
+
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var bucket = Assert.Single(result.Value);
+        Assert.Equal(1000, bucket.TotalCalories);
+        Assert.Equal(100, bucket.TotalProteins);
+        Assert.Equal(50, bucket.TotalFats);
+        Assert.Equal(200, bucket.TotalCarbs);
+        Assert.Equal(20, bucket.TotalFiber);
+        Assert.Equal(50, bucket.AverageProteins);
+        Assert.Equal(25, bucket.AverageFats);
+        Assert.Equal(100, bucket.AverageCarbs);
+        Assert.Equal(10, bucket.AverageFiber);
     }
 
     [Fact]
@@ -74,6 +103,14 @@ public class StatisticsFeatureTests {
         Assert.Equal(localDayStartUtc, bucket.DateFrom);
         Assert.Equal(localDayEndUtc, bucket.DateTo);
         Assert.Equal(946, bucket.TotalCalories);
+        Assert.Equal(59, bucket.AverageProteins);
+        Assert.Equal(45, bucket.AverageFats);
+        Assert.Equal(76, bucket.AverageCarbs);
+        Assert.Equal(7, bucket.AverageFiber);
+        Assert.Equal(59, bucket.TotalProteins);
+        Assert.Equal(45, bucket.TotalFats);
+        Assert.Equal(76, bucket.TotalCarbs);
+        Assert.Equal(7, bucket.TotalFiber);
     }
 
     private class NoopMealRepository : IMealRepository {

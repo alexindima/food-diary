@@ -20,10 +20,10 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
         carbs.push(stat.averageCarbs);
         fiber.push(stat.averageFiber);
 
-        totalProteins += stat.averageProteins;
-        totalFats += stat.averageFats;
-        totalCarbs += stat.averageCarbs;
-        totalFiber += stat.averageFiber;
+        totalProteins += stat.totalProteins;
+        totalFats += stat.totalFats;
+        totalCarbs += stat.totalCarbs;
+        totalFiber += stat.totalFiber;
     });
 
     return {

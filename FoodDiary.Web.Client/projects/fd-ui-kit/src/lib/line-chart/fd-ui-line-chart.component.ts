@@ -33,6 +33,8 @@ type FdUiLineChartSeriesViewModel = {
     points: readonly FdUiLineChartPointViewModel[];
     path: string;
     areaPath: string;
+    paths: readonly string[];
+    areaPaths: readonly string[];
 };
 
 type FdUiLineChartGridLine = {
@@ -49,6 +51,13 @@ type FdUiLineChartXAxisLabel = {
     label: string;
     xPercent: string;
     position: 'start' | 'middle' | 'end';
+};
+
+type FdUiLineChartPointGroupOptions = {
+    minValue: number;
+    effectiveRange: number;
+    availableHeight: number;
+    shouldPrefixTooltip: boolean;
 };
 
 const LINE_CHART_VIEWBOX_WIDTH = 100;
@@ -276,38 +285,21 @@ export class FdUiLineChartComponent {
 
         return this.resolvedSeries().flatMap(series => {
             const shouldPrefixTooltip = this.series().length > 0 && series.label.trim().length > 0;
-            const points = series.points.flatMap((point, index) => {
-                const value = point.value;
-                if (typeof value !== 'number' || !Number.isFinite(value)) {
-                    return [];
-                }
-
-                const xStep = series.points.length > 1 ? (this.chartRight() - this.chartLeft()) / (series.points.length - 1) : 0;
-                const x = series.points.length > 1 ? this.chartLeft() + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
-                const y = this.chartBottom() - ((value - minValue) / effectiveRange) * availableHeight;
-                const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
-                const tooltipPrefix = shouldPrefixTooltip ? `${series.label}, ` : '';
-
-                return [
-                    {
-                        label,
-                        seriesLabel: series.label,
-                        value,
-                        x,
-                        y,
-                        xPercent: `${x}%`,
-                        yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
-                        color: series.color,
-                        tooltip: `${tooltipPrefix}${label}: ${value}`,
-                    },
-                ];
+            const pointGroups = this.buildPointGroups(series, {
+                minValue,
+                effectiveRange,
+                availableHeight,
+                shouldPrefixTooltip,
             });
+            const points = pointGroups.flat();
 
             if (points.length === 0) {
                 return [];
             }
 
-            const path = this.buildLinePath(points);
+            const paths = pointGroups.map(group => this.buildLinePath(group)).filter(path => path.length > 0);
+            const areaPaths = pointGroups.map(group => this.buildAreaPath(this.buildLinePath(group), group));
+            const path = paths.join(' ');
 
             return [
                 {
@@ -316,7 +308,9 @@ export class FdUiLineChartComponent {
                     fillColor: series.fillColor,
                     points,
                     path,
-                    areaPath: this.buildAreaPath(path, points),
+                    areaPath: areaPaths.join(' '),
+                    paths,
+                    areaPaths,
                 },
             ];
         });
@@ -393,6 +387,50 @@ export class FdUiLineChartComponent {
         });
 
         return [`M ${firstPoint.x} ${firstPoint.y}`, ...segments].join(' ');
+    }
+
+    private buildPointGroups(
+        series: Required<FdUiLineChartSeries>,
+        options: FdUiLineChartPointGroupOptions,
+    ): FdUiLineChartPointViewModel[][] {
+        const groups: FdUiLineChartPointViewModel[][] = [];
+        let currentGroup: FdUiLineChartPointViewModel[] = [];
+
+        series.points.forEach((point, index) => {
+            const value = point.value;
+            if (typeof value !== 'number' || !Number.isFinite(value)) {
+                if (currentGroup.length > 0) {
+                    groups.push(currentGroup);
+                    currentGroup = [];
+                }
+
+                return;
+            }
+
+            const xStep = series.points.length > 1 ? (this.chartRight() - this.chartLeft()) / (series.points.length - 1) : 0;
+            const x = series.points.length > 1 ? this.chartLeft() + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
+            const y = this.chartBottom() - ((value - options.minValue) / options.effectiveRange) * options.availableHeight;
+            const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
+            const tooltipPrefix = options.shouldPrefixTooltip ? `${series.label}, ` : '';
+
+            currentGroup.push({
+                label,
+                seriesLabel: series.label,
+                value,
+                x,
+                y,
+                xPercent: `${x}%`,
+                yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
+                color: series.color,
+                tooltip: `${tooltipPrefix}${label}: ${value}`,
+            });
+        });
+
+        if (currentGroup.length > 0) {
+            groups.push(currentGroup);
+        }
+
+        return groups;
     }
 
     private buildAreaPath(path: string, points: readonly FdUiLineChartPointViewModel[]): string {

@@ -12,7 +12,11 @@ public static class StatisticsHttpResponseMappings {
             model.AverageProteins,
             model.AverageFats,
             model.AverageCarbs,
-            model.AverageFiber
+            model.AverageFiber,
+            model.TotalProteins,
+            model.TotalFats,
+            model.TotalCarbs,
+            model.TotalFiber
         );
     }
 }

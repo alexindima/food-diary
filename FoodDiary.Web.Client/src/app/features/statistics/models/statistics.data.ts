@@ -6,6 +6,10 @@ export type AggregatedStatistics = {
     averageFats: number;
     averageCarbs: number;
     averageFiber: number;
+    totalProteins: number;
+    totalFats: number;
+    totalCarbs: number;
+    totalFiber: number;
 };
 
 export type GetStatisticsDto = {

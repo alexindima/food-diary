@@ -4,11 +4,13 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { ExportService } from '../../meals/api/export.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import { StatisticsService } from '../api/statistics.service';
 import { StatisticsFacade } from './statistics.facade';
+import { getQuantizationDays, normalizeEndOfDay, normalizeStartOfDay } from './statistics-data-mapper';
 
 const FIRST_TOTAL_CALORIES = 1800;
 const USER_HEIGHT_CM = 180;
@@ -41,6 +43,10 @@ beforeEach(() => {
                     averageFats: 70,
                     averageCarbs: 160,
                     averageFiber: 20,
+                    totalProteins: 120,
+                    totalFats: 70,
+                    totalCarbs: 160,
+                    totalFiber: 20,
                 },
             ]),
         ),
@@ -93,6 +99,16 @@ describe('StatisticsFacade loading', () => {
         expect(statisticsService.getAggregatedStatistics).toHaveBeenCalled();
         expect(weightEntriesService.getSummary).toHaveBeenCalled();
         expect(waistEntriesService.getSummary).toHaveBeenCalled();
+        const bodySummaryRange = facade.currentRange();
+        const bodySummaryStart = normalizeStartOfDay(bodySummaryRange.start);
+        const bodySummaryEnd = normalizeEndOfDay(bodySummaryRange.end);
+        const bodySummaryFilters = {
+            dateFrom: formatDateInputValue(bodySummaryRange.start),
+            dateTo: formatDateInputValue(bodySummaryRange.end),
+            quantizationDays: getQuantizationDays(bodySummaryStart, bodySummaryEnd),
+        };
+        expect(weightEntriesService.getSummary).toHaveBeenCalledWith(bodySummaryFilters);
+        expect(waistEntriesService.getSummary).toHaveBeenCalledWith(bodySummaryFilters);
         expect(userService.getInfo).toHaveBeenCalled();
         expect(facade.chartStatisticsData()?.calories).toEqual([FIRST_TOTAL_CALORIES]);
         expect(facade.weightSummaryPoints()).toHaveLength(1);
@@ -207,6 +223,10 @@ describe('StatisticsFacade errors', () => {
                     averageFats: 75,
                     averageCarbs: 190,
                     averageFiber: 24,
+                    totalProteins: 130,
+                    totalFats: 75,
+                    totalCarbs: 190,
+                    totalFiber: 24,
                 },
             ]),
         );

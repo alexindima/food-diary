@@ -87,6 +87,23 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWaistSummariesQueryHandler_WithDateOnlyValues_PreservesRequestedCalendarDates() {
+        var repository = new InMemoryWaistEntryRepository();
+        var user = User.Create("waist-summary@example.com", "hash");
+        var handler = new GetWaistSummariesQueryHandler(repository, new StubUserRepository(user));
+        var from = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
+        var to = new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(
+            new GetWaistSummariesQuery(user.Id.Value, from, to, 1),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateFrom);
+        Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateTo);
+    }
+
+    [Fact]
     public async Task DeleteWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
         var handler = new DeleteWaistEntryCommandHandler(
             new InMemoryWaistEntryRepository(),
@@ -145,6 +162,8 @@ public class WaistEntriesFeatureTests {
         private readonly List<WaistEntry> _entries = [];
 
         public DateTime LastGetByDateDate { get; private set; }
+        public DateTime LastPeriodDateFrom { get; private set; }
+        public DateTime LastPeriodDateTo { get; private set; }
 
         public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
             _entries.Add(entry);
@@ -202,6 +221,8 @@ public class WaistEntriesFeatureTests {
             DateTime dateFrom,
             DateTime dateTo,
             CancellationToken cancellationToken = default) {
+            LastPeriodDateFrom = dateFrom;
+            LastPeriodDateTo = dateTo;
             var items = _entries
                 .Where(x => x.UserId == userId && x.Date >= dateFrom && x.Date <= dateTo)
                 .OrderBy(x => x.Date)

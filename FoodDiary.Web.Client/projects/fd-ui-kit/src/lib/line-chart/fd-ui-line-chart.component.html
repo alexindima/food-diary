@@ -49,12 +49,16 @@
 
                     @if (showArea()) {
                         @for (series of seriesViews(); track series.label) {
-                            <path class="fd-ui-line-chart__area" [attr.d]="series.areaPath" [style.fill]="series.fillColor" />
+                            @for (areaPath of series.areaPaths; track $index) {
+                                <path class="fd-ui-line-chart__area" [attr.d]="areaPath" [style.fill]="series.fillColor" />
+                            }
                         }
                     }
 
                     @for (series of seriesViews(); track series.label) {
-                        <path class="fd-ui-line-chart__line" [attr.d]="series.path" [style.stroke]="series.color" />
+                        @for (path of series.paths; track $index) {
+                            <path class="fd-ui-line-chart__line" [attr.d]="path" [style.stroke]="series.color" />
+                        }
                     }
                 </svg>
 

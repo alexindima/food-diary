@@ -83,6 +83,27 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public async Task ExportDiary_WithRepositoryOverfetch_FiltersToRequestedInstants() {
+        var userId = UserId.New();
+        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        var beforeMeal = CreateMeal(userId, localDayStartUtc.AddMinutes(-1), comment: "outside before");
+        var includedMeal = CreateMeal(userId, localDayStartUtc.AddMinutes(1), comment: "inside period");
+        var afterMeal = CreateMeal(userId, localDayEndUtc.AddMilliseconds(1), comment: "outside after");
+        var handler = CreateHandler([beforeMeal, includedMeal, afterMeal]);
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        Assert.Contains("inside period", content);
+        Assert.DoesNotContain("outside before", content);
+        Assert.DoesNotContain("outside after", content);
+    }
+
+    [Fact]
     public async Task ExportDiary_WithNoMeals_ReturnsHeaderOnly() {
         var userId = UserId.New();
         var handler = CreateHandler([]);

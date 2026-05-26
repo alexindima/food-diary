@@ -398,9 +398,14 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildStatisticsSnapshot(JsonElement root) {
+        var firstItemKeys = root.GetArrayLength() > 0
+            ? root[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal).ToArray()
+            : Array.Empty<string>();
+
         return new JsonObject {
             ["isArray"] = root.ValueKind == JsonValueKind.Array,
-            ["count"] = root.GetArrayLength()
+            ["count"] = root.GetArrayLength(),
+            ["firstItemKeys"] = ToJsonArray(firstItemKeys)
         };
     }
 

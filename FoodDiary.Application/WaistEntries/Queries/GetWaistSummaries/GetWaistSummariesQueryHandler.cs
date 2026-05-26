@@ -38,8 +38,8 @@ public class GetWaistSummariesQueryHandler(
             return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(accessError);
         }
 
-        var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom);
-        var normalizedTo = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo);
+        var normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
+        var normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
         var entries = await waistEntryRepository.GetByPeriodAsync(
             userId,

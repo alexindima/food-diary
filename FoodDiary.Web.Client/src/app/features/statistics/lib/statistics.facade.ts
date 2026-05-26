@@ -6,6 +6,7 @@ import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
+import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { type ExportFormat, ExportService } from '../../meals/api/export.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
@@ -26,6 +27,7 @@ import {
     buildSummarySparklinePoints,
     type DateRange,
     getCurrentDateRange,
+    getDateRangeDayCount,
     getQuantizationDays,
     normalizeEndOfDay,
     normalizeStartOfDay,
@@ -66,7 +68,9 @@ export class StatisticsFacade {
     public readonly userHeightCm = signal<number | null>(null);
 
     public readonly currentRange = computed<DateRange>(() => getCurrentDateRange(this.selectedRange(), this.customRangeControl.value));
-    public readonly summaryMetrics = computed(() => buildSummaryMetrics(this.chartStatisticsData()));
+    public readonly summaryMetrics = computed(() =>
+        buildSummaryMetrics(this.chartStatisticsData(), getDateRangeDayCount(this.currentRange())),
+    );
     public readonly macroSparklinePoints = computed(() =>
         buildMacroSparklinePoints(this.chartStatisticsData(), date => this.formatDateLabel(date)),
     );
@@ -273,8 +277,8 @@ export class StatisticsFacade {
     private loadBodySummaries(range: DateRange): void {
         this.isBodyLoading.set(true);
         this.hasBodyLoadError.set(false);
-        const normalizedStart = normalizeStartOfDay(range.start).toISOString();
-        const normalizedEnd = normalizeEndOfDay(range.end).toISOString();
+        const normalizedStart = formatDateInputValue(range.start);
+        const normalizedEnd = formatDateInputValue(range.end);
         const quantizationDays = getQuantizationDays(normalizeStartOfDay(range.start), normalizeEndOfDay(range.end));
 
         forkJoin({
@@ -369,6 +373,8 @@ export class StatisticsFacade {
     }
 
     private formatSummaryLabel(dateString: string): string {
-        return this.formatDateLabel(new Date(dateString));
+        const date = parseLocalDateInputValue(dateString) ?? new Date(dateString);
+
+        return this.formatDateLabel(date);
     }
 }

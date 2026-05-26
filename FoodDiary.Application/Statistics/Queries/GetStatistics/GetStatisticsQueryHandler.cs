@@ -55,7 +55,7 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
         DateTime bucketEnd,
         IReadOnlyCollection<Meal> meals) {
         if (meals.Count == 0) {
-            return new AggregatedStatisticsModel(bucketStart, bucketEnd, 0, 0, 0, 0, 0);
+            return new AggregatedStatisticsModel(bucketStart, bucketEnd, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         var totalCalories = meals.Sum(m => m.TotalCalories);
@@ -64,7 +64,7 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
         var totalCarbs = meals.Sum(m => m.TotalCarbs);
         var totalFiber = meals.Sum(m => m.TotalFiber);
 
-        var effectiveDays = Math.Max(1, (bucketEnd.Date - bucketStart.Date).Days + 1);
+        var effectiveDays = GetBucketDayCount(bucketStart, bucketEnd);
 
         return new AggregatedStatisticsModel(
             bucketStart,
@@ -73,7 +73,11 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
             Math.Round(totalProteins / effectiveDays, 2),
             Math.Round(totalFats / effectiveDays, 2),
             Math.Round(totalCarbs / effectiveDays, 2),
-            Math.Round(totalFiber / effectiveDays, 2));
+            Math.Round(totalFiber / effectiveDays, 2),
+            Math.Round(totalProteins, 2),
+            Math.Round(totalFats, 2),
+            Math.Round(totalCarbs, 2),
+            Math.Round(totalFiber, 2));
     }
 
     private static List<(DateTime Start, DateTime End)> BuildBuckets(
@@ -94,5 +98,11 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
         }
 
         return buckets;
+    }
+
+    private static int GetBucketDayCount(DateTime bucketStart, DateTime bucketEnd) {
+        var totalDays = (bucketEnd - bucketStart).TotalDays;
+
+        return Math.Max(1, (int)Math.Ceiling(totalDays));
     }
 }

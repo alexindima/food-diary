@@ -13,6 +13,14 @@ const FIRST_CARBS = 160;
 const SECOND_CARBS = 180;
 const FIRST_FIBER = 20;
 const SECOND_FIBER = 25;
+const FIRST_TOTAL_PROTEINS = 240;
+const SECOND_TOTAL_PROTEINS = 420;
+const FIRST_TOTAL_FATS = 140;
+const SECOND_TOTAL_FATS = 240;
+const FIRST_TOTAL_CARBS = 320;
+const SECOND_TOTAL_CARBS = 540;
+const FIRST_TOTAL_FIBER = 40;
+const SECOND_TOTAL_FIBER = 75;
 
 describe('statistics-statistics.mapper', () => {
     it('maps statistics series and aggregates nutrients', () => {
@@ -21,22 +29,42 @@ describe('statistics-statistics.mapper', () => {
         expect(result.calories).toEqual([FIRST_CALORIES, SECOND_CALORIES]);
         expect(result.nutrientsStatistic.proteins).toEqual([FIRST_PROTEINS, SECOND_PROTEINS]);
         expect(result.aggregatedNutrients).toEqual({
-            proteins: FIRST_PROTEINS + SECOND_PROTEINS,
-            fats: FIRST_FATS + SECOND_FATS,
-            carbs: FIRST_CARBS + SECOND_CARBS,
-            fiber: FIRST_FIBER + SECOND_FIBER,
+            proteins: FIRST_TOTAL_PROTEINS + SECOND_TOTAL_PROTEINS,
+            fats: FIRST_TOTAL_FATS + SECOND_TOTAL_FATS,
+            carbs: FIRST_TOTAL_CARBS + SECOND_TOTAL_CARBS,
+            fiber: FIRST_TOTAL_FIBER + SECOND_TOTAL_FIBER,
         });
     });
 });
 
 function createStat(date: string, second = false): AggregatedStatistics {
+    if (second) {
+        return {
+            dateFrom: new Date(`${date}T00:00:00Z`),
+            dateTo: new Date(`${date}T23:59:59Z`),
+            totalCalories: SECOND_CALORIES,
+            averageProteins: SECOND_PROTEINS,
+            averageFats: SECOND_FATS,
+            averageCarbs: SECOND_CARBS,
+            averageFiber: SECOND_FIBER,
+            totalProteins: SECOND_TOTAL_PROTEINS,
+            totalFats: SECOND_TOTAL_FATS,
+            totalCarbs: SECOND_TOTAL_CARBS,
+            totalFiber: SECOND_TOTAL_FIBER,
+        };
+    }
+
     return {
         dateFrom: new Date(`${date}T00:00:00Z`),
         dateTo: new Date(`${date}T23:59:59Z`),
-        totalCalories: second ? SECOND_CALORIES : FIRST_CALORIES,
-        averageProteins: second ? SECOND_PROTEINS : FIRST_PROTEINS,
-        averageFats: second ? SECOND_FATS : FIRST_FATS,
-        averageCarbs: second ? SECOND_CARBS : FIRST_CARBS,
-        averageFiber: second ? SECOND_FIBER : FIRST_FIBER,
+        totalCalories: FIRST_CALORIES,
+        averageProteins: FIRST_PROTEINS,
+        averageFats: FIRST_FATS,
+        averageCarbs: FIRST_CARBS,
+        averageFiber: FIRST_FIBER,
+        totalProteins: FIRST_TOTAL_PROTEINS,
+        totalFats: FIRST_TOTAL_FATS,
+        totalCarbs: FIRST_TOTAL_CARBS,
+        totalFiber: FIRST_TOTAL_FIBER,
     };
 }

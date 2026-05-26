@@ -38,8 +38,8 @@ public class GetWeightSummariesQueryHandler(
             return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(accessError);
         }
 
-        var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom);
-        var normalizedTo = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo);
+        var normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
+        var normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
         var entries = await weightEntryRepository.GetByPeriodAsync(
             userId,

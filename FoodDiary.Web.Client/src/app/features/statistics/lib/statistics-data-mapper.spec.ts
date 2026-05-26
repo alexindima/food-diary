@@ -7,8 +7,10 @@ import {
     buildNutrientBarItems,
     buildNutrientPieSegments,
     buildNutrientTrendGroups,
+    buildSummaryMetrics,
     buildSummarySparklinePoints,
     getCurrentDateRange,
+    getDateRangeDayCount,
     normalizeEndOfDay,
     normalizeStartOfDay,
 } from './statistics-data-mapper';
@@ -18,6 +20,7 @@ const MAY_INDEX = 4;
 const APRIL_INDEX = 3;
 const CURRENT_DAY = 6;
 const NOON_HOUR = 12;
+const THIRD_DAY = 3;
 const WEEK_START_DAY = 30;
 const END_OF_DAY_HOUR = 23;
 const END_OF_DAY_MINUTE = 59;
@@ -38,6 +41,8 @@ const FIRST_CARBS = 220;
 const SECOND_CARBS = 240;
 const FIRST_FIBER = 18;
 const SECOND_FIBER = 22;
+const SUMMARY_DAY_COUNT = 4;
+const EXPECTED_THREE_DAYS = 3;
 const BODY_START_VALUE = 80;
 const BODY_END_VALUE = 82;
 const BODY_INTERPOLATED_VALUE = 81;
@@ -118,6 +123,30 @@ describe('statistics-data-mapper', () => {
             { label: '1', value: FIRST_CALORIES },
             { label: '2', value: SECOND_CALORIES },
         ]);
+    });
+
+    it('builds summary average calories from period day count', () => {
+        const metrics = buildSummaryMetrics(
+            {
+                date: [new Date(TEST_YEAR, MAY_INDEX, 1), new Date(TEST_YEAR, MAY_INDEX, THIRD_DAY)],
+                calories: [FIRST_CALORIES, SECOND_CALORIES],
+                nutrientsStatistic: { proteins: [], fats: [], carbs: [], fiber: [] },
+                aggregatedNutrients: { proteins: 0, fats: 0, carbs: 0, fiber: 0 },
+            },
+            SUMMARY_DAY_COUNT,
+        );
+
+        expect(metrics?.totalCalories).toBe(FIRST_CALORIES + SECOND_CALORIES);
+        expect(metrics?.averageCard.consumption).toBe((FIRST_CALORIES + SECOND_CALORIES) / SUMMARY_DAY_COUNT);
+    });
+
+    it('counts inclusive calendar days in a date range', () => {
+        const dayCount = getDateRangeDayCount({
+            start: new Date(TEST_YEAR, MAY_INDEX, 1, NOON_HOUR),
+            end: new Date(TEST_YEAR, MAY_INDEX, THIRD_DAY, NOON_HOUR),
+        });
+
+        expect(dayCount).toBe(EXPECTED_THREE_DAYS);
     });
 
     it('builds nutrient trend groups', () => {

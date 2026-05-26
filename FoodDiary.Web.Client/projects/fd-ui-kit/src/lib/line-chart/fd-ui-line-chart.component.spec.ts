@@ -23,6 +23,7 @@ const SMALL_NUTRIENT_VALUE = 58;
 const SMALL_MULTI_SERIES_VALUE = 24;
 const MULTI_SERIES_COUNT = 4;
 const MULTI_SERIES_POINT_COUNT = 8;
+const GAP_SEGMENT_COUNT = 2;
 
 // eslint-disable-next-line max-lines-per-function -- Line chart primitive behaviors are easier to scan in one component suite.
 describe('FdUiLineChartComponent', () => {
@@ -141,6 +142,26 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelectorAll('.fd-ui-line-chart__legend span')).toHaveLength(MULTI_SERIES_COUNT);
         expect(host().querySelector('.fd-ui-line-chart__legend')?.textContent).toContain('Proteins');
         expect(component.ariaLabel()).toContain('Proteins Mon 10');
+    });
+
+    it('breaks line and area paths around null values', () => {
+        fixture.componentRef.setInput('showArea', true);
+        fixture.componentRef.setInput('points', [
+            { label: 'Mon', value: 1 },
+            { label: 'Tue', value: 2 },
+            { label: 'Wed', value: null },
+            { label: 'Thu', value: 4 },
+            { label: 'Fri', value: 5 },
+        ]);
+        fixture.detectChanges();
+
+        const series = component.seriesViews()[0];
+
+        expect(series.paths).toHaveLength(GAP_SEGMENT_COUNT);
+        expect(series.areaPaths).toHaveLength(GAP_SEGMENT_COUNT);
+        expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(GAP_SEGMENT_COUNT);
+        expect(host().querySelectorAll('.fd-ui-line-chart__area')).toHaveLength(GAP_SEGMENT_COUNT);
+        expect(component.linePath().match(/\bM\b/g)).toHaveLength(GAP_SEGMENT_COUNT);
     });
 
     it('can use an explicit value range', () => {

@@ -7,4 +7,8 @@ public sealed record AggregatedStatisticsHttpResponse(
     double AverageProteins,
     double AverageFats,
     double AverageCarbs,
-    double AverageFiber);
+    double AverageFiber,
+    double TotalProteins,
+    double TotalFats,
+    double TotalCarbs,
+    double TotalFiber);

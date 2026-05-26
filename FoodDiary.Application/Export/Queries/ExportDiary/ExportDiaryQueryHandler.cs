@@ -27,6 +27,9 @@ public class ExportDiaryQueryHandler(
 
         var meals = await mealRepository.GetByPeriodAsync(
             userId, normalizedFrom, normalizedTo, cancellationToken);
+        var filteredMeals = meals
+            .Where(meal => meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
+            .ToList();
 
         var fromStr = query.DateFrom.ToString("yyyy-MM-dd");
         var toStr = query.DateTo.ToString("yyyy-MM-dd");
@@ -34,7 +37,7 @@ public class ExportDiaryQueryHandler(
         return query.Format switch {
             ExportFormat.Pdf => Result.Success(new FileExportResult(
                 await pdfGenerator.GenerateAsync(
-                    meals,
+                    filteredMeals,
                     query.DateFrom,
                     query.DateTo,
                     query.Locale,
@@ -44,7 +47,7 @@ public class ExportDiaryQueryHandler(
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
             _ => Result.Success(new FileExportResult(
-                DiaryCsvGenerator.Generate(meals),
+                DiaryCsvGenerator.Generate(filteredMeals),
                 "text/csv",
                 $"food-diary-{fromStr}-to-{toStr}.csv")),
         };

@@ -19,6 +19,10 @@ const RESPONSE: AggregatedStatistics[] = [
         averageFats: 70,
         averageCarbs: 160,
         averageFiber: 20,
+        totalProteins: 120,
+        totalFats: 70,
+        totalCarbs: 160,
+        totalFiber: 20,
     },
 ];
 

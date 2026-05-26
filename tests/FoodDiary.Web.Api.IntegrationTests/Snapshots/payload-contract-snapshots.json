@@ -129,7 +129,20 @@
   },
   "statistics-empty-range": {
     "isArray": true,
-    "count": 7
+    "count": 7,
+    "firstItemKeys": [
+      "averageCarbs",
+      "averageFats",
+      "averageFiber",
+      "averageProteins",
+      "dateFrom",
+      "dateTo",
+      "totalCalories",
+      "totalCarbs",
+      "totalFats",
+      "totalFiber",
+      "totalProteins"
+    ]
   },
   "shopping-list-current": {
     "keys": [
