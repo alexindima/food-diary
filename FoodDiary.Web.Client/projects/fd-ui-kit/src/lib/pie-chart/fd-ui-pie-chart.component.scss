@@ -42,6 +42,14 @@
         stroke-dashoffset 180ms ease;
 }
 
+.fd-ui-pie-chart--pie .fd-ui-pie-chart__track {
+    display: none;
+}
+
+.fd-ui-pie-chart--pie .fd-ui-pie-chart__segment {
+    stroke-width: 15.9155;
+}
+
 .fd-ui-pie-chart__center {
     position: absolute;
     inset: 24%;
@@ -100,7 +108,7 @@
 }
 
 @media (max-width: 720px) {
-
+    /* stylelint-disable-next-line rule-empty-line-before */
     .fd-ui-pie-chart {
         grid-template-columns: 1fr;
     }

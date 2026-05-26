@@ -86,6 +86,23 @@ describe('statistics-data-mapper', () => {
         ]);
     });
 
+    it('fills missing summary sparkline points with zeroes', () => {
+        const points = buildSummarySparklinePoints(
+            {
+                date: [new Date(TEST_YEAR, MAY_INDEX, 1), new Date(TEST_YEAR, MAY_INDEX, 2)],
+                calories: [null as unknown as number, SECOND_CALORIES],
+                nutrientsStatistic: { proteins: [], fats: [], carbs: [], fiber: [] },
+                aggregatedNutrients: { proteins: 0, fats: 0, carbs: 0, fiber: 0 },
+            },
+            date => date.getDate().toString(),
+        );
+
+        expect(points).toEqual([
+            { label: '1', value: 0 },
+            { label: '2', value: SECOND_CALORIES },
+        ]);
+    });
+
     it('builds calories trend points', () => {
         const points = buildCaloriesTrendPoints(
             {
@@ -181,8 +198,8 @@ describe('statistics-data-mapper', () => {
             { label: '2', value: SECOND_PROTEINS },
         ]);
         expect(points.fats).toEqual([
-            { label: '1', value: null },
-            { label: '2', value: null },
+            { label: '1', value: 0 },
+            { label: '2', value: 0 },
         ]);
     });
 

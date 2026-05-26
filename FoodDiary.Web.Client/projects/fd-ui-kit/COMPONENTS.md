@@ -55,6 +55,8 @@ Circular distribution chart.
 - `title?: string`
 - `segments?: FdUiPieChartSegment[]`
 - `emptyLabel?: string`
+- `showLegend?: boolean`
+- `variant?: 'donut' | 'pie'`
 
 #### `fd-ui-bar-chart`
 

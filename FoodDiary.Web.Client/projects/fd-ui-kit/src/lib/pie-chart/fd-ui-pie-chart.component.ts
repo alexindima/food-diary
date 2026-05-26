@@ -6,6 +6,8 @@ export type FdUiPieChartSegment = {
     color?: string;
 };
 
+export type FdUiPieChartVariant = 'donut' | 'pie';
+
 type FdUiPieChartSegmentViewModel = {
     label: string;
     value: number;
@@ -17,6 +19,8 @@ type FdUiPieChartSegmentViewModel = {
 };
 
 const CHART_CIRCUMFERENCE = 100;
+const DONUT_CHART_RADIUS = 15.9155;
+const PIE_CHART_RADIUS = 7.95775;
 const DEFAULT_SEGMENT_COLORS = [
     'var(--fd-color-blue-500)',
     'var(--fd-color-emerald-500)',
@@ -38,8 +42,11 @@ export class FdUiPieChartComponent {
     public readonly segments = input<readonly FdUiPieChartSegment[]>([]);
     public readonly emptyLabel = input('No data');
     public readonly showLegend = input(true);
+    public readonly variant = input<FdUiPieChartVariant>('donut');
 
     public readonly total = computed(() => this.normalizedSegments().reduce((sum, segment) => sum + segment.value, 0));
+
+    protected readonly radius = computed(() => (this.variant() === 'pie' ? PIE_CHART_RADIUS : DONUT_CHART_RADIUS));
 
     public readonly segmentViews = computed<readonly FdUiPieChartSegmentViewModel[]>(() => {
         const total = this.total();

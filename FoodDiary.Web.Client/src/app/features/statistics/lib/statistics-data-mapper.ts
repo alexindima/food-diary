@@ -51,6 +51,13 @@ function buildChartPoints(labels: readonly string[], series: ReadonlyArray<numbe
     }));
 }
 
+function buildSparklinePoints(labels: readonly string[], series: ReadonlyArray<number | null> | undefined): SummarySparklinePoint[] {
+    return labels.map((label, index) => ({
+        label,
+        value: series?.[index] ?? 0,
+    }));
+}
+
 export function getQuantizationDays(start: Date, end: Date): number {
     const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / MS_PER_DAY));
 
@@ -297,13 +304,15 @@ export function buildMacroSparklinePoints(
     const nutrients = stats?.nutrientsStatistic;
 
     return {
-        proteins: buildChartPoints(labels, nutrients?.proteins),
-        fats: buildChartPoints(labels, nutrients?.fats),
-        carbs: buildChartPoints(labels, nutrients?.carbs),
-        fiber: buildChartPoints(labels, nutrients?.fiber),
+        proteins: buildSparklinePoints(labels, nutrients?.proteins),
+        fats: buildSparklinePoints(labels, nutrients?.fats),
+        carbs: buildSparklinePoints(labels, nutrients?.carbs),
+        fiber: buildSparklinePoints(labels, nutrients?.fiber),
     };
 }
 
 export function buildSummarySparklinePoints(stats: MappedStatistics | null, formatLabel: (date: Date) => string): SummarySparklinePoint[] {
-    return buildCaloriesTrendPoints(stats, formatLabel);
+    const labels = stats?.date.map(date => formatLabel(date)) ?? [];
+
+    return buildSparklinePoints(labels, stats?.calories);
 }

@@ -1,6 +1,8 @@
 @use 'variables' as variables;
 
 :host {
+    --fd-summary-macro-sparkline-height: 56px;
+    --fd-summary-total-sparkline-height: 80px;
     display: block;
 }
 
@@ -46,10 +48,19 @@
 }
 
 .stats-summary-card__trend {
-    --fd-line-chart-height: 80px;
-    height: 80px;
-    margin-top: auto;
+    height: var(--fd-summary-total-sparkline-height);
+    margin-bottom: var(--fd-space-md);
     width: 100%;
+}
+
+.stats-summary-card__trend fd-ui-line-chart,
+.stats-summary-card__macro-trend fd-ui-line-chart {
+    display: block;
+    height: 100%;
+}
+
+.stats-summary-card__trend fd-ui-line-chart {
+    --fd-line-chart-height: var(--fd-summary-total-sparkline-height);
 }
 
 .stats-summary-card__macro-card {
@@ -71,12 +82,16 @@
 }
 
 .stats-summary-card__macro-trend {
-    --fd-line-chart-height: var(--fd-size-control-lg);
-    height: var(--fd-size-control-lg);
+    height: var(--fd-summary-macro-sparkline-height);
+    margin-bottom: var(--fd-space-sm);
+}
+
+.stats-summary-card__macro-trend fd-ui-line-chart {
+    --fd-line-chart-height: var(--fd-summary-macro-sparkline-height);
 }
 
 @media #{variables.$media-compact} {
-
+    /* stylelint-disable-next-line rule-empty-line-before */
     .stats-summary-card__row--top {
         flex-direction: column;
     }

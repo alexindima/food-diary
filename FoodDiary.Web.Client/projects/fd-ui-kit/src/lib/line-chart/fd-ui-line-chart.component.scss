@@ -27,10 +27,13 @@
 }
 
 .fd-ui-line-chart__surface {
-    grid-area: chart;
     position: relative;
     min-width: 0;
     height: var(--fd-line-chart-height);
+}
+
+.fd-ui-line-chart__plot--with-axis-labels .fd-ui-line-chart__surface {
+    grid-area: chart;
 }
 
 .fd-ui-line-chart__svg {
@@ -48,21 +51,26 @@
 }
 
 .fd-ui-line-chart__y-axis {
-    grid-area: y-axis;
     position: relative;
     min-width: 0;
     height: var(--fd-line-chart-height);
     text-align: right;
 }
 
+.fd-ui-line-chart__plot--with-axis-labels .fd-ui-line-chart__y-axis {
+    grid-area: y-axis;
+}
+
 .fd-ui-line-chart__x-axis {
-    grid-area: x-axis;
     position: relative;
     min-height: var(--fd-text-caption-line-height);
 }
 
+.fd-ui-line-chart__plot--with-axis-labels .fd-ui-line-chart__x-axis {
+    grid-area: x-axis;
+}
+
 .fd-ui-line-chart__legend {
-    grid-area: legend;
     display: flex;
     flex-wrap: wrap;
     gap: var(--fd-space-xs) var(--fd-space-md);
@@ -70,6 +78,10 @@
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-caption-size);
     line-height: var(--fd-text-caption-line-height);
+}
+
+.fd-ui-line-chart__plot--with-axis-labels .fd-ui-line-chart__legend {
+    grid-area: legend;
 }
 
 .fd-ui-line-chart__legend span {
@@ -145,7 +157,7 @@
 }
 
 @container (max-width: 560px) {
-
+    /* stylelint-disable-next-line rule-empty-line-before */
     .fd-ui-line-chart__x-axis {
         min-height: var(--fd-line-chart-angled-axis-height);
     }
@@ -168,7 +180,7 @@
 }
 
 @container (max-width: 380px) {
-
+    /* stylelint-disable-next-line rule-empty-line-before */
     .fd-ui-line-chart__x-axis span:nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end) {
         display: none;
     }

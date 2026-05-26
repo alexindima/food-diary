@@ -6,7 +6,6 @@
 
 .fd-ui-bar-chart {
     display: grid;
-    gap: var(--fd-space-xs);
     width: 100%;
     min-width: 0;
 }
@@ -51,6 +50,7 @@
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
     gap: var(--fd-space-xxs);
+    margin-top: calc(-1 * var(--fd-space-xxs));
     min-width: 0;
 }
 

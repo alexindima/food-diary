@@ -54,4 +54,19 @@ describe('FdUiPieChartComponent', () => {
         expect(host().querySelector('.fd-ui-pie-chart__legend')).toBeNull();
         expect(host().querySelector('.fd-ui-pie-chart__empty')).toBeNull();
     });
+
+    it('should render filled pie variant without center label', () => {
+        fixture.componentRef.setInput('title', 'Browsers');
+        fixture.componentRef.setInput('variant', 'pie');
+        fixture.componentRef.setInput('segments', [
+            { label: 'Opera', value: 8 },
+            { label: 'Chrome', value: 2 },
+        ]);
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-pie-chart')?.classList.contains('fd-ui-pie-chart--pie')).toBe(true);
+        expect(host().querySelector('.fd-ui-pie-chart__center')).toBeNull();
+        expect(host().querySelector('.fd-ui-pie-chart__segment')?.getAttribute('r')).toBe('7.95775');
+        expect(component.ariaLabel()).toContain('Browsers: Opera 8, Chrome 2');
+    });
 });

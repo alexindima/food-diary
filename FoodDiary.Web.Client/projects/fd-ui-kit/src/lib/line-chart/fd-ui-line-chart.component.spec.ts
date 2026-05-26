@@ -6,8 +6,11 @@ import { FdUiLineChartComponent } from './fd-ui-line-chart.component';
 const TREND_POINT_COUNT = 3;
 const CHART_LEFT_X = 2;
 const CHART_RIGHT_X = 98;
+const SPARKLINE_CHART_LEFT_X = 0;
+const SPARKLINE_CHART_RIGHT_X = 100;
 const CHART_TOP_Y = 6;
 const CHART_BOTTOM_Y = 58;
+const SPARKLINE_AREA_BASELINE_Y = 63.2;
 const EXPLICIT_MAX_VALUE = 5;
 const GRID_LINE_COUNT = 5;
 const GRID_POINT_COUNT = 2;
@@ -67,6 +70,31 @@ describe('FdUiLineChartComponent', () => {
 
         expect(component.areaPath()).toContain('Z');
         expect(host().querySelector('.fd-ui-line-chart__area')).not.toBeNull();
+    });
+
+    it('uses full horizontal range for sparklines', () => {
+        fixture.componentRef.setInput('density', 'sparkline');
+        fixture.componentRef.setInput('points', [
+            { label: 'One', value: 1 },
+            { label: 'Two', value: 2 },
+        ]);
+        fixture.detectChanges();
+
+        expect(component.pointViews()[0]?.x).toBe(SPARKLINE_CHART_LEFT_X);
+        expect(component.pointViews()[1]?.x).toBe(SPARKLINE_CHART_RIGHT_X);
+    });
+
+    it('extends sparkline area below the zero line stroke', () => {
+        fixture.componentRef.setInput('density', 'sparkline');
+        fixture.componentRef.setInput('showArea', true);
+        fixture.componentRef.setInput('points', [
+            { label: 'One', value: 0 },
+            { label: 'Two', value: 2 },
+        ]);
+        fixture.detectChanges();
+
+        expect(component.areaPath()).toContain(`100 ${SPARKLINE_AREA_BASELINE_Y}`);
+        expect(component.areaPath()).toContain(`0 ${SPARKLINE_AREA_BASELINE_Y}`);
     });
 
     it('can render multiple line series with a shared y-axis', () => {

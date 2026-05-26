@@ -22,8 +22,8 @@
                         @for (gridLine of gridLines(); track $index) {
                             <line
                                 class="fd-ui-line-chart__grid-line"
-                                [attr.x1]="chartLeft"
-                                [attr.x2]="chartRight"
+                                [attr.x1]="chartLeft()"
+                                [attr.x2]="chartRight()"
                                 [attr.y1]="gridLine.y"
                                 [attr.y2]="gridLine.y"
                             />
@@ -41,8 +41,8 @@
 
                     <line
                         class="fd-ui-line-chart__axis"
-                        [attr.x1]="chartLeft"
-                        [attr.x2]="chartRight"
+                        [attr.x1]="chartLeft()"
+                        [attr.x2]="chartRight()"
                         [attr.y1]="chartBottom()"
                         [attr.y2]="chartBottom()"
                     />

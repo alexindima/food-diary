@@ -55,9 +55,13 @@ const LINE_CHART_VIEWBOX_WIDTH = 100;
 const LINE_CHART_VIEWBOX_HEIGHT = 64;
 const LINE_CHART_PADDING = 6;
 const LINE_CHART_SPARKLINE_PADDING = 2;
+const LINE_CHART_LINE_STROKE_WIDTH = 2.4;
+const LINE_CHART_SPARKLINE_AREA_BASELINE_OFFSET = LINE_CHART_LINE_STROKE_WIDTH / 2;
 const LINE_CHART_HORIZONTAL_PADDING = 2;
 const LINE_CHART_LEFT_X = LINE_CHART_HORIZONTAL_PADDING;
 const LINE_CHART_RIGHT_X = LINE_CHART_VIEWBOX_WIDTH - LINE_CHART_HORIZONTAL_PADDING;
+const LINE_CHART_SPARKLINE_LEFT_X = 0;
+const LINE_CHART_SPARKLINE_RIGHT_X = LINE_CHART_VIEWBOX_WIDTH;
 const LINE_CHART_GRID_LINE_COUNT = 5;
 const LINE_CHART_X_AXIS_LABEL_COUNT = 14;
 const LINE_CHART_PERCENTAGE_SCALE = 100;
@@ -109,10 +113,13 @@ export class FdUiLineChartComponent {
     public readonly density = input<FdUiLineChartDensity>('default');
 
     protected readonly viewBox = `0 0 ${LINE_CHART_VIEWBOX_WIDTH} ${LINE_CHART_VIEWBOX_HEIGHT}`;
-    protected readonly chartLeft = LINE_CHART_LEFT_X;
-    protected readonly chartRight = LINE_CHART_RIGHT_X;
+    protected readonly chartLeft = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_LEFT_X : LINE_CHART_LEFT_X));
+    protected readonly chartRight = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_RIGHT_X : LINE_CHART_RIGHT_X));
     protected readonly chartTop = computed(() => this.chartPadding());
     protected readonly chartBottom = computed(() => LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding());
+    private readonly areaBaseline = computed(() =>
+        this.density() === 'sparkline' ? this.chartBottom() + LINE_CHART_SPARKLINE_AREA_BASELINE_OFFSET : this.chartBottom(),
+    );
     private readonly chartPadding = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_PADDING : LINE_CHART_PADDING));
 
     private readonly resolvedSeries = computed<ReadonlyArray<Required<FdUiLineChartSeries>>>(() => {
@@ -215,7 +222,7 @@ export class FdUiLineChartComponent {
         }
 
         const labelCount = Math.min(LINE_CHART_X_AXIS_LABEL_COUNT, points.length);
-        const xStep = (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (points.length - 1);
+        const xStep = (this.chartRight() - this.chartLeft()) / (points.length - 1);
         const indexes = Array.from({ length: labelCount }, (_, index) => Math.round((index * (points.length - 1)) / (labelCount - 1)));
         const uniqueIndexes = [...new Set(indexes)];
 
@@ -225,7 +232,7 @@ export class FdUiLineChartComponent {
                 return [];
             }
 
-            const x = LINE_CHART_LEFT_X + index * xStep;
+            const x = this.chartLeft() + index * xStep;
             const position = index === 0 ? 'start' : index === points.length - 1 ? 'end' : 'middle';
 
             return [
@@ -247,10 +254,10 @@ export class FdUiLineChartComponent {
             return [{ x: LINE_CHART_VIEWBOX_WIDTH / 2 }];
         }
 
-        const xStep = (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (points.length - 1);
+        const xStep = (this.chartRight() - this.chartLeft()) / (points.length - 1);
 
         return Array.from({ length: points.length }, (_, index) => ({
-            x: LINE_CHART_LEFT_X + index * xStep,
+            x: this.chartLeft() + index * xStep,
         }));
     });
 
@@ -275,8 +282,8 @@ export class FdUiLineChartComponent {
                     return [];
                 }
 
-                const xStep = series.points.length > 1 ? (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (series.points.length - 1) : 0;
-                const x = series.points.length > 1 ? LINE_CHART_LEFT_X + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
+                const xStep = series.points.length > 1 ? (this.chartRight() - this.chartLeft()) / (series.points.length - 1) : 0;
+                const x = series.points.length > 1 ? this.chartLeft() + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
                 const y = this.chartBottom() - ((value - minValue) / effectiveRange) * availableHeight;
                 const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
                 const tooltipPrefix = shouldPrefixTooltip ? `${series.label}, ` : '';
@@ -392,7 +399,9 @@ export class FdUiLineChartComponent {
         const first = points[0];
         const last = points[points.length - 1];
 
-        return `${path} L ${last.x} ${this.chartBottom()} L ${first.x} ${this.chartBottom()} Z`;
+        const baseline = this.areaBaseline();
+
+        return `${path} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
     }
 
     private formatAxisValue(value: number): string {
