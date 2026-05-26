@@ -5,14 +5,32 @@ export type FdUiLineChartPoint = {
     value: number | null;
 };
 
+export type FdUiLineChartSeries = {
+    label: string;
+    points: readonly FdUiLineChartPoint[];
+    color?: string;
+    fillColor?: string;
+};
+
 type FdUiLineChartPointViewModel = {
     label: string;
+    seriesLabel: string;
     value: number;
     x: number;
     y: number;
     xPercent: string;
     yPercent: string;
+    color: string;
     tooltip: string;
+};
+
+type FdUiLineChartSeriesViewModel = {
+    label: string;
+    color: string;
+    fillColor: string;
+    points: readonly FdUiLineChartPointViewModel[];
+    path: string;
+    areaPath: string;
 };
 
 type FdUiLineChartGridLine = {
@@ -72,6 +90,7 @@ const DEFAULT_FILL_COLOR = 'color-mix(in srgb, var(--fd-color-primary-500) 14%, 
 export class FdUiLineChartComponent {
     public readonly title = input<string>();
     public readonly points = input<readonly FdUiLineChartPoint[]>([]);
+    public readonly series = input<readonly FdUiLineChartSeries[]>([]);
     public readonly emptyLabel = input('No data');
     public readonly lineColor = input(DEFAULT_LINE_COLOR);
     public readonly fillColor = input(DEFAULT_FILL_COLOR);
@@ -91,9 +110,30 @@ export class FdUiLineChartComponent {
     protected readonly chartTop = LINE_CHART_PADDING;
     protected readonly chartBottom = LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_PADDING;
 
+    private readonly resolvedSeries = computed<ReadonlyArray<Required<FdUiLineChartSeries>>>(() => {
+        const series = this.series();
+        if (series.length > 0) {
+            return series.map(item => ({
+                label: item.label,
+                points: item.points,
+                color: item.color ?? DEFAULT_LINE_COLOR,
+                fillColor: item.fillColor ?? DEFAULT_FILL_COLOR,
+            }));
+        }
+
+        return [
+            {
+                label: this.title() ?? '',
+                points: this.points(),
+                color: this.lineColor(),
+                fillColor: this.fillColor(),
+            },
+        ];
+    });
+    private readonly xAxisPoints = computed(() => this.resolvedSeries().find(item => item.points.length > 0)?.points ?? []);
     private readonly numericValues = computed(() =>
-        this.points()
-            .map(point => point.value)
+        this.resolvedSeries()
+            .flatMap(item => item.points.map(point => point.value))
             .filter((value): value is number => typeof value === 'number' && Number.isFinite(value)),
     );
     private readonly resolvedMinValue = computed(() => {
@@ -123,11 +163,14 @@ export class FdUiLineChartComponent {
         const paddedMaxValue = this.shouldPadFlatRange(numeric, actualMaxValue)
             ? actualMaxValue + this.getFlatRangePadding(actualMaxValue)
             : actualMaxValue;
-        const defaultMaxValue = this.defaultMaxValue();
-        const maxValue = defaultMaxValue !== null ? Math.max(paddedMaxValue, defaultMaxValue) : paddedMaxValue;
 
-        if (maxValue > minValue) {
-            return this.getNiceMaxValue(minValue, maxValue);
+        if (paddedMaxValue > minValue) {
+            return this.getNiceMaxValue(minValue, paddedMaxValue);
+        }
+
+        const defaultMaxValue = this.defaultMaxValue();
+        if (defaultMaxValue !== null && defaultMaxValue > minValue) {
+            return defaultMaxValue;
         }
 
         if (minValue !== 0) {
@@ -154,7 +197,7 @@ export class FdUiLineChartComponent {
         });
     });
     protected readonly xAxisLabels = computed<readonly FdUiLineChartXAxisLabel[]>(() => {
-        const points = this.points();
+        const points = this.xAxisPoints();
         if (points.length === 0) {
             return [];
         }
@@ -188,7 +231,7 @@ export class FdUiLineChartComponent {
         });
     });
     protected readonly verticalGridLines = computed<readonly FdUiLineChartVerticalGridLine[]>(() => {
-        const points = this.points();
+        const points = this.xAxisPoints();
         if (points.length === 0) {
             return [];
         }
@@ -204,11 +247,10 @@ export class FdUiLineChartComponent {
         }));
     });
 
-    public readonly pointViews = computed<readonly FdUiLineChartPointViewModel[]>(() => {
-        const points = this.points();
+    public readonly seriesViews = computed<readonly FdUiLineChartSeriesViewModel[]>(() => {
         const numeric = this.numericValues();
 
-        if (points.length === 0 || numeric.length === 0) {
+        if (numeric.length === 0) {
             return [];
         }
 
@@ -216,35 +258,90 @@ export class FdUiLineChartComponent {
         const maxValue = this.resolvedMaxValue();
         const valueRange = maxValue - minValue;
         const effectiveRange = valueRange > 0 ? valueRange : 1;
-        const xStep = points.length > 1 ? (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (points.length - 1) : 0;
         const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_PADDING * 2;
 
-        return points.flatMap((point, index) => {
-            const value = point.value;
-            if (typeof value !== 'number' || !Number.isFinite(value)) {
+        return this.resolvedSeries().flatMap(series => {
+            const shouldPrefixTooltip = this.series().length > 0 && series.label.trim().length > 0;
+            const points = series.points.flatMap((point, index) => {
+                const value = point.value;
+                if (typeof value !== 'number' || !Number.isFinite(value)) {
+                    return [];
+                }
+
+                const xStep = series.points.length > 1 ? (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (series.points.length - 1) : 0;
+                const x = series.points.length > 1 ? LINE_CHART_LEFT_X + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
+                const y = this.chartBottom - ((value - minValue) / effectiveRange) * availableHeight;
+                const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
+                const tooltipPrefix = shouldPrefixTooltip ? `${series.label}, ` : '';
+
+                return [
+                    {
+                        label,
+                        seriesLabel: series.label,
+                        value,
+                        x,
+                        y,
+                        xPercent: `${x}%`,
+                        yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
+                        color: series.color,
+                        tooltip: `${tooltipPrefix}${label}: ${value}`,
+                    },
+                ];
+            });
+
+            if (points.length === 0) {
                 return [];
             }
 
-            const x = points.length > 1 ? LINE_CHART_LEFT_X + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
-            const y = this.chartBottom - ((value - minValue) / effectiveRange) * availableHeight;
-            const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
+            const path = this.buildLinePath(points);
 
             return [
                 {
-                    label,
-                    value,
-                    x,
-                    y,
-                    xPercent: `${x}%`,
-                    yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
-                    tooltip: `${label}: ${value}`,
+                    label: series.label,
+                    color: series.color,
+                    fillColor: series.fillColor,
+                    points,
+                    path,
+                    areaPath: this.buildAreaPath(path, points),
                 },
             ];
         });
     });
+    public readonly pointViews = computed<readonly FdUiLineChartPointViewModel[]>(() =>
+        this.seriesViews().flatMap(series => series.points),
+    );
 
     public readonly linePath = computed(() => {
-        const points = this.pointViews();
+        return this.seriesViews()[0]?.path ?? '';
+    });
+
+    public readonly areaPath = computed(() => {
+        return this.seriesViews()[0]?.areaPath ?? '';
+    });
+
+    protected readonly shouldShowSeriesLegend = computed(() => this.seriesViews().length > 1);
+
+    public readonly ariaLabel = computed(() => {
+        const title = this.title();
+        const hasTitle = title !== undefined && title.trim().length > 0;
+        if (this.pointViews().length === 0) {
+            return hasTitle ? `${title}: ${this.emptyLabel()}` : this.emptyLabel();
+        }
+
+        const shouldPrefixSeriesLabel = this.series().length > 0;
+        const details = this.seriesViews()
+            .flatMap(series =>
+                series.points.map(point => {
+                    const seriesLabel = shouldPrefixSeriesLabel && series.label.trim().length > 0 ? `${series.label} ` : '';
+
+                    return `${seriesLabel}${point.label} ${point.value}`;
+                }),
+            )
+            .join(', ');
+        return hasTitle ? `${title}: ${details}` : details;
+    });
+
+    private buildLinePath(points: readonly FdUiLineChartPointViewModel[]): string {
         if (points.length === 0) {
             return '';
         }
@@ -282,31 +379,14 @@ export class FdUiLineChartComponent {
         });
 
         return [`M ${firstPoint.x} ${firstPoint.y}`, ...segments].join(' ');
-    });
+    }
 
-    public readonly areaPath = computed(() => {
-        const points = this.pointViews();
-        if (points.length === 0) {
-            return '';
-        }
-
+    private buildAreaPath(path: string, points: readonly FdUiLineChartPointViewModel[]): string {
         const first = points[0];
         const last = points[points.length - 1];
-        return `${this.linePath()} L ${last.x} ${this.chartBottom} L ${first.x} ${this.chartBottom} Z`;
-    });
 
-    public readonly ariaLabel = computed(() => {
-        const title = this.title();
-        const hasTitle = title !== undefined && title.trim().length > 0;
-        if (this.pointViews().length === 0) {
-            return hasTitle ? `${title}: ${this.emptyLabel()}` : this.emptyLabel();
-        }
-
-        const details = this.pointViews()
-            .map(point => `${point.label} ${point.value}`)
-            .join(', ');
-        return hasTitle ? `${title}: ${details}` : details;
-    });
+        return `${path} L ${last.x} ${this.chartBottom} L ${first.x} ${this.chartBottom} Z`;
+    }
 
     private formatAxisValue(value: number): string {
         if (!Number.isFinite(value)) {

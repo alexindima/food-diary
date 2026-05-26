@@ -21,6 +21,10 @@
     --fd-line-chart-height: 360px;
 }
 
+.stats-nutrition-card__nutrients-chart {
+    --fd-line-chart-height: 360px;
+}
+
 .stats-nutrition-card__trend-grid,
 .stats-nutrition-card__distribution-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -36,10 +40,6 @@
         margin: 0;
         color: var(--fd-color-text);
     }
-}
-
-.stats-nutrition-card__macro-chart {
-    --fd-line-chart-height: 220px;
 }
 
 @media #{variables.$media-compact} {

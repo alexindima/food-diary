@@ -48,17 +48,21 @@
                     />
 
                     @if (showArea()) {
-                        <path class="fd-ui-line-chart__area" [attr.d]="areaPath()" [style.fill]="fillColor()" />
+                        @for (series of seriesViews(); track series.label) {
+                            <path class="fd-ui-line-chart__area" [attr.d]="series.areaPath" [style.fill]="series.fillColor" />
+                        }
                     }
 
-                    <path class="fd-ui-line-chart__line" [attr.d]="linePath()" [style.stroke]="lineColor()" />
+                    @for (series of seriesViews(); track series.label) {
+                        <path class="fd-ui-line-chart__line" [attr.d]="series.path" [style.stroke]="series.color" />
+                    }
                 </svg>
 
                 @if (showPoints()) {
                     @for (point of pointViews(); track $index) {
                         <span
                             class="fd-ui-line-chart__point"
-                            [style.background]="lineColor()"
+                            [style.background]="point.color"
                             [style.left]="point.xPercent"
                             [style.top]="point.yPercent"
                             [attr.title]="point.tooltip"
@@ -76,6 +80,17 @@
                             [style.left]="label.xPercent"
                         >
                             {{ label.label }}
+                        </span>
+                    }
+                </div>
+            }
+
+            @if (shouldShowSeriesLegend()) {
+                <div class="fd-ui-line-chart__legend" aria-hidden="true">
+                    @for (series of seriesViews(); track series.label) {
+                        <span>
+                            <i [style.background]="series.color"></i>
+                            {{ series.label }}
                         </span>
                     }
                 </div>

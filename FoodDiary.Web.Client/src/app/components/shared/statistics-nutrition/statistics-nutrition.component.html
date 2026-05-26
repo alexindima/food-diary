@@ -33,25 +33,19 @@
         }
 
         @if (selectedTab() === 'macros') {
-            <div class="stats-nutrition-card__trend-grid fd-grid fd-gap-md">
-                @for (group of nutrientTrendGroups(); track group.key) {
-                    <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
-                        <h4 class="fd-ui-card-title">{{ group.label }}</h4>
-                        <fd-ui-line-chart
-                            class="stats-nutrition-card__macro-chart"
-                            [title]="group.label"
-                            [points]="group.points"
-                            [lineColor]="group.color"
-                            [showArea]="false"
-                            [minValue]="0"
-                            [showAxisLabels]="true"
-                            [showGrid]="true"
-                            [axisDecimalPlaces]="0"
-                            [defaultMaxValue]="100"
-                            [valueSuffix]="'GENERAL.UNITS.G' | translate"
-                        />
-                    </div>
-                }
+            <div class="stats-nutrition-card__chart-area">
+                <fd-ui-line-chart
+                    class="stats-nutrition-card__nutrients-chart"
+                    [title]="'STATISTICS.NUTRITION_TABS.MACROS' | translate"
+                    [series]="nutrientTrendGroups()"
+                    [showArea]="false"
+                    [minValue]="0"
+                    [showAxisLabels]="true"
+                    [showGrid]="true"
+                    [axisDecimalPlaces]="0"
+                    [defaultMaxValue]="100"
+                    [valueSuffix]="'GENERAL.UNITS.G' | translate"
+                />
             </div>
         }
 

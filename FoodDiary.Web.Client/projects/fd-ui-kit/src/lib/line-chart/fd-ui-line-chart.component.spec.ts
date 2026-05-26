@@ -17,6 +17,9 @@ const DEFAULT_MAX_VALUE = 100;
 const FLAT_VALUE = 80;
 const HIGH_CALORIE_VALUE = 7901;
 const SMALL_NUTRIENT_VALUE = 58;
+const SMALL_MULTI_SERIES_VALUE = 24;
+const MULTI_SERIES_COUNT = 4;
+const MULTI_SERIES_POINT_COUNT = 8;
 
 // eslint-disable-next-line max-lines-per-function -- Line chart primitive behaviors are easier to scan in one component suite.
 describe('FdUiLineChartComponent', () => {
@@ -64,6 +67,52 @@ describe('FdUiLineChartComponent', () => {
 
         expect(component.areaPath()).toContain('Z');
         expect(host().querySelector('.fd-ui-line-chart__area')).not.toBeNull();
+    });
+
+    it('can render multiple line series with a shared y-axis', () => {
+        fixture.componentRef.setInput('series', [
+            {
+                label: 'Proteins',
+                color: 'blue',
+                points: [
+                    { label: 'Mon', value: 10 },
+                    { label: 'Tue', value: 20 },
+                ],
+            },
+            {
+                label: 'Fats',
+                color: 'gold',
+                points: [
+                    { label: 'Mon', value: 5 },
+                    { label: 'Tue', value: 15 },
+                ],
+            },
+            {
+                label: 'Carbs',
+                color: 'green',
+                points: [
+                    { label: 'Mon', value: 25 },
+                    { label: 'Tue', value: 30 },
+                ],
+            },
+            {
+                label: 'Fiber',
+                color: 'purple',
+                points: [
+                    { label: 'Mon', value: 2 },
+                    { label: 'Tue', value: 4 },
+                ],
+            },
+        ]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('showGrid', true);
+        fixture.detectChanges();
+
+        expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(MULTI_SERIES_COUNT);
+        expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(MULTI_SERIES_POINT_COUNT);
+        expect(host().querySelectorAll('.fd-ui-line-chart__legend span')).toHaveLength(MULTI_SERIES_COUNT);
+        expect(host().querySelector('.fd-ui-line-chart__legend')?.textContent).toContain('Proteins');
+        expect(component.ariaLabel()).toContain('Proteins Mon 10');
     });
 
     it('can use an explicit value range', () => {
@@ -170,6 +219,26 @@ describe('FdUiLineChartComponent', () => {
         fixture.detectChanges();
 
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('60 g');
+    });
+
+    it('does not force default max when non-zero values are present', () => {
+        fixture.componentRef.setInput('series', [
+            {
+                label: 'Carbs',
+                points: [
+                    { label: 'May', value: 0 },
+                    { label: 'June', value: SMALL_MULTI_SERIES_VALUE },
+                ],
+            },
+        ]);
+        fixture.componentRef.setInput('minValue', 0);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('valueSuffix', 'g');
+        fixture.componentRef.setInput('axisDecimalPlaces', 0);
+        fixture.componentRef.setInput('defaultMaxValue', DEFAULT_MAX_VALUE);
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).not.toContain('100 g');
     });
 
     it('can render grid lines and use a default max for flat zero data', () => {

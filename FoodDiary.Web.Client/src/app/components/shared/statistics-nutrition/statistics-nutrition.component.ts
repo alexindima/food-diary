@@ -6,6 +6,7 @@ import {
     type FdUiBarChartItem,
     FdUiLineChartComponent,
     type FdUiLineChartPoint,
+    type FdUiLineChartSeries,
     FdUiPieChartComponent,
     type FdUiPieChartSegment,
     FdUiSectionStateComponent,
@@ -13,11 +14,8 @@ import {
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
-export type NutritionTrendGroup = {
+export type NutritionTrendGroup = FdUiLineChartSeries & {
     key: string;
-    label: string;
-    color: string;
-    points: readonly FdUiLineChartPoint[];
 };
 
 @Component({

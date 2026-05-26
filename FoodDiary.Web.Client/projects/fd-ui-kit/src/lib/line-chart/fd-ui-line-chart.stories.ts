@@ -74,3 +74,62 @@ export const AxisLabels: Story = {
         showPoints: true,
     },
 };
+
+export const MultiSeries: Story = {
+    args: {
+        title: 'Nutrients',
+        series: [
+            {
+                label: 'Proteins',
+                color: '#3b82f6',
+                points: [
+                    { label: 'May', value: 0 },
+                    { label: 'June', value: 0 },
+                    { label: 'July', value: 12 },
+                    { label: 'Aug.', value: 0 },
+                    { label: 'Sept.', value: 14 },
+                ],
+            },
+            {
+                label: 'Fats',
+                color: '#fde68a',
+                points: [
+                    { label: 'May', value: 0 },
+                    { label: 'June', value: 4 },
+                    { label: 'July', value: 10 },
+                    { label: 'Aug.', value: 0 },
+                    { label: 'Sept.', value: 12 },
+                ],
+            },
+            {
+                label: 'Carbs',
+                color: '#10b981',
+                points: [
+                    { label: 'May', value: 0 },
+                    { label: 'June', value: 0 },
+                    { label: 'July', value: 24 },
+                    { label: 'Aug.', value: 8 },
+                    { label: 'Sept.', value: 0 },
+                ],
+            },
+            {
+                label: 'Fiber',
+                color: '#7c3aed',
+                points: [
+                    { label: 'May', value: 0 },
+                    { label: 'June', value: 1 },
+                    { label: 'July', value: 0 },
+                    { label: 'Aug.', value: 2 },
+                    { label: 'Sept.', value: 0 },
+                ],
+            },
+        ],
+        defaultMaxValue: 100,
+        valueSuffix: 'g',
+        axisDecimalPlaces: 0,
+        showArea: false,
+        showAxisLabels: true,
+        showGrid: true,
+        showPoints: true,
+    },
+};
