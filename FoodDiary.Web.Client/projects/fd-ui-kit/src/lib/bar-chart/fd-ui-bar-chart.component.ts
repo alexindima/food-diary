@@ -17,11 +17,16 @@ type FdUiBarChartItemViewModel = {
     tooltip: string;
 };
 
+type FdUiBarChartGridLine = {
+    y: number;
+};
+
 const BAR_CHART_VIEWBOX_WIDTH = 100;
 const BAR_CHART_VIEWBOX_HEIGHT = 64;
 const BAR_CHART_PADDING_TOP = 6;
 const BAR_CHART_PADDING_BOTTOM = 8;
 const BAR_CHART_GAP = 4;
+const BAR_CHART_GRID_LINE_COUNT = 5;
 const DEFAULT_BAR_COLOR = 'var(--fd-color-primary-500)';
 
 @Component({
@@ -39,6 +44,14 @@ export class FdUiBarChartComponent {
 
     protected readonly viewBox = `0 0 ${BAR_CHART_VIEWBOX_WIDTH} ${BAR_CHART_VIEWBOX_HEIGHT}`;
     protected readonly chartBottom = BAR_CHART_VIEWBOX_HEIGHT - BAR_CHART_PADDING_BOTTOM;
+    protected readonly gridLines = computed<readonly FdUiBarChartGridLine[]>(() => {
+        const availableHeight = BAR_CHART_VIEWBOX_HEIGHT - BAR_CHART_PADDING_TOP - BAR_CHART_PADDING_BOTTOM;
+        const step = availableHeight / (BAR_CHART_GRID_LINE_COUNT - 1);
+
+        return Array.from({ length: BAR_CHART_GRID_LINE_COUNT }, (_, index) => ({
+            y: BAR_CHART_PADDING_TOP + step * index,
+        }));
+    });
 
     public readonly maxValue = computed(() => Math.max(0, ...this.normalizedItems().map(item => item.value)));
     public readonly itemViews = computed<readonly FdUiBarChartItemViewModel[]>(() => {

@@ -12,6 +12,8 @@ export type FdUiLineChartSeries = {
     fillColor?: string;
 };
 
+export type FdUiLineChartDensity = 'default' | 'sparkline';
+
 type FdUiLineChartPointViewModel = {
     label: string;
     seriesLabel: string;
@@ -52,6 +54,7 @@ type FdUiLineChartXAxisLabel = {
 const LINE_CHART_VIEWBOX_WIDTH = 100;
 const LINE_CHART_VIEWBOX_HEIGHT = 64;
 const LINE_CHART_PADDING = 6;
+const LINE_CHART_SPARKLINE_PADDING = 2;
 const LINE_CHART_HORIZONTAL_PADDING = 2;
 const LINE_CHART_LEFT_X = LINE_CHART_HORIZONTAL_PADDING;
 const LINE_CHART_RIGHT_X = LINE_CHART_VIEWBOX_WIDTH - LINE_CHART_HORIZONTAL_PADDING;
@@ -103,12 +106,14 @@ export class FdUiLineChartComponent {
     public readonly showGrid = input(false);
     public readonly valueSuffix = input('');
     public readonly axisDecimalPlaces = input(DEFAULT_AXIS_DECIMAL_PLACES);
+    public readonly density = input<FdUiLineChartDensity>('default');
 
     protected readonly viewBox = `0 0 ${LINE_CHART_VIEWBOX_WIDTH} ${LINE_CHART_VIEWBOX_HEIGHT}`;
     protected readonly chartLeft = LINE_CHART_LEFT_X;
     protected readonly chartRight = LINE_CHART_RIGHT_X;
-    protected readonly chartTop = LINE_CHART_PADDING;
-    protected readonly chartBottom = LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_PADDING;
+    protected readonly chartTop = computed(() => this.chartPadding());
+    protected readonly chartBottom = computed(() => LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding());
+    private readonly chartPadding = computed(() => (this.density() === 'sparkline' ? LINE_CHART_SPARKLINE_PADDING : LINE_CHART_PADDING));
 
     private readonly resolvedSeries = computed<ReadonlyArray<Required<FdUiLineChartSeries>>>(() => {
         const series = this.series();
@@ -182,16 +187,18 @@ export class FdUiLineChartComponent {
     protected readonly gridLines = computed<readonly FdUiLineChartGridLine[]>(() => {
         const minValue = this.resolvedMinValue();
         const maxValue = this.resolvedMaxValue();
-        const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_PADDING * 2;
+        const padding = this.chartPadding();
+        const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - padding * 2;
         const step = availableHeight / (LINE_CHART_GRID_LINE_COUNT - 1);
         const valueStep = (maxValue - minValue) / (LINE_CHART_GRID_LINE_COUNT - 1);
 
         return Array.from({ length: LINE_CHART_GRID_LINE_COUNT }, (_, index) => {
             const reversedIndex = LINE_CHART_GRID_LINE_COUNT - 1 - index;
+            const y = padding + step * index;
 
             return {
-                y: LINE_CHART_PADDING + step * index,
-                yPercent: `${((LINE_CHART_PADDING + step * index) / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
+                y,
+                yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
                 label: this.formatAxisValue(minValue + valueStep * reversedIndex),
             };
         });
@@ -258,7 +265,7 @@ export class FdUiLineChartComponent {
         const maxValue = this.resolvedMaxValue();
         const valueRange = maxValue - minValue;
         const effectiveRange = valueRange > 0 ? valueRange : 1;
-        const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - LINE_CHART_PADDING * 2;
+        const availableHeight = LINE_CHART_VIEWBOX_HEIGHT - this.chartPadding() * 2;
 
         return this.resolvedSeries().flatMap(series => {
             const shouldPrefixTooltip = this.series().length > 0 && series.label.trim().length > 0;
@@ -270,7 +277,7 @@ export class FdUiLineChartComponent {
 
                 const xStep = series.points.length > 1 ? (LINE_CHART_RIGHT_X - LINE_CHART_LEFT_X) / (series.points.length - 1) : 0;
                 const x = series.points.length > 1 ? LINE_CHART_LEFT_X + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
-                const y = this.chartBottom - ((value - minValue) / effectiveRange) * availableHeight;
+                const y = this.chartBottom() - ((value - minValue) / effectiveRange) * availableHeight;
                 const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
                 const tooltipPrefix = shouldPrefixTooltip ? `${series.label}, ` : '';
 
@@ -385,7 +392,7 @@ export class FdUiLineChartComponent {
         const first = points[0];
         const last = points[points.length - 1];
 
-        return `${path} L ${last.x} ${this.chartBottom} L ${first.x} ${this.chartBottom} Z`;
+        return `${path} L ${last.x} ${this.chartBottom()} L ${first.x} ${this.chartBottom()} Z`;
     }
 
     private formatAxisValue(value: number): string {

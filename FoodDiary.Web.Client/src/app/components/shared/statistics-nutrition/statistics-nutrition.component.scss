@@ -32,7 +32,8 @@
 
 .stats-nutrition-card__chart-card {
     --fd-bar-chart-height: 220px;
-    background: var(--fd-bg-surface-inset);
+    background: var(--fd-bg-stat-tile-featured);
+    border: var(--fd-border-subtle);
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-md);
 
@@ -42,7 +43,12 @@
     }
 }
 
+.stats-nutrition-card__distribution-grid .stats-nutrition-card__chart-card:first-child {
+    --fd-pie-chart-max-size: 220px;
+}
+
 @media #{variables.$media-compact} {
+
     .stats-nutrition-card__trend-grid,
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -50,6 +56,7 @@
 }
 
 @media #{variables.$media-sm} {
+
     .stats-nutrition-card__trend-grid,
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: 1fr;

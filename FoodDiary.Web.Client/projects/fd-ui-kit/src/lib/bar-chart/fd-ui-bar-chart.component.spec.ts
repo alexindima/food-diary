@@ -7,6 +7,7 @@ const PROTEIN_VALUE = 50;
 const FAT_VALUE = 25;
 const BAR_COUNT = 2;
 const ZERO_HEIGHT = 0;
+const GRID_LINE_COUNT = 5;
 
 describe('FdUiBarChartComponent', () => {
     let component: FdUiBarChartComponent;
@@ -37,6 +38,7 @@ describe('FdUiBarChartComponent', () => {
 
         expect(component.maxValue()).toBe(PROTEIN_VALUE);
         expect(bars).toHaveLength(BAR_COUNT);
+        expect(host().querySelectorAll('.fd-ui-bar-chart__grid-line')).toHaveLength(GRID_LINE_COUNT);
         expect(Number(firstBar.getAttribute('height'))).toBeGreaterThan(Number(secondBar.getAttribute('height')));
         expect(getText('.fd-ui-bar-chart__label')).toBe('Protein');
         expect(component.ariaLabel()).toBe('Macros: Protein 50, Fat 25');

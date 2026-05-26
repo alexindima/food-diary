@@ -23,6 +23,17 @@
     stroke-width: 1;
 }
 
+.fd-ui-bar-chart__grid-line {
+    stroke: var(--fd-color-border);
+    stroke-opacity: 0.75;
+    stroke-width: 0.8;
+}
+
+.fd-ui-bar-chart__axis,
+.fd-ui-bar-chart__grid-line {
+    vector-effect: non-scaling-stroke;
+}
+
 .fd-ui-bar-chart__bar {
     cursor: help;
     transition:

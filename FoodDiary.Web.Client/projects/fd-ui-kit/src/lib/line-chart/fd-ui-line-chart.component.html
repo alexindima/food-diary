@@ -33,8 +33,8 @@
                                 class="fd-ui-line-chart__grid-line"
                                 [attr.x1]="gridLine.x"
                                 [attr.x2]="gridLine.x"
-                                [attr.y1]="chartTop"
-                                [attr.y2]="chartBottom"
+                                [attr.y1]="chartTop()"
+                                [attr.y2]="chartBottom()"
                             />
                         }
                     }
@@ -43,8 +43,8 @@
                         class="fd-ui-line-chart__axis"
                         [attr.x1]="chartLeft"
                         [attr.x2]="chartRight"
-                        [attr.y1]="chartBottom"
-                        [attr.y2]="chartBottom"
+                        [attr.y1]="chartBottom()"
+                        [attr.y2]="chartBottom()"
                     />
 
                     @if (showArea()) {

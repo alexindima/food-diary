@@ -1,6 +1,10 @@
 <div class="fd-ui-bar-chart" role="img" [attr.aria-label]="ariaLabel()">
     @if (itemViews().length) {
         <svg class="fd-ui-bar-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">
+            @for (gridLine of gridLines(); track $index) {
+                <line class="fd-ui-bar-chart__grid-line" x1="0" x2="100" [attr.y1]="gridLine.y" [attr.y2]="gridLine.y" />
+            }
+
             <line class="fd-ui-bar-chart__axis" x1="0" x2="100" [attr.y1]="chartBottom" [attr.y2]="chartBottom" />
 
             @for (item of itemViews(); track $index) {

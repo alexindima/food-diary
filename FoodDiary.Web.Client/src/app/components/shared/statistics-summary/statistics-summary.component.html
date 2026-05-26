@@ -42,6 +42,7 @@
                         </strong>
                         <div class="stats-summary-card__trend">
                             <fd-ui-line-chart
+                                density="sparkline"
                                 lineColor="var(--fd-color-primary-600)"
                                 fillColor="var(--fd-color-primary-100)"
                                 [title]="'STATISTICS.TOTAL_CALORIES' | translate"
@@ -102,6 +103,7 @@
                             <div class="stats-summary-card__macro-trend">
                                 @if (macroSparklinePoints(); as chartPoints) {
                                     <fd-ui-line-chart
+                                        density="sparkline"
                                         [title]="macro.labelKey | translate"
                                         [points]="chartPoints[macro.key]"
                                         [lineColor]="macro.color"
