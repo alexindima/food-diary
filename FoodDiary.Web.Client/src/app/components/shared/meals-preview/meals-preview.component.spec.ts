@@ -38,7 +38,7 @@ describe('MealsPreviewComponent AI panel', () => {
         expect(component.expandedAiSlot()).toBeNull();
     });
 
-    it('collapses AI slot and emits created meal result', async () => {
+    it('keeps AI slot open while meal create is pending and emits created meal result', async () => {
         const fixture = await setupMealsPreviewAsync();
         const component = fixture.componentInstance;
         const emitSpy = vi.fn<(result: AiInputBarResult) => void>();
@@ -55,7 +55,19 @@ describe('MealsPreviewComponent AI panel', () => {
 
         component.handleAiMealCreateRequested(result);
 
-        expect(component.expandedAiSlot()).toBeNull();
+        expect(component.expandedAiSlot()).toBe('lunch');
         expect(emitSpy).toHaveBeenCalledWith(result);
+    });
+
+    it('collapses AI slot when clear token changes after successful create', async () => {
+        const fixture = await setupMealsPreviewAsync();
+        const component = fixture.componentInstance;
+        fixture.detectChanges();
+
+        component.toggleAi('lunch');
+        fixture.componentRef.setInput('aiMealClearToken', 1);
+        fixture.detectChanges();
+
+        expect(component.expandedAiSlot()).toBeNull();
     });
 });

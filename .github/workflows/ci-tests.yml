@@ -725,7 +725,28 @@ jobs:
             safe_area=$(printf '%s' "${FAILED_AREA}" | tr -cs '[:alnum:]' '-')
             safe_target=$(printf '%s' "${FAILED_TARGET}" | tr -cs '[:alnum:]' '-')
             telegram_log_file="${RUNNER_TEMP}/ci-${safe_area}-${safe_target}.txt"
-            cp "${FAILED_LOG_FILE}" "${telegram_log_file}"
+            {
+              echo "CI failure summary"
+              echo "Workflow: ${WORKFLOW_NAME}"
+              echo "Area: ${FAILED_AREA}"
+              echo "Step: ${FAILED_TARGET}"
+              echo "Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+              echo
+              failure_summary=$(sed -n '/Failed Suites/,$p' "${FAILED_LOG_FILE}" | head -n 180 || true)
+              if [ -z "${failure_summary}" ]; then
+                failure_summary=$(sed -n '/Failed Tests/,$p' "${FAILED_LOG_FILE}" | head -n 180 || true)
+              fi
+              if [ -z "${failure_summary}" ]; then
+                failure_summary=$(grep -E -A 40 '(^|[[:space:]])FAIL[[:space:]]|Error:|AssertionError|error TS|error [A-Z0-9]+|âœ–|FAILED|Failed!' "${FAILED_LOG_FILE}" | head -n 180 || true)
+              fi
+              if [ -n "${failure_summary}" ]; then
+                printf '%s\n' "${failure_summary}"
+              else
+                tail -n 120 "${FAILED_LOG_FILE}"
+              fi
+              echo
+              echo "Full log is available in the uploaded CI artifact."
+            } > "${telegram_log_file}"
             response=$(curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
               -F chat_id="${TELEGRAM_CHAT_ID}" \
               -F caption="❌ CI Tests | ${FAILED_AREA} | ${FAILED_TARGET}" \
