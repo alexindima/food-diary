@@ -1,9 +1,11 @@
 using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -24,10 +26,10 @@ public class ExportFeatureTests {
     }
 
     private static ExportDiaryQueryHandler CreateHandler(IReadOnlyList<Meal> meals) =>
-        new(new StubMealRepository(meals), new StubPdfGenerator());
+        CreateHandler(new StubMealRepository(meals));
 
     private static ExportDiaryQueryHandler CreateHandler(StubMealRepository repository) =>
-        new(repository, new StubPdfGenerator());
+        new(repository, new SingleUserRepository(), new StubPdfGenerator());
 
     [Fact]
     public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
@@ -51,7 +53,7 @@ public class ExportFeatureTests {
         var userId = UserId.New();
         var meals = new[] { CreateMeal(userId) };
         var pdfGenerator = new StubPdfGenerator();
-        var handler = new ExportDiaryQueryHandler(new StubMealRepository(meals), pdfGenerator);
+        var handler = new ExportDiaryQueryHandler(new StubMealRepository(meals), new SingleUserRepository(), pdfGenerator);
 
         var result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://дневникеды.рф"),
@@ -126,6 +128,49 @@ public class ExportFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task ExportDiary_WithDateFromAfterDateTo_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var handler = CreateHandler([]);
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, TestDate.AddDays(1), TestDate),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ExportDiary_WithRangeOverOneYear_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var handler = CreateHandler([]);
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(367)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ExportDiary_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("export-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new ExportDiaryQueryHandler(
+            new StubMealRepository([]),
+            new SingleUserRepository(user),
+            new StubPdfGenerator());
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -217,6 +262,21 @@ public class ExportFeatureTests {
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+    }
+
+    private sealed class SingleUserRepository(User? user = null) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
+            Task.FromResult<User?>(user is null || user.Id == id ? user ?? User.Create("export-user@example.com", "hash") : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
     private sealed class StubPdfGenerator : IDiaryPdfGenerator {

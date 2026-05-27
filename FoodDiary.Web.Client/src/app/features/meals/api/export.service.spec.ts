@@ -73,6 +73,17 @@ describe('ExportService', () => {
         expect(clickedDownloadName).toBe('diary.pdf');
     });
 
+    it('should decode percent-encoded filename from content disposition', () => {
+        service.exportDiary({ dateFrom: '2026-05-01', dateTo: '2026-05-14', format: 'pdf' }).subscribe();
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/diary` && r.method === 'GET');
+        req.flush(new Blob(['pdf'], { type: 'application/pdf' }), {
+            headers: new HttpHeaders({ 'Content-Disposition': "attachment; filename*=UTF-8''food%20diary.pdf" }),
+        });
+
+        expect(clickedDownloadName).toBe('food diary.pdf');
+    });
+
     it('should skip download when response body is null', () => {
         service.exportDiary({ dateFrom: '2026-05-01', dateTo: '2026-05-14' }).subscribe();
 
