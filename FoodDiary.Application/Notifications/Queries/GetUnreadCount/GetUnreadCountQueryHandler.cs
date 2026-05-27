@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
@@ -16,6 +17,11 @@ public class GetUnreadCountQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<int>(accessError);
+        }
+
         var count = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user?.HasPassword == true) {

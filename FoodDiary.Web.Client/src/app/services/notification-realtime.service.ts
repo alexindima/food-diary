@@ -50,6 +50,11 @@ export class NotificationRealtimeService {
         this.connecting.set(true);
 
         const { HubConnectionBuilder, LogLevel } = await import('@microsoft/signalr');
+        const currentToken = this.authService.getToken();
+        if (!this.authService.isAuthenticated() || currentToken?.trim() !== token.trim()) {
+            this.connecting.set(false);
+            return;
+        }
 
         this.connection = new HubConnectionBuilder()
             .withUrl(toNotificationHubUrl(environment.apiUrls.auth), {
@@ -95,6 +100,7 @@ export class NotificationRealtimeService {
     private async disconnectAsync(): Promise<void> {
         if (this.connection === null) {
             this.connectedSignal.set(false);
+            this.connecting.set(false);
             return;
         }
 

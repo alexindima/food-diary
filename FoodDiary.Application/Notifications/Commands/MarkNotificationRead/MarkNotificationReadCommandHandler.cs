@@ -1,12 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 
 public class MarkNotificationReadCommandHandler(
-    INotificationRepository notificationRepository)
+    INotificationRepository notificationRepository,
+    IUserRepository userRepository)
     : ICommandHandler<MarkNotificationReadCommand, Result> {
     public async Task<Result> Handle(MarkNotificationReadCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -14,6 +17,11 @@ public class MarkNotificationReadCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
+        }
+
         var notificationId = new NotificationId(command.NotificationId);
 
         var notification = await notificationRepository.GetByIdAsync(

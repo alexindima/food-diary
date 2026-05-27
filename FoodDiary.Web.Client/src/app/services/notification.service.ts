@@ -163,7 +163,11 @@ export class NotificationService {
     public markAsRead(notificationId: string): Observable<void> {
         return this.http.put<void>(`${this.baseUrl}/${notificationId}/read`, {}).pipe(
             tap(() => {
-                this.unreadCount.update(count => Math.max(0, count - 1));
+                const notification = this.notifications().find(item => item.id === notificationId);
+                if (notification?.isRead === false) {
+                    this.unreadCount.update(count => Math.max(0, count - 1));
+                }
+
                 this.notifications.update(items => items.map(item => (item.id === notificationId ? { ...item, isRead: true } : item)));
             }),
         );

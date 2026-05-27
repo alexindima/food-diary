@@ -16,6 +16,21 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Tests.Notifications;
 
 public class NotificationsFeatureTests {
+    private static User CreateUser(UserId? id = null, string email = "notifications@example.com") {
+        var user = User.Create(email, "hash");
+        if (id is not null) {
+            typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, id);
+        }
+
+        return user;
+    }
+
+    private static User CreateDeletedUser(UserId id) {
+        var user = CreateUser(id, "deleted-notifications@example.com");
+        user.DeleteAccount(DateTime.UtcNow);
+        return user;
+    }
+
     [Fact]
     public async Task MarkNotificationRead_WithValidOwnership_Succeeds() {
         var userId = UserId.New();
@@ -23,7 +38,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
-        var handler = new MarkNotificationReadCommandHandler(repo);
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)));
         var result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -40,7 +55,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
-        var handler = new MarkNotificationReadCommandHandler(repo);
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)));
         var result = await handler.Handle(
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -51,10 +66,11 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task MarkNotificationRead_WhenNotFound_ReturnsFailure() {
         var repo = new InMemoryNotificationRepository();
-        var handler = new MarkNotificationReadCommandHandler(repo);
+        var userId = UserId.New();
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)));
 
         var result = await handler.Handle(
-            new MarkNotificationReadCommand(Guid.NewGuid(), Guid.NewGuid()),
+            new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -62,7 +78,9 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task MarkNotificationRead_WithNullUserId_ReturnsFailure() {
-        var handler = new MarkNotificationReadCommandHandler(new InMemoryNotificationRepository());
+        var handler = new MarkNotificationReadCommandHandler(
+            new InMemoryNotificationRepository(),
+            new SingleUserRepository(CreateUser()));
 
         var result = await handler.Handle(
             new MarkNotificationReadCommand(null, Guid.NewGuid()),
@@ -72,12 +90,30 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
-    public async Task MarkAllNotificationsRead_WithValidUserId_Succeeds() {
+    public async Task MarkNotificationRead_WhenUserDeleted_ReturnsFailure() {
+        var userId = UserId.New();
+        var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo);
+        repo.Seed(notification);
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)));
 
         var result = await handler.Handle(
-            new MarkAllNotificationsReadCommand(Guid.NewGuid()),
+            new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(notification.IsRead);
+    }
+
+    [Fact]
+    public async Task MarkAllNotificationsRead_WithValidUserId_Succeeds() {
+        var userId = UserId.New();
+        var repo = new InMemoryNotificationRepository();
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)));
+
+        var result = await handler.Handle(
+            new MarkAllNotificationsReadCommand(userId.Value),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -86,7 +122,9 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task MarkAllNotificationsRead_WithNullUserId_ReturnsFailure() {
-        var handler = new MarkAllNotificationsReadCommandHandler(new InMemoryNotificationRepository());
+        var handler = new MarkAllNotificationsReadCommandHandler(
+            new InMemoryNotificationRepository(),
+            new SingleUserRepository(CreateUser()));
 
         var result = await handler.Handle(
             new MarkAllNotificationsReadCommand(null),
@@ -96,13 +134,28 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task MarkAllNotificationsRead_WhenUserDeleted_ReturnsFailure() {
+        var userId = UserId.New();
+        var repo = new InMemoryNotificationRepository();
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)));
+
+        var result = await handler.Handle(
+            new MarkAllNotificationsReadCommand(userId.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(repo.MarkAllReadCalled);
+    }
+
+    [Fact]
     public async Task GetUnreadCount_ReturnsCount() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
         repo.Seed(Notification.Create(userId, "info", "{}"));
         repo.Seed(Notification.Create(userId, "info", "{}"));
 
-        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(User.Create("notifications@example.com", "hash")));
+        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(CreateUser(userId)));
         var result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
@@ -112,8 +165,23 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task GetUnreadCount_WhenUserDeleted_ReturnsFailure() {
+        var userId = UserId.New();
+        var repo = new InMemoryNotificationRepository();
+        repo.Seed(Notification.Create(userId, "info", "{}"));
+        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)));
+
+        var result = await handler.Handle(
+            new GetUnreadCountQuery(userId.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateNotificationPreferences_UpdatesUserAndWritesAuditLog() {
-        var user = User.Create("notifications@example.com", "hash");
+        var user = CreateUser(email: "notifications@example.com");
         var userRepository = new SingleUserRepository(user);
         var auditLogger = new RecordingAuditLogger();
         var handler = new UpdateNotificationPreferencesCommandHandler(userRepository, auditLogger);
@@ -139,7 +207,7 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task GetNotificationPreferences_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = User.Create("deleted-notifications@example.com", "hash");
+        var user = CreateUser(email: "deleted-notifications@example.com");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetNotificationPreferencesQueryHandler(new SingleUserRepository(user));
 

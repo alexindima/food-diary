@@ -12,6 +12,7 @@ const UNREAD_COUNT_INITIAL = 4;
 const UNREAD_COUNT_CONCURRENT = 7;
 const UNREAD_COUNT_LOADED = 3;
 const UNREAD_COUNT_FORCED = 5;
+const UNREAD_COUNT_ALREADY_READ = 3;
 
 const baseUrl = environment.apiUrls.auth.replace('/auth', '/notifications');
 
@@ -144,6 +145,31 @@ describe('NotificationService read state', () => {
         req.flush(null);
 
         expect(service.unreadCount()).toBe(0);
+        expect(service.notifications()[0].isRead).toBe(true);
+    });
+
+    it('should not decrement unread count when notification is already read locally', () => {
+        service.notifications.set([
+            {
+                id: 'n1',
+                type: 'info',
+                title: 'Title',
+                body: null,
+                targetUrl: null,
+                referenceId: null,
+                isRead: true,
+                createdAtUtc: '2026-01-01T00:00:00Z',
+            },
+        ]);
+        service.unreadCount.set(UNREAD_COUNT_ALREADY_READ);
+
+        service.markAsRead('n1').subscribe();
+
+        const req = httpMock.expectOne(`${baseUrl}/n1/read`);
+        expect(req.request.method).toBe('PUT');
+        req.flush(null);
+
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_ALREADY_READ);
         expect(service.notifications()[0].isRead).toBe(true);
     });
 
