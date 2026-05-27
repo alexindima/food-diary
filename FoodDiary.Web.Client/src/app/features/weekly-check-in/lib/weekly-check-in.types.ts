@@ -1,4 +1,4 @@
-export type WeeklyCheckInTrendCardKey = 'calories' | 'protein' | 'weight' | 'hydration';
+export type WeeklyCheckInTrendCardKey = 'calories' | 'protein' | 'weight' | 'waist' | 'hydration';
 
 export type WeeklyCheckInTrendCardConfig = {
     key: WeeklyCheckInTrendCardKey;

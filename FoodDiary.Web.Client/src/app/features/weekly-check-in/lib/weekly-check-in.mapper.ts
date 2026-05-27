@@ -11,6 +11,7 @@ const TREND_ICON_FLAT = 'trending_flat';
 const TREND_COLOR_NEUTRAL = 'var(--fd-color-slate-500)';
 const TREND_COLOR_POSITIVE = 'var(--fd-color-green-500)';
 const TREND_COLOR_NEGATIVE = 'var(--fd-color-danger)';
+const BODY_TREND_INSERT_INDEX = 2;
 
 export function buildWeeklyCheckInSuggestionRows(suggestions: string[]): WeeklyCheckInSuggestionViewModel[] {
     return suggestions.map(suggestion => ({
@@ -51,13 +52,28 @@ export function buildWeeklyCheckInTrendCards(trends: WeekTrend | null | undefine
 
     if (trends.weightChange !== null) {
         cards.splice(
-            2,
+            BODY_TREND_INSERT_INDEX,
             0,
             buildWeeklyCheckInTrendCard({
                 key: 'weight',
                 labelKey: 'WEEKLY_CHECK_IN.WEIGHT',
                 value: trends.weightChange,
                 unitKey: 'GENERAL.UNITS.KG',
+                numberFormat: '1.1-1',
+                invertPositive: true,
+            }),
+        );
+    }
+
+    if (trends.waistChange !== null) {
+        cards.splice(
+            trends.weightChange !== null ? BODY_TREND_INSERT_INDEX + 1 : BODY_TREND_INSERT_INDEX,
+            0,
+            buildWeeklyCheckInTrendCard({
+                key: 'waist',
+                labelKey: 'WEEKLY_CHECK_IN.WAIST',
+                value: trends.waistChange,
+                unitKey: 'GENERAL.UNITS.CM',
                 numberFormat: '1.1-1',
                 invertPositive: true,
             }),

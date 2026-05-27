@@ -15,7 +15,7 @@ const TREND: WeekTrend = {
     fatChange: 1,
     carbChange: 2,
     weightChange: -0.8,
-    waistChange: null,
+    waistChange: -1.2,
     hydrationChange: 250,
     mealsLoggedChange: 3,
 };
@@ -29,11 +29,13 @@ describe('weekly check-in mapper', () => {
             },
         ]);
     });
+});
 
+describe('weekly check-in trend cards mapper', () => {
     it('builds trend cards with optional weight card', () => {
         const cards = buildWeeklyCheckInTrendCards(TREND);
 
-        expect(cards.map(card => card.key)).toEqual(['calories', 'protein', 'weight', 'hydration']);
+        expect(cards.map(card => card.key)).toEqual(['calories', 'protein', 'weight', 'waist', 'hydration']);
         expect(cards[0]).toMatchObject({
             key: 'calories',
             valuePrefix: '+',
@@ -45,12 +47,27 @@ describe('weekly check-in mapper', () => {
             icon: 'trending_down',
             color: 'var(--fd-color-green-500)',
         });
+        expect(cards[3]).toMatchObject({
+            key: 'waist',
+            icon: 'trending_down',
+            color: 'var(--fd-color-green-500)',
+        });
     });
 
     it('skips weight trend card when weight change is missing', () => {
         expect(buildWeeklyCheckInTrendCards({ ...TREND, weightChange: null }).map(card => card.key)).toEqual([
             'calories',
             'protein',
+            'waist',
+            'hydration',
+        ]);
+    });
+
+    it('skips waist trend card when waist change is missing', () => {
+        expect(buildWeeklyCheckInTrendCards({ ...TREND, waistChange: null }).map(card => card.key)).toEqual([
+            'calories',
+            'protein',
+            'weight',
             'hydration',
         ]);
     });
