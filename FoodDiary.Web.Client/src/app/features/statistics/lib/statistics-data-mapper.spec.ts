@@ -72,6 +72,16 @@ describe('statistics-data-mapper', () => {
             );
             expect(days).toBe(EXPECTED_WEEK_DAYS);
         });
+
+        it('should normalize reversed custom range boundaries', () => {
+            const start = new Date(TEST_YEAR, MAY_INDEX, CURRENT_DAY);
+            const end = new Date(TEST_YEAR, MAY_INDEX, THIRD_DAY);
+
+            const range = getCurrentDateRange('custom', { start, end });
+
+            expect(range.start).toBe(end);
+            expect(range.end).toBe(start);
+        });
     });
 
     it('builds summary sparkline points', () => {

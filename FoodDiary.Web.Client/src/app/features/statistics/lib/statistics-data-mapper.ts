@@ -129,10 +129,14 @@ export function getCurrentDateRange(
     const customStart = customValue?.start ?? null;
     const customEnd = customValue?.end ?? null;
     if (customStart !== null && customEnd !== null) {
-        return { start: customStart, end: customEnd };
+        return createOrderedDateRange(customStart, customEnd);
     }
 
     return { start, end };
+}
+
+function createOrderedDateRange(start: Date, end: Date): DateRange {
+    return start.getTime() <= end.getTime() ? { start, end } : { start: end, end: start };
 }
 
 export function buildCaloriesTrendPoints(stats: MappedStatistics | null, formatLabel: (date: Date) => string): FdUiLineChartPoint[] {
