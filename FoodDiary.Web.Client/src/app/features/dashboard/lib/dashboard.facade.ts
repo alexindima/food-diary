@@ -35,6 +35,7 @@ export class DashboardFacade {
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
     private readonly trendDays = DASHBOARD_TREND_DAYS;
+    private snapshotRequestVersion = 0;
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {
@@ -128,11 +129,16 @@ export class DashboardFacade {
     }
 
     private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
+        const requestVersion = ++this.snapshotRequestVersion;
         const targetDate = getDashboardDateUtc(this.selectedDate());
         const locale = this.getCurrentLocale();
         const request$ = this.dashboardService.getSnapshot({ date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays });
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {
+                if (requestVersion !== this.snapshotRequestVersion) {
+                    return;
+                }
+
                 this.snapshot.set(snapshot);
                 this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
                 if (clearHydrationUpdate) {
@@ -140,6 +146,10 @@ export class DashboardFacade {
                 }
             },
             error: () => {
+                if (requestVersion !== this.snapshotRequestVersion) {
+                    return;
+                }
+
                 this.snapshot.set(null);
                 this.layout.initializeLayout(null);
                 if (clearHydrationUpdate) {

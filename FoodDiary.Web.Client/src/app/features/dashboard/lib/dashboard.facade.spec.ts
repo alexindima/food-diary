@@ -12,6 +12,8 @@ import { DashboardLayoutService } from './dashboard-layout.service';
 
 const HYDRATION_AMOUNT_ML = 250;
 const TDEE_TARGET = 2300;
+const DEFAULT_SNAPSHOT_CALORIES = 1200;
+const UPDATED_SNAPSHOT_CALORIES = 1800;
 
 describe('DashboardFacade loading', () => {
     it('should load snapshot on initialize', () => {
@@ -57,6 +59,25 @@ describe('DashboardFacade loading', () => {
         reload$.next(snapshot);
         reload$.complete();
         expect(facade.snapshot()).toEqual(snapshot);
+    });
+
+    it('should ignore stale snapshot responses after selected date changes', () => {
+        const { facade, dashboardService } = setupFacade();
+        const firstRequest$ = new Subject<DashboardSnapshot>();
+        const secondRequest$ = new Subject<DashboardSnapshot>();
+        const firstSnapshot = createSnapshot(DEFAULT_SNAPSHOT_CALORIES);
+        const secondSnapshot = createSnapshot(UPDATED_SNAPSHOT_CALORIES);
+        dashboardService.getSnapshot.mockReturnValueOnce(firstRequest$).mockReturnValueOnce(secondRequest$);
+
+        facade.initialize();
+        facade.setSelectedDate(new Date('2026-03-20T12:00:00Z'));
+        secondRequest$.next(secondSnapshot);
+        secondRequest$.complete();
+        firstRequest$.next(firstSnapshot);
+        firstRequest$.complete();
+
+        expect(facade.snapshot()).toEqual(secondSnapshot);
+        expect(facade.todayCalories()).toBe(UPDATED_SNAPSHOT_CALORIES);
     });
 });
 
@@ -141,14 +162,14 @@ function setupFacade(): {
     };
 }
 
-function createSnapshot(): DashboardSnapshot {
+function createSnapshot(totalCalories = DEFAULT_SNAPSHOT_CALORIES): DashboardSnapshot {
     return {
         date: '2026-03-15',
         dateTo: '2026-03-15',
         dailyGoal: 2100,
         weeklyCalorieGoal: 14700,
         statistics: {
-            totalCalories: 1200,
+            totalCalories,
             averageProteins: 90,
             averageFats: 45,
             averageCarbs: 140,

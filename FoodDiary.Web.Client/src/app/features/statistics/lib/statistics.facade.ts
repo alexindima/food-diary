@@ -49,6 +49,8 @@ export class StatisticsFacade {
 
     private dateLabelFormatterCache: { locale: string; range: StatisticsRange; formatter: Intl.DateTimeFormat } | null = null;
     private lastLoadedRangeKey: string | null = null;
+    private statisticsRequestVersion = 0;
+    private bodyRequestVersion = 0;
     private readonly initialized = signal(false);
     private readonly currentLocale = signal(this.resolveCurrentLocale());
 
@@ -244,6 +246,7 @@ export class StatisticsFacade {
     }
 
     private loadStatistics(range: DateRange): void {
+        const requestVersion = ++this.statisticsRequestVersion;
         this.isLoading.set(true);
         this.hasLoadError.set(false);
         const normalizedStart = normalizeStartOfDay(range.start);
@@ -258,16 +261,26 @@ export class StatisticsFacade {
             })
             .pipe(
                 finalize(() => {
-                    this.isLoading.set(false);
+                    if (requestVersion === this.statisticsRequestVersion) {
+                        this.isLoading.set(false);
+                    }
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
                 next: data => {
+                    if (requestVersion !== this.statisticsRequestVersion) {
+                        return;
+                    }
+
                     this.chartStatisticsData.set(mapStatistics(data));
                     this.hasLoadError.set(false);
                 },
                 error: () => {
+                    if (requestVersion !== this.statisticsRequestVersion) {
+                        return;
+                    }
+
                     this.chartStatisticsData.set(null);
                     this.hasLoadError.set(true);
                 },
@@ -275,6 +288,7 @@ export class StatisticsFacade {
     }
 
     private loadBodySummaries(range: DateRange): void {
+        const requestVersion = ++this.bodyRequestVersion;
         this.isBodyLoading.set(true);
         this.hasBodyLoadError.set(false);
         const normalizedStart = formatDateInputValue(range.start);
@@ -295,17 +309,27 @@ export class StatisticsFacade {
         })
             .pipe(
                 finalize(() => {
-                    this.isBodyLoading.set(false);
+                    if (requestVersion === this.bodyRequestVersion) {
+                        this.isBodyLoading.set(false);
+                    }
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
                 next: ({ weight, waist }) => {
+                    if (requestVersion !== this.bodyRequestVersion) {
+                        return;
+                    }
+
                     this.weightSummaryPoints.set(weight);
                     this.waistSummaryPoints.set(waist);
                     this.hasBodyLoadError.set(false);
                 },
                 error: () => {
+                    if (requestVersion !== this.bodyRequestVersion) {
+                        return;
+                    }
+
                     this.weightSummaryPoints.set([]);
                     this.waistSummaryPoints.set([]);
                     this.hasBodyLoadError.set(true);

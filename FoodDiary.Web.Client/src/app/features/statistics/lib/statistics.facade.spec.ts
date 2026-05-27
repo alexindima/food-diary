@@ -9,12 +9,15 @@ import { ExportService } from '../../meals/api/export.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import { StatisticsService } from '../api/statistics.service';
+import type { AggregatedStatistics } from '../models/statistics.data';
 import { StatisticsFacade } from './statistics.facade';
 import { getQuantizationDays, normalizeEndOfDay, normalizeStartOfDay } from './statistics-data-mapper';
 
 const FIRST_TOTAL_CALORIES = 1800;
 const USER_HEIGHT_CM = 180;
 const RETRY_TOTAL_CALORIES = 2200;
+const SECOND_WEIGHT_AVERAGE = 77.1;
+const SECOND_WAIST_AVERAGE = 83.4;
 
 let facade: StatisticsFacade;
 let statisticsService: { getAggregatedStatistics: ReturnType<typeof vi.fn> };
@@ -160,6 +163,28 @@ describe('StatisticsFacade loading', () => {
     });
 });
 
+describe('StatisticsFacade stale requests', () => {
+    it('ignores stale statistics and body summary responses after range changes', () => {
+        const requests = setupStaleRangeRequests();
+
+        facade.initialize();
+        TestBed.tick();
+        facade.changeRange('month');
+        TestBed.tick();
+
+        completeLatestRangeRequests(requests);
+        completeStaleRangeRequests(requests);
+
+        expect(facade.chartStatisticsData()?.calories).toEqual([RETRY_TOTAL_CALORIES]);
+        expect(facade.weightSummaryPoints()).toEqual([
+            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageWeight: SECOND_WEIGHT_AVERAGE },
+        ]);
+        expect(facade.waistSummaryPoints()).toEqual([
+            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageCircumference: SECOND_WAIST_AVERAGE },
+        ]);
+    });
+});
+
 describe('StatisticsFacade export', () => {
     it('exports current date range and tracks exporting format', () => {
         facade.initialize();
@@ -243,3 +268,75 @@ describe('StatisticsFacade errors', () => {
         expect(facade.chartStatisticsData()?.calories).toEqual([RETRY_TOTAL_CALORIES]);
     });
 });
+
+function createStatisticsResponse(totalCalories: number): AggregatedStatistics[] {
+    return [
+        {
+            dateFrom: new Date('2026-04-01T00:00:00Z'),
+            dateTo: new Date('2026-04-01T23:59:59Z'),
+            totalCalories,
+            averageProteins: 120,
+            averageFats: 70,
+            averageCarbs: 160,
+            averageFiber: 20,
+            totalProteins: 120,
+            totalFats: 70,
+            totalCarbs: 160,
+            totalFiber: 20,
+        },
+    ];
+}
+
+type WeightSummaryTestPoint = { startDate: string; endDate: string; averageWeight: number };
+type WaistSummaryTestPoint = { startDate: string; endDate: string; averageCircumference: number };
+
+type StaleRangeRequests = {
+    firstStatistics$: Subject<AggregatedStatistics[]>;
+    secondStatistics$: Subject<AggregatedStatistics[]>;
+    firstWeight$: Subject<WeightSummaryTestPoint[]>;
+    firstWaist$: Subject<WaistSummaryTestPoint[]>;
+    secondWeight$: Subject<WeightSummaryTestPoint[]>;
+    secondWaist$: Subject<WaistSummaryTestPoint[]>;
+};
+
+function setupStaleRangeRequests(): StaleRangeRequests {
+    const requests = {
+        firstStatistics$: new Subject<AggregatedStatistics[]>(),
+        secondStatistics$: new Subject<AggregatedStatistics[]>(),
+        firstWeight$: new Subject<WeightSummaryTestPoint[]>(),
+        firstWaist$: new Subject<WaistSummaryTestPoint[]>(),
+        secondWeight$: new Subject<WeightSummaryTestPoint[]>(),
+        secondWaist$: new Subject<WaistSummaryTestPoint[]>(),
+    };
+    statisticsService.getAggregatedStatistics
+        .mockReturnValueOnce(requests.firstStatistics$)
+        .mockReturnValueOnce(requests.secondStatistics$);
+    weightEntriesService.getSummary.mockReturnValueOnce(requests.firstWeight$).mockReturnValueOnce(requests.secondWeight$);
+    waistEntriesService.getSummary.mockReturnValueOnce(requests.firstWaist$).mockReturnValueOnce(requests.secondWaist$);
+
+    return requests;
+}
+
+function completeLatestRangeRequests(requests: StaleRangeRequests): void {
+    requests.secondStatistics$.next(createStatisticsResponse(RETRY_TOTAL_CALORIES));
+    requests.secondStatistics$.complete();
+    requests.secondWeight$.next([
+        { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageWeight: SECOND_WEIGHT_AVERAGE },
+    ]);
+    requests.secondWeight$.complete();
+    requests.secondWaist$.next([
+        { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageCircumference: SECOND_WAIST_AVERAGE },
+    ]);
+    requests.secondWaist$.complete();
+    TestBed.tick();
+}
+
+function completeStaleRangeRequests(requests: StaleRangeRequests): void {
+    requests.firstStatistics$.next(createStatisticsResponse(FIRST_TOTAL_CALORIES));
+    requests.firstStatistics$.complete();
+    requests.firstWeight$.next([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeight: 75.3 }]);
+    requests.firstWeight$.complete();
+    requests.firstWaist$.next([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82.1 }]);
+    requests.firstWaist$.complete();
+    TestBed.tick();
+}
