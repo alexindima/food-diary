@@ -39,7 +39,13 @@
     </fd-page-header>
 
     @defer (on idle) {
-        <fd-ai-input-action-bar mode="create" (mealCreateRequested)="onAiMealCreateRequested($event)" (manualAction)="goToMealAddAsync()" />
+        <fd-ai-input-action-bar
+            mode="create"
+            [isProcessing]="isAiMealSaving()"
+            [clearToken]="aiMealClearToken()"
+            (mealCreateRequested)="onAiMealCreateRequested($event)"
+            (manualAction)="goToMealAddAsync()"
+        />
     } @placeholder {
         <div class="consumption-list__ai-placeholder" aria-hidden="true"></div>
     }

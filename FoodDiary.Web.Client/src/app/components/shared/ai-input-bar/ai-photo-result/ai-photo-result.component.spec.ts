@@ -162,6 +162,24 @@ describe('AiPhotoResultComponent editing', () => {
             nutrition: null,
         });
     });
+
+    it('emits empty items without stale nutrition when all edited items are removed', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const editSpy = vi.fn<(applied: AiPhotoEditApplied) => void>();
+        component.editApplied.subscribe(applied => {
+            editSpy(applied);
+        });
+        fixture.detectChanges();
+
+        component.startEditing();
+        component.removeEditItem(0);
+        component.applyEditing();
+
+        expect(editSpy).toHaveBeenCalledWith({
+            items: [],
+            nutrition: null,
+        });
+    });
 });
 
 describe('AiPhotoResultComponent meal details', () => {

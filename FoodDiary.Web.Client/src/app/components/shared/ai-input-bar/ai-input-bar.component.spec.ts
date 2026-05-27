@@ -134,7 +134,7 @@ describe('AiInputBarComponent text recognition', () => {
         expect(component.hasTextResult()).toBe(false);
     });
 
-    it('emits created meal in create mode', async () => {
+    it('emits created meal in create mode without clearing until parent confirms success', async () => {
         const { component, fixture } = await setupAiInputBarAsync('create');
         const createSpy = vi.fn<(result: AiInputBarResult) => void>();
         component.mealCreateRequested.subscribe(result => {
@@ -148,6 +148,33 @@ describe('AiInputBarComponent text recognition', () => {
         component.onTextAddToMeal(MEAL_DETAILS);
 
         expect(createSpy).toHaveBeenCalledOnce();
+        expect(component.hasTextResult()).toBe(true);
+    });
+
+    it('clears create mode state when clear token changes', async () => {
+        const { component, fixture } = await setupAiInputBarAsync('create');
+        component.textSubmittedQuery.set('eggs');
+        component.textResults.set(VISION_ITEMS);
+        component.textNutrition.set(NUTRITION);
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('clearToken', 1);
+        fixture.detectChanges();
+
+        expect(component.voiceText()).toBe('');
+        expect(component.hasTextResult()).toBe(false);
+    });
+
+    it('does not request nutrition for empty edited items', async () => {
+        const { aiFoodService, component, fixture } = await setupAiInputBarAsync('create');
+        component.textResults.set(VISION_ITEMS);
+        component.textNutrition.set(NUTRITION);
+        fixture.detectChanges();
+
+        component.onTextEditApplied({ items: [], nutrition: null });
+
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        expect(component.textErrorKey()).toBe('AI_INPUT_BAR.EMPTY_ITEMS_ERROR');
     });
 });
 

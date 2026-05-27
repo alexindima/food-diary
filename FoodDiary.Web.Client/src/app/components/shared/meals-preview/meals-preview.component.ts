@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
 
@@ -23,6 +23,8 @@ export class MealsPreviewComponent {
     public readonly showAddButtons = input<boolean>(true);
     public readonly showAiButtons = input<boolean>(false);
     public readonly showEmptyState = input<boolean>(true);
+    public readonly isAiMealSaving = input(false);
+    public readonly aiMealClearToken = input(0);
     public readonly entries = input.required<MealPreviewEntry[]>();
 
     public readonly viewAll = output();
@@ -31,13 +33,20 @@ export class MealsPreviewComponent {
     public readonly open = output<MealCardItem>();
     public readonly expandedAiSlot = signal<string | null>(null);
 
+    public constructor() {
+        effect(() => {
+            if (this.aiMealClearToken() > 0) {
+                this.expandedAiSlot.set(null);
+            }
+        });
+    }
+
     public toggleAi(slot?: string | null): void {
         const normalizedSlot = slot ?? null;
         this.expandedAiSlot.update(current => (current === normalizedSlot ? null : normalizedSlot));
     }
 
     public handleAiMealCreateRequested(result: AiInputBarResult): void {
-        this.expandedAiSlot.set(null);
         this.aiMealCreateRequested.emit(result);
     }
 }

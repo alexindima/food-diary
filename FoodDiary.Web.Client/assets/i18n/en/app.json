@@ -584,6 +584,8 @@
         "TEXT_PREVIEW_LABEL": "Source request",
         "PHOTO_PREVIEW_ALT": "Photo analysis preview",
         "REMOVE_AI_ITEM": "Remove {name} from analysis",
+        "CREATE_MEAL_ERROR": "Could not log this meal. Your AI result is still here, please try again.",
+        "EMPTY_ITEMS_ERROR": "Keep at least one recognized item before logging the meal.",
         "TEXT_ERROR_PREMIUM": "Text and voice recognition are available for Premium users.",
         "TEXT_ERROR_QUOTA": "Monthly AI limit reached. Try again later or upgrade your plan.",
         "TEXT_ERROR_GENERIC": "Failed to recognize the meal from text. Please try again.",

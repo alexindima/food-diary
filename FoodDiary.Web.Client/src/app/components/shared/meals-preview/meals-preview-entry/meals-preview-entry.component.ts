@@ -19,6 +19,8 @@ export class MealsPreviewEntryComponent {
     public readonly showAddButtons = input.required<boolean>();
     public readonly showAiButtons = input.required<boolean>();
     public readonly expandedAiSlot = input<string | null>(null);
+    public readonly isAiMealSaving = input(false);
+    public readonly aiMealClearToken = input(0);
 
     public readonly open = output<MealCardItem>();
     public readonly add = output<string | null | undefined>();

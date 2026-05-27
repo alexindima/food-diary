@@ -19,7 +19,12 @@
                 <div class="dashboard__loader fd-ui-body-sm">{{ 'DASHBOARD.LOADING' | translate }}</div>
             } @else {
                 @if (isTodaySelected() && !layout.isEditingLayout()) {
-                    <fd-dashboard-quick-add (mealCreateRequested)="onAiMealCreateRequested($event)" (manualAdd)="addConsumptionAsync()" />
+                    <fd-dashboard-quick-add
+                        [isAiMealSaving]="isAiMealSaving()"
+                        [aiMealClearToken]="aiMealClearToken()"
+                        (mealCreateRequested)="onAiMealCreateRequested($event)"
+                        (manualAdd)="addConsumptionAsync()"
+                    />
                 }
 
                 <section
@@ -57,6 +62,8 @@
                             [state]="blockStates.meals"
                             [entries]="mealPreviewEntries()"
                             [previewState]="mealsPreviewState()"
+                            [isAiMealSaving]="isAiMealSaving()"
+                            [aiMealClearToken]="aiMealClearToken()"
                             (blockToggle)="layout.toggleBlock('meals')"
                             (viewAll)="manageConsumptionsAsync()"
                             (add)="addConsumptionAsync($event)"

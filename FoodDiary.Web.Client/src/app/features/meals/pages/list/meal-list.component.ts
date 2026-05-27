@@ -22,7 +22,7 @@ import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail.component';
 import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
-import { AiMealCreateService } from '../../lib/ai/ai-meal-create.service';
+import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
 import { MealListFacade } from '../../lib/list/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import {
@@ -59,7 +59,7 @@ export class MealListComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
     private readonly translateService = inject(TranslateService);
-    private readonly aiMealCreateService = inject(AiMealCreateService);
+    private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly filterDebounceMs = inject(APP_FILTER_DEBOUNCE_MS);
     private readonly languageVersion = signal(0);
 
@@ -77,6 +77,8 @@ export class MealListComponent {
     public readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
     public readonly isFavoritesLoadingMore = this.mealListFacade.isFavoritesLoadingMore;
     public readonly favoriteLoadingIds = this.mealListFacade.favoriteLoadingIds;
+    public readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
+    public readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
     public readonly groupedConsumptions = computed(() => {
         this.languageVersion();
         return this.groupByDate(this.consumptionData.items());
@@ -151,7 +153,7 @@ export class MealListComponent {
     }
 
     public onAiMealCreateRequested(result: AiInputBarResult): void {
-        this.aiMealCreateService
+        this.aiMealCreateFacade
             .createFromAiResult(result)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(meal => {

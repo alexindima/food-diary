@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AiInputActionBarComponent } from '../../../../../components/shared/ai-input-bar/ai-input-action-bar.component';
@@ -12,6 +12,8 @@ import type { AiInputBarResult } from '../../../../../components/shared/ai-input
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardQuickAddComponent {
+    public readonly isAiMealSaving = input(false);
+    public readonly aiMealClearToken = input(0);
     public readonly mealCreateRequested = output<AiInputBarResult>();
     public readonly manualAdd = output();
 }

@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -91,6 +92,11 @@ public sealed class OpenAiFoodService(
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId.Value));
+        }
+
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
         }
 
         var nowUtc = dateTimeProvider.UtcNow;

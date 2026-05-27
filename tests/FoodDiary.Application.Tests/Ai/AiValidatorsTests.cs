@@ -132,7 +132,9 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new CalculateFoodNutritionCommandHandler(new StubOpenAiFoodService());
+        var handler = new CalculateFoodNutritionCommandHandler(
+            new StubOpenAiFoodService(),
+            new StubUserRepository(User.Create("ai-empty-nutrition@example.com", "hash")));
 
         var result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -143,6 +145,40 @@ public class AiValidatorsTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task CalculateFoodNutritionHandler_WithInactiveUser_ReturnsInvalidToken() {
+        var user = User.Create("inactive-ai-nutrition@example.com", "hash");
+        user.Deactivate();
+        var openAiFoodService = new StubOpenAiFoodService();
+        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CalculateFoodNutritionCommand(
+                user.Id.Value,
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(openAiFoodService.WasCalculateNutritionCalled);
+    }
+
+    [Fact]
+    public async Task CalculateFoodNutritionHandler_WithActiveUser_CalculatesNutrition() {
+        var user = User.Create("active-ai-nutrition@example.com", "hash");
+        var openAiFoodService = new StubOpenAiFoodService();
+        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CalculateFoodNutritionCommand(
+                user.Id.Value,
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(openAiFoodService.WasCalculateNutritionCalled);
     }
 
     [Fact]
@@ -211,6 +247,8 @@ public class AiValidatorsTests {
     }
 
     private sealed class StubOpenAiFoodService : IOpenAiFoodService {
+        public bool WasCalculateNutritionCalled { get; private set; }
+
         public Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
             string imageUrl,
             string? userLanguage,
@@ -229,8 +267,17 @@ public class AiValidatorsTests {
         public Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
             IReadOnlyList<FoodVisionItemModel> items,
             UserId userId,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+            CancellationToken cancellationToken) {
+            WasCalculateNutritionCalled = true;
+            return Task.FromResult(Result.Success(new FoodNutritionModel(
+                52,
+                0,
+                0,
+                14,
+                2,
+                0,
+                [new FoodNutritionItemModel("apple", 120, "g", 52, 0, 0, 14, 2, 0)])));
+        }
     }
 
     private sealed class StubImageStorageService : IImageStorageService {

@@ -14,6 +14,7 @@ import type { AiInputBarMode, AiInputBarResult } from './ai-input-bar.types';
 })
 export class AiInputActionBarComponent {
     public readonly isProcessing = input(false);
+    public readonly clearToken = input(0);
     public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealType = input<string | null>(null);
     public readonly manualPrefixLabelKey = input('CONSUMPTION_LIST.MANUAL_ADD_OR');

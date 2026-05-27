@@ -48,6 +48,8 @@
                 <fd-ai-input-bar
                     mode="create"
                     [mealType]="entry().slot ?? null"
+                    [isProcessing]="isAiMealSaving()"
+                    [clearToken]="aiMealClearToken()"
                     (mealCreateRequested)="aiMealCreateRequested.emit($event)"
                 />
             </div>

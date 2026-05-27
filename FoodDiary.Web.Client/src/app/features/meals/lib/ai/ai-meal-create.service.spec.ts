@@ -3,6 +3,7 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MealService } from '../../api/meal.service';
+import type { Meal } from '../../models/meal.data';
 import { AiMealCreateService } from './ai-meal-create.service';
 
 const RECOGNIZED_AT_UTC = '2026-05-02T19:00:00.000Z';
@@ -39,7 +40,7 @@ function setupService(): {
     mealService: { create: ReturnType<typeof vi.fn> };
 } {
     const mealService = {
-        create: vi.fn(() => of(null)),
+        create: vi.fn(() => of(createMeal())),
     };
 
     TestBed.resetTestingModule();
@@ -50,5 +51,27 @@ function setupService(): {
     return {
         service: TestBed.inject(AiMealCreateService),
         mealService,
+    };
+}
+
+function createMeal(): Meal {
+    return {
+        id: 'meal-1',
+        date: '2026-05-02T23:50:00.000Z',
+        mealType: 'SNACK',
+        comment: null,
+        imageUrl: null,
+        imageAssetId: null,
+        totalCalories: 0,
+        totalProteins: 0,
+        totalFats: 0,
+        totalCarbs: 0,
+        totalFiber: 0,
+        totalAlcohol: 0,
+        isNutritionAutoCalculated: true,
+        preMealSatietyLevel: null,
+        postMealSatietyLevel: null,
+        items: [],
+        aiSessions: [],
     };
 }

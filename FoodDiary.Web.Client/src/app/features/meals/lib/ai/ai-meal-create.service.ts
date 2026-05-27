@@ -10,7 +10,7 @@ import { buildMealManageDtoFromAiResult } from './ai-meal-result.mapper';
 export class AiMealCreateService {
     private readonly mealService = inject(MealService);
 
-    public createFromAiResult(result: AiInputBarResult): Observable<Meal | null> {
+    public createFromAiResult(result: AiInputBarResult): Observable<Meal> {
         return this.mealService.create(buildMealManageDtoFromAiResult(result));
     }
 }

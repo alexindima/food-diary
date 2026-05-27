@@ -131,6 +131,14 @@ export class AiPhotoResultComponent {
             { labelKey: 'GENERAL.NUTRIENTS.ALCOHOL', value: this.resolveMacroLabel(nutrition.alcohol, 'GENERAL.UNITS.G') },
         ];
     });
+    public readonly submitDisabled = computed(
+        () =>
+            this.results().length === 0 ||
+            this.nutrition() === null ||
+            this.isAnalyzing() ||
+            this.isNutritionLoading() ||
+            this.isProcessing(),
+    );
     public readonly editUnitOptions = computed<AiEditUnitOption[]>(() =>
         this.unitOptions.map(unit => ({
             value: unit,
@@ -179,6 +187,11 @@ export class AiPhotoResultComponent {
         const normalized: FoodVisionItem[] = normalizeAiEditableItems(edited);
         const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
         this.isEditing.set(false);
+
+        if (normalized.length === 0) {
+            this.editApplied.emit({ items: [], nutrition: null });
+            return;
+        }
 
         if (requiresAi) {
             this.editApplied.emit({ items: normalized, nutrition: null });

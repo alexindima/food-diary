@@ -65,7 +65,7 @@
             [isExpanded]="isDetailsExpanded()"
             [toggleView]="detailsToggleView()"
             [submitLabelKey]="submitLabelKey()"
-            [submitDisabled]="!nutrition() || isAnalyzing() || isNutritionLoading() || isProcessing()"
+            [submitDisabled]="submitDisabled()"
             [date]="detailsDate()"
             [time]="detailsTime()"
             [comment]="detailsComment()"

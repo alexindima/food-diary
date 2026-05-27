@@ -20,7 +20,7 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { NavigationService } from '../../../services/navigation.service';
 import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
-import { AiMealCreateService } from '../../meals/lib/ai/ai-meal-create.service';
+import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
 import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog.component';
 import type {
     TdeeInsightDialogAction,
@@ -88,7 +88,7 @@ export class DashboardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
-    private readonly aiMealCreateService = inject(AiMealCreateService);
+    private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly facade = inject(DashboardFacade);
     public readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
@@ -121,6 +121,8 @@ export class DashboardComponent {
     public readonly placeholderLabel = this.facade.placeholderLabel;
     public readonly fastingIsActive = this.facade.fastingIsActive;
     public readonly fastingCurrentSession = this.facade.currentFastingSession;
+    public readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
+    public readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
     public readonly shouldRenderFastingWidget = computed(() => {
         if (this.layout.isEditingLayout()) {
             return this.layout.shouldRenderBlock('fasting');
@@ -297,7 +299,7 @@ export class DashboardComponent {
     }
 
     public onAiMealCreateRequested(result: AiInputBarResult): void {
-        this.aiMealCreateService
+        this.aiMealCreateFacade
             .createFromAiResult(result)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(meal => {

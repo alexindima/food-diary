@@ -6,6 +6,7 @@ import {
     Component,
     computed,
     DestroyRef,
+    effect,
     inject,
     input,
     output,
@@ -95,6 +96,7 @@ export class AiInputBarComponent {
     private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
 
     public readonly isProcessing = input<boolean>(false);
+    public readonly clearToken = input(0);
     public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealType = input<string | null>(null);
     public readonly mealRecognized = output<AiInputBarResult>();
@@ -142,6 +144,14 @@ export class AiInputBarComponent {
     );
 
     private speechRecognition: SpeechRecognitionLike | null = null;
+
+    public constructor() {
+        effect(() => {
+            if (this.clearToken() > 0) {
+                this.clearState();
+            }
+        });
+    }
 
     public onTextInput(event: Event): void {
         if (event.target instanceof HTMLInputElement) {
@@ -300,6 +310,11 @@ export class AiInputBarComponent {
 
     public onTextEditApplied(result: AiPhotoEditApplied): void {
         this.textResults.set(result.items);
+        if (result.items.length === 0) {
+            this.setEmptyItemsError(this.textState());
+            return;
+        }
+
         if (result.nutrition !== null) {
             this.textIsNutritionLoading.set(false);
             this.textNutritionErrorKey.set(null);
@@ -331,6 +346,11 @@ export class AiInputBarComponent {
 
     public onPhotoEditApplied(result: AiPhotoEditApplied): void {
         this.photoResults.set(result.items);
+        if (result.items.length === 0) {
+            this.setEmptyItemsError(this.photoState());
+            return;
+        }
+
         if (result.nutrition !== null) {
             this.photoIsNutritionLoading.set(false);
             this.photoNutritionErrorKey.set(null);
@@ -368,7 +388,6 @@ export class AiInputBarComponent {
         }
 
         this.mealCreateRequested.emit(result);
-        this.clearState();
     }
 
     private runTextAnalysis(text: string): void {
@@ -387,6 +406,11 @@ export class AiInputBarComponent {
     }
 
     private runTextNutrition(items: FoodVisionItem[]): void {
+        if (items.length === 0) {
+            this.setEmptyItemsError(this.textState());
+            return;
+        }
+
         this.runNutritionRequest(this.textState(), items, {
             quota: 'AI_INPUT_BAR.TEXT_ERROR_QUOTA',
             generic: 'AI_INPUT_BAR.TEXT_NUTRITION_ERROR',
@@ -409,10 +433,23 @@ export class AiInputBarComponent {
     }
 
     private runPhotoNutrition(items: FoodVisionItem[]): void {
+        if (items.length === 0) {
+            this.setEmptyItemsError(this.photoState());
+            return;
+        }
+
         this.runNutritionRequest(this.photoState(), items, {
             quota: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
             generic: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
         });
+    }
+
+    private setEmptyItemsError(state: AiInputBarChannelState): void {
+        state.results.set([]);
+        state.nutritionLoading.set(false);
+        state.nutrition.set(null);
+        state.errorKey.set('AI_INPUT_BAR.EMPTY_ITEMS_ERROR');
+        state.nutritionErrorKey.set(null);
     }
 
     private ensurePremium(): boolean {

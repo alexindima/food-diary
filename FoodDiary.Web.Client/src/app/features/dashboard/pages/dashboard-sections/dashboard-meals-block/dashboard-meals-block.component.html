@@ -11,6 +11,8 @@
             [showAddButtons]="previewState().showDateActions"
             [showAiButtons]="previewState().showDateActions"
             [showEmptyState]="previewState().showEmptyState"
+            [isAiMealSaving]="isAiMealSaving()"
+            [aiMealClearToken]="aiMealClearToken()"
             (viewAll)="viewAll.emit()"
             (add)="add.emit($event)"
             (aiMealCreateRequested)="aiMealCreateRequested.emit($event)"

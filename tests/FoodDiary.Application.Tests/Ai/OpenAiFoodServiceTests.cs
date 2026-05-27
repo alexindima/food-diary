@@ -33,6 +33,28 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task CalculateNutritionAsync_WhenUserInactive_ReturnsAccessErrorWithoutCallingClient() {
+        var user = User.Create("inactive-ai-service@example.com", "hash");
+        user.Deactivate();
+        var client = new RecordingOpenAiFoodClient();
+        var service = new OpenAiFoodService(
+            client,
+            new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            user.Id,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, client.CalculateNutritionCalls);
+    }
+
+    [Fact]
     public async Task AnalyzeFoodImageAsync_WhenClientSucceeds_StoresUsage() {
         var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
         var service = new OpenAiFoodService(
@@ -111,11 +133,13 @@ public sealed class OpenAiFoodServiceTests {
             Task.FromResult(totals);
     }
 
-    private sealed class StubUserRepository : IUserRepository {
+    private sealed class StubUserRepository(User? user = null) : IUserRepository {
+        private readonly User user = user ?? User.Create("ai-tests@example.com", "hash");
+
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult<User?>(User.Create("ai-tests@example.com", "hash"));
+            Task.FromResult<User?>(user);
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();

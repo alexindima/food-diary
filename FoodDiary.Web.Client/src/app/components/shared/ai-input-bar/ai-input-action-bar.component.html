@@ -3,6 +3,7 @@
         [mode]="mode()"
         [mealType]="mealType()"
         [isProcessing]="isProcessing()"
+        [clearToken]="clearToken()"
         (mealRecognized)="mealRecognized.emit($event)"
         (mealCreateRequested)="mealCreateRequested.emit($event)"
     />
