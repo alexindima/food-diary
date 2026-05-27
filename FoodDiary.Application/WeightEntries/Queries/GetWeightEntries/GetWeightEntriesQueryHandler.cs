@@ -28,8 +28,12 @@ public class GetWeightEntriesQueryHandler(
             return Result.Failure<IReadOnlyList<WeightEntryModel>>(accessError);
         }
 
-        var normalizedFrom = query.DateFrom.HasValue ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom.Value) : null;
-        var normalizedTo = query.DateTo.HasValue ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo.Value) : null;
+        var normalizedFrom = query.DateFrom.HasValue
+            ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom.Value)
+            : null;
+        var normalizedTo = query.DateTo.HasValue
+            ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
+            : null;
 
         var entries = await weightEntryRepository.GetEntriesAsync(
             userId,

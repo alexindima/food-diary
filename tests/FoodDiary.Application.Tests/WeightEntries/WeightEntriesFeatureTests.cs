@@ -74,6 +74,23 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateWeightEntryCommandHandler_WithDateOnlyValue_PreservesRequestedCalendarDate() {
+        var repository = new InMemoryWeightEntryRepository();
+        var user = User.Create("weight-dateonly@example.com", "hash");
+        var handler = new CreateWeightEntryCommandHandler(repository, new StubUserRepository(user));
+        var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
+        var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
+
+        var result = await handler.Handle(
+            new CreateWeightEntryCommand(user.Id.Value, dateOnly, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(expectedDate, repository.LastGetByDateDate);
+        Assert.Equal(expectedDate, repository.AddedEntry?.Date);
+    }
+
+    [Fact]
     public async Task GetWeightSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var handler = new GetWeightSummariesQueryHandler(
             new InMemoryWeightEntryRepository(),
@@ -118,6 +135,23 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWeightEntriesQueryHandler_WithDateOnlyRange_PreservesRequestedCalendarDates() {
+        var repository = new InMemoryWeightEntryRepository();
+        var user = User.Create("weight-list-dateonly@example.com", "hash");
+        var handler = new GetWeightEntriesQueryHandler(repository, new StubUserRepository(user));
+        var from = new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        var to = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(
+            new GetWeightEntriesQuery(user.Id.Value, from, to, 10, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateFrom);
+        Assert.Equal(new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateTo);
+    }
+
+    [Fact]
     public async Task DeleteWeightEntryCommandHandler_WithEmptyWeightEntryId_ReturnsValidationFailure() {
         var handler = new DeleteWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
@@ -130,6 +164,25 @@ public class WeightEntriesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WeightEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateWeightEntryCommandHandler_WithDateOnlyValue_PreservesRequestedCalendarDate() {
+        var user = User.Create("weight-update-dateonly@example.com", "hash");
+        var entry = WeightEntry.Create(user.Id, new DateTime(2026, 5, 26, 0, 0, 0, DateTimeKind.Utc), 82);
+        var repository = new InMemoryWeightEntryRepository();
+        await repository.AddAsync(entry);
+        var handler = new UpdateWeightEntryCommandHandler(repository, new StubUserRepository(user));
+        var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
+        var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
+
+        var result = await handler.Handle(
+            new UpdateWeightEntryCommand(user.Id.Value, entry.Id.Value, dateOnly, 81),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(expectedDate, repository.LastGetByDateDate);
+        Assert.Equal(expectedDate, entry.Date);
     }
 
     [Fact]
@@ -176,11 +229,15 @@ public class WeightEntriesFeatureTests {
         private readonly List<WeightEntry> _entries = [];
 
         public DateTime LastGetByDateDate { get; private set; }
+        public DateTime? LastEntriesDateFrom { get; private set; }
+        public DateTime? LastEntriesDateTo { get; private set; }
         public DateTime LastPeriodDateFrom { get; private set; }
         public DateTime LastPeriodDateTo { get; private set; }
+        public WeightEntry? AddedEntry { get; private set; }
 
         public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
             _entries.Add(entry);
+            AddedEntry = entry;
             return Task.FromResult(entry);
         }
 
@@ -213,6 +270,8 @@ public class WeightEntriesFeatureTests {
             int? limit,
             bool descending,
             CancellationToken cancellationToken = default) {
+            LastEntriesDateFrom = dateFrom;
+            LastEntriesDateTo = dateTo;
             IEnumerable<WeightEntry> query = _entries.Where(x => x.UserId == userId);
             if (dateFrom.HasValue) {
                 query = query.Where(x => x.Date >= dateFrom.Value);

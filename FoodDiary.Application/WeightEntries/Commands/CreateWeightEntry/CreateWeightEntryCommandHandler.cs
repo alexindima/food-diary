@@ -28,7 +28,7 @@ public class CreateWeightEntryCommandHandler(
             return Result.Failure<WeightEntryModel>(accessError);
         }
 
-        var normalizedDate = UtcDateNormalizer.NormalizeDateUsingLocalFallback(command.Date);
+        var normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
         var existing = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,

@@ -43,7 +43,7 @@ public class UpdateWeightEntryCommandHandler(
             return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotFound(command.WeightEntryId));
         }
 
-        var normalizedDate = UtcDateNormalizer.NormalizeDateUsingLocalFallback(command.Date);
+        var normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
         var duplicate = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
