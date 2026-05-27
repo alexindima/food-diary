@@ -84,7 +84,14 @@ public static class RecipeHttpResponseMappings {
             model.ProductFiberPerBase,
             model.ProductAlcoholPerBase,
             model.NestedRecipeId,
-            model.NestedRecipeName
+            model.NestedRecipeName,
+            model.NestedRecipeServings,
+            model.NestedRecipeTotalCalories,
+            model.NestedRecipeTotalProteins,
+            model.NestedRecipeTotalFats,
+            model.NestedRecipeTotalCarbs,
+            model.NestedRecipeTotalFiber,
+            model.NestedRecipeTotalAlcohol
         );
     }
 }

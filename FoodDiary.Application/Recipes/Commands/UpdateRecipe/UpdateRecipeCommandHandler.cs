@@ -3,6 +3,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -17,7 +19,9 @@ public class UpdateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     IUserRepository userRepository,
-    IImageAssetAccessService imageAssetAccessService)
+    IImageAssetAccessService imageAssetAccessService,
+    IProductLookupService productLookupService,
+    IRecipeLookupService recipeLookupService)
     : ICommandHandler<UpdateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -72,6 +76,18 @@ public class UpdateRecipeCommandHandler(
             visibility = parsedVisibilityResult.Value;
         }
 
+        var steps = command.Steps ?? Array.Empty<RecipeStepInput>();
+        var ingredientAccessResult = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            steps,
+            recipeId,
+            userId,
+            productLookupService,
+            recipeLookupService,
+            cancellationToken);
+        if (ingredientAccessResult.IsFailure) {
+            return Result.Failure<RecipeModel>(ingredientAccessResult.Error);
+        }
+
         var oldAssetId = recipe.ImageAssetId;
         var oldStepAssetIds = recipe.Steps
             .Select(step => step.ImageAssetId)
@@ -103,7 +119,7 @@ public class UpdateRecipeCommandHandler(
             imageAssetId: imageAssetIdResult.Value,
             clearImageAssetId: command.ClearImageAssetId);
         recipe.UpdateTimingAndServings(
-            prepTime: command.PrepTime ?? 0,
+            prepTime: command.PrepTime,
             cookTime: command.CookTime,
             servings: command.Servings);
 
@@ -112,7 +128,6 @@ public class UpdateRecipeCommandHandler(
         }
 
         recipe.ClearSteps();
-        var steps = command.Steps ?? Array.Empty<RecipeStepInput>();
         var orderedSteps = steps
             .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
             .OrderBy(x => x.Order)

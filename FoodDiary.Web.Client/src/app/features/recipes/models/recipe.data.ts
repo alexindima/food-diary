@@ -69,6 +69,13 @@ export type RecipeIngredient = {
     productAlcoholPerBase?: number | null;
     nestedRecipeId?: string | null;
     nestedRecipeName?: string | null;
+    nestedRecipeServings?: number | null;
+    nestedRecipeTotalCalories?: number | null;
+    nestedRecipeTotalProteins?: number | null;
+    nestedRecipeTotalFats?: number | null;
+    nestedRecipeTotalCarbs?: number | null;
+    nestedRecipeTotalFiber?: number | null;
+    nestedRecipeTotalAlcohol?: number | null;
 };
 
 export type RecipeFilters = {

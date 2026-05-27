@@ -14,4 +14,11 @@ public sealed record RecipeIngredientHttpResponse(
     double? ProductFiberPerBase,
     double? ProductAlcoholPerBase,
     Guid? NestedRecipeId,
-    string? NestedRecipeName);
+    string? NestedRecipeName,
+    int? NestedRecipeServings,
+    double? NestedRecipeTotalCalories,
+    double? NestedRecipeTotalProteins,
+    double? NestedRecipeTotalFats,
+    double? NestedRecipeTotalCarbs,
+    double? NestedRecipeTotalFiber,
+    double? NestedRecipeTotalAlcohol);

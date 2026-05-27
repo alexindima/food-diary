@@ -146,7 +146,7 @@ export class RecipeManageComponent {
 
     public onProductSelectClick(event: StepIngredientEvent): void {
         const { stepIndex, ingredientIndex } = event;
-        this.recipeManageFacade.openItemSelectionDialog().subscribe(selection => {
+        this.recipeManageFacade.openItemSelectionDialog(this.recipe()?.id ?? null).subscribe(selection => {
             if (selection === null) {
                 return;
             }

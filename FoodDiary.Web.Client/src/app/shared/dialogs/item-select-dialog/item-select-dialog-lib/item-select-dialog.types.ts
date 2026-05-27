@@ -5,4 +5,5 @@ export type ItemSelection = { type: 'Product'; product: Product } | { type: 'Rec
 
 export type ItemSelectDialogData = {
     initialTab?: 'Product' | 'Recipe';
+    excludedRecipeId?: string | null;
 };

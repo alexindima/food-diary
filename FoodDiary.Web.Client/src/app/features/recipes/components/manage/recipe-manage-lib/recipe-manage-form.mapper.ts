@@ -51,7 +51,7 @@ export function createRecipeStepGroup(step?: StepFormValues): FormGroup<StepForm
     const ingredientValues =
         step !== undefined && step.ingredients.length > 0
             ? step.ingredients
-            : [{ food: null, amount: null, foodName: null, nestedRecipeId: null, nestedRecipeName: null }];
+            : [{ food: null, amount: null, foodName: null, nestedRecipe: null, nestedRecipeId: null, nestedRecipeName: null }];
 
     return new FormGroup<StepFormData>({
         title: new FormControl(step?.title ?? null, [Validators.maxLength(RECIPE_STEP_TITLE_MAX_LENGTH)]),
@@ -62,7 +62,13 @@ export function createRecipeStepGroup(step?: StepFormValues): FormGroup<StepForm
         }),
         ingredients: new FormArray<FormGroup<IngredientFormData>>(
             ingredientValues.map(ingredient =>
-                createRecipeIngredientGroup(ingredient.food, ingredient.amount, ingredient.nestedRecipeId, ingredient.nestedRecipeName),
+                createRecipeIngredientGroup(
+                    ingredient.food,
+                    ingredient.amount,
+                    ingredient.nestedRecipe,
+                    ingredient.nestedRecipeId,
+                    ingredient.nestedRecipeName,
+                ),
             ),
             nonEmptyArrayValidator(),
         ),
@@ -72,13 +78,15 @@ export function createRecipeStepGroup(step?: StepFormValues): FormGroup<StepForm
 export function createRecipeIngredientGroup(
     food: Product | null = null,
     amount: number | null = null,
+    nestedRecipe: Recipe | null = null,
     nestedRecipeId: string | null = null,
     nestedRecipeName: string | null = null,
 ): FormGroup<IngredientFormData> {
     return new FormGroup<IngredientFormData>({
         food: new FormControl(food),
         amount: new FormControl(amount, [Validators.required, Validators.min(RECIPE_MIN_INGREDIENT_AMOUNT)]),
-        foodName: new FormControl<string | null>(food?.name ?? nestedRecipeName ?? null, [Validators.required]),
+        foodName: new FormControl<string | null>(food?.name ?? nestedRecipe?.name ?? nestedRecipeName ?? null, [Validators.required]),
+        nestedRecipe: new FormControl(nestedRecipe),
         nestedRecipeId: new FormControl<string | null>(nestedRecipeId),
         nestedRecipeName: new FormControl<string | null>(nestedRecipeName),
     });
@@ -212,6 +220,7 @@ function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIn
             food: null,
             amount: ingredient.amount,
             foodName: ingredient.nestedRecipeName ?? labels.selectIngredient,
+            nestedRecipe: buildNestedRecipe(ingredient),
             nestedRecipeId: ingredient.nestedRecipeId,
             nestedRecipeName: ingredient.nestedRecipeName ?? null,
         };
@@ -226,8 +235,40 @@ function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIn
         food: product,
         amount: ingredient.amount,
         foodName: product.name,
+        nestedRecipe: null,
         nestedRecipeId: null,
         nestedRecipeName: null,
+    };
+}
+
+function buildNestedRecipe(ingredient: RecipeIngredient): Recipe | null {
+    if (ingredient.nestedRecipeId === null || ingredient.nestedRecipeId === undefined || ingredient.nestedRecipeId.length === 0) {
+        return null;
+    }
+
+    return {
+        id: ingredient.nestedRecipeId,
+        name: ingredient.nestedRecipeName ?? '',
+        description: null,
+        comment: null,
+        category: null,
+        imageUrl: null,
+        imageAssetId: null,
+        prepTime: null,
+        cookTime: null,
+        servings: ingredient.nestedRecipeServings ?? 1,
+        visibility: RecipeVisibility.Public,
+        usageCount: 0,
+        createdAt: new Date().toISOString(),
+        isOwnedByCurrentUser: true,
+        totalCalories: ingredient.nestedRecipeTotalCalories ?? null,
+        totalProteins: ingredient.nestedRecipeTotalProteins ?? null,
+        totalFats: ingredient.nestedRecipeTotalFats ?? null,
+        totalCarbs: ingredient.nestedRecipeTotalCarbs ?? null,
+        totalFiber: ingredient.nestedRecipeTotalFiber ?? null,
+        totalAlcohol: ingredient.nestedRecipeTotalAlcohol ?? null,
+        isNutritionAutoCalculated: true,
+        steps: [],
     };
 }
 

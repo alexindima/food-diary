@@ -24,6 +24,17 @@ describe('RecipeSelectDialogComponent', () => {
         expect(readRecipeItems(component)).toEqual([{ recipe, imageUrl: 'assets/images/stubs/receipt.png' }]);
     });
 
+    it('excludes the current recipe from selectable items', () => {
+        const currentRecipe = createRecipe({ id: 'recipe-1' });
+        const nestedRecipe = createRecipe({ id: 'recipe-2' });
+        const { component, fixture } = setupComponent([currentRecipe, nestedRecipe]);
+
+        fixture.componentRef.setInput('excludedRecipeId', currentRecipe.id);
+        fixture.detectChanges();
+
+        expect(readRecipeItems(component)).toEqual([{ recipe: nestedRecipe, imageUrl: 'assets/images/stubs/receipt.png' }]);
+    });
+
     it('closes dialog with selected recipe when used as dialog', () => {
         const recipe = createRecipe();
         const { component, dialogRef } = setupComponent([recipe]);
@@ -146,7 +157,7 @@ function createPage(data: Recipe[]): PageOf<Recipe> {
     };
 }
 
-function createRecipe(): Recipe {
+function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
         id: 'recipe-1',
         name: 'Recipe',
@@ -158,5 +169,6 @@ function createRecipe(): Recipe {
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         steps: [],
+        ...overrides,
     };
 }

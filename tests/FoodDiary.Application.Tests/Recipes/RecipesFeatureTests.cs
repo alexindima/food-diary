@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
@@ -9,8 +10,10 @@ using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -87,7 +90,9 @@ public class RecipesFeatureTests {
             new SingleRecipeRepository(recipe),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -138,7 +143,9 @@ public class RecipesFeatureTests {
             new SingleRecipeRepository(recipe),
             cleanup,
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -177,7 +184,9 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -211,7 +220,9 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel() {
         var user = User.Create("create-recipe@example.com", "hash");
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -246,6 +257,47 @@ public class RecipesFeatureTests {
         Assert.True(result.Value.IsOwnedByCurrentUser);
         Assert.Equal("Serve warm", result.Value.Comment);
         Assert.Equal(2, result.Value.Steps.Count);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithInaccessibleProductIngredient_ReturnsValidationFailure() {
+        var user = User.Create("create-recipe-inaccessible-product@example.com", "hash");
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new EmptyProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var productId = Guid.NewGuid();
+        var result = await handler.Handle(
+            new CreateRecipeCommand(
+                user.Id.Value,
+                Name: "Tomato Soup",
+                Description: null,
+                Comment: null,
+                Category: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                PrepTime: 15,
+                CookTime: 30,
+                Servings: 4,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [CreateRecipeStepWithProduct(order: 1, "Chop vegetables", productId)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Product", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.LastAddedRecipe);
     }
 
     [Fact]
@@ -415,7 +467,9 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -449,7 +503,9 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyStepImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -489,7 +545,9 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyIngredientProductId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -533,6 +591,16 @@ public class RecipesFeatureTests {
             ImageUrl: null,
             ImageAssetId: null,
             Ingredients: [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100)]);
+    }
+
+    private static RecipeStepInput CreateRecipeStepWithProduct(int order, string description, Guid productId) {
+        return new RecipeStepInput(
+            Order: order,
+            Description: description,
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [new RecipeIngredientInput(ProductId: productId, NestedRecipeId: null, Amount: 100)]);
     }
 
     private sealed class SingleRecipeRepository(Recipe recipe) : IRecipeRepository {
@@ -746,12 +814,64 @@ public class RecipesFeatureTests {
             Task.FromResult(0);
     }
 
+    private sealed class AllowAllProductLookupService : IProductLookupService {
+        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+            IEnumerable<ProductId> ids,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(
+                ids.Distinct().ToDictionary(id => id, id => CreateProduct(userId, id)));
+    }
+
+    private sealed class EmptyProductLookupService : IProductLookupService {
+        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+            IEnumerable<ProductId> ids,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
+    }
+
+    private sealed class AllowAllRecipeLookupService : IRecipeLookupService {
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(
+                ids.Distinct().ToDictionary(id => id, id => CreateNestedRecipe(userId, id)));
+    }
+
+    private sealed class EmptyRecipeLookupService : IRecipeLookupService {
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
+    }
+
+    private static Product CreateProduct(UserId userId, ProductId productId) {
+        var product = Product.Create(userId, "Ingredient", MeasurementUnit.G, 100, null, 100, 1, 1, 1, 1, 0);
+        typeof(Product)
+            .GetProperty(nameof(Product.Id))!
+            .SetValue(product, productId);
+        return product;
+    }
+
+    private static Recipe CreateNestedRecipe(UserId userId, RecipeId recipeId) {
+        var recipe = Recipe.Create(userId, "Nested", servings: 1);
+        typeof(Recipe)
+            .GetProperty(nameof(Recipe.Id))!
+            .SetValue(recipe, recipeId);
+        return recipe;
+    }
+
     [Fact]
     public async Task CreateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-recipe@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
 
         var result = await handler.Handle(
             new CreateRecipeCommand(

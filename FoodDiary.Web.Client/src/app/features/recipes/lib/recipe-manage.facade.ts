@@ -36,11 +36,11 @@ export class RecipeManageFacade {
     public readonly globalError = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
 
-    public openItemSelectionDialog(): Observable<ItemSelection | null> {
+    public openItemSelectionDialog(excludedRecipeId: string | null = null): Observable<ItemSelection | null> {
         return this.dialogService
             .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
                 size: 'lg',
-                data: { initialTab: 'Product' },
+                data: { initialTab: 'Product', excludedRecipeId },
             })
             .afterClosed()
             .pipe(map(selection => selection ?? null));
@@ -53,6 +53,7 @@ export class RecipeManageFacade {
             foodGroup.patchValue({
                 food,
                 foodName: food.name,
+                nestedRecipe: null,
                 nestedRecipeId: null,
                 nestedRecipeName: null,
                 amount: defaultAmount,
@@ -64,6 +65,7 @@ export class RecipeManageFacade {
         foodGroup.patchValue({
             food: null,
             foodName: recipe.name,
+            nestedRecipe: recipe,
             nestedRecipeId: recipe.id,
             nestedRecipeName: recipe.name,
             amount: 1,
@@ -114,9 +116,26 @@ export class RecipeManageFacade {
         stepsArray.controls.forEach(stepGroup => {
             stepGroup.controls.ingredients.controls.forEach(ingredientGroup => {
                 const food = ingredientGroup.controls.food.value;
+                const nestedRecipe = ingredientGroup.controls.nestedRecipe.value;
                 const amount = ingredientGroup.controls.amount.value;
 
-                if (food === null || amount === null || amount <= 0) {
+                if (amount === null || amount <= 0) {
+                    return;
+                }
+
+                if (nestedRecipe !== null) {
+                    const servings = this.normalizeServings(nestedRecipe.servings);
+                    const multiplier = amount / servings;
+                    calories += (nestedRecipe.totalCalories ?? 0) * multiplier;
+                    proteins += (nestedRecipe.totalProteins ?? 0) * multiplier;
+                    fats += (nestedRecipe.totalFats ?? 0) * multiplier;
+                    carbs += (nestedRecipe.totalCarbs ?? 0) * multiplier;
+                    fiber += (nestedRecipe.totalFiber ?? 0) * multiplier;
+                    alcohol += (nestedRecipe.totalAlcohol ?? 0) * multiplier;
+                    return;
+                }
+
+                if (food === null) {
                     return;
                 }
 

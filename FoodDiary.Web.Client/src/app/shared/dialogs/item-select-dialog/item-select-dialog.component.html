@@ -14,6 +14,7 @@
                 } @else {
                     <fd-recipe-select-dialog
                         [embedded]="true"
+                        [excludedRecipeId]="excludedRecipeId"
                         (recipeSelected)="onRecipeSelected($event)"
                         (createRecipeRequested)="onCreateRecipeRequested()"
                     />
@@ -42,6 +43,7 @@
             } @else {
                 <fd-recipe-select-dialog
                     [embedded]="true"
+                    [excludedRecipeId]="excludedRecipeId"
                     (recipeSelected)="onRecipeSelected($event)"
                     (createRecipeRequested)="onCreateRecipeRequested()"
                 />

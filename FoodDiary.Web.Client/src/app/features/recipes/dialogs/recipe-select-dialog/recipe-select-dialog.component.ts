@@ -58,6 +58,7 @@ export class RecipeSelectDialogComponent {
     });
 
     public readonly embedded = input<boolean>(false);
+    public readonly excludedRecipeId = input<string | null>(null);
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output();
     public readonly searchValue = signal<string | null>(null);
@@ -68,10 +69,13 @@ export class RecipeSelectDialogComponent {
     });
     public readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
     protected readonly recipeItems = computed<RecipeSelectItemViewModel[]>(() =>
-        this.recipeData.items().map(recipe => ({
-            recipe,
-            imageUrl: this.resolveImage(recipe),
-        })),
+        this.recipeData
+            .items()
+            .filter(recipe => recipe.id !== this.excludedRecipeId())
+            .map(recipe => ({
+                recipe,
+                imageUrl: this.resolveImage(recipe),
+            })),
     );
 
     public readonly searchForm = new FormGroup<RecipeSearchFormGroup>({

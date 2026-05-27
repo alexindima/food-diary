@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import type { ResolveFn } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { RecipeService } from '../api/recipe.service';
@@ -17,6 +17,14 @@ export const recipeResolver: ResolveFn<Recipe | null> = route => {
     }
 
     return recipeService.getById(recipeId, false).pipe(
+        map(recipe => {
+            if (recipe === null || !recipe.isOwnedByCurrentUser || recipe.usageCount > 0) {
+                void navigationService.navigateToRecipeListAsync();
+                return null;
+            }
+
+            return recipe;
+        }),
         catchError(() => {
             void navigationService.navigateToRecipeListAsync();
             return of(null);

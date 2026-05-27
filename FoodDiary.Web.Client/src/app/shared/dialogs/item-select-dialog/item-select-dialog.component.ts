@@ -53,6 +53,7 @@ export class ItemSelectDialogComponent {
     public readonly createActionLabelKey = computed(() =>
         this.activeTab() === 'Product' ? 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' : 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON',
     );
+    public readonly excludedRecipeId = this.dialogData?.excludedRecipeId ?? null;
 
     public onProductSelected(product: Product): void {
         this.completeWith({ type: 'Product', product });

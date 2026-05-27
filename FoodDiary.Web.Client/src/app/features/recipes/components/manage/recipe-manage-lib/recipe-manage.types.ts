@@ -1,7 +1,7 @@
 import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { Product } from '../../../../products/models/product.data';
-import type { RecipeVisibility } from '../../../models/recipe.data';
+import type { Recipe, RecipeVisibility } from '../../../models/recipe.data';
 
 export type RecipeFormValues = {
     name: string;
@@ -34,6 +34,7 @@ export type IngredientFormValues = {
     food: Product | null;
     amount: number | null;
     foodName: string | null;
+    nestedRecipe: Recipe | null;
     nestedRecipeId: string | null;
     nestedRecipeName: string | null;
 };

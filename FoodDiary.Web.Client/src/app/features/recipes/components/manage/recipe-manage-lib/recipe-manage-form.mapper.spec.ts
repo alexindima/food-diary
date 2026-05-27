@@ -273,6 +273,7 @@ function createManualRecipeFormValue(): RecipeFormValues {
                         food: null,
                         amount: DEFAULT_SERVINGS,
                         foodName: 'Nested recipe',
+                        nestedRecipe: null,
                         nestedRecipeId: 'nested-1',
                         nestedRecipeName: 'Nested recipe',
                     },

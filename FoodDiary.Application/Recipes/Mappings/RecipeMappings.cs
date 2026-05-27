@@ -36,7 +36,14 @@ public static class RecipeMappings {
                         ingredient.Product?.FiberPerBase,
                         ingredient.Product?.AlcoholPerBase,
                         ingredient.NestedRecipeId?.Value,
-                        ingredient.NestedRecipe?.Name))
+                        ingredient.NestedRecipe?.Name,
+                        ingredient.NestedRecipe?.Servings,
+                        ingredient.NestedRecipe?.TotalCalories,
+                        ingredient.NestedRecipe?.TotalProteins,
+                        ingredient.NestedRecipe?.TotalFats,
+                        ingredient.NestedRecipe?.TotalCarbs,
+                        ingredient.NestedRecipe?.TotalFiber,
+                        ingredient.NestedRecipe?.TotalAlcohol))
                     .ToList()))
             .ToList();
 

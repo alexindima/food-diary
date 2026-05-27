@@ -2,6 +2,8 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
@@ -17,7 +19,9 @@ namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 public class CreateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IUserRepository userRepository,
-    IImageAssetAccessService imageAssetAccessService)
+    IImageAssetAccessService imageAssetAccessService,
+    IProductLookupService productLookupService,
+    IRecipeLookupService recipeLookupService)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -69,6 +73,17 @@ public class CreateRecipeCommandHandler(
         var addStepsResult = await AddStepsAsync(recipe, command, userId, cancellationToken);
         if (addStepsResult.IsFailure) {
             return Result.Failure<RecipeModel>(addStepsResult.Error);
+        }
+
+        var ingredientAccessResult = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            command.Steps,
+            recipe.Id,
+            userId,
+            productLookupService,
+            recipeLookupService,
+            cancellationToken);
+        if (ingredientAccessResult.IsFailure) {
+            return Result.Failure<RecipeModel>(ingredientAccessResult.Error);
         }
 
         if (command.CalculateNutritionAutomatically) {

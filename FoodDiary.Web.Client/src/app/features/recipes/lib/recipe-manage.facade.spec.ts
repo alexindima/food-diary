@@ -10,7 +10,7 @@ import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.con
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormData, StepFormData } from '../components/manage/recipe-manage-lib/recipe-manage.types';
-import { RecipeVisibility } from '../models/recipe.data';
+import { type Recipe, RecipeVisibility } from '../models/recipe.data';
 import { RecipeManageFacade } from './recipe-manage.facade';
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 150;
@@ -154,6 +154,7 @@ describe('RecipeManageFacade selection', () => {
             food: new FormControl(null),
             amount: new FormControl<number | null>(null),
             foodName: new FormControl<string | null>(null),
+            nestedRecipe: new FormControl(null),
             nestedRecipeId: new FormControl<string | null>(null),
             nestedRecipeName: new FormControl<string | null>(null),
         }) as unknown as FormGroup<IngredientFormData>;
@@ -213,6 +214,7 @@ describe('RecipeManageFacade nutrition summary', () => {
                         }),
                         amount: new FormControl(INGREDIENT_AMOUNT),
                         foodName: new FormControl('Ingredient'),
+                        nestedRecipe: new FormControl(null),
                         nestedRecipeId: new FormControl<string | null>(null),
                         nestedRecipeName: new FormControl<string | null>(null),
                     }),
@@ -231,4 +233,72 @@ describe('RecipeManageFacade nutrition summary', () => {
             alcohol: 0,
         });
     });
+
+    it('includes nested recipe nutrients in automatic summary', () => {
+        const nestedRecipe = createRecipe({
+            servings: 2,
+            totalCalories: 300,
+            totalProteins: 30,
+            totalFats: 12,
+            totalCarbs: 40,
+            totalFiber: 6,
+            totalAlcohol: 0,
+        });
+        const stepsArray = new FormArray([
+            new FormGroup({
+                title: new FormControl<string | null>(null),
+                imageUrl: new FormControl(null),
+                description: new FormControl('Step'),
+                ingredients: new FormArray([
+                    new FormGroup({
+                        food: new FormControl(null),
+                        amount: new FormControl(1),
+                        foodName: new FormControl('Nested recipe'),
+                        nestedRecipe: new FormControl(nestedRecipe),
+                        nestedRecipeId: new FormControl<string | null>(nestedRecipe.id),
+                        nestedRecipeName: new FormControl<string | null>(nestedRecipe.name),
+                    }),
+                ]),
+            }),
+        ]) as unknown as FormArray<FormGroup<StepFormData>>;
+
+        const summary = facade.calculateAutoSummary(stepsArray);
+
+        expect(summary).toEqual({
+            calories: 150,
+            proteins: 15,
+            fats: 6,
+            carbs: 20,
+            fiber: 3,
+            alcohol: 0,
+        });
+    });
 });
+
+function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
+    return {
+        id: 'recipe-1',
+        name: 'Nested recipe',
+        description: null,
+        comment: null,
+        category: null,
+        imageUrl: null,
+        imageAssetId: null,
+        prepTime: null,
+        cookTime: null,
+        servings: 1,
+        visibility: RecipeVisibility.Public,
+        usageCount: 0,
+        createdAt: new Date().toISOString(),
+        isOwnedByCurrentUser: true,
+        totalCalories: null,
+        totalProteins: null,
+        totalFats: null,
+        totalCarbs: null,
+        totalFiber: null,
+        totalAlcohol: null,
+        isNutritionAutoCalculated: true,
+        steps: [],
+        ...overrides,
+    };
+}

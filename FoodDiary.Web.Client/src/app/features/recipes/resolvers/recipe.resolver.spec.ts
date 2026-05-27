@@ -12,7 +12,7 @@ describe('recipeResolver', () => {
     let recipeServiceSpy: { getById: ReturnType<typeof vi.fn> };
     let navSpy: { navigateToRecipeListAsync: ReturnType<typeof vi.fn> };
 
-    const mockRecipe: Partial<Recipe> = { id: 'recipe-1' };
+    const mockRecipe: Partial<Recipe> = { id: 'recipe-1', isOwnedByCurrentUser: true, usageCount: 0 };
 
     const mockState = {} as unknown as RouterStateSnapshot;
 
@@ -68,6 +68,26 @@ describe('recipeResolver', () => {
 
     it('should navigate to recipe list when service throws error', () => {
         recipeServiceSpy.getById.mockReturnValue(throwError(() => new Error('not found')));
+
+        const mockRoute = {
+            paramMap: { get: vi.fn().mockReturnValue('recipe-1') },
+        } as unknown as ActivatedRouteSnapshot;
+
+        let resolved: Recipe | null | undefined;
+
+        TestBed.runInInjectionContext(() => {
+            const result$ = recipeResolver(mockRoute, mockState) as Observable<Recipe | null>;
+            result$.subscribe(result => {
+                resolved = result;
+            });
+        });
+
+        expect(resolved).toBeNull();
+        expect(navSpy.navigateToRecipeListAsync).toHaveBeenCalled();
+    });
+
+    it('should navigate to recipe list when recipe cannot be edited', () => {
+        recipeServiceSpy.getById.mockReturnValue(of({ ...mockRecipe, usageCount: 1 }));
 
         const mockRoute = {
             paramMap: { get: vi.fn().mockReturnValue('recipe-1') },
