@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
@@ -210,8 +210,8 @@ describe('QuickMealService saving', () => {
         );
     });
 
-    it('keeps draft and shows error when save returns null', () => {
-        mealService.create.mockReturnValue(of(null));
+    it('keeps draft and shows error when save fails', () => {
+        mealService.create.mockReturnValue(throwError(() => new Error('save failed')));
         service.addProduct(product);
 
         service.saveDraft();

@@ -113,6 +113,15 @@ export class RecipeManageFacade {
         let fiber = 0;
         let alcohol = 0;
 
+        const addNutrition = (summary: RecipeNutritionSummary): void => {
+            calories += summary.calories;
+            proteins += summary.proteins;
+            fats += summary.fats;
+            carbs += summary.carbs;
+            fiber += summary.fiber;
+            alcohol += summary.alcohol;
+        };
+
         stepsArray.controls.forEach(stepGroup => {
             stepGroup.controls.ingredients.controls.forEach(ingredientGroup => {
                 const food = ingredientGroup.controls.food.value;
@@ -124,14 +133,7 @@ export class RecipeManageFacade {
                 }
 
                 if (nestedRecipe !== null) {
-                    const servings = this.normalizeServings(nestedRecipe.servings);
-                    const multiplier = amount / servings;
-                    calories += (nestedRecipe.totalCalories ?? 0) * multiplier;
-                    proteins += (nestedRecipe.totalProteins ?? 0) * multiplier;
-                    fats += (nestedRecipe.totalFats ?? 0) * multiplier;
-                    carbs += (nestedRecipe.totalCarbs ?? 0) * multiplier;
-                    fiber += (nestedRecipe.totalFiber ?? 0) * multiplier;
-                    alcohol += (nestedRecipe.totalAlcohol ?? 0) * multiplier;
+                    addNutrition(this.calculateNestedRecipeSummary(nestedRecipe, amount));
                     return;
                 }
 
@@ -139,15 +141,7 @@ export class RecipeManageFacade {
                     return;
                 }
 
-                const baseAmount = food.baseAmount > 0 ? food.baseAmount : 1;
-                const multiplier = amount / baseAmount;
-
-                calories += food.caloriesPerBase * multiplier;
-                proteins += food.proteinsPerBase * multiplier;
-                fats += food.fatsPerBase * multiplier;
-                carbs += food.carbsPerBase * multiplier;
-                fiber += food.fiberPerBase * multiplier;
-                alcohol += food.alcoholPerBase * multiplier;
+                addNutrition(this.calculateProductSummary(food, amount));
             });
         });
 
@@ -158,6 +152,34 @@ export class RecipeManageFacade {
             carbs: this.roundNutrient(carbs),
             fiber: this.roundNutrient(fiber),
             alcohol: this.roundNutrient(alcohol),
+        };
+    }
+
+    private calculateNestedRecipeSummary(recipe: Recipe, amount: number): RecipeNutritionSummary {
+        const servings = this.normalizeServings(recipe.servings);
+        const multiplier = amount / servings;
+
+        return {
+            calories: (recipe.totalCalories ?? 0) * multiplier,
+            proteins: (recipe.totalProteins ?? 0) * multiplier,
+            fats: (recipe.totalFats ?? 0) * multiplier,
+            carbs: (recipe.totalCarbs ?? 0) * multiplier,
+            fiber: (recipe.totalFiber ?? 0) * multiplier,
+            alcohol: (recipe.totalAlcohol ?? 0) * multiplier,
+        };
+    }
+
+    private calculateProductSummary(food: NonNullable<IngredientFormData['food']['value']>, amount: number): RecipeNutritionSummary {
+        const baseAmount = food.baseAmount > 0 ? food.baseAmount : 1;
+        const multiplier = amount / baseAmount;
+
+        return {
+            calories: food.caloriesPerBase * multiplier,
+            proteins: food.proteinsPerBase * multiplier,
+            fats: food.fatsPerBase * multiplier,
+            carbs: food.carbsPerBase * multiplier,
+            fiber: food.fiberPerBase * multiplier,
+            alcohol: food.alcoholPerBase * multiplier,
         };
     }
 

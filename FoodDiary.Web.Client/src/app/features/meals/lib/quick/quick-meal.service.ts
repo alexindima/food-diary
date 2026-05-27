@@ -150,13 +150,8 @@ export class QuickMealService {
 
         this.isSavingSignal.set(true);
         this.mealService.create(payload).subscribe({
-            next: meal => {
+            next: () => {
                 this.isSavingSignal.set(false);
-                if (meal === null) {
-                    this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
-                    return;
-                }
-
                 this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.SAVE_SUCCESS'));
                 this.clear();
             },
