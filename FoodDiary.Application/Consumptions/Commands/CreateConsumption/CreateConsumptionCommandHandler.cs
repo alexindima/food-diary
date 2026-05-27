@@ -64,6 +64,11 @@ public class CreateConsumptionCommandHandler(
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
 
         foreach (var item in command.Items) {
+            var validation = ConsumptionItemValidator.Validate(item);
+            if (validation.IsFailure) {
+                return Result.Failure<ConsumptionModel>(validation.Error);
+            }
+
             var itemIdValidation = ValidateItemIdentifiers(item);
             if (itemIdValidation.IsFailure) {
                 return Result.Failure<ConsumptionModel>(itemIdValidation.Error);
@@ -90,30 +95,33 @@ public class CreateConsumptionCommandHandler(
                 return Result.Failure<ConsumptionModel>(sessionImageAssetResult.Error);
             }
 
-            var sessionItems = session.Items
-                .Select(aiItem => MealAiItemData.Create(
-                    aiItem.NameEn,
-                    aiItem.NameLocal,
-                    aiItem.Amount,
-                    aiItem.Unit,
-                    aiItem.Calories,
-                    aiItem.Proteins,
-                    aiItem.Fats,
-                    aiItem.Carbs,
-                    aiItem.Fiber,
-                    aiItem.Alcohol))
-                .ToList();
+            var sessionItemsResult = CreateAiSessionItems(session);
+            if (sessionItemsResult.IsFailure) {
+                return Result.Failure<ConsumptionModel>(sessionItemsResult.Error);
+            }
 
-            var sessionSource = Enum.TryParse<AiRecognitionSource>(session.Source, true, out var parsedSource)
-                ? parsedSource
-                : AiRecognitionSource.Text;
+            if (!TryParseAiRecognitionSource(session.Source, out var sessionSource)) {
+                return Result.Failure<ConsumptionModel>(
+                    Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
+            }
+
+            var recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.UtcNow;
+            if (recognizedAtUtc.Kind == DateTimeKind.Unspecified) {
+                return Result.Failure<ConsumptionModel>(
+                    Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));
+            }
+
+            if (session.Notes is { Length: > 2048 }) {
+                return Result.Failure<ConsumptionModel>(
+                    Errors.Validation.Invalid(nameof(session.Notes), "Notes must be at most 2048 characters."));
+            }
 
             meal.AddAiSession(
                 sessionImageAssetIdResult.Value,
                 sessionSource,
-                session.RecognizedAtUtc ?? dateTimeProvider.UtcNow,
+                recognizedAtUtc,
                 session.Notes,
-                sessionItems);
+                sessionItemsResult.Value);
         }
 
         if (command.IsNutritionAutoCalculated) {
@@ -189,5 +197,40 @@ public class CreateConsumptionCommandHandler(
         }
 
         return Result.Success();
+    }
+
+    private static bool TryParseAiRecognitionSource(string? source, out AiRecognitionSource result) {
+        if (string.IsNullOrWhiteSpace(source)) {
+            result = AiRecognitionSource.Text;
+            return true;
+        }
+
+        return Enum.TryParse(source, true, out result);
+    }
+
+    private static Result<List<MealAiItemData>> CreateAiSessionItems(ConsumptionAiSessionInput session) {
+        var items = new List<MealAiItemData>(session.Items.Count);
+        foreach (var aiItem in session.Items) {
+            if (!MealAiItemData.TryCreate(
+                    aiItem.NameEn,
+                    aiItem.NameLocal,
+                    aiItem.Amount,
+                    aiItem.Unit,
+                    aiItem.Calories,
+                    aiItem.Proteins,
+                    aiItem.Fats,
+                    aiItem.Carbs,
+                    aiItem.Fiber,
+                    aiItem.Alcohol,
+                    out var data,
+                    out var error)) {
+                return Result.Failure<List<MealAiItemData>>(
+                    Errors.Validation.Invalid("AiSessions", error ?? "AI item is invalid."));
+            }
+
+            items.Add(data!);
+        }
+
+        return Result.Success(items);
     }
 }

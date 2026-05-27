@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -121,6 +122,30 @@ describe('MealManageFormComponent submit behavior', () => {
 
         expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
         expect(component.globalError()).toBe('FORM_ERRORS.UNKNOWN');
+    });
+
+    it('should show backend validation message when submit fails', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        const serverMessage = 'Product is not accessible.';
+        mealManageFacade.submitConsumptionAsync.mockRejectedValue(new HttpErrorResponse({ error: { message: serverMessage } }));
+        component.consumptionForm.patchValue({
+            date: '2026-04-05',
+            time: '10:30',
+            mealType: 'Breakfast',
+        });
+        component.items.at(0).patchValue({
+            sourceType: ConsumptionSourceType.Product,
+            product: { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+            amount: PRODUCT_AMOUNT,
+        });
+        clearValidators(component.consumptionForm);
+        component.consumptionForm.updateValueAndValidity();
+
+        component.onSubmit();
+        await Promise.resolve();
+        await Promise.resolve();
+
+        expect(component.globalError()).toBe(serverMessage);
     });
 });
 

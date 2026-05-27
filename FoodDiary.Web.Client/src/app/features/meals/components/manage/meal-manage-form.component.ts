@@ -28,7 +28,7 @@ import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
-import { getStringProperty } from '../../../../shared/lib/unknown-value.utils';
+import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
@@ -646,8 +646,19 @@ export class MealManageFormComponent {
         }
     }
 
-    private handleSubmitError(_error?: HttpErrorResponse): void {
+    private handleSubmitError(error?: HttpErrorResponse): void {
+        const message = this.getSubmitErrorMessage(error);
+        if (message !== null) {
+            this.globalError.set(message);
+            return;
+        }
+
         this.setGlobalError('FORM_ERRORS.UNKNOWN');
+    }
+
+    private getSubmitErrorMessage(error?: HttpErrorResponse): string | null {
+        const responseBody = getRecordProperty(error, 'error');
+        return getStringProperty(responseBody, 'message') ?? null;
     }
 
     private setGlobalError(errorKey: string): void {

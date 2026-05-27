@@ -2,10 +2,10 @@ using FluentValidation;
 using FoodDiary.Application.Consumptions.Common.Validators;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
+namespace FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 
-public class CreateConsumptionCommandValidator : AbstractValidator<CreateConsumptionCommand> {
-    public CreateConsumptionCommandValidator() {
+public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsumptionCommand> {
+    public UpdateConsumptionCommandValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -14,6 +14,11 @@ public class CreateConsumptionCommandValidator : AbstractValidator<CreateConsump
             .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("UserId is invalid.");
+
+        RuleFor(c => c.ConsumptionId)
+            .NotEqual(Guid.Empty)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Consumption id must not be empty.");
 
         RuleFor(c => c.MealType)
             .Must(mealType => string.IsNullOrWhiteSpace(mealType) || Enum.TryParse<MealType>(mealType, true, out _))

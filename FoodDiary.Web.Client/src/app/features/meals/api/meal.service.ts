@@ -79,17 +79,17 @@ export class MealService extends ApiService {
         );
     }
 
-    public create(data: MealManageDto): Observable<Meal | null> {
+    public create(data: MealManageDto): Observable<Meal> {
         return this.post<ConsumptionResponseDto>('', data).pipe(
             map(response => this.mapConsumption(response)),
-            catchError(() => of(null)),
+            catchError((error: unknown) => rethrowApiError('Create meal error', error)),
         );
     }
 
-    public update(id: string, data: MealManageDto): Observable<Meal | null> {
+    public update(id: string, data: MealManageDto): Observable<Meal> {
         return this.patch<ConsumptionResponseDto>(id, data).pipe(
             map(response => this.mapConsumption(response)),
-            catchError(() => of(null)),
+            catchError((error: unknown) => rethrowApiError('Update meal error', error)),
         );
     }
 

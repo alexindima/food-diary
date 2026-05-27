@@ -85,6 +85,46 @@ public class CreateConsumptionCommandValidatorTests {
     }
 
     [Fact]
+    public async Task Validate_WhenItemAmountIsTooLarge_HasError() {
+        var command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_001)]);
+        var result = await _validator.TestValidateAsync(command);
+        Assert.NotEmpty(result.Errors);
+    }
+
+    [Fact]
+    public async Task Validate_WhenAiItemNameIsBlank_HasError() {
+        var command = CreateCommand(
+            items: [],
+            aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
+                new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0)
+            ])]);
+        var result = await _validator.TestValidateAsync(command);
+        Assert.NotEmpty(result.Errors);
+    }
+
+    [Fact]
+    public async Task Validate_WhenAiItemNutritionIsNegative_HasError() {
+        var command = CreateCommand(
+            items: [],
+            aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
+                new ConsumptionAiItemInput("Apple", null, 100, "g", -1, 10, 5, 20, 3, 0)
+            ])]);
+        var result = await _validator.TestValidateAsync(command);
+        Assert.NotEmpty(result.Errors);
+    }
+
+    [Fact]
+    public async Task Validate_WhenAiSessionRecognizedAtIsUnspecified_HasError() {
+        var command = CreateCommand(
+            items: [],
+            aiSessions: [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 12, 0, 0), null, [
+                new ConsumptionAiItemInput("Apple", null, 100, "g", 100, 10, 5, 20, 3, 0)
+            ])]);
+        var result = await _validator.TestValidateAsync(command);
+        Assert.NotEmpty(result.Errors);
+    }
+
+    [Fact]
     public async Task Validate_WhenManualNutritionMissingCalories_HasError() {
         var command = CreateCommand(
             isAutoCalculated: false,

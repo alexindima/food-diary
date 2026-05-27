@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
@@ -250,6 +250,25 @@ function registerItemSelectionTests(): void {
 
             expect(recipeWeightService.loadServingWeight).toHaveBeenCalled();
             expect(group.controls.amount.value).toBe(EXPECTED_RECIPE_AMOUNT);
+        });
+
+        it('should ignore stale recipe weight response after item source changes', () => {
+            const servingWeight = new Subject<number | null>();
+            const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
+            const product = { ...createEmptyProductSnapshot(), id: 'p1' };
+            const group = facade.createConsumptionItem(null, recipe, RECIPE_SERVING_AMOUNT, ConsumptionSourceType.Recipe);
+            recipeWeightService.loadServingWeight.mockReturnValue(servingWeight.asObservable());
+
+            facade.ensureRecipeWeightForExistingItem(group, RECIPE_SERVING_AMOUNT, recipe);
+            group.patchValue({
+                sourceType: ConsumptionSourceType.Product,
+                recipe: null,
+                product,
+                amount: PRODUCT_PORTION_AMOUNT,
+            });
+            servingWeight.next(RECIPE_SERVING_WEIGHT);
+
+            expect(group.controls.amount.value).toBe(PRODUCT_PORTION_AMOUNT);
         });
 
         it('should use product default portion amount after manual selection', async () => {

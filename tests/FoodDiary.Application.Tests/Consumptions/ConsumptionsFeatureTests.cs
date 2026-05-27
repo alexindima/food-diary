@@ -393,6 +393,46 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateConsumptionCommandHandler_WithInvalidAiItem_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                userId.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                null,
+                null,
+                [],
+                [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
+                    new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0)
+                ])],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var meal = Meal.Create(

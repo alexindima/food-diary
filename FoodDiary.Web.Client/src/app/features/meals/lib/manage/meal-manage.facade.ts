@@ -71,10 +71,7 @@ export class MealManageFacade {
         return false;
     }
 
-    public async submitConsumptionAsync(
-        consumption: Consumption | null,
-        consumptionData: ConsumptionManageDto,
-    ): Promise<Consumption | null> {
+    public async submitConsumptionAsync(consumption: Consumption | null, consumptionData: ConsumptionManageDto): Promise<Consumption> {
         return consumption !== null
             ? firstValueFrom(this.mealService.update(consumption.id, consumptionData))
             : firstValueFrom(this.mealService.create(consumptionData));
@@ -225,6 +222,11 @@ export class MealManageFacade {
 
         this.recipeWeight.loadServingWeight(recipe).subscribe(servingWeight => {
             if (servingWeight === null || servingWeight <= 0) {
+                return;
+            }
+
+            const currentRecipe = group.controls.recipe.value;
+            if (group.controls.sourceType.value !== ConsumptionSourceType.Recipe || currentRecipe?.id !== recipe.id) {
                 return;
             }
 

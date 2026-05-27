@@ -185,7 +185,7 @@ describe('MealService create', () => {
 
         service.create(createData).subscribe(result => {
             expect(result).not.toBeNull();
-            expect(result?.id).toBe('m1');
+            expect(result.id).toBe('m1');
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
@@ -194,11 +194,16 @@ describe('MealService create', () => {
         req.flush(MOCK_CONSUMPTION_DTO);
     });
 
-    it('should return null on create error', () => {
+    it('should rethrow create errors', () => {
         const createData = createConsumptionManageDto();
 
-        service.create(createData).subscribe(result => {
-            expect(result).toBeNull();
+        service.create(createData).subscribe({
+            next: () => {
+                expect.fail('Expected create to fail');
+            },
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.InternalServerError);
+            },
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
@@ -217,7 +222,7 @@ describe('MealService update', () => {
 
         service.update('m1', updateData).subscribe(result => {
             expect(result).not.toBeNull();
-            expect(result?.id).toBe('m1');
+            expect(result.id).toBe('m1');
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
@@ -226,7 +231,7 @@ describe('MealService update', () => {
         req.flush(MOCK_CONSUMPTION_DTO);
     });
 
-    it('should return null on update error', () => {
+    it('should rethrow update errors', () => {
         const updateData: ConsumptionManageDto = {
             date: new Date(),
             comment: 'fail',
@@ -234,8 +239,13 @@ describe('MealService update', () => {
             isNutritionAutoCalculated: true,
         };
 
-        service.update('m1', updateData).subscribe(result => {
-            expect(result).toBeNull();
+        service.update('m1', updateData).subscribe({
+            next: () => {
+                expect.fail('Expected update to fail');
+            },
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.InternalServerError);
+            },
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
