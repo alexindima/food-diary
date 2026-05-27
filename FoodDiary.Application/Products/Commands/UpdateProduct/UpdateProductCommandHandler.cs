@@ -73,9 +73,20 @@ public class UpdateProductCommandHandler(
         }
 
         ProductType? newProductType = null;
-        if (!string.IsNullOrWhiteSpace(command.ProductType) &&
-            Enum.TryParse<ProductType>(command.ProductType, true, out var parsedProductType)) {
-            newProductType = parsedProductType;
+        if (!string.IsNullOrWhiteSpace(command.ProductType)) {
+            var parsedProductTypeResult = EnumValueParser.ParseOptional<ProductType>(
+                command.ProductType,
+                nameof(command.ProductType),
+                "Unknown product type value.");
+            if (parsedProductTypeResult.IsFailure) {
+                return Result.Failure<ProductModel>(parsedProductTypeResult.Error);
+            }
+
+            if (parsedProductTypeResult.Value.HasValue && !Enum.IsDefined(parsedProductTypeResult.Value.Value)) {
+                return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductType), "Unknown product type value."));
+            }
+
+            newProductType = parsedProductTypeResult.Value;
         }
 
         var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));

@@ -133,6 +133,36 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [Fact]
+    public async Task CreateProduct_WithInvalidProductType_ReturnsBadRequest() {
+        var client = await CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync(
+            "/api/v1/products",
+            new CreateProductHttpRequest(
+                null,
+                "Invalid Product Type",
+                null,
+                "NotAProductType",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "G",
+                100,
+                100,
+                120,
+                10,
+                5,
+                20,
+                3,
+                0,
+                "Private"));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
     public async Task ProductsOverview_AndRecent_ReturnFavoritePreviewRecentItemsAndFavoriteFlags() {
         var client = await CreateAuthenticatedClientAsync();
         var firstProductId = await CreateProductAsync(client, "Overview Apple");
@@ -194,7 +224,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
                 Name: "Updated Product",
                 Brand: "Updated Brand",
                 ClearBrand: false,
-                ProductType: "Food",
+                ProductType: "Other",
                 Category: "Snacks",
                 ClearCategory: false,
                 Description: "Updated description",
@@ -225,6 +255,44 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         Assert.Equal("Updated Brand", json.RootElement.GetProperty("brand").GetString());
         Assert.Equal("Updated comment", json.RootElement.GetProperty("comment").GetString());
         Assert.Equal(140, json.RootElement.GetProperty("defaultPortionAmount").GetDouble());
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithInvalidProductType_ReturnsBadRequest() {
+        var client = await CreateAuthenticatedClientAsync();
+        var productId = await CreateProductAsync(client, "Invalid Patch Product Type");
+
+        var updateResponse = await client.PatchAsJsonAsync(
+            $"/api/v1/products/{productId}",
+            new UpdateProductHttpRequest(
+                Barcode: null,
+                ClearBarcode: false,
+                Name: null,
+                Brand: null,
+                ClearBrand: false,
+                ProductType: "NotAProductType",
+                Category: null,
+                ClearCategory: false,
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                BaseUnit: null,
+                BaseAmount: null,
+                DefaultPortionAmount: null,
+                CaloriesPerBase: null,
+                ProteinsPerBase: null,
+                FatsPerBase: null,
+                CarbsPerBase: null,
+                FiberPerBase: null,
+                AlcoholPerBase: null,
+                Visibility: null));
+
+        Assert.Equal(HttpStatusCode.BadRequest, updateResponse.StatusCode);
     }
 
     [Fact]

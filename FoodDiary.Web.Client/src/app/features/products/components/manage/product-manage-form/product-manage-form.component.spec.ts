@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -233,11 +234,7 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
                 resolveSubmit = resolve;
             }),
         );
-        component.productForm.patchValue({
-            name: 'Valid product',
-            caloriesPerBase: 100,
-            proteinsPerBase: 10,
-        });
+        fillValidProductForm(component);
 
         const firstSubmit = component.onSubmitAsync();
         const secondSubmit = await component.onSubmitAsync();
@@ -256,11 +253,7 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
             savedProduct = product;
         });
         productManageFacade.submitProductAsync.mockResolvedValue({ product: PRODUCT, error: null });
-        component.productForm.patchValue({
-            name: 'Valid product',
-            caloriesPerBase: 100,
-            proteinsPerBase: 10,
-        });
+        fillValidProductForm(component);
 
         const result = await component.onSubmitAsync();
 
@@ -268,15 +261,30 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         expect(savedProduct).toBe(PRODUCT);
     });
 
+    it('should emit saved product and show USDA warning when post-save sync fails', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        let savedProduct: Product | null = null;
+        component.saved.subscribe(product => {
+            savedProduct = product;
+        });
+        productManageFacade.submitProductAsync.mockResolvedValue({
+            product: PRODUCT,
+            error: new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }),
+        });
+        fillValidProductForm(component);
+
+        const result = await component.onSubmitAsync();
+
+        expect(result).toBe(PRODUCT);
+        expect(savedProduct).toBe(PRODUCT);
+        expect(component.globalError()).toBe('PRODUCT_MANAGE.USDA_SYNC_ERROR');
+    });
+
     it('should skip submit confirmation in dialog mode', async () => {
         const { component, fixture, productManageFacade } = await setupComponentAsync();
         fixture.componentRef.setInput('mode', 'dialog');
         fixture.detectChanges();
-        component.productForm.patchValue({
-            name: 'Valid product',
-            caloriesPerBase: 100,
-            proteinsPerBase: 10,
-        });
+        fillValidProductForm(component);
 
         await component.onSubmitAsync();
 
@@ -371,6 +379,14 @@ function createUsdaServiceMock(): UsdaServiceMock {
         linkProduct: vi.fn().mockReturnValue(of(null)),
         unlinkProduct: vi.fn().mockReturnValue(of(null)),
     };
+}
+
+function fillValidProductForm(component: ProductManageFormComponent): void {
+    component.productForm.patchValue({
+        name: 'Valid product',
+        caloriesPerBase: 100,
+        proteinsPerBase: 10,
+    });
 }
 
 function createUsdaFoodDetail(fdcId: number, description: string): UsdaFoodDetail {

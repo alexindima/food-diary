@@ -88,6 +88,12 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .WithMessage("Invalid visibility level")
             .When(x => !string.IsNullOrWhiteSpace(x.Visibility));
 
+        RuleFor(x => x.ProductType)
+            .Must(BeValidProductType)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Invalid product type")
+            .When(x => !string.IsNullOrWhiteSpace(x.ProductType));
+
         RuleFor(x => x)
             .Must(x => !(x.ClearBarcode && !string.IsNullOrWhiteSpace(x.Barcode)))
             .WithErrorCode("Validation.Invalid")
@@ -132,6 +138,11 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
     private bool BeValidVisibility(string? visibility) =>
         visibility != null && Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
+
+    private bool BeValidProductType(string? productType) =>
+        productType != null &&
+        Enum.TryParse(productType, ignoreCase: true, out ProductType parsed) &&
+        Enum.IsDefined(parsed);
 
     private async Task EnsureProductEditableAsync(
         UpdateProductCommand command,

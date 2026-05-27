@@ -115,6 +115,41 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateProductCommandHandler_WithInvalidProductType_ReturnsValidationFailure() {
+        var user = User.Create("create-product-invalid-type@example.com", "hash");
+        var repository = new NoopProductRepository();
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new CreateProductCommand(
+                UserId: user.Id.Value,
+                Barcode: null,
+                Name: "Apple",
+                Brand: null,
+                ProductType: "NotAProductType",
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                BaseUnit: "G",
+                BaseAmount: 100,
+                DefaultPortionAmount: 100,
+                CaloriesPerBase: 52,
+                ProteinsPerBase: 0.3,
+                FatsPerBase: 0.2,
+                CarbsPerBase: 14,
+                FiberPerBase: 2.4,
+                AlcoholPerBase: 0,
+                Visibility: "Private"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.LastAddedProduct);
+    }
+
+    [Fact]
     public async Task DeleteProductCommandHandler_WhenCleanupFails_StillDeletesProductAndReturnsSuccess() {
         var userId = UserId.New();
         var assetId = ImageAssetId.New();
@@ -357,6 +392,66 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateProductCommandHandler_WithInvalidProductType_ReturnsValidationFailure() {
+        var user = User.Create("update-product-invalid-type@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var repository = new SingleProductRepository(product);
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new UpdateProductCommand(
+                user.Id.Value,
+                product.Id.Value,
+                Barcode: null,
+                ClearBarcode: false,
+                Name: null,
+                Brand: null,
+                ClearBrand: false,
+                ProductType: "NotAProductType",
+                Category: null,
+                ClearCategory: false,
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                BaseUnit: null,
+                BaseAmount: null,
+                DefaultPortionAmount: null,
+                CaloriesPerBase: null,
+                ProteinsPerBase: null,
+                FatsPerBase: null,
+                CarbsPerBase: null,
+                FiberPerBase: null,
+                AlcoholPerBase: null,
+                Visibility: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
     public async Task GetProductsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-product@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
@@ -382,7 +477,7 @@ public class ProductsFeatureTests {
                 "4601234567890",
                 "Apple",
                 "Farm",
-                "Food",
+                "Other",
                 "Fruit",
                 "Fresh apple",
                 "Owner note",
@@ -423,7 +518,7 @@ public class ProductsFeatureTests {
                 Barcode: null,
                 Name: "Apple",
                 Brand: null,
-                ProductType: "Food",
+                ProductType: "Other",
                 Category: null,
                 Description: null,
                 Comment: null,
@@ -461,7 +556,7 @@ public class ProductsFeatureTests {
                 Barcode: null,
                 Name: "Apple",
                 Brand: null,
-                ProductType: "Food",
+                ProductType: "Other",
                 Category: null,
                 Description: null,
                 Comment: null,

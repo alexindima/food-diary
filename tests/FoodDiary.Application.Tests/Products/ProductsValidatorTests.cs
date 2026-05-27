@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Tests.Products;
 
 public class ProductsValidatorTests {
     private static CreateProductCommand ValidCreateProduct(Guid? userId = null) =>
-        new(userId ?? Guid.NewGuid(), null, "Chicken", null, "Food", null, null, null, null, null,
+        new(userId ?? Guid.NewGuid(), null, "Chicken", null, "Other", null, null, null, null, null,
             "g", 100, 100, 165, 31, 3.6, 0, 0, 0, "Private");
 
     // ── CreateProduct ──
@@ -34,6 +34,13 @@ public class ProductsValidatorTests {
         var result = await new CreateProductCommandValidator().TestValidateAsync(
             ValidCreateProduct() with { BaseUnit = "invalid" });
         result.ShouldHaveValidationErrorFor(c => c.BaseUnit);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithInvalidProductType_HasError() {
+        var result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { ProductType = "invalid" });
+        result.ShouldHaveValidationErrorFor(c => c.ProductType);
     }
 
     [Fact]

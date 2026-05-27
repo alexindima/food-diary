@@ -1,1 +1,3 @@
-<fd-product-manage-form [product]="product()" />
+@if (product(); as currentProduct) {
+    <fd-product-manage-form [product]="currentProduct" />
+}

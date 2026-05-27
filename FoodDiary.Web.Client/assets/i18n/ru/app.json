@@ -425,6 +425,7 @@
         "DELETE_BUTTON": "Удалить",
         "DELETE_CONFIRM": "Вы уверены, что хотите удалить этот продукт?",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз.",
+        "USDA_SYNC_ERROR": "Продукт сохранён, но связь с USDA не удалось обновить. Попробуйте ещё раз.",
         "VISIBILITY": "Видимость",
         "VISIBILITY_GROUP_TITLE": "Видимость",
         "VISIBILITY_PLACEHOLDER": "Видимость",

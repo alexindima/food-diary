@@ -8,14 +8,13 @@ import { ProductService } from '../api/product.service';
 import type { Product } from '../models/product.data';
 import { productResolver } from './product.resolver';
 
+let productServiceSpy: { getById: ReturnType<typeof vi.fn> };
+let navSpy: { navigateToProductListAsync: ReturnType<typeof vi.fn> };
+
+const mockProduct: Partial<Product> = { id: 'product-1', isOwnedByCurrentUser: true, usageCount: 0 };
+const mockState = {} as unknown as RouterStateSnapshot;
+
 describe('productResolver', () => {
-    let productServiceSpy: { getById: ReturnType<typeof vi.fn> };
-    let navSpy: { navigateToProductListAsync: ReturnType<typeof vi.fn> };
-
-    const mockProduct: Partial<Product> = { id: 'product-1' };
-
-    const mockState = {} as unknown as RouterStateSnapshot;
-
     beforeEach(() => {
         productServiceSpy = { getById: vi.fn() };
         navSpy = { navigateToProductListAsync: vi.fn().mockResolvedValue(undefined) };
@@ -31,36 +30,14 @@ describe('productResolver', () => {
     it('should resolve product by id', () => {
         productServiceSpy.getById.mockReturnValue(of(mockProduct));
 
-        let resolved: Product | null = null;
-
-        const mockRoute = {
-            paramMap: { get: vi.fn().mockReturnValue('product-1') },
-        } as unknown as ActivatedRouteSnapshot;
-
-        TestBed.runInInjectionContext(() => {
-            const result$ = productResolver(mockRoute, mockState) as Observable<Product | null>;
-            result$.subscribe(result => {
-                resolved = result;
-            });
-        });
+        const resolved = resolveProductRoute('product-1');
 
         expect(resolved).toEqual(mockProduct);
         expect(productServiceSpy.getById).toHaveBeenCalledWith('product-1');
     });
 
     it('should navigate to product list when id is missing', () => {
-        const mockRoute = {
-            paramMap: { get: vi.fn().mockReturnValue(null) },
-        } as unknown as ActivatedRouteSnapshot;
-
-        let resolved: Product | null | undefined;
-
-        TestBed.runInInjectionContext(() => {
-            const result$ = productResolver(mockRoute, mockState) as Observable<Product | null>;
-            result$.subscribe(result => {
-                resolved = result;
-            });
-        });
+        const resolved = resolveProductRoute(null);
 
         expect(resolved).toBeNull();
         expect(navSpy.navigateToProductListAsync).toHaveBeenCalled();
@@ -69,20 +46,44 @@ describe('productResolver', () => {
     it('should navigate to product list when service throws error', () => {
         productServiceSpy.getById.mockReturnValue(throwError(() => new Error('not found')));
 
-        const mockRoute = {
-            paramMap: { get: vi.fn().mockReturnValue('product-1') },
-        } as unknown as ActivatedRouteSnapshot;
+        const resolved = resolveProductRoute('product-1');
 
-        let resolved: Product | null | undefined;
+        expect(resolved).toBeNull();
+        expect(navSpy.navigateToProductListAsync).toHaveBeenCalled();
+    });
 
-        TestBed.runInInjectionContext(() => {
-            const result$ = productResolver(mockRoute, mockState) as Observable<Product | null>;
-            result$.subscribe(result => {
-                resolved = result;
-            });
-        });
+    it('should navigate to product list when product is already used', () => {
+        productServiceSpy.getById.mockReturnValue(of({ ...mockProduct, usageCount: 1 }));
+
+        const resolved = resolveProductRoute('product-1');
+
+        expect(resolved).toBeNull();
+        expect(navSpy.navigateToProductListAsync).toHaveBeenCalled();
+    });
+
+    it('should navigate to product list when product is not owned by current user', () => {
+        productServiceSpy.getById.mockReturnValue(of({ ...mockProduct, isOwnedByCurrentUser: false }));
+
+        const resolved = resolveProductRoute('product-1');
 
         expect(resolved).toBeNull();
         expect(navSpy.navigateToProductListAsync).toHaveBeenCalled();
     });
 });
+
+function resolveProductRoute(id: string | null): Product | null | undefined {
+    let resolved: Product | null | undefined;
+    TestBed.runInInjectionContext(() => {
+        const result$ = productResolver(createRoute(id), mockState) as Observable<Product | null>;
+        result$.subscribe(result => {
+            resolved = result;
+        });
+    });
+    return resolved;
+}
+
+function createRoute(id: string | null): ActivatedRouteSnapshot {
+    return {
+        paramMap: { get: vi.fn().mockReturnValue(id) },
+    } as unknown as ActivatedRouteSnapshot;
+}

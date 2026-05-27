@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, throwError } from 'rxjs';
@@ -141,6 +141,16 @@ describe('ProductManageFacade submit', () => {
 
         expect(result.product).toBeNull();
         expect(result.error?.status).toBe(HttpStatusCode.BadRequest);
+    });
+
+    it('should keep saved product when after save hook fails', async () => {
+        const afterSave = vi.fn().mockRejectedValue(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }));
+
+        const result = await facade.submitProductAsync(null, request, true, afterSave);
+
+        expect(afterSave).toHaveBeenCalledWith(product);
+        expect(result.product).toEqual(product);
+        expect(result.error?.status).toBe(HttpStatusCode.ServiceUnavailable);
     });
 });
 

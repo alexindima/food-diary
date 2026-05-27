@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import type { ResolveFn } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { ProductService } from '../api/product.service';
@@ -17,6 +17,14 @@ export const productResolver: ResolveFn<Product | null> = route => {
     }
 
     return productService.getById(productId).pipe(
+        map(product => {
+            if (product === null || !product.isOwnedByCurrentUser || product.usageCount > 0) {
+                void navigationService.navigateToProductListAsync();
+                return null;
+            }
+
+            return product;
+        }),
         catchError(() => {
             void navigationService.navigateToProductListAsync();
             return of(null);

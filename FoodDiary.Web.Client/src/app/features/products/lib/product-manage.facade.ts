@@ -83,13 +83,18 @@ export class ProductManageFacade {
                     ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
                     : await firstValueFrom(this.productService.create(productData));
 
-            await afterSave?.(savedProduct);
+            let afterSaveError: HttpErrorResponse | null = null;
+            try {
+                await afterSave?.(savedProduct);
+            } catch (error) {
+                afterSaveError = this.toHttpErrorResponse(error);
+            }
 
             if (!skipConfirmDialog) {
                 await this.showConfirmDialogAsync(product !== null);
             }
 
-            return { product: savedProduct, error: null };
+            return { product: savedProduct, error: afterSaveError };
         } catch (error) {
             return { product: null, error: this.toHttpErrorResponse(error) };
         }

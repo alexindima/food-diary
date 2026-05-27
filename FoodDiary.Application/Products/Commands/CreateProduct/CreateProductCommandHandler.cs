@@ -45,9 +45,18 @@ public class CreateProductCommandHandler(
             return Result.Failure<ProductModel>(visibilityResult.Error);
         }
 
-        var productType = Enum.TryParse<ProductType>(command.ProductType, true, out var parsedType)
-            ? parsedType
-            : ProductType.Unknown;
+        var productTypeResult = EnumValueParser.ParseRequired<ProductType>(
+            command.ProductType,
+            nameof(command.ProductType),
+            "Unknown product type value.");
+        if (productTypeResult.IsFailure) {
+            return Result.Failure<ProductModel>(productTypeResult.Error);
+        }
+
+        if (!Enum.IsDefined(productTypeResult.Value)) {
+            return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductType), "Unknown product type value."));
+        }
+
         var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<ProductModel>(imageAssetIdResult.Error);
@@ -77,7 +86,7 @@ public class CreateProductCommandHandler(
             alcoholPerBase: command.AlcoholPerBase,
             barcode: command.Barcode,
             brand: command.Brand,
-            productType: productType,
+            productType: productTypeResult.Value,
             category: command.Category,
             description: command.Description,
             comment: command.Comment,

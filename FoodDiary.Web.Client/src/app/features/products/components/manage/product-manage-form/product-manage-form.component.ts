@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@angular/common/http';
+import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -338,12 +338,7 @@ export class ProductManageFormComponent {
                 this.shouldSkipSubmitConfirmDialog(),
                 async savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
             );
-            if (result.error !== null) {
-                this.handleSubmitError(result.error);
-            }
-            if (result.product !== null) {
-                this.saved.emit(result.product);
-            }
+            this.handleSubmitResult(result);
             return result.product;
         } finally {
             this.isSubmitting.set(false);
@@ -446,6 +441,19 @@ export class ProductManageFormComponent {
         }
     }
 
+    private handleSubmitResult(result: ProductSubmitResult): void {
+        if (result.error !== null) {
+            if (result.product === null) {
+                this.handleSubmitError(result.error);
+            } else {
+                this.setGlobalError('PRODUCT_MANAGE.USDA_SYNC_ERROR');
+            }
+        }
+        if (result.product !== null) {
+            this.saved.emit(result.product);
+        }
+    }
+
     private setGlobalError(errorKey: string): void {
         this.globalError.set(this.translateService.instant(errorKey));
     }
@@ -499,3 +507,8 @@ type ProductManageHeaderState = {
 };
 
 type ProductManageSubmitIcon = 'save' | 'add';
+
+type ProductSubmitResult = {
+    product: Product | null;
+    error: HttpErrorResponse | null;
+};

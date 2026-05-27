@@ -34,6 +34,14 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid visibility level");
 
+        RuleFor(x => x.ProductType)
+            .NotEmpty()
+            .WithErrorCode("Validation.Required")
+            .WithMessage("ProductType is required")
+            .Must(BeValidProductType)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Invalid product type");
+
         RuleFor(x => x.BaseAmount)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
@@ -81,6 +89,12 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 
     private static bool BeValidVisibility(string visibility) {
         return Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
+    }
+
+    private static bool BeValidProductType(string? productType) {
+        return productType is not null &&
+               Enum.TryParse(productType, ignoreCase: true, out ProductType parsed) &&
+               Enum.IsDefined(parsed);
     }
 
 }
