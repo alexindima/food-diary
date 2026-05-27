@@ -1,6 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
+import type { PartialObserver } from 'rxjs';
 
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
@@ -129,32 +130,30 @@ export class DashboardFacade {
     private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
         const targetDate = getDashboardDateUtc(this.selectedDate());
         const locale = this.getCurrentLocale();
+        const request$ = this.dashboardService.getSnapshot({ date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays });
+        const observer: PartialObserver<DashboardSnapshot | null> = {
+            next: snapshot => {
+                this.snapshot.set(snapshot);
+                this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
+                if (clearHydrationUpdate) {
+                    this.isHydrationUpdating.set(false);
+                }
+            },
+            error: () => {
+                this.snapshot.set(null);
+                this.layout.initializeLayout(null);
+                if (clearHydrationUpdate) {
+                    this.isHydrationUpdating.set(false);
+                }
+            },
+        };
 
         if (showLoader) {
-            this.isLoading.set(true);
+            runTrackedRequest(this.destroyRef, this.isLoading, request$, observer);
+            return;
         }
 
-        runTrackedRequest(
-            this.destroyRef,
-            this.isLoading,
-            this.dashboardService.getSnapshot({ date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays }),
-            {
-                next: snapshot => {
-                    this.snapshot.set(snapshot);
-                    this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
-                    if (clearHydrationUpdate) {
-                        this.isHydrationUpdating.set(false);
-                    }
-                },
-                error: () => {
-                    this.snapshot.set(null);
-                    this.layout.initializeLayout(null);
-                    if (clearHydrationUpdate) {
-                        this.isHydrationUpdating.set(false);
-                    }
-                },
-            },
-        );
+        request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(observer);
     }
 
     private getCurrentLocale(): string {

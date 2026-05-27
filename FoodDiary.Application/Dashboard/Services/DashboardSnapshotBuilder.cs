@@ -140,7 +140,7 @@ public class DashboardSnapshotBuilder(
         IReadOnlyList<WeightEntrySummaryModel> weightTrend = [];
         if (sections.IncludeWeight) {
             var weightEntries = await weightEntryRepository.GetEntriesAsync(
-                userId, dateFrom: null, dateTo: null, limit: 2, descending: true, cancellationToken: cancellationToken);
+                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken);
             weight = DashboardMapping.ToWeightModel(weightEntries, currentUser.DesiredWeight);
 
             var weightTrendResult = await sender.Send(
@@ -152,7 +152,7 @@ public class DashboardSnapshotBuilder(
         IReadOnlyList<WaistEntrySummaryModel> waistTrend = [];
         if (sections.IncludeWaist) {
             var waistEntries = await waistEntryRepository.GetEntriesAsync(
-                userId, dateFrom: null, dateTo: null, limit: 2, descending: true, cancellationToken: cancellationToken);
+                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken);
             waist = DashboardMapping.ToWaistModel(waistEntries, currentUser.DesiredWaist);
 
             var waistTrendResult = await sender.Send(

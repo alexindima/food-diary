@@ -43,6 +43,21 @@ describe('DashboardFacade loading', () => {
 
         expect(dashboardService.getSnapshot).toHaveBeenCalledWith(expect.objectContaining({ locale: 'ru' }));
     });
+
+    it('should reload silently without toggling full dashboard loading', () => {
+        const { facade, dashboardService, snapshot } = setupFacade();
+        const reload$ = new Subject<DashboardSnapshot>();
+        facade.initialize();
+        dashboardService.getSnapshot.mockReturnValueOnce(reload$);
+
+        facade.reload(false);
+
+        expect(facade.isLoading()).toBe(false);
+
+        reload$.next(snapshot);
+        reload$.complete();
+        expect(facade.snapshot()).toEqual(snapshot);
+    });
 });
 
 describe('DashboardFacade actions', () => {

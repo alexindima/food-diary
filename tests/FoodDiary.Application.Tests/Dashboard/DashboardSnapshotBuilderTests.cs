@@ -1,10 +1,15 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
@@ -42,6 +47,170 @@ public sealed class DashboardSnapshotBuilderTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task BuildAsync_ForPastDate_UsesMeasurementEntriesAvailableBySelectedDate() {
+        var user = User.Create("dashboard-measurements@example.com", "hash");
+        var userId = user.Id;
+        var selectedDate = new DateTime(2026, 3, 20, 12, 0, 0, DateTimeKind.Utc);
+        var futureDate = selectedDate.AddDays(1);
+        var previousDate = selectedDate.AddDays(-1);
+        var weightRepository = new FilteringWeightEntryRepository([
+            WeightEntry.Create(userId, futureDate, 90),
+            WeightEntry.Create(userId, selectedDate, 82),
+            WeightEntry.Create(userId, previousDate, 83)
+        ]);
+        var waistRepository = new FilteringWaistEntryRepository([
+            WaistEntry.Create(userId, futureDate, 96),
+            WaistEntry.Create(userId, selectedDate, 91),
+            WaistEntry.Create(userId, previousDate, 92)
+        ]);
+        var builder = new DashboardSnapshotBuilder(
+            new EmptyTrendSender(),
+            new AccessibleUserRepository(user),
+            weightRepository,
+            waistRepository,
+            new StubHydrationEntryRepository(),
+            new StubFastingOccurrenceRepository(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        var result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                userId.Value,
+                selectedDate,
+                null,
+                "en",
+                7,
+                1,
+                10,
+                new DashboardSnapshotSections(
+                    IncludeStatistics: false,
+                    IncludeMeals: false,
+                    IncludeWeight: true,
+                    IncludeWaist: true,
+                    IncludeHydration: false,
+                    IncludeFasting: false,
+                    IncludeAdvice: false,
+                    IncludeLayout: false,
+                    IncludeExercise: false,
+                    IncludeTdee: false,
+                    IncludeCycle: false)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(selectedDate.Date, weightRepository.LastDateTo?.Date);
+        Assert.Equal(selectedDate.Date, waistRepository.LastDateTo?.Date);
+        Assert.Equal(82, result.Value.Weight.Latest?.Weight);
+        Assert.Equal(83, result.Value.Weight.Previous?.Weight);
+        Assert.Equal(91, result.Value.Waist.Latest?.Circumference);
+        Assert.Equal(92, result.Value.Waist.Previous?.Circumference);
+    }
+
+    private sealed class EmptyTrendSender : ISender {
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
+            if (request is GetWeightSummariesQuery) {
+                return Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<WeightEntrySummaryModel>>([]));
+            }
+
+            if (request is GetWaistSummariesQuery) {
+                return Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<WaistEntrySummaryModel>>([]));
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class AccessibleUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class FilteringWeightEntryRepository(IReadOnlyList<WeightEntry> entries) : IWeightEntryRepository {
+        public DateTime? LastDateTo { get; private set; }
+
+        public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WeightEntry?> GetByIdAsync(WeightEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WeightEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            LastDateTo = dateTo;
+            var filtered = entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => !dateFrom.HasValue || entry.Date.Date >= dateFrom.Value.Date)
+                .Where(entry => !dateTo.HasValue || entry.Date.Date <= dateTo.Value.Date);
+            filtered = descending ? filtered.OrderByDescending(entry => entry.Date) : filtered.OrderBy(entry => entry.Date);
+            if (limit.HasValue) {
+                filtered = filtered.Take(limit.Value);
+            }
+
+            return Task.FromResult<IReadOnlyList<WeightEntry>>(filtered.ToList());
+        }
+
+        public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class FilteringWaistEntryRepository(IReadOnlyList<WaistEntry> entries) : IWaistEntryRepository {
+        public DateTime? LastDateTo { get; private set; }
+
+        public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WaistEntry?> GetByIdAsync(WaistEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WaistEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<WaistEntry>> GetEntriesAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            LastDateTo = dateTo;
+            var filtered = entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => !dateFrom.HasValue || entry.Date.Date >= dateFrom.Value.Date)
+                .Where(entry => !dateTo.HasValue || entry.Date.Date <= dateTo.Value.Date);
+            filtered = descending ? filtered.OrderByDescending(entry => entry.Date) : filtered.OrderBy(entry => entry.Date);
+            if (limit.HasValue) {
+                filtered = filtered.Take(limit.Value);
+            }
+
+            return Task.FromResult<IReadOnlyList<WaistEntry>>(filtered.ToList());
+        }
+
+        public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class StubSender : ISender {
