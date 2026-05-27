@@ -51,6 +51,12 @@ public class DietologistFeatureTests {
         return user;
     }
 
+    private static User CreateDeletedUser(UserId id, string email = "deleted@example.com") {
+        var user = CreateUser(id, email);
+        user.MarkDeleted(DateTime.UtcNow);
+        return user;
+    }
+
     private static DietologistInvitation CreatePendingInvitation(
         UserId clientId, string email = "diet@example.com", string tokenHash = "hash",
         DietologistPermissions? permissions = null) {
@@ -837,13 +843,36 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task CreateRecommendation_WhenNoAccess_ReturnsFailure() {
-        var handler = CreateRecommendationHandler();
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var handler = CreateRecommendationHandler(userRepository: userRepo);
 
         var result = await handler.Handle(
-            new CreateRecommendationCommand(Guid.NewGuid(), Guid.NewGuid(), "Eat more veggies"),
+            new CreateRecommendationCommand(dietologistId.Value, Guid.NewGuid(), "Eat more veggies"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task CreateRecommendation_WhenDietologistDeleted_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
+
+        var handler = CreateRecommendationHandler(invitationRepository: invRepo, userRepository: userRepo);
+
+        var result = await handler.Handle(
+            new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -877,7 +906,8 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task MarkRecommendationRead_WithNullUserId_ReturnsFailure() {
-        var handler = new MarkRecommendationReadCommandHandler(new InMemoryRecommendationRepository());
+        var handler = new MarkRecommendationReadCommandHandler(
+            new InMemoryRecommendationRepository(), new InMemoryUserRepository());
 
         var result = await handler.Handle(
             new MarkRecommendationReadCommand(null, Guid.NewGuid()),
@@ -888,10 +918,13 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task MarkRecommendationRead_WhenNotFound_ReturnsFailure() {
-        var handler = new MarkRecommendationReadCommandHandler(new InMemoryRecommendationRepository());
+        var userId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(userId));
+        var handler = new MarkRecommendationReadCommandHandler(new InMemoryRecommendationRepository(), userRepo);
 
         var result = await handler.Handle(
-            new MarkRecommendationReadCommand(Guid.NewGuid(), Guid.NewGuid()),
+            new MarkRecommendationReadCommand(userId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -905,7 +938,9 @@ public class DietologistFeatureTests {
         var recRepo = new InMemoryRecommendationRepository();
         recRepo.Seed(recommendation);
 
-        var handler = new MarkRecommendationReadCommandHandler(recRepo);
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(otherId));
+        var handler = new MarkRecommendationReadCommandHandler(recRepo, userRepo);
 
         var result = await handler.Handle(
             new MarkRecommendationReadCommand(otherId.Value, recommendation.Id.Value),
@@ -921,7 +956,9 @@ public class DietologistFeatureTests {
         var recRepo = new InMemoryRecommendationRepository();
         recRepo.Seed(recommendation);
 
-        var handler = new MarkRecommendationReadCommandHandler(recRepo);
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(clientId));
+        var handler = new MarkRecommendationReadCommandHandler(recRepo, userRepo);
 
         var result = await handler.Handle(
             new MarkRecommendationReadCommand(clientId.Value, recommendation.Id.Value),
@@ -929,6 +966,26 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.True(recommendation.IsRead);
+    }
+
+    [Fact]
+    public async Task MarkRecommendationRead_WhenUserDeleted_ReturnsFailure() {
+        var clientId = UserId.New();
+        var recommendation = Recommendation.Create(UserId.New(), clientId, "text");
+        var recRepo = new InMemoryRecommendationRepository();
+        recRepo.Seed(recommendation);
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateDeletedUser(clientId));
+        var handler = new MarkRecommendationReadCommandHandler(recRepo, userRepo);
+
+        var result = await handler.Handle(
+            new MarkRecommendationReadCommand(clientId.Value, recommendation.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("AccountDeleted", result.Error.Code);
+        Assert.False(recommendation.IsRead);
     }
 
     // ── GetMyDietologist ──
@@ -1093,7 +1150,7 @@ public class DietologistFeatureTests {
     [Fact]
     public async Task GetClientDashboard_WithNullUserId_ReturnsFailure() {
         var handler = new GetClientDashboardQueryHandler(
-            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder());
+            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder(), new InMemoryUserRepository());
 
         var result = await handler.Handle(
             new GetClientDashboardQuery(null, Guid.NewGuid(), DateTime.UtcNow, null, 1, 10, "en", 7),
@@ -1104,11 +1161,14 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetClientDashboard_WhenNoAccess_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
         var handler = new GetClientDashboardQueryHandler(
-            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder());
+            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder(), userRepo);
 
         var result = await handler.Handle(
-            new GetClientDashboardQuery(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, null, 1, 10, "en", 7),
+            new GetClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1132,7 +1192,9 @@ public class DietologistFeatureTests {
         invRepo.Seed(invitation);
 
         var snapshotBuilder = new RecordingDashboardSnapshotBuilder(CreateDashboardSnapshot());
-        var handler = new GetClientDashboardQueryHandler(invRepo, snapshotBuilder);
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var handler = new GetClientDashboardQueryHandler(invRepo, snapshotBuilder, userRepo);
         var dateFrom = DateTime.UtcNow.Date;
         var dateTo = dateFrom.AddDays(6);
 
@@ -1170,13 +1232,36 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetClientDashboardQueryHandler(invRepo, new ThrowingDashboardSnapshotBuilder());
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var handler = new GetClientDashboardQueryHandler(invRepo, new ThrowingDashboardSnapshotBuilder(), userRepo);
 
         var result = await handler.Handle(
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task GetClientDashboard_WhenDietologistDeleted_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
+
+        var handler = new GetClientDashboardQueryHandler(
+            invRepo, new ThrowingDashboardSnapshotBuilder(), userRepo);
+
+        var result = await handler.Handle(
+            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, null, 1, 10, "en", 7),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("AccountDeleted", result.Error.Code);
     }
 
     // ── GetClientGoals ──
@@ -1212,7 +1297,9 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetClientGoalsQueryHandler(invRepo, new InMemoryUserRepository());
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var handler = new GetClientGoalsQueryHandler(invRepo, userRepo);
 
         var result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
@@ -1230,6 +1317,7 @@ public class DietologistFeatureTests {
 
         var clientUser = CreateUser(clientId, "client@example.com");
         var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
         userRepo.Seed(clientUser);
 
         var handler = new GetClientGoalsQueryHandler(invRepo, userRepo);
@@ -1238,6 +1326,26 @@ public class DietologistFeatureTests {
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public async Task GetClientGoals_WhenDietologistDeleted_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
+        userRepo.Seed(CreateUser(clientId, "client@example.com"));
+
+        var handler = new GetClientGoalsQueryHandler(invRepo, userRepo);
+
+        var result = await handler.Handle(
+            new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("AccountDeleted", result.Error.Code);
     }
 
     // ── GetMyRecommendations ──
@@ -1280,7 +1388,7 @@ public class DietologistFeatureTests {
     [Fact]
     public async Task GetRecommendationsForClient_WithNullUserId_ReturnsFailure() {
         var handler = new GetRecommendationsForClientQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository());
+            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository(), new InMemoryUserRepository());
 
         var result = await handler.Handle(
             new GetRecommendationsForClientQuery(null, Guid.NewGuid()), CancellationToken.None);
@@ -1290,11 +1398,14 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetRecommendationsForClient_WhenNoAccess_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
         var handler = new GetRecommendationsForClientQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository());
+            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository(), userRepo);
 
         var result = await handler.Handle(
-            new GetRecommendationsForClientQuery(Guid.NewGuid(), Guid.NewGuid()),
+            new GetRecommendationsForClientQuery(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1312,7 +1423,9 @@ public class DietologistFeatureTests {
         var recRepo = new InMemoryRecommendationRepository();
         recRepo.Seed(rec);
 
-        var handler = new GetRecommendationsForClientQueryHandler(invRepo, recRepo);
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var handler = new GetRecommendationsForClientQueryHandler(invRepo, recRepo, userRepo);
 
         var result = await handler.Handle(
             new GetRecommendationsForClientQuery(dietologistId.Value, clientId.Value),
@@ -1320,6 +1433,27 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
+    }
+
+    [Fact]
+    public async Task GetRecommendationsForClient_WhenDietologistDeleted_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
+
+        var handler = new GetRecommendationsForClientQueryHandler(
+            invRepo, new InMemoryRecommendationRepository(), userRepo);
+
+        var result = await handler.Handle(
+            new GetRecommendationsForClientQuery(dietologistId.Value, clientId.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("AccountDeleted", result.Error.Code);
     }
 
     // ── RecommendationCreatedEventHandler ──

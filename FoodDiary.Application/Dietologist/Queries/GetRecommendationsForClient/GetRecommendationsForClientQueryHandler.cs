@@ -1,8 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 
@@ -10,7 +12,8 @@ namespace FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
 
 public class GetRecommendationsForClientQueryHandler(
     IDietologistInvitationRepository invitationRepository,
-    IRecommendationRepository recommendationRepository)
+    IRecommendationRepository recommendationRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetRecommendationsForClientQuery, Result<IReadOnlyList<RecommendationModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationModel>>> Handle(
         GetRecommendationsForClientQuery query, CancellationToken cancellationToken) {
@@ -19,6 +22,12 @@ public class GetRecommendationsForClientQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
+        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+            userRepository, dietologistUserId, cancellationToken);
+        if (currentUserAccessError is not null) {
+            return Result.Failure<IReadOnlyList<RecommendationModel>>(currentUserAccessError);
+        }
+
         var clientUserId = new UserId(query.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(

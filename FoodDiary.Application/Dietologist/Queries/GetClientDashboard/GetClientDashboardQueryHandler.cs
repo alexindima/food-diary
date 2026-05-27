@@ -1,9 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -11,7 +13,8 @@ namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 
 public class GetClientDashboardQueryHandler(
     IDietologistInvitationRepository invitationRepository,
-    IDashboardSnapshotBuilder snapshotBuilder)
+    IDashboardSnapshotBuilder snapshotBuilder,
+    IUserRepository userRepository)
     : IQueryHandler<GetClientDashboardQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(
         GetClientDashboardQuery query, CancellationToken cancellationToken) {
@@ -20,6 +23,12 @@ public class GetClientDashboardQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
+        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+            userRepository, dietologistUserId, cancellationToken);
+        if (currentUserAccessError is not null) {
+            return Result.Failure<DashboardSnapshotModel>(currentUserAccessError);
+        }
+
         var clientUserId = new UserId(query.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(

@@ -1,12 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 
 namespace FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 
 public class MarkRecommendationReadCommandHandler(
-    IRecommendationRepository recommendationRepository)
+    IRecommendationRepository recommendationRepository,
+    IUserRepository userRepository)
     : ICommandHandler<MarkRecommendationReadCommand, Result> {
     public async Task<Result> Handle(MarkRecommendationReadCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -14,6 +17,12 @@ public class MarkRecommendationReadCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+            userRepository, userId, cancellationToken);
+        if (currentUserAccessError is not null) {
+            return Result.Failure(currentUserAccessError);
+        }
+
         var recommendationId = new RecommendationId(command.RecommendationId);
 
         var recommendation = await recommendationRepository.GetByIdAsync(

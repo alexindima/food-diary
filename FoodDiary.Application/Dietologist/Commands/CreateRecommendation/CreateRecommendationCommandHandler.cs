@@ -6,6 +6,7 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -27,6 +28,12 @@ public class CreateRecommendationCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
+        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+            userRepository, dietologistUserId, cancellationToken);
+        if (currentUserAccessError is not null) {
+            return Result.Failure<RecommendationModel>(currentUserAccessError);
+        }
+
         var clientUserId = new UserId(command.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(

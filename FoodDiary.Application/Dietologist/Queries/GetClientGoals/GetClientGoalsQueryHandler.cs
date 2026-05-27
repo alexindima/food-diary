@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -20,6 +21,12 @@ public class GetClientGoalsQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
+        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+            userRepository, dietologistUserId, cancellationToken);
+        if (currentUserAccessError is not null) {
+            return Result.Failure<UserModel>(currentUserAccessError);
+        }
+
         var clientUserId = new UserId(query.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
