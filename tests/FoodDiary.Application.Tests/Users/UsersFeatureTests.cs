@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.SetPassword;
+using FoodDiary.Application.Users.Commands.UpdateGoals;
 using FoodDiary.Application.Users.Queries.GetProfileOverview;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
@@ -135,6 +136,51 @@ public class UsersFeatureTests {
         var handler = new GetUserByIdQueryHandler(new SingleUserRepository(user));
 
         var result = await handler.Handle(new GetUserByIdQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateGoalsHandler_WithInvalidDesiredWeight_ReturnsValidationFailure() {
+        var user = User.Create("goals-invalid-weight@example.com", "hash");
+        var handler = new UpdateGoalsCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateGoalsCommand(
+                user.Id.Value,
+                DailyCalorieTarget: null,
+                ProteinTarget: null,
+                FatTarget: null,
+                CarbTarget: null,
+                FiberTarget: null,
+                WaterGoal: null,
+                DesiredWeight: 0,
+                DesiredWaist: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateGoalsHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("goals-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateGoalsCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateGoalsCommand(
+                user.Id.Value,
+                DailyCalorieTarget: 2000,
+                ProteinTarget: null,
+                FatTarget: null,
+                CarbTarget: null,
+                FiberTarget: null,
+                WaterGoal: null,
+                DesiredWeight: null,
+                DesiredWaist: null),
+            CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);

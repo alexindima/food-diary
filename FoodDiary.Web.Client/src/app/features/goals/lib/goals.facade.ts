@@ -426,9 +426,7 @@ export class GoalsFacade {
     }
 
     private applyLoadedCalorieTarget(goals: GoalsResponse | null): void {
-        if (goals?.dailyCalorieTarget !== undefined && goals.dailyCalorieTarget !== null) {
-            this.calorieTarget.set(this.clampCalories(goals.dailyCalorieTarget));
-        }
+        this.calorieTarget.set(this.clampOptionalValue(goals?.dailyCalorieTarget, this.maxCalories));
     }
 
     private applyLoadedMacroTargets(goals: GoalsResponse | null): void {
@@ -444,15 +442,13 @@ export class GoalsFacade {
             this.applyLoadedMacroTarget(nextMacros, key, value);
         });
 
-        if (macroInputs.some(([, value]) => value !== null && value !== undefined)) {
-            this.macroValues.set(nextMacros);
-        }
+        this.macroValues.set(nextMacros);
     }
 
     private applyLoadedMacroTarget(nextMacros: Record<MacroKey, number>, key: MacroKey, value: number | null | undefined): void {
         const cfg = this.macroConfigs.find(item => item.key === key);
-        if (value !== null && value !== undefined && cfg !== undefined) {
-            nextMacros[key] = this.clampValue(value, cfg.max);
+        if (cfg !== undefined) {
+            nextMacros[key] = this.clampOptionalValue(value, cfg.max);
         }
     }
 

@@ -24,23 +24,28 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
         }
 
         var currentUser = user!;
-        currentUser.UpdateGoals(new UserGoalUpdate(
-            DailyCalorieTarget: command.DailyCalorieTarget,
-            ProteinTarget: command.ProteinTarget,
-            FatTarget: command.FatTarget,
-            CarbTarget: command.CarbTarget,
-            FiberTarget: command.FiberTarget,
-            WaterGoal: command.WaterGoal,
-            DesiredWeight: command.DesiredWeight,
-            DesiredWaist: command.DesiredWaist,
-            CalorieCyclingEnabled: command.CalorieCyclingEnabled,
-            MondayCalories: command.MondayCalories,
-            TuesdayCalories: command.TuesdayCalories,
-            WednesdayCalories: command.WednesdayCalories,
-            ThursdayCalories: command.ThursdayCalories,
-            FridayCalories: command.FridayCalories,
-            SaturdayCalories: command.SaturdayCalories,
-            SundayCalories: command.SundayCalories));
+        try {
+            currentUser.UpdateGoals(new UserGoalUpdate(
+                DailyCalorieTarget: command.DailyCalorieTarget,
+                ProteinTarget: command.ProteinTarget,
+                FatTarget: command.FatTarget,
+                CarbTarget: command.CarbTarget,
+                FiberTarget: command.FiberTarget,
+                WaterGoal: command.WaterGoal,
+                DesiredWeight: command.DesiredWeight,
+                DesiredWaist: command.DesiredWaist,
+                CalorieCyclingEnabled: command.CalorieCyclingEnabled,
+                MondayCalories: command.MondayCalories,
+                TuesdayCalories: command.TuesdayCalories,
+                WednesdayCalories: command.WednesdayCalories,
+                ThursdayCalories: command.ThursdayCalories,
+                FridayCalories: command.FridayCalories,
+                SaturdayCalories: command.SaturdayCalories,
+                SundayCalories: command.SundayCalories));
+        } catch (ArgumentOutOfRangeException ex) {
+            return Result.Failure<GoalsModel>(
+                Errors.Validation.Invalid(ex.ParamName ?? nameof(UpdateGoalsCommand), ex.Message));
+        }
 
         await userRepository.UpdateAsync(currentUser, cancellationToken);
 

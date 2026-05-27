@@ -106,6 +106,38 @@ function registerLoadTests(): void {
                 waist: SAVED_WAIST,
             });
         });
+
+        it('clears loaded numeric goals when backend returns null values', () => {
+            facade.initialize();
+            goalsService.getGoals.mockReturnValueOnce(
+                of({
+                    dailyCalorieTarget: null,
+                    proteinTarget: null,
+                    fatTarget: null,
+                    carbTarget: null,
+                    fiberTarget: null,
+                    waterGoal: null,
+                    desiredWeight: null,
+                    desiredWaist: null,
+                    calorieCyclingEnabled: false,
+                }),
+            );
+
+            facade.reload();
+
+            expect(facade.calorieTarget()).toBe(0);
+            expect(facade.macroValues()).toEqual({
+                protein: 0,
+                fats: 0,
+                carbs: 0,
+                fiber: 0,
+            });
+            expect(facade.waterValue()).toBe(0);
+            expect(facade.bodyTargetValues()).toEqual({
+                weight: 0,
+                waist: 0,
+            });
+        });
     });
 }
 
