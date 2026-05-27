@@ -129,6 +129,40 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task CreateHydrationEntryCommandHandler_WithUnspecifiedTimestamp_PreservesInstantAsUtc() {
+        var user = User.Create("hydration-create@example.com", "hash");
+        var repository = new InMemoryHydrationEntryRepository();
+        var handler = new CreateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+        var timestamp = new DateTime(2026, 3, 26, 14, 30, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(
+            new CreateHydrationEntryCommand(user.Id.Value, timestamp, 250),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DateTimeKind.Utc, result.Value.TimestampUtc.Kind);
+        Assert.Equal(DateTime.SpecifyKind(timestamp, DateTimeKind.Utc), result.Value.TimestampUtc);
+        Assert.Equal(result.Value.TimestampUtc, repository.AddedEntry?.Timestamp);
+    }
+
+    [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WithUnspecifiedTimestamp_PreservesInstantAsUtc() {
+        var user = User.Create("hydration-update@example.com", "hash");
+        var entry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc), 250);
+        var repository = new InMemoryHydrationEntryRepository(entry);
+        var handler = new UpdateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+        var timestamp = new DateTime(2026, 3, 26, 14, 30, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, timestamp, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DateTimeKind.Utc, result.Value.TimestampUtc.Kind);
+        Assert.Equal(DateTime.SpecifyKind(timestamp, DateTimeKind.Utc), result.Value.TimestampUtc);
+    }
+
+    [Fact]
     public async Task DeleteHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
         var handler = new DeleteHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
@@ -201,18 +235,26 @@ public class HydrationFeatureTests {
         public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
-    private sealed class InMemoryHydrationEntryRepository : IHydrationEntryRepository {
-        public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+    private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null) : IHydrationEntryRepository {
+        private HydrationEntry? _entry = entry;
+        public HydrationEntry? AddedEntry { get; private set; }
 
-        public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+        public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
+            AddedEntry = entry;
+            _entry = entry;
+            return Task.FromResult(entry);
+        }
+
+        public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
+            _entry = entry;
+            return Task.CompletedTask;
+        }
 
         public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult<HydrationEntry?>(null);
+            Task.FromResult(_entry?.Id == id ? _entry : null);
 
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<HydrationEntry>>([]);

@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Hydration.Validators;
@@ -32,7 +33,8 @@ public class CreateHydrationEntryCommandHandler(
             return Result.Failure<HydrationEntryModel>(validation.Error);
         }
 
-        var entry = HydrationEntry.Create(userId, command.TimestampUtc, command.AmountMl);
+        var timestampUtc = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc);
+        var entry = HydrationEntry.Create(userId, timestampUtc, command.AmountMl);
         await repository.AddAsync(entry, cancellationToken);
 
         return Result.Success(entry.ToModel());
