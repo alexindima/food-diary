@@ -110,6 +110,26 @@ public class ShoppingListsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public async Task ShoppingListItemBuilder_WithNonFiniteAmount_Fails(double amount) {
+        var items = new[] {
+            new ShoppingListItemInput(null, "Milk", amount, null, null, false, 1)
+        };
+
+        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+            items,
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("finite", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     [Fact]
     public async Task ShoppingListItemBuilder_WithEmptyProductId_FailsWithValidationError() {
         var items = new[] {

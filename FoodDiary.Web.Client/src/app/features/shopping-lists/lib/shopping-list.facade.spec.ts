@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit } from '../../products/models/product.data';
@@ -88,6 +88,66 @@ describe('ShoppingListFacade', () => {
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
 
         expect(shoppingListService.update).toHaveBeenCalledTimes(1);
+    });
+
+    it('should restore current list when delete fails', async () => {
+        shoppingListService.deleteById.mockReturnValueOnce(throwError(() => new Error('delete failed')));
+        facade.initialize();
+        await Promise.resolve();
+
+        facade.deleteCurrentList();
+
+        expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-1');
+        expect(facade.list()).toEqual(list);
+        expect(facade.items()).toEqual([]);
+        expect(facade.selectedListId()).toBe('list-1');
+        expect(facade.listName()).toBe('Main list');
+        expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.DELETE_ERROR');
+    });
+});
+
+describe('ShoppingListFacade autosave', () => {
+    let facade: ShoppingListFacade;
+    let shoppingListService: {
+        getAll: ReturnType<typeof vi.fn>;
+        getById: ReturnType<typeof vi.fn>;
+        create: ReturnType<typeof vi.fn>;
+        update: ReturnType<typeof vi.fn>;
+        deleteById: ReturnType<typeof vi.fn>;
+    };
+
+    const list: ShoppingList = {
+        id: 'list-1',
+        name: 'Main list',
+        createdAt: '2026-01-01T00:00:00Z',
+        items: [],
+    };
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+
+        shoppingListService = {
+            getAll: vi.fn().mockReturnValue(of([{ id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 }])),
+            getById: vi.fn().mockReturnValue(of(list)),
+            create: vi.fn().mockReturnValue(of(list)),
+            update: vi.fn().mockReturnValue(of(list)),
+            deleteById: vi.fn().mockReturnValue(of(undefined)),
+        };
+
+        TestBed.configureTestingModule({
+            providers: [
+                ShoppingListFacade,
+                { provide: ShoppingListService, useValue: shoppingListService },
+                { provide: TranslateService, useValue: { instant: (key: string): string => key } },
+                { provide: FdUiToastService, useValue: { open: vi.fn(), error: vi.fn() } },
+            ],
+        });
+
+        facade = TestBed.inject(ShoppingListFacade);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     it('should persist renamed list after debounce', async () => {

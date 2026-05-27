@@ -40,6 +40,11 @@ public static class ShoppingListItemBuilder {
         var normalized = new List<ShoppingListItemData>(items.Count);
         for (var index = 0; index < items.Count; index++) {
             var item = items[index];
+            if (item.Amount.HasValue && (double.IsNaN(item.Amount.Value) || double.IsInfinity(item.Amount.Value))) {
+                return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
+                    Errors.Validation.Invalid(nameof(item.Amount), "Amount must be a finite number."));
+            }
+
             if (item.Amount.HasValue && item.Amount.Value <= 0) {
                 return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
                     Errors.Validation.Invalid(nameof(item.Amount), "Amount must be greater than zero."));

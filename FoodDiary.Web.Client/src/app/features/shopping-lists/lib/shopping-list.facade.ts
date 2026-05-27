@@ -147,6 +147,9 @@ export class ShoppingListFacade {
             return;
         }
 
+        const previousItems = this.items();
+        const previousSelectedListId = this.selectedListId();
+        const previousListName = this.listName();
         this.suppressAutosave = true;
         this.pendingSave = false;
         this.list.set(null);
@@ -167,6 +170,11 @@ export class ShoppingListFacade {
                 },
                 error: () => {
                     this.isSaving.set(false);
+                    this.list.set(current);
+                    this.items.set(previousItems);
+                    this.lastLoadedListId.set(current.id);
+                    this.selectedListId.set(previousSelectedListId);
+                    this.listName.set(previousListName);
                     this.suppressAutosave = false;
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'));
                 },
