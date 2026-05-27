@@ -43,7 +43,7 @@ public class UpdateWaistEntryCommandHandler(
             return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId));
         }
 
-        var normalizedDate = UtcDateNormalizer.NormalizeDateUsingLocalFallback(command.Date);
+        var normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
         var existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,

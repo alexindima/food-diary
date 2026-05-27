@@ -74,6 +74,23 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateWaistEntryCommandHandler_WithDateOnlyValue_PreservesRequestedCalendarDate() {
+        var repository = new InMemoryWaistEntryRepository();
+        var user = User.Create("waist-dateonly@example.com", "hash");
+        var handler = new CreateWaistEntryCommandHandler(repository, new StubUserRepository(user));
+        var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
+        var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
+
+        var result = await handler.Handle(
+            new CreateWaistEntryCommand(user.Id.Value, dateOnly, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(expectedDate, repository.LastGetByDateDate);
+        Assert.Equal(expectedDate, repository.AddedEntry?.Date);
+    }
+
+    [Fact]
     public async Task GetWaistSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var handler = new GetWaistSummariesQueryHandler(
             new InMemoryWaistEntryRepository(),
@@ -119,6 +136,23 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWaistEntriesQueryHandler_WithDateOnlyRange_PreservesRequestedCalendarDates() {
+        var repository = new InMemoryWaistEntryRepository();
+        var user = User.Create("waist-list-dateonly@example.com", "hash");
+        var handler = new GetWaistEntriesQueryHandler(repository, new StubUserRepository(user));
+        var from = new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        var to = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(
+            new GetWaistEntriesQuery(user.Id.Value, from, to, 10, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateFrom);
+        Assert.Equal(new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateTo);
+    }
+
+    [Fact]
     public async Task UpdateWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
         var handler = new UpdateWaistEntryCommandHandler(
             new InMemoryWaistEntryRepository(),
@@ -131,6 +165,25 @@ public class WaistEntriesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WaistEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateWaistEntryCommandHandler_WithDateOnlyValue_PreservesRequestedCalendarDate() {
+        var user = User.Create("waist-update-dateonly@example.com", "hash");
+        var entry = WaistEntry.Create(user.Id, new DateTime(2026, 5, 26, 0, 0, 0, DateTimeKind.Utc), 82);
+        var repository = new InMemoryWaistEntryRepository();
+        await repository.AddAsync(entry);
+        var handler = new UpdateWaistEntryCommandHandler(repository, new StubUserRepository(user));
+        var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
+        var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
+
+        var result = await handler.Handle(
+            new UpdateWaistEntryCommand(user.Id.Value, entry.Id.Value, dateOnly, 81),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(expectedDate, repository.LastGetByDateDate);
+        Assert.Equal(expectedDate, entry.Date);
     }
 
     [Fact]
@@ -162,11 +215,15 @@ public class WaistEntriesFeatureTests {
         private readonly List<WaistEntry> _entries = [];
 
         public DateTime LastGetByDateDate { get; private set; }
+        public DateTime? LastEntriesDateFrom { get; private set; }
+        public DateTime? LastEntriesDateTo { get; private set; }
         public DateTime LastPeriodDateFrom { get; private set; }
         public DateTime LastPeriodDateTo { get; private set; }
+        public WaistEntry? AddedEntry { get; private set; }
 
         public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
             _entries.Add(entry);
+            AddedEntry = entry;
             return Task.FromResult(entry);
         }
 
@@ -199,6 +256,8 @@ public class WaistEntriesFeatureTests {
             int? limit,
             bool descending,
             CancellationToken cancellationToken = default) {
+            LastEntriesDateFrom = dateFrom;
+            LastEntriesDateTo = dateTo;
             IEnumerable<WaistEntry> query = _entries.Where(x => x.UserId == userId);
             if (dateFrom.HasValue) {
                 query = query.Where(x => x.Date >= dateFrom.Value);
