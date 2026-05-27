@@ -100,7 +100,7 @@ export class ProfileManageFacade {
     }
 
     public deleteAccount(): void {
-        if (this.isDeleting()) {
+        if (this.isDeleting() || this.isSavingProfile()) {
             return;
         }
 
@@ -119,8 +119,9 @@ export class ProfileManageFacade {
             .afterClosed()
             .pipe(
                 filter((confirmed): confirmed is true => confirmed === true),
-                filter(() => !this.isDeleting()),
+                filter(() => !this.isDeleting() && !this.isSavingProfile()),
                 tap(() => {
+                    this.profileAutosaveQueue.clearPending();
                     this.isDeleting.set(true);
                 }),
                 switchMap(() =>

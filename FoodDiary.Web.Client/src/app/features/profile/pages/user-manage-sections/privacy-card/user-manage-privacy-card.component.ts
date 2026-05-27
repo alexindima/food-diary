@@ -14,6 +14,7 @@ export class UserManagePrivacyCardComponent {
     public readonly hasAiConsent = input.required<boolean>();
     public readonly isRevokingAiConsent = input.required<boolean>();
     public readonly isDeleting = input.required<boolean>();
+    public readonly isAccountActionBusy = input.required<boolean>();
 
     public readonly aiConsentRevoke = output();
     public readonly accountDelete = output();

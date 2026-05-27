@@ -192,6 +192,27 @@ describe('ProfileManageFacade account actions', () => {
         expect(facade.globalError()).toBe('USER_MANAGE.DELETE_ACCOUNT_ERROR');
         expect(facade.isDeleting()).toBe(false);
     });
+
+    it('does not start account deletion while profile autosave is in flight', () => {
+        facade.isSavingProfile.set(true);
+
+        facade.deleteAccount();
+
+        expect(dialogService.open).not.toHaveBeenCalled();
+        expect(userService.deleteCurrentUser).not.toHaveBeenCalled();
+    });
+
+    it('clears pending profile autosave before confirmed account deletion', async () => {
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
+
+        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Pending' }));
+        facade.deleteAccount();
+        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
+
+        expect(userService.deleteCurrentUser).toHaveBeenCalledTimes(1);
+        expect(userService.update).not.toHaveBeenCalled();
+        expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
+    });
 });
 
 describe('ProfileManageFacade notification preferences', () => {

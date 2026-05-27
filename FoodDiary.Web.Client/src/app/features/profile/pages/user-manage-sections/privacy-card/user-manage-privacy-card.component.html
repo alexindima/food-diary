@@ -32,7 +32,7 @@
                     fill="outline"
                     variant="secondary"
                     size="sm"
-                    [disabled]="isRevokingAiConsent()"
+                    [disabled]="isAccountActionBusy() || isRevokingAiConsent()"
                     [loading]="isRevokingAiConsent()"
                     (click)="aiConsentRevoke.emit()"
                 >
@@ -57,7 +57,7 @@
                 fill="outline"
                 size="sm"
                 icon="delete"
-                [disabled]="isDeleting()"
+                [disabled]="isAccountActionBusy() || isDeleting()"
                 [loading]="isDeleting()"
                 (click)="accountDelete.emit()"
             >

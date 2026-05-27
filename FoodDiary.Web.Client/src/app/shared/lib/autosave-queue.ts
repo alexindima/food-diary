@@ -55,6 +55,10 @@ export class AutosaveQueue<T> {
         return this.hasPendingValue;
     }
 
+    public clearPending(): void {
+        this.clear();
+    }
+
     private flush(): void {
         if (this.isBusy()) {
             return;
