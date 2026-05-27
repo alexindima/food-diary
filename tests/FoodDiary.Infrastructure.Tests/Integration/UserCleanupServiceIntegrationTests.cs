@@ -237,5 +237,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             DeletedObjectKeys.Add(objectKey);
             return Task.CompletedTask;
         }
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+            string objectKey,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(new ImageObjectValidationResult(true));
     }
 }

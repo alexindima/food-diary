@@ -16,7 +16,8 @@ namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 public class UpdateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IImageAssetCleanupService imageAssetCleanupService,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -78,6 +79,15 @@ public class UpdateRecipeCommandHandler(
             .Select(id => id!.Value)
             .Distinct()
             .ToList();
+        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            imageAssetIdResult.Value,
+            userId,
+            cancellationToken);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<RecipeModel>(imageAssetResult.Error);
+        }
+
+        var imageUrl = imageAssetResult.Value?.Url ?? command.ImageUrl;
 
         recipe.UpdateIdentity(
             name: command.Name,
@@ -88,8 +98,8 @@ public class UpdateRecipeCommandHandler(
             category: command.Category,
             clearCategory: command.ClearCategory);
         recipe.UpdateMedia(
-            imageUrl: command.ImageUrl,
-            clearImageUrl: command.ClearImageUrl,
+            imageUrl: imageUrl,
+            clearImageUrl: imageAssetResult.Value is null && command.ClearImageUrl,
             imageAssetId: imageAssetIdResult.Value,
             clearImageAssetId: command.ClearImageAssetId);
         recipe.UpdateTimingAndServings(
@@ -114,11 +124,19 @@ public class UpdateRecipeCommandHandler(
                 return Result.Failure<RecipeModel>(stepImageAssetIdResult.Error);
             }
 
+            var stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+                stepImageAssetIdResult.Value,
+                userId,
+                cancellationToken);
+            if (stepImageAssetResult.IsFailure) {
+                return Result.Failure<RecipeModel>(stepImageAssetResult.Error);
+            }
+
             var step = recipe.AddStep(
                 entry.Order,
                 entry.Step.Description,
                 entry.Step.Title,
-                entry.Step.ImageUrl,
+                stepImageAssetResult.Value?.Url ?? entry.Step.ImageUrl,
                 stepImageAssetIdResult.Value);
             foreach (var ingredient in entry.Step.Ingredients) {
                 var ingredientIdResult = ValidateIngredientIdentifiers(ingredient);
@@ -176,7 +194,7 @@ public class UpdateRecipeCommandHandler(
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
 
         var imageAssetChanged = command.ClearImageAssetId ||
-                                (command.ImageAssetId.HasValue && oldAssetId.HasValue && oldAssetId.Value.Value != command.ImageAssetId.Value);
+                                (command.ImageAssetId.HasValue && (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value));
 
         if (oldAssetId.HasValue && imageAssetChanged) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);

@@ -18,6 +18,8 @@ type ImageUploadFieldTestContext = {
     translateService: TranslateService;
 };
 
+const TINY_MAX_SIZE_MB = 0.000001;
+
 async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext> {
     const imageUploadService = {
         requestUploadUrl: vi
@@ -81,6 +83,19 @@ describe('ImageUploadFieldComponent upload', () => {
         expect(imageUploadService.requestUploadUrl).toHaveBeenCalledOnce();
         expect(component.selection).toEqual({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
         expect(changeSpy).toHaveBeenCalledWith({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
+    });
+
+    it('rejects oversized files before requesting upload URL', async () => {
+        const { component, fixture, imageUploadService, translateService } = await setupImageUploadFieldAsync();
+        vi.spyOn(translateService, 'instant').mockReturnValue('Too large');
+        fixture.componentRef.setInput('maxSizeMb', TINY_MAX_SIZE_MB);
+        fixture.detectChanges();
+
+        component.handleIncomingFile(new File(['image-data'], 'photo.png', { type: 'image/png' }));
+        await fixture.whenStable();
+
+        expect(component.error).toBe('Too large');
+        expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
     });
 });
 

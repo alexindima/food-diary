@@ -126,6 +126,51 @@ public class ImagesFeatureTests {
         Assert.NotNull(storedAsset);
     }
 
+    [Fact]
+    public async Task ImageAssetAccessService_WithOwnedUploadedAsset_ReturnsAsset() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/owned.jpg", "https://cdn.example/owned.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        var service = new ImageAssetAccessService(repo, new FakeImageStorageService());
+
+        var result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(asset.Url, result.Value!.Url);
+    }
+
+    [Fact]
+    public async Task ImageAssetAccessService_WithOtherOwner_ReturnsForbidden() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/owned.jpg", "https://cdn.example/owned.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        var service = new ImageAssetAccessService(repo, new FakeImageStorageService());
+
+        var result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ImageAssetAccessService_WithIncompleteUpload_ReturnsValidationFailure() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/pending.jpg", "https://cdn.example/pending.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        var service = new ImageAssetAccessService(
+            repo,
+            new FakeImageStorageService(new ImageObjectValidationResult(false, "not_found", "Image upload has not completed.")));
+
+        var result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("upload has not completed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private sealed class FakeCleanupService(string? errorCode = null) : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(errorCode is null
@@ -136,7 +181,8 @@ public class ImagesFeatureTests {
             Task.FromResult(0);
     }
 
-    private sealed class FakeImageStorageService : IImageStorageService {
+    private sealed class FakeImageStorageService(
+        ImageObjectValidationResult? validationResult = null) : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
             UserId userId,
             string fileName,
@@ -151,6 +197,11 @@ public class ImagesFeatureTests {
         }
 
         public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+            string objectKey,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(validationResult ?? new ImageObjectValidationResult(true));
     }
 
     private sealed class ThrowingImageStorageService : IImageStorageService {
@@ -163,6 +214,11 @@ public class ImagesFeatureTests {
 
         public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
             throw new InvalidOperationException("Simulated storage failure.");
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+            string objectKey,
+            CancellationToken cancellationToken) =>
+            Task.FromException<ImageObjectValidationResult>(new InvalidOperationException("Simulated storage failure."));
     }
 
     private sealed class FakeImageAssetRepository : IImageAssetRepository {

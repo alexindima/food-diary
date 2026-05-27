@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
@@ -22,7 +23,8 @@ public class CreateConsumptionCommandHandler(
     IMealNutritionService mealNutritionService,
     IRecentItemRepository recentItemRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -40,6 +42,14 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(accessError);
         }
 
+        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            imageAssetIdResult.Value,
+            userId,
+            cancellationToken);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(imageAssetResult.Error);
+        }
+
         var mealTypeResult = EnumValueParser.ParseOptional<MealType>(
             command.MealType,
             nameof(command.MealType),
@@ -48,7 +58,7 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
         }
 
-        var meal = Meal.Create(userId, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
+        var meal = Meal.Create(userId, command.Date, mealTypeResult.Value, command.Comment, imageAssetResult.Value?.Url ?? command.ImageUrl,
             imageAssetIdResult.Value);
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
@@ -70,6 +80,14 @@ public class CreateConsumptionCommandHandler(
             var sessionImageAssetIdResult = ImageAssetIdParser.ParseOptional(session.ImageAssetId, nameof(session.ImageAssetId));
             if (sessionImageAssetIdResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(sessionImageAssetIdResult.Error);
+            }
+
+            var sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+                sessionImageAssetIdResult.Value,
+                userId,
+                cancellationToken);
+            if (sessionImageAssetResult.IsFailure) {
+                return Result.Failure<ConsumptionModel>(sessionImageAssetResult.Error);
             }
 
             var sessionItems = session.Items

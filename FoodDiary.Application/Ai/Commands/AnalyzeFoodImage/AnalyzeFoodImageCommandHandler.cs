@@ -12,7 +12,8 @@ namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 public sealed class AnalyzeFoodImageCommandHandler(
     IImageAssetRepository imageAssetRepository,
     IUserRepository userRepository,
-    IOpenAiFoodService openAiFoodService)
+    IOpenAiFoodService openAiFoodService,
+    IImageStorageService imageStorageService)
     : IQueryHandler<AnalyzeFoodImageCommand, Result<FoodVisionModel>> {
     public async Task<Result<FoodVisionModel>> Handle(
         AnalyzeFoodImageCommand query,
@@ -36,6 +37,12 @@ public sealed class AnalyzeFoodImageCommandHandler(
 
         if (asset.UserId != userId) {
             return Result.Failure<FoodVisionModel>(Errors.Ai.Forbidden());
+        }
+
+        var imageValidation = await imageStorageService.ValidateUploadedObjectAsync(asset.ObjectKey, cancellationToken);
+        if (!imageValidation.IsValid) {
+            return Result.Failure<FoodVisionModel>(Errors.Image.InvalidData(
+                imageValidation.Message ?? "Image upload has not completed or is invalid."));
         }
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);

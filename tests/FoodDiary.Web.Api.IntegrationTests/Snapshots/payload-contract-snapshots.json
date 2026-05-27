@@ -315,21 +315,17 @@
     "dashboardLayoutKeys": []
   },
   "image-upload-url": {
-    "keys": [
-      "assetId",
-      "expiresAtUtc",
-      "fileUrl",
-      "objectKey",
-      "uploadUrl"
-    ],
-    "uploadUrlHost": "s3.test.local",
-    "uploadUrlHasSignature": false,
-    "fileUrlHost": "cdn.test.local",
-    "objectKeySegmentCount": 4,
-    "objectKeyStartsWithUsers": true,
-    "objectKeyContainsImagesSegment": true,
-    "assetIdIsGuid": true
-  },
+      "keys": [
+        "assetId",
+        "expiresAtUtc",
+        "fileUrl",
+        "uploadUrl"
+      ],
+      "uploadUrlHost": "s3.test.local",
+      "uploadUrlHasSignature": false,
+      "fileUrlHost": "cdn.test.local",
+      "assetIdIsGuid": true
+    },
   "user-overview": {
     "keys": [
       "dietologistRelationship",

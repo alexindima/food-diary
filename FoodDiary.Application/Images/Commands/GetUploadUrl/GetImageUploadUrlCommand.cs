@@ -12,6 +12,5 @@ public sealed record GetImageUploadUrlCommand(
 public sealed record GetImageUploadUrlResult(
     string UploadUrl,
     string FileUrl,
-    string ObjectKey,
     DateTime ExpiresAtUtc,
     Guid AssetId);

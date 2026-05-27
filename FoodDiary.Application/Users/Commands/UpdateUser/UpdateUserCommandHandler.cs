@@ -15,7 +15,8 @@ namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
 public class UpdateUserCommandHandler(
     IUserRepository userRepository,
-    IImageAssetCleanupService imageAssetCleanupService)
+    IImageAssetCleanupService imageAssetCleanupService,
+    IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateUserCommand, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -78,6 +79,15 @@ public class UpdateUserCommandHandler(
 
         var oldAssetId = currentUser.ProfileImageAssetId;
         var newAssetId = profileImageAssetIdResult.Value;
+        var profileImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            newAssetId,
+            userId,
+            cancellationToken);
+        if (profileImageAssetResult.IsFailure) {
+            return Result.Failure<UserModel>(profileImageAssetResult.Error);
+        }
+
+        var profileImage = profileImageAssetResult.Value?.Url ?? Normalize(command.ProfileImage);
 
         var dashboardLayoutJson = command.DashboardLayout is null
             ? null
@@ -104,7 +114,7 @@ public class UpdateUserCommandHandler(
             FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled));
         currentUser.UpdateProfileMedia(new UserProfileMediaUpdate(
-            ProfileImage: Normalize(command.ProfileImage),
+            ProfileImage: profileImage,
             ProfileImageAssetId: newAssetId));
 
         if (command.IsActive.HasValue) {

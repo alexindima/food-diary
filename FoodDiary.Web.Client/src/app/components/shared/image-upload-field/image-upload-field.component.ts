@@ -336,20 +336,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             return;
         }
 
-        const maxBytes = getMaxImageUploadBytes(this.maxSizeMb());
-
         if (this.cropEnabled()) {
             this.startCropping(file);
         } else {
             const uploadFile = await this.resizeFileIfNeededAsync(file);
-            if (uploadFile.size > maxBytes) {
-                this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
-                    maxSizeMb: this.maxSizeMb(),
-                });
-                this.cdr.markForCheck();
-                return;
-            }
-
             this.uploadFile(uploadFile);
         }
     }
@@ -446,6 +436,13 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
 
         this.error = null;
+        if (file.size > getMaxImageUploadBytes(this.maxSizeMb())) {
+            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
+                maxSizeMb: this.maxSizeMb(),
+            });
+            this.cdr.markForCheck();
+            return;
+        }
 
         this.isUploading = true;
         this.cdr.markForCheck();

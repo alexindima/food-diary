@@ -61,6 +61,22 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [Fact]
+    public async Task CreatePresignedUploadAsync_WithUnsafeFileName_EscapesPublicUrlKeySegments() {
+        var service = CreateService(new StubObjectStorageClient());
+
+        var result = await service.CreatePresignedUploadAsync(
+            UserId.New(),
+            "meal #1?.webp",
+            "image/webp",
+            1024,
+            CancellationToken.None);
+
+        Assert.Contains("meal-%231%3F.webp", result.FileUrl, StringComparison.Ordinal);
+        Assert.DoesNotContain("meal-#1?.webp", result.FileUrl, StringComparison.Ordinal);
+    }
+
+
+    [Fact]
     public async Task DeleteAsync_WhenTransportFails_RecordsFailureMetric() {
         long? count = null;
         string? operation = null;
@@ -79,6 +95,35 @@ public sealed class S3ImageStorageServiceTests {
         Assert.Equal(1, count);
         Assert.Equal("delete", operation);
         Assert.Equal("failure", outcome);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenObjectMetadataIsValid_ReturnsValid() {
+        var service = CreateService(new StubObjectStorageClient());
+
+        var result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenObjectIsTooLarge_ReturnsInvalid() {
+        var service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(6 * 1024 * 1024, "image/webp")));
+
+        var result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("too_large", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenContentTypeIsUnsupported_ReturnsInvalid() {
+        var service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(1024, "text/plain")));
+
+        var result = await service.ValidateUploadedObjectAsync("users/test/image.txt", CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("unsupported_type", result.ErrorCode);
     }
 
     private static S3ImageStorageService CreateService(IObjectStorageClient storageClient) {
@@ -123,7 +168,7 @@ public sealed class S3ImageStorageServiceTests {
         return null;
     }
 
-    private sealed class StubObjectStorageClient : IObjectStorageClient {
+    private sealed class StubObjectStorageClient(StoredObjectInfo? objectInfo = null) : IObjectStorageClient {
         public string GetPreSignedUploadUrl(
             string bucketName,
             string key,
@@ -133,6 +178,9 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.CompletedTask;
+
+        public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(1024, "image/webp"));
     }
 
     private sealed class ThrowingObjectStorageClient(Exception exception) : IObjectStorageClient {
@@ -144,6 +192,9 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromException(exception);
+
+        public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            Task.FromException<StoredObjectInfo?>(exception);
     }
 
     private sealed class StubDateTimeProvider : FoodDiary.Application.Abstractions.Common.Interfaces.Services.IDateTimeProvider {

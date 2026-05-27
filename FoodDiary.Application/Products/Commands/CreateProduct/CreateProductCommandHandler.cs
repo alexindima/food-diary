@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
@@ -13,7 +14,8 @@ namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
 public class CreateProductCommandHandler(
     IProductRepository productRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
@@ -51,6 +53,16 @@ public class CreateProductCommandHandler(
             return Result.Failure<ProductModel>(imageAssetIdResult.Error);
         }
 
+        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            imageAssetIdResult.Value,
+            userId,
+            cancellationToken);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<ProductModel>(imageAssetResult.Error);
+        }
+
+        var imageUrl = imageAssetResult.Value?.Url ?? command.ImageUrl;
+
         var product = Product.Create(
             userId: userId,
             name: command.Name,
@@ -69,7 +81,7 @@ public class CreateProductCommandHandler(
             category: command.Category,
             description: command.Description,
             comment: command.Comment,
-            imageUrl: command.ImageUrl,
+            imageUrl: imageUrl,
             imageAssetId: imageAssetIdResult.Value,
             visibility: visibilityResult.Value
         );

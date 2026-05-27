@@ -8,7 +8,6 @@ public static class ImageHttpResponseMappings {
         return new GetImageUploadUrlHttpResponse(
             result.UploadUrl,
             result.FileUrl,
-            result.ObjectKey,
             result.ExpiresAtUtc,
             result.AssetId);
     }

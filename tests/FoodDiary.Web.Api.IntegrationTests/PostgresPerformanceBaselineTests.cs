@@ -293,5 +293,5 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
     private sealed record ItemPayload(Guid Id);
 
-    private sealed record ImageUploadPayload(string UploadUrl, string FileUrl, string ObjectKey, DateTime ExpiresAtUtc, Guid AssetId);
+    private sealed record ImageUploadPayload(string UploadUrl, string FileUrl, DateTime ExpiresAtUtc, Guid AssetId);
 }

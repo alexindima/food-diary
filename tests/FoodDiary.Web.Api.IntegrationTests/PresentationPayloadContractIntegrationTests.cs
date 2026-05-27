@@ -506,17 +506,12 @@ public sealed class PresentationPayloadContractIntegrationTests(
     private static JsonObject BuildImageUploadUrlSnapshot(JsonElement root) {
         var uploadUrl = root.GetProperty("uploadUrl").GetString() ?? string.Empty;
         var fileUrl = root.GetProperty("fileUrl").GetString() ?? string.Empty;
-        var objectKey = root.GetProperty("objectKey").GetString() ?? string.Empty;
-        var objectKeySegments = objectKey.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
             ["uploadUrlHost"] = Uri.TryCreate(uploadUrl, UriKind.Absolute, out var uploadUri) ? uploadUri.Host : string.Empty,
             ["uploadUrlHasSignature"] = uploadUrl.Contains("X-Amz-Signature=", StringComparison.Ordinal),
             ["fileUrlHost"] = Uri.TryCreate(fileUrl, UriKind.Absolute, out var fileUri) ? fileUri.Host : string.Empty,
-            ["objectKeySegmentCount"] = objectKeySegments.Length,
-            ["objectKeyStartsWithUsers"] = objectKey.StartsWith("users/", StringComparison.Ordinal),
-            ["objectKeyContainsImagesSegment"] = objectKeySegments.Contains("images", StringComparer.Ordinal),
             ["assetIdIsGuid"] = root.GetProperty("assetId").GetGuid() != Guid.Empty
         };
     }

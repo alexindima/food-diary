@@ -24,7 +24,8 @@ public class UpdateConsumptionCommandHandler(
     IRecentItemRepository recentItemRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -75,11 +76,18 @@ public class UpdateConsumptionCommandHandler(
         }
 
         var oldAssetId = meal.ImageAssetId;
+        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            imageAssetIdResult.Value,
+            userId,
+            cancellationToken);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(imageAssetResult.Error);
+        }
 
         meal.UpdateDate(command.Date);
         meal.UpdateMealType(mealTypeResult.Value);
         meal.UpdateComment(command.Comment);
-        meal.UpdateImage(command.ImageUrl, imageAssetIdResult.Value);
+        meal.UpdateImage(imageAssetResult.Value?.Url ?? command.ImageUrl, imageAssetIdResult.Value);
 
         var satietyValidation = SatietyLevelValidator.Validate(
             command.PreMealSatietyLevel,
@@ -115,6 +123,14 @@ public class UpdateConsumptionCommandHandler(
             var sessionImageAssetIdResult = ImageAssetIdParser.ParseOptional(session.ImageAssetId, nameof(session.ImageAssetId));
             if (sessionImageAssetIdResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(sessionImageAssetIdResult.Error);
+            }
+
+            var sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+                sessionImageAssetIdResult.Value,
+                userId,
+                cancellationToken);
+            if (sessionImageAssetResult.IsFailure) {
+                return Result.Failure<ConsumptionModel>(sessionImageAssetResult.Error);
             }
 
             var sessionItems = session.Items
@@ -195,8 +211,7 @@ public class UpdateConsumptionCommandHandler(
             cancellationToken);
 
         var imageAssetChanged = command.ImageAssetId.HasValue &&
-                                oldAssetId.HasValue &&
-                                oldAssetId.Value.Value != command.ImageAssetId.Value;
+                                (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value);
 
         if (oldAssetId.HasValue && imageAssetChanged) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);

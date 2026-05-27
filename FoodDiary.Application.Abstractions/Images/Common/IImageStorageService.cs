@@ -8,6 +8,8 @@ public sealed record PresignedUpload(
     string ObjectKey,
     DateTime ExpirationUtc);
 
+public sealed record ImageObjectValidationResult(bool IsValid, string? ErrorCode = null, string? Message = null);
+
 public interface IImageStorageService {
     Task<PresignedUpload> CreatePresignedUploadAsync(
         UserId userId,
@@ -17,4 +19,6 @@ public interface IImageStorageService {
         CancellationToken cancellationToken);
 
     Task DeleteAsync(string objectKey, CancellationToken cancellationToken);
+
+    Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken);
 }

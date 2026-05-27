@@ -8,4 +8,8 @@ public interface IObjectStorageClient {
         DateTime expiresAt);
 
     Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken);
+
+    Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken);
 }
+
+public sealed record StoredObjectInfo(long SizeBytes, string? ContentType);

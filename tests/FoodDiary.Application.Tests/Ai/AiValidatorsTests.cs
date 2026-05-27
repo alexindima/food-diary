@@ -50,7 +50,8 @@ public class AiValidatorsTests {
         var handler = new AnalyzeFoodImageCommandHandler(
             new StubImageAssetRepository(),
             new StubUserRepository(user),
-            new StubOpenAiFoodService());
+            new StubOpenAiFoodService(),
+            new StubImageStorageService());
 
         var result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, null),
@@ -230,6 +231,24 @@ public class AiValidatorsTests {
             UserId userId,
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+    }
+
+    private sealed class StubImageStorageService : IImageStorageService {
+        public Task<PresignedUpload> CreatePresignedUploadAsync(
+            UserId userId,
+            string fileName,
+            string contentType,
+            long fileSizeBytes,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+            string objectKey,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(new ImageObjectValidationResult(true));
     }
 
     private sealed class RecordingAiUsageRepository : IAiUsageRepository {

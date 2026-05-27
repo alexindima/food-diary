@@ -21,7 +21,8 @@ public class UpdateRecipeCommandHandlerTests {
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new UpdateRecipeCommand(
             userId.Value,
@@ -68,7 +69,8 @@ public class UpdateRecipeCommandHandlerTests {
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new UpdateRecipeCommand(
             userId.Value,
@@ -114,7 +116,8 @@ public class UpdateRecipeCommandHandlerTests {
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -161,7 +164,8 @@ public class UpdateRecipeCommandHandlerTests {
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -208,7 +212,8 @@ public class UpdateRecipeCommandHandlerTests {
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -258,7 +263,8 @@ public class UpdateRecipeCommandHandlerTests {
         var handler = new UpdateRecipeCommandHandler(
             new StubRecipeRepository(RecipeId.New(), userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(

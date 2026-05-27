@@ -86,7 +86,8 @@ public class RecipesFeatureTests {
         var handler = new UpdateRecipeCommandHandler(
             new SingleRecipeRepository(recipe),
             new RecordingCleanupService(),
-            new StubUserRepository(user));
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -136,7 +137,8 @@ public class RecipesFeatureTests {
         var handler = new UpdateRecipeCommandHandler(
             new SingleRecipeRepository(recipe),
             cleanup,
-            new StubUserRepository(user));
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -175,7 +177,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -209,7 +211,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel() {
         var user = User.Create("create-recipe@example.com", "hash");
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user));
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -413,7 +415,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -447,7 +449,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyStepImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -487,7 +489,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyIngredientProductId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -749,7 +751,7 @@ public class RecipesFeatureTests {
         var user = User.Create("deleted-recipe@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user));
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateRecipeCommand(

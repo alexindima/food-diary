@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
@@ -52,7 +53,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task CreateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
         var command = new CreateProductCommand(
             UserId: null,
             Barcode: null,
@@ -83,7 +84,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task CreateProductCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
-        var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
         var command = new CreateProductCommand(
             UserId: Guid.NewGuid(),
             Barcode: null,
@@ -208,7 +209,7 @@ public class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new UpdateProductCommand(
             userId.Value,
@@ -270,7 +271,8 @@ public class ProductsFeatureTests {
         var handler = new UpdateProductCommandHandler(
             repository,
             new RecordingCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateProductCommand(
@@ -314,7 +316,8 @@ public class ProductsFeatureTests {
         var handler = new UpdateProductCommandHandler(
             new NoopProductRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateProductCommand(
@@ -371,7 +374,7 @@ public class ProductsFeatureTests {
     public async Task CreateProductCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel() {
         var user = User.Create("create-product@example.com", "hash");
         var repository = new NoopProductRepository();
-        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user));
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateProductCommand(
@@ -403,6 +406,82 @@ public class ProductsFeatureTests {
         Assert.Equal("Farm", repository.LastAddedProduct.Brand);
         Assert.True(result.Value.IsOwnedByCurrentUser);
         Assert.Equal("Owner note", result.Value.Comment);
+    }
+
+    [Fact]
+    public async Task CreateProductCommandHandler_WithImageAsset_UsesResolvedAssetUrl() {
+        var user = User.Create("create-product-image@example.com", "hash");
+        var assetId = ImageAssetId.New();
+        var access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+            .WithAsset(assetId, "https://cdn.test/assets/product.webp");
+        var repository = new NoopProductRepository();
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), access);
+
+        var result = await handler.Handle(
+            new CreateProductCommand(
+                user.Id.Value,
+                Barcode: null,
+                Name: "Apple",
+                Brand: null,
+                ProductType: "Food",
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: "https://client.test/not-trusted.webp",
+                ImageAssetId: assetId.Value,
+                BaseUnit: "G",
+                BaseAmount: 100,
+                DefaultPortionAmount: 100,
+                CaloriesPerBase: 52,
+                ProteinsPerBase: 0.3,
+                FatsPerBase: 0.2,
+                CarbsPerBase: 14,
+                FiberPerBase: 2.4,
+                AlcoholPerBase: 0,
+                Visibility: "Private"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal([assetId], access.RequestedAssetIds);
+        Assert.Equal("https://cdn.test/assets/product.webp", repository.LastAddedProduct!.ImageUrl);
+        Assert.Equal(assetId, repository.LastAddedProduct.ImageAssetId);
+    }
+
+    [Fact]
+    public async Task CreateProductCommandHandler_WhenImageAssetAccessFails_DoesNotPersist() {
+        var user = User.Create("create-product-forbidden-image@example.com", "hash");
+        var repository = new NoopProductRepository();
+        var access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+            .WithFailure(Errors.Image.Forbidden());
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), access);
+
+        var result = await handler.Handle(
+            new CreateProductCommand(
+                user.Id.Value,
+                Barcode: null,
+                Name: "Apple",
+                Brand: null,
+                ProductType: "Food",
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: Guid.NewGuid(),
+                BaseUnit: "G",
+                BaseAmount: 100,
+                DefaultPortionAmount: 100,
+                CaloriesPerBase: 52,
+                ProteinsPerBase: 0.3,
+                FatsPerBase: 0.2,
+                CarbsPerBase: 14,
+                FiberPerBase: 2.4,
+                AlcoholPerBase: 0,
+                Visibility: "Private"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+        Assert.Null(repository.LastAddedProduct);
     }
 
     [Fact]
@@ -494,7 +573,7 @@ public class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService();
-        var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(user));
+        var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateProductCommand(

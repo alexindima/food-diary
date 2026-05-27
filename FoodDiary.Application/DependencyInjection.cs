@@ -42,6 +42,7 @@ public static class DependencyInjection {
         services.AddScoped<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>();
         services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
+        services.AddScoped<IImageAssetAccessService, ImageAssetAccessService>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();

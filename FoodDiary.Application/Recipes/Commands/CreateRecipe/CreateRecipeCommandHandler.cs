@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
@@ -15,7 +16,8 @@ namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
 public class CreateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -33,6 +35,16 @@ public class CreateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(accessError);
         }
 
+        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            imageAssetIdResult.Value,
+            userId,
+            cancellationToken);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<RecipeModel>(imageAssetResult.Error);
+        }
+
+        var imageUrl = imageAssetResult.Value?.Url ?? command.ImageUrl;
+
         var visibilityResult = EnumValueParser.ParseRequired<Visibility>(
             command.Visibility,
             nameof(command.Visibility),
@@ -48,13 +60,13 @@ public class CreateRecipeCommandHandler(
             command.Description,
             command.Comment,
             command.Category,
-            command.ImageUrl,
+            imageUrl,
             imageAssetIdResult.Value,
             command.PrepTime ?? 0,
             command.CookTime,
             visibilityResult.Value);
 
-        var addStepsResult = AddSteps(recipe, command);
+        var addStepsResult = await AddStepsAsync(recipe, command, userId, cancellationToken);
         if (addStepsResult.IsFailure) {
             return Result.Failure<RecipeModel>(addStepsResult.Error);
         }
@@ -100,7 +112,11 @@ public class CreateRecipeCommandHandler(
             : Result.Success(created.ToModel(0, true));
     }
 
-    private static Result AddSteps(Recipe recipe, CreateRecipeCommand command) {
+    private async Task<Result> AddStepsAsync(
+        Recipe recipe,
+        CreateRecipeCommand command,
+        UserId userId,
+        CancellationToken cancellationToken) {
         var orderedSteps = command.Steps
             .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
             .OrderBy(x => x.Order);
@@ -111,11 +127,19 @@ public class CreateRecipeCommandHandler(
                 return stepImageAssetIdResult;
             }
 
+            var stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+                stepImageAssetIdResult.Value,
+                userId,
+                cancellationToken);
+            if (stepImageAssetResult.IsFailure) {
+                return stepImageAssetResult;
+            }
+
             var step = recipe.AddStep(
                 entry.Order,
                 entry.Step.Description,
                 entry.Step.Title,
-                entry.Step.ImageUrl,
+                stepImageAssetResult.Value?.Url ?? entry.Step.ImageUrl,
                 stepImageAssetIdResult.Value);
             foreach (var ingredient in entry.Step.Ingredients) {
                 var ingredientIdResult = ValidateIngredientIdentifiers(ingredient);

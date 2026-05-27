@@ -75,6 +75,40 @@ public sealed class S3ImageStorageService(
         }
     }
 
+    public async Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+        string objectKey,
+        CancellationToken cancellationToken) {
+        if (string.IsNullOrWhiteSpace(objectKey)) {
+            return new ImageObjectValidationResult(false, "invalid_key", "Image object key is required.");
+        }
+
+        try {
+            var info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken);
+            if (info is null) {
+                return new ImageObjectValidationResult(false, "not_found", "Image upload has not completed.");
+            }
+
+            if (info.SizeBytes <= 0) {
+                return new ImageObjectValidationResult(false, "empty", "Image file is empty.");
+            }
+
+            if (info.SizeBytes > _options.MaxUploadSizeBytes) {
+                return new ImageObjectValidationResult(false, "too_large",
+                    $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes.");
+            }
+
+            if (string.IsNullOrWhiteSpace(info.ContentType) || !AllowedContentTypes.Contains(info.ContentType)) {
+                return new ImageObjectValidationResult(false, "unsupported_type",
+                    $"Unsupported content type: {info.ContentType ?? "unknown"}.");
+            }
+
+            return new ImageObjectValidationResult(true);
+        } catch (Exception ex) {
+            IntegrationsTelemetry.RecordStorageOperation("head", "failure", ex.GetType().Name);
+            throw;
+        }
+    }
+
     private static string NormalizeFileName(string fileName) {
         var nameOnly = Path.GetFileName(fileName);
         var cleaned = nameOnly.Replace(' ', '-');
@@ -86,12 +120,15 @@ public sealed class S3ImageStorageService(
     }
 
     private string BuildPublicUrl(string key) {
+        var escapedKey = string.Join('/', key
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Select(Uri.EscapeDataString));
         if (!string.IsNullOrWhiteSpace(_options.PublicBaseUrl)) {
-            return $"{_options.PublicBaseUrl.TrimEnd('/')}/{key}";
+            return $"{_options.PublicBaseUrl.TrimEnd('/')}/{escapedKey}";
         }
 
         return !string.IsNullOrWhiteSpace(_options.ServiceUrl)
-            ? $"{_options.ServiceUrl!.TrimEnd('/')}/{_options.Bucket}/{key}"
-            : $"https://{_options.Bucket}.s3.{_options.Region}.amazonaws.com/{key}";
+            ? $"{_options.ServiceUrl!.TrimEnd('/')}/{_options.Bucket}/{escapedKey}"
+            : $"https://{_options.Bucket}.s3.{_options.Region}.amazonaws.com/{escapedKey}";
     }
 }

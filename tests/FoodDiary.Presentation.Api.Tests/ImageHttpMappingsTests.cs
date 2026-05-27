@@ -35,13 +35,12 @@ public sealed class ImageHttpMappingsTests {
         var expiresAt = DateTime.UtcNow.AddMinutes(15);
         var result = new GetImageUploadUrlResult(
             "https://s3.example.com/upload", "https://cdn.example.com/file.jpg",
-            "users/123/images/file.jpg", expiresAt, assetId);
+            expiresAt, assetId);
 
         var response = result.ToHttpResponse();
 
         Assert.Equal("https://s3.example.com/upload", response.UploadUrl);
         Assert.Equal("https://cdn.example.com/file.jpg", response.FileUrl);
-        Assert.Equal("users/123/images/file.jpg", response.ObjectKey);
         Assert.Equal(expiresAt, response.ExpiresAtUtc);
         Assert.Equal(assetId, response.AssetId);
     }

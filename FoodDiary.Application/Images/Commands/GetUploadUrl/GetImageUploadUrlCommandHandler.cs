@@ -35,7 +35,6 @@ public sealed class GetImageUploadUrlCommandHandler(
         return Result.Success(new GetImageUploadUrlResult(
             presign.UploadUrl,
             presign.FileUrl,
-            presign.ObjectKey,
             presign.ExpirationUtc,
             asset.Id.Value));
     }

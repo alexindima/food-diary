@@ -161,7 +161,8 @@ public class ConsumptionsFeatureTests {
             new RecordingRecentItemRepository(),
             cleanup,
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new UpdateConsumptionCommand(
             userId.Value,
@@ -200,7 +201,8 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new CreateConsumptionCommand(
             userId.Value,
@@ -238,7 +240,8 @@ public class ConsumptionsFeatureTests {
             new FixedMealNutritionService(new MealNutritionSummary(420, 28, 16, 38, 6, 0)),
             recentItems,
             new StubUserRepository(user),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var productId = ProductId.New().Value;
         var recipeId = RecipeId.New().Value;
@@ -284,7 +287,8 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateConsumptionCommand(
@@ -321,7 +325,8 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateConsumptionCommand(
@@ -358,7 +363,8 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new CreateConsumptionCommand(
@@ -400,7 +406,8 @@ public class ConsumptionsFeatureTests {
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateConsumptionCommand(
@@ -443,7 +450,8 @@ public class ConsumptionsFeatureTests {
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateConsumptionCommand(
@@ -493,7 +501,8 @@ public class ConsumptionsFeatureTests {
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateConsumptionCommand(
@@ -534,7 +543,8 @@ public class ConsumptionsFeatureTests {
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateConsumptionCommand(
@@ -579,7 +589,8 @@ public class ConsumptionsFeatureTests {
             new RecordingRecentItemRepository(),
             cleanup,
             new StubUserRepository(user),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateConsumptionCommand(

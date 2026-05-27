@@ -1,7 +1,6 @@
 export type ImageUploadUrlResponse = {
     uploadUrl: string;
     fileUrl: string;
-    objectKey: string;
     expiresAtUtc: string;
     assetId: string;
 };

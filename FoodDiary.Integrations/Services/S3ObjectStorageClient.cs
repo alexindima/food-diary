@@ -1,5 +1,6 @@
 using Amazon.S3;
 using Amazon.S3.Model;
+using System.Net;
 
 namespace FoodDiary.Integrations.Services;
 
@@ -27,5 +28,21 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
         };
 
         return s3Client.DeleteObjectAsync(request, cancellationToken);
+    }
+
+    public async Task<StoredObjectInfo?> GetObjectInfoAsync(
+        string bucketName,
+        string key,
+        CancellationToken cancellationToken) {
+        try {
+            var response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
+                BucketName = bucketName,
+                Key = key
+            }, cancellationToken);
+
+            return new StoredObjectInfo(response.ContentLength, response.Headers.ContentType);
+        } catch (AmazonS3Exception ex) when (ex.StatusCode == HttpStatusCode.NotFound) {
+            return null;
+        }
     }
 }

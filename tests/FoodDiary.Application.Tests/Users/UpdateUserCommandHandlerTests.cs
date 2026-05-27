@@ -15,7 +15,8 @@ public sealed class UpdateUserCommandHandlerTests {
         var userRepository = new SingleUserRepository(user);
         var handler = new UpdateUserCommandHandler(
             userRepository,
-            new StubImageAssetCleanupService());
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"]);
         var command = new UpdateUserCommand(
@@ -60,7 +61,8 @@ public sealed class UpdateUserCommandHandlerTests {
         var cleanup = new StubImageAssetCleanupService("storage_error");
         var handler = new UpdateUserCommandHandler(
             new SingleUserRepository(user),
-            cleanup);
+            cleanup,
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var newAssetId = ImageAssetId.New();
         var command = new UpdateUserCommand(
@@ -98,7 +100,8 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             new SingleUserRepository(user),
-            new StubImageAssetCleanupService());
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var result = await handler.Handle(
             new UpdateUserCommand(
@@ -135,7 +138,8 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             new SingleUserRepository(user),
-            new StubImageAssetCleanupService());
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new UpdateUserCommand(
             UserId: user.Id.Value,

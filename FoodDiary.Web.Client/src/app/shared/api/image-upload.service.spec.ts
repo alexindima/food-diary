@@ -36,7 +36,6 @@ describe('ImageUploadService', () => {
         const mockResponse = {
             uploadUrl: 'https://s3.example.com/upload?signed=abc',
             fileUrl: 'https://cdn.example.com/photo.jpg',
-            objectKey: 'uploads/photo.jpg',
             expiresAtUtc: '2026-03-28T12:00:00Z',
             assetId: 'asset-001',
         };

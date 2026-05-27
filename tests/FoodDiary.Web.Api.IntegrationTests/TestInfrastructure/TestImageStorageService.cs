@@ -49,6 +49,11 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
 
     public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
 
+    public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+        string objectKey,
+        CancellationToken cancellationToken) =>
+        Task.FromResult(new ImageObjectValidationResult(true));
+
     private static string NormalizeFileName(string fileName) {
         var nameOnly = Path.GetFileName(fileName);
         var cleaned = nameOnly.Replace(' ', '-');

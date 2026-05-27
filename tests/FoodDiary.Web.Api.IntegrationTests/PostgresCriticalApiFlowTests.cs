@@ -465,7 +465,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
     private sealed record RecipePayload(Guid Id);
 
-    private sealed record ImageUploadPayload(string UploadUrl, string FileUrl, string ObjectKey, DateTime ExpiresAtUtc, Guid AssetId);
+    private sealed record ImageUploadPayload(string UploadUrl, string FileUrl, DateTime ExpiresAtUtc, Guid AssetId);
 
     private sealed record ShoppingListPayload(Guid Id, string Name, IReadOnlyList<ShoppingListItemPayload> Items);
 

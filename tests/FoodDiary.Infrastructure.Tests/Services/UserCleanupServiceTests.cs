@@ -26,5 +26,10 @@ public sealed class UserCleanupServiceTests {
             throw new NotSupportedException();
 
         public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+            string objectKey,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(new ImageObjectValidationResult(true));
     }
 }

@@ -14,7 +14,8 @@ namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 public class UpdateProductCommandHandler(
     IProductRepository productRepository,
     IImageAssetCleanupService imageAssetCleanupService,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
@@ -83,6 +84,15 @@ public class UpdateProductCommandHandler(
         }
 
         var oldAssetId = product.ImageAssetId;
+        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            imageAssetIdResult.Value,
+            userId,
+            cancellationToken);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<ProductModel>(imageAssetResult.Error);
+        }
+
+        var imageUrl = imageAssetResult.Value?.Url ?? command.ImageUrl;
 
         if (command.Name is not null ||
             command.Barcode is not null ||
@@ -138,8 +148,8 @@ public class UpdateProductCommandHandler(
 
         if (command.ImageUrl is not null || command.ClearImageUrl || command.ImageAssetId.HasValue || command.ClearImageAssetId) {
             product.UpdateMedia(
-                imageUrl: command.ImageUrl,
-                clearImageUrl: command.ClearImageUrl,
+                imageUrl: imageUrl,
+                clearImageUrl: imageAssetResult.Value is null && command.ClearImageUrl,
                 imageAssetId: imageAssetIdResult.Value,
                 clearImageAssetId: command.ClearImageAssetId);
         }
@@ -154,7 +164,7 @@ public class UpdateProductCommandHandler(
         }
 
         var imageAssetChanged = command.ClearImageAssetId ||
-                                (command.ImageAssetId.HasValue && oldAssetId.HasValue && oldAssetId.Value.Value != command.ImageAssetId.Value);
+                                (command.ImageAssetId.HasValue && (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value));
 
         if (hasChanges && oldAssetId.HasValue && imageAssetChanged) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
