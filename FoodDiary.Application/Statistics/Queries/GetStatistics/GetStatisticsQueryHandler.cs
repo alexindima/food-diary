@@ -1,14 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
-public class GetStatisticsQueryHandler(IMealRepository mealRepository)
+public class GetStatisticsQueryHandler(
+    IMealRepository mealRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetStatisticsQuery, Result<IReadOnlyList<AggregatedStatisticsModel>>> {
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
         GetStatisticsQuery request,
@@ -24,6 +28,10 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
         }
 
         var userId = userIdResult.Value;
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(accessError);
+        }
 
         var quantizationDays = Math.Clamp(request.QuantizationDays <= 0 ? 1 : request.QuantizationDays, 1, 365);
 

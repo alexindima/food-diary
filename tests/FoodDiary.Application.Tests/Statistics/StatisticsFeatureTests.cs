@@ -1,6 +1,8 @@
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -20,7 +22,7 @@ public class StatisticsFeatureTests {
 
     [Fact]
     public async Task GetStatisticsQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
-        var handler = new GetStatisticsQueryHandler(new NoopMealRepository());
+        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), new NoopUserRepository());
         var query = new GetStatisticsQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
 
         var result = await handler.Handle(query, CancellationToken.None);
@@ -31,7 +33,7 @@ public class StatisticsFeatureTests {
 
     [Fact]
     public async Task GetStatisticsQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetStatisticsQueryHandler(new NoopMealRepository());
+        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), new NoopUserRepository());
         var query = new GetStatisticsQuery(Guid.Empty, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
 
         var result = await handler.Handle(query, CancellationToken.None);
@@ -42,10 +44,11 @@ public class StatisticsFeatureTests {
 
     [Fact]
     public async Task GetStatisticsQueryHandler_WithEmptyMeals_ReturnsSingleZeroBucket() {
-        var handler = new GetStatisticsQueryHandler(new NoopMealRepository());
+        var user = User.Create("statistics-empty@example.com", "hash");
+        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), new SingleUserRepository(user));
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
-        var query = new GetStatisticsQuery(Guid.NewGuid(), from, to, 1);
+        var query = new GetStatisticsQuery(user.Id.Value, from, to, 1);
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -60,14 +63,27 @@ public class StatisticsFeatureTests {
     }
 
     [Fact]
+    public async Task GetStatisticsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("statistics-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), new SingleUserRepository(user));
+        var query = new GetStatisticsQuery(user.Id.Value, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
+
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetStatisticsQueryHandler_WithMultiDayBucket_ReturnsTotalsAndDailyAverages() {
-        var userId = UserId.New();
+        var user = User.Create("statistics-multiday@example.com", "hash");
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 2, 23, 59, 59, DateTimeKind.Utc);
-        var meal = Meal.Create(userId, from.AddHours(12), MealType.Lunch);
+        var meal = Meal.Create(user.Id, from.AddHours(12), MealType.Lunch);
         meal.ApplyNutrition(new MealNutritionUpdate(1000, 100, 50, 200, 20, 0, true));
-        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([meal]));
-        var query = new GetStatisticsQuery(userId.Value, from, to, 2);
+        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([meal]), new SingleUserRepository(user));
+        var query = new GetStatisticsQuery(user.Id.Value, from, to, 2);
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -86,15 +102,15 @@ public class StatisticsFeatureTests {
 
     [Fact]
     public async Task GetStatisticsQueryHandler_WithLocalDayUtcBoundaries_GroupsMealsByRequestedBoundary() {
-        var userId = UserId.New();
+        var user = User.Create("statistics-boundaries@example.com", "hash");
         var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
-        var includedMeal = Meal.Create(userId, localDayStartUtc.AddMinutes(30), MealType.Snack);
+        var includedMeal = Meal.Create(user.Id, localDayStartUtc.AddMinutes(30), MealType.Snack);
         includedMeal.ApplyNutrition(new MealNutritionUpdate(946, 59, 45, 76, 7, 0, true));
-        var nextLocalDayMeal = Meal.Create(userId, localDayEndUtc.AddMinutes(1), MealType.Snack);
+        var nextLocalDayMeal = Meal.Create(user.Id, localDayEndUtc.AddMinutes(1), MealType.Snack);
         nextLocalDayMeal.ApplyNutrition(new MealNutritionUpdate(41, 1, 0, 10, 3, 0, true));
-        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([includedMeal, nextLocalDayMeal]));
-        var query = new GetStatisticsQuery(userId.Value, localDayStartUtc, localDayEndUtc, 1);
+        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([includedMeal, nextLocalDayMeal]), new SingleUserRepository(user));
+        var query = new GetStatisticsQuery(user.Id.Value, localDayStartUtc, localDayEndUtc, 1);
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -164,5 +180,33 @@ public class StatisticsFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<Meal>>(meals);
+    }
+
+    private sealed class NoopUserRepository : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class SingleUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }
