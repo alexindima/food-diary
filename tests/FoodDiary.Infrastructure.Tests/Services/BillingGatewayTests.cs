@@ -81,7 +81,7 @@ public sealed class BillingGatewayTests {
 
         var result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess, result.Error.Message);
         Assert.NotNull(result.Value);
         Assert.Equal("evt_123", result.Value.EventId);
         Assert.Equal("ctm_123", result.Value.ExternalCustomerId);
@@ -135,7 +135,7 @@ public sealed class BillingGatewayTests {
             new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "yearly", "ctm_123"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess, result.Error.Message);
         Assert.Equal("txn_123", result.Value.SessionId);
         Assert.Equal("https://checkout.paddle.com/txn_123", result.Value.Url);
         Assert.Equal("ctm_123", result.Value.CustomerId);
@@ -256,6 +256,58 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task YooKassaWebhook_WhenPaymentSucceeded_MapsActiveSubscriptionEvent() {
+        var userId = Guid.NewGuid();
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent($$"""
+                {
+                  "id": "pay_123",
+                  "status": "succeeded",
+                  "paid": true,
+                  "amount": { "value": "299.00", "currency": "RUB" },
+                  "payment_method": { "id": "pm_123" },
+                  "metadata": {
+                    "user_id": "{{userId}}",
+                    "plan": "monthly"
+                  },
+                  "created_at": "2026-05-06T00:00:00Z",
+                  "captured_at": "2026-05-06T00:01:00Z"
+                }
+                """),
+        });
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new YooKassaOptions {
+                ShopId = "shop",
+                SecretKey = "secret",
+                ApiBaseUrl = "https://api.yookassa.test/v3",
+                PremiumMonthlyAmount = "299",
+                PremiumYearlyAmount = "2990",
+                ReturnUrl = "https://app.example/billing/return",
+            }));
+
+        var result = await gateway.ParseWebhookEventAsync(
+            "{\"event\":\"payment.succeeded\",\"object\":{\"id\":\"pay_123\"}}",
+            signatureHeader: "",
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal("payment.succeeded:pay_123:succeeded", result.Value.EventId);
+        Assert.Equal("payment.succeeded", result.Value.EventType);
+        Assert.Equal(userId.ToString(), result.Value.ExternalCustomerId);
+        Assert.Equal("pay_123", result.Value.ExternalSubscriptionId);
+        Assert.Equal("pm_123", result.Value.ExternalPaymentMethodId);
+        Assert.Equal("monthly", result.Value.Plan);
+        Assert.Equal("active", result.Value.Status);
+        Assert.Equal(new DateTime(2026, 5, 6, 0, 1, 0, DateTimeKind.Utc), result.Value.CurrentPeriodStartUtc);
+        Assert.Equal(new DateTime(2026, 6, 6, 0, 1, 0, DateTimeKind.Utc), result.Value.CurrentPeriodEndUtc);
+        Assert.Equal(299.00m, result.Value.Amount);
+        Assert.Equal("RUB", result.Value.Currency);
+        Assert.Equal(userId, result.Value.UserId);
+    }
+
+    [Fact]
     public async Task YooKassaCreateRecurringPayment_WhenPaymentSucceeded_MapsActiveSubscriptionPeriod() {
         var capturedAt = new DateTime(2026, 5, 6, 10, 0, 0, DateTimeKind.Utc);
         var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
@@ -345,11 +397,114 @@ public sealed class BillingGatewayTests {
         Assert.Equal("Validation.Required", result.Error.Code);
     }
 
+    [Fact]
+    public async Task StripeWebhook_WhenSubscriptionUpdated_MapsSubscriptionEvent() {
+        var userId = Guid.NewGuid();
+        var currentPeriodStart = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero);
+        var currentPeriodEnd = new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero);
+        var payload = JsonSerializer.Serialize(new {
+            id = "evt_123",
+            @object = "event",
+            api_version = "2026-04-22.dahlia",
+            type = "customer.subscription.updated",
+            data = new {
+                @object = new {
+                    id = "sub_123",
+                    @object = "subscription",
+                    customer = "cus_123",
+                    status = "active",
+                    cancel_at_period_end = true,
+                    canceled_at = (long?)null,
+                    trial_start = (long?)null,
+                    trial_end = (long?)null,
+                    metadata = new {
+                        user_id = userId.ToString(),
+                        plan = "monthly",
+                    },
+                    items = new {
+                        @object = "list",
+                        data = new[] {
+                            new {
+                                id = "si_123",
+                                @object = "subscription_item",
+                                current_period_start = currentPeriodStart.ToUnixTimeSeconds(),
+                                current_period_end = currentPeriodEnd.ToUnixTimeSeconds(),
+                                price = new {
+                                    id = "price_monthly",
+                                    @object = "price",
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+            PremiumMonthlyPriceId = "price_monthly",
+            PremiumYearlyPriceId = "price_yearly",
+        }));
+
+        var result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreateStripeSignature(payload, "whsec_test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal("evt_123", result.Value.EventId);
+        Assert.Equal("customer.subscription.updated", result.Value.EventType);
+        Assert.Equal("cus_123", result.Value.ExternalCustomerId);
+        Assert.Equal("sub_123", result.Value.ExternalSubscriptionId);
+        Assert.Equal("price_monthly", result.Value.ExternalPriceId);
+        Assert.Equal("monthly", result.Value.Plan);
+        Assert.Equal("active", result.Value.Status);
+        Assert.True(result.Value.CancelAtPeriodEnd);
+        Assert.Equal(currentPeriodStart.UtcDateTime, result.Value.CurrentPeriodStartUtc);
+        Assert.Equal(currentPeriodEnd.UtcDateTime, result.Value.CurrentPeriodEndUtc);
+        Assert.Equal(userId, result.Value.UserId);
+    }
+
+    [Fact]
+    public async Task StripeWebhook_WhenEventPayloadMalformed_ReturnsValidationFailure() {
+        var payload = JsonSerializer.Serialize(new {
+            id = "evt_malformed",
+            @object = "event",
+            type = "customer.subscription.updated",
+            data = new {
+                @object = new {
+                    id = "sub_malformed",
+                    @object = "subscription",
+                },
+            },
+        });
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+        }));
+
+        var result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreateStripeSignature(payload, "whsec_test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+    }
+
     private static string CreatePaddleSignature(string payload, string secret) {
         const string timestamp = "1714996800";
         using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
         var hash = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes($"{timestamp}:{payload}"))).ToLowerInvariant();
         return $"ts={timestamp};h1={hash}";
+    }
+
+    private static string CreateStripeSignature(string payload, string secret) {
+        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+        using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
+        var hash = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes($"{timestamp}.{payload}"))).ToLowerInvariant();
+        return $"t={timestamp},v1={hash}";
     }
 
     private static StringContent JsonContent(string json) =>

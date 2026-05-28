@@ -125,7 +125,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                     await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken)),
                 _ => Result.Success<BillingWebhookEventModel?>(null),
             };
-        } catch (StripeException ex) {
+        } catch (Exception ex) when (ex is StripeException or InvalidCastException or InvalidOperationException or NullReferenceException) {
             return Result.Failure<BillingWebhookEventModel?>(Errors.Billing.WebhookValidationFailed(ex.Message));
         }
     }
