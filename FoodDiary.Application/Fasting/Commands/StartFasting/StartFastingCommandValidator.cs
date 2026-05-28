@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Fasting.Commands.StartFasting;
 
@@ -15,5 +16,11 @@ public class StartFastingCommandValidator : AbstractValidator<StartFastingComman
             .When(x => !string.Equals(x.PlanType, "Cyclic", StringComparison.OrdinalIgnoreCase))
             .WithErrorCode("Validation.Required")
             .WithMessage("Fasting protocol is required");
+
+        RuleFor(x => x.PlanType)
+            .Must(planType => string.IsNullOrWhiteSpace(planType) ||
+                Enum.TryParse<FastingPlanType>(planType, ignoreCase: true, out _))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Fasting plan type is invalid.");
     }
 }

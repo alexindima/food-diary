@@ -37,8 +37,13 @@ public class StartFastingCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.AlreadyActive);
         }
 
+        var planTypeResult = ResolvePlanType(command);
+        if (planTypeResult.IsFailure) {
+            return Result.Failure<FastingSessionModel>(planTypeResult.Error);
+        }
+
         var startedAtUtc = dateTimeProvider.UtcNow;
-        var planType = ResolvePlanType(command);
+        var planType = planTypeResult.Value;
         var creation = CreatePlanAndOccurrence(command, userId, planType, startedAtUtc, command.Notes);
         if (creation.IsFailure) {
             return Result.Failure<FastingSessionModel>(creation.Error);
@@ -53,21 +58,24 @@ public class StartFastingCommandHandler(
         return Result.Success(occurrence.ToModel(plan));
     }
 
-    private static FastingPlanType ResolvePlanType(StartFastingCommand command) {
-        if (!string.IsNullOrWhiteSpace(command.PlanType) &&
-            Enum.TryParse<FastingPlanType>(command.PlanType, ignoreCase: true, out var explicitPlanType)) {
-            return explicitPlanType;
+    private static Result<FastingPlanType> ResolvePlanType(StartFastingCommand command) {
+        if (!string.IsNullOrWhiteSpace(command.PlanType)) {
+            return Enum.TryParse<FastingPlanType>(command.PlanType, ignoreCase: true, out var explicitPlanType)
+                ? Result.Success(explicitPlanType)
+                : Result.Failure<FastingPlanType>(Errors.Fasting.InvalidProtocol);
         }
 
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
             !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out var protocol)) {
-            return FastingPlanType.Intermittent;
+            return Result.Success(FastingPlanType.Intermittent);
         }
 
-        return protocol switch {
+        var planType = protocol switch {
             FastingProtocol.F16_8 or FastingProtocol.F18_6 or FastingProtocol.F20_4 or FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
             _ => FastingPlanType.Extended
         };
+
+        return Result.Success(planType);
     }
 
     private static Result<(FastingPlan Plan, FastingOccurrence Occurrence)> CreatePlanAndOccurrence(

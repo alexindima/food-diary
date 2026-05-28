@@ -29,8 +29,13 @@ public class GetFastingHistoryQueryHandler(
             userId,
             query.Page,
             query.Limit,
-            query.From,
-            query.To,
+            NormalizeUtc(query.From),
+            NormalizeUtc(query.To),
             cancellationToken));
     }
+
+    private static DateTime NormalizeUtc(DateTime value) =>
+        value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            : value.ToUniversalTime();
 }

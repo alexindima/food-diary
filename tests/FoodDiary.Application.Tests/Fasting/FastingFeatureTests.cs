@@ -15,6 +15,8 @@ using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
 using FoodDiary.Application.Fasting.Queries.GetFastingStats;
 using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Notifications;
@@ -106,6 +108,27 @@ public class FastingFeatureTests {
             new StartFastingCommand(user.Id.Value, "InvalidProtocol", null, null, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task StartFasting_WithInvalidPlanType_ReturnsFailure() {
+        var user = User.Create("user@example.com", "hash");
+        var planRepo = new InMemoryFastingPlanRepository();
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
+        var handler = new StartFastingCommandHandler(
+            planRepo,
+            occurrenceRepo,
+            new StubUserRepository(user),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new StartFastingCommand(user.Id.Value, "F16_8", "InvalidPlanType", null, null, null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Empty(planRepo.StoredPlans);
+        Assert.Empty(occurrenceRepo.StoredOccurrences);
     }
 
     [Fact]
@@ -702,6 +725,40 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task GetFastingHistory_WithUnspecifiedDateRange_NormalizesDatesToUtc() {
+        var userId = UserId.New();
+        var analytics = new RecordingFastingAnalyticsService();
+        var handler = new GetFastingHistoryQueryHandler(analytics, CreateUserRepository(userId));
+        var from = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        var to = new DateTime(2026, 4, 30, 23, 59, 59, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(new GetFastingHistoryQuery(userId.Value, from, to, 1, 10), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DateTimeKind.Utc, analytics.FromUtc.Kind);
+        Assert.Equal(DateTimeKind.Utc, analytics.ToUtc.Kind);
+        Assert.Equal(DateTime.SpecifyKind(from, DateTimeKind.Utc), analytics.FromUtc);
+        Assert.Equal(DateTime.SpecifyKind(to, DateTimeKind.Utc), analytics.ToUtc);
+    }
+
+    [Fact]
+    public async Task GetFastingHistory_WithLocalDateRange_ConvertsDatesToUtc() {
+        var userId = UserId.New();
+        var analytics = new RecordingFastingAnalyticsService();
+        var handler = new GetFastingHistoryQueryHandler(analytics, CreateUserRepository(userId));
+        var from = new DateTime(2026, 4, 1, 4, 0, 0, DateTimeKind.Local);
+        var to = new DateTime(2026, 4, 30, 23, 59, 59, DateTimeKind.Local);
+
+        var result = await handler.Handle(new GetFastingHistoryQuery(userId.Value, from, to, 1, 10), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DateTimeKind.Utc, analytics.FromUtc.Kind);
+        Assert.Equal(DateTimeKind.Utc, analytics.ToUtc.Kind);
+        Assert.Equal(from.ToUniversalTime(), analytics.FromUtc);
+        Assert.Equal(to.ToUniversalTime(), analytics.ToUtc);
+    }
+
+    [Fact]
     public async Task GetFastingStats_ComputesRatesAndTopSymptom() {
         var userId = UserId.New();
         var now = FixedNow;
@@ -936,10 +993,14 @@ public class FastingFeatureTests {
     }
 
     private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {
+        public List<FastingPlan> StoredPlans { get; } = active is null ? [] : [active];
         public Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) => Task.FromResult(active);
         public Task<FastingPlan?> GetByIdAsync(FastingPlanId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<FastingPlan>> GetByUserAsync(UserId userId, FastingPlanType? type = null, FastingPlanStatus? status = null, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task AddAsync(FastingPlan plan, CancellationToken ct = default) => Task.CompletedTask;
+        public Task AddAsync(FastingPlan plan, CancellationToken ct = default) {
+            StoredPlans.Add(plan);
+            return Task.CompletedTask;
+        }
         public Task UpdateAsync(FastingPlan plan, CancellationToken ct = default) => Task.CompletedTask;
     }
 
@@ -1035,6 +1096,36 @@ public class FastingFeatureTests {
                 .ToList();
 
             return Task.FromResult(items);
+        }
+    }
+
+    private sealed class RecordingFastingAnalyticsService : IFastingAnalyticsService {
+        public DateTime FromUtc { get; private set; }
+        public DateTime ToUtc { get; private set; }
+
+        public (DateTime FromUtc, DateTime ToUtc) GetDefaultHistoryWindow(DateTime nowUtc) =>
+            (nowUtc.AddDays(-1), nowUtc);
+
+        public Task<FastingStatsModel> GetStatsAsync(UserId userId, DateTime nowUtc, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<FastingInsightsModel> GetInsightsAsync(
+            UserId userId,
+            DateTime nowUtc,
+            FastingOccurrence? current,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<PagedResponse<FastingSessionModel>> GetHistoryAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime fromUtc,
+            DateTime toUtc,
+            CancellationToken cancellationToken) {
+            FromUtc = fromUtc;
+            ToUtc = toUtc;
+            return Task.FromResult(new PagedResponse<FastingSessionModel>([], page, limit, 0, 0));
         }
     }
 
