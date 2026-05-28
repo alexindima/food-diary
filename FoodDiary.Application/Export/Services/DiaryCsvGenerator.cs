@@ -5,7 +5,10 @@ using FoodDiary.Domain.Entities.Meals;
 namespace FoodDiary.Application.Export.Services;
 
 public static class DiaryCsvGenerator {
-    public static byte[] Generate(IReadOnlyList<Meal> meals) {
+    public static byte[] Generate(IReadOnlyList<Meal> meals, int? timeZoneOffsetMinutes = null) =>
+        Generate(meals, ResolveDisplayOffset(timeZoneOffsetMinutes));
+
+    public static byte[] Generate(IReadOnlyList<Meal> meals, TimeSpan displayOffset) {
         var sb = new StringBuilder();
         sb.AppendLine("Date,MealType,Calories,Proteins,Fats,Carbs,Fiber,Alcohol,Comment");
 
@@ -17,7 +20,7 @@ public static class DiaryCsvGenerator {
             var fiber = meal.IsNutritionAutoCalculated ? meal.TotalFiber : meal.ManualFiber ?? meal.TotalFiber;
             var alcohol = meal.IsNutritionAutoCalculated ? meal.TotalAlcohol : meal.ManualAlcohol ?? meal.TotalAlcohol;
 
-            sb.Append(meal.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+            sb.Append(ToDisplayDate(meal.Date, displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             sb.Append(',');
             sb.Append(meal.MealType?.ToString() ?? "");
             sb.Append(',');
@@ -54,5 +57,20 @@ public static class DiaryCsvGenerator {
         }
 
         return value;
+    }
+
+    private static TimeSpan ResolveDisplayOffset(int? timeZoneOffsetMinutes) =>
+        timeZoneOffsetMinutes is >= -840 and <= 840
+            ? TimeSpan.FromMinutes(timeZoneOffsetMinutes.Value)
+            : TimeSpan.Zero;
+
+    private static DateTime ToDisplayDate(DateTime value, TimeSpan displayOffset) {
+        var utc = value.Kind switch {
+            DateTimeKind.Utc => value,
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
+        };
+
+        return utc.Add(displayOffset);
     }
 }

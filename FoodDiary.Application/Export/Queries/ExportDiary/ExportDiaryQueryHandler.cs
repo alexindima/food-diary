@@ -50,8 +50,9 @@ public class ExportDiaryQueryHandler(
             .Where(meal => meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
             .ToList();
 
-        var fromStr = query.DateFrom.ToString("yyyy-MM-dd");
-        var toStr = query.DateTo.ToString("yyyy-MM-dd");
+        var displayOffset = ResolveDisplayOffset(normalizedFrom, query.TimeZoneOffsetMinutes);
+        var fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd");
+        var toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd");
 
         return query.Format switch {
             ExportFormat.Pdf => Result.Success(new FileExportResult(
@@ -66,9 +67,20 @@ public class ExportDiaryQueryHandler(
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
             _ => Result.Success(new FileExportResult(
-                DiaryCsvGenerator.Generate(filteredMeals),
+                DiaryCsvGenerator.Generate(filteredMeals, displayOffset),
                 "text/csv",
                 $"food-diary-{fromStr}-to-{toStr}.csv")),
         };
+    }
+
+    private static TimeSpan ResolveDisplayOffset(DateTime dateFrom, int? timeZoneOffsetMinutes) {
+        if (timeZoneOffsetMinutes is >= -840 and <= 840) {
+            return TimeSpan.FromMinutes(timeZoneOffsetMinutes.Value);
+        }
+
+        var timeOfDay = dateFrom.TimeOfDay;
+        return timeOfDay <= TimeSpan.FromHours(12)
+            ? -timeOfDay
+            : TimeSpan.FromDays(1) - timeOfDay;
     }
 }

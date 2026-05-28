@@ -106,6 +106,43 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public async Task ExportDiary_WithCsvFormat_UsesLocalDatesForFilenameAndRows() {
+        var userId = UserId.New();
+        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        var meal = CreateMeal(userId, localDayStartUtc.AddHours(1), comment: "local day meal");
+        var handler = CreateHandler([meal]);
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc, ExportFormat.Csv, TimeZoneOffsetMinutes: 240),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName);
+        var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        Assert.Contains("2026-05-04,Breakfast", content);
+        Assert.Contains("local day meal", content);
+    }
+
+    [Fact]
+    public async Task ExportDiary_WithMissingTimeZoneOffset_InfersDisplayDateFromRangeStart() {
+        var userId = UserId.New();
+        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        var meal = CreateMeal(userId, localDayStartUtc.AddHours(1));
+        var handler = CreateHandler([meal]);
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName);
+        var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        Assert.Contains("2026-05-04,Breakfast", content);
+    }
+
+    [Fact]
     public async Task ExportDiary_WithNoMeals_ReturnsHeaderOnly() {
         var userId = UserId.New();
         var handler = CreateHandler([]);
@@ -231,6 +268,16 @@ public class ExportFeatureTests {
         Assert.True(lines.Length >= 2);
         var dataLine = lines[1];
         Assert.Contains(",,", dataLine);
+    }
+
+    [Fact]
+    public void CsvGenerator_WithTimeZoneOffset_WritesDisplayDate() {
+        var meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
+
+        var csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 240);
+        var content = System.Text.Encoding.UTF8.GetString(csv);
+
+        Assert.Contains("2026-05-04,Breakfast", content);
     }
 
     [Fact]
