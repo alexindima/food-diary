@@ -8,6 +8,20 @@ import { AuthService } from '../services/auth.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     private readonly authService = inject(AuthService);
+    private readonly refreshExcludedAuthPaths = [
+        '/auth/register',
+        '/auth/login',
+        '/auth/google',
+        '/auth/refresh',
+        '/auth/restore',
+        '/auth/verify-email',
+        '/auth/password-reset/request',
+        '/auth/password-reset/confirm',
+        '/auth/telegram/verify',
+        '/auth/telegram/login-widget',
+        '/auth/telegram/bot/auth',
+        '/auth/admin-sso/exchange',
+    ];
 
     public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const skipAuth = req.context.get(SKIP_AUTH);
@@ -26,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error: unknown) => {
-                if (!this.isUnauthorizedError(error) || this.isAuthRequest(req.url)) {
+                if (!this.isUnauthorizedError(error) || this.shouldSkipRefresh(req.url)) {
                     return throwError(() => error);
                 }
 
@@ -51,8 +65,9 @@ export class AuthInterceptor implements HttpInterceptor {
         );
     }
 
-    private isAuthRequest(url: string): boolean {
-        return url.toLowerCase().includes('/auth/');
+    private shouldSkipRefresh(url: string): boolean {
+        const path = url.split('?')[0].toLowerCase();
+        return this.refreshExcludedAuthPaths.some(endpoint => path.endsWith(endpoint));
     }
 
     private isUnauthorizedError(error: unknown): boolean {

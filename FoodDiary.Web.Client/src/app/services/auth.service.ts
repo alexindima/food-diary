@@ -68,6 +68,13 @@ export class AuthService extends ApiService {
             return;
         }
 
+        if (this.jwtDecoder.decodePayload(token) === null) {
+            this.authTokenSignal.set(null);
+            this.tokenStorage.clearToken();
+            this.clearStoredIdentity();
+            return;
+        }
+
         if (this.clearExpiredToken(token)) {
             token = null;
         }

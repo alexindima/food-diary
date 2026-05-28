@@ -162,7 +162,7 @@ describe('AuthInterceptor refresh flow', () => {
 });
 
 describe('AuthInterceptor error handling', () => {
-    it('should not refresh for auth requests (URL contains /auth/)', () => {
+    it('should not refresh for public auth requests', () => {
         authServiceSpy.getToken.mockReturnValue('some-token');
 
         http.get('/api/auth/login').subscribe({
@@ -176,6 +176,38 @@ describe('AuthInterceptor error handling', () => {
 
         expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
         expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    });
+
+    it('should not refresh for public nested auth requests', () => {
+        authServiceSpy.getToken.mockReturnValue('some-token');
+
+        http.post('/api/auth/telegram/verify', {}).subscribe({
+            error: (error: unknown) => {
+                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.Unauthorized);
+            },
+        });
+
+        const req = httpTesting.expectOne('/api/auth/telegram/verify');
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+
+        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    });
+
+    it('should refresh for protected auth requests', () => {
+        authServiceSpy.getToken.mockReturnValue('expired-token');
+        authServiceSpy.refreshToken.mockReturnValue(of('new-token'));
+
+        http.post('/api/auth/verify-email/resend', {}).subscribe();
+
+        const req = httpTesting.expectOne('/api/auth/verify-email/resend');
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+
+        expect(authServiceSpy.refreshToken).toHaveBeenCalledTimes(1);
+
+        const retryReq = httpTesting.expectOne('/api/auth/verify-email/resend');
+        expect(retryReq.request.headers.get('Authorization')).toBe('Bearer new-token');
+        retryReq.flush({});
     });
 
     it('should propagate non-401 errors without refresh attempt', () => {

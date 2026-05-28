@@ -15,6 +15,7 @@ using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
@@ -24,13 +25,40 @@ namespace FoodDiary.Application.Tests.Authentication;
 public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task AdminSsoStartHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new AdminSsoStartCommandHandler(new StubAdminSsoService());
+        var handler = new AdminSsoStartCommandHandler(new StubAdminSsoService(), new StubUserRepository());
 
         var result = await handler.Handle(new AdminSsoStartCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task AdminSsoStartHandler_WithNonAdminUser_ReturnsForbiddenWithoutCreatingCode() {
+        var user = User.Create("user@example.com", "secret");
+        var adminSsoService = new StubAdminSsoService();
+        var handler = new AdminSsoStartCommandHandler(adminSsoService, new StubUserRepository(user));
+
+        var result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
+        Assert.Equal(0, adminSsoService.CreateCodeCallCount);
+    }
+
+    [Fact]
+    public async Task AdminSsoStartHandler_WithAdminUser_CreatesCode() {
+        var user = User.Create("admin@example.com", "secret");
+        user.ReplaceRoles([Role.Create(RoleNames.Admin)]);
+        var adminSsoService = new StubAdminSsoService();
+        var handler = new AdminSsoStartCommandHandler(adminSsoService, new StubUserRepository(user));
+
+        var result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("admin-sso-code", result.Value.Code);
+        Assert.Equal(1, adminSsoService.CreateCodeCallCount);
     }
 
     [Fact]
@@ -161,8 +189,12 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     private sealed class StubAdminSsoService : IAdminSsoService {
-        public Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+        public int CreateCodeCallCount { get; private set; }
+
+        public Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
+            CreateCodeCallCount++;
+            return Task.FromResult(new AdminSsoCode("admin-sso-code", DateTime.UtcNow.AddMinutes(5)));
+        }
 
         public Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
@@ -172,7 +204,8 @@ public sealed class AuthenticationCommandHandlerTests {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(user is not null && string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase) ? user : null);
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(user is { IsActive: true, DeletedAt: null } && user.Id == id ? user : null);
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();

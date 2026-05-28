@@ -1,12 +1,17 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 
-public sealed class AdminSsoStartCommandHandler(IAdminSsoService adminSsoService)
+public sealed class AdminSsoStartCommandHandler(
+    IAdminSsoService adminSsoService,
+    IUserRepository userRepository)
     : ICommandHandler<AdminSsoStartCommand, Result<AdminSsoStartModel>> {
     public async Task<Result<AdminSsoStartModel>> Handle(
         AdminSsoStartCommand command,
@@ -16,7 +21,18 @@ public sealed class AdminSsoStartCommandHandler(IAdminSsoService adminSsoService
                 Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
         }
 
-        var code = await adminSsoService.CreateCodeAsync(new UserId(command.UserId), cancellationToken);
+        var userId = new UserId(command.UserId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        if (accessError is not null) {
+            return Result.Failure<AdminSsoStartModel>(accessError);
+        }
+
+        if (!user!.HasRole(RoleNames.Admin)) {
+            return Result.Failure<AdminSsoStartModel>(Errors.Authentication.AdminSsoForbidden);
+        }
+
+        var code = await adminSsoService.CreateCodeAsync(userId, cancellationToken);
         var response = new AdminSsoStartModel(code.Code, code.ExpiresAtUtc);
         return Result.Success(response);
     }

@@ -476,7 +476,7 @@ describe('session restore', () => {
 
 describe('logout', () => {
     beforeEach(() => {
-        localStorage.setItem('authToken', 'token');
+        localStorage.setItem('authToken', createFakeJwt({ sub: 'logout-user' }));
         localStorage.setItem('refreshToken', 'refresh');
         localStorage.setItem('userId', 'user-1');
         localStorage.setItem('emailConfirmed', 'true');
@@ -561,6 +561,8 @@ describe('JWT decoding', () => {
         const freshService = TestBed.inject(AuthService);
         freshService.initializeAuth();
         expect(freshService.getUserId()).toBeNull();
+        expect(freshService.isAuthenticated()).toBe(false);
+        expect(localStorage.getItem('authToken')).toBeNull();
     });
 
     it('should return null for non-JWT string with wrong segment count', () => {
