@@ -164,6 +164,29 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateGoalsHandler_WithInvalidDayCalories_ReturnsValidationFailure() {
+        var user = User.Create("goals-invalid-day-calories@example.com", "hash");
+        var handler = new UpdateGoalsCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateGoalsCommand(
+                user.Id.Value,
+                DailyCalorieTarget: null,
+                ProteinTarget: null,
+                FatTarget: null,
+                CarbTarget: null,
+                FiberTarget: null,
+                WaterGoal: null,
+                DesiredWeight: null,
+                DesiredWaist: null,
+                MondayCalories: double.NaN),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateGoalsHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("goals-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);

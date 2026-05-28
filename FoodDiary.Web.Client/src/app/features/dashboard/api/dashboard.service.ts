@@ -5,7 +5,7 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
 import { ApiService } from '../../../services/api.service';
-import { fallbackApiError } from '../../../shared/lib/api-error.utils';
+import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 import { DASHBOARD_SNAPSHOT_QUERY_DEFAULTS } from './dashboard-api.tokens';
 
@@ -24,17 +24,30 @@ export class DashboardService extends ApiService {
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
 
     public getSnapshot(query: DashboardSnapshotQuery): Observable<DashboardSnapshot | null> {
-        const params = this.createSnapshotParams(query);
-        return this.get<DashboardSnapshot>('', params).pipe(
+        return this.requestSnapshot(query).pipe(
             catchError((error: unknown) => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
     }
 
+    public getSnapshotStrict(query: DashboardSnapshotQuery): Observable<DashboardSnapshot> {
+        return this.requestSnapshot(query).pipe(catchError((error: unknown) => rethrowApiError('Dashboard snapshot fetch error', error)));
+    }
+
     public getSnapshotSilently(query: DashboardSnapshotQuery): Observable<DashboardSnapshot | null> {
-        const params = this.createSnapshotParams(query);
-        return this.get<DashboardSnapshot>('', params, undefined, this.silentLoadingContext).pipe(
+        return this.requestSnapshot(query, this.silentLoadingContext).pipe(
             catchError((error: unknown) => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
+    }
+
+    public getSnapshotSilentlyStrict(query: DashboardSnapshotQuery): Observable<DashboardSnapshot> {
+        return this.requestSnapshot(query, this.silentLoadingContext).pipe(
+            catchError((error: unknown) => rethrowApiError('Dashboard snapshot fetch error', error)),
+        );
+    }
+
+    private requestSnapshot(query: DashboardSnapshotQuery, context?: HttpContext): Observable<DashboardSnapshot> {
+        const params = this.createSnapshotParams(query);
+        return this.get<DashboardSnapshot>('', params, undefined, context);
     }
 
     private createSnapshotParams(query: DashboardSnapshotQuery): Record<string, string | number> {

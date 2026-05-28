@@ -394,7 +394,7 @@ export class GoalsFacade {
         this.isLoadingGoals.set(true);
         this.hasLoadError.set(false);
         this.goalsService
-            .getGoals()
+            .getGoalsStrict()
             .pipe(
                 finalize(() => {
                     this.isLoadingGoals.set(false);

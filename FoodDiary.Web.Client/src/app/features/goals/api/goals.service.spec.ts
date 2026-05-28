@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import type { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
@@ -49,6 +49,17 @@ describe('GoalsService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+
+    it('should rethrow strict getGoals errors', () => {
+        const errorSpy = vi.fn();
+
+        service.getGoalsStrict().subscribe({ error: errorSpy });
+
+        const req = httpMock.expectOne(`${baseUrl}/`);
+        req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+
+        expect(errorSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should update goals', () => {

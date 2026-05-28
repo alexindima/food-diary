@@ -418,6 +418,17 @@ public class UserInvariantTests {
 
     [Theory]
     [InlineData(-1d)]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    public void UpdateGoals_WithInvalidDayCalories_Throws(double mondayCalories) {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateGoals(new UserGoalUpdate(MondayCalories: mondayCalories)));
+    }
+
+    [Theory]
+    [InlineData(-1d)]
     [InlineData(0d)]
     [InlineData(500.0001d)]
     public void UpdateDesiredWeight_WithInvalidValue_Throws(double desiredWeight) {

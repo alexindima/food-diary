@@ -50,7 +50,7 @@ describe('DashboardFacade loading', () => {
         const { facade, dashboardService, snapshot } = setupFacade();
         const reload$ = new Subject<DashboardSnapshot>();
         facade.initialize();
-        dashboardService.getSnapshot.mockReturnValueOnce(reload$);
+        dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(reload$);
 
         facade.reload(false);
 
@@ -59,6 +59,17 @@ describe('DashboardFacade loading', () => {
         reload$.next(snapshot);
         reload$.complete();
         expect(facade.snapshot()).toEqual(snapshot);
+    });
+
+    it('should keep current snapshot when silent reload fails', () => {
+        const { facade, dashboardService, snapshot, layout } = setupFacade();
+        facade.initialize();
+        dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(throwError(() => new Error('snapshot failed')));
+
+        facade.reload(false);
+
+        expect(facade.snapshot()).toEqual(snapshot);
+        expect(layout.initializeLayout).toHaveBeenCalledTimes(1);
     });
 
     it('should ignore stale snapshot responses after selected date changes', () => {
@@ -85,23 +96,33 @@ describe('DashboardFacade actions', () => {
     it('should reload snapshot after hydration update succeeds', () => {
         const { facade, dashboardService, hydrationService } = setupFacade();
         facade.initialize();
-        const initialCallCount = dashboardService.getSnapshot.mock.calls.length;
 
         facade.addHydration(HYDRATION_AMOUNT_ML);
 
         expect(hydrationService.addEntry).toHaveBeenCalled();
-        expect(dashboardService.getSnapshot.mock.calls.length).toBe(initialCallCount + 1);
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
     });
 
     it('should update calorie goal and reload snapshot after applying TDEE suggestion', () => {
         const { facade, dashboardService, goalsService } = setupFacade();
         facade.initialize();
-        const initialCallCount = dashboardService.getSnapshot.mock.calls.length;
 
         facade.applyTdeeGoal(TDEE_TARGET);
 
         expect(goalsService.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: TDEE_TARGET });
-        expect(dashboardService.getSnapshot.mock.calls.length).toBe(initialCallCount + 1);
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
+    });
+
+    it('should keep snapshot when hydration refresh fails after update succeeds', () => {
+        const { facade, dashboardService, hydrationService, snapshot } = setupFacade();
+        facade.initialize();
+        dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(throwError(() => new Error('snapshot failed')));
+
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+
+        expect(hydrationService.addEntry).toHaveBeenCalled();
+        expect(facade.snapshot()).toEqual(snapshot);
+        expect(facade.isHydrationLoading()).toBe(false);
     });
 
     it('should stop hydration loading when hydration update fails', () => {
@@ -117,7 +138,10 @@ describe('DashboardFacade actions', () => {
 
 function setupFacade(): {
     facade: DashboardFacade;
-    dashboardService: { getSnapshot: ReturnType<typeof vi.fn> };
+    dashboardService: {
+        getSnapshot: ReturnType<typeof vi.fn>;
+        getSnapshotSilentlyStrict: ReturnType<typeof vi.fn>;
+    };
     goalsService: { updateGoals: ReturnType<typeof vi.fn> };
     hydrationService: { addEntry: ReturnType<typeof vi.fn> };
     layout: { initializeLayout: ReturnType<typeof vi.fn>; updateViewportWidth: ReturnType<typeof vi.fn> };
@@ -129,7 +153,10 @@ function setupFacade(): {
     };
 } {
     const snapshot = createSnapshot();
-    const dashboardService = { getSnapshot: vi.fn(() => of(snapshot)) };
+    const dashboardService = {
+        getSnapshot: vi.fn(() => of(snapshot)),
+        getSnapshotSilentlyStrict: vi.fn(() => of(snapshot)),
+    };
     const goalsService = { updateGoals: vi.fn(() => of(undefined)) };
     const hydrationService = { addEntry: vi.fn(() => of(undefined)) };
     const layout = { initializeLayout: vi.fn(), updateViewportWidth: vi.fn() };

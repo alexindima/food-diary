@@ -132,7 +132,8 @@ export class DashboardFacade {
         const requestVersion = ++this.snapshotRequestVersion;
         const targetDate = getDashboardDateUtc(this.selectedDate());
         const locale = this.getCurrentLocale();
-        const request$ = this.dashboardService.getSnapshot({ date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays });
+        const query = { date: targetDate, page: 1, pageSize: 10, locale, trendDays: this.trendDays };
+        const request$ = showLoader ? this.dashboardService.getSnapshot(query) : this.dashboardService.getSnapshotSilentlyStrict(query);
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {
                 if (requestVersion !== this.snapshotRequestVersion) {
@@ -150,8 +151,10 @@ export class DashboardFacade {
                     return;
                 }
 
-                this.snapshot.set(null);
-                this.layout.initializeLayout(null);
+                if (showLoader) {
+                    this.snapshot.set(null);
+                    this.layout.initializeLayout(null);
+                }
                 if (clearHydrationUpdate) {
                     this.isHydrationUpdating.set(false);
                 }

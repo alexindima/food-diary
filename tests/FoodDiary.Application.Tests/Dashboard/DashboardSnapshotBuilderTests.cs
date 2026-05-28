@@ -6,6 +6,9 @@ using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Application.WeightEntries.Models;
@@ -108,6 +111,49 @@ public sealed class DashboardSnapshotBuilderTests {
         Assert.Equal(92, result.Value.Waist.Previous?.Circumference);
     }
 
+    [Fact]
+    public async Task BuildAsync_NormalizesMealPagingBeforeLoadingConsumptions() {
+        var user = User.Create("dashboard-paging@example.com", "hash");
+        var sender = new RecordingConsumptionsSender();
+        var builder = new DashboardSnapshotBuilder(
+            sender,
+            new AccessibleUserRepository(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingOccurrenceRepository(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        var result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                null,
+                "en",
+                7,
+                Page: 0,
+                PageSize: 500,
+                Sections: new DashboardSnapshotSections(
+                    IncludeStatistics: false,
+                    IncludeMeals: true,
+                    IncludeWeight: false,
+                    IncludeWaist: false,
+                    IncludeHydration: false,
+                    IncludeFasting: false,
+                    IncludeAdvice: false,
+                    IncludeLayout: false,
+                    IncludeExercise: false,
+                    IncludeTdee: false,
+                    IncludeCycle: false)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(sender.LastConsumptionsQuery);
+        Assert.Equal(1, sender.LastConsumptionsQuery.Page);
+        Assert.Equal(100, sender.LastConsumptionsQuery.Limit);
+    }
+
     private sealed class EmptyTrendSender : ISender {
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : IRequest =>
@@ -123,6 +169,33 @@ public sealed class DashboardSnapshotBuilderTests {
 
             if (request is GetWaistSummariesQuery) {
                 return Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<WaistEntrySummaryModel>>([]));
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class RecordingConsumptionsSender : ISender {
+        public GetConsumptionsQuery? LastConsumptionsQuery { get; private set; }
+
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
+            if (request is GetConsumptionsQuery query) {
+                LastConsumptionsQuery = query;
+                var response = new PagedResponse<ConsumptionModel>([], query.Page, query.Limit, 0, 0);
+                return Task.FromResult((TResponse)(object)Result.Success(response));
             }
 
             throw new NotSupportedException();

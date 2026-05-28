@@ -140,6 +140,41 @@ public class UsersValidatorTests {
     // ── Query validators (UserId-only) ──
 
     [Fact]
+    public async Task UpdateGoals_WithInfiniteProteinTarget_HasError() {
+        var v = new UpdateGoalsCommandValidator();
+        var result = await v.TestValidateAsync(new UpdateGoalsCommand(
+            Guid.NewGuid(),
+            DailyCalorieTarget: null,
+            ProteinTarget: double.PositiveInfinity,
+            FatTarget: null,
+            CarbTarget: null,
+            FiberTarget: null,
+            WaterGoal: null,
+            DesiredWeight: null,
+            DesiredWaist: null));
+
+        result.ShouldHaveValidationErrorFor(c => c.ProteinTarget);
+    }
+
+    [Fact]
+    public async Task UpdateGoals_WithNaNMondayCalories_HasError() {
+        var v = new UpdateGoalsCommandValidator();
+        var result = await v.TestValidateAsync(new UpdateGoalsCommand(
+            Guid.NewGuid(),
+            DailyCalorieTarget: null,
+            ProteinTarget: null,
+            FatTarget: null,
+            CarbTarget: null,
+            FiberTarget: null,
+            WaterGoal: null,
+            DesiredWeight: null,
+            DesiredWaist: null,
+            MondayCalories: double.NaN));
+
+        result.ShouldHaveValidationErrorFor(c => c.MondayCalories);
+    }
+
+    [Fact]
     public async Task GetDesiredWaist_WithNullUserId_HasError() {
         var result = await new GetDesiredWaistQueryValidator().TestValidateAsync(new GetDesiredWaistQuery(null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);

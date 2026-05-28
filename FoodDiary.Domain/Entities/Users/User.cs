@@ -463,6 +463,20 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
+    private static void EnsureDayCalorieTarget(double? value, string paramName) {
+        if (!value.HasValue) {
+            return;
+        }
+
+        if (double.IsNaN(value.Value) || double.IsInfinity(value.Value)) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
+        }
+
+        if (value.Value < 0) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
+        }
+    }
+
     private static void EnsureGender(string? value, string paramName) {
         if (value is null) {
             return;

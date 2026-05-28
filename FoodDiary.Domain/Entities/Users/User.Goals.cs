@@ -42,6 +42,13 @@ public sealed partial class User {
 
         EnsureDesiredWeight(update.DesiredWeight, nameof(update.DesiredWeight));
         EnsureDesiredWaist(update.DesiredWaist, nameof(update.DesiredWaist));
+        EnsureDayCalorieTarget(update.MondayCalories, nameof(update.MondayCalories));
+        EnsureDayCalorieTarget(update.TuesdayCalories, nameof(update.TuesdayCalories));
+        EnsureDayCalorieTarget(update.WednesdayCalories, nameof(update.WednesdayCalories));
+        EnsureDayCalorieTarget(update.ThursdayCalories, nameof(update.ThursdayCalories));
+        EnsureDayCalorieTarget(update.FridayCalories, nameof(update.FridayCalories));
+        EnsureDayCalorieTarget(update.SaturdayCalories, nameof(update.SaturdayCalories));
+        EnsureDayCalorieTarget(update.SundayCalories, nameof(update.SundayCalories));
 
         var state = GetGoalState() with {
             DailyCalorieTarget = updatedGoals.DailyCalorieTarget,

@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
@@ -104,6 +104,17 @@ describe('DashboardService snapshot', () => {
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
+
+    it('should rethrow strict snapshot errors', () => {
+        const errorSpy = vi.fn();
+
+        service.getSnapshotStrict({ date: TEST_DATE }).subscribe({ error: errorSpy });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+
+        expect(errorSpy).toHaveBeenCalledTimes(1);
+    });
 });
 
 describe('DashboardService silent snapshot', () => {
@@ -113,5 +124,13 @@ describe('DashboardService silent snapshot', () => {
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         req.flush({});
+    });
+
+    it('should mark strict silent snapshot requests to skip global loading', () => {
+        service.getSnapshotSilentlyStrict({ date: TEST_DATE }).subscribe();
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        req.flush(MOCK_SNAPSHOT);
     });
 });

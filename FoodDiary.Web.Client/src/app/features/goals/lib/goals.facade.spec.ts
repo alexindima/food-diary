@@ -35,7 +35,11 @@ const RETRY_WATER = 2300;
 const FAILED_SAVE_CALORIES = 1900;
 
 let facade: GoalsFacade;
-let goalsService: { getGoals: ReturnType<typeof vi.fn>; updateGoals: ReturnType<typeof vi.fn> };
+let goalsService: {
+    getGoals: ReturnType<typeof vi.fn>;
+    getGoalsStrict: ReturnType<typeof vi.fn>;
+    updateGoals: ReturnType<typeof vi.fn>;
+};
 let toastService: { success: ReturnType<typeof vi.fn> };
 
 describe('GoalsFacade', () => {
@@ -43,7 +47,8 @@ describe('GoalsFacade', () => {
         vi.useFakeTimers();
 
         goalsService = {
-            getGoals: vi.fn().mockReturnValue(
+            getGoals: vi.fn(),
+            getGoalsStrict: vi.fn().mockReturnValue(
                 of({
                     dailyCalorieTarget: SAVED_CALORIES,
                     proteinTarget: SAVED_PROTEIN,
@@ -92,7 +97,7 @@ function registerLoadTests(): void {
         it('loads saved goals on initialize', () => {
             facade.initialize();
 
-            expect(goalsService.getGoals).toHaveBeenCalledTimes(1);
+            expect(goalsService.getGoalsStrict).toHaveBeenCalledTimes(1);
             expect(facade.calorieTarget()).toBe(SAVED_CALORIES);
             expect(facade.macroValues()).toEqual({
                 protein: SAVED_PROTEIN,
@@ -109,7 +114,7 @@ function registerLoadTests(): void {
 
         it('clears loaded numeric goals when backend returns null values', () => {
             facade.initialize();
-            goalsService.getGoals.mockReturnValueOnce(
+            goalsService.getGoalsStrict.mockReturnValueOnce(
                 of({
                     dailyCalorieTarget: null,
                     proteinTarget: null,
@@ -136,6 +141,27 @@ function registerLoadTests(): void {
             expect(facade.bodyTargetValues()).toEqual({
                 weight: 0,
                 waist: 0,
+            });
+        });
+
+        it('keeps existing goals and marks load error when reload fails', () => {
+            facade.initialize();
+            goalsService.getGoalsStrict.mockReturnValueOnce(throwError(() => new Error('load failed')));
+
+            facade.reload();
+
+            expect(facade.hasLoadError()).toBe(true);
+            expect(facade.calorieTarget()).toBe(SAVED_CALORIES);
+            expect(facade.macroValues()).toEqual({
+                protein: SAVED_PROTEIN,
+                fats: SAVED_FATS,
+                carbs: SAVED_CARBS,
+                fiber: SAVED_FIBER,
+            });
+            expect(facade.waterValue()).toBe(SAVED_WATER);
+            expect(facade.bodyTargetValues()).toEqual({
+                weight: SAVED_WEIGHT,
+                waist: SAVED_WAIST,
             });
         });
     });

@@ -78,6 +78,11 @@ public class DashboardSnapshotBuilder(
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IExerciseEntryRepository exerciseEntryRepository,
     ILogger<DashboardSnapshotBuilder> logger) : IDashboardSnapshotBuilder {
+    private const int DefaultPage = 1;
+    private const int DefaultPageSize = 10;
+    private const int MaxPageSize = 100;
+    private const int DefaultTrendDays = 7;
+    private const int MaxTrendDays = 31;
 
     public async Task<Result<DashboardSnapshotModel>> BuildAsync(
         DashboardSnapshotRequest request,
@@ -100,7 +105,9 @@ public class DashboardSnapshotBuilder(
         var sections = request.Sections ?? DashboardSnapshotSections.All;
         var userId = new UserId(request.UserId);
         var locale = string.IsNullOrWhiteSpace(request.Locale) ? "en" : request.Locale;
-        var trendDays = Math.Clamp(request.TrendDays <= 0 ? 7 : request.TrendDays, 1, 31);
+        var page = request.Page <= 0 ? DefaultPage : request.Page;
+        var pageSize = request.PageSize <= 0 ? DefaultPageSize : Math.Min(request.PageSize, MaxPageSize);
+        var trendDays = Math.Clamp(request.TrendDays <= 0 ? DefaultTrendDays : request.TrendDays, 1, MaxTrendDays);
         var trendStart = dayStart.AddDays(-(trendDays - 1));
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
@@ -130,7 +137,7 @@ public class DashboardSnapshotBuilder(
         var meals = new DashboardMealsModel([], 0);
         if (sections.IncludeMeals) {
             var mealsResult = await sender.Send(new GetConsumptionsQuery(
-                request.UserId, request.Page, request.PageSize, dayStart, dayEnd), cancellationToken);
+                request.UserId, page, pageSize, dayStart, dayEnd), cancellationToken);
             if (mealsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
 
             meals = new DashboardMealsModel(mealsResult.Value.Data, mealsResult.Value.TotalItems);
