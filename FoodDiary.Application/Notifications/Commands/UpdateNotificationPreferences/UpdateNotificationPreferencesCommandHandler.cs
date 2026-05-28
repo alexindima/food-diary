@@ -26,26 +26,36 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             return Result.Failure<NotificationPreferencesModel>(accessError);
         }
 
-        user!.UpdatePreferences(new UserPreferenceUpdate(
+        var currentUser = user!;
+        var firstReminder = command.FastingCheckInReminderHours ?? currentUser.FastingCheckInReminderHours;
+        var followUpReminder = command.FastingCheckInFollowUpReminderHours ?? currentUser.FastingCheckInFollowUpReminderHours;
+        if (followUpReminder <= firstReminder) {
+            return Result.Failure<NotificationPreferencesModel>(
+                Errors.Validation.Invalid(
+                    nameof(command.FastingCheckInFollowUpReminderHours),
+                    "Follow-up reminder hour must be greater than the first reminder hour."));
+        }
+
+        currentUser.UpdatePreferences(new UserPreferenceUpdate(
             PushNotificationsEnabled: command.PushNotificationsEnabled,
             FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled,
             FastingCheckInReminderHours: command.FastingCheckInReminderHours,
             FastingCheckInFollowUpReminderHours: command.FastingCheckInFollowUpReminderHours));
 
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken);
         auditLogger.Log(
             "notifications.preferences.updated",
-            user.Id,
+            currentUser.Id,
             "User",
-            user.Id.Value.ToString(),
-            $"push={user.PushNotificationsEnabled};fasting={user.FastingPushNotificationsEnabled};social={user.SocialPushNotificationsEnabled};fastingReminder={user.FastingCheckInReminderHours};fastingReminderFollowUp={user.FastingCheckInFollowUpReminderHours}");
+            currentUser.Id.Value.ToString(),
+            $"push={currentUser.PushNotificationsEnabled};fasting={currentUser.FastingPushNotificationsEnabled};social={currentUser.SocialPushNotificationsEnabled};fastingReminder={currentUser.FastingCheckInReminderHours};fastingReminderFollowUp={currentUser.FastingCheckInFollowUpReminderHours}");
 
         return Result.Success(new NotificationPreferencesModel(
-            user.PushNotificationsEnabled,
-            user.FastingPushNotificationsEnabled,
-            user.SocialPushNotificationsEnabled,
-            user.FastingCheckInReminderHours,
-            user.FastingCheckInFollowUpReminderHours));
+            currentUser.PushNotificationsEnabled,
+            currentUser.FastingPushNotificationsEnabled,
+            currentUser.SocialPushNotificationsEnabled,
+            currentUser.FastingCheckInReminderHours,
+            currentUser.FastingCheckInFollowUpReminderHours));
     }
 }

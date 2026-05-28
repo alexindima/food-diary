@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
+import { BrowserNotificationCapabilityService } from '../../../../../services/browser-notification-capability.service';
 import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../../services/localization.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../../services/notification.service';
@@ -35,10 +36,11 @@ export class UserManageNotificationsFacade {
     private readonly localizationService = inject(LocalizationService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
     private readonly languageVersion = signal(0);
     private readonly hasTrackedNotificationsView = signal(false);
 
-    public readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.readNotificationPermission());
+    public readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
     public readonly notificationsChangedVersion = this.notificationService.notificationsChangedVersion;
     public readonly isUpdatingNotifications = this.facade.isUpdatingNotifications;
     public readonly isSchedulingTestNotification = signal(false);
@@ -98,7 +100,7 @@ export class UserManageNotificationsFacade {
             return;
         }
 
-        this.notificationPermission.set(this.readNotificationPermission());
+        this.notificationPermission.set(this.browserNotifications.getPermission());
         if (!nextEnabled) {
             this.handlePushNotificationsDisabled();
             return;
@@ -306,14 +308,6 @@ export class UserManageNotificationsFacade {
                 );
                 break;
         }
-    }
-
-    private readNotificationPermission(): NotificationPermission | 'unsupported' {
-        if (typeof Notification === 'undefined') {
-            return 'unsupported';
-        }
-
-        return Notification.permission;
     }
 
     private formatDateTime(value: string | null): string | null {

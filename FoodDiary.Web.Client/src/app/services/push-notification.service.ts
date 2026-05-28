@@ -6,6 +6,7 @@ import { firstValueFrom, take } from 'rxjs';
 
 import { getStringProperty } from '../shared/lib/unknown-value.utils';
 import { AuthService } from './auth.service';
+import { BrowserNotificationCapabilityService } from './browser-notification-capability.service';
 import { LocalizationService } from './localization.service';
 import { NotificationService, type WebPushSubscriptionRequest } from './notification.service';
 
@@ -19,6 +20,7 @@ export class PushNotificationService {
     private readonly notificationService = inject(NotificationService);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
 
     public readonly isSupported = signal(this.swPush.isEnabled);
     public readonly isSubscribed = signal(false);
@@ -41,7 +43,7 @@ export class PushNotificationService {
         this.swPush.notificationClicks.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             const targetUrl = getStringProperty(event.notification.data, 'targetUrl') ?? getStringProperty(event.notification.data, 'url');
             if (targetUrl !== undefined && targetUrl.length > 0) {
-                void this.router.navigateByUrl(this.toAppUrl(targetUrl));
+                void this.router.navigateByUrl(this.browserNotifications.toAppUrl(targetUrl));
             }
 
             this.notificationService.fetchUnreadCount({ force: true });
@@ -181,7 +183,7 @@ export class PushNotificationService {
                 auth: json.keys?.['auth'] ?? '',
             },
             locale: this.localizationService.getCurrentLanguage(),
-            userAgent: typeof navigator === 'undefined' ? '' : navigator.userAgent,
+            userAgent: this.browserNotifications.getUserAgent(),
         };
     }
 
@@ -194,7 +196,7 @@ export class PushNotificationService {
     }
 
     private isNotificationPermissionDenied(): boolean {
-        return typeof Notification !== 'undefined' && Notification.permission === 'denied';
+        return this.browserNotifications.isPermissionDenied();
     }
 
     private async upsertSubscriptionAsync(subscription: PushSubscription): Promise<void> {
@@ -205,26 +207,5 @@ export class PushNotificationService {
     private setSubscriptionState(subscription: PushSubscription | null): void {
         this.isSubscribed.set(subscription !== null);
         this.currentSubscriptionEndpoint.set(subscription?.endpoint ?? null);
-    }
-
-    private toAppUrl(url: string): string {
-        if (!/^https?:\/\//i.test(url)) {
-            return url;
-        }
-
-        if (typeof window === 'undefined') {
-            return url;
-        }
-
-        try {
-            const parsed = new URL(url, window.location.origin);
-            if (parsed.origin === window.location.origin) {
-                return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-            }
-        } catch {
-            return url;
-        }
-
-        return url;
     }
 }

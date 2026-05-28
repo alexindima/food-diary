@@ -222,6 +222,23 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateNotificationPreferences_WhenPartialReminderUpdateWouldInvertOrder_ReturnsValidationFailure() {
+        var user = CreateUser(email: "partial-reminders@example.com");
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new UpdateNotificationPreferencesCommandHandler(new SingleUserRepository(user), auditLogger);
+
+        var result = await handler.Handle(
+            new UpdateNotificationPreferencesCommand(user.Id.Value, null, null, null, 20, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Equal(12, user.FastingCheckInReminderHours);
+        Assert.Equal(20, user.FastingCheckInFollowUpReminderHours);
+        Assert.Equal(string.Empty, auditLogger.Action);
+    }
+
+    [Fact]
     public async Task GetNotificationPreferences_WithDeletedUser_ReturnsAccountDeleted() {
         var user = CreateUser(email: "deleted-notifications@example.com");
         user.DeleteAccount(DateTime.UtcNow);

@@ -10,6 +10,7 @@ import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
 
+import { BrowserNotificationCapabilityService } from '../../../../services/browser-notification-capability.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { NotificationService } from '../../../../services/notification.service';
@@ -31,7 +32,8 @@ export class DashboardNotificationSettingsDialogComponent {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private readonly frontendObservability = inject(FrontendObservabilityService);
-    private readonly notificationPermission = signal<NotificationPermission>(this.readNotificationPermission());
+    private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
+    private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
 
     public readonly isLoading = signal(true);
     public readonly isUpdating = signal(false);
@@ -116,7 +118,7 @@ export class DashboardNotificationSettingsDialogComponent {
                     this.pushNotificationsEnabled.set(preferences.pushNotificationsEnabled);
                     this.fastingPushNotificationsEnabled.set(preferences.fastingPushNotificationsEnabled);
                     this.socialPushNotificationsEnabled.set(preferences.socialPushNotificationsEnabled);
-                    this.notificationPermission.set(this.readNotificationPermission());
+                    this.notificationPermission.set(this.browserNotifications.getPermission());
 
                     if (!nextEnabled) {
                         this.frontendObservability.recordNotificationPreferenceChanged('push', false, {
@@ -242,7 +244,7 @@ export class DashboardNotificationSettingsDialogComponent {
                     this.pushNotificationsEnabled.set(preferences.pushNotificationsEnabled);
                     this.fastingPushNotificationsEnabled.set(preferences.fastingPushNotificationsEnabled);
                     this.socialPushNotificationsEnabled.set(preferences.socialPushNotificationsEnabled);
-                    this.notificationPermission.set(this.readNotificationPermission());
+                    this.notificationPermission.set(this.browserNotifications.getPermission());
                     this.frontendObservability.recordNotificationSettingsViewed({
                         pushEnabled: preferences.pushNotificationsEnabled,
                         fastingEnabled: preferences.fastingPushNotificationsEnabled,
@@ -300,13 +302,5 @@ export class DashboardNotificationSettingsDialogComponent {
                 );
                 break;
         }
-    }
-
-    private readNotificationPermission(): NotificationPermission {
-        if (typeof Notification === 'undefined') {
-            return 'default';
-        }
-
-        return Notification.permission;
     }
 }
