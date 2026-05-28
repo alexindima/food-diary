@@ -15,4 +15,19 @@ public static class NotificationPayloadSerializer {
 
         return JsonSerializer.Deserialize<TPayload>(payloadJson, JsonOptions);
     }
+
+    public static bool TryDeserialize<TPayload>(string? payloadJson, out TPayload? payload) {
+        payload = default;
+
+        if (string.IsNullOrWhiteSpace(payloadJson)) {
+            return false;
+        }
+
+        try {
+            payload = JsonSerializer.Deserialize<TPayload>(payloadJson, JsonOptions);
+            return payload is not null;
+        } catch (JsonException) {
+            return false;
+        }
+    }
 }
