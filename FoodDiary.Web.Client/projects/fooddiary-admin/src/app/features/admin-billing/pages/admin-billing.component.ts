@@ -49,6 +49,7 @@ export class AdminBillingComponent {
     private readonly billingService = inject(AdminBillingService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly locale = inject(LOCALE_ID);
+    private loadRequestId = 0;
 
     public readonly activeTab = signal<AdminBillingTab>('subscriptions');
     public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
@@ -90,6 +91,7 @@ export class AdminBillingComponent {
     public readonly page = signal(1);
     public readonly limit = DEFAULT_PAGE_SIZE;
     public readonly isLoading = signal(false);
+    public readonly errorMessage = signal<string | null>(null);
     public readonly provider = signal('');
     public readonly status = signal('');
     public readonly kind = signal('');
@@ -160,36 +162,47 @@ export class AdminBillingComponent {
     }
 
     public load(): void {
+        const requestId = ++this.loadRequestId;
+        const tab = this.activeTab();
         this.isLoading.set(true);
+        this.errorMessage.set(null);
         const filters = this.buildFilters();
 
-        if (this.activeTab() === 'subscriptions') {
+        if (tab === 'subscriptions') {
             this.billingService
                 .getSubscriptions(this.page(), this.limit, filters)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({
                     next: response => {
+                        if (!this.isCurrentLoad(requestId, tab)) {
+                            return;
+                        }
+
                         this.subscriptions.set(response.items);
                         this.applyPageData(response);
                     },
-                    error: () => {
-                        this.clearData();
+                    error: (error: unknown) => {
+                        this.applyLoadError(requestId, tab, error);
                     },
                 });
             return;
         }
 
-        if (this.activeTab() === 'payments') {
+        if (tab === 'payments') {
             this.billingService
                 .getPayments(this.page(), this.limit, filters)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({
                     next: response => {
+                        if (!this.isCurrentLoad(requestId, tab)) {
+                            return;
+                        }
+
                         this.payments.set(response.items);
                         this.applyPageData(response);
                     },
-                    error: () => {
-                        this.clearData();
+                    error: (error: unknown) => {
+                        this.applyLoadError(requestId, tab, error);
                     },
                 });
             return;
@@ -200,11 +213,15 @@ export class AdminBillingComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
+                    if (!this.isCurrentLoad(requestId, tab)) {
+                        return;
+                    }
+
                     this.webhookEvents.set(response.items);
                     this.applyPageData(response);
                 },
-                error: () => {
-                    this.clearData();
+                error: (error: unknown) => {
+                    this.applyLoadError(requestId, tab, error);
                 },
             });
     }
@@ -215,13 +232,39 @@ export class AdminBillingComponent {
         this.isLoading.set(false);
     }
 
-    private clearData(): void {
-        this.subscriptions.set([]);
-        this.payments.set([]);
-        this.webhookEvents.set([]);
+    private applyLoadError(requestId: number, tab: AdminBillingTab, error: unknown): void {
+        if (!this.isCurrentLoad(requestId, tab)) {
+            return;
+        }
+
+        this.errorMessage.set(this.getErrorMessage(error));
+        this.clearData(tab);
+    }
+
+    private clearData(tab: AdminBillingTab): void {
+        if (tab === 'subscriptions') {
+            this.subscriptions.set([]);
+        } else if (tab === 'payments') {
+            this.payments.set([]);
+        } else {
+            this.webhookEvents.set([]);
+        }
+
         this.totalPages.set(1);
         this.totalItems.set(0);
         this.isLoading.set(false);
+    }
+
+    private isCurrentLoad(requestId: number, tab: AdminBillingTab): boolean {
+        return requestId === this.loadRequestId && tab === this.activeTab();
+    }
+
+    private getErrorMessage(error: unknown): string {
+        if (error instanceof Error && error.message.length > 0) {
+            return error.message;
+        }
+
+        return 'Failed to load billing records.';
     }
 
     private buildFilters(): AdminBillingFilters {

@@ -11,15 +11,15 @@ public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingRepository 
     public async Task<Result<PagedResponse<AdminBillingPaymentReadModel>>> Handle(
         GetAdminBillingPaymentsQuery query,
         CancellationToken cancellationToken) {
-        var filter = new AdminBillingListFilter(
-            query.Page <= 0 ? 1 : query.Page,
-            query.Limit is > 0 and <= 100 ? query.Limit : 20,
-            Normalize(query.Provider),
-            Normalize(query.Status),
-            Normalize(query.Kind),
-            Normalize(query.Search),
-            NormalizeUtc(query.FromUtc),
-            NormalizeUtc(query.ToUtc));
+        var filter = AdminBillingQueryFilters.Create(
+            query.Page,
+            query.Limit,
+            query.Provider,
+            query.Status,
+            query.Kind,
+            query.Search,
+            query.FromUtc,
+            query.ToUtc);
         var pageData = await billingRepository.GetPaymentsAsync(filter, cancellationToken);
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)filter.Limit);
         return Result.Success(new PagedResponse<AdminBillingPaymentReadModel>(
@@ -29,10 +29,4 @@ public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingRepository 
             totalPages,
             pageData.TotalItems));
     }
-
-    private static string? Normalize(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
-
-    private static DateTime? NormalizeUtc(DateTime? value) =>
-        value?.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc) : value?.ToUniversalTime();
 }

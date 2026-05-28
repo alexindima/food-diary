@@ -53,9 +53,9 @@ public class AdminFeatureTests {
             new GetAdminBillingPaymentsQuery(
                 Page: 0,
                 Limit: 999,
-                Provider: " Paddle ",
-                Status: " paid ",
-                Kind: " webhook ",
+                Provider: " paddle ",
+                Status: " Paid ",
+                Kind: " Webhook ",
                 Search: " buyer@example.com ",
                 FromUtc: new DateTime(2026, 4, 1),
                 ToUtc: new DateTime(2026, 4, 30, 23, 59, 0, DateTimeKind.Utc)),
@@ -99,7 +99,7 @@ public class AdminFeatureTests {
         var handler = new GetAdminBillingSubscriptionsQueryHandler(repository);
 
         var result = await handler.Handle(
-            new GetAdminBillingSubscriptionsQuery(1, 20, "YooKassa", "active", null, null, null),
+            new GetAdminBillingSubscriptionsQuery(1, 20, "yookassa", "Active", null, null, null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -127,7 +127,7 @@ public class AdminFeatureTests {
         var handler = new GetAdminBillingWebhookEventsQueryHandler(repository);
 
         var result = await handler.Handle(
-            new GetAdminBillingWebhookEventsQuery(1, 20, "Paddle", "processed", "evt_123", null, null),
+            new GetAdminBillingWebhookEventsQuery(1, 20, "paddle", "Processed", "evt_123", null, null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);

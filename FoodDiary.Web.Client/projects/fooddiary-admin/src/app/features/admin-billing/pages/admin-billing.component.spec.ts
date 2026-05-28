@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AdminBillingService, type AdminBillingSubscription } from '../api/admin-billing.service';
@@ -14,15 +14,14 @@ type BillingServiceMock = {
     getPayments: ReturnType<typeof vi.fn>;
     getWebhookEvents: ReturnType<typeof vi.fn>;
 };
+type SubscriptionsPage = typeof subscriptionsPage;
 type BillingTestContext = {
     billingService: BillingServiceMock;
     component: AdminBillingComponent;
     fixture: ComponentFixture<AdminBillingComponent>;
 };
 
-async function setupBillingAsync(): Promise<BillingTestContext> {
-    const billingService = createBillingServiceMock();
-
+async function setupBillingAsync(billingService: BillingServiceMock = createBillingServiceMock()): Promise<BillingTestContext> {
     await TestBed.configureTestingModule({
         imports: [AdminBillingComponent],
         providers: [{ provide: AdminBillingService, useValue: billingService }],
@@ -131,6 +130,25 @@ describe('AdminBillingComponent loading', () => {
 
         expect(component.subscriptions()).toEqual([]);
         expect(component.totalItems()).toBe(0);
+        expect(component.errorMessage()).toBe('network');
+        expect(component.isLoading()).toBe(false);
+    });
+
+    it('should ignore stale load responses after tab changes', async () => {
+        const billingService = createBillingServiceMock();
+        const pendingSubscriptions = new Subject<SubscriptionsPage>();
+        billingService.getSubscriptions.mockReturnValueOnce(pendingSubscriptions.asObservable());
+        const { component } = await setupBillingAsync(billingService);
+
+        component.setTab('payments');
+        pendingSubscriptions.next({
+            ...subscriptionsPage,
+            totalItems: 99,
+        });
+
+        expect(component.activeTab()).toBe('payments');
+        expect(component.subscriptions()).toEqual([]);
+        expect(component.totalItems()).toBe(1);
         expect(component.isLoading()).toBe(false);
     });
 });

@@ -41,6 +41,12 @@
     }
 }
 
+.admin-billing__error {
+    margin: 0;
+    color: var(--fd-color-danger-700);
+    font-weight: var(--fd-text-section-title-weight);
+}
+
 .admin-billing__table {
     width: 100%;
     border-collapse: collapse;

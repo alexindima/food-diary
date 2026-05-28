@@ -11,15 +11,15 @@ public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReposi
     public async Task<Result<PagedResponse<AdminBillingWebhookEventReadModel>>> Handle(
         GetAdminBillingWebhookEventsQuery query,
         CancellationToken cancellationToken) {
-        var filter = new AdminBillingListFilter(
-            query.Page <= 0 ? 1 : query.Page,
-            query.Limit is > 0 and <= 100 ? query.Limit : 20,
-            Normalize(query.Provider),
-            Normalize(query.Status),
+        var filter = AdminBillingQueryFilters.Create(
+            query.Page,
+            query.Limit,
+            query.Provider,
+            query.Status,
             null,
-            Normalize(query.Search),
-            NormalizeUtc(query.FromUtc),
-            NormalizeUtc(query.ToUtc));
+            query.Search,
+            query.FromUtc,
+            query.ToUtc);
         var pageData = await billingRepository.GetWebhookEventsAsync(filter, cancellationToken);
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)filter.Limit);
         return Result.Success(new PagedResponse<AdminBillingWebhookEventReadModel>(
@@ -29,10 +29,4 @@ public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReposi
             totalPages,
             pageData.TotalItems));
     }
-
-    private static string? Normalize(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
-
-    private static DateTime? NormalizeUtc(DateTime? value) =>
-        value?.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc) : value?.ToUniversalTime();
 }

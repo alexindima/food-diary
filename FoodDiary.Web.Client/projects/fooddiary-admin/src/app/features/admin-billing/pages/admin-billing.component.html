@@ -34,6 +34,8 @@
     @if (isLoading()) {
         <p>Loading billing records...</p>
     } @else {
+        <p class="admin-billing__error" role="alert" [hidden]="errorMessage() === null">{{ errorMessage() }}</p>
+
         <div class="admin-billing__summary fd-ui-action-text">Total records: {{ totalItems() }}</div>
 
         @if (activeTab() === 'subscriptions') {
