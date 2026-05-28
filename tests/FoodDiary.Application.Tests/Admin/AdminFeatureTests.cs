@@ -375,6 +375,58 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WhenActorRemovesOwnAdminRole_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = CreateUpdateAdminUserHandler(userRepository);
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Premium],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null,
+                ActorUserId: user.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("own Admin role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal([RoleNames.Admin, RoleNames.Premium], user.GetRoleNames().OrderBy(name => name).ToArray());
+    }
+
+    [Fact]
+    public async Task UpdateAdminUserHandler_WhenActorDeactivatesOwnAccount_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = CreateUpdateAdminUserHandler(userRepository);
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: false,
+                IsEmailConfirmed: null,
+                Roles: null,
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null,
+                ActorUserId: user.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("own account", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(user.IsActive);
+    }
+
+    [Fact]
     public async Task UpdateAdminUserHandler_WithSameRoles_DoesNotSetModifiedOnUtc() {
         var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(

@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminUsersService } from '../api/admin-users.service';
@@ -75,11 +75,22 @@ describe('AdminUserEditDialogComponent', () => {
         expect(dialogRef.close).toHaveBeenCalledWith(true);
     });
 
+    it('should not submit twice while save is running', () => {
+        usersService.updateUser.mockReturnValueOnce(NEVER);
+
+        component.save();
+        component.save();
+
+        expect(usersService.updateUser).toHaveBeenCalledTimes(1);
+        expect(component.isSaving()).toBe(true);
+    });
+
     it('should close with false on save failure', () => {
         usersService.updateUser.mockReturnValueOnce(throwError(() => new Error('save failed')));
 
         component.save();
 
         expect(dialogRef.close).toHaveBeenCalledWith(false);
+        expect(component.isSaving()).toBe(false);
     });
 });

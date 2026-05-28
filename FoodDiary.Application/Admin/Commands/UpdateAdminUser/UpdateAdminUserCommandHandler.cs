@@ -64,6 +64,11 @@ public sealed class UpdateAdminUserCommandHandler(
             var requestsOwner = requestedRoles.Contains(RoleNames.Owner, StringComparer.Ordinal);
             var requestsAdmin = requestedRoles.Contains(RoleNames.Admin, StringComparer.Ordinal);
 
+            if (IsSelfUpdate(command) && user.HasRole(RoleNames.Admin) && !requestsAdmin) {
+                return Result.Failure<AdminUserModel>(
+                    Errors.Validation.Invalid("roles", "Admin users cannot remove their own Admin role."));
+            }
+
             if (!isOwner && requestsOwner) {
                 return Result.Failure<AdminUserModel>(
                     Errors.Validation.Invalid("roles", "Owner role cannot be assigned from the admin user editor."));
@@ -98,6 +103,11 @@ public sealed class UpdateAdminUserCommandHandler(
             if (command.IsActive.Value) {
                 user.Activate();
             } else {
+                if (IsSelfUpdate(command)) {
+                    return Result.Failure<AdminUserModel>(
+                        Errors.Validation.Invalid(nameof(command.IsActive), "Admin users cannot deactivate their own account."));
+                }
+
                 if (user.HasRole(RoleNames.Owner)) {
                     return Result.Failure<AdminUserModel>(
                         Errors.Validation.Invalid(nameof(command.IsActive), "Owner user cannot be deactivated."));
@@ -128,6 +138,9 @@ public sealed class UpdateAdminUserCommandHandler(
 
         return Result.Success(user.ToAdminModel());
     }
+
+    private static bool IsSelfUpdate(UpdateAdminUserCommand command) =>
+        command.ActorUserId.HasValue && command.ActorUserId.Value == command.UserId;
 
     private static IReadOnlyList<UserRoleAuditEvent> CreateRoleAuditEvents(
         User user,

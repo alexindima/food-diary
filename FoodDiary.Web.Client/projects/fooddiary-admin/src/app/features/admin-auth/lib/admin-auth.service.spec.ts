@@ -40,6 +40,14 @@ describe('AdminAuthService token state', () => {
         expect(service.isAdmin()).toBe(true);
     });
 
+    it('should treat malformed token as non-admin instead of throwing', () => {
+        localStorage.setItem('authToken', 'malformed-token');
+        service.refreshTokenState();
+
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.isAdmin()).toBe(false);
+    });
+
     it('should capture auth token from query and clear token params', () => {
         const replaceStateSpy = vi.spyOn(window.history, 'replaceState');
         window.history.replaceState({}, '', '/?authToken=query-token&foo=1');

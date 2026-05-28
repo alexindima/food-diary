@@ -31,7 +31,7 @@
     </div>
 
     <div fdUiDialogFooter>
-        <fd-ui-button type="button" variant="secondary" (click)="close()">Cancel</fd-ui-button>
-        <fd-ui-button type="button" (click)="save()">Save</fd-ui-button>
+        <fd-ui-button type="button" variant="secondary" [disabled]="isSaving()" (click)="close()">Cancel</fd-ui-button>
+        <fd-ui-button type="button" [disabled]="isSaving()" (click)="save()">Save</fd-ui-button>
     </div>
 </fd-ui-dialog>

@@ -233,11 +233,12 @@ export class AdminAuthService {
     }
 
     private decodePayload(token: string): Record<string, unknown> | null {
-        const [, payloadSegment] = token.split('.');
-        if (payloadSegment.length === 0) {
+        const tokenSegments = token.split('.');
+        if (tokenSegments.length < 2 || tokenSegments[1].length === 0) {
             return null;
         }
 
+        const payloadSegment = tokenSegments[1];
         try {
             const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
             const remainder = normalized.length % BASE64_BLOCK_SIZE;

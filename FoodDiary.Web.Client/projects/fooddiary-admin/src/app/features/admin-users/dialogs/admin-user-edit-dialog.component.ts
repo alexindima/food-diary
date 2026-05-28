@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, type FormControl, type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -30,6 +30,7 @@ export class AdminUserEditDialogComponent {
     private readonly fb = inject(FormBuilder);
 
     public readonly roles = ['Admin', 'Premium', 'Support'];
+    public readonly isSaving = signal(false);
     public readonly languages: ReadonlyArray<{ value: 'en' | 'ru'; label: string }> = [
         { value: 'en', label: 'English' },
         { value: 'ru', label: 'Russian' },
@@ -48,6 +49,10 @@ export class AdminUserEditDialogComponent {
     }
 
     public save(): void {
+        if (this.isSaving()) {
+            return;
+        }
+
         const value = this.form.getRawValue();
         const payload: AdminUserUpdate = {
             isActive: value.isActive,
@@ -59,11 +64,13 @@ export class AdminUserEditDialogComponent {
             payload.language = value.language;
         }
 
+        this.isSaving.set(true);
         this.usersService.updateUser(this.user.id, payload).subscribe({
             next: () => {
                 this.dialogRef.close(true);
             },
             error: () => {
+                this.isSaving.set(false);
                 this.dialogRef.close(false);
             },
         });
