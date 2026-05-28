@@ -21,6 +21,7 @@ import { PremiumAccessPageComponent } from './premium-access-page.component';
 
 const CHECKOUT_URL = 'https://checkout.example/session';
 const PORTAL_URL = 'https://portal.example/session';
+const ASYNC_SETTLE_TURNS = 8;
 
 type BillingServiceMock = {
     getOverview: ReturnType<typeof vi.fn<() => Observable<BillingOverview>>>;
@@ -126,7 +127,7 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         expect(component.portalLoading()).toBe(true);
     });
 
-    it('stores overview load errors and clears overview', async () => {
+    it('stores overview load errors when no overview is loaded', async () => {
         billingService.getOverview.mockReturnValue(throwError(() => new Error('Network down')));
         const { component } = setupComponent();
         await settleAsync();
@@ -170,6 +171,10 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         expect(billingService.startPremiumTrial).toHaveBeenCalledTimes(1);
         expect(component.trialLoading()).toBe(true);
     });
+});
+
+describe('PremiumAccessPageComponent checkout return', () => {
+    beforeEach(resetMocks);
 
     it('handles successful checkout return state and removes query params', async () => {
         queryParams = { checkout: 'success' };
@@ -187,6 +192,21 @@ describe('PremiumAccessPageComponent overview and portal', () => {
             queryParams: {},
             replaceUrl: true,
         });
+    });
+
+    it('keeps premium overview from checkout polling when follow-up overview reload fails', async () => {
+        queryParams = { checkout: 'success' };
+        const premiumOverview = { ...createOverview(), isPremium: true, subscriptionStatus: 'active' };
+        billingService.getOverview
+            .mockReturnValueOnce(of(premiumOverview))
+            .mockReturnValueOnce(throwError(() => new Error('Network down')));
+        const { component } = setupComponent();
+        await settleAsync();
+
+        expect(authService.refreshToken).toHaveBeenCalled();
+        expect(component.overview()).toEqual(premiumOverview);
+        expect(component.errorMessage()).toBe('Network down');
+        expect(component.isLoading()).toBe(false);
     });
 });
 
@@ -275,8 +295,9 @@ function createTranslateServiceStub(): {
 }
 
 async function settleAsync(): Promise<void> {
-    await Promise.resolve();
-    await Promise.resolve();
+    for (let index = 0; index < ASYNC_SETTLE_TURNS; index++) {
+        await Promise.resolve();
+    }
 }
 
 function createOverview(): BillingOverview {

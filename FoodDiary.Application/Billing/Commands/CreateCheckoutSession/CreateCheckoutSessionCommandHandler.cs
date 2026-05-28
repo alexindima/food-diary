@@ -79,10 +79,12 @@ public sealed class CreateCheckoutSessionCommandHandler(
         return Result.Success(session);
     }
 
-    private IBillingProviderGateway? ResolveBillingProvider(string? provider) =>
-        string.IsNullOrWhiteSpace(provider)
+    private IBillingProviderGateway? ResolveBillingProvider(string? provider) {
+        var normalizedProvider = provider?.Trim();
+        return string.IsNullOrWhiteSpace(normalizedProvider)
             ? billingProviderGatewayAccessor.GetActiveProvider()
-            : billingProviderGatewayAccessor.GetProviderOrDefault(provider);
+            : billingProviderGatewayAccessor.GetProviderOrDefault(normalizedProvider);
+    }
 
     private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) {
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.Status)) {

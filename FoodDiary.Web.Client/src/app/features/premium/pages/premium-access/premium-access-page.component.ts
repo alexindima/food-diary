@@ -214,7 +214,6 @@ export class PremiumAccessPageComponent {
             this.overview.set(overview);
         } catch (error) {
             this.errorMessage.set(this.getErrorMessage(error));
-            this.overview.set(null);
         } finally {
             this.isLoading.set(false);
         }

@@ -13,11 +13,20 @@ using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FluentValidation.TestHelper;
 
 namespace FoodDiary.Application.Tests.Billing;
 
 public sealed class BillingFeatureTests {
     private static readonly DateTime Now = new(2026, 4, 28, 10, 0, 0, DateTimeKind.Utc);
+
+    [Fact]
+    public async Task CreateCheckoutSessionValidator_WithPaddedPlanAndProvider_ReturnsSuccess() {
+        var result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
+            new CreateCheckoutSessionCommand(Guid.NewGuid(), " Monthly ", $" {BillingProviderNames.YooKassa} "));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
 
     [Fact]
     public async Task CreateCheckoutSession_WithRequestedProvider_CreatesPendingSubscriptionAndCheckoutPayment() {
@@ -44,7 +53,7 @@ public sealed class BillingFeatureTests {
             new FixedDateTimeProvider(Now));
 
         var result = await handler.Handle(
-            new CreateCheckoutSessionCommand(user.Id.Value, " Monthly ", BillingProviderNames.YooKassa),
+            new CreateCheckoutSessionCommand(user.Id.Value, " Monthly ", $" {BillingProviderNames.YooKassa} "),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
