@@ -283,6 +283,76 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task ProcessBillingWebhook_ForDeletedUserSubscription_StoresEventWithoutGrantingPremiumRole() {
+        var user = User.Create("deleted-premium@example.com", "hash");
+        user.DeleteAccount(Now.AddDays(-1));
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.YooKassa,
+            "customer_deleted",
+            "price_monthly",
+            "monthly");
+        subscription.ApplyProviderSnapshot(
+            BillingProviderNames.YooKassa,
+            "pay_deleted_initial",
+            "pm_deleted",
+            "price_monthly",
+            "monthly",
+            "past_due",
+            Now.AddMonths(-1),
+            Now.AddMinutes(-1),
+            false,
+            null,
+            null,
+            null,
+            "evt_deleted_initial",
+            Now.AddMonths(-1));
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var gateway = new FakeBillingProviderGateway(
+            BillingProviderNames.YooKassa,
+            webhookEvent: new BillingWebhookEventModel(
+                "evt_deleted_active",
+                "payment.succeeded",
+                "customer_deleted",
+                "pay_deleted_active",
+                "pm_deleted",
+                "price_monthly",
+                "monthly",
+                "active",
+                Now,
+                Now.AddMonths(1),
+                false,
+                null,
+                null,
+                null,
+                7.99m,
+                "USD",
+                null,
+                user.Id.Value));
+        var handler = CreateWebhookHandler(
+            gateway,
+            userRepository,
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("active", subscription.Status);
+        Assert.Single(webhookEventRepository.Events);
+        Assert.Single(paymentRepository.Payments);
+        Assert.False(user.HasRole(RoleNames.Premium));
+        Assert.False(subscription.PremiumRoleManagedByBilling);
+        Assert.Equal(0, userRepository.UpdateCount);
+    }
+
+    [Fact]
     public async Task BillingRenewalService_ForDueSubscription_UpdatesSubscriptionAddsPaymentAndKeepsPremiumRole() {
         var premiumRole = Role.Create(RoleNames.Premium);
         var user = User.Create("premium@example.com", "hash");
@@ -420,6 +490,72 @@ public sealed class BillingFeatureTests {
         Assert.Equal(Now.AddHours(1), subscription.NextBillingAttemptUtc);
         Assert.False(subscription.PremiumRoleManagedByBilling);
         Assert.False(user.HasRole(RoleNames.Premium));
+    }
+
+    [Fact]
+    public async Task BillingRenewalService_ForDeletedUserSubscription_SkipsProviderAndDisablesRenewal() {
+        var user = User.Create("deleted-renewal@example.com", "hash");
+        user.DeleteAccount(Now.AddDays(-1));
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.YooKassa,
+            "customer_deleted_renewal",
+            "price_monthly",
+            "monthly");
+        subscription.ApplyProviderSnapshot(
+            BillingProviderNames.YooKassa,
+            "pay_deleted_initial",
+            "pm_deleted_renewal",
+            "price_monthly",
+            "monthly",
+            "active",
+            Now.AddMonths(-1),
+            Now.AddMinutes(-1),
+            false,
+            null,
+            null,
+            null,
+            "evt_deleted_initial",
+            Now.AddMonths(-1));
+        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var renewalGateway = new FakeRecurringBillingGateway(
+            BillingProviderNames.YooKassa,
+            new BillingRecurringPaymentModel(
+                "pay_should_not_be_used",
+                "pm_deleted_renewal",
+                "price_monthly",
+                "monthly",
+                "active",
+                Now,
+                Now.AddMonths(1),
+                "evt_should_not_be_used",
+                7.99m,
+                "USD",
+                null));
+        var service = new BillingRenewalService(
+            subscriptionRepository,
+            paymentRepository,
+            userRepository,
+            new NoOpBillingTransactionRunner(),
+            [renewalGateway],
+            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
+            new FixedDateTimeProvider(Now));
+
+        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+
+        Assert.Equal(1, result.Processed);
+        Assert.Equal(0, result.Renewed);
+        Assert.Equal(1, result.Failed);
+        Assert.Equal(0, renewalGateway.CreatePaymentCallCount);
+        Assert.Empty(paymentRepository.Payments);
+        Assert.Equal("canceled", subscription.Status);
+        Assert.Null(subscription.NextBillingAttemptUtc);
+        Assert.Equal(Now, subscription.CanceledAtUtc);
+        Assert.False(subscription.PremiumRoleManagedByBilling);
+        Assert.Equal(0, userRepository.UpdateCount);
     }
 
     [Fact]
@@ -623,16 +759,19 @@ public sealed class BillingFeatureTests {
         public int UpdateCount { get; private set; }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
-            Task.FromResult(_users.FirstOrDefault(user => string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)));
+            Task.FromResult(_users.FirstOrDefault(user =>
+                IsAccessible(user) &&
+                string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)));
 
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-            GetByEmailAsync(email, cancellationToken);
+            Task.FromResult(_users.FirstOrDefault(user =>
+                string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)));
 
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult(_users.FirstOrDefault(user => user.Id == id));
+            Task.FromResult(_users.FirstOrDefault(user => IsAccessible(user) && user.Id == id));
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
-            GetByIdAsync(id, cancellationToken);
+            Task.FromResult(_users.FirstOrDefault(user => user.Id == id));
 
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(null);
@@ -672,6 +811,8 @@ public sealed class BillingFeatureTests {
             UpdateCount++;
             return Task.CompletedTask;
         }
+
+        private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
     }
 
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
@@ -828,22 +969,28 @@ public sealed class BillingFeatureTests {
         BillingRecurringPaymentModel renewal)
         : IBillingRecurringProviderGateway {
         public string Provider { get; } = provider;
+        public int CreatePaymentCallCount { get; private set; }
 
         public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
             BillingRecurringPaymentRequestModel request,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Result.Success(renewal));
+            CancellationToken cancellationToken = default) {
+            CreatePaymentCallCount++;
+            return Task.FromResult(Result.Success(renewal));
+        }
     }
 
     private sealed class FailingRecurringBillingGateway(string providerName) : IBillingRecurringProviderGateway {
         private readonly string _provider = providerName;
         public string Provider => _provider;
+        public int CreatePaymentCallCount { get; private set; }
 
         public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
             BillingRecurringPaymentRequestModel request,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Result.Failure<BillingRecurringPaymentModel>(
+            CancellationToken cancellationToken = default) {
+            CreatePaymentCallCount++;
+            return Task.FromResult(Result.Failure<BillingRecurringPaymentModel>(
                 Errors.Billing.ProviderOperationFailed(_provider, "declined")));
+        }
     }
 
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {

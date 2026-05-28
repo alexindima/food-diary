@@ -83,6 +83,20 @@ describe('PremiumAccessPageComponent checkout', () => {
         expect(component.errorMessage()).toBe('Checkout URL is missing.');
         expect(toastService.error).toHaveBeenCalledWith('Checkout URL is missing.');
     });
+
+    it('does not create a second checkout session while checkout is loading', async () => {
+        billingService.createCheckoutSession.mockReturnValue(NEVER);
+        const { component } = setupComponent();
+        await settleAsync();
+
+        void component.startCheckoutAsync('monthly', 'paddle');
+        await settleAsync();
+        await component.startCheckoutAsync('yearly', 'paddle');
+
+        expect(billingService.createCheckoutSession).toHaveBeenCalledTimes(1);
+        expect(billingService.createCheckoutSession).toHaveBeenCalledWith('monthly', 'paddle');
+        expect(component.checkoutLoadingPlan()).toBe('monthly');
+    });
 });
 
 describe('PremiumAccessPageComponent overview and portal', () => {
@@ -97,6 +111,19 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         expect(billingService.createPortalSession).toHaveBeenCalled();
         expect(fakeDocument.location.href).toBe(PORTAL_URL);
         expect(component.portalLoading()).toBe(false);
+    });
+
+    it('does not create a second portal session while portal is loading', async () => {
+        billingService.createPortalSession.mockReturnValue(NEVER);
+        const { component } = setupComponent();
+        await settleAsync();
+
+        void component.openPortalAsync();
+        await settleAsync();
+        await component.openPortalAsync();
+
+        expect(billingService.createPortalSession).toHaveBeenCalledTimes(1);
+        expect(component.portalLoading()).toBe(true);
     });
 
     it('stores overview load errors and clears overview', async () => {
@@ -129,6 +156,19 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         expect(component.overview()).toEqual(trialOverview);
         expect(component.trialLoading()).toBe(false);
         expect(toastService.success).toHaveBeenCalledWith('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE');
+    });
+
+    it('does not start a second premium trial while trial request is loading', async () => {
+        billingService.startPremiumTrial.mockReturnValue(NEVER);
+        const { component } = setupComponent();
+        await settleAsync();
+
+        void component.startTrialAsync();
+        await settleAsync();
+        await component.startTrialAsync();
+
+        expect(billingService.startPremiumTrial).toHaveBeenCalledTimes(1);
+        expect(component.trialLoading()).toBe(true);
     });
 
     it('handles successful checkout return state and removes query params', async () => {

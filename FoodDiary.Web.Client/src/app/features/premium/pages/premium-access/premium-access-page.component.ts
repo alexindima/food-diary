@@ -96,7 +96,7 @@ export class PremiumAccessPageComponent {
     }
 
     public async startCheckoutAsync(plan: BillingPlan, provider?: BillingProvider): Promise<void> {
-        if (!this.isBrowser) {
+        if (!this.isBrowser || this.checkoutLoadingPlan() !== null) {
             return;
         }
 
@@ -123,6 +123,10 @@ export class PremiumAccessPageComponent {
     }
 
     public async startTrialAsync(): Promise<void> {
+        if (this.trialLoading()) {
+            return;
+        }
+
         this.errorMessage.set(null);
         this.trialLoading.set(true);
 
@@ -139,7 +143,7 @@ export class PremiumAccessPageComponent {
     }
 
     public async openPortalAsync(): Promise<void> {
-        if (!this.isBrowser) {
+        if (!this.isBrowser || this.portalLoading()) {
             return;
         }
 

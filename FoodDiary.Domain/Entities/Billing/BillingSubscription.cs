@@ -122,6 +122,20 @@ public sealed class BillingSubscription : Entity<Guid> {
         SetModified(LastSyncedAtUtc.Value);
     }
 
+    public void MarkRenewalSkippedForInaccessibleUser(
+        string eventId,
+        DateTime syncedAtUtc,
+        string? providerMetadataJson = null) {
+        Status = "canceled";
+        CancelAtPeriodEnd = false;
+        CanceledAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+        NextBillingAttemptUtc = null;
+        LastWebhookEventId = NormalizeRequired(eventId, nameof(eventId));
+        LastSyncedAtUtc = CanceledAtUtc;
+        ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
+        SetModified(LastSyncedAtUtc.Value);
+    }
+
     private static string NormalizeProvider(string provider) {
         var normalized = NormalizeRequired(provider, nameof(provider));
         if (!BillingProviderNames.IsSupported(normalized)) {

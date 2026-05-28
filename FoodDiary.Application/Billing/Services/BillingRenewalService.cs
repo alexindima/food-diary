@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 
 namespace FoodDiary.Application.Billing.Services;
@@ -43,6 +44,24 @@ public sealed class BillingRenewalService(
 
             if (string.IsNullOrWhiteSpace(subscription.ExternalPaymentMethodId) ||
                 string.IsNullOrWhiteSpace(subscription.Plan)) {
+                failed++;
+                continue;
+            }
+
+            var user = await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken);
+            if (CurrentUserAccessPolicy.EnsureCanAccess(user) is not null) {
+                await billingTransactionRunner.ExecuteAsync(async ct => {
+                    subscription.MarkRenewalSkippedForInaccessibleUser(
+                        BuildRenewalSkippedEventId(subscription, now),
+                        now,
+                        "Renewal skipped because subscription user is not accessible.");
+                    if (subscription.PremiumRoleManagedByBilling) {
+                        subscription.MarkPremiumRoleManagedByBilling(false, now);
+                    }
+
+                    await billingSubscriptionRepository.UpdateAsync(subscription, ct);
+                }, cancellationToken);
+
                 failed++;
                 continue;
             }
@@ -131,13 +150,10 @@ public sealed class BillingRenewalService(
                         await billingPaymentRepository.AddAsync(payment, ct);
                     }
 
-                    var user = await userRepository.GetByIdAsync(subscription.UserId, ct);
-                    if (user is not null) {
-                        var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
-                            renewal.Status,
-                            renewal.CurrentPeriodEndUtc);
-                        await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, ct);
-                    }
+                    var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+                        renewal.Status,
+                        renewal.CurrentPeriodEndUtc);
+                    await billingAccessService.EnsurePremiumRoleAsync(user!, subscription, shouldHavePremium, ct);
                 }, cancellationToken);
             } catch (BillingPaymentAlreadyExistsException) {
                 renewed++;
@@ -161,4 +177,7 @@ public sealed class BillingRenewalService(
 
     private static string BuildRenewalFailureEventId(BillingSubscription subscription, DateTime failedAtUtc) =>
         $"billing-renewal-failed:{subscription.Id:N}:{failedAtUtc:yyyyMMddHHmmss}";
+
+    private static string BuildRenewalSkippedEventId(BillingSubscription subscription, DateTime skippedAtUtc) =>
+        $"billing-renewal-skipped-inaccessible-user:{subscription.Id:N}:{skippedAtUtc:yyyyMMddHHmmss}";
 }

@@ -8,6 +8,7 @@ using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using User = FoodDiary.Domain.Entities.Users.User;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
@@ -118,7 +119,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
                 var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
                     webhookEvent.Status,
                     webhookEvent.CurrentPeriodEndUtc);
-                await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, ct);
+                await SyncPremiumRoleAsync(user, subscription, shouldHavePremium, ct);
             }, cancellationToken);
         } catch (BillingWebhookEventAlreadyProcessedException) {
             return Result.Success();
@@ -209,13 +210,30 @@ public sealed class ProcessBillingWebhookCommandHandler(
         Guid? webhookUserId,
         CancellationToken cancellationToken) {
         if (subscription is not null) {
-            return await userRepository.GetByIdAsync(subscription.UserId, cancellationToken);
+            return await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken);
         }
 
         if (!webhookUserId.HasValue || webhookUserId == Guid.Empty) {
             return null;
         }
 
-        return await userRepository.GetByIdAsync(new UserId(webhookUserId.Value), cancellationToken);
+        return await userRepository.GetByIdIncludingDeletedAsync(new UserId(webhookUserId.Value), cancellationToken);
+    }
+
+    private async Task SyncPremiumRoleAsync(
+        User user,
+        BillingSubscription subscription,
+        bool shouldHavePremium,
+        CancellationToken cancellationToken) {
+        var canAccess = CurrentUserAccessPolicy.EnsureCanAccess(user) is null;
+        if (canAccess) {
+            await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken);
+            return;
+        }
+
+        if (subscription.PremiumRoleManagedByBilling) {
+            subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.UtcNow);
+            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
+        }
     }
 }
