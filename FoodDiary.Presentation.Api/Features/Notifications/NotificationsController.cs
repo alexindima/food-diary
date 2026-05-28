@@ -1,14 +1,8 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Presentation.Api.Controllers;
-using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 using FoodDiary.Presentation.Api.Responses;
-using FoodDiary.Presentation.Api.Services;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/notifications")]
-public class NotificationsController(
-    ISender mediator,
-    INotificationTestScheduler notificationTestScheduler,
-    IUserRepository userRepository,
-    IAuditLogger auditLogger)
-    : AuthorizedController(mediator) {
+public class NotificationsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<NotificationHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetNotifications([FromCurrentUser] Guid userId) {
@@ -52,28 +41,8 @@ public class NotificationsController(
     [ProducesResponseType<ScheduledNotificationHttpResponse>(StatusCodes.Status202Accepted)]
     public async Task<IActionResult> ScheduleTestNotification(
         [FromCurrentUser] Guid userId,
-        [FromBody] ScheduleTestNotificationHttpRequest request,
-        CancellationToken cancellationToken) {
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository,
-            new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
-            cancellationToken);
-        if (accessError is not null) {
-            return Result.Failure(accessError).ToNoContentActionResult(this);
-        }
-
-        var response = await notificationTestScheduler.ScheduleAsync(
-            userId,
-            request.DelaySeconds,
-            request.Type,
-            cancellationToken);
-        auditLogger.Log(
-            "notifications.test.scheduled",
-            new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
-            "Notification",
-            request.Type,
-            $"delaySeconds={response.DelaySeconds};scheduledAtUtc={response.ScheduledAtUtc:O}");
-        return new ObjectResult(response) { StatusCode = StatusCodes.Status202Accepted };
+        [FromBody] ScheduleTestNotificationHttpRequest request) {
+        return await HandleAccepted(request.ToCommand(userId), static value => value.ToHttpResponse());
     }
 
     [HttpGet("preferences")]

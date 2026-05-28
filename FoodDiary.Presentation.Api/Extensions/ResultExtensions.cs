@@ -46,6 +46,14 @@ public static class ResultExtensions {
                 ? controller.Created(string.Empty, map(result.Value))
                 : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
+
+        public IActionResult ToAcceptedActionResult<TResponse>(
+            ControllerBase controller,
+            Func<T, TResponse> map) {
+            return result.IsSuccess
+                ? controller.Accepted(map(result.Value))
+                : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+        }
     }
 
     public static IActionResult ToFileActionResult(this Result<FileExportResult> result, ControllerBase controller) {

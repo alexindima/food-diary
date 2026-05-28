@@ -1,6 +1,5 @@
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,7 +11,7 @@ public sealed class NotificationTestScheduler(
     IHostApplicationLifetime applicationLifetime,
     ILogger<NotificationTestScheduler> logger)
     : INotificationTestScheduler {
-    public Task<ScheduledNotificationHttpResponse> ScheduleAsync(
+    public Task<ScheduledNotificationData> ScheduleAsync(
         Guid userId,
         int delaySeconds,
         string type,
@@ -25,7 +24,7 @@ public sealed class NotificationTestScheduler(
 
         _ = RunScheduledAsync(userId, normalizedDelaySeconds, normalizedType, applicationLifetime.ApplicationStopping);
 
-        return Task.FromResult(new ScheduledNotificationHttpResponse(
+        return Task.FromResult(new ScheduledNotificationData(
             normalizedType,
             normalizedDelaySeconds,
             scheduledAtUtc));

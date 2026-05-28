@@ -1,5 +1,6 @@
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
+using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
@@ -51,8 +52,14 @@ public static class NotificationHttpMappings {
     public static RemoveWebPushSubscriptionCommand ToCommand(this RemoveWebPushSubscriptionHttpRequest request, Guid userId) =>
         new(userId, request.Endpoint);
 
+    public static ScheduleTestNotificationCommand ToCommand(this ScheduleTestNotificationHttpRequest request, Guid userId) =>
+        new(userId, request.DelaySeconds, request.Type);
+
     public static NotificationHttpResponse ToHttpResponse(this NotificationModel model) =>
         new(model.Id, model.Type, model.Title, model.Body, model.TargetUrl, model.ReferenceId, model.IsRead, model.CreatedAtUtc);
+
+    public static ScheduledNotificationHttpResponse ToHttpResponse(this ScheduledNotificationModel model) =>
+        new(model.Type, model.DelaySeconds, model.ScheduledAtUtc);
 
     public static WebPushConfigurationHttpResponse ToHttpResponse(this WebPushConfigurationModel model) =>
         new(model.Enabled, model.PublicKey);

@@ -45,6 +45,13 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         return result.ToCreatedActionResult(this, map);
     }
 
+    protected async Task<IActionResult> HandleAccepted<TResponse, THttpResponse>(
+        IRequest<Result<TResponse>> request,
+        Func<TResponse, THttpResponse> map) {
+        var result = await Send(request);
+        return result.ToAcceptedActionResult(this, map);
+    }
+
     protected async Task<IActionResult> HandleNoContent(IRequest<Result> request) {
         var result = await Send(request);
         return result.ToNoContentActionResult(this);

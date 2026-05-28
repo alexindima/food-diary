@@ -1,6 +1,7 @@
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
+using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -352,6 +353,50 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task ScheduleTestNotification_WithValidUser_SchedulesAndWritesAuditLog() {
+        var user = CreateUser();
+        var scheduledAtUtc = new DateTime(2026, 5, 28, 9, 0, 0, DateTimeKind.Utc);
+        var scheduler = new RecordingNotificationTestScheduler(
+            new ScheduledNotificationData(NotificationTypes.FastingCompleted, 15, scheduledAtUtc));
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new ScheduleTestNotificationCommandHandler(
+            scheduler,
+            new SingleUserRepository(user),
+            auditLogger);
+
+        var result = await handler.Handle(
+            new ScheduleTestNotificationCommand(user.Id.Value, 15, NotificationTypes.FastingCompleted),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(NotificationTypes.FastingCompleted, result.Value.Type);
+        Assert.Equal(15, scheduler.DelaySeconds);
+        Assert.Equal(user.Id.Value, scheduler.UserId);
+        Assert.Equal("notifications.test.scheduled", auditLogger.Action);
+        Assert.Equal(NotificationTypes.FastingCompleted, auditLogger.TargetId);
+        Assert.Contains("delaySeconds=15", auditLogger.Details);
+    }
+
+    [Fact]
+    public async Task ScheduleTestNotification_WithDeletedUser_ReturnsFailureWithoutScheduling() {
+        var userId = UserId.New();
+        var scheduler = new RecordingNotificationTestScheduler(
+            new ScheduledNotificationData(NotificationTypes.FastingCompleted, 15, DateTime.UtcNow));
+        var handler = new ScheduleTestNotificationCommandHandler(
+            scheduler,
+            new SingleUserRepository(CreateDeletedUser(userId)),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new ScheduleTestNotificationCommand(userId.Value, 15, NotificationTypes.FastingCompleted),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(scheduler.WasCalled);
+    }
+
+    [Fact]
     public async Task NotificationCleanup_WithNonPositiveBatchSize_DoesNotCallRepository() {
         var repository = new InMemoryNotificationRepository();
         var service = new NotificationCleanupService(
@@ -520,6 +565,25 @@ public class NotificationsFeatureTests {
         }
     }
 
+    private sealed class RecordingNotificationTestScheduler(ScheduledNotificationData scheduled) : INotificationTestScheduler {
+        public bool WasCalled { get; private set; }
+        public Guid UserId { get; private set; }
+        public int DelaySeconds { get; private set; }
+        public string Type { get; private set; } = string.Empty;
+
+        public Task<ScheduledNotificationData> ScheduleAsync(
+            Guid userId,
+            int delaySeconds,
+            string type,
+            CancellationToken cancellationToken) {
+            WasCalled = true;
+            UserId = userId;
+            DelaySeconds = delaySeconds;
+            Type = type;
+            return Task.FromResult(scheduled);
+        }
+    }
+
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -537,11 +601,13 @@ public class NotificationsFeatureTests {
     private sealed class RecordingAuditLogger : IAuditLogger {
         public string Action { get; private set; } = string.Empty;
         public UserId ActorId { get; private set; } = UserId.Empty;
+        public string? TargetId { get; private set; }
         public string? Details { get; private set; }
 
         public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) {
             Action = action;
             ActorId = actorId;
+            TargetId = targetId;
             Details = details;
         }
     }
