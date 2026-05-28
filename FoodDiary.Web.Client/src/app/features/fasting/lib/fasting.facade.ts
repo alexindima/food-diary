@@ -177,6 +177,7 @@ export class FastingFacade {
     public startFasting(): void {
         const payload = this.buildStartPayload();
         this.trackRequest(this.isStarting, this.fastingService.start(payload), session => {
+            this.applyCurrentSessionUpdate(session);
             this.frontendObservability.recordFastingLifecycleEvent('session.started', {
                 sessionId: session.id,
                 protocol: session.protocol,
@@ -192,7 +193,7 @@ export class FastingFacade {
     public endFasting(): void {
         this.trackRequest(this.isEnding, this.fastingService.end(), session => {
             if (session.endedAtUtc !== null) {
-                this.stopTimer();
+                this.applyCompletedSessionUpdate(session);
                 this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
                     sessionId: session.id,
                     protocol: session.protocol,
@@ -207,6 +208,7 @@ export class FastingFacade {
                 this.resetDraftState();
                 this.refreshOverview();
             } else {
+                this.applyCurrentSessionUpdate(session);
                 this.refreshOverview();
             }
         });
@@ -349,6 +351,7 @@ export class FastingFacade {
                 checkInNotes: checkInNotes.length > 0 ? checkInNotes : null,
             }),
             updated => {
+                this.applyCurrentSessionUpdate(updated);
                 this.checkInSavedVersion.update(version => version + 1);
                 this.frontendObservability.recordFastingLifecycleEvent('check-in.saved', {
                     sessionId: updated.id,
@@ -408,13 +411,15 @@ export class FastingFacade {
     }
 
     public skipCyclicDay(): void {
-        this.trackRequest(this.isUpdatingCycle, this.fastingService.skipCyclicDay(), () => {
+        this.trackRequest(this.isUpdatingCycle, this.fastingService.skipCyclicDay(), session => {
+            this.applyCurrentSessionUpdate(session);
             this.refreshOverview();
         });
     }
 
     public postponeCyclicDay(): void {
-        this.trackRequest(this.isUpdatingCycle, this.fastingService.postponeCyclicDay(), () => {
+        this.trackRequest(this.isUpdatingCycle, this.fastingService.postponeCyclicDay(), session => {
+            this.applyCurrentSessionUpdate(session);
             this.refreshOverview();
         });
     }
@@ -439,10 +444,13 @@ export class FastingFacade {
 
     private refreshOverview(): void {
         this.fastingService
-            .getOverview()
+            .getOverviewStrict()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(overview => {
-                this.applyOverview(overview);
+            .subscribe({
+                next: overview => {
+                    this.applyOverview(overview);
+                },
+                error: (): void => undefined,
             });
     }
 

@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { FastingService } from './fasting.service';
@@ -92,6 +92,17 @@ describe('FastingService overview', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/overview`);
         req.flush({ message: 'failed' }, { status: HttpStatusCode.InternalServerError, statusText: 'Server Error' });
+    });
+
+    it('should rethrow strict overview errors', () => {
+        const errorSpy = vi.fn();
+
+        service.getOverviewStrict().subscribe({ error: errorSpy });
+
+        const req = httpMock.expectOne(`${BASE_URL}/overview`);
+        req.flush({ message: 'failed' }, { status: HttpStatusCode.InternalServerError, statusText: 'Server Error' });
+
+        expect(errorSpy).toHaveBeenCalledTimes(1);
     });
 });
 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
@@ -128,7 +128,7 @@ describe('FastingFacade check-ins', () => {
                 ],
             }),
         );
-        fastingService.getOverview.mockReturnValueOnce(
+        fastingService.getOverviewStrict.mockReturnValueOnce(
             of({
                 ...baseOverview,
                 currentSession: {
@@ -168,7 +168,8 @@ describe('FastingFacade check-ins', () => {
             symptoms: ['weakness'],
             checkInNotes: 'steady',
         });
-        expect(fastingService.getOverview).toHaveBeenCalledTimes(1);
+        expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
+        expect(facade.currentSession()?.checkInAtUtc).toBe('2026-04-12T10:00:00Z');
         expect(facade.checkInSavedVersion()).toBe(1);
         expect(frontendObservability.recordFastingLifecycleEvent).toHaveBeenCalledWith(
             'check-in.saved',
@@ -179,6 +180,38 @@ describe('FastingFacade check-ins', () => {
                 moodLevel: MOOD_LEVEL,
             }),
         );
+    });
+});
+
+describe('FastingFacade check-in refresh failures', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+
+    it('keeps saved check-in visible when overview refresh fails', () => {
+        facade.currentSession.set(activeSession);
+        fastingService.updateCheckIn.mockReturnValueOnce(
+            of({
+                ...activeSession,
+                checkInAtUtc: '2026-04-12T10:00:00Z',
+                hungerLevel: HUNGER_LEVEL,
+                energyLevel: ENERGY_LEVEL,
+                moodLevel: MOOD_LEVEL,
+                symptoms: ['weakness'],
+                checkInNotes: 'steady',
+            }),
+        );
+        fastingService.getOverviewStrict.mockReturnValueOnce(throwError(() => new Error('refresh failed')));
+
+        facade.setHungerLevel(HUNGER_LEVEL);
+        facade.setEnergyLevel(ENERGY_LEVEL);
+        facade.setMoodLevel(MOOD_LEVEL);
+        facade.toggleSymptom('weakness');
+        facade.setCheckInNotes('steady');
+        facade.saveCheckIn();
+
+        expect(facade.currentSession()?.checkInAtUtc).toBe('2026-04-12T10:00:00Z');
+        expect(facade.currentSession()?.symptoms).toEqual(['weakness']);
+        expect(facade.checkInSavedVersion()).toBe(1);
     });
 });
 
@@ -199,16 +232,71 @@ describe('FastingFacade session completion', () => {
                 isCompleted: true,
             }),
         );
-        fastingService.getOverview.mockReturnValueOnce(of(baseOverview));
+        fastingService.getOverviewStrict.mockReturnValueOnce(of(baseOverview));
 
         facade.endFasting();
 
         expect(fastingService.end).toHaveBeenCalledTimes(1);
-        expect(fastingService.getOverview).toHaveBeenCalledTimes(1);
+        expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
         expect(facade.currentSession()).toBeNull();
         expect(facade.selectedMode()).toBe('intermittent');
         expect(facade.selectedProtocol()).toBe('F16_8');
         expect(facade.extendHours()).toBe(DEFAULT_EXTEND_HOURS);
+    });
+
+    it('keeps completed state when overview refresh fails after ending fasting', () => {
+        facade.currentSession.set(activeSession);
+        facade.selectMode('cyclic');
+        fastingService.end.mockReturnValueOnce(
+            of({
+                ...activeSession,
+                endedAtUtc: '2026-04-12T12:00:00Z',
+                status: 'Completed',
+                isCompleted: true,
+            }),
+        );
+        fastingService.getOverviewStrict.mockReturnValueOnce(throwError(() => new Error('refresh failed')));
+
+        facade.endFasting();
+
+        expect(facade.currentSession()).toBeNull();
+        expect(facade.selectedMode()).toBe('intermittent');
+    });
+});
+
+describe('FastingFacade session start and cycle actions', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+
+    it('shows started session even when overview refresh fails', () => {
+        fastingService.start.mockReturnValueOnce(of(activeSession));
+        fastingService.getOverviewStrict.mockReturnValueOnce(throwError(() => new Error('refresh failed')));
+
+        facade.startFasting();
+
+        expect(fastingService.start).toHaveBeenCalledTimes(1);
+        expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
+        expect(facade.currentSession()).toEqual(activeSession);
+        expect(frontendObservability.recordFastingLifecycleEvent).toHaveBeenCalledWith(
+            'session.started',
+            expect.objectContaining({ sessionId: activeSession.id }),
+        );
+    });
+
+    it('applies cyclic day updates before refreshing overview', () => {
+        const nextSession = {
+            ...activeSession,
+            id: 'session-2',
+            occurrenceKind: 'EatingWindow',
+            cyclicPhaseDayNumber: 2,
+        } satisfies FastingSession;
+        fastingService.skipCyclicDay.mockReturnValueOnce(of(nextSession));
+        fastingService.getOverviewStrict.mockReturnValueOnce(throwError(() => new Error('refresh failed')));
+
+        facade.skipCyclicDay();
+
+        expect(fastingService.skipCyclicDay).toHaveBeenCalledTimes(1);
+        expect(facade.currentSession()).toEqual(nextSession);
     });
 });
 
@@ -274,6 +362,7 @@ describe('FastingFacade setup modes and target changes', () => {
 
 type FastingServiceMock = {
     getOverview: ReturnType<typeof vi.fn>;
+    getOverviewStrict: ReturnType<typeof vi.fn>;
     getHistory: ReturnType<typeof vi.fn>;
     updateCheckIn: ReturnType<typeof vi.fn>;
     end: ReturnType<typeof vi.fn>;
@@ -323,6 +412,7 @@ function teardownFacade(): void {
 function createFastingServiceMock(overview: FastingOverview): FastingServiceMock {
     return {
         getOverview: vi.fn().mockReturnValue(of(overview)),
+        getOverviewStrict: vi.fn().mockReturnValue(of(overview)),
         getHistory: vi
             .fn()
             .mockReturnValue(of({ data: [], page: HISTORY_PAGE, limit: 10, totalPages: HISTORY_PAGE, totalItems: HISTORY_TOTAL_ITEMS })),

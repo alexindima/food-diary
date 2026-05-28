@@ -63,7 +63,7 @@ export class FastingService extends ApiService {
     }
 
     public getOverview(): Observable<FastingOverview> {
-        return this.get<FastingOverview>('overview').pipe(
+        return this.requestOverview().pipe(
             catchError((error: unknown) =>
                 fallbackApiError('Get fasting overview error', error, {
                     currentSession: null,
@@ -92,6 +92,10 @@ export class FastingService extends ApiService {
         );
     }
 
+    public getOverviewStrict(): Observable<FastingOverview> {
+        return this.requestOverview().pipe(catchError((error: unknown) => rethrowApiError('Get fasting overview error', error)));
+    }
+
     public getHistory(query: FastingHistoryQuery): Observable<PageOf<FastingSession>> {
         return this.get<PageOf<FastingSession>>('history', {
             from: query.from,
@@ -109,5 +113,9 @@ export class FastingService extends ApiService {
                 }),
             ),
         );
+    }
+
+    private requestOverview(): Observable<FastingOverview> {
+        return this.get<FastingOverview>('overview');
     }
 }
