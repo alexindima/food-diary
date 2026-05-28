@@ -81,6 +81,17 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task GetByBarcodeAsync_EncodesBarcodePathSegment() {
+        var handler = new RecordingHttpMessageHandler("""{"status": 0, "product": null}""");
+        var service = CreateService(handler);
+
+        await service.GetByBarcodeAsync(" 123/456 ");
+
+        Assert.NotNull(handler.LastRequestUri);
+        Assert.Contains("/api/v2/product/123%2F456", handler.LastRequestUri!.ToString());
+    }
+
+    [Fact]
     public async Task GetByBarcodeAsync_WhenJsonInvalid_ReturnsNull() {
         var service = CreateService(new SuccessHttpMessageHandler("not json"));
 
@@ -237,6 +248,17 @@ public sealed class OpenFoodFactsServiceTests {
         Assert.Equal(1, handler.RequestCount);
     }
 
+    [Fact]
+    public async Task SearchAsync_ClampsLimitBeforeCallingApi() {
+        var handler = new RecordingHttpMessageHandler("""{"products": []}""");
+        var service = CreateService(handler);
+
+        await service.SearchAsync("milk", limit: 500);
+
+        Assert.NotNull(handler.LastRequestUri);
+        Assert.Contains("page_size=50", handler.LastRequestUri!.Query);
+    }
+
     private static OpenFoodFactsService CreateService(HttpMessageHandler handler) {
         var httpClient = new HttpClient(handler);
         return new OpenFoodFactsService(
@@ -271,6 +293,18 @@ public sealed class OpenFoodFactsServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) {
             RequestCount++;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+            });
+        }
+    }
+
+    private sealed class RecordingHttpMessageHandler(string json) : HttpMessageHandler {
+        public Uri? LastRequestUri { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken) {
+            LastRequestUri = request.RequestUri;
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
             });

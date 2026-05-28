@@ -22,7 +22,8 @@ internal sealed class OpenFoodFactsService(
         CancellationToken cancellationToken = default) {
         try {
             var baseUrl = options.Value.BaseUrl.TrimEnd('/');
-            var url = $"{baseUrl}/api/v2/product/{barcode}?fields=code,product_name,brands,categories,image_url,nutriments";
+            var encodedBarcode = Uri.EscapeDataString(barcode.Trim());
+            var url = $"{baseUrl}/api/v2/product/{encodedBarcode}?fields=code,product_name,brands,categories,image_url,nutriments";
 
             var response = await httpClient.SendAsync(
                 new HttpRequestMessage(HttpMethod.Get, url),
@@ -61,7 +62,8 @@ internal sealed class OpenFoodFactsService(
         string query,
         int limit = 10,
         CancellationToken cancellationToken = default) {
-        var cacheKey = GetSearchCacheKey(query, limit);
+        var normalizedLimit = Math.Clamp(limit, 1, 50);
+        var cacheKey = GetSearchCacheKey(query, normalizedLimit);
         if (TryGetCachedSearch(cacheKey, SearchCacheTtl, out var freshProducts)) {
             return freshProducts;
         }
@@ -69,7 +71,7 @@ internal sealed class OpenFoodFactsService(
         try {
             var baseUrl = options.Value.BaseUrl.TrimEnd('/');
             var encodedQuery = Uri.EscapeDataString(query);
-            var url = $"{baseUrl}/cgi/search.pl?search_terms={encodedQuery}&page_size={limit}&json=1&fields=code,product_name,brands,categories,image_url,nutriments";
+            var url = $"{baseUrl}/cgi/search.pl?search_terms={encodedQuery}&page_size={normalizedLimit}&json=1&fields=code,product_name,brands,categories,image_url,nutriments";
 
             var response = await httpClient.SendAsync(
                 new HttpRequestMessage(HttpMethod.Get, url),

@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens';
@@ -158,6 +158,29 @@ describe('ProductListFacade search and filters', () => {
         expect(facade.onlyMineFilter()).toBe(true);
         expect(productService.query).toHaveBeenCalledWith(1, PRODUCT_LIST_PAGE_SIZE, expect.anything(), false);
     });
+
+    it('ignores stale Open Food Facts responses from previous searches', async () => {
+        productService.query.mockClear();
+        const firstSearch = new Subject<OpenFoodFactsProduct[]>();
+        const secondSearch = new Subject<OpenFoodFactsProduct[]>();
+        openFoodFactsService.search.mockReturnValueOnce(firstSearch.asObservable()).mockReturnValueOnce(secondSearch.asObservable());
+
+        facade.searchForm.controls.search.setValue('banana');
+        await flushDebounceAsync();
+        facade.searchForm.controls.search.setValue('apple');
+        await flushDebounceAsync();
+
+        firstSearch.next([createOpenFoodFactsProduct({ barcode: 'stale', name: 'Stale banana' })]);
+        firstSearch.complete();
+        expect(facade.offProducts()).toEqual([]);
+
+        const latest = createOpenFoodFactsProduct({ barcode: 'latest', name: 'Fresh apple' });
+        secondSearch.next([latest]);
+        secondSearch.complete();
+
+        expect(facade.offProducts()).toEqual([latest]);
+        expect(facade.offLoading()).toBe(false);
+    });
 });
 
 describe('ProductListFacade favorites', () => {
@@ -266,7 +289,7 @@ function createFavoriteProduct(): FavoriteProduct {
     };
 }
 
-function createOpenFoodFactsProduct(): OpenFoodFactsProduct {
+function createOpenFoodFactsProduct(overrides: Partial<OpenFoodFactsProduct> = {}): OpenFoodFactsProduct {
     return {
         barcode: '4600000000000',
         name: 'Banana',
@@ -278,5 +301,6 @@ function createOpenFoodFactsProduct(): OpenFoodFactsProduct {
         fatsPer100G: PRODUCT_FATS,
         carbsPer100G: PRODUCT_CARBS,
         fiberPer100G: 1,
+        ...overrides,
     };
 }

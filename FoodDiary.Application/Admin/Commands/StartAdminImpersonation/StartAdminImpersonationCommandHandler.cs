@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Enums;
@@ -42,7 +43,9 @@ public sealed class StartAdminImpersonationCommandHandler(
         var targetUserId = new UserId(command.TargetUserId);
 
         var actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken);
-        if (actor is null || !actor.HasRole(RoleNames.Admin)) {
+        if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(actor) is not null
+            || actor is null
+            || !actor.HasRole(RoleNames.Admin)) {
             return Result.Failure<AdminImpersonationStartModel>(Errors.Authentication.ImpersonationForbidden);
         }
 
@@ -51,7 +54,8 @@ public sealed class StartAdminImpersonationCommandHandler(
             return Result.Failure<AdminImpersonationStartModel>(Errors.User.NotFound(command.TargetUserId));
         }
 
-        if (target.HasRole(RoleNames.Admin)) {
+        if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(target) is not null
+            || target.HasRole(RoleNames.Admin)) {
             return Result.Failure<AdminImpersonationStartModel>(Errors.Authentication.ImpersonationForbidden);
         }
 

@@ -48,6 +48,7 @@ export class ProfileManageFacade {
     public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
     public readonly isLoadingWebPushSubscriptions = signal(false);
     public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
+    private webPushSubscriptionsRequestId = 0;
 
     public constructor() {}
 
@@ -327,22 +328,25 @@ export class ProfileManageFacade {
     }
 
     private loadWebPushSubscriptions(): void {
+        const requestId = ++this.webPushSubscriptionsRequestId;
         this.isLoadingWebPushSubscriptions.set(true);
 
         this.notificationService
             .getWebPushSubscriptions()
             .pipe(
                 finalize(() => {
-                    this.isLoadingWebPushSubscriptions.set(false);
+                    if (requestId === this.webPushSubscriptionsRequestId) {
+                        this.isLoadingWebPushSubscriptions.set(false);
+                    }
                 }),
             )
             .subscribe({
                 next: subscriptions => {
-                    this.webPushSubscriptions.set(subscriptions);
+                    if (requestId === this.webPushSubscriptionsRequestId) {
+                        this.webPushSubscriptions.set(subscriptions);
+                    }
                 },
-                error: () => {
-                    this.webPushSubscriptions.set([]);
-                },
+                error: () => {},
             });
     }
 }

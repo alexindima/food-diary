@@ -62,7 +62,7 @@ public class ExportDiaryQueryHandler(
                     query.DateTo,
                     query.Locale,
                     query.TimeZoneOffsetMinutes,
-                    query.ReportOrigin,
+                    NormalizeReportOrigin(query.ReportOrigin),
                     cancellationToken),
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
@@ -71,6 +71,18 @@ public class ExportDiaryQueryHandler(
                 "text/csv",
                 $"food-diary-{fromStr}-to-{toStr}.csv")),
         };
+    }
+
+    private static string? NormalizeReportOrigin(string? reportOrigin) {
+        if (string.IsNullOrWhiteSpace(reportOrigin)) {
+            return null;
+        }
+
+        return Uri.TryCreate(reportOrigin.Trim(), UriKind.Absolute, out var uri)
+               && uri.Scheme is "http" or "https"
+               && !string.IsNullOrWhiteSpace(uri.Host)
+            ? uri.GetLeftPart(UriPartial.Authority)
+            : null;
     }
 
     private static TimeSpan ResolveDisplayOffset(DateTime dateFrom, int? timeZoneOffsetMinutes) {

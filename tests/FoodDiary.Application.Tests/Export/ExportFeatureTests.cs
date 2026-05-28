@@ -68,6 +68,20 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public async Task ExportDiary_WithUnsafeReportOrigin_DropsOriginBeforePdfGeneration() {
+        var userId = UserId.New();
+        var pdfGenerator = new StubPdfGenerator();
+        var handler = new ExportDiaryQueryHandler(new StubMealRepository([]), new SingleUserRepository(), pdfGenerator);
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, ReportOrigin: "javascript:alert(1)"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(pdfGenerator.LastReportOrigin);
+    }
+
+    [Fact]
     public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
         var userId = UserId.New();
         var repository = new StubMealRepository([]);

@@ -1,9 +1,11 @@
 using System.Net.Mail;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
@@ -547,6 +549,48 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task StartAdminImpersonationHandler_WithInactiveActor_ReturnsForbidden() {
+        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        actor.Deactivate();
+        var target = CreateUserWithRoles("client@example.com", []);
+        var handler = CreateStartImpersonationHandler(actor, target);
+
+        var result = await handler.Handle(
+            new StartAdminImpersonationCommand(
+                actor.Id.Value,
+                target.Id.Value,
+                "Support case",
+                "127.0.0.1",
+                "Test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.ImpersonationForbidden", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task StartAdminImpersonationHandler_WithInactiveTarget_ReturnsForbiddenWithoutSession() {
+        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        var target = CreateUserWithRoles("client@example.com", []);
+        target.Deactivate();
+        var sessionRepository = new RecordingImpersonationSessionRepository();
+        var handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
+
+        var result = await handler.Handle(
+            new StartAdminImpersonationCommand(
+                actor.Id.Value,
+                target.Id.Value,
+                "Support case",
+                "127.0.0.1",
+                "Test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.ImpersonationForbidden", result.Error.Code);
+        Assert.Equal(0, sessionRepository.AddCallCount);
+    }
+
+    [Fact]
     public async Task UpsertAdminEmailTemplateValidator_WithInvalidLocale_Fails() {
         var validator = new UpsertAdminEmailTemplateCommandValidator();
         var command = new UpsertAdminEmailTemplateCommand(
@@ -658,6 +702,17 @@ public class AdminFeatureTests {
     private static UpdateAdminUserCommandHandler CreateUpdateAdminUserHandler(InMemoryUserRepository userRepository) =>
         new(userRepository, new NullAuditLogger(), new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
+    private static StartAdminImpersonationCommandHandler CreateStartImpersonationHandler(
+        User actor,
+        User target,
+        RecordingImpersonationSessionRepository? sessionRepository = null) =>
+        new(
+            new MultipleUserRepository([actor, target]),
+            sessionRepository ?? new RecordingImpersonationSessionRepository(),
+            new StubJwtTokenGenerator(),
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)),
+            new NullAuditLogger());
+
     private sealed class NullAuditLogger : IAuditLogger {
         public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
     }
@@ -713,6 +768,47 @@ public class AdminFeatureTests {
             RoleAuditEvents.AddRange(roleAuditEvents);
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(users.FirstOrDefault(user => user.Id == id));
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class RecordingImpersonationSessionRepository : IAdminImpersonationSessionRepository {
+        public int AddCallCount { get; private set; }
+
+        public Task AddAsync(FoodDiary.Domain.Entities.Admin.AdminImpersonationSession session, CancellationToken cancellationToken = default) {
+            AddCallCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task<(IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems)> GetPagedAsync(
+            int page,
+            int limit,
+            string? search,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class StubJwtTokenGenerator : IJwtTokenGenerator {
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "access-token";
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc) => "access-token";
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, JwtImpersonationContext impersonation) => "impersonation-token";
+        public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "refresh-token";
+        public (UserId userId, string email)? ValidateToken(string token) => null;
     }
 
     private sealed class RecordingAiUsageRepository : IAiUsageRepository {

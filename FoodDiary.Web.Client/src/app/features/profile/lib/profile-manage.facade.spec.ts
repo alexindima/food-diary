@@ -59,6 +59,7 @@ let userService: {
 };
 let notificationService: {
     updateNotificationPreferences: ReturnType<typeof vi.fn>;
+    getWebPushSubscriptions: ReturnType<typeof vi.fn>;
     removeWebPushSubscription: ReturnType<typeof vi.fn>;
 };
 let dialogService: { open: ReturnType<typeof vi.fn> };
@@ -83,6 +84,7 @@ beforeEach(() => {
                 fastingCheckInFollowUpReminderHours: 20,
             }),
         ),
+        getWebPushSubscriptions: vi.fn().mockReturnValue(of(overview.webPushSubscriptions)),
         removeWebPushSubscription: vi.fn().mockReturnValue(of(undefined)),
     };
     dialogService = {
@@ -235,6 +237,38 @@ describe('ProfileManageFacade notification preferences', () => {
         expect(removed).toBe(true);
         expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith('https://push.example.com/subscriptions/current');
         expect(facade.webPushSubscriptions()).toHaveLength(0);
+    });
+
+    it('keeps latest web push device list when refresh responses complete out of order', () => {
+        facade.initialize();
+        const firstRefresh = new Subject<typeof overview.webPushSubscriptions>();
+        const secondRefresh = new Subject<typeof overview.webPushSubscriptions>();
+        notificationService.getWebPushSubscriptions
+            .mockReturnValueOnce(firstRefresh.asObservable())
+            .mockReturnValueOnce(secondRefresh.asObservable());
+
+        facade.refreshWebPushSubscriptions();
+        facade.refreshWebPushSubscriptions();
+
+        firstRefresh.next([
+            {
+                ...overview.webPushSubscriptions[0],
+                endpoint: 'https://push.example.com/subscriptions/stale',
+            },
+        ]);
+        firstRefresh.complete();
+        expect(facade.webPushSubscriptions()[0].endpoint).toBe('https://push.example.com/subscriptions/current');
+
+        secondRefresh.next([
+            {
+                ...overview.webPushSubscriptions[0],
+                endpoint: 'https://push.example.com/subscriptions/latest',
+            },
+        ]);
+        secondRefresh.complete();
+
+        expect(facade.webPushSubscriptions()[0].endpoint).toBe('https://push.example.com/subscriptions/latest');
+        expect(facade.isLoadingWebPushSubscriptions()).toBe(false);
     });
 
     it('sets update error when notification preferences request fails', async () => {

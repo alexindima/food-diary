@@ -98,6 +98,7 @@ export class ProductListFacade {
     public readonly offLoading = signal(false);
     private readonly isMobileSearchOpen = signal(false);
     private readonly selectedProductTypes = signal<ProductType[]>([]);
+    private offSearchRequestId = 0;
 
     public constructor() {
         effect(() => {
@@ -398,21 +399,29 @@ export class ProductListFacade {
     private searchOpenFoodFacts(search: string | null): void {
         const trimmed = search?.trim();
         if (trimmed === undefined || trimmed.length < PRODUCT_LIST_OFF_SEARCH_MIN_LENGTH) {
+            this.offSearchRequestId++;
             this.offProducts.set([]);
+            this.offLoading.set(false);
             return;
         }
 
+        const requestId = ++this.offSearchRequestId;
         this.offLoading.set(true);
         this.openFoodFactsService
             .search(trimmed, PRODUCT_LIST_OFF_SEARCH_LIMIT)
             .pipe(
+                catchError(() => of<OpenFoodFactsProduct[]>([])),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
-                    this.offLoading.set(false);
+                    if (requestId === this.offSearchRequestId) {
+                        this.offLoading.set(false);
+                    }
                 }),
             )
             .subscribe(products => {
-                this.offProducts.set(products);
+                if (requestId === this.offSearchRequestId) {
+                    this.offProducts.set(products);
+                }
             });
     }
 
