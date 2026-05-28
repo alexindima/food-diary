@@ -225,6 +225,53 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task ProcessBillingWebhook_WhenParsedEventIsIncomplete_ReturnsValidationFailureWithoutMutation() {
+        var user = User.Create("invalid-webhook@example.com", "hash");
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var gateway = new FakeBillingProviderGateway(
+            BillingProviderNames.YooKassa,
+            webhookEvent: new BillingWebhookEventModel(
+                string.Empty,
+                "payment.succeeded",
+                "customer_invalid",
+                "pay_invalid",
+                "pm_invalid",
+                "price_monthly",
+                "monthly",
+                "active",
+                Now,
+                Now.AddMonths(1),
+                false,
+                null,
+                null,
+                null,
+                7.99m,
+                "USD",
+                null,
+                user.Id.Value));
+        var handler = CreateWebhookHandler(
+            gateway,
+            userRepository,
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Empty(subscriptionRepository.Subscriptions);
+        Assert.Empty(webhookEventRepository.Events);
+        Assert.Empty(paymentRepository.Payments);
+        Assert.False(user.HasRole(RoleNames.Premium));
+    }
+
+    [Fact]
     public async Task ProcessBillingWebhook_ForManualPremiumUser_DoesNotRemovePremiumRoleOnCanceledSubscription() {
         var premiumRole = Role.Create(RoleNames.Premium);
         var user = User.Create("manual-premium@example.com", "hash");
@@ -497,6 +544,71 @@ public sealed class BillingFeatureTests {
         Assert.Equal(1, result.Failed);
         Assert.Equal("past_due", subscription.Status);
         Assert.Equal(Now.AddHours(1), subscription.NextBillingAttemptUtc);
+        Assert.False(subscription.PremiumRoleManagedByBilling);
+        Assert.False(user.HasRole(RoleNames.Premium));
+    }
+
+    [Fact]
+    public async Task BillingRenewalService_WhenBillingDetailsMissing_MarksPastDueWithoutCallingProvider() {
+        var premiumRole = Role.Create(RoleNames.Premium);
+        var user = User.Create("missing-renewal-details@example.com", "hash");
+        user.ReplaceRoles([premiumRole]);
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.YooKassa,
+            "customer_missing_details",
+            "price_monthly",
+            "monthly");
+        subscription.ApplyProviderSnapshot(
+            BillingProviderNames.YooKassa,
+            "pay_initial",
+            null,
+            "price_monthly",
+            "monthly",
+            "active",
+            Now.AddMonths(-1),
+            Now.AddMinutes(-1),
+            false,
+            null,
+            null,
+            null,
+            "evt_initial",
+            Now.AddMonths(-1));
+        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var renewalGateway = new FakeRecurringBillingGateway(
+            BillingProviderNames.YooKassa,
+            new BillingRecurringPaymentModel(
+                "pay_should_not_be_used",
+                "pm_should_not_be_used",
+                "price_monthly",
+                "monthly",
+                "active",
+                Now,
+                Now.AddMonths(1),
+                "evt_should_not_be_used",
+                7.99m,
+                "USD",
+                null));
+        var service = new BillingRenewalService(
+            subscriptionRepository,
+            new RecordingBillingPaymentRepository(),
+            userRepository,
+            new NoOpBillingTransactionRunner(),
+            [renewalGateway],
+            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
+            new FixedDateTimeProvider(Now));
+
+        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+
+        Assert.Equal(1, result.Processed);
+        Assert.Equal(0, result.Renewed);
+        Assert.Equal(1, result.Failed);
+        Assert.Equal(0, renewalGateway.CreatePaymentCallCount);
+        Assert.Equal("past_due", subscription.Status);
+        Assert.Equal(Now.AddHours(1), subscription.NextBillingAttemptUtc);
+        Assert.Equal("Renewal skipped because subscription billing details are incomplete.", subscription.ProviderMetadataJson);
         Assert.False(subscription.PremiumRoleManagedByBilling);
         Assert.False(user.HasRole(RoleNames.Premium));
     }

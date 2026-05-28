@@ -44,6 +44,10 @@ public sealed class BillingRenewalService(
 
             if (string.IsNullOrWhiteSpace(subscription.ExternalPaymentMethodId) ||
                 string.IsNullOrWhiteSpace(subscription.Plan)) {
+                await MarkRenewalFailedAsync(
+                    subscription,
+                    "Renewal skipped because subscription billing details are incomplete.",
+                    cancellationToken);
                 failed++;
                 continue;
             }
@@ -78,27 +82,7 @@ public sealed class BillingRenewalService(
                 cancellationToken);
 
             if (renewalResult.IsFailure) {
-                await billingTransactionRunner.ExecuteAsync(async ct => {
-                    subscription.MarkRenewalFailed(
-                        now.Add(FailedRenewalRetryDelay),
-                        BuildRenewalFailureEventId(subscription, now),
-                        now,
-                        renewalResult.Error.Message);
-                    await billingSubscriptionRepository.UpdateAsync(subscription, ct);
-
-                    var failedRenewalUser = await userRepository.GetByIdAsync(subscription.UserId, ct);
-                    if (failedRenewalUser is not null) {
-                        var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
-                            subscription.Status,
-                            subscription.CurrentPeriodEndUtc);
-                        await billingAccessService.EnsurePremiumRoleAsync(
-                            failedRenewalUser,
-                            subscription,
-                            shouldHavePremium,
-                            ct);
-                    }
-                }, cancellationToken);
-
+                await MarkRenewalFailedAsync(subscription, renewalResult.Error.Message, cancellationToken);
                 failed++;
                 continue;
             }
@@ -180,4 +164,31 @@ public sealed class BillingRenewalService(
 
     private static string BuildRenewalSkippedEventId(BillingSubscription subscription, DateTime skippedAtUtc) =>
         $"billing-renewal-skipped-inaccessible-user:{subscription.Id:N}:{skippedAtUtc:yyyyMMddHHmmss}";
+
+    private async Task MarkRenewalFailedAsync(
+        BillingSubscription subscription,
+        string reason,
+        CancellationToken cancellationToken) {
+        var now = dateTimeProvider.UtcNow;
+        await billingTransactionRunner.ExecuteAsync(async ct => {
+            subscription.MarkRenewalFailed(
+                now.Add(FailedRenewalRetryDelay),
+                BuildRenewalFailureEventId(subscription, now),
+                now,
+                reason);
+            await billingSubscriptionRepository.UpdateAsync(subscription, ct);
+
+            var failedRenewalUser = await userRepository.GetByIdAsync(subscription.UserId, ct);
+            if (failedRenewalUser is not null) {
+                var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+                    subscription.Status,
+                    subscription.CurrentPeriodEndUtc);
+                await billingAccessService.EnsurePremiumRoleAsync(
+                    failedRenewalUser,
+                    subscription,
+                    shouldHavePremium,
+                    ct);
+            }
+        }, cancellationToken);
+    }
 }

@@ -41,6 +41,11 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return Result.Success();
         }
 
+        var webhookEventValidationError = ValidateWebhookEvent(webhookEvent);
+        if (webhookEventValidationError is not null) {
+            return Result.Failure(webhookEventValidationError);
+        }
+
         if (await billingWebhookEventRepository.ExistsAsync(billingProvider.Provider, webhookEvent.EventId, cancellationToken)) {
             return Result.Success();
         }
@@ -128,6 +133,26 @@ public sealed class ProcessBillingWebhookCommandHandler(
         }
 
         return Result.Success();
+    }
+
+    private static Error? ValidateWebhookEvent(BillingWebhookEventModel webhookEvent) {
+        if (string.IsNullOrWhiteSpace(webhookEvent.EventId)) {
+            return Errors.Billing.WebhookValidationFailed("Webhook event id is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(webhookEvent.EventType)) {
+            return Errors.Billing.WebhookValidationFailed("Webhook event type is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId)) {
+            return Errors.Billing.WebhookValidationFailed("Webhook customer id is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(webhookEvent.Status)) {
+            return Errors.Billing.WebhookValidationFailed("Webhook subscription status is required.");
+        }
+
+        return null;
     }
 
     private async Task AddWebhookPaymentIfPresentAsync(
