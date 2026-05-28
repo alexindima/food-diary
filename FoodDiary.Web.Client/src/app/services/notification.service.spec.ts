@@ -120,6 +120,24 @@ describe('NotificationService loading', () => {
         httpMock.expectNone(`${baseUrl}/unread-count`);
         expect(service.unreadCount()).toBe(0);
     });
+
+    it('should allow retry after notifications loading fails', () => {
+        service.ensureNotificationsLoaded();
+
+        const failedReq = httpMock.expectOne(baseUrl);
+        failedReq.flush(null, { status: 500, statusText: 'Server Error' });
+
+        expect(service.notificationsLoaded()).toBe(false);
+        expect(service.notificationsLoading()).toBe(false);
+
+        service.ensureNotificationsLoaded();
+
+        const retryReq = httpMock.expectOne(baseUrl);
+        expect(retryReq.request.method).toBe('GET');
+        retryReq.flush([]);
+
+        expect(service.notificationsLoaded()).toBe(true);
+    });
 });
 
 describe('NotificationService read state', () => {

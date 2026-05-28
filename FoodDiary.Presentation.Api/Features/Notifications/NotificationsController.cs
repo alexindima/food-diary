@@ -1,5 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
@@ -16,6 +20,7 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 public class NotificationsController(
     ISender mediator,
     INotificationTestScheduler notificationTestScheduler,
+    IUserRepository userRepository,
     IAuditLogger auditLogger)
     : AuthorizedController(mediator) {
     [HttpGet]
@@ -49,6 +54,14 @@ public class NotificationsController(
         [FromCurrentUser] Guid userId,
         [FromBody] ScheduleTestNotificationHttpRequest request,
         CancellationToken cancellationToken) {
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+            userRepository,
+            new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
+            cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure(accessError).ToNoContentActionResult(this);
+        }
+
         var response = await notificationTestScheduler.ScheduleAsync(
             userId,
             request.DelaySeconds,

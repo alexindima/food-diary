@@ -1,10 +1,14 @@
 using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
+using FoodDiary.Application.Notifications.Queries.GetWebPushConfiguration;
+using FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
+using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 
@@ -30,8 +34,28 @@ public static class NotificationHttpMappings {
             request.FastingCheckInReminderHours,
             request.FastingCheckInFollowUpReminderHours);
 
+    public static GetWebPushConfigurationQuery ToWebPushConfigurationQuery() => new();
+
+    public static GetWebPushSubscriptionsQuery ToWebPushSubscriptionsQuery(this Guid userId) => new(userId);
+
+    public static UpsertWebPushSubscriptionCommand ToCommand(this UpsertWebPushSubscriptionHttpRequest request, Guid userId) =>
+        new(
+            userId,
+            request.Endpoint,
+            request.Keys?.P256dh ?? string.Empty,
+            request.Keys?.Auth ?? string.Empty,
+            request.ExpirationTime,
+            request.Locale,
+            request.UserAgent);
+
+    public static RemoveWebPushSubscriptionCommand ToCommand(this RemoveWebPushSubscriptionHttpRequest request, Guid userId) =>
+        new(userId, request.Endpoint);
+
     public static NotificationHttpResponse ToHttpResponse(this NotificationModel model) =>
         new(model.Id, model.Type, model.Title, model.Body, model.TargetUrl, model.ReferenceId, model.IsRead, model.CreatedAtUtc);
+
+    public static WebPushConfigurationHttpResponse ToHttpResponse(this WebPushConfigurationModel model) =>
+        new(model.Enabled, model.PublicKey);
 
     public static NotificationPreferencesHttpResponse ToHttpResponse(this NotificationPreferencesModel model) =>
         new(

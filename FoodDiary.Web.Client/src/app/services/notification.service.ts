@@ -244,7 +244,7 @@ export class NotificationService {
                 },
                 error: () => {
                     this.notifications.set([]);
-                    this.notificationsLoaded.set(true);
+                    this.notificationsLoaded.set(false);
                     this.notificationsLoading.set(false);
                 },
             });

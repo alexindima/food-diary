@@ -9,7 +9,8 @@ namespace FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 
 public class MarkAllNotificationsReadCommandHandler(
     INotificationRepository notificationRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    INotificationPusher notificationPusher)
     : ICommandHandler<MarkAllNotificationsReadCommand, Result> {
     public async Task<Result> Handle(MarkAllNotificationsReadCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -23,6 +24,8 @@ public class MarkAllNotificationsReadCommandHandler(
         }
 
         await notificationRepository.MarkAllReadAsync(userId, cancellationToken);
+        await notificationPusher.PushUnreadCountAsync(userId.Value, 0, cancellationToken);
+        await notificationPusher.PushNotificationsChangedAsync(userId.Value, cancellationToken);
         return Result.Success();
     }
 }

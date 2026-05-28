@@ -1,9 +1,12 @@
 using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
+using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
+using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
+using FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
@@ -37,14 +40,18 @@ public class NotificationsFeatureTests {
         var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
+        var pusher = new RecordingNotificationPusher();
 
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)));
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher);
         var result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(notification.IsRead);
+        Assert.Equal(userId.Value, pusher.UnreadCountUserId);
+        Assert.Equal(0, pusher.UnreadCount);
+        Assert.Equal(userId.Value, pusher.NotificationsChangedUserId);
     }
 
     [Fact]
@@ -55,7 +62,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)));
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)), new RecordingNotificationPusher());
         var result = await handler.Handle(
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -67,7 +74,7 @@ public class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WhenNotFound_ReturnsFailure() {
         var repo = new InMemoryNotificationRepository();
         var userId = UserId.New();
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)));
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), new RecordingNotificationPusher());
 
         var result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
@@ -80,7 +87,8 @@ public class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkNotificationReadCommandHandler(
             new InMemoryNotificationRepository(),
-            new SingleUserRepository(CreateUser()));
+            new SingleUserRepository(CreateUser()),
+            new RecordingNotificationPusher());
 
         var result = await handler.Handle(
             new MarkNotificationReadCommand(null, Guid.NewGuid()),
@@ -95,7 +103,7 @@ public class NotificationsFeatureTests {
         var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)));
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher());
 
         var result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
@@ -110,7 +118,10 @@ public class NotificationsFeatureTests {
     public async Task MarkAllNotificationsRead_WithValidUserId_Succeeds() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)));
+        repo.Seed(Notification.Create(userId, "info", "{}"));
+        repo.Seed(Notification.Create(userId, "info", "{}"));
+        var pusher = new RecordingNotificationPusher();
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher);
 
         var result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
@@ -118,13 +129,17 @@ public class NotificationsFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.True(repo.MarkAllReadCalled);
+        Assert.Equal(userId.Value, pusher.UnreadCountUserId);
+        Assert.Equal(0, pusher.UnreadCount);
+        Assert.Equal(userId.Value, pusher.NotificationsChangedUserId);
     }
 
     [Fact]
     public async Task MarkAllNotificationsRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkAllNotificationsReadCommandHandler(
             new InMemoryNotificationRepository(),
-            new SingleUserRepository(CreateUser()));
+            new SingleUserRepository(CreateUser()),
+            new RecordingNotificationPusher());
 
         var result = await handler.Handle(
             new MarkAllNotificationsReadCommand(null),
@@ -137,7 +152,7 @@ public class NotificationsFeatureTests {
     public async Task MarkAllNotificationsRead_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)));
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher());
 
         var result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
@@ -235,6 +250,108 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task GetWebPushSubscriptions_PrunesExpiredSubscriptions() {
+        var user = CreateUser();
+        var utcNow = new DateTime(2026, 5, 28, 8, 0, 0, DateTimeKind.Utc);
+        var active = WebPushSubscription.Create(
+            user.Id,
+            "https://push.example.com/active",
+            "p256",
+            "auth",
+            utcNow.AddMinutes(5));
+        var expired = WebPushSubscription.Create(
+            user.Id,
+            "https://push.example.com/expired",
+            "p256",
+            "auth",
+            utcNow.AddMinutes(-1));
+        var repository = new InMemoryWebPushSubscriptionRepository([active, expired]);
+        var handler = new GetWebPushSubscriptionsQueryHandler(
+            repository,
+            new SingleUserRepository(user),
+            new FixedDateTimeProvider(utcNow));
+
+        var result = await handler.Handle(new GetWebPushSubscriptionsQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var item = Assert.Single(result.Value);
+        Assert.Equal(active.Endpoint, item.Endpoint);
+        Assert.Equal([expired.Endpoint], repository.DeletedEndpoints);
+    }
+
+    [Fact]
+    public async Task UpsertWebPushSubscription_WithNewEndpoint_AddsSubscriptionAndWritesAuditLog() {
+        var user = CreateUser();
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new UpsertWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+
+        var result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                user.Id.Value,
+                "https://push.example.com/new",
+                "p256",
+                "auth",
+                null,
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var subscription = Assert.Single(repository.Subscriptions);
+        Assert.Equal(user.Id, subscription.UserId);
+        Assert.Equal("notifications.push-subscription.connected", auditLogger.Action);
+        Assert.Contains("endpointHost=push.example.com", auditLogger.Details);
+    }
+
+    [Fact]
+    public async Task UpsertWebPushSubscription_WithDeletedUser_ReturnsFailureWithoutAddingSubscription() {
+        var userId = UserId.New();
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var handler = new UpsertWebPushSubscriptionCommandHandler(
+            repository,
+            new SingleUserRepository(CreateDeletedUser(userId)),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                userId.Value,
+                "https://push.example.com/new",
+                "p256",
+                "auth",
+                null,
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Empty(repository.Subscriptions);
+    }
+
+    [Fact]
+    public async Task RemoveWebPushSubscription_WhenOwned_DeletesSubscriptionAndWritesAuditLog() {
+        var user = CreateUser();
+        var subscription = WebPushSubscription.Create(
+            user.Id,
+            "https://push.example.com/remove",
+            "p256",
+            "auth");
+        var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new RemoveWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+
+        var result = await handler.Handle(
+            new RemoveWebPushSubscriptionCommand(user.Id.Value, subscription.Endpoint),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(repository.Subscriptions);
+        Assert.Equal("notifications.push-subscription.disconnected", auditLogger.Action);
+        Assert.Contains("endpointHost=push.example.com", auditLogger.Details);
+    }
+
+    [Fact]
     public async Task NotificationCleanup_WithNonPositiveBatchSize_DoesNotCallRepository() {
         var repository = new InMemoryNotificationRepository();
         var service = new NotificationCleanupService(
@@ -307,6 +424,10 @@ public class NotificationsFeatureTests {
 
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) {
             MarkAllReadCalled = true;
+            foreach (var notification in _notifications.Where(n => n.UserId == userId)) {
+                notification.MarkAsRead();
+            }
+
             return Task.CompletedTask;
         }
 
@@ -332,6 +453,70 @@ public class NotificationsFeatureTests {
             BatchSize = batchSize;
             DeleteExpiredBatchCancellationToken = cancellationToken;
             return Task.FromResult(DeleteExpiredBatchResult);
+        }
+    }
+
+    private sealed class RecordingNotificationPusher : INotificationPusher {
+        public Guid? UnreadCountUserId { get; private set; }
+        public int? UnreadCount { get; private set; }
+        public Guid? NotificationsChangedUserId { get; private set; }
+
+        public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) {
+            UnreadCountUserId = userId;
+            UnreadCount = count;
+            return Task.CompletedTask;
+        }
+
+        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) {
+            NotificationsChangedUserId = userId;
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class InMemoryWebPushSubscriptionRepository(
+        IReadOnlyList<WebPushSubscription>? subscriptions = null)
+        : IWebPushSubscriptionRepository {
+        private readonly List<WebPushSubscription> _subscriptions = subscriptions?.ToList() ?? [];
+
+        public IReadOnlyList<WebPushSubscription> Subscriptions => _subscriptions;
+        public List<string> DeletedEndpoints { get; } = [];
+
+        public Task<WebPushSubscription?> GetByEndpointAsync(
+            string endpoint,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<WebPushSubscription?>(_subscriptions.FirstOrDefault(subscription => subscription.Endpoint == endpoint));
+
+        public Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WebPushSubscription>>(
+                _subscriptions.Where(subscription => subscription.UserId == userId).ToList());
+
+        public Task<WebPushSubscription> AddAsync(
+            WebPushSubscription subscription,
+            CancellationToken cancellationToken = default) {
+            _subscriptions.Add(subscription);
+            return Task.FromResult(subscription);
+        }
+
+        public Task UpdateAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task DeleteAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
+            DeletedEndpoints.Add(subscription.Endpoint);
+            _subscriptions.Remove(subscription);
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteRangeAsync(
+            IReadOnlyCollection<WebPushSubscription> subscriptionsToDelete,
+            CancellationToken cancellationToken = default) {
+            foreach (var subscription in subscriptionsToDelete) {
+                DeletedEndpoints.Add(subscription.Endpoint);
+                _subscriptions.Remove(subscription);
+            }
+
+            return Task.CompletedTask;
         }
     }
 
