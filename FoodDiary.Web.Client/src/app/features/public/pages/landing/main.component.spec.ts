@@ -106,6 +106,21 @@ describe('MainComponent', () => {
         });
     });
 
+    it('does not reopen auth dialog for duplicate auth query param emissions', async () => {
+        const authParams = { auth: 'login', returnUrl: '/dashboard' };
+        await createComponentAsync('', {}, authParams);
+        queryParamMapSubject.next(convertToParamMap(authParams));
+
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
+        });
+
+        queryParamMapSubject.next(convertToParamMap(authParams));
+
+        expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
+    });
+
     it('does not open auth dialog without auth query param', async () => {
         await createComponentAsync('');
 

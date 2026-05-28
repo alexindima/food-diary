@@ -37,6 +37,7 @@ export class MainComponent {
     protected readonly faqItems = LANDING_FAQ_ITEMS;
     protected readonly seoGuides = LANDING_SEO_GUIDES;
     private authDialogOpen = false;
+    private handledAuthQueryKey: string | null = null;
 
     public constructor() {
         effect(() => {
@@ -50,11 +51,20 @@ export class MainComponent {
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             const authParam = params.get('auth');
             if (authParam === null) {
+                this.handledAuthQueryKey = null;
                 return;
             }
 
             const mode: PublicAuthMode = authParam === 'register' ? 'register' : 'login';
-            void this.openAuthDialogAsync(mode, params.get('returnUrl'), params.get('adminReturnUrl'));
+            const returnUrl = params.get('returnUrl');
+            const adminReturnUrl = params.get('adminReturnUrl');
+            const authQueryKey = this.createAuthQueryKey(mode, returnUrl, adminReturnUrl);
+            if (authQueryKey === this.handledAuthQueryKey) {
+                return;
+            }
+
+            this.handledAuthQueryKey = authQueryKey;
+            void this.openAuthDialogAsync(mode, returnUrl, adminReturnUrl);
         });
     }
 
@@ -81,5 +91,9 @@ export class MainComponent {
                     replaceUrl: true,
                 });
             });
+    }
+
+    private createAuthQueryKey(mode: PublicAuthMode, returnUrl: string | null, adminReturnUrl: string | null): string {
+        return JSON.stringify({ mode, returnUrl, adminReturnUrl });
     }
 }
