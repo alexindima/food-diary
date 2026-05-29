@@ -64,7 +64,7 @@
         overflow-y: auto;
         overscroll-behavior-y: contain;
         -webkit-overflow-scrolling: touch;
-        padding-bottom: calc(var(--fd-space-lg) + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
         box-sizing: border-box;
         background: var(--fd-bg-page);
     }
@@ -141,7 +141,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
 }
 
 @media #{variables.$media-tablet} {
-
+    // stylelint-disable-next-line rule-empty-line-before
     .fd-root {
         display: block;
         height: auto;

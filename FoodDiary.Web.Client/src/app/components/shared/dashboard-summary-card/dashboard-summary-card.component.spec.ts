@@ -252,6 +252,26 @@ function registerNoticeTests(context: TestContext): void {
             context.setInput('nutrientBars', bars);
             expect(context.component().showNotice()).toBe(false);
         });
+
+        it('should not render notice when both calorie and macro goals are set', () => {
+            const bars: NutrientBar[] = [
+                {
+                    id: 'protein',
+                    label: 'Protein',
+                    current: PROTEIN_CURRENT,
+                    target: PROTEIN_TARGET,
+                    unit: 'g',
+                    colorStart: '#4dabff',
+                    colorEnd: '#2563eb',
+                },
+            ];
+            context.setInput('dailyGoal', DAILY_GOAL);
+            context.setInput('nutrientBars', bars);
+
+            const host = context.fixture().nativeElement as HTMLElement;
+
+            expect(host.querySelector('fd-notice-banner')).toBeNull();
+        });
     });
 }
 

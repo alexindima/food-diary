@@ -13,7 +13,7 @@ import { Directive } from '@angular/core';
         '[style.max-width]': '"var(--fd-layout-page-content-max-width)"',
         '[style.margin]': '"0 auto"',
         '[style.padding]':
-            '"var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding)"',
+            '"var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding) min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding))"',
     },
 })
 export class FdPageContainerDirective {}

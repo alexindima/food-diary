@@ -23,5 +23,8 @@ describe('FdPageContainerDirective', () => {
         expect(element.style.flexDirection).toBe('column');
         expect(element.style.gap).toBe('var(--fd-page-body-gap)');
         expect(element.style.maxWidth).toBe('var(--fd-layout-page-content-max-width)');
+        expect(element.style.padding).toBe(
+            'var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding) min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding))',
+        );
     });
 });
