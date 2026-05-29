@@ -3,7 +3,6 @@
 .user-manage {
     margin: 0 auto;
     box-sizing: border-box;
-    padding-bottom: var(--fd-space-lg);
 
     &__header {
         // stylelint-disable-next-line rule-empty-line-before
@@ -178,7 +177,7 @@
     }
 
     &__notifications-item {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &--nested {
             --fd-surface-padding: var(--fd-space-surface-padding);
         }
@@ -304,7 +303,7 @@
     }
 
     &__privacy-item {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &--danger {
             padding-top: var(--fd-space-xxs);
         }

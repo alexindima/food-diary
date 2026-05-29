@@ -21,7 +21,8 @@
     }
 
     &__form {
-        padding: var(--fd-space-lg) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
+        padding: var(--fd-space-lg) var(--fd-layout-page-horizontal-padding)
+            min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
     }
 
     &__grid {
@@ -77,7 +78,7 @@
     }
 
     @media #{variables.$media-mobile} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__image {
             width: 100%;
             height: auto;
@@ -129,7 +130,7 @@
     }
 
     @media #{variables.$media-tablet} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__form {
             padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-sm);
         }
@@ -140,7 +141,7 @@
     }
 
     @media #{variables.$media-mobile} {
-
+        // stylelint-disable-next-line rule-empty-line-before
         &__footer-actions {
             grid-template-columns: 1fr;
             align-items: stretch;
@@ -356,7 +357,7 @@
 }
 
 .consumption-item__field {
-
+    // stylelint-disable-next-line rule-empty-line-before
     &--source {
         flex: 2 1 240px;
     }
