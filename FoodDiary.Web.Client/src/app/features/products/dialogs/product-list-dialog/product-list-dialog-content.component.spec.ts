@@ -21,7 +21,7 @@ describe('ProductListDialogContentComponent', () => {
             },
         ]);
         const selected: Product[] = [];
-        component.productSelected.subscribe(product => {
+        component['productSelected'].subscribe(product => {
             selected.push(product);
         });
 

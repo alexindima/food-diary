@@ -50,9 +50,9 @@ beforeEach(() => {
 
 describe('ReportDialogComponent', () => {
     it('submits trimmed report reason and closes on success', () => {
-        component.reasonControl.setValue('  Spam  ');
+        component['reasonControl'].setValue('  Spam  ');
 
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(reportService.create).toHaveBeenCalledWith({
             targetType: 'Recipe',
@@ -64,35 +64,35 @@ describe('ReportDialogComponent', () => {
     });
 
     it('does not submit blank reason', () => {
-        component.reasonControl.setValue('   ');
+        component['reasonControl'].setValue('   ');
 
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(reportService.create).not.toHaveBeenCalled();
     });
 
     it('resets submitting state on failure', () => {
         reportService.create.mockReturnValueOnce(throwError(() => new Error('failed')));
-        component.reasonControl.setValue('Spam');
+        component['reasonControl'].setValue('Spam');
 
-        component.onSubmit();
+        component['onSubmit']();
 
-        expect(component.isSubmitting()).toBe(false);
+        expect(component['isSubmitting']()).toBe(false);
         expect(dialogRef.close).not.toHaveBeenCalled();
     });
 
     it('closes with false on cancel', () => {
-        component.onCancel();
+        component['onCancel']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(false);
     });
 
     it('uses injected reason max length validator', () => {
-        component.reasonControl.setValue('Too long reason');
+        component['reasonControl'].setValue('Too long reason');
 
-        component.onSubmit();
+        component['onSubmit']();
 
-        expect(component.reasonControl.hasError('maxlength')).toBe(true);
+        expect(component['reasonControl'].hasError('maxlength')).toBe(true);
         expect(reportService.create).not.toHaveBeenCalled();
     });
 });

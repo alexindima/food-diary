@@ -22,7 +22,7 @@ describe('MealListContentComponent', () => {
     it('should render error state and emit retry', async () => {
         const { component, fixture } = await setupComponentAsync({ errorKey: 'ERRORS.LOAD_FAILED_TITLE' });
         const retrySpy = vi.fn();
-        component.retry.subscribe(retrySpy);
+        component['retry'].subscribe(retrySpy);
 
         fixture.detectChanges();
         const errorState = fixture.debugElement.query(By.directive(ErrorStateComponent)).componentInstance as ErrorStateComponent;
@@ -35,7 +35,7 @@ describe('MealListContentComponent', () => {
     it('should render empty state and emit add request', async () => {
         const { component, fixture } = await setupComponentAsync({ emptyState: 'empty' });
         const mealAddSpy = vi.fn();
-        component.mealAdd.subscribe(mealAddSpy);
+        component['mealAdd'].subscribe(mealAddSpy);
 
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
@@ -62,7 +62,7 @@ describe('MealListContentComponent', () => {
             favoriteLoadingIds: new Set([meal.id]),
         });
         const openedSpy = vi.fn();
-        component.mealOpened.subscribe(openedSpy);
+        component['mealOpened'].subscribe(openedSpy);
 
         fixture.detectChanges();
         const mealCard = fixture.debugElement.query(By.directive(MealCardComponent)).componentInstance as MealCardComponent;
@@ -79,7 +79,7 @@ describe('MealListContentComponent', () => {
             favoriteLoadingIds: new Set(),
         });
         const favoriteToggleSpy = vi.fn();
-        component.mealFavoriteToggle.subscribe(favoriteToggleSpy);
+        component['mealFavoriteToggle'].subscribe(favoriteToggleSpy);
 
         fixture.detectChanges();
         const mealCard = fixture.debugElement.query(By.directive(MealCardComponent)).componentInstance as MealCardComponent;
@@ -91,14 +91,14 @@ describe('MealListContentComponent', () => {
     it('should emit page changes when pagination is visible', async () => {
         const { component, fixture } = await setupComponentAsync({ totalPages: TOTAL_PAGES, totalItems: TOTAL_ITEMS });
         const pageIndexChangeSpy = vi.fn();
-        component.pageIndexChange.subscribe(pageIndexChangeSpy);
+        component['pageIndexChange'].subscribe(pageIndexChangeSpy);
 
         fixture.detectChanges();
         const pagination = fixture.debugElement.query(By.directive(FdUiPaginationComponent)).componentInstance as FdUiPaginationComponent;
-        pagination.goToPage(PAGE_INDEX);
+        pagination['goToPage'](PAGE_INDEX);
 
-        expect(pagination.length()).toBe(TOTAL_ITEMS);
-        expect(pagination.pageSize()).toBe(PAGE_SIZE);
+        expect(pagination['length']()).toBe(TOTAL_ITEMS);
+        expect(pagination['pageSize']()).toBe(PAGE_SIZE);
         expect(pageIndexChangeSpy).toHaveBeenCalledWith(PAGE_INDEX);
     });
 

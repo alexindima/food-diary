@@ -50,21 +50,21 @@ beforeEach(() => {
 describe('ExplorePageComponent', () => {
     it('loads newest recipes on init', () => {
         expect(exploreService.query).toHaveBeenCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
-        expect(component.recipeData.items()).toEqual([createRecipe()]);
+        expect(component['recipeData'].items()).toEqual([createRecipe()]);
     });
 
     it('reloads first page when sort changes', () => {
-        component.onSortChange('popular');
+        component['onSortChange']('popular');
 
-        expect(component.sortBy()).toBe('popular');
-        expect(component.currentPageIndex()).toBe(0);
+        expect(component['sortBy']()).toBe('popular');
+        expect(component['currentPageIndex']()).toBe(0);
         expect(exploreService.query).toHaveBeenLastCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'popular' });
     });
 
     it('loads selected page using one-based API page number', () => {
-        component.onPageChange(SELECTED_PAGE_INDEX);
+        component['onPageChange'](SELECTED_PAGE_INDEX);
 
-        expect(component.currentPageIndex()).toBe(SELECTED_PAGE_INDEX);
+        expect(component['currentPageIndex']()).toBe(SELECTED_PAGE_INDEX);
         expect(exploreService.query).toHaveBeenLastCalledWith(SELECTED_API_PAGE, EXPLORE_PAGE_SIZE, {
             search: '',
             sortBy: 'newest',

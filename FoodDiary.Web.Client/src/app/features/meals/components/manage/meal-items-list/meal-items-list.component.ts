@@ -45,7 +45,7 @@ export class MealItemsListComponent {
     public readonly editItem = output<number>();
     public readonly removeItemEvent = output<number>();
     public readonly openItemSelect = output<number>();
-    public readonly manualItemRows = computed<ManualItemRowViewModel[]>(() => {
+    protected readonly manualItemRows = computed<ManualItemRowViewModel[]>(() => {
         this.renderVersion();
         this.activeLang();
 
@@ -69,7 +69,7 @@ export class MealItemsListComponent {
                 };
             });
     });
-    public readonly arrayError = computed(() =>
+    protected readonly arrayError = computed(() =>
         this.formArray().touched && this.formArray().errors?.['nonEmptyArray'] === true
             ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY')
             : null,
@@ -83,25 +83,25 @@ export class MealItemsListComponent {
         });
     }
 
-    public isProductItem(index: number): boolean {
+    protected isProductItem(index: number): boolean {
         return this.formArray().at(index).controls.sourceType.value === ConsumptionSourceType.Product;
     }
 
-    public isRecipeItem(index: number): boolean {
+    protected isRecipeItem(index: number): boolean {
         return this.formArray().at(index).controls.sourceType.value === ConsumptionSourceType.Recipe;
     }
 
-    public getProductName(index: number): string {
+    protected getProductName(index: number): string {
         const control = this.formArray().at(index).controls.product;
         return control.value?.name ?? '';
     }
 
-    public getRecipeName(index: number): string {
+    protected getRecipeName(index: number): string {
         const control = this.formArray().at(index).controls.recipe;
         return control.value?.name ?? '';
     }
 
-    public getAmountUnitLabel(index: number): string | null {
+    protected getAmountUnitLabel(index: number): string | null {
         if (this.isProductItem(index)) {
             const unit = this.formArray().at(index).controls.product.value?.baseUnit;
             return unit !== undefined ? this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`) : null;
@@ -114,7 +114,7 @@ export class MealItemsListComponent {
         return null;
     }
 
-    public isProductInvalid(index: number): boolean {
+    protected isProductInvalid(index: number): boolean {
         if (!this.isProductItem(index)) {
             return false;
         }
@@ -122,7 +122,7 @@ export class MealItemsListComponent {
         return control.invalid && control.touched;
     }
 
-    public isRecipeInvalid(index: number): boolean {
+    protected isRecipeInvalid(index: number): boolean {
         if (!this.isRecipeItem(index)) {
             return false;
         }
@@ -130,11 +130,11 @@ export class MealItemsListComponent {
         return control.invalid && control.touched;
     }
 
-    public isItemSourceInvalid(index: number): boolean {
+    protected isItemSourceInvalid(index: number): boolean {
         return this.isProductInvalid(index) || this.isRecipeInvalid(index);
     }
 
-    public getItemSourceError(index: number): string | null {
+    protected getItemSourceError(index: number): string | null {
         return this.isItemSourceInvalid(index) ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR') : null;
     }
 
@@ -155,7 +155,7 @@ export class MealItemsListComponent {
         return 'search';
     }
 
-    public getAmountControlError(index: number): string | null {
+    protected getAmountControlError(index: number): string | null {
         const group = (this.formArray().controls as Array<FormGroup<ConsumptionItemFormData> | undefined>)[index];
         return resolveMealManageControlError(group?.controls.amount ?? null, this.translateService);
     }
@@ -217,21 +217,21 @@ export class MealItemsListComponent {
         return this.formArray().at(index).controls.product.value?.imageUrl ?? null;
     }
 
-    public onEditItem(index: number): void {
+    protected onEditItem(index: number): void {
         this.editItem.emit(index);
     }
 
-    public hasManualItem(index: number): boolean {
+    protected hasManualItem(index: number): boolean {
         this.renderVersion();
         const group = this.formArray().at(index);
         return group.controls.product.value !== null || group.controls.recipe.value !== null;
     }
 
-    public onRemoveItem(index: number): void {
+    protected onRemoveItem(index: number): void {
         this.removeItemEvent.emit(index);
     }
 
-    public onItemSourceClick(index: number): void {
+    protected onItemSourceClick(index: number): void {
         this.openItemSelect.emit(index);
     }
 }

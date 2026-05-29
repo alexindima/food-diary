@@ -26,7 +26,7 @@ describe('DailyMicronutrientCardComponent', () => {
         const { component, fixture } = setupComponent(nutrients);
         const text = getText(fixture);
 
-        expect(component.keyNutrients().map(nutrient => nutrient.name)).toEqual(['Calcium', 'Vitamin C']);
+        expect(component['keyNutrients']().map(nutrient => nutrient.name)).toEqual(['Calcium', 'Vitamin C']);
         expect(text).toContain(`${LINKED_COUNT}/${TOTAL_COUNT}`);
         expect(text).toContain('Calcium');
         expect(text).toContain('Vitamin C');

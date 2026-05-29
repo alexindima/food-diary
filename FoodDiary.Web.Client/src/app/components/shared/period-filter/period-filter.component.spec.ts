@@ -59,7 +59,7 @@ describe('PeriodFilterComponent', () => {
     it('should handle tab selection', () => {
         const periodFilter = hostFixture.debugElement.children[0].componentInstance as PeriodFilterComponent;
 
-        periodFilter.onRangeChange('month');
+        periodFilter['onRangeChange']('month');
 
         expect(host.lastEmittedValue).toBe('month');
     });
@@ -67,7 +67,7 @@ describe('PeriodFilterComponent', () => {
     it('should emit filter changes', () => {
         const periodFilter = hostFixture.debugElement.children[0].componentInstance as PeriodFilterComponent;
 
-        periodFilter.onRangeChange('custom');
+        periodFilter['onRangeChange']('custom');
 
         expect(host.lastEmittedValue).toBe('custom');
     });
@@ -75,7 +75,7 @@ describe('PeriodFilterComponent', () => {
     it('should not emit for non-string values', () => {
         const periodFilter = hostFixture.debugElement.children[0].componentInstance as PeriodFilterComponent;
 
-        periodFilter.onRangeChange(NON_STRING_RANGE_VALUE);
+        periodFilter['onRangeChange'](NON_STRING_RANGE_VALUE);
 
         expect(host.lastEmittedValue).toBeNull();
     });

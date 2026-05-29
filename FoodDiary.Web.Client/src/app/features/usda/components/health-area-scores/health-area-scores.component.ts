@@ -14,5 +14,5 @@ import type { HealthAreaScores } from '../../models/usda.data';
 export class HealthAreaScoresComponent {
     public readonly scores = input<HealthAreaScores | null>(null);
 
-    public readonly areas = computed(() => buildHealthAreaDisplays(this.scores()));
+    protected readonly areas = computed(() => buildHealthAreaDisplays(this.scores()));
 }

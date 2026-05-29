@@ -55,8 +55,8 @@ describe('AdminEmailTemplatesComponent', () => {
 
     it('should load templates on init', () => {
         expect(templatesService.getAll).toHaveBeenCalledTimes(1);
-        expect(component.templates()).toEqual(templates);
-        expect(component.isLoading()).toBe(false);
+        expect(component['templates']()).toEqual(templates);
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('should reload templates after successful edit dialog close', () => {
@@ -65,7 +65,7 @@ describe('AdminEmailTemplatesComponent', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component.openEdit(templates[0]);
+        component['openEdit'](templates[0]);
         close$.next(true);
         close$.complete();
 
@@ -79,7 +79,7 @@ describe('AdminEmailTemplatesComponent', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component.openCreate();
+        component['openCreate']();
         close$.next(true);
         close$.complete();
 

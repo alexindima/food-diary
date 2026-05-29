@@ -10,11 +10,11 @@ describe('UserManagePrivacyCardComponent', () => {
         const component = fixture.componentInstance;
         const aiConsentRevoke = vi.fn();
         const accountDelete = vi.fn();
-        component.aiConsentRevoke.subscribe(aiConsentRevoke);
-        component.accountDelete.subscribe(accountDelete);
+        component['aiConsentRevoke'].subscribe(aiConsentRevoke);
+        component['accountDelete'].subscribe(accountDelete);
 
-        component.aiConsentRevoke.emit();
-        component.accountDelete.emit();
+        component['aiConsentRevoke'].emit();
+        component['accountDelete'].emit();
 
         expect(aiConsentRevoke).toHaveBeenCalledOnce();
         expect(accountDelete).toHaveBeenCalledOnce();

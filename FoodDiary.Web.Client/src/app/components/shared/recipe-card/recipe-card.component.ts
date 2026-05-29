@@ -50,26 +50,26 @@ export class RecipeCardComponent {
     public readonly open = output();
     public readonly addToMeal = output();
     public readonly favoriteToggle = output();
-    public readonly isFavorite = computed(() => Boolean(this.recipe().isFavorite));
-    public readonly isAuthenticated = this.authService.isAuthenticated;
-    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasRecipeId());
-    public readonly favoriteAriaLabelKey = computed(() =>
+    protected readonly isFavorite = computed(() => Boolean(this.recipe().isFavorite));
+    protected readonly isAuthenticated = this.authService.isAuthenticated;
+    protected readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasRecipeId());
+    protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE',
     );
-    public readonly ownershipIcon = computed(() => (this.recipe().isOwnedByCurrentUser ? 'person' : 'groups'));
-    public readonly nutrition = computed(() => ({
+    protected readonly ownershipIcon = computed(() => (this.recipe().isOwnedByCurrentUser ? 'person' : 'groups'));
+    protected readonly nutrition = computed(() => ({
         proteins: this.recipe().totalProteins ?? 0,
         fats: this.recipe().totalFats ?? 0,
         carbs: this.recipe().totalCarbs ?? 0,
         fiber: this.recipe().totalFiber ?? 0,
         alcohol: this.recipe().totalAlcohol ?? 0,
     }));
-    public readonly quality = computed(() => {
+    protected readonly quality = computed(() => {
         const score = this.qualityScore();
         const grade = this.recipe().qualityGrade;
         return score === null || grade === null || grade === undefined ? null : { score, grade };
     });
-    public readonly qualityScore = computed(() => {
+    protected readonly qualityScore = computed(() => {
         const score = this.recipe().qualityScore;
         if (score === null || score === undefined) {
             return null;
@@ -77,15 +77,15 @@ export class RecipeCardComponent {
 
         return normalizeQualityScore(score);
     });
-    public readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
-    public readonly totalTime = computed(() => {
+    protected readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
+    protected readonly totalTime = computed(() => {
         const recipe = this.recipe();
         const prep = recipe.prepTime ?? 0;
         const cook = recipe.cookTime ?? 0;
         const total = prep + cook;
         return total > 0 ? total : null;
     });
-    public readonly ingredientCount = computed(() => {
+    protected readonly ingredientCount = computed(() => {
         const recipe = this.recipe();
         if (recipe.steps === null || recipe.steps === undefined || recipe.steps.length === 0) {
             return 0;
@@ -93,7 +93,7 @@ export class RecipeCardComponent {
 
         return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
     });
-    public readonly description = computed(() => {
+    protected readonly description = computed(() => {
         const ingredients = `${this.translateService.instant('RECIPE_LIST.INGREDIENTS_COUNT')}: ${this.ingredientCount()}`;
         const totalTime = this.totalTime();
         if (totalTime === null || totalTime <= 0) {
@@ -102,15 +102,15 @@ export class RecipeCardComponent {
 
         return `${ingredients} - ${totalTime} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
     });
-    public handleOpen(): void {
+    protected handleOpen(): void {
         this.open.emit();
     }
 
-    public handleAdd(): void {
+    protected handleAdd(): void {
         this.addToMeal.emit();
     }
 
-    public handlePreview(): void {
+    protected handlePreview(): void {
         const imageUrl = this.imageUrl()?.trim();
         if (imageUrl === undefined || imageUrl.length === 0) {
             return;
@@ -128,7 +128,7 @@ export class RecipeCardComponent {
         });
     }
 
-    public toggleFavorite(): void {
+    protected toggleFavorite(): void {
         const recipeId = this.recipe().id;
         if (recipeId === undefined || recipeId.length === 0 || this.favoriteLoading()) {
             return;

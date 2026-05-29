@@ -23,14 +23,14 @@ export type FdUiConfirmDialogData = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiConfirmDialogComponent {
-    public readonly data = inject<FdUiConfirmDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<FdUiConfirmDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject(FdUiDialogRef<FdUiConfirmDialogComponent>);
 
-    public onConfirm(): void {
+    protected onConfirm(): void {
         this.dialogRef.close(true);
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(false);
     }
 }

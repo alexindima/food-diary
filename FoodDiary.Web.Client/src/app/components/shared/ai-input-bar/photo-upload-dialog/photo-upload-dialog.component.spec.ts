@@ -40,8 +40,8 @@ describe('PhotoUploadDialogComponent', () => {
         const component = fixture.componentInstance;
         fixture.detectChanges();
 
-        component.onImageChanged({ url: 'https://example.com/image.jpg', assetId: null });
-        component.onImageChanged({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component['onImageChanged']({ url: 'https://example.com/image.jpg', assetId: null });
+        component['onImageChanged']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
 
         expect(dialogRef.close).toHaveBeenCalledOnce();
         expect(dialogRef.close).toHaveBeenCalledWith({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
@@ -51,7 +51,7 @@ describe('PhotoUploadDialogComponent', () => {
         const { dialogRef, fixture } = await setupPhotoUploadDialogAsync();
         fixture.detectChanges();
 
-        fixture.componentInstance.close();
+        fixture.componentInstance['close']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });

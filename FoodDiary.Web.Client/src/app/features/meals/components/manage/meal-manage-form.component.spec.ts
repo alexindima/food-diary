@@ -68,12 +68,12 @@ describe('MealManageFormComponent input behavior', () => {
 
         fixture.componentRef.setInput('consumption', createConsumption({ totalCalories: TOTAL_CALORIES }));
         fixture.detectChanges();
-        expect(component.consumptionForm.controls.comment.value).toBe('Comment');
+        expect(component['consumptionForm'].controls.comment.value).toBe('Comment');
 
         fixture.componentRef.setInput('consumption', createConsumption({ totalCalories: UPDATED_TOTAL_CALORIES }));
         fixture.detectChanges();
 
-        expect(component.consumptionForm.controls.comment.value).toBe('Updated comment');
+        expect(component['consumptionForm'].controls.comment.value).toBe('Updated comment');
     });
 });
 
@@ -81,22 +81,22 @@ describe('MealManageFormComponent submit behavior', () => {
     it('should submit create DTO and reset add form after successful create', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         mealManageFacade.submitConsumptionAsync.mockResolvedValue(createConsumption({ totalCalories: TOTAL_CALORIES }));
-        component.consumptionForm.patchValue({
+        component['consumptionForm'].patchValue({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'Breakfast',
             comment: 'Lunch',
         });
-        component.items.at(0).patchValue({
+        component['items'].at(0).patchValue({
             sourceType: ConsumptionSourceType.Product,
             product: { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
             amount: PRODUCT_AMOUNT,
         });
-        clearValidators(component.consumptionForm);
-        component.consumptionForm.updateValueAndValidity();
-        expect(component.consumptionForm.valid).toBe(true);
+        clearValidators(component['consumptionForm']);
+        component['consumptionForm'].updateValueAndValidity();
+        expect(component['consumptionForm'].valid).toBe(true);
 
-        component.onSubmit();
+        component['onSubmit']();
         await Promise.resolve();
 
         expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledWith(
@@ -109,43 +109,43 @@ describe('MealManageFormComponent submit behavior', () => {
             }),
         );
         expect(mealManageFacade.showSuccessRedirectAsync).toHaveBeenCalledWith(false);
-        expect(component.aiSessions()).toEqual([]);
-        expect(component.items.length).toBe(1);
+        expect(component['aiSessions']()).toEqual([]);
+        expect(component['items'].length).toBe(1);
     });
 
     it('should show global error and skip submit when form is invalid', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        component.consumptionForm.controls.date.setValue('');
+        component['consumptionForm'].controls.date.setValue('');
 
-        component.onSubmit();
+        component['onSubmit']();
         await Promise.resolve();
 
         expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
-        expect(component.globalError()).toBe('FORM_ERRORS.UNKNOWN');
+        expect(component['globalError']()).toBe('FORM_ERRORS.UNKNOWN');
     });
 
     it('should show backend validation message when submit fails', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         const serverMessage = 'Product is not accessible.';
         mealManageFacade.submitConsumptionAsync.mockRejectedValue(new HttpErrorResponse({ error: { message: serverMessage } }));
-        component.consumptionForm.patchValue({
+        component['consumptionForm'].patchValue({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'Breakfast',
         });
-        component.items.at(0).patchValue({
+        component['items'].at(0).patchValue({
             sourceType: ConsumptionSourceType.Product,
             product: { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
             amount: PRODUCT_AMOUNT,
         });
-        clearValidators(component.consumptionForm);
-        component.consumptionForm.updateValueAndValidity();
+        clearValidators(component['consumptionForm']);
+        component['consumptionForm'].updateValueAndValidity();
 
-        component.onSubmit();
+        component['onSubmit']();
         await Promise.resolve();
         await Promise.resolve();
 
-        expect(component.globalError()).toBe(serverMessage);
+        expect(component['globalError']()).toBe(serverMessage);
     });
 });
 
@@ -153,10 +153,10 @@ describe('MealManageFormComponent item and AI behavior', () => {
     it('should open manual item dialog for a reusable empty item', async () => {
         const { component } = await setupComponentAsync();
 
-        component.addConsumptionItem();
+        component['addConsumptionItem']();
         await Promise.resolve();
 
-        expect(component.items.length).toBe(1);
+        expect(component['items'].length).toBe(1);
     });
 
     it('should append AI sessions and remove them by index', async () => {
@@ -165,7 +165,7 @@ describe('MealManageFormComponent item and AI behavior', () => {
         mealManageFacade.addAiSession.mockReturnValue([session]);
         mealManageFacade.removeAiSession.mockReturnValue([]);
 
-        component.onAiMealRecognized({
+        component['onAiMealRecognized']({
             source: 'Photo',
             imageAssetId: null,
             imageUrl: null,
@@ -173,11 +173,11 @@ describe('MealManageFormComponent item and AI behavior', () => {
             notes: 'recognized',
             items: [],
         });
-        expect(component.aiSessions()).toEqual([session]);
+        expect(component['aiSessions']()).toEqual([session]);
 
-        component.onDeleteAiSession(0);
+        component['onDeleteAiSession'](0);
 
-        expect(component.aiSessions()).toEqual([]);
+        expect(component['aiSessions']()).toEqual([]);
     });
 });
 
@@ -185,7 +185,7 @@ describe('MealManageFormComponent navigation', () => {
     it('should navigate to consumption list on cancel', async () => {
         const { component, navigationService } = await setupComponentAsync();
 
-        await component.onCancelAsync();
+        await component['onCancelAsync']();
 
         expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
     });

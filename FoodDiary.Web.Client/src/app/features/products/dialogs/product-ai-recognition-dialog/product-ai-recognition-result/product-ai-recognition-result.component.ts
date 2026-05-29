@@ -22,8 +22,8 @@ export class ProductAiRecognitionResultComponent {
     public readonly form = input.required<ProductAiRecognitionFormGroup>();
     public readonly nutrition = input.required<FoodNutritionResponse>();
     public readonly itemNames = input.required<readonly string[]>();
-    public readonly hasMultipleItems = computed(() => this.itemNames().length > 1);
-    public readonly unitOptions = signal<Array<FdUiSelectOption<MeasurementUnit>>>([]);
+    protected readonly hasMultipleItems = computed(() => this.itemNames().length > 1);
+    protected readonly unitOptions = signal<Array<FdUiSelectOption<MeasurementUnit>>>([]);
 
     public constructor() {
         effect(onCleanup => {

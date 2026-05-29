@@ -16,10 +16,10 @@ export class MealDetailItemPreviewComponent {
     public readonly items = input.required<readonly MealDetailItemPreview[]>();
     public readonly isItemPreviewExpanded = input.required<boolean>();
 
-    public readonly visibleItems = computed(() =>
+    protected readonly visibleItems = computed(() =>
         this.isItemPreviewExpanded() ? this.items() : this.items().slice(0, MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS),
     );
-    public readonly hiddenItemPreviewCount = computed(() => Math.max(0, this.items().length - MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS));
+    protected readonly hiddenItemPreviewCount = computed(() => Math.max(0, this.items().length - MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS));
 
     public readonly itemPreviewExpandedToggle = output();
 }

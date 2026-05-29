@@ -31,14 +31,14 @@ describe('AuthRegisterFormComponent', () => {
         const { component, fixture } = createComponent();
         const root = fixture.nativeElement as HTMLElement;
 
-        expect(component.googleButton()?.nativeElement.classList.contains('auth__google-button')).toBe(true);
+        expect(component['googleButton']()?.nativeElement.classList.contains('auth__google-button')).toBe(true);
         expect(root.querySelector('fd-auth-register-fields')).not.toBeNull();
     });
 
     it('should emit register submit', () => {
         const { component, fixture } = createComponent();
         const submitSpy = vi.fn();
-        component.registerSubmit.subscribe(submitSpy);
+        component['registerSubmit'].subscribe(submitSpy);
 
         const root = fixture.nativeElement as HTMLElement;
         const form = root.querySelector('form') as HTMLFormElement;

@@ -25,7 +25,7 @@ describe('MealItemsListComponent rows', () => {
             items: [createItemGroup({ sourceType: ConsumptionSourceType.Product, product, amount: PRODUCT_AMOUNT })],
         });
 
-        expect(component.manualItemRows()).toEqual([
+        expect(component['manualItemRows']()).toEqual([
             expect.objectContaining({
                 index: 0,
                 imageUrl: product.imageUrl,
@@ -49,7 +49,7 @@ describe('MealItemsListComponent rows', () => {
         });
 
         expect(recipeWeight.convertGramsToServings).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
-        expect(component.manualItemRows()).toEqual([
+        expect(component['manualItemRows']()).toEqual([
             expect.objectContaining({
                 index: 0,
                 imageUrl: recipe.imageUrl,
@@ -70,8 +70,8 @@ describe('MealItemsListComponent rows', () => {
             items: [createItemGroup({ sourceType: ConsumptionSourceType.Product, product: null, amount: null })],
         });
 
-        expect(component.manualItemRows()).toEqual([]);
-        expect(component.hasManualItem(0)).toBe(false);
+        expect(component['manualItemRows']()).toEqual([]);
+        expect(component['hasManualItem'](0)).toBe(false);
     });
 });
 
@@ -88,21 +88,21 @@ describe('MealItemsListComponent validation', () => {
         formArray.updateValueAndValidity();
         const { component } = await setupComponentAsync({ formArray });
 
-        expect(component.arrayError()).toBe('FORM_ERRORS.NON_EMPTY_ARRAY');
-        expect(component.getAmountControlError(0)).toBe('FORM_ERRORS.REQUIRED');
+        expect(component['arrayError']()).toBe('FORM_ERRORS.NON_EMPTY_ARRAY');
+        expect(component['getAmountControlError'](0)).toBe('FORM_ERRORS.REQUIRED');
     });
 
     it('should expose missing source errors for selected item type', async () => {
         const { component } = await setupComponentAsync({
             items: [createItemGroup({ sourceType: ConsumptionSourceType.Product, product: null, amount: PRODUCT_AMOUNT })],
         });
-        component.formArray().at(0).controls.product.setErrors({ required: true });
-        component.formArray().at(0).controls.product.markAsTouched();
+        component['formArray']().at(0).controls.product.setErrors({ required: true });
+        component['formArray']().at(0).controls.product.markAsTouched();
 
-        expect(component.isProductInvalid(0)).toBe(true);
-        expect(component.isRecipeInvalid(0)).toBe(false);
-        expect(component.isItemSourceInvalid(0)).toBe(true);
-        expect(component.getItemSourceError(0)).toBe('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR');
+        expect(component['isProductInvalid'](0)).toBe(true);
+        expect(component['isRecipeInvalid'](0)).toBe(false);
+        expect(component['isItemSourceInvalid'](0)).toBe(true);
+        expect(component['getItemSourceError'](0)).toBe('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR');
     });
 });
 
@@ -112,13 +112,13 @@ describe('MealItemsListComponent actions', () => {
         const editHandler = vi.fn();
         const removeHandler = vi.fn();
         const openHandler = vi.fn();
-        component.editItem.subscribe(editHandler);
-        component.removeItemEvent.subscribe(removeHandler);
-        component.openItemSelect.subscribe(openHandler);
+        component['editItem'].subscribe(editHandler);
+        component['removeItemEvent'].subscribe(removeHandler);
+        component['openItemSelect'].subscribe(openHandler);
 
-        component.onEditItem(EDIT_ITEM_INDEX);
-        component.onRemoveItem(REMOVE_ITEM_INDEX);
-        component.onItemSourceClick(OPEN_ITEM_INDEX);
+        component['onEditItem'](EDIT_ITEM_INDEX);
+        component['onRemoveItem'](REMOVE_ITEM_INDEX);
+        component['onItemSourceClick'](OPEN_ITEM_INDEX);
 
         expect(editHandler).toHaveBeenCalledWith(EDIT_ITEM_INDEX);
         expect(removeHandler).toHaveBeenCalledWith(REMOVE_ITEM_INDEX);

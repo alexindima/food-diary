@@ -47,54 +47,54 @@ export class StatisticsComponent {
         this.facade.initialize();
     }
 
-    public readonly rangeTabs = STATISTICS_RANGE_TABS;
-    public readonly nutritionTabs = STATISTICS_NUTRITION_TABS;
-    public readonly bodyTabs = STATISTICS_BODY_TABS;
+    protected readonly rangeTabs = STATISTICS_RANGE_TABS;
+    protected readonly nutritionTabs = STATISTICS_NUTRITION_TABS;
+    protected readonly bodyTabs = STATISTICS_BODY_TABS;
 
-    public readonly selectedRange = this.facade.selectedRange;
-    public readonly selectedNutritionTab = this.facade.selectedNutritionTab;
-    public readonly selectedBodyTab = this.facade.selectedBodyTab;
-    public readonly customRangeControl = this.facade.customRangeControl;
-    public readonly currentRange = this.facade.currentRange;
-    public readonly isLoading = this.facade.isLoading;
-    public readonly isBodyLoading = this.facade.isBodyLoading;
-    public readonly hasLoadError = this.facade.hasLoadError;
-    public readonly hasBodyLoadError = this.facade.hasBodyLoadError;
-    public readonly summaryMetrics = this.facade.summaryMetrics;
-    public readonly summarySparklinePoints = this.facade.summarySparklinePoints;
-    public readonly macroSparklinePoints = this.facade.macroSparklinePoints;
-    public readonly hasStatisticsData = this.facade.hasStatisticsData;
-    public readonly caloriesTrendPoints = this.facade.caloriesTrendPoints;
-    public readonly nutrientTrendGroups = this.facade.nutrientTrendGroups;
-    public readonly nutrientPieSegments = this.facade.nutrientPieSegments;
-    public readonly nutrientBarItems = this.facade.nutrientBarItems;
-    public readonly bodyChartPoints = this.facade.bodyChartPoints;
-    public readonly hasBodyData = this.facade.hasBodyData;
-    public readonly exportingFormat = this.facade.exportingFormat;
+    protected readonly selectedRange = this.facade.selectedRange;
+    protected readonly selectedNutritionTab = this.facade.selectedNutritionTab;
+    protected readonly selectedBodyTab = this.facade.selectedBodyTab;
+    protected readonly customRangeControl = this.facade.customRangeControl;
+    protected readonly currentRange = this.facade.currentRange;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly isBodyLoading = this.facade.isBodyLoading;
+    protected readonly hasLoadError = this.facade.hasLoadError;
+    protected readonly hasBodyLoadError = this.facade.hasBodyLoadError;
+    protected readonly summaryMetrics = this.facade.summaryMetrics;
+    protected readonly summarySparklinePoints = this.facade.summarySparklinePoints;
+    protected readonly macroSparklinePoints = this.facade.macroSparklinePoints;
+    protected readonly hasStatisticsData = this.facade.hasStatisticsData;
+    protected readonly caloriesTrendPoints = this.facade.caloriesTrendPoints;
+    protected readonly nutrientTrendGroups = this.facade.nutrientTrendGroups;
+    protected readonly nutrientPieSegments = this.facade.nutrientPieSegments;
+    protected readonly nutrientBarItems = this.facade.nutrientBarItems;
+    protected readonly bodyChartPoints = this.facade.bodyChartPoints;
+    protected readonly hasBodyData = this.facade.hasBodyData;
+    protected readonly exportingFormat = this.facade.exportingFormat;
 
-    public changeRange(value: unknown): void {
+    protected changeRange(value: unknown): void {
         if (isStatisticsRange(value)) {
             this.facade.changeRange(value);
         }
     }
 
-    public changeNutritionTab(value: unknown): void {
+    protected changeNutritionTab(value: unknown): void {
         if (isNutritionTab(value)) {
             this.facade.changeNutritionTab(value);
         }
     }
 
-    public changeBodyTab(value: unknown): void {
+    protected changeBodyTab(value: unknown): void {
         if (isBodyTab(value)) {
             this.facade.changeBodyTab(value);
         }
     }
 
-    public reload(): void {
+    protected reload(): void {
         this.facade.reload();
     }
 
-    public exportDiary(format: ExportFormat): void {
+    protected exportDiary(format: ExportFormat): void {
         this.facade.exportDiary(format);
     }
 }

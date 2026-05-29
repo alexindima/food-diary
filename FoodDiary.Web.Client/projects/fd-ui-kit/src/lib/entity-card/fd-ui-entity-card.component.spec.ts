@@ -46,7 +46,7 @@ describe('FdUiEntityCardComponent', () => {
     it('should display meta when provided', () => {
         expect(hostEl.querySelector('.fd-ui-entity-card__meta')).toBeNull();
 
-        fixture.componentInstance.meta = '100 kcal';
+        fixture.componentInstance['meta'] = '100 kcal';
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 
@@ -56,7 +56,7 @@ describe('FdUiEntityCardComponent', () => {
     });
 
     it('should render image when imageUrl provided', () => {
-        fixture.componentInstance.imageUrl = 'https://example.com/food.jpg';
+        fixture.componentInstance['imageUrl'] = 'https://example.com/food.jpg';
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
 

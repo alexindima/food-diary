@@ -17,7 +17,7 @@ describe('WeightHistoryEntriesCardComponent', () => {
     it('builds entry view models inside the component', () => {
         const { component, fixture } = setupComponent([createEntry()]);
 
-        expect(component.items()).toEqual([
+        expect(component['items']()).toEqual([
             {
                 entry: createEntry(),
                 dateLabel: '05/15/2026',
@@ -31,11 +31,11 @@ describe('WeightHistoryEntriesCardComponent', () => {
         const { component } = setupComponent([entry]);
         const editHandler = vi.fn();
         const removeHandler = vi.fn();
-        component.editEntry.subscribe(editHandler);
-        component.removeEntry.subscribe(removeHandler);
+        component['editEntry'].subscribe(editHandler);
+        component['removeEntry'].subscribe(removeHandler);
 
-        component.editEntry.emit(entry);
-        component.removeEntry.emit(entry);
+        component['editEntry'].emit(entry);
+        component['removeEntry'].emit(entry);
 
         expect(editHandler).toHaveBeenCalledWith(entry);
         expect(removeHandler).toHaveBeenCalledWith(entry);

@@ -41,27 +41,27 @@ type TemplateForm = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEmailTemplateEditDialogComponent {
-    public readonly data = inject<AdminEmailTemplate>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<AdminEmailTemplate>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly service = inject(AdminEmailTemplatesService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
 
-    public readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
-    public readonly isSaving = signal(false);
-    public readonly isSendingTest = signal(false);
-    public readonly testSendStatus = signal<'idle' | 'sent' | 'failed'>('idle');
-    public readonly previewMode = signal<'html' | 'text'>('html');
-    public readonly previewHtml = signal<SafeHtml>('');
-    public readonly previewText = signal('');
-    public readonly previewBrand = signal('FoodDiary');
-    public readonly previewClientName = signal('Alex Johnson');
-    public readonly previewLink = signal(this.getDefaultPreviewLink(this.data.key));
-    public readonly testEmailControl = new FormControl('', {
+    protected readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
+    protected readonly isSaving = signal(false);
+    protected readonly isSendingTest = signal(false);
+    protected readonly testSendStatus = signal<'idle' | 'sent' | 'failed'>('idle');
+    protected readonly previewMode = signal<'html' | 'text'>('html');
+    protected readonly previewHtml = signal<SafeHtml>('');
+    protected readonly previewText = signal('');
+    protected readonly previewBrand = signal('FoodDiary');
+    protected readonly previewClientName = signal('Alex Johnson');
+    protected readonly previewLink = signal(this.getDefaultPreviewLink(this.data.key));
+    protected readonly testEmailControl = new FormControl('', {
         nonNullable: true,
         validators: [Validators.required, Validators.email],
     });
-    public readonly form = new FormGroup<TemplateForm>({
+    protected readonly form = new FormGroup<TemplateForm>({
         key: new FormControl(this.data.key, { nonNullable: true, validators: [Validators.required] }),
         locale: new FormControl(this.data.locale, { nonNullable: true, validators: [Validators.required] }),
         subject: new FormControl(this.data.subject, { nonNullable: true, validators: [Validators.required] }),
@@ -82,11 +82,11 @@ export class AdminEmailTemplateEditDialogComponent {
         });
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(false);
     }
 
-    public onSave(): void {
+    protected onSave(): void {
         if (this.form.invalid || this.isSaving()) {
             return;
         }
@@ -113,11 +113,11 @@ export class AdminEmailTemplateEditDialogComponent {
             });
     }
 
-    public setPreviewMode(mode: 'html' | 'text'): void {
+    protected setPreviewMode(mode: 'html' | 'text'): void {
         this.previewMode.set(mode);
     }
 
-    public onSendTest(): void {
+    protected onSendTest(): void {
         this.testSendStatus.set('idle');
         if (this.form.invalid || this.testEmailControl.invalid || this.isSendingTest()) {
             this.form.markAllAsTouched();

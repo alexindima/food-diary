@@ -14,8 +14,8 @@ import type { PremiumCheckoutRequest, PremiumPlanCardViewModel } from '../../pre
 })
 export class PremiumPlansCardComponent {
     public readonly cards = input.required<PremiumPlanCardViewModel[]>();
-    public readonly showProviderChoices = computed(() => this.cards().some(card => card.providerOptions.length > 1));
-    public readonly checkoutDisabled = computed(() => this.cards().some(card => card.isLoading));
+    protected readonly showProviderChoices = computed(() => this.cards().some(card => card.providerOptions.length > 1));
+    protected readonly checkoutDisabled = computed(() => this.cards().some(card => card.isLoading));
 
     public readonly checkout = output<PremiumCheckoutRequest>();
 }

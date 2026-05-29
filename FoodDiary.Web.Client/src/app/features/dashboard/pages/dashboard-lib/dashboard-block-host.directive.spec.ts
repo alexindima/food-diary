@@ -20,11 +20,11 @@ describe('DashboardBlockHostDirective', () => {
         expect(host.getAttribute('aria-label')).toBe('Toggle block');
         expect(host.classList.contains('dashboard__block--hidden')).toBe(false);
         expect(spaceEvent.defaultPrevented).toBe(true);
-        expect(fixture.componentInstance.activated).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance['activated']).toHaveBeenCalledTimes(1);
 
         host.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
 
-        expect(fixture.componentInstance.activated).toHaveBeenCalledTimes(2);
+        expect(fixture.componentInstance['activated']).toHaveBeenCalledTimes(2);
     });
 
     it('marks nested dashboard content inert and hidden while the block is editable', () => {
@@ -35,7 +35,7 @@ describe('DashboardBlockHostDirective', () => {
         expect(content.getAttribute('inert')).toBe('');
         expect(content.getAttribute('aria-hidden')).toBe('true');
 
-        fixture.componentInstance.state.update(state => ({ ...state, inert: null }));
+        fixture.componentInstance['state'].update(state => ({ ...state, inert: null }));
         fixture.detectChanges();
 
         expect(content.getAttribute('inert')).toBeNull();

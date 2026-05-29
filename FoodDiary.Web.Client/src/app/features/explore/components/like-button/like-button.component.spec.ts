@@ -32,27 +32,27 @@ beforeEach(() => {
 describe('LikeButtonComponent', () => {
     it('loads like status for the recipe', () => {
         expect(likeService.getStatus).toHaveBeenCalledWith('recipe-1');
-        expect(component.isLiked()).toBe(false);
-        expect(component.totalLikes()).toBe(INITIAL_LIKES);
-        expect(component.icon()).toBe('favorite_border');
+        expect(component['isLiked']()).toBe(false);
+        expect(component['totalLikes']()).toBe(INITIAL_LIKES);
+        expect(component['icon']()).toBe('favorite_border');
     });
 
     it('toggles like status', () => {
-        component.onToggle();
+        component['onToggle']();
 
         expect(likeService.toggle).toHaveBeenCalledWith('recipe-1');
-        expect(component.isLiked()).toBe(true);
-        expect(component.totalLikes()).toBe(UPDATED_LIKES);
-        expect(component.isToggling()).toBe(false);
-        expect(component.icon()).toBe('favorite');
+        expect(component['isLiked']()).toBe(true);
+        expect(component['totalLikes']()).toBe(UPDATED_LIKES);
+        expect(component['isToggling']()).toBe(false);
+        expect(component['icon']()).toBe('favorite');
     });
 
     it('resets toggling state on toggle failure', () => {
         likeService.toggle.mockReturnValueOnce(throwError(() => new Error('failed')));
 
-        component.onToggle();
+        component['onToggle']();
 
-        expect(component.isToggling()).toBe(false);
+        expect(component['isToggling']()).toBe(false);
     });
 });
 

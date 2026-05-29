@@ -33,12 +33,12 @@ describe('MealManualItemDialogComponent selection', () => {
         const { component, fdDialogService } = await setupComponentAsync();
         fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
 
-        await component.chooseItemAsync();
+        await component['chooseItemAsync']();
 
-        expect(component.product()).toBe(product);
-        expect(component.recipe()).toBeNull();
-        expect(component.amount.value).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
-        expect(component.sourceType()).toBe(ConsumptionSourceType.Product);
+        expect(component['product']()).toBe(product);
+        expect(component['recipe']()).toBeNull();
+        expect(component['amount'].value).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
+        expect(component['sourceType']()).toBe(ConsumptionSourceType.Product);
     });
 
     it('should apply selected recipe serving weight', async () => {
@@ -46,12 +46,12 @@ describe('MealManualItemDialogComponent selection', () => {
         const { component, fdDialogService } = await setupComponentAsync();
         fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
 
-        await component.chooseItemAsync();
+        await component['chooseItemAsync']();
 
-        expect(component.recipe()).toBe(recipe);
-        expect(component.product()).toBeNull();
-        expect(component.amount.value).toBe(RECIPE_SERVING_WEIGHT);
-        expect(component.sourceType()).toBe(ConsumptionSourceType.Recipe);
+        expect(component['recipe']()).toBe(recipe);
+        expect(component['product']()).toBeNull();
+        expect(component['amount'].value).toBe(RECIPE_SERVING_WEIGHT);
+        expect(component['sourceType']()).toBe(ConsumptionSourceType.Recipe);
     });
 });
 
@@ -63,7 +63,7 @@ describe('MealManualItemDialogComponent save', () => {
             amount: PRODUCT_DEFAULT_PORTION_AMOUNT,
         });
 
-        component.save();
+        component['save']();
 
         expect(group.controls.product.value).toBe(product);
         expect(group.controls.amount.value).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
@@ -74,16 +74,16 @@ describe('MealManualItemDialogComponent save', () => {
     it('should keep dialog open when source is missing', async () => {
         const { component, dialogRef } = await setupComponentAsync();
 
-        component.save();
+        component['save']();
 
-        expect(component.sourceError()).toBe('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR');
+        expect(component['sourceError']()).toBe('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR');
         expect(dialogRef.close).not.toHaveBeenCalled();
     });
 
     it('should close with false on cancel', async () => {
         const { component, dialogRef } = await setupComponentAsync();
 
-        component.cancel();
+        component['cancel']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(false);
     });

@@ -23,14 +23,14 @@ describe('AiPhotoResultActionsComponent', () => {
         const reanalyzeSpy = vi.fn();
         const editActionSpy = vi.fn();
         const cancelSpy = vi.fn();
-        component.reanalyze.subscribe(reanalyzeSpy);
-        component.editAction.subscribe(editActionSpy);
-        component.editCancel.subscribe(cancelSpy);
+        component['reanalyze'].subscribe(reanalyzeSpy);
+        component['editAction'].subscribe(editActionSpy);
+        component['editCancel'].subscribe(cancelSpy);
         fixture.detectChanges();
 
-        component.reanalyze.emit();
-        component.editAction.emit();
-        component.editCancel.emit();
+        component['reanalyze'].emit();
+        component['editAction'].emit();
+        component['editCancel'].emit();
 
         expect(reanalyzeSpy).toHaveBeenCalledOnce();
         expect(editActionSpy).toHaveBeenCalledOnce();

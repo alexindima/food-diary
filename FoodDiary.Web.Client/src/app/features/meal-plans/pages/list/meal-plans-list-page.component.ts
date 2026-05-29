@@ -20,18 +20,18 @@ import { MealPlanListFiltersComponent } from './meal-plan-list-sections/meal-pla
 })
 export class MealPlansListPageComponent {
     private readonly router = inject(Router);
-    public readonly facade = inject(MealPlanFacade);
-    public readonly planCards = computed(() => buildMealPlanCards(this.facade.plans()));
+    protected readonly facade = inject(MealPlanFacade);
+    protected readonly planCards = computed(() => buildMealPlanCards(this.facade.plans()));
 
     public constructor() {
         this.facade.loadPlans();
     }
 
-    public filterByDiet(type: DietType | null): void {
+    protected filterByDiet(type: DietType | null): void {
         this.facade.loadPlans(type);
     }
 
-    public openPlan(id: string): void {
+    protected openPlan(id: string): void {
         void this.router.navigate(['/meal-plans', id]);
     }
 }

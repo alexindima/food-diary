@@ -30,8 +30,8 @@ describe('GoalsMacrosCardComponent', () => {
         const fixture = createComponent();
         const macroInput = vi.fn();
         const macroSlider = vi.fn();
-        fixture.componentInstance.macroInput.subscribe(macroInput);
-        fixture.componentInstance.macroSlider.subscribe(macroSlider);
+        fixture.componentInstance['macroInput'].subscribe(macroInput);
+        fixture.componentInstance['macroSlider'].subscribe(macroSlider);
         const element = getElement(fixture);
 
         element.querySelector<HTMLInputElement>('.goals__macro-input')?.dispatchEvent(new Event('input'));

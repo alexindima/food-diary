@@ -16,7 +16,7 @@ describe('RecipeDetailSummaryComponent', () => {
     it('derives quality hint from quality grade', () => {
         const { component } = setupComponent();
 
-        expect(component.qualityHintKey()).toBe('QUALITY.GREEN');
+        expect(component['qualityHintKey']()).toBe('QUALITY.GREEN');
     });
 
     it('renders summary values and ingredient preview', () => {

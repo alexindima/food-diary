@@ -24,16 +24,16 @@ export class EmailVerificationComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly state = signal<VerificationState>('pending');
-    public readonly isBusy = signal(false);
-    public readonly errorMessage = signal<string | null>(null);
-    public readonly emailToken = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
+    protected readonly state = signal<VerificationState>('pending');
+    protected readonly isBusy = signal(false);
+    protected readonly errorMessage = signal<string | null>(null);
+    protected readonly emailToken = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
 
     public constructor() {
         this.resolveAndVerify();
     }
 
-    public onContinue(): void {
+    protected onContinue(): void {
         if (this.authService.isAuthenticated()) {
             void this.navigationService.navigateToHomeAsync();
         } else {
@@ -41,7 +41,7 @@ export class EmailVerificationComponent {
         }
     }
 
-    public onRetry(): void {
+    protected onRetry(): void {
         const { userId, token } = this.emailToken();
         if (userId === null || userId.length === 0 || token === null || token.length === 0) {
             this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));

@@ -16,7 +16,7 @@ describe('PasswordSuccessDialogComponent', () => {
 
         const fixture = TestBed.createComponent(PasswordSuccessDialogComponent);
 
-        fixture.componentInstance.close();
+        fixture.componentInstance['close']();
 
         expect(dialogRef.close).toHaveBeenCalledOnce();
     });

@@ -45,19 +45,19 @@ export class CycleTrackingPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly languageVersion = signal(0);
 
-    public readonly isLoading = this.facade.isLoading;
-    public readonly isSavingCycle = this.facade.isSavingCycle;
-    public readonly isSavingDay = this.facade.isSavingDay;
-    public readonly cycle = this.facade.cycle;
-    public readonly startCycleForm = this.facade.startCycleForm;
-    public readonly dayForm = this.facade.dayForm;
-    public readonly symptomFields = CYCLE_SYMPTOM_FIELDS;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly isSavingCycle = this.facade.isSavingCycle;
+    protected readonly isSavingDay = this.facade.isSavingDay;
+    protected readonly cycle = this.facade.cycle;
+    protected readonly startCycleForm = this.facade.startCycleForm;
+    protected readonly dayForm = this.facade.dayForm;
+    protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS;
 
-    public readonly predictions = this.facade.predictions;
-    public readonly days = this.facade.days;
-    public readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
-    public readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
-    public readonly dayItems = computed(() => buildCycleDayItems(this.days(), this.appLocale()));
+    protected readonly predictions = this.facade.predictions;
+    protected readonly days = this.facade.days;
+    protected readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
+    protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
+    protected readonly dayItems = computed(() => buildCycleDayItems(this.days(), this.appLocale()));
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -66,11 +66,11 @@ export class CycleTrackingPageComponent {
         this.facade.initialize();
     }
 
-    public startCycle(): void {
+    protected startCycle(): void {
         this.facade.startCycle();
     }
 
-    public saveDay(): void {
+    protected saveDay(): void {
         this.facade.saveDay();
     }
 

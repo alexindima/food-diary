@@ -44,8 +44,8 @@ describe('AdminAiUsageComponent', () => {
 
     it('should load ai usage on init', () => {
         expect(aiUsageService.getSummary).toHaveBeenCalledTimes(1);
-        expect(component.usage()?.totalTokens).toBe(TOTAL_TOKENS);
-        expect(component.isLoading()).toBe(false);
+        expect(component['usage']()?.totalTokens).toBe(TOTAL_TOKENS);
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('should reset usage and loading state on error', async () => {
@@ -56,7 +56,7 @@ describe('AdminAiUsageComponent', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component.usage()).toBeNull();
-        expect(component.isLoading()).toBe(false);
+        expect(component['usage']()).toBeNull();
+        expect(component['isLoading']()).toBe(false);
     });
 });

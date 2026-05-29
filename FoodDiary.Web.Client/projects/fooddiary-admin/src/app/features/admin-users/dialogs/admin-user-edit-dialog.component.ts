@@ -29,26 +29,26 @@ export class AdminUserEditDialogComponent {
     private readonly usersService = inject(AdminUsersService);
     private readonly fb = inject(FormBuilder);
 
-    public readonly roles = ['Admin', 'Premium', 'Support'];
-    public readonly isSaving = signal(false);
-    public readonly languages: ReadonlyArray<{ value: 'en' | 'ru'; label: string }> = [
+    protected readonly roles = ['Admin', 'Premium', 'Support'];
+    protected readonly isSaving = signal(false);
+    protected readonly languages: ReadonlyArray<{ value: 'en' | 'ru'; label: string }> = [
         { value: 'en', label: 'English' },
         { value: 'ru', label: 'Russian' },
     ];
-    public readonly form: FormGroup<AdminUserForm> = this.fb.group({
+    protected readonly form: FormGroup<AdminUserForm> = this.fb.group({
         isActive: this.fb.nonNullable.control(this.data.isActive),
         isEmailConfirmed: this.fb.nonNullable.control(this.data.isEmailConfirmed),
         roles: this.fb.nonNullable.control(this.data.roles),
         language: this.fb.nonNullable.control(this.normalizeLanguage(this.data.language) ?? 'en'),
     });
 
-    public readonly user = this.data;
+    protected readonly user = this.data;
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef.close(false);
     }
 
-    public save(): void {
+    protected save(): void {
         if (this.isSaving()) {
             return;
         }
@@ -76,14 +76,14 @@ export class AdminUserEditDialogComponent {
         });
     }
 
-    public toggleRole(role: string): void {
+    protected toggleRole(role: string): void {
         const current = this.form.controls.roles.value;
         const hasRole = current.includes(role);
         const next = hasRole ? current.filter(item => item !== role) : [...current, role];
         this.form.controls.roles.setValue(next);
     }
 
-    public hasRole(role: string): boolean {
+    protected hasRole(role: string): boolean {
         return this.form.controls.roles.value.includes(role);
     }
 

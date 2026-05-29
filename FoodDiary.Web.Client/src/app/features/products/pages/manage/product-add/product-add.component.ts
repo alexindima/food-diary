@@ -16,7 +16,7 @@ import type { ProductManagePrefill } from '../../../components/manage/product-ma
 export class ProductAddComponent {
     private readonly router = inject(Router);
 
-    public readonly prefill = signal<ProductManagePrefill | null>(this.getNavigationPrefill());
+    protected readonly prefill = signal<ProductManagePrefill | null>(this.getNavigationPrefill());
 
     private getNavigationPrefill(): ProductManagePrefill | null {
         const state: unknown = this.router.currentNavigation()?.extras.state ?? (typeof history === 'undefined' ? null : history.state);

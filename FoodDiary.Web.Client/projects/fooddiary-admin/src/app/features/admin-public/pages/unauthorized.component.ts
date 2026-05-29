@@ -19,8 +19,8 @@ export class UnauthorizedComponent {
     private readonly authService = inject(AdminAuthService);
     private readonly document = inject(DOCUMENT);
 
-    public readonly reason: string | null;
-    public readonly returnUrl: string;
+    protected readonly reason: string | null;
+    protected readonly returnUrl: string;
 
     public constructor() {
         this.reason = this.route.snapshot.queryParamMap.get('reason');
@@ -37,7 +37,7 @@ export class UnauthorizedComponent {
         void this.tryRecoverFromSsoAsync(this.returnUrl);
     }
 
-    public goToLogin(): void {
+    protected goToLogin(): void {
         const url = new URL('/', environment.mainAppUrl);
         url.searchParams.set('auth', 'login');
         const adminReturnUrl = this.normalizeReturnUrl(this.returnUrl);

@@ -19,7 +19,7 @@ import { mergeNutrientsSummaryConfig, type NutrientsSummaryConfig } from './nutr
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NutrientsSummaryComponent {
-    public readonly CHART_COLORS = CHART_COLORS;
+    protected readonly CHART_COLORS = CHART_COLORS;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
@@ -36,41 +36,41 @@ export class NutrientsSummaryComponent {
     public readonly showBarChart = input<boolean>(false);
 
     public readonly config = input<NutrientsSummaryConfig>({});
-    public readonly mergedConfig = computed(() => mergeNutrientsSummaryConfig(this.config()));
+    protected readonly mergedConfig = computed(() => mergeNutrientsSummaryConfig(this.config()));
     private readonly viewportWidth = signal(this.isBrowser ? window.innerWidth : Number.MAX_SAFE_INTEGER);
-    public readonly isColumnLayout = computed(() => this.viewportWidth() <= this.mergedConfig().styles.charts.breakpoints.columnLayout);
-    public readonly areChartsBelowInfo = computed(
+    protected readonly isColumnLayout = computed(() => this.viewportWidth() <= this.mergedConfig().styles.charts.breakpoints.columnLayout);
+    protected readonly areChartsBelowInfo = computed(
         () => this.viewportWidth() <= this.mergedConfig().styles.common.infoBreakpoints.columnLayout,
     );
-    public readonly summaryWrapperStyles = computed(() => {
+    protected readonly summaryWrapperStyles = computed(() => {
         const gapValue = this.isColumnLayout()
             ? this.mergedConfig().styles.common.infoBreakpoints.gap
             : this.mergedConfig().styles.common.gap;
 
         return { gap: `${gapValue}px` };
     });
-    public readonly nutrientStyles = computed(() => {
+    protected readonly nutrientStyles = computed(() => {
         const { fontSize, lineHeight } = this.mergedConfig().styles.info.lineStyles.nutrients;
         return {
             fontSize: `${fontSize}px`,
             lineHeight: `${lineHeight}px`,
         };
     });
-    public readonly nutrientColorStyles = computed(() => {
+    protected readonly nutrientColorStyles = computed(() => {
         const { colorWidthMultiplier, fontSize } = this.mergedConfig().styles.info.lineStyles.nutrients;
         return {
             height: `${fontSize}px`,
             width: `${fontSize * colorWidthMultiplier}px`,
         };
     });
-    public readonly chartsWrapperStyles = computed(() => {
+    protected readonly chartsWrapperStyles = computed(() => {
         const gapValue = this.isColumnLayout() ? this.mergedConfig().styles.charts.breakpoints.gap : this.mergedConfig().styles.charts.gap;
 
         return {
             gap: `${gapValue}px`,
         };
     });
-    public readonly chartsBlockSize = computed(() => {
+    protected readonly chartsBlockSize = computed(() => {
         if (this.areChartsBelowInfo()) {
             return this.mergedConfig().styles.common.infoBreakpoints.chartBlockSize;
         }
@@ -79,16 +79,16 @@ export class NutrientsSummaryComponent {
             ? this.mergedConfig().styles.charts.breakpoints.chartBlockSize
             : this.mergedConfig().styles.charts.chartBlockSize;
     });
-    public readonly chartStyles = computed(() => ({
+    protected readonly chartStyles = computed(() => ({
         width: `${this.chartsBlockSize()}px`,
         height: `${this.chartsBlockSize()}px`,
     }));
-    public readonly hasNutrientData = computed(() => {
+    protected readonly hasNutrientData = computed(() => {
         const data = this.nutrientChartData();
         return data.proteins + data.fats + data.carbs > 0;
     });
-    public readonly nutrientPieSegments = computed<FdUiPieChartSegment[]>(() => this.buildNutrientChartItems());
-    public readonly nutrientBarItems = computed<FdUiBarChartItem[]>(() => this.buildNutrientChartItems());
+    protected readonly nutrientPieSegments = computed<FdUiPieChartSegment[]>(() => this.buildNutrientChartItems());
+    protected readonly nutrientBarItems = computed<FdUiBarChartItem[]>(() => this.buildNutrientChartItems());
 
     public constructor() {
         if (!this.isBrowser) {

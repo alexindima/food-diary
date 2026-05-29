@@ -83,8 +83,8 @@ describe('AiPhotoResultComponent view models', () => {
         vi.spyOn(translateService, 'getCurrentLang').mockReturnValue('en');
         fixture.detectChanges();
 
-        expect(component.resultRows()).toEqual([{ key: 'egg', displayName: 'Яйцо', amountLabel: '100 g' }]);
-        expect(component.nutritionSummary()[1]).toEqual({
+        expect(component['resultRows']()).toEqual([{ key: 'egg', displayName: 'Яйцо', amountLabel: '100 g' }]);
+        expect(component['nutritionSummary']()[1]).toEqual({
             labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
             value: '12.3 g',
         });
@@ -94,14 +94,14 @@ describe('AiPhotoResultComponent view models', () => {
         const { component, fixture } = await setupAiPhotoResultAsync();
         fixture.detectChanges();
 
-        expect(component.editActionView().labelKey).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON');
-        expect(component.detailsToggleView().icon).toBe('expand_more');
+        expect(component['editActionView']().labelKey).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON');
+        expect(component['detailsToggleView']().icon).toBe('expand_more');
 
-        component.startEditing();
-        component.toggleDetails();
+        component['startEditing']();
+        component['toggleDetails']();
 
-        expect(component.editActionView().labelKey).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE');
-        expect(component.detailsToggleView().icon).toBe('expand_less');
+        expect(component['editActionView']().labelKey).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE');
+        expect(component['detailsToggleView']().icon).toBe('expand_less');
     });
 });
 
@@ -109,14 +109,14 @@ describe('AiPhotoResultComponent editing', () => {
     it('recalculates nutrition locally for amount-only edit', async () => {
         const { component, fixture } = await setupAiPhotoResultAsync();
         const editSpy = vi.fn<(applied: AiPhotoEditApplied) => void>();
-        component.editApplied.subscribe(applied => {
+        component['editApplied'].subscribe(applied => {
             editSpy(applied);
         });
         fixture.detectChanges();
 
-        component.startEditing();
-        component.updateEditItem(0, 'amount', String(HALF_AMOUNT));
-        component.applyEditing();
+        component['startEditing']();
+        component['updateEditItem'](0, 'amount', String(HALF_AMOUNT));
+        component['applyEditing']();
 
         expect(editSpy).toHaveBeenCalledWith({
             items: [{ nameEn: 'egg', nameLocal: 'яйцо', amount: HALF_AMOUNT, unit: 'g', confidence: 1 }],
@@ -148,14 +148,14 @@ describe('AiPhotoResultComponent editing', () => {
     it('requests AI recalculation when an item name changes', async () => {
         const { component, fixture } = await setupAiPhotoResultAsync();
         const editSpy = vi.fn<(applied: AiPhotoEditApplied) => void>();
-        component.editApplied.subscribe(applied => {
+        component['editApplied'].subscribe(applied => {
             editSpy(applied);
         });
         fixture.detectChanges();
 
-        component.startEditing();
-        component.updateEditItem(0, 'name', 'omelette');
-        component.applyEditing();
+        component['startEditing']();
+        component['updateEditItem'](0, 'name', 'omelette');
+        component['applyEditing']();
 
         expect(editSpy).toHaveBeenCalledWith({
             items: [{ nameEn: 'omelette', nameLocal: 'omelette', amount: ORIGINAL_AMOUNT, unit: 'g', confidence: 1 }],
@@ -166,14 +166,14 @@ describe('AiPhotoResultComponent editing', () => {
     it('emits empty items without stale nutrition when all edited items are removed', async () => {
         const { component, fixture } = await setupAiPhotoResultAsync();
         const editSpy = vi.fn<(applied: AiPhotoEditApplied) => void>();
-        component.editApplied.subscribe(applied => {
+        component['editApplied'].subscribe(applied => {
             editSpy(applied);
         });
         fixture.detectChanges();
 
-        component.startEditing();
-        component.removeEditItem(0);
-        component.applyEditing();
+        component['startEditing']();
+        component['removeEditItem'](0);
+        component['applyEditing']();
 
         expect(editSpy).toHaveBeenCalledWith({
             items: [],
@@ -186,15 +186,15 @@ describe('AiPhotoResultComponent meal details', () => {
     it('emits normalized meal details', async () => {
         const { component, fixture } = await setupAiPhotoResultAsync();
         const addSpy = vi.fn();
-        component.addToMeal.subscribe(addSpy);
+        component['addToMeal'].subscribe(addSpy);
         fixture.detectChanges();
 
-        component.updateDetailsDate('2026-05-17');
-        component.updateDetailsTime('08:30');
-        component.updateDetailsComment('  Breakfast  ');
-        component.preMealSatietyLevel.set(INVALID_SATIETY_LEVEL);
-        component.postMealSatietyLevel.set(null);
-        component.emitAddToMeal();
+        component['updateDetailsDate']('2026-05-17');
+        component['updateDetailsTime']('08:30');
+        component['updateDetailsComment']('  Breakfast  ');
+        component['preMealSatietyLevel'].set(INVALID_SATIETY_LEVEL);
+        component['postMealSatietyLevel'].set(null);
+        component['emitAddToMeal']();
 
         expect(addSpy).toHaveBeenCalledWith({
             date: '2026-05-17',

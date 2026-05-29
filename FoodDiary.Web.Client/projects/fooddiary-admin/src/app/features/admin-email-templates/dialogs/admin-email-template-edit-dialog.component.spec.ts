@@ -63,39 +63,39 @@ describe('AdminEmailTemplateEditDialogComponent', () => {
     it('should disable key and locale controls for existing template', async () => {
         const { component } = await setupEmailTemplateDialogAsync();
 
-        expect(component.form.controls.key.disabled).toBe(true);
-        expect(component.form.controls.locale.disabled).toBe(true);
+        expect(component['form'].controls.key.disabled).toBe(true);
+        expect(component['form'].controls.locale.disabled).toBe(true);
     });
 });
 
 describe('AdminEmailTemplateEditDialogComponent preview', () => {
     it('should update preview when form changes', async () => {
         const { component } = await setupEmailTemplateDialogAsync();
-        component.form.controls.subject.setValue('Hello {{brand}}');
-        component.form.controls.textBody.setValue('Open {{link}}');
+        component['form'].controls.subject.setValue('Hello {{brand}}');
+        component['form'].controls.textBody.setValue('Open {{link}}');
 
-        expect(component.previewText()).toContain('https://fooddiary.club/verify-email');
-        expect(component.previewBrand()).toBe('FoodDiary');
+        expect(component['previewText']()).toContain('https://fooddiary.club/verify-email');
+        expect(component['previewBrand']()).toBe('FoodDiary');
     });
 
     it('should switch preview mode', async () => {
         const { component } = await setupEmailTemplateDialogAsync();
-        component.setPreviewMode('text');
-        expect(component.previewMode()).toBe('text');
+        component['setPreviewMode']('text');
+        expect(component['previewMode']()).toBe('text');
     });
 });
 
 describe('AdminEmailTemplateEditDialogComponent saving', () => {
     it('should close false on cancel', async () => {
         const { component, dialogRef } = await setupEmailTemplateDialogAsync();
-        component.onCancel();
+        component['onCancel']();
         expect(dialogRef.close).toHaveBeenCalledWith(false);
     });
 
     it('should save and close true on success', async () => {
         const { component, dialogRef, service } = await setupEmailTemplateDialogAsync();
-        component.form.controls.subject.setValue('Updated subject');
-        component.onSave();
+        component['form'].controls.subject.setValue('Updated subject');
+        component['onSave']();
 
         expect(service.upsert).toHaveBeenCalledWith('email_verification', 'en', {
             subject: 'Updated subject',
@@ -110,19 +110,19 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
         const { component, service } = await setupEmailTemplateDialogAsync();
         service.upsert.mockReturnValueOnce(throwError(() => new Error('save failed')));
 
-        component.onSave();
+        component['onSave']();
 
-        expect(component.isSaving()).toBe(false);
+        expect(component['isSaving']()).toBe(false);
     });
 });
 
 describe('AdminEmailTemplateEditDialogComponent test send', () => {
     it('should send current form values as a test email', async () => {
         const { component, service } = await setupEmailTemplateDialogAsync();
-        component.testEmailControl.setValue('admin@example.com');
-        component.form.controls.subject.setValue('Updated subject');
+        component['testEmailControl'].setValue('admin@example.com');
+        component['form'].controls.subject.setValue('Updated subject');
 
-        component.onSendTest();
+        component['onSendTest']();
 
         expect(service.sendTest).toHaveBeenCalledWith({
             toEmail: 'admin@example.com',
@@ -131,17 +131,17 @@ describe('AdminEmailTemplateEditDialogComponent test send', () => {
             htmlBody: '<a href="{{link}}">Verify</a>',
             textBody: 'Verify {{brand}}: {{link}}',
         });
-        expect(component.testSendStatus()).toBe('sent');
+        expect(component['testSendStatus']()).toBe('sent');
     });
 
     it('should show failed status when test email send fails', async () => {
         const { component, service } = await setupEmailTemplateDialogAsync();
         service.sendTest.mockReturnValueOnce(throwError(() => new Error('send failed')));
-        component.testEmailControl.setValue('admin@example.com');
+        component['testEmailControl'].setValue('admin@example.com');
 
-        component.onSendTest();
+        component['onSendTest']();
 
-        expect(component.isSendingTest()).toBe(false);
-        expect(component.testSendStatus()).toBe('failed');
+        expect(component['isSendingTest']()).toBe(false);
+        expect(component['testSendStatus']()).toBe('failed');
     });
 });

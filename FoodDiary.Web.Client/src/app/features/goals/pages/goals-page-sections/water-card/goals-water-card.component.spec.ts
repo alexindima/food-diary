@@ -19,8 +19,8 @@ describe('GoalsWaterCardComponent', () => {
         const fixture = createComponent();
         const waterInput = vi.fn();
         const waterSlider = vi.fn();
-        fixture.componentInstance.waterInput.subscribe(waterInput);
-        fixture.componentInstance.waterSlider.subscribe(waterSlider);
+        fixture.componentInstance['waterInput'].subscribe(waterInput);
+        fixture.componentInstance['waterSlider'].subscribe(waterSlider);
         const element = getElement(fixture);
 
         expect(element.textContent).toContain('GOALS_PAGE.WATER_TITLE');

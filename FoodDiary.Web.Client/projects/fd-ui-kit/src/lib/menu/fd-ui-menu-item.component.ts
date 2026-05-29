@@ -29,15 +29,15 @@ export class FdUiMenuItemComponent {
     public readonly disabled = input(false);
     public readonly itemClick = output<Event>();
 
-    public focus(): void {
+    protected focus(): void {
         this.host.nativeElement.focus();
     }
 
-    public isFocused(): boolean {
+    protected isFocused(): boolean {
         return this.document.activeElement === this.host.nativeElement;
     }
 
-    public onClick(event: Event): void {
+    protected onClick(event: Event): void {
         this.itemClick.emit(event);
 
         if (!event.defaultPrevented && !this.disabled()) {

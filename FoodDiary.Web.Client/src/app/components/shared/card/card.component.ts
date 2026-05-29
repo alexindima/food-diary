@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 export class CardComponent {
     public readonly cardClick = output();
 
-    public onCardClick(): void {
+    protected onCardClick(): void {
         this.cardClick.emit();
     }
 }

@@ -48,9 +48,9 @@ export class ExplorePageComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly searchDebounceMs = inject(EXPLORE_SEARCH_DEBOUNCE_MS);
 
-    public readonly searchControl = new FormControl('');
-    public readonly sortBy = signal<ExploreSort>('newest');
-    public readonly sortActions = computed<ExploreSortAction[]>(() => {
+    protected readonly searchControl = new FormControl('');
+    protected readonly sortBy = signal<ExploreSort>('newest');
+    protected readonly sortActions = computed<ExploreSortAction[]>(() => {
         const selectedSort = this.sortBy();
 
         return [
@@ -58,11 +58,11 @@ export class ExplorePageComponent {
             { value: 'popular', labelKey: 'EXPLORE.SORT_POPULAR', variant: selectedSort === 'popular' ? 'primary' : 'outline' },
         ];
     });
-    public readonly recipeData = new PagedData<ExploreRecipe>();
-    public readonly currentPageIndex = signal(0);
-    public readonly pageSize = EXPLORE_PAGE_SIZE;
+    protected readonly recipeData = new PagedData<ExploreRecipe>();
+    protected readonly currentPageIndex = signal(0);
+    protected readonly pageSize = EXPLORE_PAGE_SIZE;
 
-    public readonly resolveImageUrl = resolveRecipeImageUrl;
+    protected readonly resolveImageUrl = resolveRecipeImageUrl;
 
     public constructor() {
         this.loadRecipes();
@@ -75,18 +75,18 @@ export class ExplorePageComponent {
             });
     }
 
-    public onSortChange(sort: ExploreSort): void {
+    protected onSortChange(sort: ExploreSort): void {
         this.sortBy.set(sort);
         this.currentPageIndex.set(0);
         this.loadRecipes();
     }
 
-    public onPageChange(pageIndex: number): void {
+    protected onPageChange(pageIndex: number): void {
         this.currentPageIndex.set(pageIndex);
         this.loadRecipes();
     }
 
-    public onRecipeClick(recipe: ExploreRecipe): void {
+    protected onRecipeClick(recipe: ExploreRecipe): void {
         this.fdDialogService.open<RecipeDetailComponent, Recipe>(RecipeDetailComponent, {
             preset: 'detail',
             data: recipe,

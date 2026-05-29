@@ -105,7 +105,7 @@ describe('ProductCardComponent events', () => {
         fixture.detectChanges();
 
         const openSpy = vi.fn();
-        component.open.subscribe(openSpy);
+        component['open'].subscribe(openSpy);
 
         const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
@@ -118,9 +118,9 @@ describe('ProductCardComponent events', () => {
         fixture.detectChanges();
 
         const addSpy = vi.fn();
-        component.addToMeal.subscribe(addSpy);
+        component['addToMeal'].subscribe(addSpy);
 
-        component.handleAdd();
+        component['handleAdd']();
 
         expect(addSpy).toHaveBeenCalledOnce();
     });

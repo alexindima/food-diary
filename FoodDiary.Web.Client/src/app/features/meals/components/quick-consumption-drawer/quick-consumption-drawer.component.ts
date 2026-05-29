@@ -52,18 +52,18 @@ export class QuickConsumptionDrawerComponent {
 
     public readonly forceShow = input(false);
     public readonly layout = input<'fixed' | 'inline'>('fixed');
-    public readonly titleId = `fd-quick-consumption-title-${QuickConsumptionDrawerComponent.nextId++}`;
+    protected readonly titleId = `fd-quick-consumption-title-${QuickConsumptionDrawerComponent.nextId++}`;
 
-    public readonly items = this.quickService.items;
-    public readonly details = this.quickService.details;
-    public readonly hasItems = this.quickService.hasItems;
-    public readonly isSaving = this.quickService.isSaving;
-    public readonly isDetailsExpanded = signal(false);
-    public readonly isCollapsed = signal(false);
+    protected readonly items = this.quickService.items;
+    protected readonly details = this.quickService.details;
+    protected readonly hasItems = this.quickService.hasItems;
+    protected readonly isSaving = this.quickService.isSaving;
+    protected readonly isDetailsExpanded = signal(false);
+    protected readonly isCollapsed = signal(false);
 
-    public readonly shouldRender = computed(() => this.forceShow() || this.hasItems());
-    public readonly isInline = computed(() => this.layout() === 'inline');
-    public readonly collapsedToggleView = computed<QuickConsumptionToggleView>(() =>
+    protected readonly shouldRender = computed(() => this.forceShow() || this.hasItems());
+    protected readonly isInline = computed(() => this.layout() === 'inline');
+    protected readonly collapsedToggleView = computed<QuickConsumptionToggleView>(() =>
         this.isCollapsed()
             ? {
                   icon: 'expand_less',
@@ -74,7 +74,7 @@ export class QuickConsumptionDrawerComponent {
                   labelKey: 'QUICK_CONSUMPTION.COLLAPSE',
               },
     );
-    public readonly detailsToggleView = computed<QuickConsumptionToggleView>(() =>
+    protected readonly detailsToggleView = computed<QuickConsumptionToggleView>(() =>
         this.isDetailsExpanded()
             ? {
                   icon: 'expand_less',
@@ -85,8 +85,8 @@ export class QuickConsumptionDrawerComponent {
                   labelKey: 'MEAL_DETAILS.ADD',
               },
     );
-    public readonly bodyInert = computed(() => (this.isCollapsed() ? '' : null));
-    public readonly itemViews = computed<QuickConsumptionItemView[]>(() =>
+    protected readonly bodyInert = computed(() => (this.isCollapsed() ? '' : null));
+    protected readonly itemViews = computed<QuickConsumptionItemView[]>(() =>
         this.items().map(item => ({
             item,
             imageUrl: this.imageFor(item),
@@ -134,27 +134,27 @@ export class QuickConsumptionDrawerComponent {
         return 'QUICK_CONSUMPTION.SERVINGS';
     }
 
-    public updateDate(value: string): void {
+    protected updateDate(value: string): void {
         this.quickService.updateDetails({ date: value });
     }
 
-    public updateTime(value: string): void {
+    protected updateTime(value: string): void {
         this.quickService.updateDetails({ time: value });
     }
 
-    public updateComment(value: string): void {
+    protected updateComment(value: string): void {
         this.quickService.updateDetails({ comment: value });
     }
 
-    public toggleDetails(): void {
+    protected toggleDetails(): void {
         this.isDetailsExpanded.update(value => !value);
     }
 
-    public toggleCollapsed(): void {
+    protected toggleCollapsed(): void {
         this.isCollapsed.update(value => !value);
     }
 
-    public updatePreMealSatietyLevel(value: number | null): void {
+    protected updatePreMealSatietyLevel(value: number | null): void {
         if (value === null) {
             return;
         }
@@ -162,7 +162,7 @@ export class QuickConsumptionDrawerComponent {
         this.quickService.updateDetails({ preMealSatietyLevel: value });
     }
 
-    public updatePostMealSatietyLevel(value: number | null): void {
+    protected updatePostMealSatietyLevel(value: number | null): void {
         if (value === null) {
             return;
         }
@@ -170,19 +170,19 @@ export class QuickConsumptionDrawerComponent {
         this.quickService.updateDetails({ postMealSatietyLevel: value });
     }
 
-    public edit(item: QuickMealItem): void {
+    protected edit(item: QuickMealItem): void {
         void this.openEditDialogAsync(item);
     }
 
-    public remove(key: string): void {
+    protected remove(key: string): void {
         this.quickService.removeItem(key);
     }
 
-    public clear(): void {
+    protected clear(): void {
         this.quickService.clear();
     }
 
-    public save(): void {
+    protected save(): void {
         this.quickService.saveDraft();
     }
 

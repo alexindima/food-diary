@@ -66,7 +66,7 @@ export class StatisticsSummaryComponent {
     public readonly exportingFormat = input.required<StatisticsSummaryExportFormat | null>();
     public readonly exportRequested = output<StatisticsSummaryExportFormat>();
 
-    public export(format: StatisticsSummaryExportFormat): void {
+    protected export(format: StatisticsSummaryExportFormat): void {
         this.exportRequested.emit(format);
     }
 }

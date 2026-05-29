@@ -14,5 +14,5 @@ import type { WaistHistoryChartPoint } from '../../lib/waist-history-chart.mappe
 export class WaistHistoryChartCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly chartPoints = input.required<readonly WaistHistoryChartPoint[]>();
-    public readonly hasPoints = computed(() => this.chartPoints().some(point => point.value !== null));
+    protected readonly hasPoints = computed(() => this.chartPoints().some(point => point.value !== null));
 }

@@ -28,14 +28,14 @@ export class AdminUsersComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
 
-    public readonly users = signal<AdminUser[]>([]);
-    public readonly totalPages = signal(1);
-    public readonly totalItems = signal(0);
-    public readonly page = signal(1);
-    public readonly limit = ADMIN_USERS_PAGE_SIZE;
-    public readonly isLoading = signal(false);
-    public readonly search = signal('');
-    public readonly status = signal<AdminUserStatusFilter>('active');
+    protected readonly users = signal<AdminUser[]>([]);
+    protected readonly totalPages = signal(1);
+    protected readonly totalItems = signal(0);
+    protected readonly page = signal(1);
+    protected readonly limit = ADMIN_USERS_PAGE_SIZE;
+    protected readonly isLoading = signal(false);
+    protected readonly search = signal('');
+    protected readonly status = signal<AdminUserStatusFilter>('active');
     protected readonly statusOptions: Array<FdUiSelectOption<AdminUserStatusFilter>> = [
         { value: 'active', label: 'Active users' },
         { value: 'inactive', label: 'Inactive users' },
@@ -46,7 +46,7 @@ export class AdminUsersComponent {
         this.loadUsers();
     }
 
-    public loadUsers(): void {
+    protected loadUsers(): void {
         this.isLoading.set(true);
         this.usersService
             .getUsers(this.page(), this.limit, this.resolveSearchQuery(this.search()), this.status())
@@ -67,19 +67,19 @@ export class AdminUsersComponent {
             });
     }
 
-    public onSearchChange(value: string): void {
+    protected onSearchChange(value: string): void {
         this.search.set(value);
         this.page.set(1);
         this.loadUsers();
     }
 
-    public onStatusChange(value: AdminUserStatusFilter | null): void {
+    protected onStatusChange(value: AdminUserStatusFilter | null): void {
         this.status.set(value ?? 'active');
         this.page.set(1);
         this.loadUsers();
     }
 
-    public goToPage(page: number): void {
+    protected goToPage(page: number): void {
         if (page < 1 || page > this.totalPages()) {
             return;
         }
@@ -88,7 +88,7 @@ export class AdminUsersComponent {
         this.loadUsers();
     }
 
-    public openDetails(user: AdminUser): void {
+    protected openDetails(user: AdminUser): void {
         this.dialogService
             .open<AdminUserDetailsDialogComponent, AdminUser, AdminUserDetailsDialogResult>(AdminUserDetailsDialogComponent, {
                 size: 'xl',
@@ -107,7 +107,7 @@ export class AdminUsersComponent {
             });
     }
 
-    public openEdit(user: AdminUser): void {
+    protected openEdit(user: AdminUser): void {
         this.dialogService
             .open(AdminUserEditDialogComponent, {
                 size: 'sm',
@@ -121,7 +121,7 @@ export class AdminUsersComponent {
             });
     }
 
-    public startImpersonation(user: AdminUser): void {
+    protected startImpersonation(user: AdminUser): void {
         this.dialogService
             .open<AdminUserImpersonationDialogComponent, AdminUser, AdminImpersonationStart | null>(AdminUserImpersonationDialogComponent, {
                 size: 'sm',

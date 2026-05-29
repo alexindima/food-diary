@@ -27,7 +27,7 @@ export class FdUiCardComponent {
 
     public readonly headerActions = contentChild(FdUiCardActionsDirective);
 
-    public readonly cardClass = computed(() => {
+    protected readonly cardClass = computed(() => {
         const classes = ['fd-ui-card'];
         if (this.subtle()) {
             classes.push('fd-ui-card--subtle');

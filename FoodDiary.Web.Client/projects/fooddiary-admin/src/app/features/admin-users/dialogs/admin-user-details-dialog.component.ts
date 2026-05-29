@@ -37,19 +37,19 @@ export class AdminUserDetailsDialogComponent {
     private readonly usersService = inject(AdminUsersService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly user = signal<AdminUser>(this.initialUser);
-    public readonly loginEvents = signal<AdminUserLoginEvent[]>([]);
-    public readonly roleAuditEvents = signal<AdminUserRoleAuditEvent[]>([]);
-    public readonly isLoading = signal(true);
-    public readonly hasError = signal(false);
-    public readonly initials = computed(() => this.buildInitials(this.user()));
-    public readonly canImpersonate = computed(() => {
+    protected readonly user = signal<AdminUser>(this.initialUser);
+    protected readonly loginEvents = signal<AdminUserLoginEvent[]>([]);
+    protected readonly roleAuditEvents = signal<AdminUserRoleAuditEvent[]>([]);
+    protected readonly isLoading = signal(true);
+    protected readonly hasError = signal(false);
+    protected readonly initials = computed(() => this.buildInitials(this.user()));
+    protected readonly canImpersonate = computed(() => {
         const currentUser = this.user();
         return currentUser.deletedAt === null || currentUser.deletedAt === undefined ? !currentUser.roles.includes('Admin') : false;
     });
 
     // eslint-disable-next-line max-lines-per-function -- Admin detail sections are static field metadata kept together for scanability.
-    public readonly sections = computed<DetailSection[]>(() => {
+    protected readonly sections = computed<DetailSection[]>(() => {
         const currentUser = this.user();
         return [
             {
@@ -143,15 +143,15 @@ export class AdminUserDetailsDialogComponent {
         this.loadDetails();
     }
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef.close(null);
     }
 
-    public edit(): void {
+    protected edit(): void {
         this.dialogRef.close('edit');
     }
 
-    public impersonate(): void {
+    protected impersonate(): void {
         this.dialogRef.close('impersonate');
     }
 
@@ -192,7 +192,7 @@ export class AdminUserDetailsDialogComponent {
             });
     }
 
-    public describeRoleActor(event: AdminUserRoleAuditEvent): string {
+    protected describeRoleActor(event: AdminUserRoleAuditEvent): string {
         if (event.actorEmail !== null && event.actorEmail !== undefined && event.actorEmail.trim().length > 0) {
             return event.actorEmail;
         }

@@ -30,7 +30,7 @@ describe('ProductAddComponent prefill', () => {
         });
         setupComponent();
 
-        expect(component.prefill()).toEqual({
+        expect(component['prefill']()).toEqual({
             barcode: '4600000000000',
             offProduct,
         });
@@ -49,7 +49,7 @@ describe('ProductAddComponent prefill', () => {
         });
         setupComponent();
 
-        expect(component.prefill()).toEqual({
+        expect(component['prefill']()).toEqual({
             barcode: '4600000000000',
             offProduct: null,
         });
@@ -59,7 +59,7 @@ describe('ProductAddComponent prefill', () => {
         router.currentNavigation.mockReturnValue(null);
         setupComponent();
 
-        expect(component.prefill()).toEqual({
+        expect(component['prefill']()).toEqual({
             barcode: null,
             offProduct: null,
         });

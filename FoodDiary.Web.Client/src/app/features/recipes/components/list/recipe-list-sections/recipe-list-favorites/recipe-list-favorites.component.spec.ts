@@ -9,17 +9,17 @@ describe('RecipeListFavoritesComponent', () => {
     it('derives has-more state from total count and visible favorites', () => {
         const { component } = setupComponent({ favoriteTotalCount: 2 });
 
-        expect(component.hasMoreFavorites()).toBe(true);
+        expect(component['hasMoreFavorites']()).toBe(true);
     });
 
     it('emits favorite actions', () => {
         const { component } = setupComponent();
         const opened: FavoriteRecipe[] = [];
-        component.favoriteOpen.subscribe(favorite => {
+        component['favoriteOpen'].subscribe(favorite => {
             opened.push(favorite);
         });
 
-        component.favoriteOpen.emit(createFavoriteRecipe());
+        component['favoriteOpen'].emit(createFavoriteRecipe());
 
         expect(opened).toEqual([createFavoriteRecipe()]);
     });

@@ -40,17 +40,17 @@ export class ProductBasicInfoComponent {
     public readonly formGroup = input.required<FormGroup<ProductFormData>>();
     public readonly nameOptions = input.required<ProductNameAutocompleteOption[]>();
     public readonly isNameSearchLoading = input.required<boolean>();
-    public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
-    public readonly unitOptions = signal<Array<FdUiSelectOption<MeasurementUnit>>>([]);
-    public readonly productTypeOptions = signal<Array<FdUiSelectOption<ProductType>>>([]);
-    public readonly visibilityOptions = signal<Array<FdUiSelectOption<ProductVisibility>>>([]);
+    protected readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    protected readonly unitOptions = signal<Array<FdUiSelectOption<MeasurementUnit>>>([]);
+    protected readonly productTypeOptions = signal<Array<FdUiSelectOption<ProductType>>>([]);
+    protected readonly visibilityOptions = signal<Array<FdUiSelectOption<ProductVisibility>>>([]);
 
     public readonly openBarcodeScanner = output();
     public readonly openAiRecognition = output();
     public readonly nameQueryChange = output<string>();
     public readonly nameSuggestionSelected = output<ProductNameSuggestion>();
 
-    public readonly displayNameValue = (value: string | null): string => value ?? '';
+    protected readonly displayNameValue = (value: string | null): string => value ?? '';
 
     public constructor() {
         effect(onCleanup => {
@@ -88,7 +88,7 @@ export class ProductBasicInfoComponent {
         });
     }
 
-    public onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
+    protected onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
         if (this.isProductNameSuggestion(option.data)) {
             this.nameSuggestionSelected.emit(option.data);
         }

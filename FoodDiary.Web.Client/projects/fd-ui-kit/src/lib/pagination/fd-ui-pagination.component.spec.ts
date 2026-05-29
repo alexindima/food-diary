@@ -57,6 +57,6 @@ describe('FdUiPaginationComponent', () => {
         const buttons = pageButtons();
         buttons[2].click();
 
-        expect(component.pageIndex()).toBe(1);
+        expect(component['pageIndex']()).toBe(1);
     });
 });

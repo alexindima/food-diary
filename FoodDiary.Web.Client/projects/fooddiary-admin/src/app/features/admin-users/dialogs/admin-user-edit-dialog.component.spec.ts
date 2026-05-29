@@ -47,24 +47,24 @@ describe('AdminUserEditDialogComponent', () => {
     });
 
     it('should toggle roles', () => {
-        expect(component.hasRole('Admin')).toBe(true);
+        expect(component['hasRole']('Admin')).toBe(true);
 
-        component.toggleRole('Support');
-        expect(component.hasRole('Support')).toBe(true);
+        component['toggleRole']('Support');
+        expect(component['hasRole']('Support')).toBe(true);
 
-        component.toggleRole('Admin');
-        expect(component.hasRole('Admin')).toBe(false);
+        component['toggleRole']('Admin');
+        expect(component['hasRole']('Admin')).toBe(false);
     });
 
     it('should close with false on cancel', () => {
-        component.close();
+        component['close']();
         expect(dialogRef.close).toHaveBeenCalledWith(false);
     });
 
     it('should save and close with true on success', () => {
-        component.form.controls.isEmailConfirmed.setValue(true);
-        component.form.controls.language.setValue('ru');
-        component.save();
+        component['form'].controls.isEmailConfirmed.setValue(true);
+        component['form'].controls.language.setValue('ru');
+        component['save']();
 
         expect(usersService.updateUser).toHaveBeenCalledWith('u1', {
             isActive: true,
@@ -78,19 +78,19 @@ describe('AdminUserEditDialogComponent', () => {
     it('should not submit twice while save is running', () => {
         usersService.updateUser.mockReturnValueOnce(NEVER);
 
-        component.save();
-        component.save();
+        component['save']();
+        component['save']();
 
         expect(usersService.updateUser).toHaveBeenCalledTimes(1);
-        expect(component.isSaving()).toBe(true);
+        expect(component['isSaving']()).toBe(true);
     });
 
     it('should close with false on save failure', () => {
         usersService.updateUser.mockReturnValueOnce(throwError(() => new Error('save failed')));
 
-        component.save();
+        component['save']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(false);
-        expect(component.isSaving()).toBe(false);
+        expect(component['isSaving']()).toBe(false);
     });
 });

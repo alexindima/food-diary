@@ -21,8 +21,8 @@ describe('WearableConnectionsComponent', () => {
         const { component, fixture } = setupComponent();
         const text = getText(fixture);
 
-        expect(component.providerRows()).toHaveLength(PROVIDER_COUNT);
-        expect(component.providerRows()[0].connection).toEqual(CONNECTION);
+        expect(component['providerRows']()).toHaveLength(PROVIDER_COUNT);
+        expect(component['providerRows']()[0].connection).toEqual(CONNECTION);
         expect(text).toContain('Fitbit');
         expect(text).toContain('WEARABLES.CONNECTED');
         expect(text).toContain('Google Fit');
@@ -32,7 +32,7 @@ describe('WearableConnectionsComponent', () => {
     it('delegates disconnect to service and reloads connections', () => {
         const { component, service } = setupComponent();
 
-        component.disconnect('Fitbit');
+        component['disconnect']('Fitbit');
 
         expect(service.disconnect).toHaveBeenCalledWith('Fitbit');
         expect(service.getConnections).toHaveBeenCalledTimes(2);

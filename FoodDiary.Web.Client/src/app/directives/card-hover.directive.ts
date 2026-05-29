@@ -38,19 +38,19 @@ export class FdCardHoverDirective {
         });
     }
 
-    public onMouseEnter(): void {
+    protected onMouseEnter(): void {
         this.applyHoverStyles();
     }
 
-    public onMouseLeave(): void {
+    protected onMouseLeave(): void {
         this.clearHoverStyles();
     }
 
-    public onFocusIn(): void {
+    protected onFocusIn(): void {
         this.applyHoverStyles();
     }
 
-    public onFocusOut(): void {
+    protected onFocusOut(): void {
         this.clearHoverStyles();
     }
 

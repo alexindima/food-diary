@@ -37,25 +37,25 @@ export class DashboardAppearanceDialogComponent {
     private readonly initialUiStyle = this.data.uiStyle;
     private pendingPersist = false;
 
-    public readonly themes = APP_THEMES.map(theme => ({
+    protected readonly themes = APP_THEMES.map(theme => ({
         ...theme,
         descriptionKey: `DASHBOARD.APPEARANCE.THEME_DESCRIPTION_${theme.name.toUpperCase()}`,
     }));
-    public readonly uiStyles = APP_UI_STYLES.map(uiStyle => ({
+    protected readonly uiStyles = APP_UI_STYLES.map(uiStyle => ({
         ...uiStyle,
         descriptionKey: `DASHBOARD.APPEARANCE.UI_STYLE_DESCRIPTION_${uiStyle.name.toUpperCase()}`,
     }));
-    public readonly selectedTheme = signal<AppThemeName>(this.initialTheme);
-    public readonly selectedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
-    public readonly persistedTheme = signal<AppThemeName>(this.initialTheme);
-    public readonly persistedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
-    public readonly isSaving = signal(false);
-    public readonly submitError = signal<string | null>(null);
-    public readonly hasChanges = computed(
+    protected readonly selectedTheme = signal<AppThemeName>(this.initialTheme);
+    protected readonly selectedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
+    protected readonly persistedTheme = signal<AppThemeName>(this.initialTheme);
+    protected readonly persistedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
+    protected readonly isSaving = signal(false);
+    protected readonly submitError = signal<string | null>(null);
+    protected readonly hasChanges = computed(
         () => this.selectedTheme() !== this.persistedTheme() || this.selectedUiStyle() !== this.persistedUiStyle(),
     );
 
-    public selectTheme(theme: AppThemeName): void {
+    protected selectTheme(theme: AppThemeName): void {
         if (this.selectedTheme() === theme) {
             return;
         }
@@ -66,7 +66,7 @@ export class DashboardAppearanceDialogComponent {
         this.persistSelection();
     }
 
-    public selectUiStyle(uiStyle: AppUiStyleName): void {
+    protected selectUiStyle(uiStyle: AppUiStyleName): void {
         if (this.selectedUiStyle() === uiStyle) {
             return;
         }

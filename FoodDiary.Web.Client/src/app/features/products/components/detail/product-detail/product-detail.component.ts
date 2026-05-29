@@ -47,44 +47,44 @@ import { ProductDetailSummaryComponent } from '../product-detail-summary/product
 export class ProductDetailComponent {
     private readonly productDetailFacade = inject(ProductDetailFacade);
 
-    public readonly isFavorite = this.productDetailFacade.isFavorite;
-    public readonly isFavoriteLoading = this.productDetailFacade.isFavoriteLoading;
-    public readonly isDuplicateInProgress = this.productDetailFacade.isDuplicateInProgress;
+    protected readonly isFavorite = this.productDetailFacade.isFavorite;
+    protected readonly isFavoriteLoading = this.productDetailFacade.isFavoriteLoading;
+    protected readonly isDuplicateInProgress = this.productDetailFacade.isDuplicateInProgress;
 
-    public product: Product;
-    public readonly productTypeKey: string;
-    public readonly baseUnitKey: string;
-    public readonly tabs: FdUiTab[] = [
+    protected product: Product;
+    protected readonly productTypeKey: string;
+    protected readonly baseUnitKey: string;
+    protected readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'PRODUCT_DETAIL.TABS.SUMMARY' },
         { value: 'nutrients', labelKey: 'PRODUCT_DETAIL.TABS.NUTRIENTS' },
     ];
-    public readonly activeTab = signal<ProductDetailTab>('summary');
-    public readonly onTabChange = (tab: string): void => {
+    protected readonly activeTab = signal<ProductDetailTab>('summary');
+    protected readonly onTabChange = (tab: string): void => {
         if (tab === 'summary' || tab === 'nutrients') {
             this.activeTab.set(tab);
         }
     };
 
-    public calories: number;
-    public readonly qualityScore: number;
-    public readonly qualityGrade: string;
-    public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
-    public readonly favoriteAriaLabelKey = computed(() =>
+    protected calories: number;
+    protected readonly qualityScore: number;
+    protected readonly qualityGrade: string;
+    protected readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
+    protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE',
     );
-    public readonly isDeleteDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
-    public readonly isEditDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
-    public readonly canModify = computed(() => !this.isEditDisabled());
-    public readonly warningMessage = computed(() => {
+    protected readonly isDeleteDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
+    protected readonly isEditDisabled = computed(() => !this.product.isOwnedByCurrentUser || this.product.usageCount > 0);
+    protected readonly canModify = computed(() => !this.isEditDisabled());
+    protected readonly warningMessage = computed(() => {
         if (!this.isDeleteDisabled() && !this.isEditDisabled()) {
             return null;
         }
 
         return this.product.isOwnedByCurrentUser ? 'PRODUCT_DETAIL.WARNING_MESSAGE' : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     });
-    public readonly macroBlocks: ProductDetailMacroBlock[];
-    public readonly macroSummaryBlocks: ProductDetailMacroBlock[];
-    public readonly nutritionControlNames: NutritionControlNames = {
+    protected readonly macroBlocks: ProductDetailMacroBlock[];
+    protected readonly macroSummaryBlocks: ProductDetailMacroBlock[];
+    protected readonly nutritionControlNames: NutritionControlNames = {
         calories: 'calories',
         proteins: 'proteins',
         fats: 'fats',
@@ -92,8 +92,8 @@ export class ProductDetailComponent {
         fiber: 'fiber',
         alcohol: 'alcohol',
     };
-    public readonly nutritionForm: FormGroup<ProductDetailNutritionForm>;
-    public readonly macroBarState: NutritionMacroState;
+    protected readonly nutritionForm: FormGroup<ProductDetailNutritionForm>;
+    protected readonly macroBarState: NutritionMacroState;
     public constructor() {
         this.product = inject<Product>(FD_UI_DIALOG_DATA);
         this.productDetailFacade.initialize(this.product);
@@ -110,29 +110,29 @@ export class ProductDetailComponent {
         this.macroSummaryBlocks = nutritionViewModel.macroSummaryBlocks;
     }
 
-    public close(): void {
+    protected close(): void {
         this.productDetailFacade.close(this.product);
     }
 
-    public onEdit(): void {
+    protected onEdit(): void {
         if (this.isEditDisabled()) {
             return;
         }
         this.productDetailFacade.edit(this.product);
     }
 
-    public onDelete(): void {
+    protected onDelete(): void {
         if (this.isDeleteDisabled()) {
             return;
         }
         this.productDetailFacade.delete(this.product);
     }
 
-    public onDuplicate(): void {
+    protected onDuplicate(): void {
         this.productDetailFacade.duplicate(this.product);
     }
 
-    public toggleFavorite(): void {
+    protected toggleFavorite(): void {
         this.productDetailFacade.toggleFavorite(this.product);
     }
 }

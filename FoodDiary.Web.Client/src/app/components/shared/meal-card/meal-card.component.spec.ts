@@ -94,7 +94,7 @@ describe('MealCardComponent content', () => {
         fixture.componentRef.setInput('meal', { ...MOCK_MEAL, mealType: 'Dinner' });
         fixture.detectChanges();
 
-        expect(component.mealTitle()).toBe('Dinner');
+        expect(component['mealTitle']()).toBe('Dinner');
         expect(instantSpy).toHaveBeenCalledWith('MEAL_CARD.MEAL_TYPES.DINNER');
     });
 });
@@ -105,7 +105,7 @@ describe('MealCardComponent events', () => {
         fixture.detectChanges();
 
         const openSpy = vi.fn();
-        component.open.subscribe(openSpy);
+        component['open'].subscribe(openSpy);
 
         const card = el.querySelector<HTMLElement>('.entity-card');
         card?.click();
@@ -118,14 +118,14 @@ describe('MealCardComponent item count', () => {
     it('should calculate itemCount from items array', async () => {
         const { component, fixture } = await setupMealCardAsync();
         fixture.detectChanges();
-        expect(component.itemCount()).toBe(ITEM_COUNT);
+        expect(component['itemCount']()).toBe(ITEM_COUNT);
     });
 
     it('should calculate itemCount as 0 when items is null', async () => {
         const { component, fixture } = await setupMealCardAsync();
         fixture.componentRef.setInput('meal', { ...MOCK_MEAL, items: null });
         fixture.detectChanges();
-        expect(component.itemCount()).toBe(0);
+        expect(component['itemCount']()).toBe(0);
     });
 
     it('should include aiSession items in itemCount', async () => {
@@ -136,7 +136,7 @@ describe('MealCardComponent item count', () => {
             aiSessions: [{ items: [{}, {}, {}] }, { items: [{}] }],
         });
         fixture.detectChanges();
-        expect(component.itemCount()).toBe(AI_ITEM_COUNT);
+        expect(component['itemCount']()).toBe(AI_ITEM_COUNT);
     });
 
     it('should handle aiSessions with null items', async () => {
@@ -147,7 +147,7 @@ describe('MealCardComponent item count', () => {
             aiSessions: [{ items: null }, null],
         });
         fixture.detectChanges();
-        expect(component.itemCount()).toBe(1);
+        expect(component['itemCount']()).toBe(1);
     });
 });
 
@@ -156,7 +156,7 @@ describe('MealCardComponent cover image', () => {
         const { component, fixture } = await setupMealCardAsync();
         fixture.componentRef.setInput('meal', { ...MOCK_MEAL, imageUrl: null, mealType: 'LUNCH' });
         fixture.detectChanges();
-        expect(component.coverImage()).toBe('assets/images/stubs/meals/lunch.svg');
+        expect(component['coverImage']()).toBe('assets/images/stubs/meals/lunch.svg');
     });
 
     it('should use item image as cover when no meal image exists', async () => {
@@ -168,16 +168,16 @@ describe('MealCardComponent cover image', () => {
         });
         fixture.detectChanges();
 
-        expect(component.coverImage()).toBe('https://example.com/product.jpg');
-        expect(component.collageImages()).toEqual([]);
-        expect(component.hasPreviewImage()).toBe(true);
+        expect(component['coverImage']()).toBe('https://example.com/product.jpg');
+        expect(component['collageImages']()).toEqual([]);
+        expect(component['hasPreviewImage']()).toBe(true);
     });
 
     it('should compute coverImage as fallback when no imageUrl and no mealType', async () => {
         const { component, fixture } = await setupMealCardAsync();
         fixture.componentRef.setInput('meal', { ...MOCK_MEAL, imageUrl: null, mealType: null });
         fixture.detectChanges();
-        expect(component.coverImage()).toBe('assets/images/stubs/meals/other.svg');
+        expect(component['coverImage']()).toBe('assets/images/stubs/meals/other.svg');
     });
 });
 
@@ -187,12 +187,12 @@ describe('MealCardComponent collage images', () => {
         fixture.componentRef.setInput('meal', createItemCollageMeal());
         fixture.detectChanges();
 
-        expect(component.coverImage()).toBeNull();
-        expect(component.collageImages()).toEqual([
+        expect(component['coverImage']()).toBeNull();
+        expect(component['collageImages']()).toEqual([
             { url: 'https://example.com/product.jpg', alt: 'Product' },
             { url: 'https://example.com/recipe.jpg', alt: 'Recipe' },
         ]);
-        expect(component.hasPreviewImage()).toBe(true);
+        expect(component['hasPreviewImage']()).toBe(true);
     });
 
     it('should open collage preview when meal uses item collage images', async () => {
@@ -202,7 +202,7 @@ describe('MealCardComponent collage images', () => {
         fixture.componentRef.setInput('meal', createItemCollageMeal());
         fixture.detectChanges();
 
-        component.handlePreview();
+        component['handlePreview']();
 
         const call = openSpy.mock.calls[0] as Parameters<FdUiDialogService['open']> | undefined;
         const data = call?.[1]?.data as FdUiImagePreviewDialogData | undefined;
@@ -226,12 +226,12 @@ describe('MealCardComponent collage images', () => {
         });
         fixture.detectChanges();
 
-        expect(component.coverImage()).toBeNull();
-        expect(component.collageImages()).toEqual([
+        expect(component['coverImage']()).toBeNull();
+        expect(component['collageImages']()).toEqual([
             { url: 'https://example.com/ai-meal-1.jpg', alt: 'First photo' },
             { url: 'https://example.com/ai-meal-2.jpg', alt: 'Second photo' },
         ]);
-        expect(component.hasPreviewImage()).toBe(true);
+        expect(component['hasPreviewImage']()).toBe(true);
     });
 });
 
@@ -244,9 +244,9 @@ describe('MealCardComponent AI images', () => {
             aiSessions: [{ imageUrl: 'https://example.com/ai-meal.jpg', items: [{}] }],
         });
         fixture.detectChanges();
-        expect(component.coverImage()).toBe('https://example.com/ai-meal.jpg');
-        expect(component.collageImages()).toEqual([]);
-        expect(component.hasPreviewImage()).toBe(true);
+        expect(component['coverImage']()).toBe('https://example.com/ai-meal.jpg');
+        expect(component['collageImages']()).toEqual([]);
+        expect(component['hasPreviewImage']()).toBe(true);
     });
 
     it('should keep explicit meal image over AI collage images', async () => {
@@ -261,8 +261,8 @@ describe('MealCardComponent AI images', () => {
         });
         fixture.detectChanges();
 
-        expect(component.coverImage()).toBe('https://example.com/meal-cover.jpg');
-        expect(component.collageImages()).toEqual([]);
+        expect(component['coverImage']()).toBe('https://example.com/meal-cover.jpg');
+        expect(component['collageImages']()).toEqual([]);
     });
 });
 

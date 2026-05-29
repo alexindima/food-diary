@@ -77,26 +77,26 @@ export class ClientDashboardComponent {
     private readonly toastService = inject(FdUiToastService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly periodPresetDays = PERIOD_PRESET_DAYS;
-    public readonly client = signal<ClientSummary | null>(null);
-    public readonly dashboard = signal<DashboardSnapshot | null>(null);
-    public readonly goals = signal<DietologistClientGoals | null>(null);
-    public readonly recommendations = signal<DietologistRecommendation[]>([]);
-    public readonly loading = signal(true);
-    public readonly detailsLoading = signal(false);
-    public readonly savingRecommendation = signal(false);
-    public readonly error = signal<string | null>(null);
-    public readonly sectionLoadError = signal<string | null>(null);
-    public readonly selectedDateTo = signal(formatDateInputValue(new Date()));
-    public readonly selectedDateFrom = signal(formatDateInputValue(this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1))));
-    public readonly dateFilterForm = this.formBuilder.group({
+    protected readonly periodPresetDays = PERIOD_PRESET_DAYS;
+    protected readonly client = signal<ClientSummary | null>(null);
+    protected readonly dashboard = signal<DashboardSnapshot | null>(null);
+    protected readonly goals = signal<DietologistClientGoals | null>(null);
+    protected readonly recommendations = signal<DietologistRecommendation[]>([]);
+    protected readonly loading = signal(true);
+    protected readonly detailsLoading = signal(false);
+    protected readonly savingRecommendation = signal(false);
+    protected readonly error = signal<string | null>(null);
+    protected readonly sectionLoadError = signal<string | null>(null);
+    protected readonly selectedDateTo = signal(formatDateInputValue(new Date()));
+    protected readonly selectedDateFrom = signal(formatDateInputValue(this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1))));
+    protected readonly dateFilterForm = this.formBuilder.group({
         dateFrom: [this.selectedDateFrom(), [Validators.required]],
         dateTo: [this.selectedDateTo(), [Validators.required]],
     });
-    public readonly recommendationForm = this.formBuilder.group({
+    protected readonly recommendationForm = this.formBuilder.group({
         text: ['', [Validators.required, Validators.maxLength(RECOMMENDATION_MAX_LENGTH)]],
     });
-    public readonly clientTitle = computed(() => {
+    protected readonly clientTitle = computed(() => {
         const client = this.client();
         if (client === null) {
             return '';
@@ -104,41 +104,41 @@ export class ClientDashboardComponent {
 
         return getClientDashboardTitle(client);
     });
-    public readonly profileChips = computed(() => {
+    protected readonly profileChips = computed(() => {
         return buildClientProfileChips(this.client());
     });
-    public readonly profileDetails = computed<ClientProfileDetail[]>(() => buildClientProfileDetails(this.client()));
-    public readonly visibleSections = computed<ClientDashboardSection[]>(() => {
+    protected readonly profileDetails = computed<ClientProfileDetail[]>(() => buildClientProfileDetails(this.client()));
+    protected readonly visibleSections = computed<ClientDashboardSection[]>(() => {
         return buildClientDashboardSections(this.client());
     });
-    public readonly hasAnyPermission = computed(() => {
+    protected readonly hasAnyPermission = computed(() => {
         return this.visibleSections().length > 0;
     });
-    public readonly hasPeriodFilterPermission = computed(() => {
+    protected readonly hasPeriodFilterPermission = computed(() => {
         const client = this.client();
         return client !== null && this.shouldLoadDashboardSnapshot(client);
     });
-    public readonly nutritionTiles = computed<ClientMetricTile[]>(() =>
+    protected readonly nutritionTiles = computed<ClientMetricTile[]>(() =>
         this.client()?.permissions.shareStatistics === true ? buildNutritionTiles(this.dashboard()) : [],
     );
-    public readonly bodyTiles = computed<ClientMetricTile[]>(() => buildBodyTiles(this.dashboard(), this.client()?.permissions));
-    public readonly goalTiles = computed<ClientMetricTile[]>(() => buildGoalTiles(this.goals()));
-    public readonly mealItems = computed<ClientMealView[]>(() =>
+    protected readonly bodyTiles = computed<ClientMetricTile[]>(() => buildBodyTiles(this.dashboard(), this.client()?.permissions));
+    protected readonly goalTiles = computed<ClientMetricTile[]>(() => buildGoalTiles(this.goals()));
+    protected readonly mealItems = computed<ClientMealView[]>(() =>
         this.client()?.permissions.shareMeals === true ? buildMealViews(this.dashboard()) : [],
     );
-    public readonly weightSummary = computed<ClientBodyMeasurementView | null>(() =>
+    protected readonly weightSummary = computed<ClientBodyMeasurementView | null>(() =>
         this.client()?.permissions.shareWeight === true ? buildWeightView(this.dashboard()) : null,
     );
-    public readonly waistSummary = computed<ClientBodyMeasurementView | null>(() =>
+    protected readonly waistSummary = computed<ClientBodyMeasurementView | null>(() =>
         this.client()?.permissions.shareWaist === true ? buildWaistView(this.dashboard()) : null,
     );
-    public readonly hydrationSummary = computed<ClientHydrationView | null>(() =>
+    protected readonly hydrationSummary = computed<ClientHydrationView | null>(() =>
         this.client()?.permissions.shareHydration === true ? buildHydrationView(this.dashboard()) : null,
     );
-    public readonly fastingSummary = computed<ClientFastingView | null>(() =>
+    protected readonly fastingSummary = computed<ClientFastingView | null>(() =>
         this.client()?.permissions.shareFasting === true ? buildFastingView(this.dashboard()) : null,
     );
-    public readonly recommendationItems = computed<ClientRecommendationView[]>(() => buildRecommendationViews(this.recommendations()));
+    protected readonly recommendationItems = computed<ClientRecommendationView[]>(() => buildRecommendationViews(this.recommendations()));
 
     public constructor() {
         const clientId = this.route.snapshot.paramMap.get('clientId');
@@ -171,11 +171,11 @@ export class ClientDashboardComponent {
             });
     }
 
-    public goBack(): void {
+    protected goBack(): void {
         void this.router.navigate(['/dietologist']);
     }
 
-    public applyDateFilter(): void {
+    protected applyDateFilter(): void {
         const client = this.client();
         const nextPeriod = this.getPeriodFromForm();
         if (
@@ -193,26 +193,26 @@ export class ClientDashboardComponent {
         this.reloadDashboard(client);
     }
 
-    public showPreviousPeriod(): void {
+    protected showPreviousPeriod(): void {
         this.shiftSelectedPeriod(-this.getSelectedPeriodLength());
     }
 
-    public showNextPeriod(): void {
+    protected showNextPeriod(): void {
         this.shiftSelectedPeriod(this.getSelectedPeriodLength());
     }
 
-    public showRecentDays(days: number): void {
+    protected showRecentDays(days: number): void {
         const dateTo = new Date();
         const dateFrom = this.addDays(dateTo, -(days - 1));
         this.applyPeriod(formatDateInputValue(dateFrom), formatDateInputValue(dateTo));
     }
 
-    public showToday(): void {
+    protected showToday(): void {
         const today = formatDateInputValue(new Date());
         this.applyPeriod(today, today);
     }
 
-    public submitRecommendation(): void {
+    protected submitRecommendation(): void {
         const client = this.client();
         if (client === null || this.recommendationForm.invalid || this.savingRecommendation()) {
             this.recommendationForm.markAllAsTouched();
@@ -244,7 +244,7 @@ export class ClientDashboardComponent {
             });
     }
 
-    public disconnectClient(): void {
+    protected disconnectClient(): void {
         const client = this.client();
         if (client === null) {
             return;

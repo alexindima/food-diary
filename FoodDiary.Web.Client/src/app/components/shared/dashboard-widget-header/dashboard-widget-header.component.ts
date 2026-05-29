@@ -15,7 +15,7 @@ export class DashboardWidgetHeaderComponent {
     public readonly iconLabel = input<string | null>(null);
     public readonly iconTone = input<'neutral' | 'info' | 'success' | 'energy' | 'accent'>('neutral');
 
-    public readonly hasIcon = computed(() => {
+    protected readonly hasIcon = computed(() => {
         const iconName = this.iconName();
         const iconLabel = this.iconLabel();
         return (iconName !== null && iconName.length > 0) || (iconLabel !== null && iconLabel.length > 0);

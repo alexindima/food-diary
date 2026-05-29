@@ -44,11 +44,11 @@ export class FdUiPieChartComponent {
     public readonly showLegend = input(true);
     public readonly variant = input<FdUiPieChartVariant>('donut');
 
-    public readonly total = computed(() => this.normalizedSegments().reduce((sum, segment) => sum + segment.value, 0));
+    protected readonly total = computed(() => this.normalizedSegments().reduce((sum, segment) => sum + segment.value, 0));
 
     protected readonly radius = computed(() => (this.variant() === 'pie' ? PIE_CHART_RADIUS : DONUT_CHART_RADIUS));
 
-    public readonly segmentViews = computed<readonly FdUiPieChartSegmentViewModel[]>(() => {
+    protected readonly segmentViews = computed<readonly FdUiPieChartSegmentViewModel[]>(() => {
         const total = this.total();
         let offset = 0;
 
@@ -72,7 +72,7 @@ export class FdUiPieChartComponent {
         });
     });
 
-    public readonly ariaLabel = computed(() => {
+    protected readonly ariaLabel = computed(() => {
         const title = this.title();
         const total = this.total();
         const hasTitle = title !== undefined && title.trim().length > 0;

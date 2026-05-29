@@ -30,17 +30,17 @@ describe('AiConsentDialogComponent', () => {
         input.checked = true;
         fixture.detectChanges();
 
-        component.onCheckboxChange({ target: input } as unknown as Event);
+        component['onCheckboxChange']({ target: input } as unknown as Event);
 
-        expect(component.isAgreed()).toBe(true);
+        expect(component['isAgreed']()).toBe(true);
     });
 
     it('closes with consent result', async () => {
         const { component, dialogRef, fixture } = await setupAiConsentDialogAsync();
         fixture.detectChanges();
 
-        component.onAccept();
-        component.onCancel();
+        component['onAccept']();
+        component['onCancel']();
 
         expect(dialogRef.close).toHaveBeenNthCalledWith(1, true);
         expect(dialogRef.close).toHaveBeenNthCalledWith(2, false);

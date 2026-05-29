@@ -30,8 +30,8 @@ import { MealPlanDetailHeaderComponent } from './meal-plan-detail-sections/meal-
 export class MealPlanDetailPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    public readonly facade = inject(MealPlanFacade);
-    public readonly selectedPlanView = computed(() => buildMealPlanDetailView(this.facade.selectedPlan()));
+    protected readonly facade = inject(MealPlanFacade);
+    protected readonly selectedPlanView = computed(() => buildMealPlanDetailView(this.facade.selectedPlan()));
 
     public constructor() {
         const id = this.route.snapshot.paramMap.get('id');
@@ -40,7 +40,7 @@ export class MealPlanDetailPageComponent {
         }
     }
 
-    public adopt(): void {
+    protected adopt(): void {
         const plan = this.facade.selectedPlan();
         if (plan === null) {
             return;
@@ -48,7 +48,7 @@ export class MealPlanDetailPageComponent {
         this.facade.adopt(plan.id, () => void this.router.navigate(['/meal-plans']));
     }
 
-    public generateShoppingList(): void {
+    protected generateShoppingList(): void {
         const plan = this.facade.selectedPlan();
         if (plan === null) {
             return;
@@ -56,7 +56,7 @@ export class MealPlanDetailPageComponent {
         this.facade.generateShoppingList(plan.id, () => void this.router.navigate(['/shopping-lists']));
     }
 
-    public goBack(): void {
+    protected goBack(): void {
         void this.router.navigate(['/meal-plans']);
     }
 }

@@ -19,7 +19,7 @@ export class ManageHeaderComponent {
     public readonly backAriaLabel = input('Back');
     public readonly back = output();
 
-    public onBackClick(): void {
+    protected onBackClick(): void {
         this.back.emit();
     }
 }

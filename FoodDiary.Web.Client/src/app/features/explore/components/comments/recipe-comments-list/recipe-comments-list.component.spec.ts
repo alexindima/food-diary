@@ -31,7 +31,7 @@ describe('RecipeCommentsListComponent', () => {
     it('renders comments and emits load more', () => {
         const fixture = createComponent({ isLoading: false, commentsCount: 1, items: [createViewModel()], hasMore: true });
         const loadMore = vi.fn();
-        fixture.componentInstance.loadMore.subscribe(loadMore);
+        fixture.componentInstance['loadMore'].subscribe(loadMore);
         const element = getElement(fixture);
 
         expect(element.textContent).toContain('Nice recipe');

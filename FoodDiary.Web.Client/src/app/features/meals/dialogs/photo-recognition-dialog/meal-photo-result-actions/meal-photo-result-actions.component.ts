@@ -15,7 +15,7 @@ import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 export class MealPhotoResultActionsComponent {
     public readonly hasSelectionAsset = input.required<boolean>();
     public readonly isEditing = input.required<boolean>();
-    public readonly editActionState = computed(() =>
+    protected readonly editActionState = computed(() =>
         this.isEditing()
             ? {
                   variant: 'primary' as const,

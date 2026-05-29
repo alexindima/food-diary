@@ -40,7 +40,7 @@ describe('ProductListDialogComponent', () => {
         const product = createProduct();
         const { component, dialogRef } = setupComponent();
 
-        component.onProductClick(product);
+        component['onProductClick'](product);
 
         expect(dialogRef.close).toHaveBeenCalledWith(product);
     });
@@ -49,13 +49,13 @@ describe('ProductListDialogComponent', () => {
         const product = createProduct();
         const { component, fixture, dialogRef } = setupComponent();
         const selected: Product[] = [];
-        component.productSelected.subscribe(value => {
+        component['productSelected'].subscribe(value => {
             selected.push(value);
         });
         fixture.componentRef.setInput('embedded', true);
         fixture.detectChanges();
 
-        component.onProductClick(product);
+        component['onProductClick'](product);
 
         expect(dialogRef.close).not.toHaveBeenCalled();
         expect(selected).toEqual([product]);
@@ -66,7 +66,7 @@ describe('ProductListDialogComponent', () => {
         const { component, dialogService, dialogRef } = setupComponent();
         dialogService.open.mockReturnValue({ afterClosed: () => of(product) });
 
-        component.onAddProductClick();
+        component['onAddProductClick']();
 
         expect(dialogService.open).toHaveBeenCalledWith(ProductAddDialogComponent, { preset: 'fullscreen' });
         expect(dialogRef.close).toHaveBeenCalledWith(product);
@@ -76,7 +76,7 @@ describe('ProductListDialogComponent', () => {
         const { component, dialogService, dialogRef } = setupComponent();
         dialogService.open.mockReturnValue({ afterClosed: () => of(null) });
 
-        component.onAddProductClick();
+        component['onAddProductClick']();
 
         expect(dialogRef.close).not.toHaveBeenCalled();
     });

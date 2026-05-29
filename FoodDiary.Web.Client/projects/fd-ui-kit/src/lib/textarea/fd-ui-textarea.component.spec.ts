@@ -130,7 +130,7 @@ describe('FdUiTextareaComponent rendering', () => {
 describe('FdUiTextareaComponent CVA', () => {
     it('should write value via CVA (string)', async () => {
         const { component, fixture, textarea } = await setupTextareaAsync();
-        component.writeValue('hello');
+        component['writeValue']('hello');
         fixture.detectChanges();
 
         expect(textarea().value).toBe('hello');
@@ -138,7 +138,7 @@ describe('FdUiTextareaComponent CVA', () => {
 
     it('should write value via CVA (null converts to empty string)', async () => {
         const { component, fixture, textarea } = await setupTextareaAsync();
-        component.writeValue(null);
+        component['writeValue'](null);
         fixture.detectChanges();
 
         expect(textarea().value).toBe('');
@@ -146,7 +146,7 @@ describe('FdUiTextareaComponent CVA', () => {
 
     it('should write value via CVA (number converts to string)', async () => {
         const { component, fixture, textarea } = await setupTextareaAsync();
-        component.writeValue(NUMERIC_VALUE);
+        component['writeValue'](NUMERIC_VALUE);
         fixture.detectChanges();
 
         expect(textarea().value).toBe(String(NUMERIC_VALUE));
@@ -155,7 +155,7 @@ describe('FdUiTextareaComponent CVA', () => {
     it('should call onChange on input', async () => {
         const { component, textarea } = await setupTextareaAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         const textareaEl = textarea();
         textareaEl.value = 'new text';
@@ -167,7 +167,7 @@ describe('FdUiTextareaComponent CVA', () => {
     it('should call onTouched on blur', async () => {
         const { component, textarea } = await setupTextareaAsync();
         const onTouchedSpy = vi.fn();
-        component.registerOnTouched(onTouchedSpy);
+        component['registerOnTouched'](onTouchedSpy);
 
         textarea().dispatchEvent(new Event('blur'));
 
@@ -176,7 +176,7 @@ describe('FdUiTextareaComponent CVA', () => {
 
     it('should set disabled state', async () => {
         const { component, fixture, textarea } = await setupTextareaAsync();
-        component.setDisabledState(true);
+        component['setDisabledState'](true);
         fixture.detectChanges();
 
         expect(textarea().disabled).toBe(true);
@@ -185,8 +185,8 @@ describe('FdUiTextareaComponent CVA', () => {
     it('should not process input when disabled', async () => {
         const { component, textarea } = await setupTextareaAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
-        component.setDisabledState(true);
+        component['registerOnChange'](onChangeSpy);
+        component['setDisabledState'](true);
 
         const textareaEl = textarea();
         textareaEl.value = 'blocked';
@@ -212,7 +212,7 @@ describe('FdUiTextareaComponent floating label', () => {
     it('should float label when has value', async () => {
         const { component, el, fixture } = await setupTextareaAsync();
         fixture.componentRef.setInput('label', 'Bio');
-        component.writeValue('content');
+        component['writeValue']('content');
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-textarea');
@@ -242,7 +242,7 @@ describe('FdUiTextareaComponent attributes', () => {
 describe('FdUiTextareaComponent with TestHost', () => {
     it('should write value from FormControl', async () => {
         const { hostComponent, hostFixture, textarea } = await setupTextareaHostAsync();
-        hostComponent.ctrl.setValue('form value');
+        hostComponent['ctrl'].setValue('form value');
         hostFixture.detectChanges();
 
         expect(textarea().value).toBe('form value');
@@ -255,22 +255,22 @@ describe('FdUiTextareaComponent with TestHost', () => {
         textareaEl.dispatchEvent(new Event('input'));
         hostFixture.detectChanges();
 
-        expect(hostComponent.ctrl.value).toBe('typed');
+        expect(hostComponent['ctrl'].value).toBe('typed');
     });
 
     it('should mark control as touched on blur', async () => {
         const { hostComponent, hostFixture, textarea } = await setupTextareaHostAsync();
-        expect(hostComponent.ctrl.touched).toBe(false);
+        expect(hostComponent['ctrl'].touched).toBe(false);
 
         textarea().dispatchEvent(new Event('blur'));
         hostFixture.detectChanges();
 
-        expect(hostComponent.ctrl.touched).toBe(true);
+        expect(hostComponent['ctrl'].touched).toBe(true);
     });
 
     it('should disable textarea when FormControl is disabled', async () => {
         const { hostComponent, hostFixture, textarea } = await setupTextareaHostAsync();
-        hostComponent.ctrl.disable();
+        hostComponent['ctrl'].disable();
         hostFixture.detectChanges();
 
         expect(textarea().disabled).toBe(true);

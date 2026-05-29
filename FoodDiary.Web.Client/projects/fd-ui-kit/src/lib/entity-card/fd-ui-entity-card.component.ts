@@ -31,7 +31,7 @@ export class FdUiEntityCardComponent {
         return imageUrl;
     });
 
-    public handleImageError(): void {
+    protected handleImageError(): void {
         if (!this.hasImageError()) {
             this.hasImageError.set(true);
         }

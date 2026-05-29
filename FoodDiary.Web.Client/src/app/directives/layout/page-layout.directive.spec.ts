@@ -39,8 +39,8 @@ describe('FdLayoutPageDirective', () => {
 function createFixture(values?: { background: string | null; padding: string | null }): ComponentFixture<PageLayoutHostComponent> {
     const fixture = TestBed.createComponent(PageLayoutHostComponent);
     if (values !== undefined) {
-        fixture.componentInstance.background = values.background;
-        fixture.componentInstance.padding = values.padding;
+        fixture.componentInstance['background'] = values.background;
+        fixture.componentInstance['padding'] = values.padding;
     }
     fixture.detectChanges();
     return fixture;

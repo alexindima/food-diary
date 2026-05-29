@@ -14,7 +14,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 export class PasswordSuccessDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<PasswordSuccessDialogComponent>);
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef.close();
     }
 }

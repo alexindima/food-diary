@@ -39,7 +39,7 @@ describe('FdUiCardComponent', () => {
     });
 
     it('should have default card class', () => {
-        const cardClass = component.cardClass();
+        const cardClass = component['cardClass']();
         expect(cardClass).toContain('fd-ui-card');
         expect(cardClass).toContain('fd-ui-card--appearance-default');
         expect(cardClass).not.toContain('fd-ui-card--subtle');
@@ -49,7 +49,7 @@ describe('FdUiCardComponent', () => {
         fixture.componentRef.setInput('subtle', true);
         fixture.detectChanges();
 
-        const cardClass = component.cardClass();
+        const cardClass = component['cardClass']();
         expect(cardClass).toContain('fd-ui-card--subtle');
     });
 
@@ -57,7 +57,7 @@ describe('FdUiCardComponent', () => {
         fixture.componentRef.setInput('appearance', 'product');
         fixture.detectChanges();
 
-        const cardClass = component.cardClass();
+        const cardClass = component['cardClass']();
         expect(cardClass).toContain('fd-ui-card--appearance-product');
         expect(cardClass).not.toContain('fd-ui-card--appearance-default');
     });

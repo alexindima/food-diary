@@ -17,10 +17,10 @@ export class LikeButtonComponent {
 
     public readonly recipeId = input.required<string>();
 
-    public readonly isLiked = signal(false);
-    public readonly totalLikes = signal(0);
-    public readonly isToggling = signal(false);
-    public readonly icon = computed(() => (this.isLiked() ? 'favorite' : 'favorite_border'));
+    protected readonly isLiked = signal(false);
+    protected readonly totalLikes = signal(0);
+    protected readonly isToggling = signal(false);
+    protected readonly icon = computed(() => (this.isLiked() ? 'favorite' : 'favorite_border'));
 
     public constructor() {
         effect(() => {
@@ -34,7 +34,7 @@ export class LikeButtonComponent {
         });
     }
 
-    public onToggle(): void {
+    protected onToggle(): void {
         if (this.isToggling()) {
             return;
         }

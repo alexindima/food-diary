@@ -24,18 +24,18 @@ export type UnsavedChangesDialogData = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnsavedChangesDialogComponent {
-    public readonly data = inject<UnsavedChangesDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
+    protected readonly data = inject<UnsavedChangesDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly dialogRef = inject<FdUiDialogRef<UnsavedChangesDialogComponent, UnsavedChangesDialogResult>>(FdUiDialogRef);
 
-    public onSave(): void {
+    protected onSave(): void {
         this.dialogRef.close('save');
     }
 
-    public onDiscard(): void {
+    protected onDiscard(): void {
         this.dialogRef.close('discard');
     }
 
-    public onStay(): void {
+    protected onStay(): void {
         this.dialogRef.close('stay');
     }
 }

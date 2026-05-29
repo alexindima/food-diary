@@ -17,26 +17,26 @@ describe('HydrationCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.hasGoal()).toBe(true);
-        expect(component.percent()).toBe(EXPECTED_PERCENT);
+        expect(component['hasGoal']()).toBe(true);
+        expect(component['percent']()).toBe(EXPECTED_PERCENT);
 
         fixture.componentRef.setInput('total', OVER_GOAL_TOTAL_ML);
         fixture.detectChanges();
 
-        expect(component.trackWidth()).toBe(MAX_TRACK_WIDTH);
+        expect(component['trackWidth']()).toBe(MAX_TRACK_WIDTH);
     });
 
     it('emits add amount only when adding is allowed', async () => {
         const { component, fixture } = await setupComponentAsync({ canAdd: false });
         const addSpy = vi.fn();
-        component.addClick.subscribe(addSpy);
+        component['addClick'].subscribe(addSpy);
 
-        component.onAdd();
+        component['onAdd']();
         expect(addSpy).not.toHaveBeenCalled();
 
         fixture.componentRef.setInput('canAdd', true);
         fixture.detectChanges();
-        component.onAdd();
+        component['onAdd']();
 
         expect(addSpy).toHaveBeenCalledWith(HYDRATION_CARD_ADD_STEP_ML);
     });

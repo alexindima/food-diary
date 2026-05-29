@@ -46,7 +46,7 @@ describe('ProductAiRecognitionResultComponent', () => {
         setRequiredInputs(['Apple']);
         fixture.detectChanges();
 
-        expect(component.unitOptions()).toEqual([
+        expect(component['unitOptions']()).toEqual([
             { value: MeasurementUnit.G, label: 'PRODUCT_AMOUNT_UNITS.G' },
             { value: MeasurementUnit.ML, label: 'PRODUCT_AMOUNT_UNITS.ML' },
             { value: MeasurementUnit.PCS, label: 'PRODUCT_AMOUNT_UNITS.PCS' },
@@ -56,25 +56,25 @@ describe('ProductAiRecognitionResultComponent', () => {
     it('rebuilds unit options when language changes', () => {
         setRequiredInputs(['Apple']);
         fixture.detectChanges();
-        const firstOptions = component.unitOptions();
+        const firstOptions = component['unitOptions']();
 
         languageChanges$.next(null);
 
-        expect(component.unitOptions()).not.toBe(firstOptions);
+        expect(component['unitOptions']()).not.toBe(firstOptions);
     });
 
     it('detects multiple recognized item names', () => {
         setRequiredInputs(['Apple', 'Milk']);
         fixture.detectChanges();
 
-        expect(component.hasMultipleItems()).toBe(true);
+        expect(component['hasMultipleItems']()).toBe(true);
     });
 
     it('detects single recognized item name', () => {
         setRequiredInputs(['Apple']);
         fixture.detectChanges();
 
-        expect(component.hasMultipleItems()).toBe(false);
+        expect(component['hasMultipleItems']()).toBe(false);
     });
 });
 

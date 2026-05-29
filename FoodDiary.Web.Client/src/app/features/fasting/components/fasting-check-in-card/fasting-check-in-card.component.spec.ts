@@ -40,7 +40,7 @@ describe('FastingCheckInCardComponent', () => {
     it('renders collapsed summary and emits form-open action', () => {
         const fixture = createComponent({ latestCheckIn: createCheckInViewModel() });
         const formOpen = vi.fn();
-        fixture.componentInstance.formOpen.subscribe(formOpen);
+        fixture.componentInstance['formOpen'].subscribe(formOpen);
         const element = getElement(fixture);
 
         expect(element.textContent).toContain('FASTING.CHECK_IN.UPDATE_ACTION');
@@ -66,8 +66,8 @@ describe('FastingCheckInCardComponent', () => {
         });
         const formClose = vi.fn();
         const save = vi.fn();
-        fixture.componentInstance.formClose.subscribe(formClose);
-        fixture.componentInstance.save.subscribe(save);
+        fixture.componentInstance['formClose'].subscribe(formClose);
+        fixture.componentInstance['save'].subscribe(save);
 
         const emojiPickers = fixture.debugElement.queryAll(By.css('fd-ui-emoji-picker'));
         emojiPickers[0].triggerEventHandler('selectedValueChange', UPDATED_HUNGER_LEVEL);

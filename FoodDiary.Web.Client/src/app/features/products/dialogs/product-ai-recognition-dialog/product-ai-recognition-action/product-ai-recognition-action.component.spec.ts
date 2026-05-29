@@ -9,7 +9,7 @@ describe('ProductAiRecognitionActionComponent', () => {
     it('emits analyze before the first analysis', () => {
         const { fixture, component } = setupComponent(false);
         let analyzeCount = 0;
-        component.analyze.subscribe(() => {
+        component['analyze'].subscribe(() => {
             analyzeCount += 1;
         });
 
@@ -22,7 +22,7 @@ describe('ProductAiRecognitionActionComponent', () => {
     it('emits reanalyze after analysis has completed', () => {
         const { fixture, component } = setupComponent(true);
         let reanalyzeCount = 0;
-        component.reanalyze.subscribe(() => {
+        component['reanalyze'].subscribe(() => {
             reanalyzeCount += 1;
         });
 

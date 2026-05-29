@@ -56,16 +56,16 @@ describe('DashboardAppearanceDialogComponent', () => {
     });
 
     it('applies preview when selecting theme and style', () => {
-        component.selectTheme('leaf');
-        component.selectUiStyle('modern');
+        component['selectTheme']('leaf');
+        component['selectUiStyle']('modern');
 
         expect(themeService.setTheme).toHaveBeenCalledWith('leaf');
         expect(themeService.setUiStyle).toHaveBeenCalledWith('modern');
     });
 
     it('persists selected appearance immediately after choosing it', () => {
-        component.selectTheme('leaf');
-        component.selectUiStyle('modern');
+        component['selectTheme']('leaf');
+        component['selectUiStyle']('modern');
 
         expect(userService.updateAppearance).toHaveBeenCalledTimes(1);
         expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('leaf', 'modern');
@@ -73,18 +73,18 @@ describe('DashboardAppearanceDialogComponent', () => {
 
     it('reverts preview and shows error when autosave fails', () => {
         userService.updateAppearance.mockReturnValueOnce(throwError(() => new Error('save failed')));
-        component.selectTheme('dark');
+        component['selectTheme']('dark');
 
         expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('ocean', 'classic');
-        expect(component.submitError()).toBeTruthy();
+        expect(component['submitError']()).toBeTruthy();
     });
 
     it('queues the latest selection while a save is in flight', () => {
         const saveResponse$ = new Subject<{ theme: string; uiStyle: string }>();
         userService.updateAppearance.mockImplementationOnce(() => saveResponse$.asObservable());
 
-        component.selectTheme('leaf');
-        component.selectUiStyle('modern');
+        component['selectTheme']('leaf');
+        component['selectUiStyle']('modern');
 
         expect(userService.updateAppearance).toHaveBeenCalledTimes(1);
 

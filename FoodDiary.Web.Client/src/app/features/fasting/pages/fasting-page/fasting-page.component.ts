@@ -79,55 +79,55 @@ export class FastingPageComponent {
     private readonly toastService = inject(FdUiToastService);
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
 
-    public readonly isLoading = this.facade.isLoading;
-    public readonly isEnding = this.facade.isEnding;
-    public readonly isUpdatingCycle = this.facade.isUpdatingCycle;
-    public readonly isSavingCheckIn = this.facade.isSavingCheckIn;
-    public readonly isActive = this.facade.isActive;
-    public readonly currentSession = this.facade.currentSession;
-    public readonly stats = this.facade.stats;
-    public readonly history = this.facade.history;
-    public readonly hungerLevel = this.facade.hungerLevel;
-    public readonly energyLevel = this.facade.energyLevel;
-    public readonly moodLevel = this.facade.moodLevel;
-    public readonly selectedSymptoms = this.facade.selectedSymptoms;
-    public readonly checkInNotes = this.facade.checkInNotes;
-    public readonly hungerEmojiScale = FASTING_HUNGER_EMOJI_SCALE;
-    public readonly energyEmojiScale = FASTING_ENERGY_EMOJI_SCALE;
-    public readonly moodEmojiScale = FASTING_MOOD_EMOJI_SCALE;
-    public readonly alerts = computed(() => this.facade.insightsData().alerts);
-    public readonly insights = computed(() => this.facade.insightsData().insights);
-    public readonly visibleAlertItems = computed(() => {
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly isEnding = this.facade.isEnding;
+    protected readonly isUpdatingCycle = this.facade.isUpdatingCycle;
+    protected readonly isSavingCheckIn = this.facade.isSavingCheckIn;
+    protected readonly isActive = this.facade.isActive;
+    protected readonly currentSession = this.facade.currentSession;
+    protected readonly stats = this.facade.stats;
+    protected readonly history = this.facade.history;
+    protected readonly hungerLevel = this.facade.hungerLevel;
+    protected readonly energyLevel = this.facade.energyLevel;
+    protected readonly moodLevel = this.facade.moodLevel;
+    protected readonly selectedSymptoms = this.facade.selectedSymptoms;
+    protected readonly checkInNotes = this.facade.checkInNotes;
+    protected readonly hungerEmojiScale = FASTING_HUNGER_EMOJI_SCALE;
+    protected readonly energyEmojiScale = FASTING_ENERGY_EMOJI_SCALE;
+    protected readonly moodEmojiScale = FASTING_MOOD_EMOJI_SCALE;
+    protected readonly alerts = computed(() => this.facade.insightsData().alerts);
+    protected readonly insights = computed(() => this.facade.insightsData().insights);
+    protected readonly visibleAlertItems = computed(() => {
         this.currentLanguage();
         const session = this.currentSession();
         return this.alerts()
             .filter(alert => this.facade.isPromptVisible(session, alert))
             .map(alert => this.buildMessageViewModel(alert));
     });
-    public readonly insightItems = computed(() => {
+    protected readonly insightItems = computed(() => {
         this.currentLanguage();
         return this.insights().map(insight => this.buildMessageViewModel(insight));
     });
-    public readonly sessionCheckInVisibleCount = signal<Record<string, number>>({});
-    public readonly isLoadingMoreHistory = this.facade.isLoadingMoreHistory;
-    public readonly visibleHistory = this.history;
-    public readonly historyItems = computed<FastingHistorySessionViewModel[]>(() => {
+    protected readonly sessionCheckInVisibleCount = signal<Record<string, number>>({});
+    protected readonly isLoadingMoreHistory = this.facade.isLoadingMoreHistory;
+    protected readonly visibleHistory = this.history;
+    protected readonly historyItems = computed<FastingHistorySessionViewModel[]>(() => {
         this.currentLanguage();
         this.expandedHistorySessionId();
         this.sessionCheckInVisibleCount();
 
         return this.visibleHistory().map(session => this.buildHistorySessionViewModel(session));
     });
-    public readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
-    public readonly isCheckInExpanded = signal(false);
-    public readonly expandedHistorySessionId = signal<string | null>(null);
-    public readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
-    public readonly currentSessionLatestCheckInView = computed<FastingCheckInViewModel | null>(() => {
+    protected readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
+    protected readonly isCheckInExpanded = signal(false);
+    protected readonly expandedHistorySessionId = signal<string | null>(null);
+    protected readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
+    protected readonly currentSessionLatestCheckInView = computed<FastingCheckInViewModel | null>(() => {
         this.currentLanguage();
         const checkIn = this.currentSessionLatestCheckIn();
         return checkIn === null ? null : this.buildCheckInViewModel(checkIn);
     });
-    public readonly currentSessionRecentCheckIns = computed(() => {
+    protected readonly currentSessionRecentCheckIns = computed(() => {
         const session = this.currentSession();
         if (session === null) {
             return [];
@@ -155,32 +155,32 @@ export class FastingPageComponent {
         });
     }
 
-    public saveCheckIn(): void {
+    protected saveCheckIn(): void {
         this.facade.saveCheckIn();
     }
 
-    public openCheckInForm(): void {
+    protected openCheckInForm(): void {
         this.isCheckInExpanded.set(true);
     }
 
-    public closeCheckInForm(): void {
+    protected closeCheckInForm(): void {
         this.isCheckInExpanded.set(false);
         this.facade.resetCheckInDraft();
     }
 
-    public dismissPrompt(promptId: string): void {
+    protected dismissPrompt(promptId: string): void {
         this.facade.dismissPrompt(promptId);
     }
 
-    public snoozePrompt(promptId: string): void {
+    protected snoozePrompt(promptId: string): void {
         this.facade.snoozePrompt(promptId);
     }
 
-    public loadMoreHistory(): void {
+    protected loadMoreHistory(): void {
         this.facade.loadMoreHistory();
     }
 
-    public openSessionCheckInChart(session: FastingSession): void {
+    protected openSessionCheckInChart(session: FastingSession): void {
         if (!this.canViewSessionCheckInChart(session)) {
             return;
         }
@@ -201,7 +201,7 @@ export class FastingPageComponent {
         );
     }
 
-    public getHistoryAccentColor(session: FastingSession): string {
+    protected getHistoryAccentColor(session: FastingSession): string {
         switch (session.status) {
             case 'Completed':
                 return 'var(--fd-color-green-500)';
@@ -216,7 +216,7 @@ export class FastingPageComponent {
         }
     }
 
-    public getHistoryBadgeKey(status: FastingSessionStatus): string {
+    protected getHistoryBadgeKey(status: FastingSessionStatus): string {
         switch (status) {
             case 'Completed':
                 return 'FASTING.BADGE_COMPLETED';
@@ -231,12 +231,12 @@ export class FastingPageComponent {
         }
     }
 
-    public getHistoryProtocolLabel(protocol: string): string {
+    protected getHistoryProtocolLabel(protocol: string): string {
         const option = FASTING_PROTOCOLS.find(item => item.value === protocol);
         return option === undefined ? protocol : this.translateService.instant(option.labelKey);
     }
 
-    public getHistorySessionTypeLabel(session: FastingSession): string {
+    protected getHistorySessionTypeLabel(session: FastingSession): string {
         if (session.planType === 'Cyclic') {
             return this.translateService.instant('FASTING.CYCLIC_TYPE');
         }
@@ -249,7 +249,7 @@ export class FastingPageComponent {
         return this.translateService.instant(option.category === 'intermittent' ? 'FASTING.INTERMITTENT_TYPE' : 'FASTING.EXTENDED_TYPE');
     }
 
-    public getHistoryProtocolDisplay(session: FastingSession): string {
+    protected getHistoryProtocolDisplay(session: FastingSession): string {
         if (session.planType === 'Cyclic') {
             return this.getCyclicProtocolDisplay(session);
         }
@@ -282,36 +282,36 @@ export class FastingPageComponent {
         return `${baseLabel} (${addedHours} ${hoursLabel})`;
     }
 
-    public hasCheckIn(session: FastingSession): boolean {
+    protected hasCheckIn(session: FastingSession): boolean {
         return this.getSessionCheckIns(session).length > 0;
     }
 
-    public isHistorySessionExpanded(sessionId: string): boolean {
+    protected isHistorySessionExpanded(sessionId: string): boolean {
         return this.expandedHistorySessionId() === sessionId;
     }
 
-    public toggleHistorySession(sessionId: string): void {
+    protected toggleHistorySession(sessionId: string): void {
         this.expandedHistorySessionId.update(current => (current === sessionId ? null : sessionId));
     }
 
-    public getHistoryCheckInToggleKey(session: FastingSession): string {
+    protected getHistoryCheckInToggleKey(session: FastingSession): string {
         return this.isHistorySessionExpanded(session.id) ? 'FASTING.HIDE_HISTORY_CHECK_INS' : 'FASTING.SHOW_HISTORY_CHECK_INS';
     }
 
-    public getLatestSessionCheckIn(session: FastingSession): FastingCheckIn | null {
+    protected getLatestSessionCheckIn(session: FastingSession): FastingCheckIn | null {
         const checkIns = this.getSessionCheckIns(session);
         return checkIns.length > 0 ? (checkIns[0] ?? null) : null;
     }
 
-    public getSessionCheckInCount(session: FastingSession): number {
+    protected getSessionCheckInCount(session: FastingSession): number {
         return this.getSessionCheckIns(session).length;
     }
 
-    public canViewSessionCheckInChart(session: FastingSession): boolean {
+    protected canViewSessionCheckInChart(session: FastingSession): boolean {
         return this.getSessionCheckInCount(session) > 1;
     }
 
-    public getCheckInSummary(hunger: number | null, energy: number | null, mood: number | null): string {
+    protected getCheckInSummary(hunger: number | null, energy: number | null, mood: number | null): string {
         return this.translateService.instant('FASTING.CHECK_IN.SUMMARY', {
             hunger: this.getHungerSummaryValue(hunger),
             energy: this.getEnergySummaryValue(energy),
@@ -319,11 +319,11 @@ export class FastingPageComponent {
         });
     }
 
-    public hasCurrentSessionTimeline(): boolean {
+    protected hasCurrentSessionTimeline(): boolean {
         return this.currentSessionRecentCheckIns().length > 0;
     }
 
-    public getCurrentSessionOlderCheckInsCount(): number {
+    protected getCurrentSessionOlderCheckInsCount(): number {
         const session = this.currentSession();
         if (session === null) {
             return 0;
@@ -332,7 +332,7 @@ export class FastingPageComponent {
         return Math.max(0, this.getSessionCheckIns(session).length - this.currentSessionRecentCheckIns().length);
     }
 
-    public getSessionCheckIns(session: FastingSession): FastingCheckIn[] {
+    protected getSessionCheckIns(session: FastingSession): FastingCheckIn[] {
         if (session.checkIns.length > 0) {
             return session.checkIns;
         }
@@ -354,26 +354,26 @@ export class FastingPageComponent {
         ];
     }
 
-    public getVisibleSessionCheckIns(session: FastingSession): FastingCheckIn[] {
+    protected getVisibleSessionCheckIns(session: FastingSession): FastingCheckIn[] {
         const allCheckIns = this.getSessionCheckIns(session);
         const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FASTING_SESSION_CHECK_INS_PAGE_SIZE;
         return allCheckIns.slice(0, visibleCount);
     }
 
-    public canLoadMoreSessionCheckIns(session: FastingSession): boolean {
+    protected canLoadMoreSessionCheckIns(session: FastingSession): boolean {
         const allCheckIns = this.getSessionCheckIns(session);
         const visibleCount = this.sessionCheckInVisibleCount()[session.id] ?? FASTING_SESSION_CHECK_INS_PAGE_SIZE;
         return allCheckIns.length > visibleCount;
     }
 
-    public loadMoreSessionCheckIns(sessionId: string): void {
+    protected loadMoreSessionCheckIns(sessionId: string): void {
         this.sessionCheckInVisibleCount.update(current => ({
             ...current,
             [sessionId]: (current[sessionId] ?? FASTING_SESSION_CHECK_INS_PAGE_SIZE) + FASTING_SESSION_CHECK_INS_PAGE_SIZE,
         }));
     }
 
-    public getHistoryCheckInRegionId(sessionId: string): string {
+    protected getHistoryCheckInRegionId(sessionId: string): string {
         return `fasting-history-checkins-${sessionId}`;
     }
 
@@ -485,19 +485,19 @@ export class FastingPageComponent {
         }
     }
 
-    public getEnergyEmoji(level: number | null | undefined): string {
+    protected getEnergyEmoji(level: number | null | undefined): string {
         return this.energyEmojiScale.find(option => option.value === level)?.emoji ?? '—';
     }
 
-    public getHungerEmoji(level: number | null | undefined): string {
+    protected getHungerEmoji(level: number | null | undefined): string {
         return this.hungerEmojiScale.find(option => option.value === level)?.emoji ?? '—';
     }
 
-    public getMoodEmoji(level: number | null | undefined): string {
+    protected getMoodEmoji(level: number | null | undefined): string {
         return this.moodEmojiScale.find(option => option.value === level)?.emoji ?? '—';
     }
 
-    public formatRelativeTime(value: string | null): string | null {
+    protected formatRelativeTime(value: string | null): string | null {
         if (value === null || value.length === 0) {
             return null;
         }

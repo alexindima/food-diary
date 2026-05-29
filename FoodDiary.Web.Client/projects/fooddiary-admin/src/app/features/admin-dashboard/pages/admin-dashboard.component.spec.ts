@@ -74,16 +74,16 @@ describe('AdminDashboardComponent', () => {
         expect(aiUsageService.getSummary).toHaveBeenCalledTimes(1);
         expect(telemetryService.getFastingSummary).toHaveBeenCalledTimes(1);
         expect(usersService.getLoginSummary).toHaveBeenCalledTimes(1);
-        expect(component.summary()?.totalUsers).toBe(TOTAL_USERS);
-        expect(component.aiUsage()?.totalTokens).toBe(TOTAL_TOKENS);
-        expect(component.fastingTelemetry()?.startedSessions).toBe(STARTED_SESSIONS);
-        expect(component.loginDeviceSegments()).toEqual([{ label: 'Desktop', value: 21 }]);
-        expect(component.loginOperatingSystemSegments()).toEqual([{ label: 'Windows', value: 21 }]);
-        expect(component.loginBrowserSegments()).toEqual([
+        expect(component['summary']()?.totalUsers).toBe(TOTAL_USERS);
+        expect(component['aiUsage']()?.totalTokens).toBe(TOTAL_TOKENS);
+        expect(component['fastingTelemetry']()?.startedSessions).toBe(STARTED_SESSIONS);
+        expect(component['loginDeviceSegments']()).toEqual([{ label: 'Desktop', value: 21 }]);
+        expect(component['loginOperatingSystemSegments']()).toEqual([{ label: 'Windows', value: 21 }]);
+        expect(component['loginBrowserSegments']()).toEqual([
             { label: 'Opera', value: 19 },
             { label: 'Chrome', value: 2 },
         ]);
-        expect(component.isLoading()).toBe(false);
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('should reset summary and loading state on dashboard error', async () => {
@@ -97,8 +97,8 @@ describe('AdminDashboardComponent', () => {
         errorFixture.detectChanges();
         await errorFixture.whenStable();
 
-        expect(errorComponent.summary()).toBeNull();
-        expect(errorComponent.isLoading()).toBe(false);
+        expect(errorComponent['summary']()).toBeNull();
+        expect(errorComponent['isLoading']()).toBe(false);
     });
 });
 

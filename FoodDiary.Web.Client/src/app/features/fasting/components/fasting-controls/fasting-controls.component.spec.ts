@@ -64,9 +64,9 @@ describe('FastingControlsComponent setup controls', () => {
     });
 
     it('delegates mode and protocol changes to the shared facade', () => {
-        component.onModeChange('extended');
-        component.onProtocolChange('F36_0');
-        component.onCyclicPresetChange('2:1');
+        component['onModeChange']('extended');
+        component['onProtocolChange']('F36_0');
+        component['onCyclicPresetChange']('2:1');
 
         expect(facade.selectMode).toHaveBeenCalledWith('extended');
         expect(facade.selectProtocol).toHaveBeenCalledWith('F36_0');
@@ -74,13 +74,13 @@ describe('FastingControlsComponent setup controls', () => {
     });
 
     it('ignores invalid numeric input values', () => {
-        component.onCustomHoursChange('abc');
-        component.onCustomIntermittentFastHoursChange('abc');
-        component.onCyclicFastDaysChange('abc');
-        component.onCyclicEatDaysChange('abc');
-        component.onCyclicEatDayFastHoursChange('abc');
-        component.onExtendHoursChange('abc');
-        component.onReduceHoursChange('abc');
+        component['onCustomHoursChange']('abc');
+        component['onCustomIntermittentFastHoursChange']('abc');
+        component['onCyclicFastDaysChange']('abc');
+        component['onCyclicEatDaysChange']('abc');
+        component['onCyclicEatDayFastHoursChange']('abc');
+        component['onExtendHoursChange']('abc');
+        component['onReduceHoursChange']('abc');
 
         expect(facade.setCustomHours).not.toHaveBeenCalled();
         expect(facade.setCustomIntermittentFastHours).not.toHaveBeenCalled();
@@ -110,7 +110,7 @@ describe('FastingControlsComponent active cyclic session', () => {
         facade.currentSession.set(createCyclicSession());
         fixture.detectChanges();
 
-        component.endFasting();
+        component['endFasting']();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.endFasting).toHaveBeenCalledTimes(1);
@@ -121,8 +121,8 @@ describe('FastingControlsComponent active cyclic session', () => {
         facade.currentSession.set(createCyclicSession());
         fixture.detectChanges();
 
-        component.skipCyclicDay();
-        component.postponeCyclicDay();
+        component['skipCyclicDay']();
+        component['postponeCyclicDay']();
 
         expect(dialogService.open).toHaveBeenCalledTimes(2);
         expect(facade.skipCyclicDay).toHaveBeenCalledTimes(1);
@@ -151,16 +151,16 @@ describe('FastingControlsComponent active extended session', () => {
         facade.reduceHours.set(CUSTOM_REDUCE_HOURS);
         fixture.detectChanges();
 
-        component.showCustomExtend();
-        component.showCustomReduce();
+        component['showCustomExtend']();
+        component['showCustomReduce']();
         fixture.detectChanges();
 
         const text = host(fixture).textContent;
         expect(text).toContain('FASTING.ADD_TIME');
         expect(text).toContain('FASTING.REDUCE_TIME');
 
-        component.extendByCustom();
-        component.reduceByCustom();
+        component['extendByCustom']();
+        component['reduceByCustom']();
 
         expect(facade.extendByHours).toHaveBeenCalledWith(CUSTOM_EXTEND_HOURS);
         expect(facade.reduceTargetByHours).toHaveBeenCalledWith(CUSTOM_REDUCE_HOURS);
@@ -172,7 +172,7 @@ describe('FastingControlsComponent active extended session', () => {
         facade.extendHours.set(CUSTOM_EXTEND_HOURS);
         fixture.detectChanges();
 
-        component.extendByCustom();
+        component['extendByCustom']();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.extendByHours).toHaveBeenCalledWith(CUSTOM_EXTEND_HOURS);
@@ -183,8 +183,8 @@ describe('FastingControlsComponent active extended session', () => {
         facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: HARD_STOP_PLANNED_DURATION_HOURS });
         fixture.detectChanges();
 
-        component.onExtendHoursChange(HARD_STOP_EXTEND_HOURS);
-        component.extendByCustom();
+        component['onExtendHoursChange'](HARD_STOP_EXTEND_HOURS);
+        component['extendByCustom']();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.extendByHours).not.toHaveBeenCalled();

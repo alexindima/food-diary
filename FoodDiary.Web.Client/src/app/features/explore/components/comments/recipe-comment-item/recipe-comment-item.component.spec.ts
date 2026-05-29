@@ -27,15 +27,15 @@ describe('RecipeCommentItemComponent', () => {
         const fixture = createComponent(createViewModel());
         const edit = vi.fn();
         const deleteComment = vi.fn();
-        fixture.componentInstance.edit.subscribe(edit);
-        fixture.componentInstance.delete.subscribe(deleteComment);
+        fixture.componentInstance['edit'].subscribe(edit);
+        fixture.componentInstance['delete'].subscribe(deleteComment);
         const element = getElement(fixture);
 
         getButtonByText(element, 'COMMENTS.EDIT').click();
         getButtonByText(element, 'COMMENTS.DELETE').click();
 
-        expect(edit).toHaveBeenCalledWith(fixture.componentInstance.item().comment);
-        expect(deleteComment).toHaveBeenCalledWith(fixture.componentInstance.item().comment);
+        expect(edit).toHaveBeenCalledWith(fixture.componentInstance['item']().comment);
+        expect(deleteComment).toHaveBeenCalledWith(fixture.componentInstance['item']().comment);
     });
 
     it('hides actions for comments owned by another user', () => {

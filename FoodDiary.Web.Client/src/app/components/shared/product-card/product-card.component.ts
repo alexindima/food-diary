@@ -44,26 +44,26 @@ export class ProductCardComponent {
     public readonly open = output();
     public readonly addToMeal = output();
     public readonly favoriteToggle = output();
-    public readonly isFavorite = computed(() => Boolean(this.product().isFavorite));
-    public readonly isAuthenticated = this.authService.isAuthenticated;
-    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasProductId());
-    public readonly favoriteAriaLabelKey = computed(() =>
+    protected readonly isFavorite = computed(() => Boolean(this.product().isFavorite));
+    protected readonly isAuthenticated = this.authService.isAuthenticated;
+    protected readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasProductId());
+    protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE',
     );
-    public readonly ownershipIcon = computed(() => (this.product().isOwnedByCurrentUser ? 'person' : 'groups'));
-    public readonly nutrition = computed(() => ({
+    protected readonly ownershipIcon = computed(() => (this.product().isOwnedByCurrentUser ? 'person' : 'groups'));
+    protected readonly nutrition = computed(() => ({
         proteins: this.product().proteinsPerBase,
         fats: this.product().fatsPerBase,
         carbs: this.product().carbsPerBase,
         fiber: this.product().fiberPerBase,
         alcohol: this.product().alcoholPerBase,
     }));
-    public readonly quality = computed(() => {
+    protected readonly quality = computed(() => {
         const score = this.qualityScore();
         const grade = this.product().qualityGrade;
         return score === null || grade === null || grade === undefined ? null : { score, grade };
     });
-    public readonly qualityScore = computed(() => {
+    protected readonly qualityScore = computed(() => {
         const score = this.product().qualityScore;
         if (score === null || score === undefined) {
             return null;
@@ -71,16 +71,16 @@ export class ProductCardComponent {
 
         return normalizeQualityScore(score);
     });
-    public readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
-    public handleOpen(): void {
+    protected readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
+    protected handleOpen(): void {
         this.open.emit();
     }
 
-    public handleAdd(): void {
+    protected handleAdd(): void {
         this.addToMeal.emit();
     }
 
-    public handlePreview(): void {
+    protected handlePreview(): void {
         const imageUrl = this.imageUrl()?.trim();
         if (imageUrl === undefined || imageUrl.length === 0) {
             return;
@@ -98,7 +98,7 @@ export class ProductCardComponent {
         });
     }
 
-    public toggleFavorite(): void {
+    protected toggleFavorite(): void {
         const productId = this.product().id;
         if (productId === undefined || productId.length === 0 || this.favoriteLoading()) {
             return;

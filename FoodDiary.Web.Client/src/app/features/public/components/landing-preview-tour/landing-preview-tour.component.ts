@@ -38,12 +38,12 @@ export class LandingPreviewTourComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly draftBlock = viewChild<ElementRef<HTMLElement>>('draftBlock');
 
-    public isAuthenticated = this.authService.isAuthenticated;
-    public heroSummaryCard: LandingPreviewContent['heroSummaryCard'] = buildLandingPreviewContent(key => key).heroSummaryCard;
-    public guestMealEntries: MealPreviewEntry[] = [];
-    public previewProducts: Product[] = [];
-    public previewRecipes: Recipe[] = [];
-    public previewQuickItems: QuickMealItem[] = [];
+    protected isAuthenticated = this.authService.isAuthenticated;
+    protected heroSummaryCard: LandingPreviewContent['heroSummaryCard'] = buildLandingPreviewContent(key => key).heroSummaryCard;
+    protected guestMealEntries: MealPreviewEntry[] = [];
+    protected previewProducts: Product[] = [];
+    protected previewRecipes: Recipe[] = [];
+    protected previewQuickItems: QuickMealItem[] = [];
 
     public constructor() {
         effect(() => {
@@ -58,17 +58,17 @@ export class LandingPreviewTourComponent {
         });
     }
 
-    public addPreviewProduct(product: Product): void {
+    protected addPreviewProduct(product: Product): void {
         this.quickConsumptionService.addProduct(product);
         this.scrollDraftIntoView();
     }
 
-    public addPreviewRecipe(recipe: Recipe): void {
+    protected addPreviewRecipe(recipe: Recipe): void {
         this.quickConsumptionService.addRecipe(recipe);
         this.scrollDraftIntoView();
     }
 
-    public async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+    protected async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
         await this.authNavigationService.navigateAsync(mode);
     }
 

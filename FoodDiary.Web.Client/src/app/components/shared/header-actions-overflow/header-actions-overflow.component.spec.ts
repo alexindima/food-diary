@@ -69,7 +69,7 @@ describe('HeaderActionsOverflowComponent', () => {
     });
 
     it('renders multiple header actions as menu items', async () => {
-        component.showSecond.set(true);
+        component['showSecond'].set(true);
         await settleAsync();
 
         const trigger = getOverflowTrigger();
@@ -84,7 +84,7 @@ describe('HeaderActionsOverflowComponent', () => {
     });
 
     it('proxies menu item clicks to the original action', async () => {
-        component.showSecond.set(true);
+        component['showSecond'].set(true);
         await settleAsync();
 
         getOverflowTrigger()?.click();
@@ -94,7 +94,7 @@ describe('HeaderActionsOverflowComponent', () => {
         firstItem.click();
         await settleAsync();
 
-        expect(component.firstClicks()).toBe(1);
-        expect(component.secondClicks()).toBe(0);
+        expect(component['firstClicks']()).toBe(1);
+        expect(component['secondClicks']()).toBe(0);
     });
 });

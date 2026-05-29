@@ -23,9 +23,9 @@ export class DietologistClientsPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly languageVersion = signal(0);
 
-    public readonly clients = signal<ClientSummary[]>([]);
-    public readonly loading = signal(true);
-    public readonly clientItems = computed<ClientCardViewModel[]>(() => {
+    protected readonly clients = signal<ClientSummary[]>([]);
+    protected readonly loading = signal(true);
+    protected readonly clientItems = computed<ClientCardViewModel[]>(() => {
         this.languageVersion();
         return buildClientCardViewModels(this.clients(), this.translateService.getCurrentLang());
     });
@@ -49,7 +49,7 @@ export class DietologistClientsPageComponent {
             });
     }
 
-    public openClient(client: ClientSummary): void {
+    protected openClient(client: ClientSummary): void {
         void this.router.navigate(['/dietologist', 'clients', client.userId]);
     }
 }

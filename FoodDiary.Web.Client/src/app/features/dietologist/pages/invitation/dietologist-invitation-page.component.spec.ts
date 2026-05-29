@@ -56,7 +56,7 @@ describe('DietologistInvitationPageComponent accepted state', () => {
 
         createComponent();
 
-        expect(component.state()).toBe('accepted');
+        expect(component['state']()).toBe('accepted');
         const host = fixture.nativeElement as HTMLElement;
         expect(host.textContent).toContain('DIETOLOGIST_INVITATION.SUCCESS_ACCEPT');
     });
@@ -68,8 +68,8 @@ describe('DietologistInvitationPageComponent error state', () => {
 
         createComponent();
 
-        expect(component.state()).toBe('error');
-        expect(component.errorMessage()).toBe('DIETOLOGIST_INVITATION.ERROR_LOAD');
+        expect(component['state']()).toBe('error');
+        expect(component['errorMessage']()).toBe('DIETOLOGIST_INVITATION.ERROR_LOAD');
     });
 });
 

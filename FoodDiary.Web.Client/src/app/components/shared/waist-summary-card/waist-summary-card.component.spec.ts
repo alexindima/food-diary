@@ -41,15 +41,15 @@ function registerBasicTests(): void {
         it('should show latest waist measurement', () => {
             fixture.componentRef.setInput('latest', LATEST_WAIST);
             fixture.detectChanges();
-            expect(component.latest()).toBe(LATEST_WAIST);
+            expect(component['latest']()).toBe(LATEST_WAIST);
         });
 
         it('should emit cardClick', () => {
             fixture.detectChanges();
             const emitSpy = vi.fn();
-            component.cardClick.subscribe(emitSpy);
+            component['cardClick'].subscribe(emitSpy);
 
-            component.cardClick.emit();
+            component['cardClick'].emit();
             expect(emitSpy).toHaveBeenCalled();
         });
     });
@@ -63,7 +63,7 @@ function registerMetaTextTests(): void {
 
             const translateService = TestBed.inject(TranslateService);
             const expected = translateService.instant('WAIST_CARD.GOAL', { value: DESIRED_WAIST });
-            expect(component.metaText()).toBe(expected);
+            expect(component['metaText']()).toBe(expected);
         });
 
         it('should return empty meta text when desired is null', () => {
@@ -72,7 +72,7 @@ function registerMetaTextTests(): void {
 
             const translateService = TestBed.inject(TranslateService);
             const expected = translateService.instant('WAIST_CARD.META_EMPTY');
-            expect(component.metaText()).toBe(expected);
+            expect(component['metaText']()).toBe(expected);
         });
     });
 }
@@ -85,7 +85,7 @@ function registerTrendTests(): void {
             fixture.componentRef.setInput('desired', DESIRED_WAIST);
             fixture.detectChanges();
 
-            const trend = component.trend();
+            const trend = component['trend']();
             expect(trend.status).toBe('positive');
             expect(trend.label).toContain(POSITIVE_TREND_LABEL_DELTA);
         });
@@ -96,7 +96,7 @@ function registerTrendTests(): void {
             fixture.componentRef.setInput('desired', DESIRED_WAIST);
             fixture.detectChanges();
 
-            const trend = component.trend();
+            const trend = component['trend']();
             expect(trend.status).toBe('negative');
             expect(trend.label).toContain(NEGATIVE_TREND_LABEL_DELTA);
         });
@@ -106,7 +106,7 @@ function registerTrendTests(): void {
             fixture.componentRef.setInput('previous', SAME_WAIST);
             fixture.detectChanges();
 
-            const trend = component.trend();
+            const trend = component['trend']();
             expect(trend.status).toBe('neutral');
         });
 
@@ -116,7 +116,7 @@ function registerTrendTests(): void {
             fixture.componentRef.setInput('desired', null);
             fixture.detectChanges();
 
-            const trend = component.trend();
+            const trend = component['trend']();
             expect(trend.status).toBe('neutral');
         });
 
@@ -127,8 +127,8 @@ function registerTrendTests(): void {
 
             const translateService = TestBed.inject(TranslateService);
             const expected = translateService.instant('WAIST_CARD.NO_PREVIOUS');
-            expect(component.trend().label).toBe(expected);
-            expect(component.trend().status).toBe('neutral');
+            expect(component['trend']().label).toBe(expected);
+            expect(component['trend']().status).toBe('neutral');
         });
 
         it('should return neutral status when no desired value is set', () => {
@@ -137,7 +137,7 @@ function registerTrendTests(): void {
             fixture.componentRef.setInput('desired', null);
             fixture.detectChanges();
 
-            const trend = component.trend();
+            const trend = component['trend']();
             expect(trend.status).toBe('neutral');
             expect(trend.label).toContain(POSITIVE_TREND_LABEL_DELTA);
         });

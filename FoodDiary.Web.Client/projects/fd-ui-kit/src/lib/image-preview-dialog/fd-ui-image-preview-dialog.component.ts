@@ -31,12 +31,12 @@ export class FdUiImagePreviewDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<FdUiImagePreviewDialogComponent, void>);
     private readonly dialogData = inject<FdUiImagePreviewDialogData>(FD_UI_DIALOG_DATA);
 
-    public readonly imageUrl = this.dialogData.imageUrl?.trim() ?? '';
-    public readonly collageImages = (this.dialogData.collageImages ?? []).slice(0, MAX_COLLAGE_IMAGES);
-    public readonly alt = this.dialogData.alt ?? '';
-    public readonly title = this.dialogData.title?.trim() ?? '';
+    protected readonly imageUrl = this.dialogData.imageUrl?.trim() ?? '';
+    protected readonly collageImages = (this.dialogData.collageImages ?? []).slice(0, MAX_COLLAGE_IMAGES);
+    protected readonly alt = this.dialogData.alt ?? '';
+    protected readonly title = this.dialogData.title?.trim() ?? '';
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef.close();
     }
 }

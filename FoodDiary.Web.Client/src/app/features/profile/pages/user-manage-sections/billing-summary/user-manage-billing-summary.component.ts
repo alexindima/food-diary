@@ -27,19 +27,19 @@ export class UserManageBillingSummaryComponent {
     public readonly billing = input.required<BillingViewModel>();
     public readonly isOpeningBillingPortal = input.required<boolean>();
 
-    public readonly billingPlanLabelKey = computed(() => getBillingPlanLabelKey(this.billing().overview));
-    public readonly billingStatusLabelKey = computed(() => getBillingStatusLabelKey(this.billing().overview));
-    public readonly billingProviderLabel = computed(() =>
+    protected readonly billingPlanLabelKey = computed(() => getBillingPlanLabelKey(this.billing().overview));
+    protected readonly billingStatusLabelKey = computed(() => getBillingStatusLabelKey(this.billing().overview));
+    protected readonly billingProviderLabel = computed(() =>
         getBillingProviderLabel(this.billing().overview.subscriptionProvider ?? this.billing().overview.provider, key =>
             this.translateService.instant(key),
         ),
     );
-    public readonly billingRenewalLabelKey = computed(() => getBillingRenewalLabelKey(this.billing().overview));
+    protected readonly billingRenewalLabelKey = computed(() => getBillingRenewalLabelKey(this.billing().overview));
 
     public readonly billingPortalOpen = output();
     public readonly premiumPageOpen = output();
 
-    public formatDate(value: string | null | undefined): string | null {
+    protected formatDate(value: string | null | undefined): string | null {
         return formatUserManageDate(value, this.localizationService.getCurrentLanguage());
     }
 }

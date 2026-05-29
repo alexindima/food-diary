@@ -14,17 +14,17 @@ describe('TdeeInsightDialogComponent', () => {
     it('builds adaptive state and complete setup items from insight', async () => {
         const { component } = await setupComponentAsync(createInsight());
 
-        expect(component.effectiveTdee).toBe(ADAPTIVE_TDEE);
-        expect(component.stateKey).toBe('TDEE_DIALOG.STATE.ADAPTIVE');
-        expect(component.summaryKey).toBe('TDEE_DIALOG.SUMMARY.ADAPTIVE');
-        expect(component.showSuggestion).toBe(true);
-        expect(component.setupItems.map(item => item.complete)).toEqual([true, true, true]);
+        expect(component['effectiveTdee']).toBe(ADAPTIVE_TDEE);
+        expect(component['stateKey']).toBe('TDEE_DIALOG.STATE.ADAPTIVE');
+        expect(component['summaryKey']).toBe('TDEE_DIALOG.SUMMARY.ADAPTIVE');
+        expect(component['showSuggestion']).toBe(true);
+        expect(component['setupItems'].map(item => item.complete)).toEqual([true, true, true]);
     });
 
     it('closes with applyGoal action only when suggestion is valid', async () => {
         const { component, dialogRef } = await setupComponentAsync(createInsight());
 
-        component.applySuggestion();
+        component['applySuggestion']();
 
         expect(dialogRef.close).toHaveBeenCalledWith({ type: 'applyGoal', target: SUGGESTED_TARGET });
     });
@@ -32,12 +32,12 @@ describe('TdeeInsightDialogComponent', () => {
     it('uses empty state and ignores invalid suggestion without insight', async () => {
         const { component, dialogRef } = await setupComponentAsync(null);
 
-        component.applySuggestion();
+        component['applySuggestion']();
 
-        expect(component.effectiveTdee).toBeNull();
-        expect(component.stateKey).toBe('TDEE_DIALOG.STATE.EMPTY');
-        expect(component.summaryKey).toBe('TDEE_DIALOG.SUMMARY.EMPTY');
-        expect(component.showSuggestion).toBe(false);
+        expect(component['effectiveTdee']).toBeNull();
+        expect(component['stateKey']).toBe('TDEE_DIALOG.STATE.EMPTY');
+        expect(component['summaryKey']).toBe('TDEE_DIALOG.SUMMARY.EMPTY');
+        expect(component['showSuggestion']).toBe(false);
         expect(dialogRef.close).not.toHaveBeenCalled();
     });
 });

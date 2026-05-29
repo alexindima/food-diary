@@ -109,56 +109,56 @@ describe('MealDetailComponent summary state', () => {
     });
 
     it('should extract nutrition values from meal', () => {
-        expect(component.calories).toBe(TOTAL_CALORIES);
-        expect(component.proteins).toBe(TOTAL_PROTEINS);
-        expect(component.fats).toBe(TOTAL_FATS);
-        expect(component.carbs).toBe(TOTAL_CARBS);
-        expect(component.fiber).toBe(TOTAL_FIBER);
-        expect(component.alcohol).toBe(0);
+        expect(component['calories']).toBe(TOTAL_CALORIES);
+        expect(component['proteins']).toBe(TOTAL_PROTEINS);
+        expect(component['fats']).toBe(TOTAL_FATS);
+        expect(component['carbs']).toBe(TOTAL_CARBS);
+        expect(component['fiber']).toBe(TOTAL_FIBER);
+        expect(component['alcohol']).toBe(0);
     });
 
     it('should have summary and nutrients tabs', () => {
-        expect(component.tabs.length).toBe(EXPECTED_TAB_COUNT);
-        expect(component.tabs[0].value).toBe('summary');
-        expect(component.tabs[1].value).toBe('nutrients');
+        expect(component['tabs'].length).toBe(EXPECTED_TAB_COUNT);
+        expect(component['tabs'][0].value).toBe('summary');
+        expect(component['tabs'][1].value).toBe('nutrients');
     });
 
     it('should change active tab', () => {
-        expect(component.activeTab).toBe('summary');
+        expect(component['activeTab']).toBe('summary');
 
-        component.onTabChange('nutrients');
-        expect(component.activeTab).toBe('nutrients');
+        component['onTabChange']('nutrients');
+        expect(component['activeTab']).toBe('nutrients');
 
-        component.onTabChange('summary');
-        expect(component.activeTab).toBe('summary');
+        component['onTabChange']('summary');
+        expect(component['activeTab']).toBe('summary');
     });
 
     it('should not change tab for invalid value', () => {
-        component.onTabChange('invalid');
-        expect(component.activeTab).toBe('summary');
+        component['onTabChange']('invalid');
+        expect(component['activeTab']).toBe('summary');
     });
 });
 
 describe('MealDetailComponent actions', () => {
     it('should close dialog with edit action on onEdit', () => {
-        component.onEdit();
+        component['onEdit']();
 
         expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Edit' }));
     });
 
     it('should open confirm dialog on delete and close with delete action', () => {
-        component.onDelete();
+        component['onDelete']();
 
         expect(mockFdDialogService.open).toHaveBeenCalled();
         expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Delete' }));
     });
 
     it('should store the consumption data', () => {
-        expect(component.consumption).toEqual(mockMeal);
+        expect(component['consumption']).toEqual(mockMeal);
     });
 
     it('should build an empty item preview', () => {
-        expect(component.itemPreview).toEqual([]);
+        expect(component['itemPreview']).toEqual([]);
     });
 });
 
@@ -204,17 +204,17 @@ describe('MealDetailComponent item previews', () => {
 
         const customComponent = await createComponentAsync(meal);
 
-        expect(customComponent.itemPreview).toHaveLength(2);
-        expect(customComponent.itemPreview.map(item => item.name)).toEqual(['Manual item', 'ИИ позиция']);
+        expect(customComponent['itemPreview']).toHaveLength(2);
+        expect(customComponent['itemPreview'].map(item => item.name)).toEqual(['Manual item', 'ИИ позиция']);
     });
 });
 
 describe('MealDetailComponent macro blocks and expanded preview', () => {
     it('should build macro blocks', () => {
-        expect(component.macroBlocks.length).toBe(EXPECTED_MACRO_BLOCK_COUNT);
-        expect(component.macroBlocks[0].value).toBe(TOTAL_PROTEINS);
-        expect(component.macroBlocks[1].value).toBe(TOTAL_FATS);
-        expect(component.macroBlocks[2].value).toBe(TOTAL_CARBS);
+        expect(component['macroBlocks'].length).toBe(EXPECTED_MACRO_BLOCK_COUNT);
+        expect(component['macroBlocks'][0].value).toBe(TOTAL_PROTEINS);
+        expect(component['macroBlocks'][1].value).toBe(TOTAL_FATS);
+        expect(component['macroBlocks'][2].value).toBe(TOTAL_CARBS);
     });
 
     it('should collapse item preview and expand hidden items', async () => {
@@ -248,10 +248,10 @@ describe('MealDetailComponent macro blocks and expanded preview', () => {
 
         const customComponent = await createComponentAsync(meal);
 
-        expect(customComponent.itemPreview.slice(0, 2).map(item => item.name)).toEqual(['First item', 'Second item']);
+        expect(customComponent['itemPreview'].slice(0, 2).map(item => item.name)).toEqual(['First item', 'Second item']);
 
-        customComponent.toggleItemPreviewExpanded();
+        customComponent['toggleItemPreviewExpanded']();
 
-        expect(customComponent.isItemPreviewExpanded()).toBe(true);
+        expect(customComponent['isItemPreviewExpanded']()).toBe(true);
     });
 });

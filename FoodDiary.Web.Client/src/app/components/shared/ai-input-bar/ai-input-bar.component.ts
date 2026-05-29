@@ -102,33 +102,35 @@ export class AiInputBarComponent {
     public readonly mealRecognized = output<AiInputBarResult>();
     public readonly mealCreateRequested = output<AiInputBarResult>();
 
-    public readonly voiceText = signal('');
-    public readonly textSubmittedQuery = signal<string | null>(null);
-    public readonly textIsAnalyzing = signal(false);
-    public readonly textResults = signal<FoodVisionItem[]>([]);
-    public readonly textIsNutritionLoading = signal(false);
-    public readonly textNutrition = signal<FoodNutritionResponse | null>(null);
-    public readonly textErrorKey = signal<string | null>(null);
-    public readonly textNutritionErrorKey = signal<string | null>(null);
-    public readonly hasTextResult = computed(() => this.textSubmittedQuery() !== null);
-    public readonly isSubmittingMeal = signal(false);
-    public readonly isListening = signal(false);
-    public readonly isSpeechSupported = this.isBrowser && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+    protected readonly voiceText = signal('');
+    protected readonly textSubmittedQuery = signal<string | null>(null);
+    protected readonly textIsAnalyzing = signal(false);
+    protected readonly textResults = signal<FoodVisionItem[]>([]);
+    protected readonly textIsNutritionLoading = signal(false);
+    protected readonly textNutrition = signal<FoodNutritionResponse | null>(null);
+    protected readonly textErrorKey = signal<string | null>(null);
+    protected readonly textNutritionErrorKey = signal<string | null>(null);
+    protected readonly hasTextResult = computed(() => this.textSubmittedQuery() !== null);
+    protected readonly isSubmittingMeal = signal(false);
+    protected readonly isListening = signal(false);
+    protected readonly isSpeechSupported = this.isBrowser && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
     private lastTextSource: AiRecognitionSource = 'Text';
 
-    public readonly photoSelection = signal<ImageSelection | null>(null);
-    public readonly photoIsAnalyzing = signal(false);
-    public readonly photoResults = signal<FoodVisionItem[]>([]);
-    public readonly photoIsNutritionLoading = signal(false);
-    public readonly photoNutrition = signal<FoodNutritionResponse | null>(null);
-    public readonly photoErrorKey = signal<string | null>(null);
-    public readonly photoNutritionErrorKey = signal<string | null>(null);
-    public readonly hasPhotoResult = computed(() => this.photoSelection() !== null);
-    public readonly hasAttachedResult = computed(() => this.hasTextResult() || this.hasPhotoResult());
-    public readonly microphoneIcon = computed(() => (this.isListening() ? 'mic' : 'mic_none'));
-    public readonly textSubmitIcon = computed(() => (this.textIsAnalyzing() || this.textIsNutritionLoading() ? 'hourglass_empty' : 'send'));
+    protected readonly photoSelection = signal<ImageSelection | null>(null);
+    protected readonly photoIsAnalyzing = signal(false);
+    protected readonly photoResults = signal<FoodVisionItem[]>([]);
+    protected readonly photoIsNutritionLoading = signal(false);
+    protected readonly photoNutrition = signal<FoodNutritionResponse | null>(null);
+    protected readonly photoErrorKey = signal<string | null>(null);
+    protected readonly photoNutritionErrorKey = signal<string | null>(null);
+    protected readonly hasPhotoResult = computed(() => this.photoSelection() !== null);
+    protected readonly hasAttachedResult = computed(() => this.hasTextResult() || this.hasPhotoResult());
+    protected readonly microphoneIcon = computed(() => (this.isListening() ? 'mic' : 'mic_none'));
+    protected readonly textSubmitIcon = computed(() =>
+        this.textIsAnalyzing() || this.textIsNutritionLoading() ? 'hourglass_empty' : 'send',
+    );
 
-    public readonly isDisabled = computed(
+    protected readonly isDisabled = computed(
         () =>
             this.isProcessing() ||
             this.textIsAnalyzing() ||
@@ -138,8 +140,8 @@ export class AiInputBarComponent {
             this.isSubmittingMeal(),
     );
 
-    public readonly showDetails = computed(() => this.mode() === 'create');
-    public readonly submitLabelKey = computed(() =>
+    protected readonly showDetails = computed(() => this.mode() === 'create');
+    protected readonly submitLabelKey = computed(() =>
         this.mode() === 'create' ? 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' : 'AI_INPUT_BAR.ADD_ACTION',
     );
 
@@ -153,13 +155,13 @@ export class AiInputBarComponent {
         });
     }
 
-    public onTextInput(event: Event): void {
+    protected onTextInput(event: Event): void {
         if (event.target instanceof HTMLInputElement) {
             this.voiceText.set(event.target.value);
         }
     }
 
-    public async submitTextAsync(source: AiRecognitionSource = 'Text'): Promise<void> {
+    protected async submitTextAsync(source: AiRecognitionSource = 'Text'): Promise<void> {
         const text = this.voiceText().trim();
         if (text.length === 0 || this.isDisabled()) {
             return;
@@ -180,7 +182,7 @@ export class AiInputBarComponent {
         this.runTextAnalysis(text);
     }
 
-    public async toggleMicAsync(): Promise<void> {
+    protected async toggleMicAsync(): Promise<void> {
         if (this.isListening()) {
             this.stopListening();
             return;
@@ -230,7 +232,7 @@ export class AiInputBarComponent {
         recognition.start();
     }
 
-    public onTextAddToMeal(details: AiInputBarMealDetails): void {
+    protected onTextAddToMeal(details: AiInputBarMealDetails): void {
         const nutrition = this.textNutrition();
         if (nutrition === null) {
             return;
@@ -249,7 +251,7 @@ export class AiInputBarComponent {
         );
     }
 
-    public async onPhotoClickAsync(): Promise<void> {
+    protected async onPhotoClickAsync(): Promise<void> {
         if (this.isDisabled()) {
             return;
         }
@@ -266,7 +268,7 @@ export class AiInputBarComponent {
         this.photoUploadField()?.openFilePicker();
     }
 
-    public onPhotoSelected(selection: ImageSelection | null): void {
+    protected onPhotoSelected(selection: ImageSelection | null): void {
         if (selection?.assetId === null || selection?.assetId === undefined) {
             return;
         }
@@ -279,7 +281,7 @@ export class AiInputBarComponent {
         this.runPhotoAnalysis(selection.assetId);
     }
 
-    public onPhotoAddToMeal(details: AiInputBarMealDetails): void {
+    protected onPhotoAddToMeal(details: AiInputBarMealDetails): void {
         const nutrition = this.photoNutrition();
         if (nutrition === null) {
             return;
@@ -298,7 +300,7 @@ export class AiInputBarComponent {
         );
     }
 
-    public dismissTextResult(): void {
+    protected dismissTextResult(): void {
         this.textSubmittedQuery.set(null);
         this.textIsAnalyzing.set(false);
         this.textResults.set([]);
@@ -308,7 +310,7 @@ export class AiInputBarComponent {
         this.textNutritionErrorKey.set(null);
     }
 
-    public onTextEditApplied(result: AiPhotoEditApplied): void {
+    protected onTextEditApplied(result: AiPhotoEditApplied): void {
         this.textResults.set(result.items);
         if (result.items.length === 0) {
             this.setEmptyItemsError(this.textState());
@@ -325,7 +327,7 @@ export class AiInputBarComponent {
         this.runTextNutrition(result.items);
     }
 
-    public onTextReanalyze(): void {
+    protected onTextReanalyze(): void {
         const query = this.textSubmittedQuery();
         if (query === null || query.length === 0 || this.textIsAnalyzing()) {
             return;
@@ -334,7 +336,7 @@ export class AiInputBarComponent {
         this.runTextAnalysis(query);
     }
 
-    public dismissPhotoResult(): void {
+    protected dismissPhotoResult(): void {
         this.photoSelection.set(null);
         this.photoIsAnalyzing.set(false);
         this.photoResults.set([]);
@@ -344,7 +346,7 @@ export class AiInputBarComponent {
         this.photoNutritionErrorKey.set(null);
     }
 
-    public onPhotoEditApplied(result: AiPhotoEditApplied): void {
+    protected onPhotoEditApplied(result: AiPhotoEditApplied): void {
         this.photoResults.set(result.items);
         if (result.items.length === 0) {
             this.setEmptyItemsError(this.photoState());
@@ -361,7 +363,7 @@ export class AiInputBarComponent {
         this.runPhotoNutrition(result.items);
     }
 
-    public onPhotoReanalyze(): void {
+    protected onPhotoReanalyze(): void {
         const assetId = this.photoSelection()?.assetId;
         if (assetId === null || assetId === undefined || this.photoIsAnalyzing()) {
             return;
@@ -374,7 +376,7 @@ export class AiInputBarComponent {
         this.runPhotoAnalysis(assetId);
     }
 
-    public clearState(): void {
+    protected clearState(): void {
         this.voiceText.set('');
         this.dismissTextResult();
         this.dismissPhotoResult();

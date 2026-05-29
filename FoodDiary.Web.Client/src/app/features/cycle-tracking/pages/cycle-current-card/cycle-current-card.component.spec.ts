@@ -38,7 +38,7 @@ describe('CycleCurrentCardComponent', () => {
         fixture.componentRef.setInput('current', null);
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.titleKey()).toBe('CYCLE_TRACKING.NO_CYCLE');
+        expect(fixture.componentInstance['titleKey']()).toBe('CYCLE_TRACKING.NO_CYCLE');
         expect(getText()).toContain('CYCLE_TRACKING.NO_CYCLE_COPY');
     });
 
@@ -60,7 +60,7 @@ describe('CycleCurrentCardComponent', () => {
         });
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.titleKey()).toBe('CYCLE_TRACKING.CURRENT_CYCLE');
+        expect(fixture.componentInstance['titleKey']()).toBe('CYCLE_TRACKING.CURRENT_CYCLE');
         expect(getText()).toContain('Apr 1, 2026');
         expect(getText()).toContain('Apr 29');
         expect(getText()).toContain('Apr 15');

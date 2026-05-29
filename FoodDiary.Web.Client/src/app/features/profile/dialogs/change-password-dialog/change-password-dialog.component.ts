@@ -54,9 +54,9 @@ export class ChangePasswordDialogComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly data = inject<ChangePasswordDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
-    public readonly hasPassword = this.data.hasPassword ?? true;
+    protected readonly hasPassword = this.data.hasPassword ?? true;
 
-    public readonly form = new FormGroup<ChangePasswordFormData>({
+    protected readonly form = new FormGroup<ChangePasswordFormData>({
         currentPassword: new FormControl<string>('', {
             nonNullable: true,
             validators: this.hasPassword ? [Validators.required] : [],
@@ -71,10 +71,10 @@ export class ChangePasswordDialogComponent {
         }),
     });
 
-    public readonly passwordError = signal<string | null>(null);
-    public readonly isSubmitting = signal<boolean>(false);
-    public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
-    public readonly dialogCopyState = computed(() => ({
+    protected readonly passwordError = signal<string | null>(null);
+    protected readonly isSubmitting = signal<boolean>(false);
+    protected readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    protected readonly dialogCopyState = computed(() => ({
         titleKey: this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD' : 'USER_MANAGE.SET_PASSWORD',
         submitLabelKey: this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_SAVE' : 'USER_MANAGE.SET_PASSWORD_SAVE',
     }));
@@ -89,7 +89,7 @@ export class ChangePasswordDialogComponent {
         this.updateFieldErrors();
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         if (this.isSubmitting()) {
             return;
         }
@@ -97,7 +97,7 @@ export class ChangePasswordDialogComponent {
         this.dialogRef.close(false);
     }
 
-    public onSubmit(): void {
+    protected onSubmit(): void {
         this.form.markAllAsTouched();
         this.updateFieldErrors();
         if (this.form.invalid || this.isSubmitting()) {

@@ -17,7 +17,7 @@ describe('DailyAdviceCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.adviceState()).toEqual({
+        expect(component['adviceState']()).toEqual({
             value: 'Eat more vegetables',
             tagKey: 'DASHBOARD.ADVICE_TAGS.NUTRITION',
         });
@@ -28,12 +28,12 @@ describe('DailyAdviceCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.adviceState()).toBeNull();
+        expect(component['adviceState']()).toBeNull();
 
         fixture.componentRef.setInput('advice', createAdvice({ value: 'No tag', tag: '' }));
         fixture.detectChanges();
 
-        expect(component.adviceState()).toEqual({ value: 'No tag', tagKey: null });
+        expect(component['adviceState']()).toEqual({ value: 'No tag', tagKey: null });
     });
 });
 

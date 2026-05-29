@@ -40,8 +40,8 @@ describe('FastingSafetyDialogComponent', () => {
     it('closes with explicit confirm and cancel results', () => {
         const fixture = createComponent();
 
-        fixture.componentInstance.onConfirm();
-        fixture.componentInstance.onCancel();
+        fixture.componentInstance['onConfirm']();
+        fixture.componentInstance['onCancel']();
 
         expect(dialogRef.close).toHaveBeenNthCalledWith(1, 'confirm');
         expect(dialogRef.close).toHaveBeenNthCalledWith(2, 'cancel');
@@ -59,7 +59,7 @@ describe('FastingSafetyDialogComponent', () => {
         });
         const fixture = createComponent();
 
-        fixture.componentInstance.onClose();
+        fixture.componentInstance['onClose']();
 
         expect(dialogRef.close).toHaveBeenCalledWith('close');
     });

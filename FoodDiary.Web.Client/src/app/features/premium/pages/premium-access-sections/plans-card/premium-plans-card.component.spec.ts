@@ -10,7 +10,7 @@ describe('PremiumPlansCardComponent', () => {
         const { component, fixture } = setupComponent([createPlanCard({ providerCount: 2 })]);
         const host = fixture.nativeElement as HTMLElement;
 
-        expect(component.showProviderChoices()).toBe(true);
+        expect(component['showProviderChoices']()).toBe(true);
         expect(host.textContent).toContain('PREMIUM_PAGE.PLANS.PAY_WITH');
     });
 
@@ -20,7 +20,7 @@ describe('PremiumPlansCardComponent', () => {
             createPlanCard({ plan: 'yearly', isLoading: true }),
         ]);
 
-        expect(component.checkoutDisabled()).toBe(true);
+        expect(component['checkoutDisabled']()).toBe(true);
     });
 });
 

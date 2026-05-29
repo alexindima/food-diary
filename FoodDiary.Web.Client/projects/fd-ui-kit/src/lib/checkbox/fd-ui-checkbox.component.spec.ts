@@ -57,19 +57,19 @@ describe('FdUiCheckboxComponent', () => {
     });
 
     it('should write value via CVA (true/false/null)', () => {
-        component.writeValue(true);
+        component['writeValue'](true);
         expect(component['checked']).toBe(true);
 
-        component.writeValue(false);
+        component['writeValue'](false);
         expect(component['checked']).toBe(false);
 
-        component.writeValue(null);
+        component['writeValue'](null);
         expect(component['checked']).toBe(false);
     });
 
     it('should call onChange when checkbox changes', () => {
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         const changeEvent = dispatchCheckboxChange(true);
         component['handleChange'](changeEvent);
@@ -86,7 +86,7 @@ describe('FdUiCheckboxComponent', () => {
 
     it('should call onTouched on blur', () => {
         const onTouchedSpy = vi.fn();
-        component.registerOnTouched(onTouchedSpy);
+        component['registerOnTouched'](onTouchedSpy);
 
         component['handleBlur']();
 
@@ -94,22 +94,22 @@ describe('FdUiCheckboxComponent', () => {
     });
 
     it('should set disabled state via CVA', () => {
-        component.setDisabledState(true);
+        component['setDisabledState'](true);
         fixture.detectChanges();
 
-        expect(component.disabled()).toBe(true);
+        expect(component['disabled']()).toBe(true);
 
-        component.setDisabledState(false);
+        component['setDisabledState'](false);
         fixture.detectChanges();
 
-        expect(component.disabled()).toBe(false);
+        expect(component['disabled']()).toBe(false);
     });
 
     it('should handle null writeValue as false', () => {
-        component.writeValue(true);
+        component['writeValue'](true);
         expect(component['checked']).toBe(true);
 
-        component.writeValue(null);
+        component['writeValue'](null);
         expect(component['checked']).toBe(false);
     });
 });

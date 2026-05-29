@@ -18,7 +18,7 @@ export class EntityCardActionsComponent {
 
     public readonly action = output();
 
-    public handleAction(event: Event): void {
+    protected handleAction(event: Event): void {
         event.stopPropagation();
         this.action.emit();
     }

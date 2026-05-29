@@ -35,24 +35,24 @@ export class DashboardNotificationSettingsDialogComponent {
     private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
     private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
 
-    public readonly isLoading = signal(true);
-    public readonly isUpdating = signal(false);
-    public readonly isOpeningProfile = signal(false);
-    public readonly submitError = signal<string | null>(null);
-    public readonly pushNotificationsEnabled = signal(false);
-    public readonly fastingPushNotificationsEnabled = signal(true);
-    public readonly socialPushNotificationsEnabled = signal(true);
-    public readonly pushNotificationsSupported = this.pushNotifications.isSupported;
-    public readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
-    public readonly pushNotificationsBusy = this.pushNotifications.isBusy;
+    protected readonly isLoading = signal(true);
+    protected readonly isUpdating = signal(false);
+    protected readonly isOpeningProfile = signal(false);
+    protected readonly submitError = signal<string | null>(null);
+    protected readonly pushNotificationsEnabled = signal(false);
+    protected readonly fastingPushNotificationsEnabled = signal(true);
+    protected readonly socialPushNotificationsEnabled = signal(true);
+    protected readonly pushNotificationsSupported = this.pushNotifications.isSupported;
+    protected readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
+    protected readonly pushNotificationsBusy = this.pushNotifications.isBusy;
 
-    public readonly pushNotificationsAccountStatusKey = computed(() =>
+    protected readonly pushNotificationsAccountStatusKey = computed(() =>
         this.pushNotificationsEnabled()
             ? 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED'
             : 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_DISABLED',
     );
 
-    public readonly pushNotificationsDeviceStatusKey = computed(() => {
+    protected readonly pushNotificationsDeviceStatusKey = computed(() => {
         if (!this.pushNotificationsSupported()) {
             return 'USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED';
         }
@@ -72,7 +72,7 @@ export class DashboardNotificationSettingsDialogComponent {
         return 'USER_MANAGE.NOTIFICATIONS_STATUS_SETUP_REQUIRED';
     });
 
-    public readonly pushNotificationsHintKey = computed(() => {
+    protected readonly pushNotificationsHintKey = computed(() => {
         if (!this.pushNotificationsEnabled()) {
             return 'USER_MANAGE.NOTIFICATIONS_DISABLED_HINT';
         }
@@ -96,7 +96,7 @@ export class DashboardNotificationSettingsDialogComponent {
         this.loadPreferences();
     }
 
-    public togglePushNotifications(): void {
+    protected togglePushNotifications(): void {
         if (this.isUpdating() || this.pushNotificationsBusy()) {
             return;
         }
@@ -137,7 +137,7 @@ export class DashboardNotificationSettingsDialogComponent {
             });
     }
 
-    public toggleFastingPushNotifications(): void {
+    protected toggleFastingPushNotifications(): void {
         if (this.isUpdating()) {
             return;
         }
@@ -176,7 +176,7 @@ export class DashboardNotificationSettingsDialogComponent {
             });
     }
 
-    public toggleSocialPushNotifications(): void {
+    protected toggleSocialPushNotifications(): void {
         if (this.isUpdating()) {
             return;
         }
@@ -215,7 +215,7 @@ export class DashboardNotificationSettingsDialogComponent {
             });
     }
 
-    public async openAdvancedSettingsAsync(): Promise<void> {
+    protected async openAdvancedSettingsAsync(): Promise<void> {
         if (this.isOpeningProfile()) {
             return;
         }

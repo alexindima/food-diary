@@ -34,8 +34,8 @@ describe('AuthLoginFormComponent', () => {
     it('should expose login form and google button refs', () => {
         const { component } = createComponent();
 
-        expect(component.formElement()?.nativeElement.tagName).toBe('FORM');
-        expect(component.googleButton()?.nativeElement.classList.contains('auth__google-button')).toBe(true);
+        expect(component['formElement']()?.nativeElement.tagName).toBe('FORM');
+        expect(component['googleButton']()?.nativeElement.classList.contains('auth__google-button')).toBe(true);
     });
 
     it('should emit submit, native input, reset open, and restore actions', () => {
@@ -44,12 +44,12 @@ describe('AuthLoginFormComponent', () => {
         const inputSpy = vi.fn();
         const resetOpenSpy = vi.fn();
         const restoreSpy = vi.fn();
-        component.loginSubmit.subscribe(submitSpy);
-        component.loginNativeInput.subscribe(inputSpy);
-        component.passwordResetOpen.subscribe(resetOpenSpy);
-        component.restoreSubmit.subscribe(restoreSpy);
-        component.form().controls.email.setValue('user@example.com');
-        component.form().controls.password.setValue('password123');
+        component['loginSubmit'].subscribe(submitSpy);
+        component['loginNativeInput'].subscribe(inputSpy);
+        component['passwordResetOpen'].subscribe(resetOpenSpy);
+        component['restoreSubmit'].subscribe(restoreSpy);
+        component['form']().controls.email.setValue('user@example.com');
+        component['form']().controls.password.setValue('password123');
         fixture.componentRef.setInput('showRestoreAction', true);
         fixture.detectChanges();
 

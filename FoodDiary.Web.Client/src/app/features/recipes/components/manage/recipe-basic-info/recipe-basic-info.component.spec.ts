@@ -10,7 +10,7 @@ describe('RecipeBasicInfoComponent', () => {
     it('builds visibility options inside the component', () => {
         const { component } = setupComponent();
 
-        expect(component.visibilitySelectOptions()).toEqual([
+        expect(component['visibilitySelectOptions']()).toEqual([
             { value: RecipeVisibility.Private, label: 'RECIPE_VISIBILITY.Private' },
             { value: RecipeVisibility.Public, label: 'RECIPE_VISIBILITY.Public' },
         ]);
@@ -23,7 +23,7 @@ describe('RecipeBasicInfoComponent', () => {
         form.controls.name.updateValueAndValidity();
         fixture.detectChanges();
 
-        expect(component.fieldErrors().name).toBe('FORM_ERRORS.REQUIRED');
+        expect(component['fieldErrors']().name).toBe('FORM_ERRORS.REQUIRED');
     });
 });
 

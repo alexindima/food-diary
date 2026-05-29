@@ -23,18 +23,18 @@ export type FastingSafetyDialogData = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingSafetyDialogComponent {
-    public readonly data = inject<FastingSafetyDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<FastingSafetyDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<FastingSafetyDialogComponent, FastingSafetyDialogResult>>(FdUiDialogRef);
 
-    public onConfirm(): void {
+    protected onConfirm(): void {
         this.dialogRef.close('confirm');
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close('cancel');
     }
 
-    public onClose(): void {
+    protected onClose(): void {
         this.dialogRef.close('close');
     }
 }

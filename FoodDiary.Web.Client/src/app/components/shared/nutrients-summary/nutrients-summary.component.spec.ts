@@ -52,6 +52,6 @@ describe('NutrientsSummaryComponent', () => {
         fixture.componentRef.setInput('config', { styles: { common: { gap: CUSTOM_GAP } } });
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.summaryWrapperStyles()).toEqual({ gap: `${CUSTOM_GAP}px` });
+        expect(fixture.componentInstance['summaryWrapperStyles']()).toEqual({ gap: `${CUSTOM_GAP}px` });
     });
 });

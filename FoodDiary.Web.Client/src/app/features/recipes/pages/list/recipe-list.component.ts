@@ -71,47 +71,47 @@ export class RecipeListComponent {
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
-    public readonly pageSize = this.recipeListFacade.pageSize;
-    public recipeData = this.recipeListFacade.recipeData;
-    public currentPageIndex = this.recipeListFacade.currentPageIndex;
-    public recentRecipes = this.recipeListFacade.recentRecipes;
-    public readonly favorites = this.recipeListFacade.favoriteRecipes;
-    public readonly favoriteTotalCount = this.recipeListFacade.favoriteTotalCount;
-    public readonly isFavoritesOpen = signal(false);
-    public readonly isFavoritesLoadingMore = this.recipeListFacade.isFavoritesLoadingMore;
-    public readonly errorKey = this.recipeListFacade.errorKey;
-    public readonly isMobileView = this.viewportService.isMobile;
-    public readonly recentRecipeItems = computed<RecipeCardViewModel[]>(() =>
+    protected readonly pageSize = this.recipeListFacade.pageSize;
+    protected recipeData = this.recipeListFacade.recipeData;
+    protected currentPageIndex = this.recipeListFacade.currentPageIndex;
+    protected recentRecipes = this.recipeListFacade.recentRecipes;
+    protected readonly favorites = this.recipeListFacade.favoriteRecipes;
+    protected readonly favoriteTotalCount = this.recipeListFacade.favoriteTotalCount;
+    protected readonly isFavoritesOpen = signal(false);
+    protected readonly isFavoritesLoadingMore = this.recipeListFacade.isFavoritesLoadingMore;
+    protected readonly errorKey = this.recipeListFacade.errorKey;
+    protected readonly isMobileView = this.viewportService.isMobile;
+    protected readonly recentRecipeItems = computed<RecipeCardViewModel[]>(() =>
         this.recentRecipes().map(recipe => ({
             recipe,
             imageUrl: this.resolveImage(recipe),
         })),
     );
-    public readonly allRecipesSectionItems = computed(() => this.recipeListFacade.allRecipesSectionItems());
-    public readonly allRecipeItems = computed<RecipeCardViewModel[]>(() =>
+    protected readonly allRecipesSectionItems = computed(() => this.recipeListFacade.allRecipesSectionItems());
+    protected readonly allRecipeItems = computed<RecipeCardViewModel[]>(() =>
         this.allRecipesSectionItems().map(recipe => ({
             recipe,
             imageUrl: this.resolveImage(recipe),
         })),
     );
-    public readonly hasVisibleRecipes = computed(() => this.recipeListFacade.hasVisibleRecipes());
-    public readonly hasActiveFilters = computed(() => this.recipeListFacade.hasActiveFilters(this.searchForm.controls.onlyMine.value));
-    public readonly isEmptyState = computed(
+    protected readonly hasVisibleRecipes = computed(() => this.recipeListFacade.hasVisibleRecipes());
+    protected readonly hasActiveFilters = computed(() => this.recipeListFacade.hasActiveFilters(this.searchForm.controls.onlyMine.value));
+    protected readonly isEmptyState = computed(
         () =>
             !this.hasVisibleRecipes() &&
             !this.recipeListFacade.hasSearch(this.searchForm.controls.search.value) &&
             !this.hasActiveFilters(),
     );
-    public readonly allRecipesSectionLabelKey = computed(() => this.recipeListFacade.allRecipesSectionLabelKey());
-    public readonly emptyState = computed<RecipeListEmptyState>(() => (this.isEmptyState() ? 'empty' : 'no-results'));
-    public readonly isMobileSearchVisible = computed(
+    protected readonly allRecipesSectionLabelKey = computed(() => this.recipeListFacade.allRecipesSectionLabelKey());
+    protected readonly emptyState = computed<RecipeListEmptyState>(() => (this.isEmptyState() ? 'empty' : 'no-results'));
+    protected readonly isMobileSearchVisible = computed(
         () => this.isMobileSearchOpen() || this.recipeListFacade.hasSearch(this.searchForm.controls.search.value),
     );
-    public readonly pageIndex = computed(() => this.currentPageIndex());
+    protected readonly pageIndex = computed(() => this.currentPageIndex());
     private readonly isMobileSearchOpen = signal(false);
-    public searchForm: FormGroup<RecipeSearchFormGroup>;
-    public readonly isDeleting = this.recipeListFacade.isDeleting;
-    public readonly favoriteLoadingIds = this.recipeListFacade.favoriteLoadingIds;
+    protected searchForm: FormGroup<RecipeSearchFormGroup>;
+    protected readonly isDeleting = this.recipeListFacade.isDeleting;
+    protected readonly favoriteLoadingIds = this.recipeListFacade.favoriteLoadingIds;
 
     public constructor() {
         this.searchForm = new FormGroup<RecipeSearchFormGroup>({
@@ -153,21 +153,21 @@ export class RecipeListComponent {
             .subscribe();
     }
 
-    public resolveImage(recipe: Recipe): string | undefined {
+    protected resolveImage(recipe: Recipe): string | undefined {
         return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
     }
 
-    public retryLoad(): void {
+    protected retryLoad(): void {
         this.recipeListFacade
             .loadInitialOverview(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
             .subscribe();
     }
 
-    public async onAddRecipeClickAsync(): Promise<void> {
+    protected async onAddRecipeClickAsync(): Promise<void> {
         await this.recipeListFacade.navigateToAddRecipeAsync();
     }
 
-    public onRecipeClick(recipe: Recipe): void {
+    protected onRecipeClick(recipe: Recipe): void {
         void this.openRecipeDetailAsync(recipe);
     }
 
@@ -200,7 +200,7 @@ export class RecipeListComponent {
             });
     }
 
-    public onPageChange(pageIndex: number): void {
+    protected onPageChange(pageIndex: number): void {
         this.scrollToTop();
         this.currentPageIndex.set(pageIndex);
         this.recipeListFacade
@@ -213,11 +213,11 @@ export class RecipeListComponent {
             .subscribe();
     }
 
-    public toggleMobileSearch(): void {
+    protected toggleMobileSearch(): void {
         this.isMobileSearchOpen.update(value => !value);
     }
 
-    public openFilters(): void {
+    protected openFilters(): void {
         const currentOnlyMine = this.searchForm.controls.onlyMine.value;
         this.fdDialogService
             .open<RecipeListFiltersDialogComponent, { onlyMine: boolean }, RecipeListFiltersDialogResult | null>(
@@ -237,27 +237,27 @@ export class RecipeListComponent {
             });
     }
 
-    public clearSearch(): void {
+    protected clearSearch(): void {
         this.searchForm.controls.search.setValue('');
     }
 
-    public onAddToMeal(recipe: Recipe): void {
+    protected onAddToMeal(recipe: Recipe): void {
         this.recipeListFacade.addToMeal(recipe);
     }
 
-    public loadFavorites(): void {
+    protected loadFavorites(): void {
         this.recipeListFacade.loadFavorites().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
-    public onRecipeFavoriteToggle(recipe: Recipe): void {
+    protected onRecipeFavoriteToggle(recipe: Recipe): void {
         this.recipeListFacade.toggleRecipeFavorite(recipe).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
-    public toggleFavorites(): void {
+    protected toggleFavorites(): void {
         this.isFavoritesOpen.update(value => !value);
     }
 
-    public openFavoriteRecipe(favorite: FavoriteRecipe): void {
+    protected openFavoriteRecipe(favorite: FavoriteRecipe): void {
         this.recipeListFacade
             .getFavoriteRecipe(favorite)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -268,7 +268,7 @@ export class RecipeListComponent {
             });
     }
 
-    public addFavoriteRecipeToMeal(favorite: FavoriteRecipe): void {
+    protected addFavoriteRecipeToMeal(favorite: FavoriteRecipe): void {
         this.recipeListFacade
             .getFavoriteRecipe(favorite)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -279,7 +279,7 @@ export class RecipeListComponent {
             });
     }
 
-    public removeFavorite(favorite: FavoriteRecipe): void {
+    protected removeFavorite(favorite: FavoriteRecipe): void {
         this.recipeListFacade.removeFavorite(favorite).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 

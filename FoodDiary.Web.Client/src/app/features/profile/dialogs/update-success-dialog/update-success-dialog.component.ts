@@ -14,7 +14,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 export class UpdateSuccessDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<UpdateSuccessDialogComponent, boolean>);
 
-    public close(redirectHome: boolean): void {
+    protected close(redirectHome: boolean): void {
         this.dialogRef.close(redirectHome);
     }
 }

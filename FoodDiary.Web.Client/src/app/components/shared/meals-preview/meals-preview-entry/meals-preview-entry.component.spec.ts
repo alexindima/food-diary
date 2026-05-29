@@ -22,7 +22,7 @@ describe('MealsPreviewEntryComponent', () => {
         const fixture = await setupMealsPreviewEntryAsync({ slot: 'breakfast', meal: null });
         const component = fixture.componentInstance;
         const addSpy = vi.fn();
-        component.add.subscribe(addSpy);
+        component['add'].subscribe(addSpy);
         fixture.detectChanges();
 
         const addButton = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.meals-preview__placeholder-main');

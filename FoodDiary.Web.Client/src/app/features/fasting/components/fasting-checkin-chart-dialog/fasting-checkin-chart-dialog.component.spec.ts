@@ -78,8 +78,8 @@ describe('FastingCheckInChartDialogComponent', () => {
         const fixture = TestBed.createComponent(FastingCheckInChartDialogComponent);
         const component = fixture.componentInstance;
 
-        const points = component.points();
-        const chartSeries = component.chartSeries();
+        const points = component['points']();
+        const chartSeries = component['chartSeries']();
 
         expect(points.map(point => point.checkedInAtUtc)).toEqual(['2026-04-12T11:00:00Z', '2026-04-12T12:30:00Z']);
         expect(chartSeries).toHaveLength(CHECK_IN_METRIC_COUNT);

@@ -13,8 +13,8 @@ describe('LessonsListPageComponent', () => {
         const component = createComponent(facade);
 
         expect(facade.loadLessons).toHaveBeenCalledWith();
-        expect(component.progress()).toEqual({ read: 1, total: 1, percent: 100 });
-        expect(component.lessons()[0]).toMatchObject({
+        expect(component['progress']()).toEqual({ read: 1, total: 1, percent: 100 });
+        expect(component['lessons']()[0]).toMatchObject({
             categoryLabelKey: 'LESSONS.CATEGORY.Macronutrients',
             difficultyLabelKey: 'LESSONS.DIFFICULTY.Beginner',
         });
@@ -24,7 +24,7 @@ describe('LessonsListPageComponent', () => {
         const facade = createFacadeStub();
         const component = createComponent(facade);
 
-        component.filterByCategory('Hydration');
+        component['filterByCategory']('Hydration');
 
         expect(facade.loadLessons).toHaveBeenLastCalledWith('Hydration');
     });
@@ -34,7 +34,7 @@ describe('LessonsListPageComponent', () => {
         const router = createRouterStub();
         const component = createComponent(facade, router);
 
-        component.openLesson('lesson-1');
+        component['openLesson']('lesson-1');
 
         expect(router.navigate).toHaveBeenCalledWith(['/lessons', 'lesson-1']);
     });

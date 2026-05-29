@@ -19,16 +19,16 @@ describe('TdeeInsightCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.effectiveTdee()).toBe(ADAPTIVE_TDEE);
+        expect(component['effectiveTdee']()).toBe(ADAPTIVE_TDEE);
     });
 
     it('emits suggested target and stops click propagation', async () => {
         const { component } = await setupComponentAsync(createInsight());
         const applySpy = vi.fn();
         const stopPropagation = vi.fn();
-        component.applyGoal.subscribe(applySpy);
+        component['applyGoal'].subscribe(applySpy);
 
-        component.onApplyGoal({ stopPropagation } as unknown as Event);
+        component['onApplyGoal']({ stopPropagation } as unknown as Event);
 
         expect(stopPropagation).toHaveBeenCalledTimes(1);
         expect(applySpy).toHaveBeenCalledWith(SUGGESTED_TARGET);
@@ -37,9 +37,9 @@ describe('TdeeInsightCardComponent', () => {
     it('does not emit when suggested target is missing', async () => {
         const { component } = await setupComponentAsync({ ...createInsight(), suggestedCalorieTarget: null });
         const applySpy = vi.fn();
-        component.applyGoal.subscribe(applySpy);
+        component['applyGoal'].subscribe(applySpy);
 
-        component.onApplyGoal();
+        component['onApplyGoal']();
 
         expect(applySpy).not.toHaveBeenCalled();
     });

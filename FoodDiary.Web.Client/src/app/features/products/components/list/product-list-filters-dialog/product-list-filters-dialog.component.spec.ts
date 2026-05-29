@@ -41,24 +41,24 @@ describe('ProductListFiltersDialogComponent', () => {
     it('should initialize with provided filter data', () => {
         createComponent({ onlyMine: true, productTypes: [ProductType.Dairy] });
 
-        expect(component.visibilityValue).toBe('mine');
-        expect(component.selectedTypeValues()).toEqual([ProductType.Dairy]);
+        expect(component['visibilityValue']).toBe('mine');
+        expect(component['selectedTypeValues']()).toEqual([ProductType.Dairy]);
     });
 
     it('should update product type selection', () => {
         createComponent();
 
-        component.onSelectedTypesChange([ProductType.Fruit, ProductType.Grain]);
+        component['onSelectedTypesChange']([ProductType.Fruit, ProductType.Grain]);
 
-        expect(component.selectedTypeValues()).toEqual([ProductType.Fruit, ProductType.Grain]);
+        expect(component['selectedTypeValues']()).toEqual([ProductType.Fruit, ProductType.Grain]);
     });
 
     it('should apply filters on submit', () => {
         createComponent({ onlyMine: false, productTypes: [] });
 
-        component.onVisibilityChange('mine');
-        component.onSelectedTypesChange([ProductType.Seafood]);
-        component.onApply();
+        component['onVisibilityChange']('mine');
+        component['onSelectedTypesChange']([ProductType.Seafood]);
+        component['onApply']();
 
         const result = dialogRefSpy.close.mock.calls[0]?.[0] as ProductListFiltersDialogData | undefined;
 
@@ -69,7 +69,7 @@ describe('ProductListFiltersDialogComponent', () => {
     it('should cancel without applying', () => {
         createComponent();
 
-        component.onCancel();
+        component['onCancel']();
 
         expect(dialogRefSpy.close).toHaveBeenCalledWith(null);
     });

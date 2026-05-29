@@ -19,7 +19,7 @@ export class UserManageConnectedDevicesComponent {
     public readonly pushNotificationsBusy = input.required<boolean>();
     public readonly removingEndpoint = input.required<string | null>();
 
-    public readonly state = computed<ConnectedDevicesSectionState>(() => {
+    protected readonly state = computed<ConnectedDevicesSectionState>(() => {
         if (this.isLoading()) {
             return 'loading';
         }

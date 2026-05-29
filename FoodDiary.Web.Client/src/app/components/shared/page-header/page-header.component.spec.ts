@@ -50,7 +50,7 @@ describe('PageHeaderComponent', () => {
 
     it('should default stickyOnMobile to true', () => {
         fixture.detectChanges();
-        expect(component.stickyOnMobile()).toBe(true);
+        expect(component['stickyOnMobile']()).toBe(true);
     });
 
     it('should apply mobile-static host class when stickyOnMobile is false', () => {

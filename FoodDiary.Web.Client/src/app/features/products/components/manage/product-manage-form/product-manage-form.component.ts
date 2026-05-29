@@ -109,15 +109,15 @@ export class ProductManageFormComponent {
     public readonly mode = input<ProductManageMode>('page');
     public readonly saved = output<Product>();
     public readonly cancelled = output();
-    public readonly globalError = signal<string | null>(null);
+    protected readonly globalError = signal<string | null>(null);
     private populatedProduct: Product | null = null;
     private appliedPrefillKey: string | null = null;
     private usdaDetailRequestId = 0;
-    public readonly isDeleting = signal(false);
-    public readonly isSubmitting = signal(false);
+    protected readonly isDeleting = signal(false);
+    protected readonly isSubmitting = signal(false);
 
-    public productForm: FormGroup<ProductFormData>;
-    public nutritionMode: NutritionMode = 'base';
+    protected productForm: FormGroup<ProductFormData>;
+    protected nutritionMode: NutritionMode = 'base';
 
     public constructor() {
         this.productForm = createProductForm();
@@ -192,11 +192,11 @@ export class ProductManageFormComponent {
         return barcode === undefined || barcode.length === 0 ? null : `barcode:${barcode}`;
     }
 
-    public readonly canShowDeleteButton = computed(() => {
+    protected readonly canShowDeleteButton = computed(() => {
         const currentProduct = this.product();
         return currentProduct?.isOwnedByCurrentUser === true;
     });
-    public readonly manageHeaderState = computed<ProductManageHeaderState>(() => {
+    protected readonly manageHeaderState = computed<ProductManageHeaderState>(() => {
         const isEdit = this.product() !== null;
 
         return {
@@ -206,7 +206,7 @@ export class ProductManageFormComponent {
         };
     });
 
-    public openBarcodeScanner(): void {
+    protected openBarcodeScanner(): void {
         this.fdDialogService
             .open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, { size: 'lg' })
             .afterClosed()
@@ -243,7 +243,7 @@ export class ProductManageFormComponent {
         this.productForm.patchValue(buildUsdaFoodDetailPrefillPatch(detail));
     }
 
-    public openAiRecognitionDialog(): void {
+    protected openAiRecognitionDialog(): void {
         if (!this.ensurePremiumAccess()) {
             return;
         }
@@ -268,7 +268,7 @@ export class ProductManageFormComponent {
             });
     }
 
-    public async onCancelAsync(): Promise<void> {
+    protected async onCancelAsync(): Promise<void> {
         if (this.mode() === 'dialog') {
             this.cancelled.emit();
             return;
@@ -284,7 +284,7 @@ export class ProductManageFormComponent {
         await this.navigationService.navigateToProductListAsync();
     }
 
-    public async onDeleteProductAsync(): Promise<void> {
+    protected async onDeleteProductAsync(): Promise<void> {
         const currentProduct = this.product();
 
         if (currentProduct === null || !currentProduct.isOwnedByCurrentUser || this.isDeleting() || this.isSubmitting()) {
@@ -314,7 +314,7 @@ export class ProductManageFormComponent {
         }
     }
 
-    public async onSubmitAsync(): Promise<Product | null> {
+    protected async onSubmitAsync(): Promise<Product | null> {
         if (this.isSubmitting() || this.isDeleting()) {
             return null;
         }
@@ -345,7 +345,7 @@ export class ProductManageFormComponent {
         }
     }
 
-    public onNutritionModeChange(nextMode: string): void {
+    protected onNutritionModeChange(nextMode: string): void {
         const resolvedMode: NutritionMode = nextMode === 'portion' ? 'portion' : 'base';
         if (resolvedMode === this.nutritionMode) {
             return;
@@ -362,11 +362,11 @@ export class ProductManageFormComponent {
         this.nutritionMode = resolvedMode;
     }
 
-    public onNameQueryChange(query: string): void {
+    protected onNameQueryChange(query: string): void {
         this.nameSearch.search(query);
     }
 
-    public onNameSuggestionSelected(suggestion: ProductNameSuggestion): void {
+    protected onNameSuggestionSelected(suggestion: ProductNameSuggestion): void {
         if (suggestion.source === 'usda') {
             const fdcId = suggestion.usdaFdcId;
             if (fdcId === null || fdcId === undefined) {

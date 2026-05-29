@@ -20,8 +20,8 @@ export class RecipeListResultsComponent {
     public readonly allRecipesSectionLabelKey = input.required<string>();
     public readonly emptyState = input.required<RecipeListEmptyState>();
     public readonly favoriteLoadingIds = input.required<ReadonlySet<string>>();
-    public readonly showRecentSection = computed(() => this.recentRecipeItems().length > 0);
-    public readonly hasVisibleRecipes = computed(() => this.showRecentSection() || this.allRecipeItems().length > 0);
+    protected readonly showRecentSection = computed(() => this.recentRecipeItems().length > 0);
+    protected readonly hasVisibleRecipes = computed(() => this.showRecentSection() || this.allRecipeItems().length > 0);
 
     public readonly recipeOpen = output<Recipe>();
     public readonly recipeAddToMeal = output<Recipe>();

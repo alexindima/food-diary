@@ -45,13 +45,13 @@ describe('FdUiConfirmDialogComponent', () => {
 
     it('should close with true on confirm', () => {
         createComponent({ title: 'Confirm', message: 'Proceed?' });
-        component.onConfirm();
+        component['onConfirm']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
     });
 
     it('should close with false on cancel', () => {
         createComponent({ title: 'Confirm', message: 'Proceed?' });
-        component.onCancel();
+        component['onCancel']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
     });
 

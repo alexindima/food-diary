@@ -31,17 +31,17 @@ export class RecipeCommentsComponent {
 
     public readonly recipeId = input.required<string>();
 
-    public readonly comments = signal<RecipeComment[]>([]);
-    public readonly isLoading = signal(false);
-    public readonly totalItems = signal(0);
-    public readonly currentPage = signal(1);
-    public readonly pageSize = COMMENTS_PAGE_SIZE;
-    public readonly commentControl = new FormControl('', [Validators.required, Validators.maxLength(COMMENT_MAX_LENGTH)]);
-    public readonly editingCommentId = signal<string | null>(null);
-    public readonly isSubmitting = signal(false);
-    public readonly hasMore = computed(() => this.comments().length < this.totalItems());
-    public readonly submitLabelKey = computed(() => (this.editingCommentId() !== null ? 'COMMON.SAVE' : 'COMMENTS.POST'));
-    public readonly commentItems = computed<RecipeCommentViewModel[]>(() => {
+    protected readonly comments = signal<RecipeComment[]>([]);
+    protected readonly isLoading = signal(false);
+    protected readonly totalItems = signal(0);
+    protected readonly currentPage = signal(1);
+    protected readonly pageSize = COMMENTS_PAGE_SIZE;
+    protected readonly commentControl = new FormControl('', [Validators.required, Validators.maxLength(COMMENT_MAX_LENGTH)]);
+    protected readonly editingCommentId = signal<string | null>(null);
+    protected readonly isSubmitting = signal(false);
+    protected readonly hasMore = computed(() => this.comments().length < this.totalItems());
+    protected readonly submitLabelKey = computed(() => (this.editingCommentId() !== null ? 'COMMON.SAVE' : 'COMMENTS.POST'));
+    protected readonly commentItems = computed<RecipeCommentViewModel[]>(() => {
         this.languageVersion();
         return buildRecipeCommentViewModels(this.comments(), this.translateService.getCurrentLang());
     });
@@ -62,7 +62,7 @@ export class RecipeCommentsComponent {
         });
     }
 
-    public onSubmit(): void {
+    protected onSubmit(): void {
         const text = (this.commentControl.value ?? '').trim();
         if (text.length === 0 || this.commentControl.invalid || this.isSubmitting()) {
             return;
@@ -91,17 +91,17 @@ export class RecipeCommentsComponent {
             });
     }
 
-    public onEdit(comment: RecipeComment): void {
+    protected onEdit(comment: RecipeComment): void {
         this.editingCommentId.set(comment.id);
         this.commentControl.setValue(comment.text);
     }
 
-    public onCancelEdit(): void {
+    protected onCancelEdit(): void {
         this.editingCommentId.set(null);
         this.commentControl.reset();
     }
 
-    public onDelete(comment: RecipeComment): void {
+    protected onDelete(comment: RecipeComment): void {
         this.fdDialogService
             .open(FdUiConfirmDialogComponent, {
                 size: 'sm',
@@ -121,7 +121,7 @@ export class RecipeCommentsComponent {
             });
     }
 
-    public onLoadMore(): void {
+    protected onLoadMore(): void {
         const nextPage = this.currentPage() + 1;
         this.currentPage.set(nextPage);
         this.loadComments(nextPage, true);

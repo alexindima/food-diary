@@ -17,13 +17,13 @@ import { ImageUploadFieldComponent } from '../../image-upload-field/image-upload
 export class PhotoUploadDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<PhotoUploadDialogComponent, ImageSelection | null>, { optional: true });
 
-    public onImageChanged(selection: ImageSelection | null): void {
+    protected onImageChanged(selection: ImageSelection | null): void {
         if ((selection?.assetId ?? '').trim().length > 0) {
             this.dialogRef?.close(selection);
         }
     }
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef?.close(null);
     }
 }

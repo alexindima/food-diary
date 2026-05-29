@@ -51,7 +51,7 @@ describe('ManageHeaderComponent', () => {
         fixture.detectChanges();
 
         const backSpy = vi.fn();
-        component.back.subscribe(backSpy);
+        component['back'].subscribe(backSpy);
 
         const el = fixture.nativeElement as HTMLElement;
         const backBtn = el.querySelector<HTMLElement>('.fd-manage-header__back');
@@ -62,11 +62,11 @@ describe('ManageHeaderComponent', () => {
 
     it('should default mobileBackOnly to true', () => {
         fixture.detectChanges();
-        expect(component.mobileBackOnly()).toBe(true);
+        expect(component['mobileBackOnly']()).toBe(true);
     });
 
     it('should default backAriaLabel to "Back"', () => {
         fixture.detectChanges();
-        expect(component.backAriaLabel()).toBe('Back');
+        expect(component['backAriaLabel']()).toBe('Back');
     });
 });

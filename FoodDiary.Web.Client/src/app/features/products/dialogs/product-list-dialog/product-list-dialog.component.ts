@@ -46,7 +46,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
         optional: true,
     });
 
-    public override onAddProductClick(): void {
+    protected override onAddProductClick(): void {
         this.fdDialogService
             .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
                 preset: 'fullscreen',

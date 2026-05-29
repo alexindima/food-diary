@@ -28,6 +28,6 @@ describe('RecipeEditComponent', () => {
         fixture.componentRef.setInput('recipe', recipe);
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.recipe()).toEqual(recipe);
+        expect(fixture.componentInstance['recipe']()).toEqual(recipe);
     });
 });

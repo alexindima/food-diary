@@ -25,12 +25,12 @@ export class HydrationCardComponent {
     public readonly addClick = output<number>();
     public readonly goalAction = output();
 
-    public readonly addAmount = computed(() => Math.max(1, this.addStep));
-    public readonly hasGoal = computed(() => {
+    protected readonly addAmount = computed(() => Math.max(1, this.addStep));
+    protected readonly hasGoal = computed(() => {
         const goal = this.goal();
         return goal !== null && goal > 0;
     });
-    public readonly percent = computed(() => {
+    protected readonly percent = computed(() => {
         if (!this.hasGoal()) {
             return 0;
         }
@@ -38,16 +38,16 @@ export class HydrationCardComponent {
         return Math.max(0, Math.min(value, HYDRATION_CARD_MAX_PERCENT)); // allow slight overflow visualization
     });
 
-    public readonly trackWidth = computed(() => `${Math.min(this.percent(), HYDRATION_CARD_TRACK_WIDTH_MAX_PERCENT)}%`);
+    protected readonly trackWidth = computed(() => `${Math.min(this.percent(), HYDRATION_CARD_TRACK_WIDTH_MAX_PERCENT)}%`);
 
-    public onAdd(): void {
+    protected onAdd(): void {
         if (!this.canAdd()) {
             return;
         }
         this.addClick.emit(this.addAmount());
     }
 
-    public onGoalAction(): void {
+    protected onGoalAction(): void {
         this.goalAction.emit();
     }
 }

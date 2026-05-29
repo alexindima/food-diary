@@ -26,7 +26,7 @@ export class CalorieGoalDialogComponent {
     private readonly data = inject<CalorieGoalDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly goalsService = inject(GoalsService);
 
-    public readonly form = new FormGroup({
+    protected readonly form = new FormGroup({
         dailyCalorieTarget: new FormControl<number | null>(null, [Validators.min(0)]),
     });
 
@@ -36,7 +36,7 @@ export class CalorieGoalDialogComponent {
         }
     }
 
-    public save(): void {
+    protected save(): void {
         this.form.markAllAsTouched();
         if (this.form.invalid) {
             return;
@@ -56,7 +56,7 @@ export class CalorieGoalDialogComponent {
         });
     }
 
-    public cancel(): void {
+    protected cancel(): void {
         this.dialogRef.close(false);
     }
 }

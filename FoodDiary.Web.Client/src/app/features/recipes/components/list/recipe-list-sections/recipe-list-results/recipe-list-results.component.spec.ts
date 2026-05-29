@@ -9,8 +9,8 @@ describe('RecipeListResultsComponent', () => {
     it('derives visible recipes from recent and all recipe items', () => {
         const { component } = setupComponent({ recentCount: 1, allCount: 0 });
 
-        expect(component.showRecentSection()).toBe(true);
-        expect(component.hasVisibleRecipes()).toBe(true);
+        expect(component['showRecentSection']()).toBe(true);
+        expect(component['hasVisibleRecipes']()).toBe(true);
     });
 
     it('renders empty state when no items and empty state is provided', () => {

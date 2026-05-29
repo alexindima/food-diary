@@ -46,10 +46,10 @@ export class ProductNutritionEditorComponent {
 
     public readonly formGroup = input.required<FormGroup<ProductFormData>>();
     public readonly nutritionMode = input.required<NutritionMode>();
-    public readonly macroBarState = signal<NutritionMacroState>({ isEmpty: true, segments: [] });
-    public readonly nutritionWarning = signal<NutritionMismatchWarning | null>(null);
-    public readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
-    public readonly nutritionControlNames: NutritionControlNames = {
+    protected readonly macroBarState = signal<NutritionMacroState>({ isEmpty: true, segments: [] });
+    protected readonly nutritionWarning = signal<NutritionMismatchWarning | null>(null);
+    protected readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
+    protected readonly nutritionControlNames: NutritionControlNames = {
         calories: 'caloriesPerBase',
         proteins: 'proteinsPerBase',
         fats: 'fatsPerBase',
@@ -95,12 +95,12 @@ export class ProductNutritionEditorComponent {
         });
     }
 
-    public caloriesError(): string | null {
+    protected caloriesError(): string | null {
         const control = this.formGroup().controls.caloriesPerBase;
         return checkCaloriesError(control) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED') : null;
     }
 
-    public macrosError(): string | null {
+    protected macrosError(): string | null {
         const controls = [
             this.formGroup().controls.proteinsPerBase,
             this.formGroup().controls.fatsPerBase,

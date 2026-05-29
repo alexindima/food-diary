@@ -46,22 +46,22 @@ export class ShoppingListPageComponent {
     private readonly viewportService = inject(ViewportService);
     private readonly facade = inject(ShoppingListFacade);
 
-    public readonly list = this.facade.list;
-    public readonly items = this.facade.items;
-    public readonly isLoading = this.facade.isLoading;
-    public readonly isSaving = this.facade.isSaving;
-    public readonly lists = this.facade.lists;
-    public readonly isMobileView = this.viewportService.isMobile;
-    public readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
-    public readonly canDeleteList = computed(
+    protected readonly list = this.facade.list;
+    protected readonly items = this.facade.items;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly isSaving = this.facade.isSaving;
+    protected readonly lists = this.facade.lists;
+    protected readonly isMobileView = this.viewportService.isMobile;
+    protected readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
+    protected readonly canDeleteList = computed(
         () => this.lists().length > 1 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
-    public readonly canClearList = computed(
+    protected readonly canClearList = computed(
         () => this.lists().length === 1 && this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
-    public readonly listSelectControl = new FormControl<string | null>(null);
-    public readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
-    public readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
+    protected readonly listSelectControl = new FormControl<string | null>(null);
+    protected readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
+    protected readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
 
     private readonly isMobileManageOpen = signal(false);
 
@@ -106,7 +106,7 @@ export class ShoppingListPageComponent {
         this.facade.initialize();
     }
 
-    public addItem(): void {
+    protected addItem(): void {
         this.itemForm.markAllAsTouched();
         if (this.itemForm.invalid) {
             return;
@@ -132,19 +132,19 @@ export class ShoppingListPageComponent {
         });
     }
 
-    public removeItem(itemId: string): void {
+    protected removeItem(itemId: string): void {
         this.facade.removeItem(itemId);
     }
 
-    public toggleItemChecked(itemId: string, checked: boolean): void {
+    protected toggleItemChecked(itemId: string, checked: boolean): void {
         this.facade.toggleItemChecked(itemId, checked);
     }
 
-    public toggleMobileManage(): void {
+    protected toggleMobileManage(): void {
         this.isMobileManageOpen.update(value => !value);
     }
 
-    public deleteCurrentList(): void {
+    protected deleteCurrentList(): void {
         const current = this.list();
         if (current === null || !this.canDeleteList()) {
             return;
@@ -173,7 +173,7 @@ export class ShoppingListPageComponent {
             });
     }
 
-    public clearCurrentList(): void {
+    protected clearCurrentList(): void {
         const current = this.list();
         if (current === null || !this.canClearList()) {
             return;
@@ -202,7 +202,7 @@ export class ShoppingListPageComponent {
             });
     }
 
-    public createNewList(): void {
+    protected createNewList(): void {
         this.facade.createNewList();
     }
 }

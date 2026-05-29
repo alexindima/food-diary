@@ -55,49 +55,49 @@ export class FastingControlsComponent {
     private readonly localizationService = inject(LocalizationService);
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
 
-    public readonly isActive = this.facade.isActive;
-    public readonly currentSession = this.facade.currentSession;
-    public readonly selectedMode = this.facade.selectedMode;
-    public readonly selectedProtocol = this.facade.selectedProtocol;
-    public readonly customHours = this.facade.customHours;
-    public readonly customIntermittentFastHours = this.facade.customIntermittentFastHours;
-    public readonly cyclicEatDayProtocol = this.facade.cyclicEatDayProtocol;
-    public readonly cyclicFastDays = this.facade.cyclicFastDays;
-    public readonly cyclicEatDays = this.facade.cyclicEatDays;
-    public readonly cyclicUsesCustomPreset = this.facade.cyclicUsesCustomPreset;
-    public readonly cyclicEatDayFastHours = this.facade.cyclicEatDayFastHours;
-    public readonly extendHours = this.facade.extendHours;
-    public readonly reduceHours = this.facade.reduceHours;
-    public readonly isStarting = this.facade.isStarting;
-    public readonly isEnding = this.facade.isEnding;
-    public readonly isExtending = this.facade.isExtending;
-    public readonly isReducing = this.facade.isReducing;
-    public readonly isUpdatingCycle = this.facade.isUpdatingCycle;
-    public readonly canExtendActiveSession = this.facade.canExtendActiveSession;
+    protected readonly isActive = this.facade.isActive;
+    protected readonly currentSession = this.facade.currentSession;
+    protected readonly selectedMode = this.facade.selectedMode;
+    protected readonly selectedProtocol = this.facade.selectedProtocol;
+    protected readonly customHours = this.facade.customHours;
+    protected readonly customIntermittentFastHours = this.facade.customIntermittentFastHours;
+    protected readonly cyclicEatDayProtocol = this.facade.cyclicEatDayProtocol;
+    protected readonly cyclicFastDays = this.facade.cyclicFastDays;
+    protected readonly cyclicEatDays = this.facade.cyclicEatDays;
+    protected readonly cyclicUsesCustomPreset = this.facade.cyclicUsesCustomPreset;
+    protected readonly cyclicEatDayFastHours = this.facade.cyclicEatDayFastHours;
+    protected readonly extendHours = this.facade.extendHours;
+    protected readonly reduceHours = this.facade.reduceHours;
+    protected readonly isStarting = this.facade.isStarting;
+    protected readonly isEnding = this.facade.isEnding;
+    protected readonly isExtending = this.facade.isExtending;
+    protected readonly isReducing = this.facade.isReducing;
+    protected readonly isUpdatingCycle = this.facade.isUpdatingCycle;
+    protected readonly canExtendActiveSession = this.facade.canExtendActiveSession;
 
-    public readonly isCustomExtendExpanded = signal(false);
-    public readonly isCustomReduceExpanded = signal(false);
-    public readonly isExtendPanelExpanded = signal(false);
-    public readonly isReducePanelExpanded = signal(false);
-    public readonly isActiveExtendedSession = computed(() => this.currentSession()?.planType === 'Extended' && this.isActive());
-    public readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
-    public readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
-    public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
-    public readonly cyclicPresets = CYCLIC_PRESETS;
-    public readonly customIntermittentEatingWindowHours = computed(() =>
+    protected readonly isCustomExtendExpanded = signal(false);
+    protected readonly isCustomReduceExpanded = signal(false);
+    protected readonly isExtendPanelExpanded = signal(false);
+    protected readonly isReducePanelExpanded = signal(false);
+    protected readonly isActiveExtendedSession = computed(() => this.currentSession()?.planType === 'Extended' && this.isActive());
+    protected readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
+    protected readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
+    protected readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
+    protected readonly cyclicPresets = CYCLIC_PRESETS;
+    protected readonly customIntermittentEatingWindowHours = computed(() =>
         Math.max(MIN_FASTING_HOURS, HOURS_PER_DAY - this.customIntermittentFastHours()),
     );
-    public readonly cyclicEatDayEatingWindowHours = computed(() =>
+    protected readonly cyclicEatDayEatingWindowHours = computed(() =>
         Math.max(MIN_FASTING_HOURS, HOURS_PER_DAY - this.cyclicEatDayFastHours()),
     );
-    public readonly endActionLabelKey = computed(() => {
+    protected readonly endActionLabelKey = computed(() => {
         if (this.isCurrentSessionCyclic()) {
             return 'FASTING.STOP_CYCLE';
         }
 
         return this.isCurrentSessionIntermittent() ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST';
     });
-    public readonly canManageCurrentCyclicDay = computed(() => {
+    protected readonly canManageCurrentCyclicDay = computed(() => {
         const session = this.currentSession();
         return (
             session !== null &&
@@ -106,22 +106,22 @@ export class FastingControlsComponent {
             (session.occurrenceKind === 'FastDay' || session.occurrenceKind === 'EatDay')
         );
     });
-    public readonly skipCycleActionLabelKey = computed(() =>
+    protected readonly skipCycleActionLabelKey = computed(() =>
         this.getCurrentCyclicOccurrenceKind() === 'EatDay' ? 'FASTING.START_FAST_NOW' : 'FASTING.SKIP_FASTING_PERIOD',
     );
-    public readonly postponeCycleActionLabelKey = computed(() => 'FASTING.SKIP_DAY');
-    public readonly isCustomCyclicPresetSelected = computed(() => this.cyclicUsesCustomPreset());
-    public readonly modeOptions = computed(() =>
+    protected readonly postponeCycleActionLabelKey = computed(() => 'FASTING.SKIP_DAY');
+    protected readonly isCustomCyclicPresetSelected = computed(() => this.cyclicUsesCustomPreset());
+    protected readonly modeOptions = computed(() =>
         this.buildSegmentedToggleOptions([
             { labelKey: 'FASTING.MODE_INTERMITTENT', value: 'intermittent' },
             { labelKey: 'FASTING.MODE_EXTENDED', value: 'extended' },
             { labelKey: 'FASTING.MODE_CYCLIC', value: 'cyclic' },
         ]),
     );
-    public readonly intermittentProtocolOptions = computed(() => this.buildProtocolOptions(this.intermittentProtocols));
-    public readonly extendedProtocolOptions = computed(() => this.buildProtocolOptions(this.extendedProtocols));
-    public readonly cyclicEatDayProtocolOptions = computed(() => this.buildProtocolOptions(this.cyclicEatDayProtocols));
-    public readonly cyclicPresetOptions = computed(() => {
+    protected readonly intermittentProtocolOptions = computed(() => this.buildProtocolOptions(this.intermittentProtocols));
+    protected readonly extendedProtocolOptions = computed(() => this.buildProtocolOptions(this.extendedProtocols));
+    protected readonly cyclicEatDayProtocolOptions = computed(() => this.buildProtocolOptions(this.cyclicEatDayProtocols));
+    protected readonly cyclicPresetOptions = computed(() => {
         this.currentLanguage();
 
         return [
@@ -135,7 +135,7 @@ export class FastingControlsComponent {
             },
         ];
     });
-    public readonly selectedCyclicPresetValue = computed(() => {
+    protected readonly selectedCyclicPresetValue = computed(() => {
         if (this.isCustomCyclicPresetSelected()) {
             return 'custom';
         }
@@ -151,33 +151,33 @@ export class FastingControlsComponent {
             });
     }
 
-    public onModeChange(mode: string): void {
+    protected onModeChange(mode: string): void {
         if (this.isFastingMode(mode)) {
             this.facade.selectMode(mode);
         }
     }
 
-    public onProtocolChange(protocol: string): void {
+    protected onProtocolChange(protocol: string): void {
         if (this.isFastingProtocol(protocol)) {
             this.facade.selectProtocol(protocol);
         }
     }
 
-    public onCustomHoursChange(value: string | number): void {
+    protected onCustomHoursChange(value: string | number): void {
         const hours = parseIntegerInput(value);
         if (hours !== null) {
             this.facade.setCustomHours(hours);
         }
     }
 
-    public onCustomIntermittentFastHoursChange(value: string | number): void {
+    protected onCustomIntermittentFastHoursChange(value: string | number): void {
         const hours = parseIntegerInput(value);
         if (hours !== null) {
             this.facade.setCustomIntermittentFastHours(hours);
         }
     }
 
-    public onCyclicPresetChange(value: string): void {
+    protected onCyclicPresetChange(value: string): void {
         if (value === 'custom') {
             this.facade.selectCustomCyclicPreset();
             return;
@@ -194,38 +194,38 @@ export class FastingControlsComponent {
         this.facade.setCyclicPreset(fastDays, eatDays);
     }
 
-    public onCyclicFastDaysChange(value: string | number): void {
+    protected onCyclicFastDaysChange(value: string | number): void {
         const days = parseIntegerInput(value);
         if (days !== null) {
             this.facade.setCyclicFastDays(days);
         }
     }
 
-    public onCyclicEatDaysChange(value: string | number): void {
+    protected onCyclicEatDaysChange(value: string | number): void {
         const days = parseIntegerInput(value);
         if (days !== null) {
             this.facade.setCyclicEatDays(days);
         }
     }
 
-    public onCyclicEatDayProtocolChange(protocol: string): void {
+    protected onCyclicEatDayProtocolChange(protocol: string): void {
         if (this.isFastingProtocol(protocol)) {
             this.facade.selectCyclicEatDayProtocol(protocol);
         }
     }
 
-    public onCyclicEatDayFastHoursChange(value: string | number): void {
+    protected onCyclicEatDayFastHoursChange(value: string | number): void {
         const hours = parseIntegerInput(value);
         if (hours !== null) {
             this.facade.setCyclicEatDayFastHours(hours);
         }
     }
 
-    public startFasting(): void {
+    protected startFasting(): void {
         this.facade.startFasting();
     }
 
-    public endFasting(): void {
+    protected endFasting(): void {
         this.dialogService
             .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
                 FastingEndConfirmDialogComponent,
@@ -243,67 +243,67 @@ export class FastingControlsComponent {
             });
     }
 
-    public onExtendHoursChange(value: string | number): void {
+    protected onExtendHoursChange(value: string | number): void {
         const hours = parseIntegerInput(value);
         if (hours !== null) {
             this.facade.setExtendHours(hours);
         }
     }
 
-    public onReduceHoursChange(value: string | number): void {
+    protected onReduceHoursChange(value: string | number): void {
         const hours = parseIntegerInput(value);
         if (hours !== null) {
             this.facade.setReduceHours(hours);
         }
     }
 
-    public extendByDay(): void {
+    protected extendByDay(): void {
         this.isCustomExtendExpanded.set(false);
         this.requestExtendByHours(EXTEND_DAY_HOURS);
     }
 
-    public extendBy36Hours(): void {
+    protected extendBy36Hours(): void {
         this.isCustomExtendExpanded.set(false);
         this.requestExtendByHours(EXTEND_DAY_AND_HALF_HOURS);
     }
 
-    public extendByCustom(): void {
+    protected extendByCustom(): void {
         this.requestExtendByHours(this.extendHours());
     }
 
-    public showCustomExtend(): void {
+    protected showCustomExtend(): void {
         this.isExtendPanelExpanded.set(true);
         this.isCustomExtendExpanded.set(true);
     }
 
-    public toggleExtendPanel(): void {
+    protected toggleExtendPanel(): void {
         this.isExtendPanelExpanded.update(isExpanded => !isExpanded);
     }
 
-    public reduceBy4Hours(): void {
+    protected reduceBy4Hours(): void {
         this.isCustomReduceExpanded.set(false);
         this.requestReduceByHours(REDUCE_SHORT_HOURS);
     }
 
-    public reduceBy8Hours(): void {
+    protected reduceBy8Hours(): void {
         this.isCustomReduceExpanded.set(false);
         this.requestReduceByHours(REDUCE_LONG_HOURS);
     }
 
-    public reduceByCustom(): void {
+    protected reduceByCustom(): void {
         this.requestReduceByHours(this.reduceHours());
     }
 
-    public showCustomReduce(): void {
+    protected showCustomReduce(): void {
         this.isReducePanelExpanded.set(true);
         this.isCustomReduceExpanded.set(true);
     }
 
-    public toggleReducePanel(): void {
+    protected toggleReducePanel(): void {
         this.isReducePanelExpanded.update(isExpanded => !isExpanded);
     }
 
-    public skipCyclicDay(): void {
+    protected skipCyclicDay(): void {
         this.openCycleActionDialog(
             this.getSkipCycleConfirmTitleKey(),
             this.getSkipCycleConfirmMessageKey(),
@@ -314,7 +314,7 @@ export class FastingControlsComponent {
         );
     }
 
-    public postponeCyclicDay(): void {
+    protected postponeCyclicDay(): void {
         this.openCycleActionDialog(
             this.getPostponeCycleConfirmTitleKey(),
             this.getPostponeCycleConfirmMessageKey(),

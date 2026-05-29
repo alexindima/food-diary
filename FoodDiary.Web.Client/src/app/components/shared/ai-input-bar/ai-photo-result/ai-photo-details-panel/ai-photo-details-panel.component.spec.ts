@@ -38,8 +38,8 @@ describe('AiPhotoDetailsPanelComponent', () => {
         const fixture = await setupAiPhotoDetailsPanelAsync();
         const toggleSpy = vi.fn();
         const submitSpy = vi.fn();
-        fixture.componentInstance.detailsToggle.subscribe(toggleSpy);
-        fixture.componentInstance.mealSubmit.subscribe(submitSpy);
+        fixture.componentInstance['detailsToggle'].subscribe(toggleSpy);
+        fixture.componentInstance['mealSubmit'].subscribe(submitSpy);
         fixture.detectChanges();
 
         (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.ai-photo-result__details-toggle')?.click();

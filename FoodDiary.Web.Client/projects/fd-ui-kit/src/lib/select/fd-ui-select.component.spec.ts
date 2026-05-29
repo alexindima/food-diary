@@ -83,7 +83,7 @@ describe('FdUiSelectComponent CVA', () => {
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
-        component.writeValue('banana');
+        component['writeValue']('banana');
         fixture.detectChanges();
 
         expect(component['internalValue']()).toBe('banana');
@@ -96,8 +96,8 @@ describe('FdUiSelectComponent CVA', () => {
 
         const onChangeSpy = vi.fn();
         const onTouchedSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
-        component.registerOnTouched(onTouchedSpy);
+        component['registerOnChange'](onChangeSpy);
+        component['registerOnTouched'](onTouchedSpy);
 
         component['onOptionSelect'](TEST_OPTIONS[1]);
         fixture.detectChanges();
@@ -113,8 +113,8 @@ describe('FdUiSelectComponent CVA', () => {
         fixture.detectChanges();
 
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
-        component.setDisabledState(true);
+        component['registerOnChange'](onChangeSpy);
+        component['setDisabledState'](true);
 
         component['onOptionSelect'](TEST_OPTIONS[0]);
         fixture.detectChanges();
@@ -125,7 +125,7 @@ describe('FdUiSelectComponent CVA', () => {
 
     it('should set disabled state via CVA', async () => {
         const { component } = await setupSelectAsync();
-        component.setDisabledState(true);
+        component['setDisabledState'](true);
 
         expect(component['disabled']()).toBe(true);
     });
@@ -137,7 +137,7 @@ describe('FdUiSelectComponent computed state', () => {
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
-        component.writeValue('cherry');
+        component['writeValue']('cherry');
         fixture.detectChanges();
 
         expect(component['selectedLabel']()).toBe('Cherry');
@@ -151,7 +151,7 @@ describe('FdUiSelectComponent computed state', () => {
 
         expect(component['shouldFloatLabel']()).toBe(false);
 
-        component.writeValue('apple');
+        component['writeValue']('apple');
 
         expect(component['shouldFloatLabel']()).toBe(true);
     });
@@ -164,7 +164,7 @@ describe('FdUiSelectComponent computed state', () => {
         component['openMenu']();
         fixture.detectChanges();
 
-        expect(component['activeOptionId']()).toBe(`${component.id()}-option-0`);
+        expect(component['activeOptionId']()).toBe(`${component['id']()}-option-0`);
     });
 });
 

@@ -29,22 +29,22 @@ export class RecipeListFiltersDialogComponent {
     private readonly translate = inject(TranslateService);
     private readonly data = inject<RecipeListFiltersDialogData>(FD_UI_DIALOG_DATA);
 
-    public readonly visibilityOptions: FdUiSegmentedToggleOption[] = [
+    protected readonly visibilityOptions: FdUiSegmentedToggleOption[] = [
         { value: 'all', label: this.translate.instant('RECIPE_LIST.FILTER_ALL_RECIPES') },
         { value: 'mine', label: this.translate.instant('RECIPE_LIST.FILTER_MY_RECIPES') },
     ];
 
-    public visibilityValue: 'all' | 'mine' = this.data.onlyMine ? 'mine' : 'all';
+    protected visibilityValue: 'all' | 'mine' = this.data.onlyMine ? 'mine' : 'all';
 
-    public onVisibilityChange(value: string): void {
+    protected onVisibilityChange(value: string): void {
         this.visibilityValue = value === 'mine' ? 'mine' : 'all';
     }
 
-    public onApply(): void {
+    protected onApply(): void {
         this.dialogRef.close({ onlyMine: this.visibilityValue === 'mine' });
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(null);
     }
 }

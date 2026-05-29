@@ -45,34 +45,34 @@ export class MealDetailComponent {
     private readonly translate = inject(TranslateService);
     private readonly mealDetailFacade = inject(MealDetailFacade);
 
-    public readonly isFavorite = this.mealDetailFacade.isFavorite;
-    public readonly isFavoriteLoading = this.mealDetailFacade.isFavoriteLoading;
-    public readonly favoriteIcon = this.mealDetailFacade.favoriteIcon;
-    public readonly favoriteAriaLabelKey = this.mealDetailFacade.favoriteAriaLabelKey;
+    protected readonly isFavorite = this.mealDetailFacade.isFavorite;
+    protected readonly isFavoriteLoading = this.mealDetailFacade.isFavoriteLoading;
+    protected readonly favoriteIcon = this.mealDetailFacade.favoriteIcon;
+    protected readonly favoriteAriaLabelKey = this.mealDetailFacade.favoriteAriaLabelKey;
 
-    public readonly consumption: Meal;
-    public readonly calories: number;
-    public readonly proteins: number;
-    public readonly fats: number;
-    public readonly carbs: number;
-    public readonly fiber: number;
-    public readonly alcohol: number;
-    public readonly formattedDate: string | null;
-    public readonly mealTypeLabel: string | null;
-    public readonly preMealSatietyMeta: MealSatietyMeta;
-    public readonly postMealSatietyMeta: MealSatietyMeta;
-    public readonly tabs: FdUiTab[] = [
+    protected readonly consumption: Meal;
+    protected readonly calories: number;
+    protected readonly proteins: number;
+    protected readonly fats: number;
+    protected readonly carbs: number;
+    protected readonly fiber: number;
+    protected readonly alcohol: number;
+    protected readonly formattedDate: string | null;
+    protected readonly mealTypeLabel: string | null;
+    protected readonly preMealSatietyMeta: MealSatietyMeta;
+    protected readonly postMealSatietyMeta: MealSatietyMeta;
+    protected readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'CONSUMPTION_DETAIL.TABS.SUMMARY' },
         { value: 'nutrients', labelKey: 'CONSUMPTION_DETAIL.TABS.NUTRIENTS' },
     ];
-    public activeTab: 'summary' | 'nutrients' = 'summary';
-    public readonly isItemPreviewExpanded = signal(false);
-    public readonly macroBlocks: MealMacroBlock[];
-    public readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MEAL_DETAIL_MACRO_SUMMARY_LIMIT));
-    public readonly itemPreview: MealDetailItemPreview[];
-    public readonly nutritionControlNames: NutritionControlNames;
-    public readonly nutritionForm: FormGroup<MealDetailNutritionForm>;
-    public readonly macroBarState: NutritionMacroState;
+    protected activeTab: 'summary' | 'nutrients' = 'summary';
+    protected readonly isItemPreviewExpanded = signal(false);
+    protected readonly macroBlocks: MealMacroBlock[];
+    protected readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MEAL_DETAIL_MACRO_SUMMARY_LIMIT));
+    protected readonly itemPreview: MealDetailItemPreview[];
+    protected readonly nutritionControlNames: NutritionControlNames;
+    protected readonly nutritionForm: FormGroup<MealDetailNutritionForm>;
+    protected readonly macroBarState: NutritionMacroState;
 
     public constructor() {
         const meal = inject<Meal>(FD_UI_DIALOG_DATA);
@@ -98,33 +98,33 @@ export class MealDetailComponent {
         this.mealDetailFacade.initialize(meal);
     }
 
-    public close(): void {
+    protected close(): void {
         this.mealDetailFacade.close(this.consumption);
     }
 
-    public toggleFavorite(): void {
+    protected toggleFavorite(): void {
         this.mealDetailFacade.toggleFavorite(this.consumption);
     }
 
-    public onTabChange(tab: string): void {
+    protected onTabChange(tab: string): void {
         if (tab === 'summary' || tab === 'nutrients') {
             this.activeTab = tab;
         }
     }
 
-    public toggleItemPreviewExpanded(): void {
+    protected toggleItemPreviewExpanded(): void {
         this.isItemPreviewExpanded.update(isExpanded => !isExpanded);
     }
 
-    public onRepeat(): void {
+    protected onRepeat(): void {
         this.mealDetailFacade.repeat(this.consumption);
     }
 
-    public onEdit(): void {
+    protected onEdit(): void {
         this.mealDetailFacade.edit(this.consumption);
     }
 
-    public onDelete(): void {
+    protected onDelete(): void {
         this.mealDetailFacade.delete(this.consumption);
     }
 }

@@ -11,13 +11,13 @@ describe('DietologistClientCardComponent', () => {
     it('renders client card data and emits open event', () => {
         const fixture = createComponent();
         const open = vi.fn();
-        fixture.componentInstance.clientOpen.subscribe(open);
+        fixture.componentInstance['clientOpen'].subscribe(open);
 
         getHost(fixture).querySelector<HTMLElement>('fd-ui-card')?.click();
 
         expect(getHost(fixture).textContent).toContain('Alex Ivanov');
         expect(getHost(fixture).textContent).toContain('client@example.com');
-        expect(open).toHaveBeenCalledWith(fixture.componentInstance.item().client);
+        expect(open).toHaveBeenCalledWith(fixture.componentInstance['item']().client);
     });
 });
 

@@ -15,21 +15,21 @@ describe('UserManageNotificationsCardComponent status state', () => {
     it('derives background action status from busy inputs', async () => {
         await createComponentAsync();
 
-        expect(component.notificationsStatusKey()).toBeNull();
+        expect(component['notificationsStatusKey']()).toBeNull();
 
         fixture.componentRef.setInput('isUpdatingNotifications', true);
         fixture.detectChanges();
-        expect(component.notificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_SAVING');
+        expect(component['notificationsStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_SAVING');
 
         fixture.componentRef.setInput('isUpdatingNotifications', false);
         fixture.componentRef.setInput('isSchedulingTestNotification', true);
         fixture.detectChanges();
-        expect(component.notificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING');
+        expect(component['notificationsStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_TEST_SENDING');
 
         fixture.componentRef.setInput('isSchedulingTestNotification', false);
         fixture.componentRef.setInput('removingConnectedDeviceEndpoint', 'https://push.example/subscription');
         fixture.detectChanges();
-        expect(component.notificationsStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_REMOVING');
+        expect(component['notificationsStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_REMOVING');
     });
 
     it('derives push notification account, device, and hint states', async () => {
@@ -40,20 +40,20 @@ describe('UserManageNotificationsCardComponent status state', () => {
             notificationPermission: 'default',
         });
 
-        expect(component.pushNotificationsAccountStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_DISABLED');
-        expect(component.pushNotificationsDeviceStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_IDLE');
-        expect(component.pushNotificationsHintKey()).toBe('USER_MANAGE.NOTIFICATIONS_DISABLED_HINT');
+        expect(component['pushNotificationsAccountStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_DISABLED');
+        expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_DEVICE_IDLE');
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_DISABLED_HINT');
 
         fixture.componentRef.setInput('pushNotificationsEnabled', true);
         fixture.detectChanges();
-        expect(component.pushNotificationsAccountStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED');
-        expect(component.pushNotificationsDeviceStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_SETUP_REQUIRED');
-        expect(component.pushNotificationsHintKey()).toBe('USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT');
+        expect(component['pushNotificationsAccountStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED');
+        expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_SETUP_REQUIRED');
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT');
 
         fixture.componentRef.setInput('pushNotificationsSubscribed', true);
         fixture.detectChanges();
-        expect(component.pushNotificationsDeviceStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_ENABLED');
-        expect(component.pushNotificationsHintKey()).toBe('USER_MANAGE.NOTIFICATIONS_ENABLED_HINT');
+        expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_ENABLED');
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_ENABLED_HINT');
     });
 
     it('prioritizes blocked and unsupported device states', async () => {
@@ -63,14 +63,14 @@ describe('UserManageNotificationsCardComponent status state', () => {
             notificationPermission: 'denied',
         });
 
-        expect(component.pushNotificationsDeviceStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_BLOCKED');
-        expect(component.pushNotificationsHintKey()).toBe('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT');
+        expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_BLOCKED');
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT');
 
         fixture.componentRef.setInput('pushNotificationsSupported', false);
         fixture.componentRef.setInput('notificationPermission', 'unsupported');
         fixture.detectChanges();
-        expect(component.pushNotificationsDeviceStatusKey()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED');
-        expect(component.pushNotificationsHintKey()).toBe('USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT');
+        expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED');
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT');
     });
 
     it('derives active fasting preset from reminder hours', async () => {
@@ -80,12 +80,12 @@ describe('UserManageNotificationsCardComponent status state', () => {
             fastingCheckInFollowUpReminderHours: preset.followUpReminderHours,
         });
 
-        expect(component.activeFastingReminderPresetId()).toBe(preset.id);
+        expect(component['activeFastingReminderPresetId']()).toBe(preset.id);
 
         fixture.componentRef.setInput('fastingCheckInReminderHours', CUSTOM_FIRST_REMINDER_HOURS);
         fixture.componentRef.setInput('fastingCheckInFollowUpReminderHours', CUSTOM_FOLLOW_UP_REMINDER_HOURS);
         fixture.detectChanges();
-        expect(component.activeFastingReminderPresetId()).toBeNull();
+        expect(component['activeFastingReminderPresetId']()).toBeNull();
     });
 });
 

@@ -10,10 +10,10 @@ describe('ProductDetailActionsComponent', () => {
         const { fixture, component } = setupComponent(true);
         let editCount = 0;
         let deleteCount = 0;
-        component.edit.subscribe(() => {
+        component['edit'].subscribe(() => {
             editCount += 1;
         });
-        component.delete.subscribe(() => {
+        component['delete'].subscribe(() => {
             deleteCount += 1;
         });
 
@@ -30,7 +30,7 @@ describe('ProductDetailActionsComponent', () => {
     it('renders duplicate action for read-only products', () => {
         const { fixture, component } = setupComponent(false);
         let duplicateCount = 0;
-        component.duplicate.subscribe(() => {
+        component['duplicate'].subscribe(() => {
             duplicateCount += 1;
         });
 

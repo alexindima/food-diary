@@ -27,14 +27,14 @@ describe('FastingHistoryItemComponent', () => {
         const fixture = createComponent(createHistoryItem({ canViewChart: true }));
         const chartOpen = vi.fn();
         const historyToggle = vi.fn();
-        fixture.componentInstance.chartOpen.subscribe(chartOpen);
-        fixture.componentInstance.historyToggle.subscribe(historyToggle);
+        fixture.componentInstance['chartOpen'].subscribe(chartOpen);
+        fixture.componentInstance['historyToggle'].subscribe(historyToggle);
         const element = getElement(fixture);
 
         getButtonByText(element, 'FASTING.SHOW_CHECK_IN_CHART').click();
         getButtonByText(element, 'FASTING.SHOW_CHECK_INS').click();
 
-        expect(chartOpen).toHaveBeenCalledWith(fixture.componentInstance.historyItem().session);
+        expect(chartOpen).toHaveBeenCalledWith(fixture.componentInstance['historyItem']().session);
         expect(historyToggle).toHaveBeenCalledWith('session-1');
     });
 

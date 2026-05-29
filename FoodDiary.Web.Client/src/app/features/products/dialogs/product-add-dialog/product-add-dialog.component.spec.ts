@@ -24,13 +24,13 @@ describe('ProductAddDialogComponent without initial product', () => {
     it('closes with saved product', () => {
         const product = createProduct();
 
-        component.onSaved(product);
+        component['onSaved'](product);
 
         expect(dialogRef.close).toHaveBeenCalledWith(product);
     });
 
     it('closes with null when cancelled without initial product', () => {
-        component.onCancel();
+        component['onCancel']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });
@@ -42,7 +42,7 @@ describe('ProductAddDialogComponent with initial product', () => {
     });
 
     it('returns initial product when cancelled', () => {
-        component.onCancel();
+        component['onCancel']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(createProduct({ id: 'initial-product' }));
     });

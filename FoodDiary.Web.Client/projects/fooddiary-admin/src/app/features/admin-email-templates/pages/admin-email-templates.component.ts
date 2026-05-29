@@ -20,14 +20,14 @@ export class AdminEmailTemplatesComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly templates = signal<AdminEmailTemplate[]>([]);
-    public readonly isLoading = signal(false);
+    protected readonly templates = signal<AdminEmailTemplate[]>([]);
+    protected readonly isLoading = signal(false);
 
     public constructor() {
         this.loadTemplates();
     }
 
-    public loadTemplates(): void {
+    protected loadTemplates(): void {
         this.isLoading.set(true);
         this.templatesService
             .getAll()
@@ -44,7 +44,7 @@ export class AdminEmailTemplatesComponent {
             });
     }
 
-    public openEdit(template: AdminEmailTemplate): void {
+    protected openEdit(template: AdminEmailTemplate): void {
         this.dialogService
             .open(AdminEmailTemplateEditDialogComponent, {
                 preset: 'fullscreen',
@@ -59,7 +59,7 @@ export class AdminEmailTemplatesComponent {
             });
     }
 
-    public openCreate(): void {
+    protected openCreate(): void {
         const dialogData: AdminEmailTemplate & { isNew: boolean } = {
             id: '',
             key: 'email_verification',

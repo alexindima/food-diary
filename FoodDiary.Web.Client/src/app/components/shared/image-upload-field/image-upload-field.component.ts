@@ -101,16 +101,16 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     protected readonly cropTitleId = createImageUploadId('image-upload-crop-title');
     protected readonly cropSubtitleId = createImageUploadId('image-upload-crop-subtitle');
 
-    public selection: ImageSelection = { url: null, assetId: null };
-    public isDragging = false;
-    public isUploading = false;
-    public error: string | null = null;
-    public disabled = false;
-    public isCropping = false;
+    protected selection: ImageSelection = { url: null, assetId: null };
+    protected isDragging = false;
+    protected isUploading = false;
+    protected error: string | null = null;
+    protected disabled = false;
+    protected isCropping = false;
 
-    public cropPreviewUrl: string | null = null;
-    public cropImageBounds: CropRect | null = null;
-    public cropSelection: CropRect | null = null;
+    protected cropPreviewUrl: string | null = null;
+    protected cropImageBounds: CropRect | null = null;
+    protected cropSelection: CropRect | null = null;
     private originalFile: File | null = null;
     private cropImageElement: HTMLImageElement | null = null;
     private cropInteraction: CropInteraction | null = null;
@@ -156,7 +156,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.cdr.markForCheck();
     }
 
-    public onFileSelected(event: Event): void {
+    protected onFileSelected(event: Event): void {
         if (!(event.target instanceof HTMLInputElement)) {
             return;
         }
@@ -169,7 +169,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         target.value = '';
     }
 
-    public onDrop(event: DragEvent): void {
+    protected onDrop(event: DragEvent): void {
         event.preventDefault();
         event.stopPropagation();
         if (this.disabled || this.isUploading) {
@@ -182,7 +182,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
     }
 
-    public onDragOver(event: DragEvent): void {
+    protected onDragOver(event: DragEvent): void {
         event.preventDefault();
         if (this.disabled || this.isUploading) {
             return;
@@ -190,12 +190,12 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.isDragging = true;
     }
 
-    public onDragLeave(event: DragEvent): void {
+    protected onDragLeave(event: DragEvent): void {
         event.preventDefault();
         this.isDragging = false;
     }
 
-    public clearImage(): void {
+    protected clearImage(): void {
         const assetId = this.selection.assetId;
         this.selection = { url: null, assetId: null };
         this.error = null;
@@ -215,12 +215,12 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
     }
 
-    public onCropImageLoaded(img: HTMLImageElement): void {
+    protected onCropImageLoaded(img: HTMLImageElement): void {
         this.cropImageElement = img;
         this.initializeCropSelection(img);
     }
 
-    public onCropPointerDown(event: PointerEvent, mode: CropInteractionMode): void {
+    protected onCropPointerDown(event: PointerEvent, mode: CropInteractionMode): void {
         if (this.cropSelection === null || this.cropImageBounds === null) {
             return;
         }
@@ -238,7 +238,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         };
     }
 
-    public onCropPointerMove(event: PointerEvent): void {
+    protected onCropPointerMove(event: PointerEvent): void {
         const interaction = this.cropInteraction;
         const bounds = this.cropImageBounds;
         if (bounds === null || event.pointerId !== interaction?.pointerId) {
@@ -263,7 +263,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.cdr.markForCheck();
     }
 
-    public onCropPointerUp(event: PointerEvent): void {
+    protected onCropPointerUp(event: PointerEvent): void {
         if (event.pointerId !== this.cropInteraction?.pointerId) {
             return;
         }
@@ -272,7 +272,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.cropInteraction = null;
     }
 
-    public onCropKeydown(event: KeyboardEvent): void {
+    protected onCropKeydown(event: KeyboardEvent): void {
         if (this.cropSelection === null || this.cropImageBounds === null) {
             return;
         }
@@ -294,13 +294,13 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.cdr.markForCheck();
     }
 
-    public cancelCrop(): void {
+    protected cancelCrop(): void {
         this.isCropping = false;
         this.clearCropState();
         this.cdr.markForCheck();
     }
 
-    public confirmCrop(): void {
+    protected confirmCrop(): void {
         this.confirmCropInternal();
     }
 
@@ -308,19 +308,19 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.fileInputRef()?.nativeElement.click();
     }
 
-    public onZoneClick(fileInput: HTMLInputElement): void {
+    protected onZoneClick(fileInput: HTMLInputElement): void {
         if (this.disabled || this.isUploading || this.selection.url !== null) {
             return;
         }
         fileInput.click();
     }
 
-    public onDeleteClick(event: Event): void {
+    protected onDeleteClick(event: Event): void {
         event.stopPropagation();
         this.clearImage();
     }
 
-    public handleIncomingFile(file: File): void {
+    protected handleIncomingFile(file: File): void {
         void this.handleIncomingFileAsync(file);
     }
 

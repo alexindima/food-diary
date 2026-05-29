@@ -11,15 +11,15 @@ describe('MealNutritionSidebarComponent state', () => {
     it('should make nutrition editor readonly in auto mode', async () => {
         const { component } = await setupComponentAsync({ nutritionMode: 'auto' });
 
-        expect(component.isNutritionReadonly()).toBe(true);
-        expect(component.showManualNutritionHint()).toBe(false);
+        expect(component['isNutritionReadonly']()).toBe(true);
+        expect(component['showManualNutritionHint']()).toBe(false);
     });
 
     it('should show manual hint in manual mode', async () => {
         const { component } = await setupComponentAsync({ nutritionMode: 'manual' });
 
-        expect(component.isNutritionReadonly()).toBe(false);
-        expect(component.showManualNutritionHint()).toBe(true);
+        expect(component['isNutritionReadonly']()).toBe(false);
+        expect(component['showManualNutritionHint']()).toBe(true);
     });
 });
 
@@ -28,11 +28,11 @@ describe('MealNutritionSidebarComponent actions', () => {
         const { component } = await setupComponentAsync();
         const modeHandler = vi.fn();
         const cancelHandler = vi.fn();
-        component.nutritionModeChange.subscribe(modeHandler);
-        component.cancelRequested.subscribe(cancelHandler);
+        component['nutritionModeChange'].subscribe(modeHandler);
+        component['cancelRequested'].subscribe(cancelHandler);
 
-        component.onNutritionModeChange('manual');
-        component.onCancel();
+        component['onNutritionModeChange']('manual');
+        component['onCancel']();
 
         expect(modeHandler).toHaveBeenCalledWith('manual');
         expect(cancelHandler).toHaveBeenCalled();

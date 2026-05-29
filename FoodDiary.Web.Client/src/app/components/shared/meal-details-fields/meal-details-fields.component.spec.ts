@@ -26,10 +26,10 @@ describe('MealDetailsFieldsComponent satiety', () => {
         const component = fixture.componentInstance;
         fixture.detectChanges();
 
-        component.onPreMealSatietyLevelChange(null);
-        component.onPostMealSatietyLevelChange(INVALID_SATIETY_LEVEL);
+        component['onPreMealSatietyLevelChange'](null);
+        component['onPostMealSatietyLevelChange'](INVALID_SATIETY_LEVEL);
 
-        expect(component.preMealSatietyLevel()).toBe(DEFAULT_SATIETY_LEVEL);
-        expect(component.postMealSatietyLevel()).toBe(MAX_SATIETY_LEVEL);
+        expect(component['preMealSatietyLevel']()).toBe(DEFAULT_SATIETY_LEVEL);
+        expect(component['postMealSatietyLevel']()).toBe(MAX_SATIETY_LEVEL);
     });
 });

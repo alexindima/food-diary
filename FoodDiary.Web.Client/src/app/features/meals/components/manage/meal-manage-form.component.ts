@@ -105,7 +105,7 @@ export class MealManageFormComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly calorieMismatchThreshold = DEFAULT_CALORIE_MISMATCH_THRESHOLD;
 
-    public readonly nutritionControlNames = {
+    protected readonly nutritionControlNames = {
         calories: 'manualCalories',
         proteins: 'manualProteins',
         fats: 'manualFats',
@@ -115,35 +115,35 @@ export class MealManageFormComponent {
     };
 
     public readonly consumption = input<Consumption | null>(null);
-    public readonly totalCalories = signal<number>(0);
-    public readonly totalFiber = signal<number>(0);
-    public readonly totalAlcohol = signal<number>(0);
-    public readonly nutrientChartData = signal<NutrientData>({
+    protected readonly totalCalories = signal<number>(0);
+    protected readonly totalFiber = signal<number>(0);
+    protected readonly totalAlcohol = signal<number>(0);
+    protected readonly nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
         carbs: 0,
     });
-    public readonly globalError = signal<string | null>(null);
-    public readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
-    public readonly itemsRenderVersion = signal(0);
-    public readonly nutritionMode = signal<NutritionMode>('auto');
-    public readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
-    public readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
-    public readonly selectedMealType = signal<string | null>(null);
-    public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
-    public readonly generalFieldErrors = signal<MealGeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
-    public readonly manageHeaderState = computed(() => ({
+    protected readonly globalError = signal<string | null>(null);
+    protected readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
+    protected readonly itemsRenderVersion = signal(0);
+    protected readonly nutritionMode = signal<NutritionMode>('auto');
+    protected readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
+    protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
+    protected readonly selectedMealType = signal<string | null>(null);
+    protected readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+    protected readonly generalFieldErrors = signal<MealGeneralFieldErrors>(this.createEmptyGeneralFieldErrors());
+    protected readonly manageHeaderState = computed(() => ({
         titleKey: this.consumption() !== null ? 'CONSUMPTION_MANAGE.EDIT_TITLE' : 'CONSUMPTION_MANAGE.ADD_TITLE',
     }));
     private populatedConsumption: Consumption | null = null;
 
-    public readonly macroBarState = computed<MacroBarState>(() => {
+    protected readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
         return calculateMacroBarState(nutrients.proteins, nutrients.fats, nutrients.carbs);
     });
 
-    public consumptionForm: FormGroup<ConsumptionFormData>;
-    public mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
+    protected consumptionForm: FormGroup<ConsumptionFormData>;
+    protected mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
         this.consumptionForm = this.createConsumptionForm();
@@ -264,17 +264,17 @@ export class MealManageFormComponent {
         });
     }
 
-    public async onCancelAsync(): Promise<void> {
+    protected async onCancelAsync(): Promise<void> {
         await this.navigationService.navigateToConsumptionListAsync();
     }
 
-    public get items(): FormArray<FormGroup<ConsumptionItemFormData>> {
+    protected get items(): FormArray<FormGroup<ConsumptionItemFormData>> {
         return this.consumptionForm.controls.items;
     }
 
     // --- Item management (delegated from MealItemsListComponent events) ---
 
-    public addConsumptionItem(): void {
+    protected addConsumptionItem(): void {
         const reusableIndex = this.findReusableEmptyItemIndex();
         const itemIndex = reusableIndex >= 0 ? reusableIndex : this.items.length;
 
@@ -287,16 +287,16 @@ export class MealManageFormComponent {
         });
     }
 
-    public removeItem(index: number): void {
+    protected removeItem(index: number): void {
         this.items.removeAt(index);
         this.bumpItemsRenderVersion();
     }
 
-    public onItemSourceClick(index: number): void {
+    protected onItemSourceClick(index: number): void {
         this.openManualItemDialog(index);
     }
 
-    public openManualItemDialog(index: number): void {
+    protected openManualItemDialog(index: number): void {
         const group = this.items.at(index);
         void firstValueFrom(
             this.fdDialogService
@@ -316,7 +316,7 @@ export class MealManageFormComponent {
 
     // --- AI session management ---
 
-    public onAiMealRecognized(result: AiInputBarResult): void {
+    protected onAiMealRecognized(result: AiInputBarResult): void {
         this.aiSessions.update(current =>
             this.mealManageFacade.addAiSession(current, {
                 source: result.source,
@@ -332,14 +332,14 @@ export class MealManageFormComponent {
         this.updateSummary();
     }
 
-    public onDeleteAiSession(index: number): void {
+    protected onDeleteAiSession(index: number): void {
         this.aiSessions.update(current => this.mealManageFacade.removeAiSession(current, index));
         this.items.updateValueAndValidity({ emitEvent: false });
         this.updateItemValidationRules();
         this.updateSummary();
     }
 
-    public onEditAiSession(index: number): void {
+    protected onEditAiSession(index: number): void {
         if (!this.ensurePremiumAccess()) {
             return;
         }
@@ -362,7 +362,7 @@ export class MealManageFormComponent {
 
     // --- Nutrition mode (delegated from MealNutritionSidebarComponent events) ---
 
-    public onNutritionModeChange(nextMode: string): void {
+    protected onNutritionModeChange(nextMode: string): void {
         const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
         if (this.nutritionMode() === resolvedMode) {
             return;
@@ -372,7 +372,7 @@ export class MealManageFormComponent {
         this.consumptionForm.controls.isNutritionAutoCalculated.setValue(resolvedMode === 'auto');
     }
 
-    public caloriesError(): string | null {
+    protected caloriesError(): string | null {
         if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
             return null;
         }
@@ -382,7 +382,7 @@ export class MealManageFormComponent {
             : null;
     }
 
-    public macrosError(): string | null {
+    protected macrosError(): string | null {
         if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
             return null;
         }
@@ -399,7 +399,7 @@ export class MealManageFormComponent {
 
     // --- Satiety ---
 
-    public onSatietyLevelChange(controlName: MealSatietyControlName, value: number | null): void {
+    protected onSatietyLevelChange(controlName: MealSatietyControlName, value: number | null): void {
         const control = this.consumptionForm.controls[controlName];
         control.setValue(normalizeSatietyLevel(value));
         control.markAsDirty();
@@ -431,7 +431,7 @@ export class MealManageFormComponent {
 
     // --- Submit ---
 
-    public onSubmit(): void {
+    protected onSubmit(): void {
         this.markFormGroupTouched(this.consumptionForm);
 
         if (this.macrosError() !== null) {

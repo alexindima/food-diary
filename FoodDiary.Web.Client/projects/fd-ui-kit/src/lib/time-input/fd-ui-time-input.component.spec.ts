@@ -89,30 +89,30 @@ describe('FdUiTimeInputComponent rendering', () => {
 describe('FdUiTimeInputComponent CVA', () => {
     it('should write value via CVA', async () => {
         const { component } = await setupTimeInputAsync();
-        component.writeValue('14:30');
+        component['writeValue']('14:30');
         expect(component['internalValue']()).toBe('14:30');
     });
 
     it('should write null value via CVA as empty string', async () => {
         const { component } = await setupTimeInputAsync();
-        component.writeValue('10:00');
+        component['writeValue']('10:00');
         expect(component['internalValue']()).toBe('10:00');
 
-        component.writeValue(null);
+        component['writeValue'](null);
         expect(component['internalValue']()).toBe('');
     });
 
     it('should set disabled state', async () => {
         const { component } = await setupTimeInputAsync();
-        component.setDisabledState(true);
+        component['setDisabledState'](true);
 
         expect(component['disabled']()).toBe(true);
     });
 
     it('should re-enable after being disabled', async () => {
         const { component, fixture } = await setupTimeInputAsync();
-        component.setDisabledState(true);
-        component.setDisabledState(false);
+        component['setDisabledState'](true);
+        component['setDisabledState'](false);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(false);
@@ -121,7 +121,7 @@ describe('FdUiTimeInputComponent CVA', () => {
     it('should call onTouched on blur', async () => {
         const { component } = await setupTimeInputAsync();
         const onTouchedSpy = vi.fn();
-        component.registerOnTouched(onTouchedSpy);
+        component['registerOnTouched'](onTouchedSpy);
 
         component['onBlur']();
 
@@ -150,7 +150,7 @@ describe('FdUiTimeInputComponent input handling', () => {
     it('should call onChange with formatted time on valid input', async () => {
         const { component } = await setupTimeInputAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('14:30');
 
@@ -161,7 +161,7 @@ describe('FdUiTimeInputComponent input handling', () => {
     it('should call onChange with null on empty input', async () => {
         const { component } = await setupTimeInputAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('');
 
@@ -172,7 +172,7 @@ describe('FdUiTimeInputComponent input handling', () => {
     it('should not call onChange on invalid time input', async () => {
         const { component } = await setupTimeInputAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('abc');
 
@@ -183,8 +183,8 @@ describe('FdUiTimeInputComponent input handling', () => {
     it('should not process input when disabled', async () => {
         const { component } = await setupTimeInputAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
-        component.setDisabledState(true);
+        component['registerOnChange'](onChangeSpy);
+        component['setDisabledState'](true);
 
         component['onInput']('14:30');
 
@@ -194,7 +194,7 @@ describe('FdUiTimeInputComponent input handling', () => {
     it('should pad single-digit hours and minutes', async () => {
         const { component } = await setupTimeInputAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('9:05');
 
@@ -205,7 +205,7 @@ describe('FdUiTimeInputComponent input handling', () => {
     it('should reject hours above 23', async () => {
         const { component } = await setupTimeInputAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('25:00');
 
@@ -215,7 +215,7 @@ describe('FdUiTimeInputComponent input handling', () => {
     it('should reject minutes above 59', async () => {
         const { component } = await setupTimeInputAsync();
         const onChangeSpy = vi.fn();
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('12:60');
 

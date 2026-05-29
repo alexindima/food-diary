@@ -31,11 +31,11 @@ export class DietologistInvitationPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly currentLanguage = signal(this.resolveCurrentLanguage());
 
-    public readonly state = signal<InvitationPageState>('loading');
-    public readonly invitation = signal<DietologistInvitationForCurrentUser | null>(null);
-    public readonly errorMessage = signal<string | null>(null);
-    public readonly isSubmitting = signal(false);
-    public readonly invitationView = computed<DietologistInvitationView | null>(() => {
+    protected readonly state = signal<InvitationPageState>('loading');
+    protected readonly invitation = signal<DietologistInvitationForCurrentUser | null>(null);
+    protected readonly errorMessage = signal<string | null>(null);
+    protected readonly isSubmitting = signal(false);
+    protected readonly invitationView = computed<DietologistInvitationView | null>(() => {
         this.currentLanguage();
         const invitation = this.invitation();
         if (invitation === null) {
@@ -63,7 +63,7 @@ export class DietologistInvitationPageComponent {
         this.loadInvitation();
     }
 
-    public accept(): void {
+    protected accept(): void {
         const invitationId = this.invitation()?.invitationId;
         if (invitationId === undefined || invitationId.length === 0 || this.isSubmitting()) {
             return;
@@ -90,7 +90,7 @@ export class DietologistInvitationPageComponent {
             });
     }
 
-    public decline(): void {
+    protected decline(): void {
         const invitationId = this.invitation()?.invitationId;
         if (invitationId === undefined || invitationId.length === 0 || this.isSubmitting()) {
             return;
@@ -116,11 +116,11 @@ export class DietologistInvitationPageComponent {
             });
     }
 
-    public goToClients(): void {
+    protected goToClients(): void {
         void this.navigationService.navigateToDietologistAsync();
     }
 
-    public goHome(): void {
+    protected goHome(): void {
         void this.navigationService.navigateToHomeAsync();
     }
 

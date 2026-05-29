@@ -15,9 +15,9 @@ describe('WeightHistoryFormCardComponent', () => {
     it('renders edit mode and emits cancel', () => {
         const { component, fixture } = setupComponent(true);
         const cancelHandler = vi.fn();
-        component.editCancel.subscribe(cancelHandler);
+        component['editCancel'].subscribe(cancelHandler);
 
-        component.editCancel.emit();
+        component['editCancel'].emit();
 
         expect(getText(fixture)).toContain('WEIGHT_HISTORY.UPDATE');
         expect(getText(fixture)).toContain('WEIGHT_HISTORY.CANCEL_EDIT');

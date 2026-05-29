@@ -51,49 +51,49 @@ describe('FastingPageComponent setup and actions', () => {
             ],
         });
 
-        expect(component.hasCurrentSessionTimeline()).toBe(true);
-        expect(component.currentSessionRecentCheckIns()).toHaveLength(1);
+        expect(component['hasCurrentSessionTimeline']()).toBe(true);
+        expect(component['currentSessionRecentCheckIns']()).toHaveLength(1);
     });
 
     it('opens and closes check-in form while resetting draft on close', () => {
-        component.openCheckInForm();
-        expect(component.isCheckInExpanded()).toBe(true);
+        component['openCheckInForm']();
+        expect(component['isCheckInExpanded']()).toBe(true);
 
-        component.closeCheckInForm();
+        component['closeCheckInForm']();
 
-        expect(component.isCheckInExpanded()).toBe(false);
+        expect(component['isCheckInExpanded']()).toBe(false);
         expect(facade.resetCheckInDraft).toHaveBeenCalledTimes(1);
     });
 
     it('delegates save and load more actions to facade', () => {
-        component.saveCheckIn();
-        component.loadMoreHistory();
+        component['saveCheckIn']();
+        component['loadMoreHistory']();
 
         expect(facade.saveCheckIn).toHaveBeenCalledTimes(1);
         expect(facade.loadMoreHistory).toHaveBeenCalledTimes(1);
     });
 
     it('shows success toast and collapses check-in after saved version changes', () => {
-        component.openCheckInForm();
+        component['openCheckInForm']();
         facade.checkInSavedVersion.set(1);
         fixture.detectChanges();
 
-        expect(component.isCheckInExpanded()).toBe(false);
+        expect(component['isCheckInExpanded']()).toBe(false);
         expect(toastService.success).toHaveBeenCalledWith('FASTING.CHECK_IN.SAVED_TOAST');
     });
 
     it('toggles history accordion with single expanded session', () => {
-        component.toggleHistorySession('session-1');
-        expect(component.isHistorySessionExpanded('session-1')).toBe(true);
-        expect(component.getHistoryCheckInToggleKey(createHistorySession('session-1', 2))).toBe('FASTING.HIDE_HISTORY_CHECK_INS');
+        component['toggleHistorySession']('session-1');
+        expect(component['isHistorySessionExpanded']('session-1')).toBe(true);
+        expect(component['getHistoryCheckInToggleKey'](createHistorySession('session-1', 2))).toBe('FASTING.HIDE_HISTORY_CHECK_INS');
 
-        component.toggleHistorySession('session-2');
-        expect(component.isHistorySessionExpanded('session-1')).toBe(false);
-        expect(component.isHistorySessionExpanded('session-2')).toBe(true);
+        component['toggleHistorySession']('session-2');
+        expect(component['isHistorySessionExpanded']('session-1')).toBe(false);
+        expect(component['isHistorySessionExpanded']('session-2')).toBe(true);
 
-        component.toggleHistorySession('session-2');
-        expect(component.isHistorySessionExpanded('session-2')).toBe(false);
-        expect(component.getHistoryCheckInToggleKey(createHistorySession('session-2', 2))).toBe('FASTING.SHOW_HISTORY_CHECK_INS');
+        component['toggleHistorySession']('session-2');
+        expect(component['isHistorySessionExpanded']('session-2')).toBe(false);
+        expect(component['getHistoryCheckInToggleKey'](createHistorySession('session-2', 2))).toBe('FASTING.SHOW_HISTORY_CHECK_INS');
     });
 });
 
@@ -104,13 +104,13 @@ describe('FastingPageComponent check-in history', () => {
         const singleCheckInSession = createHistorySession('session-1', 1);
         const multiCheckInSession = createHistorySession('session-2', 2);
 
-        component.openSessionCheckInChart(singleCheckInSession);
+        component['openSessionCheckInChart'](singleCheckInSession);
         expect(dialogService.open).not.toHaveBeenCalled();
-        expect(component.canViewSessionCheckInChart(singleCheckInSession)).toBe(false);
+        expect(component['canViewSessionCheckInChart'](singleCheckInSession)).toBe(false);
 
-        component.openSessionCheckInChart(multiCheckInSession);
+        component['openSessionCheckInChart'](multiCheckInSession);
 
-        expect(component.canViewSessionCheckInChart(multiCheckInSession)).toBe(true);
+        expect(component['canViewSessionCheckInChart'](multiCheckInSession)).toBe(true);
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         const call = dialogService.open.mock.calls[0] as
             | [unknown, { size?: string; panelClass?: string; data?: FastingCheckInChartDialogData }]
@@ -126,22 +126,22 @@ describe('FastingPageComponent check-in history', () => {
     it('tracks session check-in pagination locally', () => {
         const session = createHistorySession('session-3', SESSION_CHECK_INS_BEYOND_PAGE_SIZE);
 
-        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(INITIAL_VISIBLE_CHECK_INS);
-        expect(component.canLoadMoreSessionCheckIns(session)).toBe(true);
+        expect(component['getVisibleSessionCheckIns'](session)).toHaveLength(INITIAL_VISIBLE_CHECK_INS);
+        expect(component['canLoadMoreSessionCheckIns'](session)).toBe(true);
 
-        component.loadMoreSessionCheckIns(session.id);
+        component['loadMoreSessionCheckIns'](session.id);
 
-        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(SESSION_CHECK_INS_BEYOND_PAGE_SIZE);
-        expect(component.canLoadMoreSessionCheckIns(session)).toBe(false);
+        expect(component['getVisibleSessionCheckIns'](session)).toHaveLength(SESSION_CHECK_INS_BEYOND_PAGE_SIZE);
+        expect(component['canLoadMoreSessionCheckIns'](session)).toBe(false);
     });
 
     it('treats sessions without check-ins as collapsed non-chartable history items', () => {
         const session = createHistorySession('session-4', 0);
 
-        expect(component.hasCheckIn(session)).toBe(false);
-        expect(component.getSessionCheckInCount(session)).toBe(0);
-        expect(component.canViewSessionCheckInChart(session)).toBe(false);
-        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(0);
+        expect(component['hasCheckIn'](session)).toBe(false);
+        expect(component['getSessionCheckInCount'](session)).toBe(0);
+        expect(component['canViewSessionCheckInChart'](session)).toBe(false);
+        expect(component['getVisibleSessionCheckIns'](session)).toHaveLength(0);
     });
 
     it('does not allow chart for single legacy summary check-in fallback', () => {
@@ -155,10 +155,10 @@ describe('FastingPageComponent check-in history', () => {
             checkInNotes: 'legacy',
         };
 
-        expect(component.hasCheckIn(session)).toBe(true);
-        expect(component.getSessionCheckInCount(session)).toBe(1);
-        expect(component.canViewSessionCheckInChart(session)).toBe(false);
-        expect(component.getVisibleSessionCheckIns(session)).toHaveLength(1);
+        expect(component['hasCheckIn'](session)).toBe(true);
+        expect(component['getSessionCheckInCount'](session)).toBe(1);
+        expect(component['canViewSessionCheckInChart'](session)).toBe(false);
+        expect(component['getVisibleSessionCheckIns'](session)).toHaveLength(1);
     });
 });
 

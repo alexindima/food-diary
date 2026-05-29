@@ -26,13 +26,13 @@ describe('ProductListGroupsComponent', () => {
         const openHandler = vi.fn();
         const addHandler = vi.fn();
         const favoriteHandler = vi.fn();
-        component.openProduct.subscribe(openHandler);
-        component.addToMeal.subscribe(addHandler);
-        component.favoriteToggle.subscribe(favoriteHandler);
+        component['openProduct'].subscribe(openHandler);
+        component['addToMeal'].subscribe(addHandler);
+        component['favoriteToggle'].subscribe(favoriteHandler);
 
-        component.openProduct.emit(product);
-        component.addToMeal.emit(product);
-        component.favoriteToggle.emit(product);
+        component['openProduct'].emit(product);
+        component['addToMeal'].emit(product);
+        component['favoriteToggle'].emit(product);
 
         expect(openHandler).toHaveBeenCalledWith(product);
         expect(addHandler).toHaveBeenCalledWith(product);

@@ -15,20 +15,20 @@ describe('TdeeInsightCardContentComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.confidenceLabel()).toBe('TDEE_CARD.CONFIDENCE.MEDIUM');
-        expect(component.confidenceClass()).toBe('medium');
-        expect(component.weightTrendFormatted()).toBe('-0.25');
-        expect(component.hintKey()).toBe('TDEE_CARD.HINTS.REDUCE');
-        expect(component.showSuggestion()).toBe(true);
+        expect(component['confidenceLabel']()).toBe('TDEE_CARD.CONFIDENCE.MEDIUM');
+        expect(component['confidenceClass']()).toBe('medium');
+        expect(component['weightTrendFormatted']()).toBe('-0.25');
+        expect(component['hintKey']()).toBe('TDEE_CARD.HINTS.REDUCE');
+        expect(component['showSuggestion']()).toBe(true);
     });
 
     it('emits apply goal click event', async () => {
         const { component } = await setupComponentAsync(createInsight());
         const event = new MouseEvent('click');
         const applySpy = vi.fn();
-        component.applyGoal.subscribe(applySpy);
+        component['applyGoal'].subscribe(applySpy);
 
-        component.applyGoal.emit(event);
+        component['applyGoal'].emit(event);
 
         expect(applySpy).toHaveBeenCalledWith(event);
     });

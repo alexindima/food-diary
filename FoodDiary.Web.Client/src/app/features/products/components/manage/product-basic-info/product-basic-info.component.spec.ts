@@ -42,19 +42,19 @@ describe('ProductBasicInfoComponent options', () => {
         setRequiredInputs();
         fixture.detectChanges();
 
-        expect(component.unitOptions().map(option => option.value)).toEqual(Object.values(MeasurementUnit));
-        expect(component.productTypeOptions().map(option => option.value)).toEqual(Object.values(ProductType));
-        expect(component.visibilityOptions().map(option => option.value)).toEqual(Object.values(ProductVisibility));
+        expect(component['unitOptions']().map(option => option.value)).toEqual(Object.values(MeasurementUnit));
+        expect(component['productTypeOptions']().map(option => option.value)).toEqual(Object.values(ProductType));
+        expect(component['visibilityOptions']().map(option => option.value)).toEqual(Object.values(ProductVisibility));
     });
 
     it('rebuilds select options when language changes', () => {
         setRequiredInputs();
         fixture.detectChanges();
-        const firstOptions = component.unitOptions();
+        const firstOptions = component['unitOptions']();
 
         languageChanges$.next(null);
 
-        expect(component.unitOptions()).not.toBe(firstOptions);
+        expect(component['unitOptions']()).not.toBe(firstOptions);
     });
 });
 
@@ -64,12 +64,12 @@ describe('ProductBasicInfoComponent field errors', () => {
         setRequiredInputs(form);
         fixture.detectChanges();
 
-        expect(component.fieldErrors().name).toBeNull();
+        expect(component['fieldErrors']().name).toBeNull();
 
         form.controls.name.markAsTouched();
         form.controls.name.updateValueAndValidity();
 
-        expect(component.fieldErrors().name).toBe('FORM_ERRORS.REQUIRED');
+        expect(component['fieldErrors']().name).toBe('FORM_ERRORS.REQUIRED');
     });
 
     it('returns min amount error with validator metadata', () => {
@@ -79,7 +79,7 @@ describe('ProductBasicInfoComponent field errors', () => {
         setRequiredInputs(form);
         fixture.detectChanges();
 
-        expect(component.fieldErrors().defaultPortionAmount).toBe('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO:0.001');
+        expect(component['fieldErrors']().defaultPortionAmount).toBe('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO:0.001');
     });
 });
 
@@ -93,11 +93,11 @@ describe('ProductBasicInfoComponent name suggestions', () => {
         const selected: ProductNameSuggestion[] = [];
         setRequiredInputs();
         fixture.detectChanges();
-        component.nameSuggestionSelected.subscribe(value => {
+        component['nameSuggestionSelected'].subscribe(value => {
             selected.push(value);
         });
 
-        component.onNameOptionSelected({
+        component['onNameOptionSelected']({
             id: 'apple',
             value: 'Apple',
             label: 'Apple',
@@ -111,11 +111,11 @@ describe('ProductBasicInfoComponent name suggestions', () => {
         const selected: ProductNameSuggestion[] = [];
         setRequiredInputs();
         fixture.detectChanges();
-        component.nameSuggestionSelected.subscribe(value => {
+        component['nameSuggestionSelected'].subscribe(value => {
             selected.push(value);
         });
 
-        component.onNameOptionSelected({
+        component['onNameOptionSelected']({
             id: 'plain',
             value: 'Plain',
             label: 'Plain',

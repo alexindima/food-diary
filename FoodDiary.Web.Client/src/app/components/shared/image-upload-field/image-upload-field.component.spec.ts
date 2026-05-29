@@ -50,11 +50,11 @@ describe('ImageUploadFieldComponent control value', () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
         fixture.detectChanges();
 
-        component.writeValue({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
-        component.setDisabledState(true);
+        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component['setDisabledState'](true);
 
-        expect(component.selection).toEqual({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
-        expect(component.disabled).toBe(true);
+        expect(component['selection']).toEqual({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        expect(component['disabled']).toBe(true);
     });
 });
 
@@ -64,24 +64,24 @@ describe('ImageUploadFieldComponent upload', () => {
         vi.spyOn(translateService, 'instant').mockReturnValue('Only images');
         fixture.detectChanges();
 
-        component.handleIncomingFile(new File(['text'], 'notes.txt', { type: 'text/plain' }));
+        component['handleIncomingFile'](new File(['text'], 'notes.txt', { type: 'text/plain' }));
         await fixture.whenStable();
 
-        expect(component.error).toBe('Only images');
+        expect(component['error']).toBe('Only images');
         expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
     });
 
     it('uploads valid image files and emits selection', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         const changeSpy = vi.fn();
-        component.imageChanged.subscribe(changeSpy);
+        component['imageChanged'].subscribe(changeSpy);
         fixture.detectChanges();
 
-        component.handleIncomingFile(new File(['image'], 'photo.png', { type: 'image/png' }));
+        component['handleIncomingFile'](new File(['image'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
         expect(imageUploadService.requestUploadUrl).toHaveBeenCalledOnce();
-        expect(component.selection).toEqual({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
+        expect(component['selection']).toEqual({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
         expect(changeSpy).toHaveBeenCalledWith({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
     });
 
@@ -91,10 +91,10 @@ describe('ImageUploadFieldComponent upload', () => {
         fixture.componentRef.setInput('maxSizeMb', TINY_MAX_SIZE_MB);
         fixture.detectChanges();
 
-        component.handleIncomingFile(new File(['image-data'], 'photo.png', { type: 'image/png' }));
+        component['handleIncomingFile'](new File(['image-data'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
-        expect(component.error).toBe('Too large');
+        expect(component['error']).toBe('Too large');
         expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
     });
 });
@@ -105,14 +105,14 @@ describe('ImageUploadFieldComponent clearing', () => {
         fixture.componentRef.setInput('deleteOnClear', true);
         const onChange = vi.fn();
         const onTouched = vi.fn();
-        component.registerOnChange(onChange);
-        component.registerOnTouched(onTouched);
-        component.writeValue({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component['registerOnChange'](onChange);
+        component['registerOnTouched'](onTouched);
+        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
         fixture.detectChanges();
 
-        component.clearImage();
+        component['clearImage']();
 
-        expect(component.selection).toEqual({ url: null, assetId: null });
+        expect(component['selection']).toEqual({ url: null, assetId: null });
         expect(onChange).toHaveBeenCalledWith({ url: null, assetId: null });
         expect(onTouched).toHaveBeenCalledOnce();
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
@@ -126,11 +126,11 @@ describe('ImageUploadFieldComponent interactions', () => {
         const fileInput = { click: clickSpy } as unknown as HTMLInputElement;
         fixture.detectChanges();
 
-        component.setDisabledState(true);
-        component.onZoneClick(fileInput);
-        component.setDisabledState(false);
-        component.writeValue({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
-        component.onZoneClick(fileInput);
+        component['setDisabledState'](true);
+        component['onZoneClick'](fileInput);
+        component['setDisabledState'](false);
+        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component['onZoneClick'](fileInput);
 
         expect(clickSpy).not.toHaveBeenCalled();
     });
@@ -140,10 +140,10 @@ describe('ImageUploadFieldComponent interactions', () => {
         const preventDefault = vi.fn();
         fixture.detectChanges();
 
-        component.onDragOver({ preventDefault } as unknown as DragEvent);
-        expect(component.isDragging).toBe(true);
+        component['onDragOver']({ preventDefault } as unknown as DragEvent);
+        expect(component['isDragging']).toBe(true);
 
-        component.onDragLeave({ preventDefault } as unknown as DragEvent);
-        expect(component.isDragging).toBe(false);
+        component['onDragLeave']({ preventDefault } as unknown as DragEvent);
+        expect(component['isDragging']).toBe(false);
     });
 });

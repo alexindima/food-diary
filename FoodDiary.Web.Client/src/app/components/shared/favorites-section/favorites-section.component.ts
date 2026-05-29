@@ -19,11 +19,11 @@ export class FavoritesSectionComponent {
     public readonly toggleRequested = output();
     public readonly loadMore = output();
 
-    public onToggle(): void {
+    protected onToggle(): void {
         this.toggleRequested.emit();
     }
 
-    public onLoadMore(): void {
+    protected onLoadMore(): void {
         if (!this.showLoadMore() || this.isLoadingMore()) {
             return;
         }

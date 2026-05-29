@@ -77,10 +77,10 @@ describe('NutrientBadgesComponent', () => {
 
     it('should expose input values', () => {
         fixture.detectChanges();
-        expect(component.proteins()).toBe(PROTEIN_VALUE);
-        expect(component.fats()).toBe(FAT_VALUE);
-        expect(component.carbs()).toBe(CARB_VALUE);
-        expect(component.fiber()).toBe(FIBER_VALUE);
-        expect(component.alcohol()).toBe(0);
+        expect(component['proteins']()).toBe(PROTEIN_VALUE);
+        expect(component['fats']()).toBe(FAT_VALUE);
+        expect(component['carbs']()).toBe(CARB_VALUE);
+        expect(component['fiber']()).toBe(FIBER_VALUE);
+        expect(component['alcohol']()).toBe(0);
     });
 });

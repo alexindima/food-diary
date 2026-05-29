@@ -48,11 +48,11 @@ export class RecipeManageComponent {
     private readonly recipeManageFacade = inject(RecipeManageFacade);
 
     public readonly recipe = input<Recipe | null>(null);
-    public globalError = this.recipeManageFacade.globalError;
-    public isSubmitting = this.recipeManageFacade.isSubmitting;
+    protected globalError = this.recipeManageFacade.globalError;
+    protected isSubmitting = this.recipeManageFacade.isSubmitting;
 
-    public recipeForm: FormGroup<RecipeFormData>;
-    public readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
+    protected recipeForm: FormGroup<RecipeFormData>;
+    protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;
 
         return {
@@ -60,11 +60,11 @@ export class RecipeManageComponent {
             submitLabelKey: isEdit ? 'RECIPE_MANAGE.SAVE_BUTTON' : 'RECIPE_MANAGE.ADD_BUTTON',
         };
     });
-    public readonly totalCalories: RecipeNutritionFormManager['totalCalories'];
-    public readonly totalFiber: RecipeNutritionFormManager['totalFiber'];
-    public readonly totalAlcohol: RecipeNutritionFormManager['totalAlcohol'];
-    public readonly nutrientChartData: RecipeNutritionFormManager['nutrientChartData'];
-    public readonly nutritionMode: RecipeNutritionFormManager['nutritionMode'];
+    protected readonly totalCalories: RecipeNutritionFormManager['totalCalories'];
+    protected readonly totalFiber: RecipeNutritionFormManager['totalFiber'];
+    protected readonly totalAlcohol: RecipeNutritionFormManager['totalAlcohol'];
+    protected readonly nutrientChartData: RecipeNutritionFormManager['nutrientChartData'];
+    protected readonly nutritionMode: RecipeNutritionFormManager['nutritionMode'];
 
     private isFormReady = true;
 
@@ -114,37 +114,37 @@ export class RecipeManageComponent {
         });
     }
 
-    public get steps(): FormArray<FormGroup<StepFormData>> {
+    protected get steps(): FormArray<FormGroup<StepFormData>> {
         return this.recipeForm.controls.steps;
     }
 
-    public get expandedStepsSet(): Set<number> {
+    protected get expandedStepsSet(): Set<number> {
         return this.stepFormManager.expandedSteps;
     }
 
     // -- Step management (delegated from steps-list) --
 
-    public addStep(): void {
+    protected addStep(): void {
         this.stepFormManager.addStep();
     }
 
-    public removeStep(index: number): void {
+    protected removeStep(index: number): void {
         this.stepFormManager.removeStep(index);
     }
 
-    public addIngredientToStep(stepIndex: number): void {
+    protected addIngredientToStep(stepIndex: number): void {
         this.stepFormManager.addIngredientToStep(stepIndex);
     }
 
-    public toggleStepExpanded(index: number): void {
+    protected toggleStepExpanded(index: number): void {
         this.stepFormManager.toggleStepExpanded(index);
     }
 
-    public removeIngredientFromStep(event: StepIngredientEvent): void {
+    protected removeIngredientFromStep(event: StepIngredientEvent): void {
         this.stepFormManager.removeIngredientFromStep(event);
     }
 
-    public onProductSelectClick(event: StepIngredientEvent): void {
+    protected onProductSelectClick(event: StepIngredientEvent): void {
         const { stepIndex, ingredientIndex } = event;
         this.recipeManageFacade.openItemSelectionDialog(this.recipe()?.id ?? null).subscribe(selection => {
             if (selection === null) {
@@ -160,17 +160,17 @@ export class RecipeManageComponent {
 
     // -- Nutrition mode --
 
-    public onNutritionModeChange(nextMode: string): void {
+    protected onNutritionModeChange(nextMode: string): void {
         this.nutritionFormManager.onNutritionModeChange(nextMode);
     }
 
-    public onNutritionScaleModeChange(nextMode: string): void {
+    protected onNutritionScaleModeChange(nextMode: string): void {
         this.nutritionFormManager.onNutritionScaleModeChange(nextMode);
     }
 
     // -- Form submission --
 
-    public onSubmit(): void {
+    protected onSubmit(): void {
         this.markFormGroupTouched(this.recipeForm);
 
         if (this.nutritionFormManager.hasMacrosError()) {
@@ -194,7 +194,7 @@ export class RecipeManageComponent {
         }
     }
 
-    public async onCancelAsync(): Promise<void> {
+    protected async onCancelAsync(): Promise<void> {
         await this.recipeManageFacade.cancelManageAsync();
     }
 
@@ -264,7 +264,7 @@ export class RecipeManageComponent {
         });
     }
 
-    public get nutritionScaleMode(): NutritionScaleMode {
+    protected get nutritionScaleMode(): NutritionScaleMode {
         return this.nutritionFormManager.nutritionScaleMode;
     }
 }

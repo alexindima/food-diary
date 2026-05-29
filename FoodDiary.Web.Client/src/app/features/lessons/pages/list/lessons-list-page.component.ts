@@ -27,19 +27,19 @@ import { LessonsListProgressComponent } from './lessons-list-sections/lessons-li
 })
 export class LessonsListPageComponent {
     private readonly router = inject(Router);
-    public readonly facade = inject(LessonFacade);
-    public readonly progress = computed(() => buildLessonProgress(this.facade.lessons()));
-    public readonly lessons = computed(() => buildLessonListItems(this.facade.lessons()));
+    protected readonly facade = inject(LessonFacade);
+    protected readonly progress = computed(() => buildLessonProgress(this.facade.lessons()));
+    protected readonly lessons = computed(() => buildLessonListItems(this.facade.lessons()));
 
     public constructor() {
         this.facade.loadLessons();
     }
 
-    public filterByCategory(category: string | null): void {
+    protected filterByCategory(category: string | null): void {
         this.facade.loadLessons(category);
     }
 
-    public openLesson(id: string): void {
+    protected openLesson(id: string): void {
         void this.router.navigate(['/lessons', id]);
     }
 }

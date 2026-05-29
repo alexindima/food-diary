@@ -14,8 +14,8 @@ describe('MealDetailItemPreviewComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.visibleItems().length).toBe(PREVIEW_LIMIT);
-        expect(component.hiddenItemPreviewCount()).toBe(1);
+        expect(component['visibleItems']().length).toBe(PREVIEW_LIMIT);
+        expect(component['hiddenItemPreviewCount']()).toBe(1);
         expect(getFixtureText(fixture)).toContain('CONSUMPTION_DETAIL.SUMMARY.ITEMS_MORE');
     });
 
@@ -25,14 +25,14 @@ describe('MealDetailItemPreviewComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.visibleItems()).toEqual(items);
+        expect(component['visibleItems']()).toEqual(items);
         expect(getFixtureText(fixture)).toContain('CONSUMPTION_DETAIL.SUMMARY.ITEMS_HIDE');
     });
 
     it('should emit expand toggle from more button', async () => {
         const { component, fixture } = await setupComponentAsync({ items: createItems(PREVIEW_LIMIT + 1) });
         const toggleSpy = vi.fn();
-        component.itemPreviewExpandedToggle.subscribe(toggleSpy);
+        component['itemPreviewExpandedToggle'].subscribe(toggleSpy);
 
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;

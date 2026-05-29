@@ -31,7 +31,7 @@ describe('GoalsBodyTargetsComponent', () => {
     it('emits changed target key and DOM event', () => {
         const fixture = createComponent();
         const targetInput = vi.fn();
-        fixture.componentInstance.targetInput.subscribe(targetInput);
+        fixture.componentInstance['targetInput'].subscribe(targetInput);
 
         getElement(fixture).querySelector<HTMLInputElement>('.goals__body-input')?.dispatchEvent(new Event('input'));
 

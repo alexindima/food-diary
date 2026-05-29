@@ -59,32 +59,32 @@ export class PremiumAccessPageComponent {
 
     private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-    public readonly overview = signal<BillingOverview | null>(null);
-    public readonly isLoading = signal(true);
-    public readonly checkoutLoadingPlan = signal<BillingPlan | null>(null);
-    public readonly portalLoading = signal(false);
-    public readonly trialLoading = signal(false);
-    public readonly errorMessage = signal<string | null>(null);
-    public readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
+    protected readonly overview = signal<BillingOverview | null>(null);
+    protected readonly isLoading = signal(true);
+    protected readonly checkoutLoadingPlan = signal<BillingPlan | null>(null);
+    protected readonly portalLoading = signal(false);
+    protected readonly trialLoading = signal(false);
+    protected readonly errorMessage = signal<string | null>(null);
+    protected readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
     private readonly languageVersion = signal(0);
 
-    public readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
-    public readonly availableProviders = computed(() => {
+    protected readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
+    protected readonly availableProviders = computed(() => {
         const overview = this.overview();
         return overview?.availableProviders.filter(provider => provider.trim().length > 0) ?? [];
     });
-    public readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
-    public readonly showPlans = computed(
+    protected readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
+    protected readonly showPlans = computed(
         () => !this.isLoading() && (!this.isPremium() || this.overview()?.premiumTrialActive === true) && this.checkoutAvailable(),
     );
-    public readonly currentPeriodEndLabel = computed(() => {
+    protected readonly currentPeriodEndLabel = computed(() => {
         this.languageVersion();
         return this.formatMediumDate(this.overview()?.currentPeriodEndUtc);
     });
-    public readonly overviewViewModel = computed<PremiumOverviewCardViewModel>(() =>
+    protected readonly overviewViewModel = computed<PremiumOverviewCardViewModel>(() =>
         buildPremiumOverviewCardViewModel(this.overview(), this.isPremium(), this.checkoutAvailable(), this.currentPeriodEndLabel()),
     );
-    public readonly planCards = computed<PremiumPlanCardViewModel[]>(() =>
+    protected readonly planCards = computed<PremiumPlanCardViewModel[]>(() =>
         buildPremiumPlanCards(this.availableProviders(), this.checkoutLoadingPlan()),
     );
 
@@ -95,7 +95,7 @@ export class PremiumAccessPageComponent {
         void this.initializePageAsync();
     }
 
-    public async startCheckoutAsync(plan: BillingPlan, provider?: BillingProvider): Promise<void> {
+    protected async startCheckoutAsync(plan: BillingPlan, provider?: BillingProvider): Promise<void> {
         if (!this.isBrowser || this.checkoutLoadingPlan() !== null) {
             return;
         }
@@ -118,11 +118,11 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    public async startCheckoutFromViewAsync(request: PremiumCheckoutRequest): Promise<void> {
+    protected async startCheckoutFromViewAsync(request: PremiumCheckoutRequest): Promise<void> {
         await this.startCheckoutAsync(request.plan, request.provider);
     }
 
-    public async startTrialAsync(): Promise<void> {
+    protected async startTrialAsync(): Promise<void> {
         if (this.trialLoading()) {
             return;
         }
@@ -142,7 +142,7 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    public async openPortalAsync(): Promise<void> {
+    protected async openPortalAsync(): Promise<void> {
         if (!this.isBrowser || this.portalLoading()) {
             return;
         }
@@ -165,7 +165,7 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    public async reloadOverviewAsync(): Promise<void> {
+    protected async reloadOverviewAsync(): Promise<void> {
         await this.loadOverviewAsync();
     }
 

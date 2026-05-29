@@ -47,12 +47,12 @@ export class RecipeStepCardComponent {
     public readonly removeIngredient = output<number>();
     public readonly selectProduct = output<number>();
 
-    public readonly isStepTitleEditing = signal(false);
-    public readonly ingredientsCount = computed(() => {
+    protected readonly isStepTitleEditing = signal(false);
+    protected readonly ingredientsCount = computed(() => {
         this.formRevision();
         return this.ingredients.length;
     });
-    public readonly descriptionSummary = computed(() => {
+    protected readonly descriptionSummary = computed(() => {
         this.formRevision();
         this.currentLanguage();
         const description = this.stepFormGroup().controls.description.value.trim();
@@ -61,7 +61,7 @@ export class RecipeStepCardComponent {
         }
         return description;
     });
-    public readonly titleDisplay = computed(() => {
+    protected readonly titleDisplay = computed(() => {
         this.formRevision();
         this.currentLanguage();
         const titleValue = this.stepFormGroup().controls.title.value;
@@ -71,14 +71,14 @@ export class RecipeStepCardComponent {
         }
         return this.translateService.instant('RECIPE_MANAGE.STEP_TITLE', { index: this.stepIndex() + 1 });
     });
-    public readonly descriptionError = computed(() => {
+    protected readonly descriptionError = computed(() => {
         this.formRevision();
         this.currentLanguage();
         return resolveRecipeControlError(this.stepFormGroup().controls.description, this.translateService);
     });
-    public readonly expandedIcon = computed(() => (this.isExpanded() ? 'expand_less' : 'expand_more'));
-    public readonly isFirst = computed(() => this.stepIndex() === 0);
-    public readonly ingredientRows = computed<RecipeIngredientRowView[]>(() => {
+    protected readonly expandedIcon = computed(() => (this.isExpanded() ? 'expand_less' : 'expand_more'));
+    protected readonly isFirst = computed(() => this.stepIndex() === 0);
+    protected readonly ingredientRows = computed<RecipeIngredientRowView[]>(() => {
         this.formRevision();
         this.currentLanguage();
 
@@ -117,11 +117,11 @@ export class RecipeStepCardComponent {
         });
     }
 
-    public get ingredients(): FormArray<FormGroup<FormGroupControls<IngredientFormValues>>> {
+    protected get ingredients(): FormArray<FormGroup<FormGroupControls<IngredientFormValues>>> {
         return this.stepFormGroup().controls.ingredients;
     }
 
-    public toggleStepTitleEdit(): void {
+    protected toggleStepTitleEdit(): void {
         if (this.isStepTitleEditing()) {
             this.commitStepTitle();
             this.isStepTitleEditing.set(false);
@@ -130,28 +130,28 @@ export class RecipeStepCardComponent {
         this.isStepTitleEditing.set(true);
     }
 
-    public onStepTitleBlur(): void {
+    protected onStepTitleBlur(): void {
         this.commitStepTitle();
         this.isStepTitleEditing.set(false);
     }
 
-    public onProductSelectClick(ingredientIndex: number): void {
+    protected onProductSelectClick(ingredientIndex: number): void {
         this.selectProduct.emit(ingredientIndex);
     }
 
-    public onRemoveIngredient(ingredientIndex: number): void {
+    protected onRemoveIngredient(ingredientIndex: number): void {
         this.removeIngredient.emit(ingredientIndex);
     }
 
-    public onAddIngredient(): void {
+    protected onAddIngredient(): void {
         this.addIngredient.emit();
     }
 
-    public onRemoveStep(): void {
+    protected onRemoveStep(): void {
         this.removeStep.emit();
     }
 
-    public onToggleExpanded(): void {
+    protected onToggleExpanded(): void {
         this.toggleExpanded.emit();
     }
 

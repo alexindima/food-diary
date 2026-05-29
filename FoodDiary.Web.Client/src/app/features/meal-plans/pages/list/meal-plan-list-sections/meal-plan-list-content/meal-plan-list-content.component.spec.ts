@@ -25,7 +25,7 @@ describe('MealPlanListContentComponent', () => {
         const fixture = createComponent({ plans: [createPlanCard()] });
         const element = getElement(fixture);
         const planOpen = vi.fn();
-        fixture.componentInstance.planOpen.subscribe(planOpen);
+        fixture.componentInstance['planOpen'].subscribe(planOpen);
 
         element.querySelector<HTMLElement>('.meal-plan-card')?.click();
 

@@ -15,6 +15,6 @@ import { MicronutrientSectionComponent } from './micronutrient-section/micronutr
 export class MicronutrientPanelComponent {
     public readonly nutrients = input<Micronutrient[]>([]);
 
-    public readonly vitamins = computed(() => buildVitaminMicronutrientViews(this.nutrients()));
-    public readonly minerals = computed(() => buildMineralMicronutrientViews(this.nutrients()));
+    protected readonly vitamins = computed(() => buildVitaminMicronutrientViews(this.nutrients()));
+    protected readonly minerals = computed(() => buildMineralMicronutrientViews(this.nutrients()));
 }

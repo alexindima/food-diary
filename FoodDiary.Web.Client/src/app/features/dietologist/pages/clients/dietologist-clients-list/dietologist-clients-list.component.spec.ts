@@ -23,12 +23,12 @@ describe('DietologistClientsListComponent', () => {
     it('renders client cards and forwards open event', () => {
         const fixture = createComponent({ loading: false, items: [createViewModel()] });
         const open = vi.fn();
-        fixture.componentInstance.clientOpen.subscribe(open);
+        fixture.componentInstance['clientOpen'].subscribe(open);
 
         getHost(fixture).querySelector<HTMLElement>('fd-ui-card')?.click();
 
         expect(getHost(fixture).textContent).toContain('Alex Ivanov');
-        expect(open).toHaveBeenCalledWith(fixture.componentInstance.items()[0].client);
+        expect(open).toHaveBeenCalledWith(fixture.componentInstance['items']()[0].client);
     });
 });
 

@@ -31,7 +31,7 @@ describe('SidebarMobileComponent', () => {
         const fixture = createComponent(null);
         const component = fixture.componentInstance;
         const foodToggle = vi.fn();
-        component.foodToggle.subscribe(foodToggle);
+        component['foodToggle'].subscribe(foodToggle);
 
         const host = fixture.nativeElement as HTMLElement;
         const foodButton = host.querySelector('button[aria-haspopup="dialog"]');

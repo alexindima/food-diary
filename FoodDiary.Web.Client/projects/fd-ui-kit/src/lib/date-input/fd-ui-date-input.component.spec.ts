@@ -100,7 +100,7 @@ function registerLabelTests(): void {
 function registerValueAccessorTests(): void {
     describe('value accessor', () => {
         it('should write value via CVA with string', () => {
-            component.writeValue(MARCH_DATE_STRING);
+            component['writeValue'](MARCH_DATE_STRING);
 
             const dateValue = component['value']();
             expect(dateValue).toBeTruthy();
@@ -110,16 +110,16 @@ function registerValueAccessorTests(): void {
         });
 
         it('should write null value via CVA', () => {
-            component.writeValue(JANUARY_DATE_STRING);
+            component['writeValue'](JANUARY_DATE_STRING);
             expect(component['value']()).toBeTruthy();
 
-            component.writeValue(null);
+            component['writeValue'](null);
             expect(component['value']()).toBeNull();
         });
 
         it('should write Date object via CVA', () => {
             const date = new Date(TEST_YEAR, JUNE_INDEX, JUNE_DAY);
-            component.writeValue(date);
+            component['writeValue'](date);
 
             const dateValue = component['value']();
             expect(dateValue).toBeTruthy();
@@ -183,7 +183,7 @@ function registerStateTests(): void {
         });
 
         it('should set disabled state', () => {
-            component.setDisabledState(true);
+            component['setDisabledState'](true);
             fixture.detectChanges();
 
             expect(component['disabled']()).toBe(true);
@@ -193,8 +193,8 @@ function registerStateTests(): void {
         });
 
         it('should re-enable after being disabled', () => {
-            component.setDisabledState(true);
-            component.setDisabledState(false);
+            component['setDisabledState'](true);
+            component['setDisabledState'](false);
             fixture.detectChanges();
 
             expect(component['disabled']()).toBe(false);
@@ -202,7 +202,7 @@ function registerStateTests(): void {
 
         it('should call onChange with formatted date string when date is selected', () => {
             const onChangeSpy = vi.fn();
-            component.registerOnChange(onChangeSpy);
+            component['registerOnChange'](onChangeSpy);
 
             component['onDateSelect'](new Date(TEST_YEAR, MARCH_INDEX, TEST_DAY));
 
@@ -210,7 +210,7 @@ function registerStateTests(): void {
         });
 
         it('should display selected date value in the control', () => {
-            component.writeValue(MARCH_DATE_STRING);
+            component['writeValue'](MARCH_DATE_STRING);
             fixture.detectChanges();
 
             const inputEl = requireInputElement('.fd-ui-date-input__control');

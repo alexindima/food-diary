@@ -33,16 +33,16 @@ type AdminModerationActionDialogViewState = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminModerationActionDialogComponent {
-    public readonly data = inject<AdminModerationActionDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<AdminModerationActionDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef =
         inject<FdUiDialogRef<AdminModerationActionDialogComponent, AdminModerationActionDialogResult>>(FdUiDialogRef);
     private readonly moderationService = inject(AdminModerationService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public adminNote = '';
-    public readonly isSubmitting = signal(false);
+    protected adminNote = '';
+    protected readonly isSubmitting = signal(false);
 
-    public readonly viewState = computed(
+    protected readonly viewState = computed(
         (): AdminModerationActionDialogViewState =>
             this.data.action === 'review'
                 ? {
@@ -57,7 +57,7 @@ export class AdminModerationActionDialogComponent {
                   },
     );
 
-    public onConfirm(): void {
+    protected onConfirm(): void {
         this.isSubmitting.set(true);
         const adminNote = this.adminNote.trim();
         const action = { adminNote: adminNote.length > 0 ? adminNote : null };
@@ -77,7 +77,7 @@ export class AdminModerationActionDialogComponent {
         });
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close({ confirmed: false });
     }
 }

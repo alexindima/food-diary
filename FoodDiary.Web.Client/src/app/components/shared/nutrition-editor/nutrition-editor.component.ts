@@ -49,7 +49,7 @@ export class NutritionEditorComponent {
     protected readonly hasMacrosError = computed(() => this.hasText(this.macrosError()));
     protected readonly hasManualHint = computed(() => this.showManualHint() && this.manualHintKey().trim().length > 0);
 
-    public readonly nutrientFillColors = {
+    protected readonly nutrientFillColors = {
         calories: 'var(--fd-color-nutrition-calories-fill)',
         proteins: 'var(--fd-color-nutrition-proteins-fill)',
         fats: 'var(--fd-color-nutrition-fats-fill)',
@@ -57,14 +57,14 @@ export class NutritionEditorComponent {
         fiber: 'var(--fd-color-nutrition-fiber-fill)',
         alcohol: 'var(--fd-color-nutrition-alcohol-fill)',
     };
-    public readonly nutrientTextColors = {
+    protected readonly nutrientTextColors = {
         calories: 'var(--fd-color-nutrition-calories)',
         proteins: 'var(--fd-color-nutrition-proteins)',
         fats: 'var(--fd-color-nutrition-fats)',
         carbs: 'var(--fd-color-nutrition-carbs)',
         fiber: 'var(--fd-color-nutrition-fiber)',
     };
-    public readonly macroBarState = computed<NutritionMacroBarViewModel>(() => {
+    protected readonly macroBarState = computed<NutritionMacroBarViewModel>(() => {
         const state = this.macroState();
 
         return {

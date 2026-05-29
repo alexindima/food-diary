@@ -62,7 +62,7 @@ describe('FdUiSegmentedToggleComponent', () => {
         buttons[1].click();
         fixture.detectChanges();
 
-        expect(component.selectedValue()).toBe('week');
+        expect(component['selectedValue']()).toBe('week');
         expect(buttons[1].getAttribute('aria-checked')).toBe('true');
         expect(buttons[0].getAttribute('aria-checked')).toBe('false');
     });
@@ -94,7 +94,7 @@ describe('FdUiSegmentedToggleComponent', () => {
 
     it('should emit selectedValue change', () => {
         let emittedValue: string | undefined;
-        component.selectedValue.subscribe(value => {
+        component['selectedValue'].subscribe(value => {
             emittedValue = value;
         });
 

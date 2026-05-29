@@ -46,7 +46,7 @@ export class StatisticsNutritionComponent {
 
     public readonly selectedTabChange = output<string>();
 
-    public onTabChange(value: string): void {
+    protected onTabChange(value: string): void {
         this.selectedTabChange.emit(value);
     }
 }

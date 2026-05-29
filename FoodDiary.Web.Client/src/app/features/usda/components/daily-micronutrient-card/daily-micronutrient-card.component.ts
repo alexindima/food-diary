@@ -17,5 +17,5 @@ export class DailyMicronutrientCardComponent {
     public readonly linkedCount = input(0);
     public readonly totalCount = input(0);
 
-    public readonly keyNutrients = computed(() => buildDailyMicronutrientViews(this.nutrients()));
+    protected readonly keyNutrients = computed(() => buildDailyMicronutrientViews(this.nutrients()));
 }

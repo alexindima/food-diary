@@ -19,15 +19,15 @@ describe('DashboardWidgetHeaderComponent', () => {
         const component = fixture.componentInstance;
         fixture.detectChanges();
 
-        expect(component.hasIcon()).toBe(false);
+        expect(component['hasIcon']()).toBe(false);
 
         fixture.componentRef.setInput('iconLabel', 'A');
         fixture.detectChanges();
-        expect(component.hasIcon()).toBe(true);
+        expect(component['hasIcon']()).toBe(true);
 
         fixture.componentRef.setInput('iconLabel', '');
         fixture.componentRef.setInput('iconName', 'restaurant');
         fixture.detectChanges();
-        expect(component.hasIcon()).toBe(true);
+        expect(component['hasIcon']()).toBe(true);
     });
 });

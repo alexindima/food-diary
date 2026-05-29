@@ -132,48 +132,48 @@ describe('RecipeDetailComponent summary state', () => {
     });
 
     it('should extract nutrition from recipe', () => {
-        expect(component.calories).toBe(TOTAL_CALORIES);
-        expect(component.proteins).toBe(TOTAL_PROTEINS);
-        expect(component.fats).toBe(TOTAL_FATS);
-        expect(component.carbs).toBe(TOTAL_CARBS);
-        expect(component.fiber).toBe(TOTAL_FIBER);
-        expect(component.alcohol).toBe(0);
+        expect(component['calories']).toBe(TOTAL_CALORIES);
+        expect(component['proteins']).toBe(TOTAL_PROTEINS);
+        expect(component['fats']).toBe(TOTAL_FATS);
+        expect(component['carbs']).toBe(TOTAL_CARBS);
+        expect(component['fiber']).toBe(TOTAL_FIBER);
+        expect(component['alcohol']).toBe(0);
     });
 
     it('should calculate total time', () => {
-        expect(component.totalTime).toBe(TOTAL_TIME_MINUTES);
+        expect(component['totalTime']).toBe(TOTAL_TIME_MINUTES);
     });
 
     it('should count ingredients across steps', () => {
-        expect(component.ingredientCount).toBe(INGREDIENT_COUNT);
+        expect(component['ingredientCount']).toBe(INGREDIENT_COUNT);
     });
 
     it('should have summary and nutrients tabs', () => {
-        expect(component.tabs.length).toBe(EXPECTED_TAB_COUNT);
-        expect(component.tabs[0].value).toBe('summary');
-        expect(component.tabs[1].value).toBe('nutrients');
+        expect(component['tabs'].length).toBe(EXPECTED_TAB_COUNT);
+        expect(component['tabs'][0].value).toBe('summary');
+        expect(component['tabs'][1].value).toBe('nutrients');
     });
 
     it('should change active tab', () => {
-        expect(component.activeTab).toBe('summary');
+        expect(component['activeTab']).toBe('summary');
 
-        component.onTabChange('nutrients');
-        expect(component.activeTab).toBe('nutrients');
+        component['onTabChange']('nutrients');
+        expect(component['activeTab']).toBe('nutrients');
 
-        component.onTabChange('summary');
-        expect(component.activeTab).toBe('summary');
+        component['onTabChange']('summary');
+        expect(component['activeTab']).toBe('summary');
     });
 });
 
 describe('RecipeDetailComponent actions', () => {
     it('should emit edit action', () => {
-        component.onEdit();
+        component['onEdit']();
 
         expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Edit' }));
     });
 
     it('should emit delete action after confirmation', () => {
-        component.onDelete();
+        component['onDelete']();
 
         expect(mockFdDialogService.open).toHaveBeenCalled();
         expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Delete' }));
@@ -182,7 +182,7 @@ describe('RecipeDetailComponent actions', () => {
     it('should not emit delete when delete is disabled', () => {
         Object.defineProperty(component, 'isDeleteDisabled', { get: () => true });
 
-        component.onDelete();
+        component['onDelete']();
 
         expect(mockFdDialogService.open).not.toHaveBeenCalled();
         expect(mockDialogRef.close).not.toHaveBeenCalled();
@@ -191,23 +191,23 @@ describe('RecipeDetailComponent actions', () => {
     it('should not emit edit when edit is disabled', () => {
         Object.defineProperty(component, 'isEditDisabled', { get: () => true });
 
-        component.onEdit();
+        component['onEdit']();
 
         expect(mockDialogRef.close).not.toHaveBeenCalled();
     });
 
     it('should handle duplicate', () => {
-        component.onDuplicate();
+        component['onDuplicate']();
 
         expect(mockRecipeService.duplicate).toHaveBeenCalledWith('1');
         expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '2', action: 'Duplicate' }));
     });
 
     it('should detect canModify based on ownership and usage', () => {
-        expect(component.canModify).toBe(true);
+        expect(component['canModify']).toBe(true);
     });
 
     it('should build macro blocks', () => {
-        expect(component.macroBlocks.length).toBe(EXPECTED_MACRO_BLOCK_COUNT);
+        expect(component['macroBlocks'].length).toBe(EXPECTED_MACRO_BLOCK_COUNT);
     });
 });

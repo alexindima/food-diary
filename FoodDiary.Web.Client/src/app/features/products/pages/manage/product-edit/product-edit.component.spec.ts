@@ -14,7 +14,7 @@ describe('ProductEditComponent', () => {
     it('defaults product input to null', () => {
         const { component } = setupComponent();
 
-        expect(component.product()).toBeNull();
+        expect(component['product']()).toBeNull();
     });
 
     it('accepts product input for edit form wrapper', () => {
@@ -24,7 +24,7 @@ describe('ProductEditComponent', () => {
         fixture.componentRef.setInput('product', product);
         fixture.detectChanges();
 
-        expect(component.product()).toEqual(product);
+        expect(component['product']()).toEqual(product);
     });
 });
 

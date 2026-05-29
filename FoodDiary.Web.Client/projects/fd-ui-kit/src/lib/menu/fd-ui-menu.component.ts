@@ -25,7 +25,7 @@ export class FdUiMenuComponent {
         return this.templateRefValue();
     }
 
-    public close(): void {
+    protected close(): void {
         this.closed.emit();
     }
 

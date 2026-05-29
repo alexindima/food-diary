@@ -31,15 +31,15 @@ export class RecipeStepsListComponent {
     public readonly removeIngredient = output<StepIngredientEvent>();
     public readonly selectProduct = output<StepIngredientEvent>();
 
-    public isStepExpanded(index: number): boolean {
+    protected isStepExpanded(index: number): boolean {
         return this.expandedSteps().has(index);
     }
 
-    public onToggleStepExpanded(index: number): void {
+    protected onToggleStepExpanded(index: number): void {
         this.stepExpandedToggle.emit(index);
     }
 
-    public onStepDrop(event: CdkDragDrop<Array<FormGroup<StepFormData>>>): void {
+    protected onStepDrop(event: CdkDragDrop<Array<FormGroup<StepFormData>>>): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -50,23 +50,23 @@ export class RecipeStepsListComponent {
         steps.markAsDirty();
     }
 
-    public onRemoveStep(index: number): void {
+    protected onRemoveStep(index: number): void {
         this.removeStep.emit(index);
     }
 
-    public onAddStep(): void {
+    protected onAddStep(): void {
         this.addStep.emit();
     }
 
-    public onAddIngredient(stepIndex: number): void {
+    protected onAddIngredient(stepIndex: number): void {
         this.addIngredient.emit(stepIndex);
     }
 
-    public onRemoveIngredient(stepIndex: number, ingredientIndex: number): void {
+    protected onRemoveIngredient(stepIndex: number, ingredientIndex: number): void {
         this.removeIngredient.emit({ stepIndex, ingredientIndex });
     }
 
-    public onSelectProduct(stepIndex: number, ingredientIndex: number): void {
+    protected onSelectProduct(stepIndex: number, ingredientIndex: number): void {
         this.selectProduct.emit({ stepIndex, ingredientIndex });
     }
 }

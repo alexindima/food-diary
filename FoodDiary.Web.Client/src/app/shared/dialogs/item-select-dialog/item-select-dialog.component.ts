@@ -39,7 +39,7 @@ export class ItemSelectDialogComponent {
     public readonly productSelected = output<Product>();
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output();
-    public readonly tabs: FdUiTab[] = [
+    protected readonly tabs: FdUiTab[] = [
         {
             value: 'Product',
             labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.PRODUCTS_TAB',
@@ -49,25 +49,25 @@ export class ItemSelectDialogComponent {
             labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB',
         },
     ];
-    public readonly activeTab = signal<'Product' | 'Recipe'>(this.dialogData?.initialTab === 'Recipe' ? 'Recipe' : 'Product');
-    public readonly createActionLabelKey = computed(() =>
+    protected readonly activeTab = signal<'Product' | 'Recipe'>(this.dialogData?.initialTab === 'Recipe' ? 'Recipe' : 'Product');
+    protected readonly createActionLabelKey = computed(() =>
         this.activeTab() === 'Product' ? 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' : 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON',
     );
-    public readonly excludedRecipeId = this.dialogData?.excludedRecipeId ?? null;
+    protected readonly excludedRecipeId = this.dialogData?.excludedRecipeId ?? null;
 
-    public onProductSelected(product: Product): void {
+    protected onProductSelected(product: Product): void {
         this.completeWith({ type: 'Product', product });
     }
 
-    public onRecipeSelected(recipe: Recipe): void {
+    protected onRecipeSelected(recipe: Recipe): void {
         this.completeWith({ type: 'Recipe', recipe });
     }
 
-    public onCreateRecipeRequested(): void {
+    protected onCreateRecipeRequested(): void {
         this.completeWith(null);
     }
 
-    public onTabChange(tab: string): void {
+    protected onTabChange(tab: string): void {
         if (tab !== 'Product' && tab !== 'Recipe') {
             return;
         }
@@ -75,7 +75,7 @@ export class ItemSelectDialogComponent {
         this.activeTab.set(tab);
     }
 
-    public onCreateAction(): void {
+    protected onCreateAction(): void {
         if (this.activeTab() === 'Product') {
             this.fdDialogService
                 .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {

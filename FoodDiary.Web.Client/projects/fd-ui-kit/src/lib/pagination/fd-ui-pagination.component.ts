@@ -30,7 +30,7 @@ export class FdUiPaginationComponent {
         return Array.from({ length: end - adjustedStart }, (_, index) => adjustedStart + index);
     });
 
-    public goToPage(index: number): void {
+    protected goToPage(index: number): void {
         const nextIndex = Math.min(Math.max(index, 0), this.pageCount() - 1);
         if (nextIndex === this.pageIndex()) {
             return;

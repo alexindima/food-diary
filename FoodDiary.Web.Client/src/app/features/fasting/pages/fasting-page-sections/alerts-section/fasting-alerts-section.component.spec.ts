@@ -24,8 +24,8 @@ describe('FastingAlertsSectionComponent', () => {
         const fixture = createComponent([createAlert()]);
         const promptSnooze = vi.fn();
         const promptDismiss = vi.fn();
-        fixture.componentInstance.promptSnooze.subscribe(promptSnooze);
-        fixture.componentInstance.promptDismiss.subscribe(promptDismiss);
+        fixture.componentInstance['promptSnooze'].subscribe(promptSnooze);
+        fixture.componentInstance['promptDismiss'].subscribe(promptDismiss);
         const element = getElement(fixture);
         const alert = fixture.debugElement.query(By.css('fd-ui-inline-alert'));
 

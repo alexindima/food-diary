@@ -25,8 +25,8 @@ describe('MicronutrientPanelComponent', () => {
         ]);
         const text = getText(fixture);
 
-        expect(component.vitamins().map(nutrient => nutrient.name)).toEqual(['Vitamin C']);
-        expect(component.minerals().map(nutrient => nutrient.name)).toEqual(['Calcium']);
+        expect(component['vitamins']().map(nutrient => nutrient.name)).toEqual(['Vitamin C']);
+        expect(component['minerals']().map(nutrient => nutrient.name)).toEqual(['Calcium']);
         expect(text).toContain('Vitamin C');
         expect(text).toContain('Calcium');
     });

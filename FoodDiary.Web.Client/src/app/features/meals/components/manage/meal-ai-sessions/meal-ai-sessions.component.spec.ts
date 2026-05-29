@@ -9,7 +9,7 @@ describe('MealAiSessionsComponent rows', () => {
     it('should build collapsed AI session rows with preview items and totals', async () => {
         const { component } = await setupComponentAsync([createSession()]);
 
-        expect(component.aiSessionRows()).toEqual([
+        expect(component['aiSessionRows']()).toEqual([
             expect.objectContaining({
                 index: 0,
                 itemCount: 3,
@@ -30,9 +30,9 @@ describe('MealAiSessionsComponent rows', () => {
     it('should include all items when session is expanded', async () => {
         const { component } = await setupComponentAsync([createSession()]);
 
-        component.toggleAiSessionExpanded(0);
+        component['toggleAiSessionExpanded'](0);
 
-        expect(component.aiSessionRows()[0]).toEqual(
+        expect(component['aiSessionRows']()[0]).toEqual(
             expect.objectContaining({
                 isExpanded: true,
                 hiddenItemsCount: 1,
@@ -48,10 +48,10 @@ describe('MealAiSessionsComponent rows', () => {
     it('should collapse expanded session on second toggle', async () => {
         const { component } = await setupComponentAsync([createSession()]);
 
-        component.toggleAiSessionExpanded(0);
-        component.toggleAiSessionExpanded(0);
+        component['toggleAiSessionExpanded'](0);
+        component['toggleAiSessionExpanded'](0);
 
-        expect(component.aiSessionRows()[0]?.isExpanded).toBe(false);
+        expect(component['aiSessionRows']()[0]?.isExpanded).toBe(false);
     });
 });
 
@@ -60,11 +60,11 @@ describe('MealAiSessionsComponent actions', () => {
         const { component } = await setupComponentAsync([createSession()]);
         const editHandler = vi.fn();
         const deleteHandler = vi.fn();
-        component.editSession.subscribe(editHandler);
-        component.deleteSession.subscribe(deleteHandler);
+        component['editSession'].subscribe(editHandler);
+        component['deleteSession'].subscribe(deleteHandler);
 
-        component.onEditSession(1);
-        component.onDeleteSession(2);
+        component['onEditSession'](1);
+        component['onDeleteSession'](2);
 
         expect(editHandler).toHaveBeenCalledWith(1);
         expect(deleteHandler).toHaveBeenCalledWith(2);

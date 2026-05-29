@@ -13,16 +13,16 @@ describe('UserManageDietologistPermissionsComponent', () => {
             permissionOptions: typeof DIETOLOGIST_PERMISSION_OPTIONS;
         };
 
-        expect(component.permissionOptions).toEqual(DIETOLOGIST_PERMISSION_OPTIONS);
+        expect(component['permissionOptions']).toEqual(DIETOLOGIST_PERMISSION_OPTIONS);
     });
 
     it('emits permission changes', async () => {
         const fixture = await createComponentAsync();
         const component = fixture.componentInstance;
         const permissionChange = vi.fn();
-        component.permissionChange.subscribe(permissionChange);
+        component['permissionChange'].subscribe(permissionChange);
 
-        component.permissionChange.emit({ controlName: 'shareMeals', value: false });
+        component['permissionChange'].emit({ controlName: 'shareMeals', value: false });
 
         expect(permissionChange).toHaveBeenCalledWith({ controlName: 'shareMeals', value: false });
     });

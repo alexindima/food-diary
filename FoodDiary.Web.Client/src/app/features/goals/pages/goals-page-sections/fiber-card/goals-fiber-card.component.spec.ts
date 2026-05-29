@@ -25,8 +25,8 @@ describe('GoalsFiberCardComponent', () => {
         const fixture = createComponent(createFiber());
         const macroInput = vi.fn();
         const macroSlider = vi.fn();
-        fixture.componentInstance.macroInput.subscribe(macroInput);
-        fixture.componentInstance.macroSlider.subscribe(macroSlider);
+        fixture.componentInstance['macroInput'].subscribe(macroInput);
+        fixture.componentInstance['macroSlider'].subscribe(macroSlider);
         const element = getElement(fixture);
 
         expect(element.textContent).toContain('GOALS_PAGE.FIBER_GROUP');

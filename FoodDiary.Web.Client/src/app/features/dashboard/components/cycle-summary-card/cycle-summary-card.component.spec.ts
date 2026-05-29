@@ -21,19 +21,19 @@ describe('CycleSummaryCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.hasCycle()).toBe(true);
-        expect(component.cycleDay()).toBe(CYCLE_DAY);
-        expect(component.statusKey()).toBe('CYCLE_CARD.NEXT_PERIOD_IN');
-        expect(component.statusDays()).toBe(DAYS_TO_PERIOD);
+        expect(component['hasCycle']()).toBe(true);
+        expect(component['cycleDay']()).toBe(CYCLE_DAY);
+        expect(component['statusKey']()).toBe('CYCLE_CARD.NEXT_PERIOD_IN');
+        expect(component['statusDays']()).toBe(DAYS_TO_PERIOD);
     });
 
     it('emits setup action when cycle data is missing', async () => {
         const { component } = await setupComponentAsync({ startDate: null, predictions: null });
         const setupSpy = vi.fn();
-        component.setupAction.subscribe(setupSpy);
+        component['setupAction'].subscribe(setupSpy);
 
-        expect(component.hasCycle()).toBe(false);
-        component.onSetup();
+        expect(component['hasCycle']()).toBe(false);
+        component['onSetup']();
 
         expect(setupSpy).toHaveBeenCalledOnce();
     });

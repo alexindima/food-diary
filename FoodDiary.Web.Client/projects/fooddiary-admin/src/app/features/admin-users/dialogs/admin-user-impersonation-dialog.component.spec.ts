@@ -49,23 +49,23 @@ describe('AdminUserImpersonationDialogComponent', () => {
     });
 
     it('should require a reason', () => {
-        component.submit();
+        component['submit']();
 
         expect(usersService.startImpersonation).not.toHaveBeenCalled();
-        expect(component.reasonError()).toBe('Reason is required.');
+        expect(component['reasonError']()).toBe('Reason is required.');
     });
 
     it('should validate minimum reason length', () => {
-        component.form.controls.reason.setValue('too short');
-        component.submit();
+        component['form'].controls.reason.setValue('too short');
+        component['submit']();
 
         expect(usersService.startImpersonation).not.toHaveBeenCalled();
-        expect(component.reasonError()).toBe('Reason must be at least 10 characters.');
+        expect(component['reasonError']()).toBe('Reason must be at least 10 characters.');
     });
 
     it('should start impersonation and close with response', () => {
-        component.form.controls.reason.setValue(' Support case investigation ');
-        component.submit();
+        component['form'].controls.reason.setValue(' Support case investigation ');
+        component['submit']();
 
         expect(usersService.startImpersonation).toHaveBeenCalledWith('u1', 'Support case investigation');
         expect(dialogRef.close).toHaveBeenCalledWith(response);
@@ -73,16 +73,16 @@ describe('AdminUserImpersonationDialogComponent', () => {
 
     it('should show submit error on failure', () => {
         usersService.startImpersonation.mockReturnValueOnce(throwError(() => new Error('failed')));
-        component.form.controls.reason.setValue('Support case investigation');
-        component.submit();
+        component['form'].controls.reason.setValue('Support case investigation');
+        component['submit']();
 
         expect(dialogRef.close).not.toHaveBeenCalled();
-        expect(component.submitError()).toBe('Could not start impersonation. Please try again.');
-        expect(component.isSubmitting()).toBe(false);
+        expect(component['submitError']()).toBe('Could not start impersonation. Please try again.');
+        expect(component['isSubmitting']()).toBe(false);
     });
 
     it('should close with null on cancel', () => {
-        component.close();
+        component['close']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });

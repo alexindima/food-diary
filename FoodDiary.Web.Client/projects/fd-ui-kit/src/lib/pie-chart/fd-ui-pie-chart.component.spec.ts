@@ -29,19 +29,19 @@ describe('FdUiPieChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component.total()).toBe(CHART_TOTAL);
+        expect(component['total']()).toBe(CHART_TOTAL);
         expect(host().querySelectorAll('.fd-ui-pie-chart__segment')).toHaveLength(SEGMENT_COUNT);
         expect(host().querySelector('.fd-ui-pie-chart__center strong')?.textContent.trim()).toBe('Browsers');
         expect(host().querySelector('.fd-ui-pie-chart__segment title')?.textContent.trim()).toBe('Opera: 8');
         expect(host().querySelector('.fd-ui-pie-chart__legend-item')?.getAttribute('title')).toBe('Opera: 8');
-        expect(component.ariaLabel()).toContain('Browsers: Opera 8, Chrome 2');
+        expect(component['ariaLabel']()).toContain('Browsers: Opera 8, Chrome 2');
     });
 
     it('should show empty state when there are no positive values', () => {
         fixture.componentRef.setInput('segments', [{ label: 'Desktop', value: 0 }]);
         fixture.detectChanges();
 
-        expect(component.total()).toBe(0);
+        expect(component['total']()).toBe(0);
         expect(host().querySelectorAll('.fd-ui-pie-chart__segment')).toHaveLength(0);
         expect(host().querySelector('.fd-ui-pie-chart__empty')?.textContent.trim()).toBe('No data');
     });
@@ -67,6 +67,6 @@ describe('FdUiPieChartComponent', () => {
         expect(host().querySelector('.fd-ui-pie-chart')?.classList.contains('fd-ui-pie-chart--pie')).toBe(true);
         expect(host().querySelector('.fd-ui-pie-chart__center')).toBeNull();
         expect(host().querySelector('.fd-ui-pie-chart__segment')?.getAttribute('r')).toBe('7.95775');
-        expect(component.ariaLabel()).toContain('Browsers: Opera 8, Chrome 2');
+        expect(component['ariaLabel']()).toContain('Browsers: Opera 8, Chrome 2');
     });
 });

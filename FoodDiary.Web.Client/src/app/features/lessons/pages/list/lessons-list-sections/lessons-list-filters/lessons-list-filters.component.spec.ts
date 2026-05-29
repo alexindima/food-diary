@@ -16,16 +16,16 @@ describe('LessonsListFiltersComponent', () => {
         const fixture = createComponent('Hydration');
         const component = fixture.componentInstance;
 
-        expect(component.options().find(option => option.value === null)?.fill).toBe('outline');
-        expect(component.options().find(option => option.value === 'Hydration')?.fill).toBe('solid');
+        expect(component['options']().find(option => option.value === null)?.fill).toBe('outline');
+        expect(component['options']().find(option => option.value === 'Hydration')?.fill).toBe('solid');
     });
 
     it('emits selected category', () => {
         const fixture = createComponent(null);
         const filterChange = vi.fn();
-        fixture.componentInstance.filterChange.subscribe(filterChange);
+        fixture.componentInstance['filterChange'].subscribe(filterChange);
 
-        fixture.componentInstance.filterChange.emit('Macronutrients');
+        fixture.componentInstance['filterChange'].emit('Macronutrients');
 
         expect(filterChange).toHaveBeenCalledWith('Macronutrients');
     });

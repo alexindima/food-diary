@@ -32,7 +32,7 @@ describe('AiPhotoEditListComponent', () => {
     it('emits item updates from inputs', async () => {
         const fixture = await setupAiPhotoEditListAsync();
         const updateSpy = vi.fn();
-        fixture.componentInstance.itemUpdated.subscribe(updateSpy);
+        fixture.componentInstance['itemUpdated'].subscribe(updateSpy);
         fixture.detectChanges();
 
         const amountInput = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.ai-photo-result__edit-input--amount');
@@ -50,8 +50,8 @@ describe('AiPhotoEditListComponent', () => {
         const fixture = await setupAiPhotoEditListAsync();
         const removeSpy = vi.fn();
         const addSpy = vi.fn();
-        fixture.componentInstance.itemRemoved.subscribe(removeSpy);
-        fixture.componentInstance.itemAdded.subscribe(addSpy);
+        fixture.componentInstance['itemRemoved'].subscribe(removeSpy);
+        fixture.componentInstance['itemAdded'].subscribe(addSpy);
         fixture.detectChanges();
 
         (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.ai-photo-result__edit-remove')?.click();

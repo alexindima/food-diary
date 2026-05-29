@@ -34,7 +34,7 @@ describe('FdUiEmptyStateComponent', () => {
         }).compileComponents();
 
         const fixture = TestBed.createComponent(TestHostComponent);
-        fixture.componentInstance.appearance = appearance;
+        fixture.componentInstance['appearance'] = appearance;
         fixture.detectChanges();
         return fixture;
     }

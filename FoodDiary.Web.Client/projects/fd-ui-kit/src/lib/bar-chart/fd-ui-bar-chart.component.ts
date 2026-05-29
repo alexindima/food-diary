@@ -53,8 +53,8 @@ export class FdUiBarChartComponent {
         }));
     });
 
-    public readonly maxValue = computed(() => Math.max(0, ...this.normalizedItems().map(item => item.value)));
-    public readonly itemViews = computed<readonly FdUiBarChartItemViewModel[]>(() => {
+    protected readonly maxValue = computed(() => Math.max(0, ...this.normalizedItems().map(item => item.value)));
+    protected readonly itemViews = computed<readonly FdUiBarChartItemViewModel[]>(() => {
         const items = this.normalizedItems();
         const maxValue = this.maxValue();
 
@@ -85,7 +85,7 @@ export class FdUiBarChartComponent {
         });
     });
 
-    public readonly ariaLabel = computed(() => {
+    protected readonly ariaLabel = computed(() => {
         const title = this.title();
         const hasTitle = title !== undefined && title.trim().length > 0;
         if (this.itemViews().length === 0) {

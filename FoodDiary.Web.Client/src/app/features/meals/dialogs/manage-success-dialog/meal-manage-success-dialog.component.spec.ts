@@ -34,18 +34,18 @@ describe('MealManageSuccessDialogComponent', () => {
 
     it('should close with Home', () => {
         createComponent();
-        component.close('Home');
+        component['close']('Home');
         expect(dialogRefSpy.close).toHaveBeenCalledWith('Home');
     });
 
     it('should close with ConsumptionList', () => {
         createComponent();
-        component.close('ConsumptionList');
+        component['close']('ConsumptionList');
         expect(dialogRefSpy.close).toHaveBeenCalledWith('ConsumptionList');
     });
 
     it('should display edit title when isEdit true', () => {
         createComponent({ isEdit: true });
-        expect(component.data.isEdit).toBe(true);
+        expect(component['data'].isEdit).toBe(true);
     });
 });

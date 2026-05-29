@@ -25,10 +25,10 @@ describe('EntityCardActionsComponent', () => {
         const stopPropagationSpy = vi.fn();
         const event = { stopPropagation: stopPropagationSpy } as unknown as Event;
         const actionSpy = vi.fn();
-        component.action.subscribe(actionSpy);
+        component['action'].subscribe(actionSpy);
         fixture.detectChanges();
 
-        component.handleAction(event);
+        component['handleAction'](event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
         expect(actionSpy).toHaveBeenCalledOnce();

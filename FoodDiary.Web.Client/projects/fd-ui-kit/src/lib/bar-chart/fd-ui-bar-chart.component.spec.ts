@@ -36,19 +36,19 @@ describe('FdUiBarChartComponent', () => {
         const firstBar = bars.item(0);
         const secondBar = bars.item(1);
 
-        expect(component.maxValue()).toBe(PROTEIN_VALUE);
+        expect(component['maxValue']()).toBe(PROTEIN_VALUE);
         expect(bars).toHaveLength(BAR_COUNT);
         expect(host().querySelectorAll('.fd-ui-bar-chart__grid-line')).toHaveLength(GRID_LINE_COUNT);
         expect(Number(firstBar.getAttribute('height'))).toBeGreaterThan(Number(secondBar.getAttribute('height')));
         expect(getText('.fd-ui-bar-chart__label')).toBe('Protein');
-        expect(component.ariaLabel()).toBe('Macros: Protein 50, Fat 25');
+        expect(component['ariaLabel']()).toBe('Macros: Protein 50, Fat 25');
     });
 
     it('keeps zero value categories visible', () => {
         fixture.componentRef.setInput('items', [{ label: 'Calories', value: 0 }]);
         fixture.detectChanges();
 
-        expect(component.maxValue()).toBe(0);
+        expect(component['maxValue']()).toBe(0);
         expect(host().querySelectorAll('.fd-ui-bar-chart__bar')).toHaveLength(1);
         expect(Number(host().querySelector('.fd-ui-bar-chart__bar')?.getAttribute('height'))).toBe(ZERO_HEIGHT);
         expect(getText('.fd-ui-bar-chart__label')).toBe('Calories');

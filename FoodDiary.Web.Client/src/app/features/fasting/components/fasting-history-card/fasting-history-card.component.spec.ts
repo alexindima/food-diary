@@ -22,7 +22,7 @@ describe('FastingHistoryCardComponent', () => {
     it('renders history items and emits load-more requests', () => {
         const fixture = createComponent([createHistoryItem()], true);
         const historyLoadMore = vi.fn();
-        fixture.componentInstance.historyLoadMore.subscribe(historyLoadMore);
+        fixture.componentInstance['historyLoadMore'].subscribe(historyLoadMore);
         const element = getElement(fixture);
 
         expect(element.textContent).toContain('May 16');

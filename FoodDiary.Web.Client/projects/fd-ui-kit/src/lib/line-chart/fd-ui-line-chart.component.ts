@@ -270,7 +270,7 @@ export class FdUiLineChartComponent {
         }));
     });
 
-    public readonly seriesViews = computed<readonly FdUiLineChartSeriesViewModel[]>(() => {
+    protected readonly seriesViews = computed<readonly FdUiLineChartSeriesViewModel[]>(() => {
         const numeric = this.numericValues();
 
         if (numeric.length === 0) {
@@ -315,21 +315,21 @@ export class FdUiLineChartComponent {
             ];
         });
     });
-    public readonly pointViews = computed<readonly FdUiLineChartPointViewModel[]>(() =>
+    protected readonly pointViews = computed<readonly FdUiLineChartPointViewModel[]>(() =>
         this.seriesViews().flatMap(series => series.points),
     );
 
-    public readonly linePath = computed(() => {
+    protected readonly linePath = computed(() => {
         return this.seriesViews()[0]?.path ?? '';
     });
 
-    public readonly areaPath = computed(() => {
+    protected readonly areaPath = computed(() => {
         return this.seriesViews()[0]?.areaPath ?? '';
     });
 
     protected readonly shouldShowSeriesLegend = computed(() => this.seriesViews().length > 1);
 
-    public readonly ariaLabel = computed(() => {
+    protected readonly ariaLabel = computed(() => {
         const title = this.title();
         const hasTitle = title !== undefined && title.trim().length > 0;
         if (this.pointViews().length === 0) {

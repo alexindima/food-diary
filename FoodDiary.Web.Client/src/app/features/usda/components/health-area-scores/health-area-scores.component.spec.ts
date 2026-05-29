@@ -16,7 +16,7 @@ describe('HealthAreaScoresComponent', () => {
     it('renders no area cards when scores are missing', () => {
         const { component } = setupComponent(null);
 
-        expect(component.areas()).toEqual([]);
+        expect(component['areas']()).toEqual([]);
     });
 
     it('renders all health area cards', () => {
@@ -29,7 +29,7 @@ describe('HealthAreaScoresComponent', () => {
         });
         const text = getText(fixture);
 
-        expect(component.areas()).toHaveLength(AREA_COUNT);
+        expect(component['areas']()).toHaveLength(AREA_COUNT);
         expect(text).toContain('HEALTH_SCORES.HEART');
         expect(text).toContain(String(HEART_SCORE));
     });

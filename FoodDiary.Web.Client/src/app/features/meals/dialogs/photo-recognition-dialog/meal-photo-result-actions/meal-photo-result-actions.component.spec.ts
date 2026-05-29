@@ -12,7 +12,7 @@ describe('MealPhotoResultActionsComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.editActionState()).toEqual({
+        expect(component['editActionState']()).toEqual({
             variant: 'secondary',
             fill: 'outline',
             labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
@@ -24,7 +24,7 @@ describe('MealPhotoResultActionsComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.editActionState()).toEqual({
+        expect(component['editActionState']()).toEqual({
             variant: 'primary',
             fill: 'solid',
             labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE',
@@ -44,8 +44,8 @@ describe('MealPhotoResultActionsComponent', () => {
         const { component, fixture } = await setupComponentAsync({ hasSelectionAsset: true });
         const reanalyzeSpy = vi.fn();
         const editActionSpy = vi.fn();
-        component.reanalyze.subscribe(reanalyzeSpy);
-        component.editAction.subscribe(editActionSpy);
+        component['reanalyze'].subscribe(reanalyzeSpy);
+        component['editAction'].subscribe(editActionSpy);
 
         fixture.detectChanges();
         const buttons = fixture.debugElement.queryAll(By.directive(FdUiButtonComponent));

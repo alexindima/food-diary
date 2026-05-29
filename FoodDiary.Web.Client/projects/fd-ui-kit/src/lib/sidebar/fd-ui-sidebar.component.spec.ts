@@ -142,14 +142,14 @@ describe('FdUiSidebarComponent', () => {
 
         button?.click();
 
-        expect(fixture.componentInstance.notificationClicks).toBe(1);
+        expect(fixture.componentInstance['notificationClicks']).toBe(1);
     });
 
     it('should emit route, action, and section toggle events', () => {
         const fixture = setup();
-        const reportsItem = fixture.componentInstance.bottomSections[0].items[0];
-        const adminItem = fixture.componentInstance.sections[0].items[1];
-        const foodSection = fixture.componentInstance.sections[1];
+        const reportsItem = fixture.componentInstance['bottomSections'][0].items[0];
+        const adminItem = fixture.componentInstance['sections'][0].items[1];
+        const foodSection = fixture.componentInstance['sections'][1];
         const sidebarItems = fixture.debugElement.queryAll(By.directive(FdUiSidebarItemComponent));
         const sidebarSections = fixture.debugElement.queryAll(By.directive(FdUiSidebarSectionComponent));
 
@@ -157,8 +157,8 @@ describe('FdUiSidebarComponent', () => {
         sidebarItems[1].triggerEventHandler('actionSelected', adminItem);
         sidebarSections[1].triggerEventHandler('sectionToggled', { section: foodSection });
 
-        expect(fixture.componentInstance.selectedRouteIds).toContain('reports');
-        expect(fixture.componentInstance.selectedActionIds).toContain('admin');
-        expect(fixture.componentInstance.toggledSectionIds).toContain('food');
+        expect(fixture.componentInstance['selectedRouteIds']).toContain('reports');
+        expect(fixture.componentInstance['selectedActionIds']).toContain('admin');
+        expect(fixture.componentInstance['toggledSectionIds']).toContain('food');
     });
 });

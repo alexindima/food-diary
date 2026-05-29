@@ -24,7 +24,7 @@ describe('FdUiSwitchComponent', () => {
         button.click();
         fixture.detectChanges();
 
-        expect(component.checked()).toBe(true);
+        expect(component['checked']()).toBe(true);
         expect(button.getAttribute('aria-checked')).toBe('true');
     });
 

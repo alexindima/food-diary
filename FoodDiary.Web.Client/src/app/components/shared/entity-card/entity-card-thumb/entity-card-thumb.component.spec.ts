@@ -30,10 +30,10 @@ describe('EntityCardThumbComponent', () => {
         const stopPropagationSpy = vi.fn();
         const event = { stopPropagation: stopPropagationSpy } as unknown as Event;
         const previewSpy = vi.fn();
-        component.preview.subscribe(previewSpy);
+        component['preview'].subscribe(previewSpy);
         fixture.detectChanges();
 
-        component.handlePreview(event);
+        component['handlePreview'](event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
         expect(previewSpy).toHaveBeenCalledOnce();
@@ -43,10 +43,10 @@ describe('EntityCardThumbComponent', () => {
         const fixture = await setupEntityCardThumbAsync(false);
         const component = fixture.componentInstance;
         const previewSpy = vi.fn();
-        component.preview.subscribe(previewSpy);
+        component['preview'].subscribe(previewSpy);
         fixture.detectChanges();
 
-        component.handlePreview({ stopPropagation: vi.fn() } as unknown as Event);
+        component['handlePreview']({ stopPropagation: vi.fn() } as unknown as Event);
 
         expect(previewSpy).not.toHaveBeenCalled();
     });

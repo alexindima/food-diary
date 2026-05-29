@@ -39,7 +39,7 @@ export class FdUiSectionStateComponent {
         this.appearance() === 'compact' ? 'compact' : 'default',
     );
 
-    public onRetry(): void {
+    protected onRetry(): void {
         this.retry.emit();
     }
 }

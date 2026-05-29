@@ -42,8 +42,8 @@ describe('EntityCardComponent preview state', () => {
         fixture.componentRef.setInput('imageUrl', 'https://example.com/photo.jpg');
         fixture.detectChanges();
 
-        expect(component.hasPreviewImage()).toBe(false);
-        expect(component.previewInteractionState()).toEqual({
+        expect(component['hasPreviewImage']()).toBe(false);
+        expect(component['previewInteractionState']()).toEqual({
             hint: null,
             role: null,
             tabIndex: null,
@@ -58,8 +58,8 @@ describe('EntityCardComponent preview state', () => {
         fixture.componentRef.setInput('imageUrl', 'https://example.com/photo.jpg');
         fixture.detectChanges();
 
-        expect(component.hasPreviewImage()).toBe(true);
-        expect(component.previewInteractionState()).toEqual({
+        expect(component['hasPreviewImage']()).toBe(true);
+        expect(component['previewInteractionState']()).toEqual({
             hint: 'Open preview',
             role: 'button',
             tabIndex: '0',
@@ -81,7 +81,7 @@ describe('EntityCardComponent computed view model', () => {
         fixture.componentRef.setInput('quality', { score: 150, grade: 'green' });
         fixture.detectChanges();
 
-        expect(component.collageState()).toEqual({
+        expect(component['collageState']()).toEqual({
             images: [
                 { url: '1.jpg', alt: '1' },
                 { url: '2.jpg', alt: '2' },
@@ -91,7 +91,7 @@ describe('EntityCardComponent computed view model', () => {
             count: 4,
             hasImages: true,
         });
-        expect(component.normalizedQuality()).toEqual({
+        expect(component['normalizedQuality']()).toEqual({
             score: 100,
             grade: 'green',
             hintKey: 'QUALITY.GREEN',
@@ -106,16 +106,16 @@ describe('EntityCardComponent events', () => {
         const previewSpy = vi.fn();
         const favoriteSpy = vi.fn();
         const actionSpy = vi.fn();
-        component.open.subscribe(openSpy);
-        component.preview.subscribe(previewSpy);
-        component.favoriteToggle.subscribe(favoriteSpy);
-        component.action.subscribe(actionSpy);
+        component['open'].subscribe(openSpy);
+        component['preview'].subscribe(previewSpy);
+        component['favoriteToggle'].subscribe(favoriteSpy);
+        component['action'].subscribe(actionSpy);
         fixture.detectChanges();
 
-        component.handleOpen();
-        component.handlePreview();
-        component.handleFavoriteToggle();
-        component.handleAction();
+        component['handleOpen']();
+        component['handlePreview']();
+        component['handleFavoriteToggle']();
+        component['handleAction']();
 
         expect(openSpy).toHaveBeenCalledOnce();
         expect(previewSpy).toHaveBeenCalledOnce();

@@ -8,7 +8,7 @@ describe('MealEditComponent', () => {
     it('should default meal input to null', () => {
         const { component } = setupComponent();
 
-        expect(component.consumption()).toBeNull();
+        expect(component['consumption']()).toBeNull();
     });
 
     it('should accept meal input for edit form wrapper', () => {
@@ -18,7 +18,7 @@ describe('MealEditComponent', () => {
         fixture.componentRef.setInput('consumption', meal);
         fixture.detectChanges();
 
-        expect(component.consumption()).toEqual(meal);
+        expect(component['consumption']()).toEqual(meal);
     });
 });
 

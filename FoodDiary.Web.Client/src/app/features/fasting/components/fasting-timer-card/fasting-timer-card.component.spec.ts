@@ -48,7 +48,7 @@ function registerLayoutTests(): void {
         it('renders dashboard layout without page controls', async () => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set('dashboard');
+            fixture.componentInstance['layout'].set('dashboard');
             setSession(fixture, createSession());
             fixture.detectChanges();
 
@@ -59,7 +59,7 @@ function registerLayoutTests(): void {
         it('renders dashboard layout without a fasting facade provider', async () => {
             const fixture = await createHostFixtureWithoutFacadeAsync();
 
-            fixture.componentInstance.session.set(createSession());
+            fixture.componentInstance['session'].set(createSession());
             fixture.detectChanges();
 
             expect(fixture.debugElement.query(By.css('fd-dashboard-widget-frame'))).not.toBeNull();
@@ -69,7 +69,7 @@ function registerLayoutTests(): void {
         it('renders page controls in page layout', async () => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set('page');
+            fixture.componentInstance['layout'].set('page');
             fixture.detectChanges();
 
             expect(fixture.debugElement.query(By.css('fd-fasting-controls'))).not.toBeNull();
@@ -96,7 +96,7 @@ function registerContentTests(): void {
             translateService.setTranslation('en', { FASTING: { FASTING_WINDOW: 'Fasting' } });
 
             await firstValueFrom(translateService.use('ru'));
-            fixture.componentInstance.layout.set('dashboard');
+            fixture.componentInstance['layout'].set('dashboard');
             setSession(fixture, createSession());
             fixture.detectChanges();
 
@@ -112,7 +112,7 @@ function registerContentTests(): void {
         it.each(['dashboard', 'page'] as const)('does not render fasting stage details for eating phases in %s layout', async layout => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set(layout);
+            fixture.componentInstance['layout'].set(layout);
             setSession(
                 fixture,
                 createSession({
@@ -136,7 +136,7 @@ function registerContentTests(): void {
         it.each(['dashboard', 'page'] as const)('renders protocol separator without mojibake in %s layout', async layout => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set(layout);
+            fixture.componentInstance['layout'].set(layout);
             setSession(fixture, createSession({ protocol: 'F16_8' }));
             fixture.detectChanges();
 
@@ -162,7 +162,7 @@ function registerProgressTests(): void {
         it.each(['dashboard', 'page'] as const)('clamps rendered progress percent to the valid ring range in %s layout', async layout => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set(layout);
+            fixture.componentInstance['layout'].set(layout);
             setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(EXTENDED_OVERTIME_HOURS) }));
             fixture.detectChanges();
 
@@ -173,7 +173,7 @@ function registerProgressTests(): void {
         it.each(['dashboard', 'page'] as const)('uses the same progress ring geometry in %s layout', async layout => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set(layout);
+            fixture.componentInstance['layout'].set(layout);
             setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(RING_TEST_HOURS) }));
             fixture.detectChanges();
 
@@ -186,7 +186,7 @@ function registerProgressTests(): void {
         it.each(['dashboard', 'page'] as const)('uses shared summary ring content in %s layout', async layout => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set(layout);
+            fixture.componentInstance['layout'].set(layout);
             setSession(fixture, createSession());
             fixture.detectChanges();
 
@@ -210,7 +210,7 @@ function registerTimerDisplayTests(): void {
         it('builds timer display from session inputs', async () => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set('dashboard');
+            fixture.componentInstance['layout'].set('dashboard');
             setSession(
                 fixture,
                 createExtendedSession({
@@ -230,7 +230,7 @@ function registerTimerDisplayTests(): void {
         it('uses facade elapsed time in page layout', async () => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set('page');
+            fixture.componentInstance['layout'].set('page');
             setSession(
                 fixture,
                 createExtendedSession({
@@ -251,7 +251,7 @@ function registerTimerDisplayTests(): void {
         it('advances dashboard elapsed time without a fasting facade provider', async () => {
             const fixture = await createHostFixtureWithoutFacadeAsync();
 
-            fixture.componentInstance.session.set(createExtendedSession({ plannedDurationHours: 1, initialPlannedDurationHours: 1 }));
+            fixture.componentInstance['session'].set(createExtendedSession({ plannedDurationHours: 1, initialPlannedDurationHours: 1 }));
             fixture.detectChanges();
             vi.advanceTimersByTime(DASHBOARD_TICK_MS);
             fixture.detectChanges();
@@ -277,7 +277,7 @@ function registerAccessibilityTests(): void {
         it('marks progress rings as decorative', async () => {
             const fixture = await createHostFixtureAsync();
 
-            fixture.componentInstance.layout.set('dashboard');
+            fixture.componentInstance['layout'].set('dashboard');
             fixture.detectChanges();
 
             const ringSvg = requireSvgElement(fixture, '.fasting-timer-card__ring-svg');
@@ -457,7 +457,7 @@ function requireSvgCircleElement(fixture: ComponentFixture<FastingTimerCardHostC
 }
 
 function setSession(fixture: ComponentFixture<FastingTimerCardHostComponent>, session: FastingSession | null): void {
-    fixture.componentInstance.session.set(session);
+    fixture.componentInstance['session'].set(session);
     getFacadeStub(fixture).currentSession.set(session);
     const elapsedMs =
         session === null ? 0 : Math.max(0, new Date('2026-04-12T06:00:00Z').getTime() - new Date(session.startedAtUtc).getTime());

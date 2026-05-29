@@ -42,7 +42,7 @@ type FastingCheckInChartSeries = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingCheckInChartDialogComponent {
-    public readonly data = inject<FastingCheckInChartDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<FastingCheckInChartDialogData>(FD_UI_DIALOG_DATA);
 
     private readonly translateService = inject(TranslateService);
     private readonly localizationService = inject(LocalizationService);
@@ -50,7 +50,7 @@ export class FastingCheckInChartDialogComponent {
     protected readonly minLevel = FASTING_CHECK_IN_MIN_LEVEL;
     protected readonly maxLevel = FASTING_CHECK_IN_MAX_LEVEL;
 
-    public readonly points = computed<FastingCheckInChartPoint[]>(() =>
+    protected readonly points = computed<FastingCheckInChartPoint[]>(() =>
         [...this.data.checkIns]
             .sort((left, right) => new Date(left.checkedInAtUtc).getTime() - new Date(right.checkedInAtUtc).getTime())
             .map(checkIn => ({
@@ -63,7 +63,7 @@ export class FastingCheckInChartDialogComponent {
             })),
     );
 
-    public readonly chartSeries = computed<FastingCheckInChartSeries[]>(() => {
+    protected readonly chartSeries = computed<FastingCheckInChartSeries[]>(() => {
         const points = this.points();
         const buildPoints = (getValue: (point: FastingCheckInChartPoint) => number): FdUiLineChartPoint[] =>
             points.map(point => ({

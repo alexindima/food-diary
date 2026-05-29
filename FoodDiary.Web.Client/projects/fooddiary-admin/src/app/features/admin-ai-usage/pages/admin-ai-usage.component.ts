@@ -17,14 +17,14 @@ export class AdminAiUsageComponent {
     private readonly aiUsageService = inject(AdminAiUsageService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly usage = signal<AdminAiUsageSummary | null>(null);
-    public readonly isLoading = signal(false);
+    protected readonly usage = signal<AdminAiUsageSummary | null>(null);
+    protected readonly isLoading = signal(false);
 
     public constructor() {
         this.loadUsage();
     }
 
-    public loadUsage(): void {
+    protected loadUsage(): void {
         this.isLoading.set(true);
         this.aiUsageService
             .getSummary()

@@ -27,8 +27,8 @@ describe('DietologistClientsPageComponent', () => {
     it('loads client cards on creation', () => {
         createComponent();
 
-        expect(component.loading()).toBe(false);
-        expect(component.clientItems()[0].title).toBe('Alex Ivanov');
+        expect(component['loading']()).toBe(false);
+        expect(component['clientItems']()[0].title).toBe('Alex Ivanov');
     });
 
     it('stops loading on request error', () => {
@@ -36,14 +36,14 @@ describe('DietologistClientsPageComponent', () => {
 
         createComponent();
 
-        expect(component.loading()).toBe(false);
-        expect(component.clientItems()).toEqual([]);
+        expect(component['loading']()).toBe(false);
+        expect(component['clientItems']()).toEqual([]);
     });
 
     it('navigates to selected client dashboard', () => {
         createComponent();
 
-        component.openClient(createClient({ userId: 'client-2' }));
+        component['openClient'](createClient({ userId: 'client-2' }));
 
         expect(router.navigate).toHaveBeenCalledWith(['/dietologist', 'clients', 'client-2']);
     });

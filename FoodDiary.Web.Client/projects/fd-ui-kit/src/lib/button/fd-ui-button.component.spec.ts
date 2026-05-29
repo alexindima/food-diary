@@ -42,7 +42,7 @@ describe('FdUiButtonComponent', () => {
 
     it('should have default classes (primary, solid, md)', () => {
         const { component } = setupButton();
-        const classes = component.classes();
+        const classes = component['classes']();
 
         expect(classes).toContain('fd-ui-button');
         expect(classes).toContain('fd-ui-button--primary');
@@ -60,7 +60,7 @@ describe('FdUiButtonComponent classes', () => {
         fixture.componentRef.setInput('appearance', 'toolbar');
         fixture.detectChanges();
 
-        const classes = component.classes();
+        const classes = component['classes']();
         expect(classes).toContain('fd-ui-button--appearance-toolbar');
         expect(classes).not.toContain('fd-ui-button--appearance-default');
     });
@@ -71,7 +71,7 @@ describe('FdUiButtonComponent classes', () => {
         fixture.componentRef.setInput('variant', 'danger');
         fixture.detectChanges();
 
-        const classes = component.classes();
+        const classes = component['classes']();
         expect(classes).toContain('fd-ui-button--danger');
         expect(classes).not.toContain('fd-ui-button--primary');
     });
@@ -82,7 +82,7 @@ describe('FdUiButtonComponent classes', () => {
         fixture.componentRef.setInput('variant', 'ghost');
         fixture.detectChanges();
 
-        const classes = component.classes();
+        const classes = component['classes']();
         expect(classes).toContain('fd-ui-button--text');
         expect(classes).not.toContain('fd-ui-button--solid');
     });
@@ -93,7 +93,7 @@ describe('FdUiButtonComponent classes', () => {
         fixture.componentRef.setInput('variant', 'outline');
         fixture.detectChanges();
 
-        const classes = component.classes();
+        const classes = component['classes']();
         expect(classes).toContain('fd-ui-button--outline');
         expect(classes).not.toContain('fd-ui-button--solid');
     });
@@ -104,7 +104,7 @@ describe('FdUiButtonComponent classes', () => {
         fixture.componentRef.setInput('fill', 'ghost');
         fixture.detectChanges();
 
-        const classes = component.classes();
+        const classes = component['classes']();
         expect(classes).toContain('fd-ui-button--text');
         expect(classes).not.toContain('fd-ui-button--ghost');
     });
@@ -115,7 +115,7 @@ describe('FdUiButtonComponent classes', () => {
         fixture.componentRef.setInput('fullWidth', true);
         fixture.detectChanges();
 
-        const classes = component.classes();
+        const classes = component['classes']();
         expect(classes).toContain('fd-ui-button--full-width');
     });
 });
@@ -150,7 +150,7 @@ describe('FdUiButtonComponent rendering', () => {
         expect(button().disabled).toBe(true);
         expect(button().getAttribute('aria-busy')).toBe('true');
         expect(spinner).toBeTruthy();
-        expect(component.classes()).toContain('fd-ui-button--loading');
+        expect(component['classes']()).toContain('fd-ui-button--loading');
     });
 
     it('should keep spinner positioned inside the button', () => {

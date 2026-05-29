@@ -51,7 +51,7 @@ export class UserManageNotificationsCardComponent {
     public readonly connectedDeviceItems = input.required<ConnectedDeviceViewModel[]>();
     public readonly removingConnectedDeviceEndpoint = input.required<string | null>();
 
-    public readonly notificationsStatusKey = computed(() =>
+    protected readonly notificationsStatusKey = computed(() =>
         buildNotificationsStatusKey({
             isSchedulingTestNotification: this.isSchedulingTestNotification(),
             isRemovingConnectedDevice: this.removingConnectedDeviceEndpoint() !== null,
@@ -59,12 +59,12 @@ export class UserManageNotificationsCardComponent {
             isUpdatingNotifications: this.isUpdatingNotifications(),
         }),
     );
-    public readonly pushNotificationsAccountStatusKey = computed(() =>
+    protected readonly pushNotificationsAccountStatusKey = computed(() =>
         this.pushNotificationsEnabled()
             ? 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_ENABLED'
             : 'USER_MANAGE.NOTIFICATIONS_ACCOUNT_STATUS_DISABLED',
     );
-    public readonly pushNotificationsDeviceStatusKey = computed(() => {
+    protected readonly pushNotificationsDeviceStatusKey = computed(() => {
         if (!this.pushNotificationsSupported()) {
             return 'USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED';
         }
@@ -83,7 +83,7 @@ export class UserManageNotificationsCardComponent {
 
         return 'USER_MANAGE.NOTIFICATIONS_STATUS_SETUP_REQUIRED';
     });
-    public readonly pushNotificationsHintKey = computed(() => {
+    protected readonly pushNotificationsHintKey = computed(() => {
         if (!this.pushNotificationsEnabled()) {
             return 'USER_MANAGE.NOTIFICATIONS_DISABLED_HINT';
         }
@@ -102,7 +102,7 @@ export class UserManageNotificationsCardComponent {
 
         return 'USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT';
     });
-    public readonly activeFastingReminderPresetId = computed(() => {
+    protected readonly activeFastingReminderPresetId = computed(() => {
         const presetId = resolveFastingReminderPresetId(this.fastingCheckInReminderHours(), this.fastingCheckInFollowUpReminderHours());
         return presetId === 'custom' ? null : presetId;
     });

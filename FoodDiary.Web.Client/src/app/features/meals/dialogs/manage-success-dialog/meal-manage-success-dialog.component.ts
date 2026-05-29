@@ -20,11 +20,11 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
 })
 export class MealManageSuccessDialogComponent {
-    public readonly data = inject<ConsumptionManageSuccessDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<ConsumptionManageSuccessDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<MealManageSuccessDialogComponent, ConsumptionManageRedirectAction>>(FdUiDialogRef);
-    public readonly titleKey = this.data.isEdit ? 'CONSUMPTION_MANAGE.EDIT_SUCCESS' : 'CONSUMPTION_MANAGE.CREATE_SUCCESS';
+    protected readonly titleKey = this.data.isEdit ? 'CONSUMPTION_MANAGE.EDIT_SUCCESS' : 'CONSUMPTION_MANAGE.CREATE_SUCCESS';
 
-    public close(action: ConsumptionManageRedirectAction): void {
+    protected close(action: ConsumptionManageRedirectAction): void {
         this.dialogRef.close(action);
     }
 }

@@ -77,22 +77,22 @@ export class AiPhotoResultComponent {
     public readonly editApplied = output<AiPhotoEditApplied>();
     public readonly reanalyzeRequested = output();
 
-    public readonly isEditing = signal(false);
-    public readonly isDetailsExpanded = signal(false);
-    public readonly detailsDate = signal(this.getDateInputValue(new Date()));
-    public readonly detailsTime = signal(this.getTimeInputValue(new Date()));
-    public readonly detailsComment = signal('');
-    public readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
-    public readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
-    public readonly editItems = signal<EditableAiItem[]>([]);
-    public readonly resultRows = computed<AiResultRow[]>(() =>
+    protected readonly isEditing = signal(false);
+    protected readonly isDetailsExpanded = signal(false);
+    protected readonly detailsDate = signal(this.getDateInputValue(new Date()));
+    protected readonly detailsTime = signal(this.getTimeInputValue(new Date()));
+    protected readonly detailsComment = signal('');
+    protected readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
+    protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
+    protected readonly editItems = signal<EditableAiItem[]>([]);
+    protected readonly resultRows = computed<AiResultRow[]>(() =>
         this.results().map(item => ({
             key: item.nameEn,
             displayName: this.resolveDisplayName(item),
             amountLabel: this.resolveAmountLabel(item),
         })),
     );
-    public readonly editActionView = computed<AiEditActionView>(() =>
+    protected readonly editActionView = computed<AiEditActionView>(() =>
         this.isEditing()
             ? {
                   variant: 'primary',
@@ -105,7 +105,7 @@ export class AiPhotoResultComponent {
                   labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
               },
     );
-    public readonly detailsToggleView = computed<AiDetailsToggleView>(() =>
+    protected readonly detailsToggleView = computed<AiDetailsToggleView>(() =>
         this.isDetailsExpanded()
             ? {
                   icon: 'expand_less',
@@ -116,7 +116,7 @@ export class AiPhotoResultComponent {
                   labelKey: 'MEAL_DETAILS.ADD',
               },
     );
-    public readonly nutritionSummary = computed<AiNutritionSummaryItem[]>(() => {
+    protected readonly nutritionSummary = computed<AiNutritionSummaryItem[]>(() => {
         const nutrition = this.nutrition();
         if (nutrition === null) {
             return [];
@@ -131,7 +131,7 @@ export class AiPhotoResultComponent {
             { labelKey: 'GENERAL.NUTRIENTS.ALCOHOL', value: this.resolveMacroLabel(nutrition.alcohol, 'GENERAL.UNITS.G') },
         ];
     });
-    public readonly submitDisabled = computed(
+    protected readonly submitDisabled = computed(
         () =>
             this.results().length === 0 ||
             this.nutrition() === null ||
@@ -139,7 +139,7 @@ export class AiPhotoResultComponent {
             this.isNutritionLoading() ||
             this.isProcessing(),
     );
-    public readonly editUnitOptions = computed<AiEditUnitOption[]>(() =>
+    protected readonly editUnitOptions = computed<AiEditUnitOption[]>(() =>
         this.unitOptions.map(unit => ({
             value: unit,
             label: this.resolveUnitLabel(unit),
@@ -175,14 +175,14 @@ export class AiPhotoResultComponent {
         return unitKey !== null ? this.translateService.instant(unitKey) : unit;
     }
 
-    public startEditing(): void {
+    protected startEditing(): void {
         const editable = buildAiEditableItems(this.results(), this.nutrition(), () => this.createEditId());
         this.editItems.set(editable);
         this.sourceItems.set(editable.map(item => ({ ...item })));
         this.isEditing.set(true);
     }
 
-    public applyEditing(): void {
+    protected applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
         const normalized: FoodVisionItem[] = normalizeAiEditableItems(edited);
         const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
@@ -204,7 +204,7 @@ export class AiPhotoResultComponent {
         });
     }
 
-    public handleEditAction(): void {
+    protected handleEditAction(): void {
         if (this.isEditing()) {
             this.applyEditing();
             return;
@@ -213,11 +213,11 @@ export class AiPhotoResultComponent {
         this.startEditing();
     }
 
-    public cancelEditing(): void {
+    protected cancelEditing(): void {
         this.isEditing.set(false);
     }
 
-    public reorderEditItems(event: AiEditItemDrop): void {
+    protected reorderEditItems(event: AiEditItemDrop): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -227,39 +227,39 @@ export class AiPhotoResultComponent {
         this.editItems.set(items);
     }
 
-    public updateEditItemFromView(update: AiEditItemUpdate): void {
+    protected updateEditItemFromView(update: AiEditItemUpdate): void {
         this.updateEditItem(update.index, update.field, update.value);
     }
 
-    public updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
+    protected updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
         this.editItems.update(items => updateAiEditableItem(items, index, field, value));
     }
 
-    public removeEditItem(index: number): void {
+    protected removeEditItem(index: number): void {
         this.editItems.update(items => items.filter((_, idx) => idx !== index));
     }
 
-    public addEditItem(): void {
+    protected addEditItem(): void {
         this.editItems.update(items => [...items, createEmptyAiEditableItem(() => this.createEditId(), 'g')]);
     }
 
-    public toggleDetails(): void {
+    protected toggleDetails(): void {
         this.isDetailsExpanded.update(value => !value);
     }
 
-    public updateDetailsDate(value: string): void {
+    protected updateDetailsDate(value: string): void {
         this.detailsDate.set(value);
     }
 
-    public updateDetailsTime(value: string): void {
+    protected updateDetailsTime(value: string): void {
         this.detailsTime.set(value);
     }
 
-    public updateDetailsComment(value: string): void {
+    protected updateDetailsComment(value: string): void {
         this.detailsComment.set(value);
     }
 
-    public emitAddToMeal(): void {
+    protected emitAddToMeal(): void {
         this.addToMeal.emit({
             date: this.detailsDate(),
             time: this.detailsTime(),

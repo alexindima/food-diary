@@ -70,29 +70,29 @@ export class AuthComponent {
     private readonly googleManager = inject(AuthGoogleManager);
     private readonly authFlowFacade = inject(AuthFlowFacade);
 
-    public authMode: 'login' | 'register' = 'login';
+    protected authMode: 'login' | 'register' = 'login';
 
-    public readonly loginForm = this.formManager.loginForm;
-    public readonly registerForm = this.formManager.registerForm;
-    public readonly passwordResetForm = this.formManager.passwordResetForm;
-    public readonly globalError = signal<string | null>(null);
-    public readonly isSubmitting = signal<boolean>(false);
-    public readonly googleReady = this.googleManager.ready;
-    public readonly showRestoreAction = signal<boolean>(false);
-    public readonly isRestoring = signal<boolean>(false);
-    public readonly showPasswordReset = signal<boolean>(false);
-    public readonly isPasswordResetting = signal<boolean>(false);
-    public readonly passwordResetSent = signal<boolean>(false);
-    public readonly passwordResetCooldownSeconds = signal<number>(0);
-    public readonly loginAutofillDetected = signal<boolean>(false);
-    public readonly loginFieldErrors = this.formManager.loginFieldErrors;
-    public readonly registerFieldErrors = this.formManager.registerFieldErrors;
-    public readonly passwordResetFieldErrors = this.formManager.passwordResetFieldErrors;
-    public readonly loginSubmitLabelKey = computed(() => (this.isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN'));
+    protected readonly loginForm = this.formManager.loginForm;
+    protected readonly registerForm = this.formManager.registerForm;
+    protected readonly passwordResetForm = this.formManager.passwordResetForm;
+    protected readonly globalError = signal<string | null>(null);
+    protected readonly isSubmitting = signal<boolean>(false);
+    protected readonly googleReady = this.googleManager.ready;
+    protected readonly showRestoreAction = signal<boolean>(false);
+    protected readonly isRestoring = signal<boolean>(false);
+    protected readonly showPasswordReset = signal<boolean>(false);
+    protected readonly isPasswordResetting = signal<boolean>(false);
+    protected readonly passwordResetSent = signal<boolean>(false);
+    protected readonly passwordResetCooldownSeconds = signal<number>(0);
+    protected readonly loginAutofillDetected = signal<boolean>(false);
+    protected readonly loginFieldErrors = this.formManager.loginFieldErrors;
+    protected readonly registerFieldErrors = this.formManager.registerFieldErrors;
+    protected readonly passwordResetFieldErrors = this.formManager.passwordResetFieldErrors;
+    protected readonly loginSubmitLabelKey = computed(() => (this.isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN'));
     private stopPasswordResetCooldown: (() => void) | null = null;
     private loginAutofillCheckTimerIds: number[] = [];
     private hasLoginNativeInteraction = false;
-    public readonly authTabs = AUTH_TABS;
+    protected readonly authTabs = AUTH_TABS;
 
     private returnUrl: string | null = null;
     private adminReturnUrl: string | null = null;
@@ -149,12 +149,12 @@ export class AuthComponent {
         });
     }
 
-    public handleTabChange(value: string): void {
+    protected handleTabChange(value: string): void {
         const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
         void this.onTabChangeAsync(mode);
     }
 
-    public async onTabChangeAsync(mode: 'login' | 'register'): Promise<void> {
+    protected async onTabChangeAsync(mode: 'login' | 'register'): Promise<void> {
         if (this.authMode === mode) {
             return;
         }
@@ -169,7 +169,7 @@ export class AuthComponent {
         }
     }
 
-    public onLoginSubmit(): void {
+    protected onLoginSubmit(): void {
         this.syncLoginNativeValues();
 
         if (!this.loginForm.valid || this.isSubmitting()) {
@@ -192,17 +192,17 @@ export class AuthComponent {
         });
     }
 
-    public isLoginSubmitDisabled(): boolean {
+    protected isLoginSubmitDisabled(): boolean {
         return this.isSubmitting();
     }
 
-    public onLoginNativeInput(): void {
+    protected onLoginNativeInput(): void {
         this.hasLoginNativeInteraction = true;
         this.syncLoginNativeValues();
         this.updateLoginAutofillState();
     }
 
-    public onRestoreSubmit(): void {
+    protected onRestoreSubmit(): void {
         if (!this.loginForm.valid || this.isRestoring()) {
             return;
         }
@@ -221,7 +221,7 @@ export class AuthComponent {
         });
     }
 
-    public onRegisterSubmit(): void {
+    protected onRegisterSubmit(): void {
         if (!this.registerForm.valid || this.isSubmitting()) {
             this.registerForm.markAllAsTouched();
             this.formManager.updateFieldErrors();
@@ -266,7 +266,7 @@ export class AuthComponent {
         });
     }
 
-    public onPasswordResetOpen(): void {
+    protected onPasswordResetOpen(): void {
         if (this.showPasswordReset()) {
             return;
         }
@@ -278,13 +278,13 @@ export class AuthComponent {
         this.showPasswordReset.set(true);
     }
 
-    public onPasswordResetClose(): void {
+    protected onPasswordResetClose(): void {
         this.showPasswordReset.set(false);
         this.passwordResetSent.set(false);
         this.clearGlobalError();
     }
 
-    public onPasswordResetSubmit(): void {
+    protected onPasswordResetSubmit(): void {
         if (!this.passwordResetForm.valid || this.isPasswordResetting()) {
             this.passwordResetForm.markAllAsTouched();
             this.formManager.updateFieldErrors();

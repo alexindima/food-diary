@@ -14,5 +14,5 @@ import type { WearableDailySummary } from '../../models/wearable.data';
 })
 export class WearableDailyCardComponent {
     public readonly summary = input<WearableDailySummary | null>(null);
-    public readonly metrics = computed(() => buildWearableMetrics(this.summary()));
+    protected readonly metrics = computed(() => buildWearableMetrics(this.summary()));
 }

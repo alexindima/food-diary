@@ -16,11 +16,11 @@ export class ProductAddDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductAddDialogComponent, Product | null>);
     private readonly initialProduct = inject<Product | null>(FD_UI_DIALOG_DATA, { optional: true });
 
-    public onSaved(product: Product): void {
+    protected onSaved(product: Product): void {
         this.dialogRef.close(product);
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(this.initialProduct ?? null);
     }
 }

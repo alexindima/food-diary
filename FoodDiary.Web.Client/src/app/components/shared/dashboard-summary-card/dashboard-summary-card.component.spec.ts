@@ -85,22 +85,22 @@ function registerPercentTests(context: TestContext): void {
     describe('percents', () => {
         it('should calculate daily percent correctly', () => {
             setDailyInputs(context, DAILY_CONSUMED, DAILY_GOAL);
-            expect(context.component().dailyPercent()).toBe(DAILY_PERCENT);
+            expect(context.component()['dailyPercent']()).toBe(DAILY_PERCENT);
         });
 
         it('should handle zero goal gracefully', () => {
             setDailyInputs(context, LOW_DAILY_CONSUMED, 0);
-            expect(context.component().dailyPercent()).toBe(0);
+            expect(context.component()['dailyPercent']()).toBe(0);
         });
 
         it('should return 100 when consumed equals goal', () => {
             setDailyInputs(context, DAILY_GOAL, DAILY_GOAL);
-            expect(context.component().dailyPercent()).toBe(FULL_PERCENT);
+            expect(context.component()['dailyPercent']()).toBe(FULL_PERCENT);
         });
 
         it('should allow values above 100 when consumed exceeds goal', () => {
             setDailyInputs(context, OVER_DAILY_CONSUMED, DAILY_GOAL);
-            expect(context.component().dailyPercent()).toBe(OVER_PERCENT);
+            expect(context.component()['dailyPercent']()).toBe(OVER_PERCENT);
         });
 
         registerClampPercentTests(context);
@@ -112,14 +112,14 @@ function registerClampPercentTests({ component, fixture }: TestContext): void {
     describe('clampPercent', () => {
         it('should clamp percent to 0-120 range', () => {
             fixture().detectChanges();
-            expect(component().clampPercent(OVER_PERCENT)).toBe(CLAMPED_MAX_PERCENT);
-            expect(component().clampPercent(NEGATIVE_PERCENT)).toBe(0);
-            expect(component().clampPercent(HALF_PERCENT)).toBe(HALF_PERCENT);
+            expect(component()['clampPercent'](OVER_PERCENT)).toBe(CLAMPED_MAX_PERCENT);
+            expect(component()['clampPercent'](NEGATIVE_PERCENT)).toBe(0);
+            expect(component()['clampPercent'](HALF_PERCENT)).toBe(HALF_PERCENT);
         });
 
         it('should return 0 for NaN', () => {
             fixture().detectChanges();
-            expect(component().clampPercent(NaN)).toBe(0);
+            expect(component()['clampPercent'](NaN)).toBe(0);
         });
     });
 }
@@ -129,14 +129,14 @@ function registerWeeklyPercentTests(context: TestContext): void {
         it('should calculate weekly percent from daily goal * 7', () => {
             context.setInput('dailyGoal', DAILY_GOAL);
             context.setInput('weeklyConsumed', WEEKLY_CONSUMED);
-            expect(context.component().weeklyPercent()).toBe(HALF_PERCENT);
+            expect(context.component()['weeklyPercent']()).toBe(HALF_PERCENT);
         });
 
         it('should use explicit weekly goal when provided', () => {
             context.setInput('dailyGoal', DAILY_GOAL);
             context.setInput('weeklyGoal', WEEKLY_GOAL);
             context.setInput('weeklyConsumed', HALF_WEEKLY_CONSUMED);
-            expect(context.component().weeklyPercent()).toBe(HALF_PERCENT);
+            expect(context.component()['weeklyPercent']()).toBe(HALF_PERCENT);
         });
     });
 }
@@ -146,9 +146,9 @@ function registerGoalActionTests({ component, fixture }: TestContext): void {
         it('should emit goalAction', () => {
             fixture().detectChanges();
             const emitSpy = vi.fn();
-            component().goalAction.subscribe(emitSpy);
+            component()['goalAction'].subscribe(emitSpy);
 
-            component().onGoalAction();
+            component()['onGoalAction']();
             expect(emitSpy).toHaveBeenCalled();
         });
     });
@@ -158,22 +158,22 @@ function registerGoalNormalizationTests(context: TestContext): void {
     describe('goal normalization', () => {
         it('should detect hasCalorieGoal when daily goal is positive', () => {
             context.setInput('dailyGoal', DAILY_GOAL);
-            expect(context.component().showNotice()).toBe(true);
+            expect(context.component()['showNotice']()).toBe(true);
         });
 
         it('should show notice when no calorie goal', () => {
             context.setInput('dailyGoal', 0);
-            expect(context.component().showNotice()).toBe(true);
+            expect(context.component()['showNotice']()).toBe(true);
         });
 
         it('should normalize negative goal to 0', () => {
             context.setInput('dailyGoal', NEGATIVE_GOAL);
-            expect(context.component().normalizedDailyGoal()).toBe(0);
+            expect(context.component()['normalizedDailyGoal']()).toBe(0);
         });
 
         it('should keep positive goal as is', () => {
             context.setInput('dailyGoal', POSITIVE_GOAL);
-            expect(context.component().normalizedDailyGoal()).toBe(POSITIVE_GOAL);
+            expect(context.component()['normalizedDailyGoal']()).toBe(POSITIVE_GOAL);
         });
 
         registerWeeklyGoalNormalizationTests(context);
@@ -184,18 +184,18 @@ function registerWeeklyGoalNormalizationTests(context: TestContext): void {
     describe('normalizedWeeklyGoal', () => {
         it('should derive weekly goal from daily goal when not explicitly set', () => {
             context.setInput('dailyGoal', DAILY_GOAL);
-            expect(context.component().normalizedWeeklyGoal()).toBe(DEFAULT_WEEKLY_GOAL);
+            expect(context.component()['normalizedWeeklyGoal']()).toBe(DEFAULT_WEEKLY_GOAL);
         });
 
         it('should use explicit weekly goal when provided', () => {
             context.setInput('dailyGoal', DAILY_GOAL);
             context.setInput('weeklyGoal', WEEKLY_GOAL);
-            expect(context.component().normalizedWeeklyGoal()).toBe(WEEKLY_GOAL);
+            expect(context.component()['normalizedWeeklyGoal']()).toBe(WEEKLY_GOAL);
         });
 
         it('should return 0 when daily goal is 0 and no weekly goal', () => {
             context.setInput('dailyGoal', 0);
-            expect(context.component().normalizedWeeklyGoal()).toBe(0);
+            expect(context.component()['normalizedWeeklyGoal']()).toBe(0);
         });
     });
 }
@@ -204,26 +204,26 @@ function registerHoverTests(context: TestContext): void {
     describe('hover states', () => {
         it('should set daily hover when goal exists', () => {
             context.setInput('dailyGoal', DAILY_GOAL);
-            context.component().setDailyHover(true);
-            expect(context.component().isDailyHovered()).toBe(true);
+            context.component()['setDailyHover'](true);
+            expect(context.component()['isDailyHovered']()).toBe(true);
         });
 
         it('should not set daily hover when goal is 0', () => {
             context.setInput('dailyGoal', 0);
-            context.component().setDailyHover(true);
-            expect(context.component().isDailyHovered()).toBe(false);
+            context.component()['setDailyHover'](true);
+            expect(context.component()['isDailyHovered']()).toBe(false);
         });
 
         it('should set weekly hover when goal exists', () => {
             context.setInput('dailyGoal', DAILY_GOAL);
-            context.component().setWeeklyHover(true);
-            expect(context.component().isWeeklyHovered()).toBe(true);
+            context.component()['setWeeklyHover'](true);
+            expect(context.component()['isWeeklyHovered']()).toBe(true);
         });
 
         it('should not set weekly hover when goal is 0', () => {
             context.setInput('dailyGoal', 0);
-            context.component().setWeeklyHover(true);
-            expect(context.component().isWeeklyHovered()).toBe(false);
+            context.component()['setWeeklyHover'](true);
+            expect(context.component()['isWeeklyHovered']()).toBe(false);
         });
     });
 }
@@ -233,7 +233,7 @@ function registerNoticeTests(context: TestContext): void {
         it('should show notice when no calorie goal and no macro goals', () => {
             context.setInput('dailyGoal', 0);
             context.setInput('nutrientBars', null);
-            expect(context.component().showNotice()).toBe(true);
+            expect(context.component()['showNotice']()).toBe(true);
         });
 
         it('should not show notice when both calorie and macro goals are set', () => {
@@ -250,7 +250,7 @@ function registerNoticeTests(context: TestContext): void {
             ];
             context.setInput('dailyGoal', DAILY_GOAL);
             context.setInput('nutrientBars', bars);
-            expect(context.component().showNotice()).toBe(false);
+            expect(context.component()['showNotice']()).toBe(false);
         });
 
         it('should not render notice when both calorie and macro goals are set', () => {

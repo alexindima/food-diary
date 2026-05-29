@@ -10,20 +10,20 @@ describe('RecipeStepCardComponent', () => {
     it('derives first-step state from step index', () => {
         const { component, fixture } = setupComponent();
 
-        expect(component.isFirst()).toBe(true);
+        expect(component['isFirst']()).toBe(true);
 
         fixture.componentRef.setInput('stepIndex', 1);
         fixture.detectChanges();
 
-        expect(component.isFirst()).toBe(false);
+        expect(component['isFirst']()).toBe(false);
     });
 
     it('trims title when title editing is committed', () => {
         const { component, stepGroup } = setupComponent();
         stepGroup.controls.title.setValue('  Cook rice  ');
 
-        component.toggleStepTitleEdit();
-        component.toggleStepTitleEdit();
+        component['toggleStepTitleEdit']();
+        component['toggleStepTitleEdit']();
 
         expect(stepGroup.controls.title.value).toBe('Cook rice');
     });
@@ -54,7 +54,7 @@ describe('RecipeStepCardComponent', () => {
             foodName: 'Rice',
         });
 
-        expect(component.ingredientRows()[0]).toEqual(
+        expect(component['ingredientRows']()[0]).toEqual(
             expect.objectContaining({
                 prefixIcon: 'restaurant',
                 amountLabel: 'RECIPE_MANAGE.INGREDIENT_AMOUNT (PRODUCT_AMOUNT_UNITS.G)',

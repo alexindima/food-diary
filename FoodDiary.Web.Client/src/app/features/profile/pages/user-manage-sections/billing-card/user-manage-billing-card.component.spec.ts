@@ -11,13 +11,13 @@ describe('UserManageBillingCardComponent', () => {
         const billingReload = vi.fn();
         const billingPortalOpen = vi.fn();
         const premiumPageOpen = vi.fn();
-        component.billingReload.subscribe(billingReload);
-        component.billingPortalOpen.subscribe(billingPortalOpen);
-        component.premiumPageOpen.subscribe(premiumPageOpen);
+        component['billingReload'].subscribe(billingReload);
+        component['billingPortalOpen'].subscribe(billingPortalOpen);
+        component['premiumPageOpen'].subscribe(premiumPageOpen);
 
-        component.billingReload.emit();
-        component.billingPortalOpen.emit();
-        component.premiumPageOpen.emit();
+        component['billingReload'].emit();
+        component['billingPortalOpen'].emit();
+        component['premiumPageOpen'].emit();
 
         expect(billingReload).toHaveBeenCalledTimes(1);
         expect(billingPortalOpen).toHaveBeenCalledTimes(1);

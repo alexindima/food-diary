@@ -13,15 +13,15 @@ describe('MealPlanDetailPageComponent', () => {
         const component = createComponent(facade, 'plan-1');
 
         expect(facade.loadPlan).toHaveBeenCalledWith('plan-1');
-        expect(component.selectedPlanView()?.days[0].meals[0].mealTypeKey).toBe('MEAL_PLANS.MEAL_TYPE.LUNCH');
+        expect(component['selectedPlanView']()?.days[0].meals[0].mealTypeKey).toBe('MEAL_PLANS.MEAL_TYPE.LUNCH');
     });
 
     it('does not call actions when plan is missing', () => {
         const facade = createFacadeStub(null);
         const component = createComponent(facade, null);
 
-        component.adopt();
-        component.generateShoppingList();
+        component['adopt']();
+        component['generateShoppingList']();
 
         expect(facade.adopt).not.toHaveBeenCalled();
         expect(facade.generateShoppingList).not.toHaveBeenCalled();
@@ -32,7 +32,7 @@ describe('MealPlanDetailPageComponent', () => {
         const router = createRouterStub();
         const component = createComponent(facade, 'plan-1', router);
 
-        component.adopt();
+        component['adopt']();
         const onSuccess = facade.adopt.mock.calls[0][1];
         onSuccess();
 
@@ -45,7 +45,7 @@ describe('MealPlanDetailPageComponent', () => {
         const router = createRouterStub();
         const component = createComponent(facade, 'plan-1', router);
 
-        component.generateShoppingList();
+        component['generateShoppingList']();
         const onSuccess = facade.generateShoppingList.mock.calls[0][1];
         onSuccess();
 

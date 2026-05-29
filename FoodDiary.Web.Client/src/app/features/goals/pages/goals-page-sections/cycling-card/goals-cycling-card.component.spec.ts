@@ -39,8 +39,8 @@ describe('GoalsCyclingCardComponent', () => {
         const fixture = createComponent();
         const enabledToggle = vi.fn();
         const dayCaloriesInput = vi.fn();
-        fixture.componentInstance.enabledToggle.subscribe(enabledToggle);
-        fixture.componentInstance.dayCaloriesInput.subscribe(dayCaloriesInput);
+        fixture.componentInstance['enabledToggle'].subscribe(enabledToggle);
+        fixture.componentInstance['dayCaloriesInput'].subscribe(dayCaloriesInput);
         const element = getElement(fixture);
 
         element.querySelector<HTMLInputElement>('input[type="checkbox"]')?.dispatchEvent(new Event('change'));

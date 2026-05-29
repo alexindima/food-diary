@@ -18,7 +18,7 @@ export class ErrorStateComponent {
 
     public readonly retry = output();
 
-    public onRetry(): void {
+    protected onRetry(): void {
         this.retry.emit();
     }
 }

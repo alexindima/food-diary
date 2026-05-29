@@ -35,19 +35,19 @@ export class ProductListFiltersDialogComponent {
     private readonly translate = inject(TranslateService);
     private readonly data = inject<ProductListFiltersDialogData>(FD_UI_DIALOG_DATA);
 
-    public readonly visibilityOptions: FdUiSegmentedToggleOption[] = [
+    protected readonly visibilityOptions: FdUiSegmentedToggleOption[] = [
         { value: 'all', label: this.translate.instant('PRODUCT_LIST.FILTER_ALL_PRODUCTS') },
         { value: 'mine', label: this.translate.instant('PRODUCT_LIST.FILTER_MY_PRODUCTS') },
     ];
 
-    public visibilityValue: ProductListVisibilityFilter = this.data.onlyMine ? 'mine' : 'all';
-    public readonly selectedTypeValues = linkedSignal(() => [...this.data.productTypes]);
+    protected visibilityValue: ProductListVisibilityFilter = this.data.onlyMine ? 'mine' : 'all';
+    protected readonly selectedTypeValues = linkedSignal(() => [...this.data.productTypes]);
 
-    public readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[]).filter(
+    protected readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[]).filter(
         type => type !== ProductType.Unknown,
     );
     private readonly selectableProductTypes = new Set<string>(this.productTypes);
-    public readonly productTypeOptions = computed(() =>
+    protected readonly productTypeOptions = computed(() =>
         this.productTypes.map<FdUiChipSelectOption>(type => {
             const label = this.translate.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`);
             return {
@@ -59,22 +59,22 @@ export class ProductListFiltersDialogComponent {
         }),
     );
 
-    public onVisibilityChange(value: string): void {
+    protected onVisibilityChange(value: string): void {
         this.visibilityValue = value === 'mine' ? 'mine' : 'all';
     }
 
-    public onSelectedTypesChange(values: string[]): void {
+    protected onSelectedTypesChange(values: string[]): void {
         this.selectedTypeValues.set(values.filter((value): value is ProductType => this.selectableProductTypes.has(value)));
     }
 
-    public onApply(): void {
+    protected onApply(): void {
         this.dialogRef.close({
             onlyMine: this.visibilityValue === 'mine',
             productTypes: this.selectedTypeValues(),
         });
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(null);
     }
 }

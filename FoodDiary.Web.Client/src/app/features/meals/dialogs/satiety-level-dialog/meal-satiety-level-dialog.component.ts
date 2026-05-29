@@ -24,14 +24,14 @@ export type SatietyLevelDialogData = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealSatietyLevelDialogComponent {
-    public readonly data = inject<SatietyLevelDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<SatietyLevelDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<MealSatietyLevelDialogComponent>>(FdUiDialogRef);
     private readonly translateService = inject(TranslateService);
     private readonly defaultSatietyLevel = DEFAULT_SATIETY_LEVEL;
 
-    public readonly selectedValue = signal<number | null>(null);
-    public readonly subtitleKey = computed(() => this.data.subtitleKey ?? null);
-    public readonly subtitle = computed(() => {
+    protected readonly selectedValue = signal<number | null>(null);
+    protected readonly subtitleKey = computed(() => this.data.subtitleKey ?? null);
+    protected readonly subtitle = computed(() => {
         const key = this.subtitleKey();
         return key !== null && key.trim().length > 0 ? this.translateService.instant(key) : undefined;
     });
@@ -40,15 +40,15 @@ export class MealSatietyLevelDialogComponent {
         this.selectedValue.set(this.data.value ?? this.defaultSatietyLevel);
     }
 
-    public onValueSelected(level: number): void {
+    protected onValueSelected(level: number): void {
         this.selectedValue.set(level);
     }
 
-    public closeWithValue(): void {
+    protected closeWithValue(): void {
         this.dialogRef.close(this.selectedValue());
     }
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef.close();
     }
 }

@@ -25,8 +25,8 @@ describe('MealPlanDetailHeaderComponent', () => {
         const fixture = createComponent({ isCurated: true });
         const adoptPlan = vi.fn();
         const generateShoppingList = vi.fn();
-        fixture.componentInstance.adoptPlan.subscribe(adoptPlan);
-        fixture.componentInstance.generateShoppingList.subscribe(generateShoppingList);
+        fixture.componentInstance['adoptPlan'].subscribe(adoptPlan);
+        fixture.componentInstance['generateShoppingList'].subscribe(generateShoppingList);
         const buttons = getElement(fixture).querySelectorAll<HTMLElement>('fd-ui-button');
 
         buttons[0].click();

@@ -38,30 +38,30 @@ describe('MealSatietyLevelDialogComponent', () => {
 
     it('should initialize with value from data', () => {
         createComponent({ titleKey: 'TITLE', value: HIGH_SATIETY });
-        expect(component.selectedValue()).toBe(HIGH_SATIETY);
+        expect(component['selectedValue']()).toBe(HIGH_SATIETY);
     });
 
     it('should initialize with neutral value when data value is null', () => {
         createComponent({ titleKey: 'TITLE', value: null });
-        expect(component.selectedValue()).toBe(LOW_SATIETY);
+        expect(component['selectedValue']()).toBe(LOW_SATIETY);
     });
 
     it('should update selectedValue on selection', () => {
         createComponent();
-        component.onValueSelected(SELECTED_SATIETY);
-        expect(component.selectedValue()).toBe(SELECTED_SATIETY);
+        component['onValueSelected'](SELECTED_SATIETY);
+        expect(component['selectedValue']()).toBe(SELECTED_SATIETY);
     });
 
     it('should close with selected value', () => {
         createComponent({ titleKey: 'TITLE', value: LOW_SATIETY });
-        component.onValueSelected(HIGH_SATIETY);
-        component.closeWithValue();
+        component['onValueSelected'](HIGH_SATIETY);
+        component['closeWithValue']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(HIGH_SATIETY);
     });
 
     it('should close with null on dismiss', () => {
         createComponent();
-        component.close();
+        component['close']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith();
     });
 });

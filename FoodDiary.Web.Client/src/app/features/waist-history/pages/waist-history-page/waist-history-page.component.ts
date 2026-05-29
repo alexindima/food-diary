@@ -36,47 +36,47 @@ import type { WaistEntry } from '../../models/waist-entry.data';
 export class WaistHistoryPageComponent {
     private readonly facade = inject(WaistHistoryFacade);
 
-    public readonly selectedRange = this.facade.selectedRange;
-    public readonly currentRange = this.facade.currentRange;
-    public readonly isLoading = this.facade.isLoading;
-    public readonly isSaving = this.facade.isSaving;
-    public readonly isEditing = this.facade.isEditing;
-    public readonly isSummaryLoading = this.facade.isSummaryLoading;
-    public readonly customRangeControl = this.facade.customRangeControl;
-    public readonly isDesiredWaistSaving = this.facade.isDesiredWaistSaving;
-    public readonly desiredWaistControl = this.facade.desiredWaistControl;
-    public readonly entriesDescending = this.facade.entriesDescending;
-    public readonly chartPoints = this.facade.chartPoints;
-    public readonly form = this.facade.form;
-    public readonly whtViewModel = this.facade.whtViewModel;
+    protected readonly selectedRange = this.facade.selectedRange;
+    protected readonly currentRange = this.facade.currentRange;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly isSaving = this.facade.isSaving;
+    protected readonly isEditing = this.facade.isEditing;
+    protected readonly isSummaryLoading = this.facade.isSummaryLoading;
+    protected readonly customRangeControl = this.facade.customRangeControl;
+    protected readonly isDesiredWaistSaving = this.facade.isDesiredWaistSaving;
+    protected readonly desiredWaistControl = this.facade.desiredWaistControl;
+    protected readonly entriesDescending = this.facade.entriesDescending;
+    protected readonly chartPoints = this.facade.chartPoints;
+    protected readonly form = this.facade.form;
+    protected readonly whtViewModel = this.facade.whtViewModel;
 
-    public readonly rangeTabs = WAIST_HISTORY_RANGE_TABS;
+    protected readonly rangeTabs = WAIST_HISTORY_RANGE_TABS;
 
     public constructor() {
         this.facade.initialize();
     }
 
-    public submit(): void {
+    protected submit(): void {
         this.facade.submit();
     }
 
-    public startEdit(entry: WaistEntry): void {
+    protected startEdit(entry: WaistEntry): void {
         this.facade.startEdit(entry);
     }
 
-    public cancelEdit(): void {
+    protected cancelEdit(): void {
         this.facade.cancelEdit();
     }
 
-    public deleteEntry(entry: WaistEntry): void {
+    protected deleteEntry(entry: WaistEntry): void {
         this.facade.deleteEntry(entry);
     }
 
-    public saveDesiredWaist(): void {
+    protected saveDesiredWaist(): void {
         this.facade.saveDesiredWaist();
     }
 
-    public changeRange(value: string): void {
+    protected changeRange(value: string): void {
         this.facade.changeRange(value);
     }
 }

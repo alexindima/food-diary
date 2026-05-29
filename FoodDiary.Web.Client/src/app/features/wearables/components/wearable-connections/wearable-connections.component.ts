@@ -20,13 +20,13 @@ export class WearableConnectionsComponent {
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-    public readonly providerRows = this.facade.providerRows;
+    protected readonly providerRows = this.facade.providerRows;
 
     public constructor() {
         this.facade.initialize();
     }
 
-    public connect(providerId: string): void {
+    protected connect(providerId: string): void {
         const state = crypto.randomUUID();
         this.facade
             .getAuthUrl(providerId, state)
@@ -38,7 +38,7 @@ export class WearableConnectionsComponent {
             });
     }
 
-    public disconnect(providerId: string): void {
+    protected disconnect(providerId: string): void {
         this.facade.disconnect(providerId);
     }
 }

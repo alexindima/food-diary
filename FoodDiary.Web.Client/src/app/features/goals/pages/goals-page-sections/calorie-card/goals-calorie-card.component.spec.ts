@@ -38,12 +38,12 @@ describe('GoalsCalorieCardComponent', () => {
         const caloriesInput = vi.fn();
         const caloriesBlur = vi.fn();
         const sliderInput = vi.fn();
-        fixture.componentInstance.ringPointerDown.subscribe(ringPointerDown);
-        fixture.componentInstance.ringPointerMove.subscribe(ringPointerMove);
-        fixture.componentInstance.ringPointerLeave.subscribe(ringPointerLeave);
-        fixture.componentInstance.caloriesInput.subscribe(caloriesInput);
-        fixture.componentInstance.caloriesBlur.subscribe(caloriesBlur);
-        fixture.componentInstance.sliderInput.subscribe(sliderInput);
+        fixture.componentInstance['ringPointerDown'].subscribe(ringPointerDown);
+        fixture.componentInstance['ringPointerMove'].subscribe(ringPointerMove);
+        fixture.componentInstance['ringPointerLeave'].subscribe(ringPointerLeave);
+        fixture.componentInstance['caloriesInput'].subscribe(caloriesInput);
+        fixture.componentInstance['caloriesBlur'].subscribe(caloriesBlur);
+        fixture.componentInstance['sliderInput'].subscribe(sliderInput);
         const element = getElement(fixture);
 
         getRequiredElement(element, '.goals__ring').dispatchEvent(new PointerEvent('pointerdown'));

@@ -11,14 +11,14 @@ describe('WeightHistoryChartCardComponent', () => {
     it('derives empty state from chart data labels', async () => {
         const { component, fixture } = await setupComponentAsync([]);
 
-        expect(component.hasPoints()).toBe(false);
+        expect(component['hasPoints']()).toBe(false);
         expect(getText(fixture)).toContain('WEIGHT_HISTORY.NO_DATA_FOR_CHART');
     });
 
     it('detects chart points without a separate input', async () => {
         const { component } = await setupComponentAsync([{ label: '2026-05-15', value: CHART_VALUE }], true);
 
-        expect(component.hasPoints()).toBe(true);
+        expect(component['hasPoints']()).toBe(true);
     });
 });
 

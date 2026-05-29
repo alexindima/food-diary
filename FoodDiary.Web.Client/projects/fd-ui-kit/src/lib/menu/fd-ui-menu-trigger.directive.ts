@@ -84,7 +84,7 @@ export class FdUiMenuTriggerDirective {
         }
     }
 
-    public toggle(): void {
+    protected toggle(): void {
         if (this.overlayRef?.hasAttached() === true) {
             this.close();
             return;
@@ -93,7 +93,7 @@ export class FdUiMenuTriggerDirective {
         this.open();
     }
 
-    public open(focusTarget: 'first' | 'last' = 'first'): void {
+    protected open(focusTarget: 'first' | 'last' = 'first'): void {
         const menu = this.menu();
         if (menu === null) {
             return;
@@ -140,7 +140,7 @@ export class FdUiMenuTriggerDirective {
         menu.focusFirstItem();
     }
 
-    public close(restoreFocus = true): void {
+    protected close(restoreFocus = true): void {
         if (this.overlayRef?.hasAttached() !== true) {
             return;
         }

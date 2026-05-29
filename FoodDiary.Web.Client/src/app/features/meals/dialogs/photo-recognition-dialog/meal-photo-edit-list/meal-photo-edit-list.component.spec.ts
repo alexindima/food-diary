@@ -11,7 +11,7 @@ describe('MealPhotoEditListComponent', () => {
     it('should emit item updates from name, amount and unit controls', async () => {
         const { component, fixture } = await setupComponentAsync();
         const updateSpy = vi.fn();
-        component.itemUpdated.subscribe(updateSpy);
+        component['itemUpdated'].subscribe(updateSpy);
 
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
@@ -28,8 +28,8 @@ describe('MealPhotoEditListComponent', () => {
         const { component, fixture } = await setupComponentAsync();
         const removedSpy = vi.fn();
         const addedSpy = vi.fn();
-        component.itemRemoved.subscribe(removedSpy);
-        component.itemAdded.subscribe(addedSpy);
+        component['itemRemoved'].subscribe(removedSpy);
+        component['itemAdded'].subscribe(addedSpy);
 
         fixture.detectChanges();
         const buttons = fixture.debugElement.queryAll(By.directive(FdUiButtonComponent));

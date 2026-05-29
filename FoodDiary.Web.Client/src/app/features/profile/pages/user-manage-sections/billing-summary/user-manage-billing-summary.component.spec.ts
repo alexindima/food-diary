@@ -33,16 +33,16 @@ describe('UserManageBillingSummaryComponent state', () => {
         const fixture = await createComponentAsync();
         const component = fixture.componentInstance;
 
-        expect(component.billingPlanLabelKey()).toBe('USER_MANAGE.BILLING_PLAN_PREMIUM_MONTHLY');
-        expect(component.billingStatusLabelKey()).toBe('USER_MANAGE.BILLING_STATUS_ACTIVE');
-        expect(component.billingProviderLabel()).toBe('Stripe');
-        expect(component.billingRenewalLabelKey()).toBe('USER_MANAGE.BILLING_RENEWAL_ENABLED');
+        expect(component['billingPlanLabelKey']()).toBe('USER_MANAGE.BILLING_PLAN_PREMIUM_MONTHLY');
+        expect(component['billingStatusLabelKey']()).toBe('USER_MANAGE.BILLING_STATUS_ACTIVE');
+        expect(component['billingProviderLabel']()).toBe('Stripe');
+        expect(component['billingRenewalLabelKey']()).toBe('USER_MANAGE.BILLING_RENEWAL_ENABLED');
     });
 
     it('formats billing dates with current language', async () => {
         const fixture = await createComponentAsync();
 
-        expect(fixture.componentInstance.formatDate('2026-01-01T00:00:00Z')).toBe('Jan 1, 2026');
+        expect(fixture.componentInstance['formatDate']('2026-01-01T00:00:00Z')).toBe('Jan 1, 2026');
     });
 });
 
@@ -52,11 +52,11 @@ describe('UserManageBillingSummaryComponent actions', () => {
         const component = fixture.componentInstance;
         const billingPortalOpen = vi.fn();
         const premiumPageOpen = vi.fn();
-        component.billingPortalOpen.subscribe(billingPortalOpen);
-        component.premiumPageOpen.subscribe(premiumPageOpen);
+        component['billingPortalOpen'].subscribe(billingPortalOpen);
+        component['premiumPageOpen'].subscribe(premiumPageOpen);
 
-        component.billingPortalOpen.emit();
-        component.premiumPageOpen.emit();
+        component['billingPortalOpen'].emit();
+        component['premiumPageOpen'].emit();
 
         expect(billingPortalOpen).toHaveBeenCalledOnce();
         expect(premiumPageOpen).toHaveBeenCalledOnce();

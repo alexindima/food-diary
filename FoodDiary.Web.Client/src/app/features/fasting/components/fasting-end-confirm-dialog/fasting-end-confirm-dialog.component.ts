@@ -22,14 +22,14 @@ export type FastingEndConfirmDialogData = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingEndConfirmDialogComponent {
-    public readonly data = inject<FastingEndConfirmDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<FastingEndConfirmDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<FastingEndConfirmDialogComponent, FastingEndConfirmDialogResult>>(FdUiDialogRef);
 
-    public onConfirm(): void {
+    protected onConfirm(): void {
         this.dialogRef.close('confirm');
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close('cancel');
     }
 }

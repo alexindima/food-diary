@@ -21,7 +21,7 @@ describe('NotificationsDialogListComponent', () => {
         const fixture = await setupNotificationsDialogListAsync();
         const component = fixture.componentInstance;
         const openSpy = vi.fn<(notification: NotificationItem) => void>();
-        component.notificationOpen.subscribe(notification => {
+        component['notificationOpen'].subscribe(notification => {
             openSpy(notification);
         });
         fixture.detectChanges();

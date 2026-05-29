@@ -15,19 +15,19 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 export class AiConsentDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<AiConsentDialogComponent, boolean>);
 
-    public readonly isAgreed = signal(false);
+    protected readonly isAgreed = signal(false);
 
-    public onCheckboxChange(event: Event): void {
+    protected onCheckboxChange(event: Event): void {
         if (event.target instanceof HTMLInputElement) {
             this.isAgreed.set(event.target.checked);
         }
     }
 
-    public onAccept(): void {
+    protected onAccept(): void {
         this.dialogRef.close(true);
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(false);
     }
 }

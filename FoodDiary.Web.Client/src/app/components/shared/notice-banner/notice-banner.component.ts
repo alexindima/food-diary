@@ -17,12 +17,12 @@ export class NoticeBannerComponent {
     public readonly actionLabel = input<string | null>(null);
     public readonly action = output();
 
-    public readonly showAction = computed(() => {
+    protected readonly showAction = computed(() => {
         const actionLabel = this.actionLabel();
         return actionLabel !== null && actionLabel.length > 0;
     });
 
-    public onAction(): void {
+    protected onAction(): void {
         const actionLabel = this.actionLabel();
         if (actionLabel === null || actionLabel.length === 0) {
             return;

@@ -39,18 +39,18 @@ export class TdeeInsightDialogComponent {
     private readonly dialogRef = inject<FdUiDialogRef<TdeeInsightDialogComponent, TdeeInsightDialogAction | undefined>>(FdUiDialogRef);
     private readonly data = inject<TdeeInsightDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
 
-    public readonly insight = this.data?.insight ?? null;
-    public readonly effectiveTdee = getEffectiveTdee(this.insight);
-    public readonly hasProfileBasis = (this.insight?.estimatedTdee ?? this.insight?.bmr ?? 0) > 0;
-    public readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= MIN_FOOD_WINDOW_DAYS || (this.insight?.adaptiveTdee ?? 0) > 0;
-    public readonly hasBodyTrend = this.hasBodyTrendValue();
-    public readonly weightTrendFormatted = formatTdeeWeightTrend(this.insight?.weightTrendPerWeek);
-    public readonly confidenceKey = buildTdeeConfidenceKey(this.insight, 'TDEE_DIALOG.CONFIDENCE.NONE');
-    public readonly stateKey = this.buildTdeeStateKey('STATE');
-    public readonly summaryKey = this.buildTdeeStateKey('SUMMARY');
-    public readonly showSuggestion = hasMeaningfulTdeeSuggestion(this.insight);
-    public readonly hintKey = buildTdeeHintKey(this.insight?.goalAdjustmentHint);
-    public readonly setupItems: readonly TdeeSetupItem[] = [
+    protected readonly insight = this.data?.insight ?? null;
+    protected readonly effectiveTdee = getEffectiveTdee(this.insight);
+    protected readonly hasProfileBasis = (this.insight?.estimatedTdee ?? this.insight?.bmr ?? 0) > 0;
+    protected readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= MIN_FOOD_WINDOW_DAYS || (this.insight?.adaptiveTdee ?? 0) > 0;
+    protected readonly hasBodyTrend = this.hasBodyTrendValue();
+    protected readonly weightTrendFormatted = formatTdeeWeightTrend(this.insight?.weightTrendPerWeek);
+    protected readonly confidenceKey = buildTdeeConfidenceKey(this.insight, 'TDEE_DIALOG.CONFIDENCE.NONE');
+    protected readonly stateKey = this.buildTdeeStateKey('STATE');
+    protected readonly summaryKey = this.buildTdeeStateKey('SUMMARY');
+    protected readonly showSuggestion = hasMeaningfulTdeeSuggestion(this.insight);
+    protected readonly hintKey = buildTdeeHintKey(this.insight?.goalAdjustmentHint);
+    protected readonly setupItems: readonly TdeeSetupItem[] = [
         {
             key: 'profile',
             icon: 'person',
@@ -74,11 +74,11 @@ export class TdeeInsightDialogComponent {
         },
     ];
 
-    public close(action?: TdeeInsightDialogAction): void {
+    protected close(action?: TdeeInsightDialogAction): void {
         this.dialogRef.close(action);
     }
 
-    public applySuggestion(): void {
+    protected applySuggestion(): void {
         const target = this.insight?.suggestedCalorieTarget;
         if (target === null || target === undefined || target <= 0) {
             return;

@@ -34,10 +34,10 @@ export class ReportDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly reportReasonMaxLength = inject(REPORT_REASON_MAX_LENGTH);
 
-    public readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(this.reportReasonMaxLength)]);
-    public readonly isSubmitting = signal(false);
+    protected readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(this.reportReasonMaxLength)]);
+    protected readonly isSubmitting = signal(false);
 
-    public onSubmit(): void {
+    protected onSubmit(): void {
         const reason = (this.reasonControl.value ?? '').trim();
         if (reason.length === 0 || this.reasonControl.invalid || this.isSubmitting()) {
             return;
@@ -64,7 +64,7 @@ export class ReportDialogComponent {
             });
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(false);
     }
 }

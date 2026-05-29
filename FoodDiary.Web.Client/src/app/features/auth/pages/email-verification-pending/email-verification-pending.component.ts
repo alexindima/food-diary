@@ -31,11 +31,11 @@ export class EmailVerificationPendingComponent {
     private readonly shouldAutoResend = this.route.snapshot.queryParamMap.get('autoResend') === 'true';
     private autoResendAttempted = false;
 
-    public readonly email = signal<string | null>(null);
-    public readonly statusMessage = signal<string | null>(null);
-    public readonly isChecking = signal(false);
-    public readonly isSending = signal(false);
-    public readonly resendCooldownSeconds = signal(0);
+    protected readonly email = signal<string | null>(null);
+    protected readonly statusMessage = signal<string | null>(null);
+    protected readonly isChecking = signal(false);
+    protected readonly isSending = signal(false);
+    protected readonly resendCooldownSeconds = signal(0);
 
     public constructor() {
         if (!this.authService.isAuthenticated()) {
@@ -46,7 +46,7 @@ export class EmailVerificationPendingComponent {
         this.loadCurrentUser();
     }
 
-    public onRefreshStatus(): void {
+    protected onRefreshStatus(): void {
         this.isChecking.set(true);
         this.userService
             .getInfo()
@@ -68,7 +68,7 @@ export class EmailVerificationPendingComponent {
             });
     }
 
-    public onResendEmail(): void {
+    protected onResendEmail(): void {
         this.sendVerificationEmail(false);
     }
 

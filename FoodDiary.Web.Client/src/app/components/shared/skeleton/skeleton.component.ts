@@ -19,7 +19,7 @@ export class SkeletonComponent {
     public readonly borderRadius = input<string>(this.defaultRadius);
     public readonly variant = input<SkeletonVariant>('text');
 
-    public readonly styles = computed(() => {
+    protected readonly styles = computed(() => {
         const v = this.variant();
 
         switch (v) {

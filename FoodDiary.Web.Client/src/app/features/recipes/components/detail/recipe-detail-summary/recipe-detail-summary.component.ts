@@ -23,5 +23,5 @@ export class RecipeDetailSummaryComponent {
     public readonly macroSummaryBlocks = input.required<readonly MacroBlock[]>();
     public readonly ingredientCount = input.required<number>();
     public readonly ingredientPreview = input.required<readonly IngredientPreviewItem[]>();
-    public readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
+    protected readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
 }

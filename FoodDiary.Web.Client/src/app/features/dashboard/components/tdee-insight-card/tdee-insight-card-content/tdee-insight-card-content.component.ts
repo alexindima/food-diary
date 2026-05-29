@@ -20,12 +20,12 @@ export class TdeeInsightCardContentComponent {
     public readonly effectiveTdee = input.required<number>();
     public readonly applyGoal = output<Event>();
 
-    public readonly confidenceLabel = computed(() => {
+    protected readonly confidenceLabel = computed(() => {
         const insight = this.insight();
         return insight !== null && insight.confidence !== 'none' ? `TDEE_CARD.CONFIDENCE.${insight.confidence.toUpperCase()}` : null;
     });
-    public readonly confidenceClass = computed(() => this.insight()?.confidence ?? 'none');
-    public readonly weightTrendFormatted = computed(() => formatTdeeWeightTrend(this.insight()?.weightTrendPerWeek));
-    public readonly hintKey = computed(() => buildTdeeHintKey(this.insight()?.goalAdjustmentHint));
-    public readonly showSuggestion = computed(() => hasMeaningfulTdeeSuggestion(this.insight()));
+    protected readonly confidenceClass = computed(() => this.insight()?.confidence ?? 'none');
+    protected readonly weightTrendFormatted = computed(() => formatTdeeWeightTrend(this.insight()?.weightTrendPerWeek));
+    protected readonly hintKey = computed(() => buildTdeeHintKey(this.insight()?.goalAdjustmentHint));
+    protected readonly showSuggestion = computed(() => hasMeaningfulTdeeSuggestion(this.insight()));
 }

@@ -19,7 +19,7 @@ export class ProductSaveSuccessDialogComponent {
     private readonly data = inject<ProductSaveSuccessDialogData>(FD_UI_DIALOG_DATA);
     protected readonly titleKey = computed(() => (this.data.isEdit ? 'PRODUCT_DETAIL.EDIT_SUCCESS' : 'PRODUCT_DETAIL.CREATE_SUCCESS'));
 
-    public close(action: RedirectAction): void {
+    protected close(action: RedirectAction): void {
         this.dialogRef.close(action);
     }
 }

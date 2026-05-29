@@ -17,18 +17,18 @@ describe('MealPlanListFiltersComponent', () => {
         const fixture = createComponent('Keto');
         const component = fixture.componentInstance;
 
-        expect(component.options().find(option => option.value === null)?.fill).toBe('outline');
-        expect(component.options().find(option => option.value === 'Keto')?.fill).toBe('solid');
-        expect(component.options().find(option => option.value === 'Balanced')?.fill).toBe('outline');
+        expect(component['options']().find(option => option.value === null)?.fill).toBe('outline');
+        expect(component['options']().find(option => option.value === 'Keto')?.fill).toBe('solid');
+        expect(component['options']().find(option => option.value === 'Balanced')?.fill).toBe('outline');
     });
 
     it('emits selected filter value', () => {
         const fixture = createComponent(null);
         const component = fixture.componentInstance;
         const filterChange = vi.fn();
-        component.filterChange.subscribe(filterChange);
+        component['filterChange'].subscribe(filterChange);
 
-        component.filterChange.emit('Balanced');
+        component['filterChange'].emit('Balanced');
 
         expect(filterChange).toHaveBeenCalledWith('Balanced');
     });

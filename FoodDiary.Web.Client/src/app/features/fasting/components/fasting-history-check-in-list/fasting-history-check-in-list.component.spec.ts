@@ -22,7 +22,7 @@ describe('FastingHistoryCheckInListComponent', () => {
     it('renders visible check-ins and emits load-more requests', () => {
         const fixture = createComponent(createHistoryItem({ canLoadMoreCheckIns: true }));
         const checkInsLoadMore = vi.fn();
-        fixture.componentInstance.checkInsLoadMore.subscribe(checkInsLoadMore);
+        fixture.componentInstance['checkInsLoadMore'].subscribe(checkInsLoadMore);
         const element = getElement(fixture);
 
         expect(element.textContent).toContain('First check-in');

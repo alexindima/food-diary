@@ -116,22 +116,22 @@ describe('AdminBillingComponent loading', () => {
             fromUtc: null,
             toUtc: null,
         });
-        expect(component.subscriptions()).toEqual(subscriptionsPage.items);
-        expect(component.totalPages()).toBe(TOTAL_PAGES);
-        expect(component.totalItems()).toBe(TOTAL_ITEMS);
-        expect(component.isLoading()).toBe(false);
+        expect(component['subscriptions']()).toEqual(subscriptionsPage.items);
+        expect(component['totalPages']()).toBe(TOTAL_PAGES);
+        expect(component['totalItems']()).toBe(TOTAL_ITEMS);
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('should clear state on load error', async () => {
         const { billingService, component } = await setupBillingAsync();
         billingService.getSubscriptions.mockReturnValueOnce(throwError(() => new Error('network')));
 
-        component.load();
+        component['load']();
 
-        expect(component.subscriptions()).toEqual([]);
-        expect(component.totalItems()).toBe(0);
-        expect(component.errorMessage()).toBe('network');
-        expect(component.isLoading()).toBe(false);
+        expect(component['subscriptions']()).toEqual([]);
+        expect(component['totalItems']()).toBe(0);
+        expect(component['errorMessage']()).toBe('network');
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('should ignore stale load responses after tab changes', async () => {
@@ -140,27 +140,27 @@ describe('AdminBillingComponent loading', () => {
         billingService.getSubscriptions.mockReturnValueOnce(pendingSubscriptions.asObservable());
         const { component } = await setupBillingAsync(billingService);
 
-        component.setTab('payments');
+        component['setTab']('payments');
         pendingSubscriptions.next({
             ...subscriptionsPage,
             totalItems: 99,
         });
 
-        expect(component.activeTab()).toBe('payments');
-        expect(component.subscriptions()).toEqual([]);
-        expect(component.totalItems()).toBe(1);
-        expect(component.isLoading()).toBe(false);
+        expect(component['activeTab']()).toBe('payments');
+        expect(component['subscriptions']()).toEqual([]);
+        expect(component['totalItems']()).toBe(1);
+        expect(component['isLoading']()).toBe(false);
     });
 });
 
 describe('AdminBillingComponent filters', () => {
     it('should switch to payments and include kind filter', async () => {
         const { billingService, component } = await setupBillingAsync();
-        component.kind.set('webhook');
-        component.setTab('payments');
+        component['kind'].set('webhook');
+        component['setTab']('payments');
 
-        expect(component.activeTab()).toBe('payments');
-        expect(component.page()).toBe(1);
+        expect(component['activeTab']()).toBe('payments');
+        expect(component['page']()).toBe(1);
         expect(billingService.getPayments).toHaveBeenCalledWith(1, PAGE_SIZE, {
             provider: null,
             status: null,
@@ -169,18 +169,18 @@ describe('AdminBillingComponent filters', () => {
             fromUtc: null,
             toUtc: null,
         });
-        expect(component.payments()[0].externalPaymentId).toBe('pay_123');
+        expect(component['payments']()[0].externalPaymentId).toBe('pay_123');
     });
 
     it('should apply filters with utc day bounds', async () => {
         const { billingService, component } = await setupBillingAsync();
-        component.provider.set(' Paddle ');
-        component.status.set(' paid ');
-        component.search.set(' buyer@example.com ');
-        component.fromDate.set('2026-04-01');
-        component.toDate.set('2026-04-30');
+        component['provider'].set(' Paddle ');
+        component['status'].set(' paid ');
+        component['search'].set(' buyer@example.com ');
+        component['fromDate'].set('2026-04-01');
+        component['toDate'].set('2026-04-30');
 
-        component.applyFilters();
+        component['applyFilters']();
 
         expect(billingService.getSubscriptions).toHaveBeenLastCalledWith(1, PAGE_SIZE, {
             provider: 'Paddle',
@@ -196,8 +196,8 @@ describe('AdminBillingComponent filters', () => {
 describe('AdminBillingComponent metadata', () => {
     it('should format metadata json for side panel', async () => {
         const { component } = await setupBillingAsync();
-        component.showMetadata('{"payment_id":"pay_123"}');
+        component['showMetadata']('{"payment_id":"pay_123"}');
 
-        expect(component.selectedMetadata()).toContain('"payment_id": "pay_123"');
+        expect(component['selectedMetadata']()).toContain('"payment_id": "pay_123"');
     });
 });

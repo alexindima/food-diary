@@ -18,7 +18,7 @@ describe('MealPhotoUploadPanelComponent', () => {
         const nextSelection: ImageSelection = { url: 'https://example.com/next.jpg', assetId: 'asset-2' };
         const { component, fixture } = await setupComponentAsync({ initialSelection });
         const imageChangedSpy = vi.fn();
-        component.imageChanged.subscribe(imageChangedSpy);
+        component['imageChanged'].subscribe(imageChangedSpy);
 
         fixture.detectChanges();
         const uploadField = fixture.debugElement.query(By.directive(ImageUploadFieldComponent))

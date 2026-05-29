@@ -61,8 +61,8 @@ export class EntityCardComponent {
     public readonly favoriteToggle = output();
     public readonly action = output();
 
-    public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
-    public readonly normalizedQuality = computed<EntityCardNormalizedQuality | null>(() => {
+    protected readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
+    protected readonly normalizedQuality = computed<EntityCardNormalizedQuality | null>(() => {
         const quality = this.quality();
         if (quality === null) {
             return null;
@@ -75,8 +75,8 @@ export class EntityCardComponent {
         };
     });
 
-    public readonly visibleCollageImages = computed(() => this.collageImages().slice(0, this.config.collage.visibleLimit));
-    public readonly collageState = computed<EntityCardCollageState>(() => {
+    protected readonly visibleCollageImages = computed(() => this.collageImages().slice(0, this.config.collage.visibleLimit));
+    protected readonly collageState = computed<EntityCardCollageState>(() => {
         const images = this.visibleCollageImages();
 
         return {
@@ -85,11 +85,11 @@ export class EntityCardComponent {
             hasImages: images.length > 0,
         };
     });
-    public readonly hasPreviewImage = computed(() => {
+    protected readonly hasPreviewImage = computed(() => {
         const imageUrl = this.imageUrl()?.trim() ?? '';
         return this.previewable() && (imageUrl.length > 0 || this.collageState().hasImages);
     });
-    public readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() => {
+    protected readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() => {
         this.languageVersion();
         const hasPreviewImage = this.hasPreviewImage();
         const previewLabel = hasPreviewImage ? this.translateService.instant('IMAGE_PREVIEW.OPEN') : null;
@@ -108,19 +108,19 @@ export class EntityCardComponent {
         });
     }
 
-    public handleOpen(): void {
+    protected handleOpen(): void {
         this.open.emit();
     }
 
-    public handlePreview(): void {
+    protected handlePreview(): void {
         this.preview.emit();
     }
 
-    public handleFavoriteToggle(): void {
+    protected handleFavoriteToggle(): void {
         this.favoriteToggle.emit();
     }
 
-    public handleAction(): void {
+    protected handleAction(): void {
         this.action.emit();
     }
 }

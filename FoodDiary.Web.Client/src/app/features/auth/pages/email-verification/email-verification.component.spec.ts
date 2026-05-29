@@ -33,34 +33,34 @@ describe('EmailVerificationComponent', () => {
         const component = createComponent({ userId: 'user-1', token: 'token-1' });
 
         expect(authServiceMock.verifyEmail).toHaveBeenCalledWith('user-1', 'token-1');
-        expect(component.state()).toBe('success');
-        expect(component.isBusy()).toBe(false);
+        expect(component['state']()).toBe('success');
+        expect(component['isBusy']()).toBe(false);
     });
 
     it('should set invalid error when token is missing', () => {
         const component = createComponent({});
 
         expect(authServiceMock.verifyEmail).not.toHaveBeenCalled();
-        expect(component.state()).toBe('error');
-        expect(component.errorMessage()).toBe('AUTH.VERIFY.ERROR_INVALID');
+        expect(component['state']()).toBe('error');
+        expect(component['errorMessage']()).toBe('AUTH.VERIFY.ERROR_INVALID');
     });
 
     it('should allow retry with the resolved token', () => {
         authServiceMock.verifyEmail.mockReturnValueOnce(throwError(() => new Error('fail'))).mockReturnValueOnce(of(true));
         const component = createComponent({ userId: 'user-1', token: 'token-1' });
 
-        expect(component.state()).toBe('error');
+        expect(component['state']()).toBe('error');
 
-        component.onRetry();
+        component['onRetry']();
 
         expect(authServiceMock.verifyEmail).toHaveBeenCalledTimes(2);
-        expect(component.state()).toBe('success');
+        expect(component['state']()).toBe('success');
     });
 
     it('should navigate home on continue when authenticated', () => {
         const component = createComponent({ userId: 'user-1', token: 'token-1' });
 
-        component.onContinue();
+        component['onContinue']();
 
         expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
     });
@@ -69,7 +69,7 @@ describe('EmailVerificationComponent', () => {
         authServiceMock.isAuthenticated.mockReturnValue(false);
         const component = createComponent({ userId: 'user-1', token: 'token-1' });
 
-        component.onContinue();
+        component['onContinue']();
 
         expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login');
     });

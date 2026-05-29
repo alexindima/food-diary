@@ -33,10 +33,10 @@ export class MealSatietyFieldsComponent {
     public readonly pickerSize = input<'sm' | 'md'>('sm');
     public readonly layout = input<'stacked' | 'columns' | 'compactColumns'>('stacked');
 
-    public hungerEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
-    public satietyEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
-    public readonly preMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('before'));
-    public readonly postMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('after'));
+    protected hungerEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
+    protected satietyEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+    protected readonly preMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('before'));
+    protected readonly postMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('after'));
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -46,7 +46,7 @@ export class MealSatietyFieldsComponent {
         });
     }
 
-    public onSatietyLevelChange(kind: 'before' | 'after', value: FdUiEmojiPickerValue | null): void {
+    protected onSatietyLevelChange(kind: 'before' | 'after', value: FdUiEmojiPickerValue | null): void {
         if (typeof value !== 'number') {
             return;
         }

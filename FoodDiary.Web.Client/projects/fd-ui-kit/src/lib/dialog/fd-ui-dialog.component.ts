@@ -46,7 +46,7 @@ export class FdUiDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
 
-    public readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
+    protected readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
 
     private readonly footerSlot = contentChild(FdUiDialogFooterDirective, { descendants: true });
     private readonly headerSlot = contentChild(FdUiDialogHeaderDirective, { descendants: true });
@@ -61,12 +61,12 @@ export class FdUiDialogComponent {
         transform: booleanAttribute,
     });
 
-    public readonly showHeader = computed(() => Boolean(this.title() ?? this.subtitle() ?? this.dismissible()));
-    public readonly hasCustomHeader = computed(() => Boolean(this.headerSlot()));
-    public readonly showBuiltInHeader = computed(() => this.showHeader() && !this.hasCustomHeader());
-    public readonly isBodyScrollInsetVisible = computed(() => this.bodyScrollInset() === 'default' && this.isBodyScrollable());
-    public readonly hasFooter = computed(() => Boolean(this.footerSlot()));
-    public readonly hostClass = computed(
+    protected readonly showHeader = computed(() => Boolean(this.title() ?? this.subtitle() ?? this.dismissible()));
+    protected readonly hasCustomHeader = computed(() => Boolean(this.headerSlot()));
+    protected readonly showBuiltInHeader = computed(() => this.showHeader() && !this.hasCustomHeader());
+    protected readonly isBodyScrollInsetVisible = computed(() => this.bodyScrollInset() === 'default' && this.isBodyScrollable());
+    protected readonly hasFooter = computed(() => Boolean(this.footerSlot()));
+    protected readonly hostClass = computed(
         () =>
             `fd-ui-dialog fd-ui-dialog--size-${this.size()} fd-ui-dialog--body-scroll-${this.bodyScrollInset()}${this.isBodyScrollInsetVisible() ? ' fd-ui-dialog--body-scrollable' : ''}${this.showBuiltInHeader() || this.hasCustomHeader() ? ' fd-ui-dialog--has-header' : ''}${this.hasFooter() ? ' fd-ui-dialog--has-footer' : ''}`,
     );
@@ -99,7 +99,7 @@ export class FdUiDialogComponent {
         });
     }
 
-    public close(result?: unknown): void {
+    protected close(result?: unknown): void {
         this.dialogRef?.close(result);
     }
 }

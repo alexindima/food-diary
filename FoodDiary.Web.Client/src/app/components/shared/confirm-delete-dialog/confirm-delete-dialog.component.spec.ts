@@ -34,30 +34,30 @@ describe('ConfirmDeleteDialogComponent', () => {
 
     it('should close with true on confirm', () => {
         createComponent();
-        component.onConfirm();
+        component['onConfirm']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
     });
 
     it('should close with false on cancel', () => {
         createComponent();
-        component.onCancel();
+        component['onCancel']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
     });
 
     it('should display custom title from data', () => {
         createComponent({ title: 'Remove item?' });
-        expect(component.data.title).toBe('Remove item?');
+        expect(component['data'].title).toBe('Remove item?');
     });
 
     it('should have default empty data when none provided', () => {
         createComponent();
-        expect(component.data.title).toBeUndefined();
-        expect(component.data.name).toBeUndefined();
+        expect(component['data'].title).toBeUndefined();
+        expect(component['data'].name).toBeUndefined();
     });
 
     it('should accept entityType and name in data', () => {
         createComponent({ entityType: 'product', name: 'Apple' });
-        expect(component.data.entityType).toBe('product');
-        expect(component.data.name).toBe('Apple');
+        expect(component['data'].entityType).toBe('product');
+        expect(component['data'].name).toBe('Apple');
     });
 });

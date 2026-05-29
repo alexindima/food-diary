@@ -9,7 +9,7 @@ describe('FavoritesSectionComponent', () => {
     it('renders closed header and emits toggle', () => {
         const fixture = createComponent({ isOpen: false });
         const toggle = vi.fn();
-        fixture.componentInstance.toggleRequested.subscribe(toggle);
+        fixture.componentInstance['toggleRequested'].subscribe(toggle);
 
         getHost(fixture).querySelector<HTMLButtonElement>('.fd-favorites-section__header')?.click();
 
@@ -21,7 +21,7 @@ describe('FavoritesSectionComponent', () => {
     it('emits load more only when visible and not loading', () => {
         const fixture = createComponent({ isOpen: true, showLoadMore: true, isLoadingMore: false });
         const loadMore = vi.fn();
-        fixture.componentInstance.loadMore.subscribe(loadMore);
+        fixture.componentInstance['loadMore'].subscribe(loadMore);
 
         getHost(fixture).querySelectorAll<HTMLButtonElement>('button')[1].click();
 
@@ -31,9 +31,9 @@ describe('FavoritesSectionComponent', () => {
     it('does not emit load more while loading', () => {
         const fixture = createComponent({ isOpen: true, showLoadMore: true, isLoadingMore: true });
         const loadMore = vi.fn();
-        fixture.componentInstance.loadMore.subscribe(loadMore);
+        fixture.componentInstance['loadMore'].subscribe(loadMore);
 
-        fixture.componentInstance.onLoadMore();
+        fixture.componentInstance['onLoadMore']();
 
         expect(loadMore).not.toHaveBeenCalled();
     });

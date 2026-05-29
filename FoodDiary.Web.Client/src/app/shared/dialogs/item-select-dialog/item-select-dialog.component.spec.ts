@@ -75,15 +75,15 @@ function configureComponent(
 
 describe('ItemSelectDialogComponent', () => {
     it('uses product tab by default and recipe tab from dialog data', () => {
-        expect(configureComponent().componentInstance.activeTab()).toBe('Product');
-        expect(configureComponent({ dialogData: { initialTab: 'Recipe' } }).componentInstance.activeTab()).toBe('Recipe');
+        expect(configureComponent().componentInstance['activeTab']()).toBe('Product');
+        expect(configureComponent({ dialogData: { initialTab: 'Recipe' } }).componentInstance['activeTab']()).toBe('Recipe');
     });
 
     it('closes dialog with selected product in dialog mode', () => {
         const dialogRef = { close: vi.fn() };
         const component = configureComponent({ dialogRef }).componentInstance;
 
-        component.onProductSelected(product);
+        component['onProductSelected'](product);
 
         expect(dialogRef.close).toHaveBeenCalledWith({ type: 'Product', product });
     });
@@ -91,10 +91,10 @@ describe('ItemSelectDialogComponent', () => {
     it('updates active tab from tabs output and ignores unknown values', () => {
         const component = configureComponent().componentInstance;
 
-        component.onTabChange('Recipe');
-        component.onTabChange('Unknown');
+        component['onTabChange']('Recipe');
+        component['onTabChange']('Unknown');
 
-        expect(component.activeTab()).toBe('Recipe');
+        expect(component['activeTab']()).toBe('Recipe');
     });
 
     it('emits selection in embedded mode', () => {
@@ -103,11 +103,11 @@ describe('ItemSelectDialogComponent', () => {
         const productSelected = vi.fn();
         const recipeSelected = vi.fn();
         fixture.componentRef.setInput('embedded', true);
-        component.productSelected.subscribe(productSelected);
-        component.recipeSelected.subscribe(recipeSelected);
+        component['productSelected'].subscribe(productSelected);
+        component['recipeSelected'].subscribe(recipeSelected);
 
-        component.onProductSelected(product);
-        component.onRecipeSelected(recipe);
+        component['onProductSelected'](product);
+        component['onRecipeSelected'](recipe);
 
         expect(productSelected).toHaveBeenCalledWith(product);
         expect(recipeSelected).toHaveBeenCalledWith(recipe);
@@ -118,9 +118,9 @@ describe('ItemSelectDialogComponent', () => {
         const component = fixture.componentInstance;
         const createRecipeRequested = vi.fn();
         fixture.componentRef.setInput('embedded', true);
-        component.createRecipeRequested.subscribe(createRecipeRequested);
+        component['createRecipeRequested'].subscribe(createRecipeRequested);
 
-        component.onCreateRecipeRequested();
+        component['onCreateRecipeRequested']();
 
         expect(createRecipeRequested).toHaveBeenCalledTimes(1);
     });
@@ -130,7 +130,7 @@ describe('ItemSelectDialogComponent', () => {
         const dialogService = { open: vi.fn().mockReturnValue({ afterClosed: () => of(product) }) };
         const component = configureComponent({ dialogRef, dialogService }).componentInstance;
 
-        component.onCreateAction();
+        component['onCreateAction']();
 
         expect(dialogService.open).toHaveBeenCalled();
         expect(dialogRef.close).toHaveBeenCalledWith({ type: 'Product', product });

@@ -105,7 +105,7 @@ export class UserManageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly facade = inject(ProfileManageFacade);
-    public readonly notifications = inject(UserManageNotificationsFacade);
+    protected readonly notifications = inject(UserManageNotificationsFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly dietologistService = inject(DietologistService);
@@ -118,33 +118,33 @@ export class UserManageComponent {
     private lastNotificationSyncVersion = -1;
     private readonly pendingPasswordSetupIntent = signal(false);
 
-    public genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
-    public activityLevelOptions: Array<FdUiSelectOption<ActivityLevelOption | null>> = [];
-    public languageOptions: Array<FdUiSelectOption<string | null>> = [];
-    public themeOptions: Array<FdUiSelectOption<AppThemeName | null>> = [];
-    public uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
-    public userForm: FormGroup<UserFormData>;
-    public dietologistForm: FormGroup<DietologistFormData>;
-    public readonly globalError = this.facade.globalError;
-    public readonly dietologistRelationship = this.facade.dietologistRelationship;
-    public readonly dietologistError = signal<string | null>(null);
-    public readonly dietologistPermissions = signal<DietologistPermissions>(DEFAULT_DIETOLOGIST_PERMISSIONS);
-    public readonly isLoadingDietologist = signal(false);
-    public readonly isSavingDietologist = signal(false);
-    public readonly billingOverview = signal<BillingOverview | null>(null);
-    public readonly isLoadingBilling = signal(false);
-    public readonly isOpeningBillingPortal = signal(false);
-    public readonly billingError = signal<string | null>(null);
-    public readonly isDeleting = this.facade.isDeleting;
-    public readonly isSavingProfile = this.facade.isSavingProfile;
-    public readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
-    public readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().some(isBusy => isBusy));
-    public readonly hasAiConsent = computed(() => {
+    protected genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
+    protected activityLevelOptions: Array<FdUiSelectOption<ActivityLevelOption | null>> = [];
+    protected languageOptions: Array<FdUiSelectOption<string | null>> = [];
+    protected themeOptions: Array<FdUiSelectOption<AppThemeName | null>> = [];
+    protected uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
+    protected userForm: FormGroup<UserFormData>;
+    protected dietologistForm: FormGroup<DietologistFormData>;
+    protected readonly globalError = this.facade.globalError;
+    protected readonly dietologistRelationship = this.facade.dietologistRelationship;
+    protected readonly dietologistError = signal<string | null>(null);
+    protected readonly dietologistPermissions = signal<DietologistPermissions>(DEFAULT_DIETOLOGIST_PERMISSIONS);
+    protected readonly isLoadingDietologist = signal(false);
+    protected readonly isSavingDietologist = signal(false);
+    protected readonly billingOverview = signal<BillingOverview | null>(null);
+    protected readonly isLoadingBilling = signal(false);
+    protected readonly isOpeningBillingPortal = signal(false);
+    protected readonly billingError = signal<string | null>(null);
+    protected readonly isDeleting = this.facade.isDeleting;
+    protected readonly isSavingProfile = this.facade.isSavingProfile;
+    protected readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
+    protected readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().some(isBusy => isBusy));
+    protected readonly hasAiConsent = computed(() => {
         const acceptedAt = this.facade.user()?.aiConsentAcceptedAt;
         return acceptedAt !== null && acceptedAt !== undefined && acceptedAt.length > 0;
     });
-    public readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
-    public readonly passwordActionState = computed<PasswordActionState>(() => {
+    protected readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
+    protected readonly passwordActionState = computed<PasswordActionState>(() => {
         const hasPassword = this.hasPassword();
 
         return {
@@ -152,15 +152,15 @@ export class UserManageComponent {
             descriptionKey: hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION' : 'USER_MANAGE.SET_PASSWORD_DESCRIPTION',
         };
     });
-    public readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
-    public readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
-    public readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
-    public readonly profileStatus = signal<ProfileStatusViewModel>({
+    protected readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
+    protected readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
+    protected readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
+    protected readonly profileStatus = signal<ProfileStatusViewModel>({
         key: 'USER_MANAGE.PROFILE_STATUS_SAVED',
         tone: 'success',
     });
-    public readonly dietologistInviteEmailError = signal<string | null>(null);
-    public readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
+    protected readonly dietologistInviteEmailError = signal<string | null>(null);
+    protected readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
 
     public constructor() {
         this.userForm = createUserManageForm();
@@ -278,7 +278,7 @@ export class UserManageComponent {
             });
     }
 
-    public onSubmit(): void {
+    protected onSubmit(): void {
         this.userForm.markAllAsTouched();
 
         if (this.userForm.valid) {
@@ -286,19 +286,19 @@ export class UserManageComponent {
         }
     }
 
-    public openChangePasswordDialog(): void {
+    protected openChangePasswordDialog(): void {
         this.facade.openChangePasswordDialog();
     }
 
-    public onRevokeAiConsent(): void {
+    protected onRevokeAiConsent(): void {
         this.facade.revokeAiConsent();
     }
 
-    public onDeleteAccount(): void {
+    protected onDeleteAccount(): void {
         this.facade.deleteAccount();
     }
 
-    public inviteDietologist(): void {
+    protected inviteDietologist(): void {
         if (this.isSavingDietologist()) {
             return;
         }
@@ -331,7 +331,7 @@ export class UserManageComponent {
             });
     }
 
-    public updateDietologistPermission(controlName: DietologistPermissionControlName, nextValue: boolean): void {
+    protected updateDietologistPermission(controlName: DietologistPermissionControlName, nextValue: boolean): void {
         if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
             return;
         }
@@ -341,11 +341,11 @@ export class UserManageComponent {
         this.persistDietologistPermissions(previousPermissions);
     }
 
-    public onDietologistPermissionChangeRequest(change: DietologistPermissionChange): void {
+    protected onDietologistPermissionChangeRequest(change: DietologistPermissionChange): void {
         this.updateDietologistPermission(change.controlName, change.value);
     }
 
-    public persistDietologistPermissions(previousPermissions?: DietologistPermissions): void {
+    protected persistDietologistPermissions(previousPermissions?: DietologistPermissions): void {
         if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
             return;
         }
@@ -377,7 +377,7 @@ export class UserManageComponent {
             });
     }
 
-    public revokeDietologistRelationship(): void {
+    protected revokeDietologistRelationship(): void {
         if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
             return;
         }
@@ -407,7 +407,7 @@ export class UserManageComponent {
         this.executeDietologistRevoke();
     }
 
-    public onDietologistProfileToggle(nextValue: boolean): void {
+    protected onDietologistProfileToggle(nextValue: boolean): void {
         if (this.isSavingDietologist()) {
             return;
         }
@@ -467,15 +467,15 @@ export class UserManageComponent {
         });
     }
 
-    public reloadBillingOverview(): void {
+    protected reloadBillingOverview(): void {
         this.loadBillingOverview();
     }
 
-    public openPremiumPage(): void {
+    protected openPremiumPage(): void {
         void this.router.navigate(['/premium']);
     }
 
-    public openBillingPortal(): void {
+    protected openBillingPortal(): void {
         if (!this.isBrowser || this.isOpeningBillingPortal()) {
             return;
         }

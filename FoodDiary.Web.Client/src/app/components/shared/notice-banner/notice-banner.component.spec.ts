@@ -75,7 +75,7 @@ describe('NoticeBannerComponent action', () => {
         fixture.detectChanges();
 
         const actionSpy = vi.fn();
-        component.action.subscribe(actionSpy);
+        component['action'].subscribe(actionSpy);
 
         const actionBtn = el.querySelector<HTMLButtonElement>('.fd-notice__action');
         actionBtn?.click();
@@ -88,9 +88,9 @@ describe('NoticeBannerComponent action', () => {
         fixture.detectChanges();
 
         const actionSpy = vi.fn();
-        component.action.subscribe(actionSpy);
+        component['action'].subscribe(actionSpy);
 
-        component.onAction();
+        component['onAction']();
 
         expect(actionSpy).not.toHaveBeenCalled();
     });
@@ -101,13 +101,13 @@ describe('NoticeBannerComponent computed state', () => {
         const { component, fixture } = await setupNoticeBannerAsync();
         fixture.componentRef.setInput('actionLabel', 'Some Action');
         fixture.detectChanges();
-        expect(component.showAction()).toBe(true);
+        expect(component['showAction']()).toBe(true);
     });
 
     it('should have showAction computed as false when actionLabel is null', async () => {
         const { component, fixture } = await setupNoticeBannerAsync();
         fixture.detectChanges();
-        expect(component.showAction()).toBe(false);
+        expect(component['showAction']()).toBe(false);
     });
 });
 

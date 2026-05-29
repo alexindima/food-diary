@@ -36,7 +36,7 @@ export class WeightTrendCardComponent {
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
 
-    public readonly chartPoints = computed<readonly FdUiLineChartPoint[]>(() =>
+    protected readonly chartPoints = computed<readonly FdUiLineChartPoint[]>(() =>
         [...this.points()]
             .sort((a, b) => compareDatesAsc(a.date, b.date))
             .map(point => ({
@@ -45,15 +45,15 @@ export class WeightTrendCardComponent {
             })),
     );
 
-    public readonly hasChartData = computed(() =>
+    protected readonly hasChartData = computed(() =>
         this.chartPoints().some(point => typeof point.value === 'number' && Number.isFinite(point.value)),
     );
 
-    public readonly chartFillColor = computed(
+    protected readonly chartFillColor = computed(
         () => `color-mix(in srgb, ${this.accentColor()} ${WEIGHT_TREND_FILL_COLOR_PERCENT}%, transparent)`,
     );
 
-    public readonly changeTone = computed<'positive' | 'negative' | 'neutral'>(() => {
+    protected readonly changeTone = computed<'positive' | 'negative' | 'neutral'>(() => {
         const value = this.change();
         if (value === null) {
             return 'neutral';
@@ -67,7 +67,7 @@ export class WeightTrendCardComponent {
         return 'neutral';
     });
 
-    public readonly formattedChangeValue = computed(() => {
+    protected readonly formattedChangeValue = computed(() => {
         const delta = this.change();
         if (delta === null) {
             return null;
@@ -77,7 +77,7 @@ export class WeightTrendCardComponent {
         return `${sign}${rounded.toFixed(WEIGHT_TREND_DISPLAY_FRACTION_DIGITS)}`;
     });
 
-    public readonly hasValue = computed(() => {
+    protected readonly hasValue = computed(() => {
         const value = this.currentWeight();
         return value !== null;
     });

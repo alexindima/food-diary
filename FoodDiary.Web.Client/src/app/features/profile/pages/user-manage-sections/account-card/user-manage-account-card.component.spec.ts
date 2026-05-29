@@ -14,9 +14,9 @@ describe('UserManageAccountCardComponent', () => {
         const fixture = await createComponentAsync();
         const component = fixture.componentInstance;
         const passwordChange = vi.fn();
-        component.passwordChange.subscribe(passwordChange);
+        component['passwordChange'].subscribe(passwordChange);
 
-        component.passwordChange.emit();
+        component['passwordChange'].emit();
 
         expect(passwordChange).toHaveBeenCalledTimes(1);
         const host = fixture.nativeElement as HTMLElement;

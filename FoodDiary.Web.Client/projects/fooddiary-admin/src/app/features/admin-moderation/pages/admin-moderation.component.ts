@@ -36,8 +36,8 @@ export class AdminModerationComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly locale = inject(LOCALE_ID);
 
-    public readonly reports = signal<AdminContentReport[]>([]);
-    public readonly reportItems = computed<AdminContentReportViewModel[]>(() =>
+    protected readonly reports = signal<AdminContentReport[]>([]);
+    protected readonly reportItems = computed<AdminContentReportViewModel[]>(() =>
         this.reports().map(report => ({
             ...report,
             targetIdShort: `${report.targetId.slice(0, TARGET_ID_PREVIEW_LENGTH)}...`,
@@ -45,18 +45,18 @@ export class AdminModerationComponent {
             reviewedText: this.formatDateLabel(report.reviewedAtUtc),
         })),
     );
-    public readonly totalPages = signal(1);
-    public readonly totalItems = signal(0);
-    public readonly page = signal(1);
-    public readonly limit = ADMIN_MODERATION_PAGE_SIZE;
-    public readonly isLoading = signal(false);
-    public readonly statusFilter = signal<string>('Pending');
+    protected readonly totalPages = signal(1);
+    protected readonly totalItems = signal(0);
+    protected readonly page = signal(1);
+    protected readonly limit = ADMIN_MODERATION_PAGE_SIZE;
+    protected readonly isLoading = signal(false);
+    protected readonly statusFilter = signal<string>('Pending');
 
     public constructor() {
         this.loadReports();
     }
 
-    public loadReports(): void {
+    protected loadReports(): void {
         this.isLoading.set(true);
         this.moderationService
             .getReports(this.page(), this.limit, this.resolveStatusFilter())
@@ -77,13 +77,13 @@ export class AdminModerationComponent {
             });
     }
 
-    public onStatusChange(status: string): void {
+    protected onStatusChange(status: string): void {
         this.statusFilter.set(status);
         this.page.set(1);
         this.loadReports();
     }
 
-    public goToPage(page: number): void {
+    protected goToPage(page: number): void {
         if (page < 1 || page > this.totalPages()) {
             return;
         }
@@ -92,7 +92,7 @@ export class AdminModerationComponent {
         this.loadReports();
     }
 
-    public openAction(report: AdminContentReport, action: 'review' | 'dismiss'): void {
+    protected openAction(report: AdminContentReport, action: 'review' | 'dismiss'): void {
         const data: AdminModerationActionDialogData = { report, action };
         this.dialogService
             .open<AdminModerationActionDialogComponent, AdminModerationActionDialogData, AdminModerationActionDialogResult>(

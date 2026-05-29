@@ -74,9 +74,9 @@ describe('DashboardNotificationSettingsDialogComponent loading', () => {
         const { component, notificationService } = await setupNotificationSettingsAsync();
 
         expect(notificationService.getNotificationPreferences).toHaveBeenCalledTimes(1);
-        expect(component.pushNotificationsEnabled()).toBe(true);
-        expect(component.fastingPushNotificationsEnabled()).toBe(true);
-        expect(component.socialPushNotificationsEnabled()).toBe(false);
+        expect(component['pushNotificationsEnabled']()).toBe(true);
+        expect(component['fastingPushNotificationsEnabled']()).toBe(true);
+        expect(component['socialPushNotificationsEnabled']()).toBe(false);
     });
 
     it('shows an error when preferences fail to load', async () => {
@@ -87,17 +87,17 @@ describe('DashboardNotificationSettingsDialogComponent loading', () => {
         const errorComponent = errorFixture.componentInstance;
         errorFixture.detectChanges();
 
-        expect(errorComponent.submitError()).toBe('DASHBOARD.NOTIFICATIONS.LOAD_ERROR');
+        expect(errorComponent['submitError']()).toBe('DASHBOARD.NOTIFICATIONS.LOAD_ERROR');
     });
 });
 
 describe('DashboardNotificationSettingsDialogComponent actions', () => {
     it('enables push notifications and ensures device subscription', async () => {
         const { component, fixture, notificationService, pushNotifications, toastService } = await setupNotificationSettingsAsync();
-        component.pushNotificationsEnabled.set(false);
+        component['pushNotificationsEnabled'].set(false);
         notificationService.updateNotificationPreferences.mockReturnValue(of(createNotificationPreferences()));
 
-        component.togglePushNotifications();
+        component['togglePushNotifications']();
         await fixture.whenStable();
 
         expect(notificationService.updateNotificationPreferences).toHaveBeenCalledWith({ pushNotificationsEnabled: true });
@@ -107,7 +107,7 @@ describe('DashboardNotificationSettingsDialogComponent actions', () => {
 
     it('opens profile settings from the dialog footer action', async () => {
         const { component, dialogRef, navigationService } = await setupNotificationSettingsAsync();
-        await component.openAdvancedSettingsAsync();
+        await component['openAdvancedSettingsAsync']();
 
         expect(dialogRef.close).toHaveBeenCalledTimes(1);
         expect(navigationService.navigateToProfileAsync).toHaveBeenCalledTimes(1);

@@ -19,9 +19,9 @@ export class TdeeInsightCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly applyGoal = output<number>();
 
-    public readonly effectiveTdee = computed(() => getEffectiveTdee(this.insight()));
+    protected readonly effectiveTdee = computed(() => getEffectiveTdee(this.insight()));
 
-    public onApplyGoal(event?: Event): void {
+    protected onApplyGoal(event?: Event): void {
         event?.stopPropagation();
 
         const target = this.insight()?.suggestedCalorieTarget;

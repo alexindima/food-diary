@@ -73,17 +73,17 @@ function registerHasGoalTests({ component, fixture, setInput }: TestContext): vo
     describe('hasGoal', () => {
         it('should be false when goal is 0', () => {
             setInput('goal', 0);
-            expect(component().hasGoal()).toBe(false);
+            expect(component()['hasGoal']()).toBe(false);
         });
 
         it('should be false when goal is default (0)', () => {
             fixture().detectChanges();
-            expect(component().hasGoal()).toBe(false);
+            expect(component()['hasGoal']()).toBe(false);
         });
 
         it('should be true when goal is positive', () => {
             setInput('goal', DAILY_GOAL);
-            expect(component().hasGoal()).toBe(true);
+            expect(component()['hasGoal']()).toBe(true);
         });
     });
 }
@@ -92,32 +92,32 @@ function registerProgressPercentTests({ component, setInput }: TestContext): voi
     describe('progressPercent', () => {
         it('should calculate progress percentage correctly', () => {
             setProgressInputs(setInput, CONSUMED_500, DAILY_GOAL);
-            expect(component().progressPercent()).toBe(QUARTER_PROGRESS);
+            expect(component()['progressPercent']()).toBe(QUARTER_PROGRESS);
         });
 
         it('should round the percentage', () => {
             setProgressInputs(setInput, CONSUMED_333, ROUNDING_GOAL);
-            expect(component().progressPercent()).toBe(THIRD_PROGRESS);
+            expect(component()['progressPercent']()).toBe(THIRD_PROGRESS);
         });
 
         it('should return 0 when goal is 0 (no division by zero)', () => {
             setProgressInputs(setInput, CONSUMED_500, 0);
-            expect(component().progressPercent()).toBe(0);
+            expect(component()['progressPercent']()).toBe(0);
         });
 
         it('should clamp progress to minimum 0 when consumed is negative', () => {
             setProgressInputs(setInput, NEGATIVE_CONSUMED, DAILY_GOAL);
-            expect(component().progressPercent()).toBe(0);
+            expect(component()['progressPercent']()).toBe(0);
         });
 
         it('should allow progress above 100 when consumed exceeds goal', () => {
             setProgressInputs(setInput, CONSUMED_3000, DAILY_GOAL);
-            expect(component().progressPercent()).toBe(OVER_GOAL_PROGRESS);
+            expect(component()['progressPercent']()).toBe(OVER_GOAL_PROGRESS);
         });
 
         it('should return 100 when consumed equals goal', () => {
             setProgressInputs(setInput, DAILY_GOAL, DAILY_GOAL);
-            expect(component().progressPercent()).toBe(FULL_PROGRESS);
+            expect(component()['progressPercent']()).toBe(FULL_PROGRESS);
         });
     });
 }
@@ -126,22 +126,22 @@ function registerRemainingTests({ component, setInput }: TestContext): void {
     describe('remaining', () => {
         it('should calculate remaining calories', () => {
             setProgressInputs(setInput, CONSUMED_500, DAILY_GOAL);
-            expect(component().remaining()).toBe(CONSUMED_1500);
+            expect(component()['remaining']()).toBe(CONSUMED_1500);
         });
 
         it('should return 0 when consumed exceeds goal', () => {
             setProgressInputs(setInput, CONSUMED_2500, DAILY_GOAL);
-            expect(component().remaining()).toBe(0);
+            expect(component()['remaining']()).toBe(0);
         });
 
         it('should return null when goal is 0', () => {
             setProgressInputs(setInput, CONSUMED_500, 0);
-            expect(component().remaining()).toBeNull();
+            expect(component()['remaining']()).toBeNull();
         });
 
         it('should return goal value when nothing consumed', () => {
             setProgressInputs(setInput, 0, DAILY_GOAL);
-            expect(component().remaining()).toBe(DAILY_GOAL);
+            expect(component()['remaining']()).toBe(DAILY_GOAL);
         });
     });
 }
@@ -150,7 +150,7 @@ function registerMotivationKeyTests(context: TestContext): void {
     describe('motivationKey', () => {
         it('should return null when goal is 0', () => {
             setProgressInputs(context.setInput, CONSUMED_500, 0);
-            expect(context.component().motivationKey()).toBeNull();
+            expect(context.component()['motivationKey']()).toBeNull();
         });
 
         it('should return NONE key when consumed is 0', () => {
@@ -190,7 +190,7 @@ function registerProgressMotivationRangeTests(context: TestContext): void {
 
 function expectMotivationKey({ component, setInput }: TestContext, consumed: number, expectedKey: string): void {
     setProgressInputs(setInput, consumed, DAILY_GOAL);
-    expect(component().motivationKey()).toBe(expectedKey);
+    expect(component()['motivationKey']()).toBe(expectedKey);
 }
 
 function setProgressInputs(setInput: TestContext['setInput'], consumed: number, goal: number): void {

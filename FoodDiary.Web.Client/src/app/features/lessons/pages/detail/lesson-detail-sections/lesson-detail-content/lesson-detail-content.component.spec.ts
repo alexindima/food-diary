@@ -24,7 +24,7 @@ describe('LessonDetailContentComponent', () => {
     it('renders unread lesson and emits mark read action', () => {
         const fixture = createComponent({ lesson: createLesson({ isRead: false }) });
         const markRead = vi.fn();
-        fixture.componentInstance.markRead.subscribe(markRead);
+        fixture.componentInstance['markRead'].subscribe(markRead);
         const element = getElement(fixture);
 
         element.querySelector<HTMLElement>('fd-ui-button')?.click();

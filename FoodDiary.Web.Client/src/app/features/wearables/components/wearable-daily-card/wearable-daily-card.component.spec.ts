@@ -23,7 +23,7 @@ describe('WearableDailyCardComponent', () => {
         });
         const text = getText(fixture);
 
-        expect(component.metrics().map(metric => metric.key)).toEqual([
+        expect(component['metrics']().map(metric => metric.key)).toEqual([
             'STEPS',
             'HEART_RATE',
             'CALORIES_BURNED',

@@ -17,5 +17,5 @@ export class CycleCurrentCardComponent {
     public readonly current = input<CycleViewModel | null>(null);
     public readonly prediction = input<CyclePredictionViewModel | null>(null);
 
-    public readonly titleKey = computed(() => (this.current() !== null ? 'CYCLE_TRACKING.CURRENT_CYCLE' : 'CYCLE_TRACKING.NO_CYCLE'));
+    protected readonly titleKey = computed(() => (this.current() !== null ? 'CYCLE_TRACKING.CURRENT_CYCLE' : 'CYCLE_TRACKING.NO_CYCLE'));
 }

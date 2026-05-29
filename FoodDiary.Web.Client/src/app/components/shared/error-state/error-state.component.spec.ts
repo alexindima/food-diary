@@ -8,7 +8,7 @@ describe('ErrorStateComponent', () => {
     it('renders default text keys and emits retry', () => {
         const fixture = createComponent();
         const retry = vi.fn();
-        fixture.componentInstance.retry.subscribe(retry);
+        fixture.componentInstance['retry'].subscribe(retry);
 
         getHost(fixture).querySelector<HTMLButtonElement>('button')?.click();
 

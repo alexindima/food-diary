@@ -109,7 +109,7 @@ describe('ProductManageFormComponent header state', () => {
     it('should use create title and submit label when product is not provided', async () => {
         const { component } = await setupComponentAsync();
 
-        expect(component.manageHeaderState()).toEqual({
+        expect(component['manageHeaderState']()).toEqual({
             titleKey: 'PRODUCT_MANAGE.ADD_TITLE',
             submitIcon: 'add',
             submitLabelKey: 'PRODUCT_MANAGE.ADD_BUTTON',
@@ -121,7 +121,7 @@ describe('ProductManageFormComponent header state', () => {
 
         fixture.componentRef.setInput('product', PRODUCT);
 
-        expect(component.manageHeaderState()).toEqual({
+        expect(component['manageHeaderState']()).toEqual({
             titleKey: 'PRODUCT_MANAGE.EDIT_TITLE',
             submitIcon: 'save',
             submitLabelKey: 'PRODUCT_MANAGE.SAVE_BUTTON',
@@ -135,13 +135,13 @@ describe('ProductManageFormComponent product inputs', () => {
 
         fixture.componentRef.setInput('product', PRODUCT);
         fixture.detectChanges();
-        expect(component.productForm.controls.name.value).toBe(PRODUCT.name);
+        expect(component['productForm'].controls.name.value).toBe(PRODUCT.name);
 
         fixture.componentRef.setInput('product', SECOND_PRODUCT);
         fixture.detectChanges();
 
-        expect(component.productForm.controls.name.value).toBe(SECOND_PRODUCT.name);
-        expect(component.productForm.controls.caloriesPerBase.value).toBe(SECOND_PRODUCT.caloriesPerBase);
+        expect(component['productForm'].controls.name.value).toBe(SECOND_PRODUCT.name);
+        expect(component['productForm'].controls.caloriesPerBase.value).toBe(SECOND_PRODUCT.caloriesPerBase);
     });
 
     it('should repopulate the form when the product input is refreshed with the same id', async () => {
@@ -153,8 +153,8 @@ describe('ProductManageFormComponent product inputs', () => {
         fixture.componentRef.setInput('product', SAME_ID_UPDATED_PRODUCT);
         fixture.detectChanges();
 
-        expect(component.productForm.controls.name.value).toBe(SAME_ID_UPDATED_PRODUCT.name);
-        expect(component.productForm.controls.caloriesPerBase.value).toBe(SAME_ID_UPDATED_PRODUCT.caloriesPerBase);
+        expect(component['productForm'].controls.name.value).toBe(SAME_ID_UPDATED_PRODUCT.name);
+        expect(component['productForm'].controls.caloriesPerBase.value).toBe(SAME_ID_UPDATED_PRODUCT.caloriesPerBase);
     });
 
     it('should not apply add prefill over an edit product', async () => {
@@ -164,8 +164,8 @@ describe('ProductManageFormComponent product inputs', () => {
         fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode, offProduct: OFF_PRODUCT });
         fixture.detectChanges();
 
-        expect(component.productForm.controls.name.value).toBe(PRODUCT.name);
-        expect(component.productForm.controls.barcode.value).toBe(PRODUCT.barcode);
+        expect(component['productForm'].controls.name.value).toBe(PRODUCT.name);
+        expect(component['productForm'].controls.barcode.value).toBe(PRODUCT.barcode);
     });
 });
 
@@ -177,11 +177,11 @@ describe('ProductManageFormComponent prefill behavior', () => {
 
         fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode });
         fixture.detectChanges();
-        component.productForm.controls.barcode.setValue('changed-barcode');
+        component['productForm'].controls.barcode.setValue('changed-barcode');
         lookupResult$.next(OFF_PRODUCT);
 
-        expect(component.productForm.controls.name.value).toBe('');
-        expect(component.productForm.controls.brand.value).toBeNull();
+        expect(component['productForm'].controls.name.value).toBe('');
+        expect(component['productForm'].controls.brand.value).toBeNull();
     });
 });
 
@@ -189,7 +189,7 @@ describe('ProductManageFormComponent USDA behavior', () => {
     it('should clear stale nutrition values before applying USDA detail', async () => {
         const { component } = await setupComponentAsync();
 
-        component.productForm.patchValue({
+        component['productForm'].patchValue({
             caloriesPerBase: 500,
             proteinsPerBase: 50,
             fatsPerBase: 20,
@@ -198,15 +198,15 @@ describe('ProductManageFormComponent USDA behavior', () => {
             alcoholPerBase: 3,
         });
 
-        component.onNameSuggestionSelected(USDA_SUGGESTION);
+        component['onNameSuggestionSelected'](USDA_SUGGESTION);
 
-        expect(component.productForm.controls.name.value).toBe('USDA detail');
-        expect(component.productForm.controls.caloriesPerBase.value).toBeNull();
-        expect(component.productForm.controls.proteinsPerBase.value).toBe(EXPECTED_ROUNDED_USDA_PROTEIN);
-        expect(component.productForm.controls.fatsPerBase.value).toBeNull();
-        expect(component.productForm.controls.carbsPerBase.value).toBeNull();
-        expect(component.productForm.controls.fiberPerBase.value).toBeNull();
-        expect(component.productForm.controls.alcoholPerBase.value).toBeNull();
+        expect(component['productForm'].controls.name.value).toBe('USDA detail');
+        expect(component['productForm'].controls.caloriesPerBase.value).toBeNull();
+        expect(component['productForm'].controls.proteinsPerBase.value).toBe(EXPECTED_ROUNDED_USDA_PROTEIN);
+        expect(component['productForm'].controls.fatsPerBase.value).toBeNull();
+        expect(component['productForm'].controls.carbsPerBase.value).toBeNull();
+        expect(component['productForm'].controls.fiberPerBase.value).toBeNull();
+        expect(component['productForm'].controls.alcoholPerBase.value).toBeNull();
     });
 
     it('should ignore stale USDA detail response when a later USDA suggestion is selected', async () => {
@@ -215,13 +215,13 @@ describe('ProductManageFormComponent USDA behavior', () => {
         const secondDetail$ = new Subject<UsdaFoodDetail | null>();
         usdaService.getFoodDetail.mockImplementation((fdcId: number) => (fdcId === USDA_FDC_ID ? firstDetail$ : secondDetail$));
 
-        component.onNameSuggestionSelected(USDA_SUGGESTION);
-        component.onNameSuggestionSelected(SECOND_USDA_SUGGESTION);
+        component['onNameSuggestionSelected'](USDA_SUGGESTION);
+        component['onNameSuggestionSelected'](SECOND_USDA_SUGGESTION);
         firstDetail$.next(createUsdaFoodDetail(USDA_FDC_ID, 'Old USDA detail'));
         secondDetail$.next(createUsdaFoodDetail(SECOND_USDA_FDC_ID, 'Fresh USDA detail'));
 
-        expect(component.productForm.controls.name.value).toBe('Fresh USDA detail');
-        expect(component.productForm.controls.usdaFdcId.value).toBe(SECOND_USDA_FDC_ID);
+        expect(component['productForm'].controls.name.value).toBe('Fresh USDA detail');
+        expect(component['productForm'].controls.usdaFdcId.value).toBe(SECOND_USDA_FDC_ID);
     });
 });
 
@@ -236,8 +236,8 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         );
         fillValidProductForm(component);
 
-        const firstSubmit = component.onSubmitAsync();
-        const secondSubmit = await component.onSubmitAsync();
+        const firstSubmit = component['onSubmitAsync']();
+        const secondSubmit = await component['onSubmitAsync']();
 
         expect(secondSubmit).toBeNull();
         expect(productManageFacade.submitProductAsync).toHaveBeenCalledTimes(1);
@@ -249,13 +249,13 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
     it('should emit saved product after successful submit', async () => {
         const { component, productManageFacade } = await setupComponentAsync();
         let savedProduct: Product | null = null;
-        component.saved.subscribe(product => {
+        component['saved'].subscribe(product => {
             savedProduct = product;
         });
         productManageFacade.submitProductAsync.mockResolvedValue({ product: PRODUCT, error: null });
         fillValidProductForm(component);
 
-        const result = await component.onSubmitAsync();
+        const result = await component['onSubmitAsync']();
 
         expect(result).toBe(PRODUCT);
         expect(savedProduct).toBe(PRODUCT);
@@ -264,7 +264,7 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
     it('should emit saved product and show USDA warning when post-save sync fails', async () => {
         const { component, productManageFacade } = await setupComponentAsync();
         let savedProduct: Product | null = null;
-        component.saved.subscribe(product => {
+        component['saved'].subscribe(product => {
             savedProduct = product;
         });
         productManageFacade.submitProductAsync.mockResolvedValue({
@@ -273,11 +273,11 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         });
         fillValidProductForm(component);
 
-        const result = await component.onSubmitAsync();
+        const result = await component['onSubmitAsync']();
 
         expect(result).toBe(PRODUCT);
         expect(savedProduct).toBe(PRODUCT);
-        expect(component.globalError()).toBe('PRODUCT_MANAGE.USDA_SYNC_ERROR');
+        expect(component['globalError']()).toBe('PRODUCT_MANAGE.USDA_SYNC_ERROR');
     });
 
     it('should skip submit confirmation in dialog mode', async () => {
@@ -286,7 +286,7 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         fixture.detectChanges();
         fillValidProductForm(component);
 
-        await component.onSubmitAsync();
+        await component['onSubmitAsync']();
 
         expect(productManageFacade.submitProductAsync).toHaveBeenCalledWith(null, expect.any(Object), true, expect.any(Function));
     });
@@ -294,14 +294,14 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
     it('should emit cancel without navigation or discard confirmation in dialog mode', async () => {
         const { component, fixture, productManageFacade, navigationService } = await setupComponentAsync();
         let wasCancelled = false;
-        component.cancelled.subscribe(() => {
+        component['cancelled'].subscribe(() => {
             wasCancelled = true;
         });
         fixture.componentRef.setInput('mode', 'dialog');
         fixture.detectChanges();
-        component.productForm.markAsDirty();
+        component['productForm'].markAsDirty();
 
-        await component.onCancelAsync();
+        await component['onCancelAsync']();
 
         expect(wasCancelled).toBe(true);
         expect(productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
@@ -382,7 +382,7 @@ function createUsdaServiceMock(): UsdaServiceMock {
 }
 
 function fillValidProductForm(component: ProductManageFormComponent): void {
-    component.productForm.patchValue({
+    component['productForm'].patchValue({
         name: 'Valid product',
         caloriesPerBase: 100,
         proteinsPerBase: 10,

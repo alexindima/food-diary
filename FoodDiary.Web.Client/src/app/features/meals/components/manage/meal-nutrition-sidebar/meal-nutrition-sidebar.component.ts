@@ -48,12 +48,12 @@ export class MealNutritionSidebarComponent {
     public readonly nutritionModeChange = output<string>();
     public readonly cancelRequested = output();
     private readonly activeLang = signal(this.translateService.getCurrentLang());
-    public readonly nutritionModeOptions = computed(() => {
+    protected readonly nutritionModeOptions = computed(() => {
         this.activeLang();
         return buildMealNutritionModeOptions(this.translateService);
     });
-    public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
-    public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
+    protected readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
+    protected readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
@@ -61,11 +61,11 @@ export class MealNutritionSidebarComponent {
         });
     }
 
-    public onNutritionModeChange(nextMode: string): void {
+    protected onNutritionModeChange(nextMode: string): void {
         this.nutritionModeChange.emit(nextMode);
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.cancelRequested.emit();
     }
 }

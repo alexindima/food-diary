@@ -76,8 +76,8 @@ describe('RecipeManageComponent form population', () => {
     it('should create one empty step for new recipes', async () => {
         const { component } = await setupComponentAsync();
 
-        expect(component.steps.length).toBe(1);
-        expect(component.steps.at(0).controls.ingredients.length).toBe(1);
+        expect(component['steps'].length).toBe(1);
+        expect(component['steps'].at(0).controls.ingredients.length).toBe(1);
     });
 
     it('should repopulate the form when recipe input is refreshed with the same id', async () => {
@@ -87,13 +87,13 @@ describe('RecipeManageComponent form population', () => {
 
         fixture.componentRef.setInput('recipe', recipe);
         fixture.detectChanges();
-        expect(component.recipeForm.controls.name.value).toBe('Initial recipe');
+        expect(component['recipeForm'].controls.name.value).toBe('Initial recipe');
 
         fixture.componentRef.setInput('recipe', updatedRecipe);
         fixture.detectChanges();
 
-        expect(component.recipeForm.controls.name.value).toBe(UPDATED_RECIPE_NAME);
-        expect(component.recipeForm.controls.cookTime.value).toBe(UPDATED_COOK_TIME);
+        expect(component['recipeForm'].controls.name.value).toBe(UPDATED_RECIPE_NAME);
+        expect(component['recipeForm'].controls.cookTime.value).toBe(UPDATED_COOK_TIME);
     });
 });
 
@@ -102,7 +102,7 @@ describe('RecipeManageComponent submission', () => {
         const { component, facade } = await setupComponentAsync();
         patchValidManualRecipe(component);
 
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(facade.clearGlobalError).toHaveBeenCalledTimes(1);
         expect(facade.addRecipe).toHaveBeenCalledWith(
@@ -119,14 +119,14 @@ describe('RecipeManageComponent submission', () => {
         const { component, facade, fixture } = await setupComponentAsync();
         fixture.componentRef.setInput('recipe', createRecipe());
         fixture.detectChanges();
-        component.recipeForm.controls.name.setValue(UPDATED_RECIPE_NAME);
-        component.steps.at(0).controls.ingredients.at(0).patchValue({
+        component['recipeForm'].controls.name.setValue(UPDATED_RECIPE_NAME);
+        component['steps'].at(0).controls.ingredients.at(0).patchValue({
             food: createProduct(),
             foodName: 'Product',
             amount: PRODUCT_DEFAULT_AMOUNT,
         });
 
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(facade.updateRecipe).toHaveBeenCalledWith(
             RECIPE_ID,
@@ -140,7 +140,7 @@ describe('RecipeManageComponent submission', () => {
     it('should set a global error and skip submit when the form is invalid', async () => {
         const { component, facade } = await setupComponentAsync();
 
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(facade.setGlobalError).toHaveBeenCalledWith('FORM_ERRORS.UNKNOWN');
         expect(facade.addRecipe).not.toHaveBeenCalled();
@@ -150,10 +150,10 @@ describe('RecipeManageComponent submission', () => {
     it('should block manual submit when all macros are empty', async () => {
         const { component, facade } = await setupComponentAsync();
         patchValidRecipeBase(component);
-        component.onNutritionModeChange('manual');
-        component.recipeForm.controls.manualCalories.setValue(MANUAL_CALORIES);
+        component['onNutritionModeChange']('manual');
+        component['recipeForm'].controls.manualCalories.setValue(MANUAL_CALORIES);
 
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(facade.addRecipe).not.toHaveBeenCalled();
         expect(facade.updateRecipe).not.toHaveBeenCalled();
@@ -166,37 +166,37 @@ describe('RecipeManageComponent nutrition state', () => {
             calculateAutoSummary: vi.fn().mockReturnValue(FILLED_SUMMARY),
         });
         facade.fromRecipeTotal.mockImplementation((value: number | null | undefined) => Number(value ?? 0));
-        component.totalCalories.set(SUMMARY_CALORIES);
-        component.totalFiber.set(SUMMARY_FIBER);
-        component.totalAlcohol.set(SUMMARY_ALCOHOL);
-        component.nutrientChartData.set({
+        component['totalCalories'].set(SUMMARY_CALORIES);
+        component['totalFiber'].set(SUMMARY_FIBER);
+        component['totalAlcohol'].set(SUMMARY_ALCOHOL);
+        component['nutrientChartData'].set({
             proteins: SUMMARY_PROTEINS,
             fats: SUMMARY_FATS,
             carbs: SUMMARY_CARBS,
         });
 
-        component.onNutritionModeChange('manual');
+        component['onNutritionModeChange']('manual');
 
-        expect(component.nutritionMode()).toBe('manual');
-        expect(component.recipeForm.controls.calculateNutritionAutomatically.value).toBe(false);
-        expect(component.recipeForm.controls.manualCalories.value).toBe(SUMMARY_CALORIES);
-        expect(component.recipeForm.controls.manualProteins.value).toBe(SUMMARY_PROTEINS);
+        expect(component['nutritionMode']()).toBe('manual');
+        expect(component['recipeForm'].controls.calculateNutritionAutomatically.value).toBe(false);
+        expect(component['recipeForm'].controls.manualCalories.value).toBe(SUMMARY_CALORIES);
+        expect(component['recipeForm'].controls.manualProteins.value).toBe(SUMMARY_PROTEINS);
     });
 
     it('should convert manual nutrition values when switching between recipe and portion scale', async () => {
         const { component, facade } = await setupComponentAsync();
         patchValidManualRecipe(component);
 
-        component.onNutritionScaleModeChange('portion');
+        component['onNutritionScaleModeChange']('portion');
 
-        expect(component.nutritionScaleMode).toBe('portion');
-        expect(component.recipeForm.controls.manualCalories.value).toBe(MANUAL_CALORIES / DEFAULT_SERVINGS);
-        expect(component.recipeForm.controls.manualProteins.value).toBe(MANUAL_PROTEINS / DEFAULT_SERVINGS);
+        expect(component['nutritionScaleMode']).toBe('portion');
+        expect(component['recipeForm'].controls.manualCalories.value).toBe(MANUAL_CALORIES / DEFAULT_SERVINGS);
+        expect(component['recipeForm'].controls.manualProteins.value).toBe(MANUAL_PROTEINS / DEFAULT_SERVINGS);
 
-        component.onNutritionScaleModeChange('recipe');
+        component['onNutritionScaleModeChange']('recipe');
 
-        expect(component.nutritionScaleMode).toBe('recipe');
-        expect(component.recipeForm.controls.manualCalories.value).toBe(MANUAL_CALORIES);
+        expect(component['nutritionScaleMode']).toBe('recipe');
+        expect(component['recipeForm'].controls.manualCalories.value).toBe(MANUAL_CALORIES);
         expect(facade.roundNutritionValue).toHaveBeenCalled();
     });
 });
@@ -205,25 +205,25 @@ describe('RecipeManageComponent steps and ingredients', () => {
     it('should add and remove steps while keeping the first step expanded', async () => {
         const { component } = await setupComponentAsync();
 
-        component.addStep();
-        expect(component.steps.length).toBe(DEFAULT_SERVINGS);
-        expect(component.expandedStepsSet.has(1)).toBe(true);
+        component['addStep']();
+        expect(component['steps'].length).toBe(DEFAULT_SERVINGS);
+        expect(component['expandedStepsSet'].has(1)).toBe(true);
 
-        component.removeStep(0);
+        component['removeStep'](0);
 
-        expect(component.steps.length).toBe(1);
-        expect(component.expandedStepsSet.has(0)).toBe(true);
+        expect(component['steps'].length).toBe(1);
+        expect(component['expandedStepsSet'].has(0)).toBe(true);
     });
 
     it('should add and remove ingredients in a step', async () => {
         const { component } = await setupComponentAsync();
 
-        component.addIngredientToStep(0);
-        expect(component.steps.at(0).controls.ingredients.length).toBe(DEFAULT_SERVINGS);
+        component['addIngredientToStep'](0);
+        expect(component['steps'].at(0).controls.ingredients.length).toBe(DEFAULT_SERVINGS);
 
-        component.removeIngredientFromStep({ stepIndex: 0, ingredientIndex: 1 });
+        component['removeIngredientFromStep']({ stepIndex: 0, ingredientIndex: 1 });
 
-        expect(component.steps.at(0).controls.ingredients.length).toBe(1);
+        expect(component['steps'].at(0).controls.ingredients.length).toBe(1);
     });
 
     it('should apply selected product to an ingredient and recalculate automatic summary', async () => {
@@ -240,12 +240,12 @@ describe('RecipeManageComponent steps and ingredients', () => {
             });
         });
 
-        component.onProductSelectClick({ stepIndex: 0, ingredientIndex: 0 });
+        component['onProductSelectClick']({ stepIndex: 0, ingredientIndex: 0 });
 
         expect(facade.openItemSelectionDialog).toHaveBeenCalledTimes(1);
         expect(facade.applyItemSelection).toHaveBeenCalledTimes(1);
         expect(facade.calculateAutoSummary).toHaveBeenCalled();
-        expect(component.steps.at(0).controls.ingredients.at(0).controls.foodName.value).toBe(selectedProduct.name);
+        expect(component['steps'].at(0).controls.ingredients.at(0).controls.foodName.value).toBe(selectedProduct.name);
     });
 });
 
@@ -305,15 +305,15 @@ function createRecipeManageFacadeMock(overrides: Partial<RecipeManageFacadeMock>
 }
 
 function patchValidRecipeBase(component: RecipeManageComponent): void {
-    component.recipeForm.patchValue({
+    component['recipeForm'].patchValue({
         name: 'Manual recipe',
         cookTime: DEFAULT_COOK_TIME,
         servings: DEFAULT_SERVINGS,
     });
-    component.steps.at(0).patchValue({
+    component['steps'].at(0).patchValue({
         description: 'Cook',
     });
-    component.steps.at(0).controls.ingredients.at(0).patchValue({
+    component['steps'].at(0).controls.ingredients.at(0).patchValue({
         food: createProduct(),
         foodName: 'Product',
         amount: PRODUCT_DEFAULT_AMOUNT,
@@ -322,8 +322,8 @@ function patchValidRecipeBase(component: RecipeManageComponent): void {
 
 function patchValidManualRecipe(component: RecipeManageComponent): void {
     patchValidRecipeBase(component);
-    component.onNutritionModeChange('manual');
-    component.recipeForm.patchValue({
+    component['onNutritionModeChange']('manual');
+    component['recipeForm'].patchValue({
         manualCalories: MANUAL_CALORIES,
         manualProteins: MANUAL_PROTEINS,
         manualFats: MANUAL_FATS,

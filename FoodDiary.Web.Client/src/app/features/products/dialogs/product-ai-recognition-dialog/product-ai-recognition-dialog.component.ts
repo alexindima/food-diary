@@ -53,16 +53,16 @@ export class ProductAiRecognitionDialogComponent {
     private readonly aiFoodService = inject(AiFoodService);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly logger = inject(FrontendLoggerService);
-    public readonly isLoading = signal(false);
-    public readonly isNutritionLoading = signal(false);
-    public readonly hasAnalyzed = signal(false);
-    public readonly errorKey = signal<string | null>(null);
-    public readonly nutritionErrorKey = signal<string | null>(null);
-    public readonly selection = signal<ImageSelection | null>(null);
-    public readonly results = signal<FoodVisionItem[]>([]);
-    public readonly nutrition = signal<FoodNutritionResponse | null>(null);
-    public readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
-    public readonly resultForm: ProductAiRecognitionFormGroup = createProductAiRecognitionForm();
+    protected readonly isLoading = signal(false);
+    protected readonly isNutritionLoading = signal(false);
+    protected readonly hasAnalyzed = signal(false);
+    protected readonly errorKey = signal<string | null>(null);
+    protected readonly nutritionErrorKey = signal<string | null>(null);
+    protected readonly selection = signal<ImageSelection | null>(null);
+    protected readonly results = signal<FoodVisionItem[]>([]);
+    protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
+    protected readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
+    protected readonly resultForm: ProductAiRecognitionFormGroup = createProductAiRecognitionForm();
 
     public constructor() {
         effect(() => {
@@ -75,7 +75,7 @@ export class ProductAiRecognitionDialogComponent {
         });
     }
 
-    public readonly statusKey = computed(() => {
+    protected readonly statusKey = computed(() => {
         if (this.selection() === null) {
             return null;
         }
@@ -90,14 +90,14 @@ export class ProductAiRecognitionDialogComponent {
         }
         return null;
     });
-    public readonly canApply = computed(() => this.nutrition() !== null);
-    public readonly isAnalyzeDisabled = computed(() => this.selection() === null || this.isLoading() || this.isNutritionLoading());
-    public readonly itemNames = computed(() =>
+    protected readonly canApply = computed(() => this.nutrition() !== null);
+    protected readonly isAnalyzeDisabled = computed(() => this.selection() === null || this.isLoading() || this.isNutritionLoading());
+    protected readonly itemNames = computed(() =>
         this.results()
             .map(item => capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))
             .filter(name => name.length > 0),
     );
-    public onImageChanged(selection: ImageSelection | null): void {
+    protected onImageChanged(selection: ImageSelection | null): void {
         this.selection.set(selection);
         this.errorKey.set(null);
         this.nutritionErrorKey.set(null);
@@ -106,11 +106,11 @@ export class ProductAiRecognitionDialogComponent {
         this.hasAnalyzed.set(false);
     }
 
-    public startAnalysis(): void {
+    protected startAnalysis(): void {
         this.runAnalysisFlow();
     }
 
-    public reanalyze(): void {
+    protected reanalyze(): void {
         this.runAnalysisFlow();
     }
 
@@ -132,7 +132,7 @@ export class ProductAiRecognitionDialogComponent {
         this.runAnalysis(assetId);
     }
 
-    public apply(): void {
+    protected apply(): void {
         const nutrition = this.nutrition();
         if (nutrition === null) {
             return;
@@ -149,7 +149,7 @@ export class ProductAiRecognitionDialogComponent {
         this.dialogRef?.close(result);
     }
 
-    public close(): void {
+    protected close(): void {
         this.cleanupAsset();
         this.dialogRef?.close(null);
     }

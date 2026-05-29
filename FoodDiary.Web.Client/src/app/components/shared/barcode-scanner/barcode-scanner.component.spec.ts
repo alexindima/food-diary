@@ -27,14 +27,14 @@ describe('BarcodeScannerComponent', () => {
         const { component, fixture } = await setupBarcodeScannerAsync();
         fixture.detectChanges();
 
-        expect(component.isUnsupported()).toBe(true);
+        expect(component['isUnsupported']()).toBe(true);
     });
 
     it('closes dialog with null when cancelled', async () => {
         const { component, dialogRef, fixture } = await setupBarcodeScannerAsync();
         fixture.detectChanges();
 
-        component.close();
+        component['close']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });

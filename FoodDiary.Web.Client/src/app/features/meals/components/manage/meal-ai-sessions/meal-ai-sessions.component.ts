@@ -24,9 +24,9 @@ export class MealAiSessionsComponent {
     public readonly editSession = output<number>();
     public readonly deleteSession = output<number>();
 
-    public readonly aiPreviewMaxItems = 2;
-    public readonly expandedAiSessions = signal<Set<number>>(new Set());
-    public readonly aiSessionRows = computed<AiSessionRowViewModel[]>(() => {
+    protected readonly aiPreviewMaxItems = 2;
+    protected readonly expandedAiSessions = signal<Set<number>>(new Set());
+    protected readonly aiSessionRows = computed<AiSessionRowViewModel[]>(() => {
         const expandedAiSessions = this.expandedAiSessions();
         this.activeLang();
 
@@ -61,7 +61,7 @@ export class MealAiSessionsComponent {
         });
     }
 
-    public toggleAiSessionExpanded(index: number): void {
+    protected toggleAiSessionExpanded(index: number): void {
         this.expandedAiSessions.update(current => {
             const next = new Set(current);
             if (next.has(index)) {
@@ -81,11 +81,11 @@ export class MealAiSessionsComponent {
         return Math.max(0, items.length - Math.max(0, maxVisible));
     }
 
-    public onEditSession(index: number): void {
+    protected onEditSession(index: number): void {
         this.editSession.emit(index);
     }
 
-    public onDeleteSession(index: number): void {
+    protected onDeleteSession(index: number): void {
         this.deleteSession.emit(index);
     }
 }

@@ -36,7 +36,7 @@ export class FdUiInlineAlertComponent {
     public readonly secondaryAction = output();
     public readonly dismiss = output();
 
-    public readonly iconName = computed(() => {
+    protected readonly iconName = computed(() => {
         switch (this.severity()) {
             case 'warning':
                 return 'warning_amber';
@@ -49,5 +49,5 @@ export class FdUiInlineAlertComponent {
         }
     });
 
-    public readonly hasActions = computed(() => this.primaryActionLabel() !== null || this.secondaryActionLabel() !== null);
+    protected readonly hasActions = computed(() => this.primaryActionLabel() !== null || this.secondaryActionLabel() !== null);
 }

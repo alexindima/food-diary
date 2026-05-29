@@ -13,7 +13,7 @@ describe('MealPlansListPageComponent', () => {
         const component = createComponent(facade);
 
         expect(facade.loadPlans).toHaveBeenCalledWith();
-        expect(component.planCards()[0]).toMatchObject({
+        expect(component['planCards']()[0]).toMatchObject({
             id: 'plan-1',
             dietTypeKey: 'MEAL_PLANS.DIET_TYPE.VEGAN',
         });
@@ -23,7 +23,7 @@ describe('MealPlansListPageComponent', () => {
         const facade = createFacadeStub();
         const component = createComponent(facade);
 
-        component.filterByDiet('Keto');
+        component['filterByDiet']('Keto');
 
         expect(facade.loadPlans).toHaveBeenLastCalledWith('Keto');
     });
@@ -33,7 +33,7 @@ describe('MealPlansListPageComponent', () => {
         const router = createRouterStub();
         const component = createComponent(facade, router);
 
-        component.openPlan('plan-1');
+        component['openPlan']('plan-1');
 
         expect(router.navigate).toHaveBeenCalledWith(['/meal-plans', 'plan-1']);
     });

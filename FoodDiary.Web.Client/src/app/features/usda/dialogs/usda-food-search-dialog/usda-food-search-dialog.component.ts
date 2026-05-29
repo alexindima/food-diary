@@ -21,28 +21,28 @@ export class UsdaFoodSearchDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<UsdaFoodSearchDialogComponent, UsdaFood | null>);
     private readonly usdaFoodSearchFacade = inject(UsdaFoodSearchFacade);
 
-    public readonly searchQuery = this.usdaFoodSearchFacade.searchQuery;
-    public readonly results = this.usdaFoodSearchFacade.results;
-    public readonly isLoading = this.usdaFoodSearchFacade.isLoading;
-    public readonly selectedFood = this.usdaFoodSearchFacade.selectedFood;
+    protected readonly searchQuery = this.usdaFoodSearchFacade.searchQuery;
+    protected readonly results = this.usdaFoodSearchFacade.results;
+    protected readonly isLoading = this.usdaFoodSearchFacade.isLoading;
+    protected readonly selectedFood = this.usdaFoodSearchFacade.selectedFood;
 
     public constructor() {
         this.usdaFoodSearchFacade.reset();
     }
 
-    public onSearchChange(value: string): void {
+    protected onSearchChange(value: string): void {
         this.usdaFoodSearchFacade.updateSearchQuery(value);
     }
 
-    public selectFood(food: UsdaFood): void {
+    protected selectFood(food: UsdaFood): void {
         this.usdaFoodSearchFacade.selectFood(food);
     }
 
-    public onConfirm(): void {
+    protected onConfirm(): void {
         this.dialogRef.close(this.selectedFood());
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(null);
     }
 }

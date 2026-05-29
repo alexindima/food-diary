@@ -71,8 +71,8 @@ function createComponent(queryParams: Record<string, string> = { userId: 'user-1
 }
 
 function setValidPassword(component: PasswordResetComponent): void {
-    component.form.controls.password.setValue('newPassword123');
-    component.form.controls.confirmPassword.setValue('newPassword123');
+    component['form'].controls.password.setValue('newPassword123');
+    component['form'].controls.confirmPassword.setValue('newPassword123');
 }
 
 describe('PasswordResetComponent', () => {
@@ -85,13 +85,13 @@ describe('PasswordResetComponent', () => {
 describe('PasswordResetComponent form validation', () => {
     it('should initialize form with password and confirmPassword fields', () => {
         const { component } = createComponent();
-        expect(component.form.contains('password')).toBe(true);
-        expect(component.form.contains('confirmPassword')).toBe(true);
+        expect(component['form'].contains('password')).toBe(true);
+        expect(component['form'].contains('confirmPassword')).toBe(true);
     });
 
     it('should validate required password', () => {
         const { component } = createComponent();
-        const control = component.form.controls.password;
+        const control = component['form'].controls.password;
         control.setValue('');
         control.markAsTouched();
         expect(control.hasError('required')).toBe(true);
@@ -99,7 +99,7 @@ describe('PasswordResetComponent form validation', () => {
 
     it('should validate password minimum length', () => {
         const { component } = createComponent();
-        const control = component.form.controls.password;
+        const control = component['form'].controls.password;
         control.setValue('abc');
         control.markAsTouched();
         expect(control.hasError('minlength')).toBe(true);
@@ -110,14 +110,14 @@ describe('PasswordResetComponent form validation', () => {
 
     it('should validate password confirmation match', () => {
         const { component } = createComponent();
-        component.form.controls.password.setValue('validPass1');
-        component.form.controls.confirmPassword.setValue('differentPass');
-        component.form.controls.confirmPassword.markAsTouched();
+        component['form'].controls.password.setValue('validPass1');
+        component['form'].controls.confirmPassword.setValue('differentPass');
+        component['form'].controls.confirmPassword.markAsTouched();
 
-        expect(component.form.controls.confirmPassword.hasError('matchField')).toBe(true);
+        expect(component['form'].controls.confirmPassword.hasError('matchField')).toBe(true);
 
-        component.form.controls.confirmPassword.setValue('validPass1');
-        expect(component.form.controls.confirmPassword.hasError('matchField')).toBe(false);
+        component['form'].controls.confirmPassword.setValue('validPass1');
+        expect(component['form'].controls.confirmPassword.hasError('matchField')).toBe(false);
     });
 });
 
@@ -127,7 +127,7 @@ describe('PasswordResetComponent submit', () => {
         authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
 
         setValidPassword(component);
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledTimes(1);
         const arg = authServiceSpy.confirmPasswordReset.mock.calls[authServiceSpy.confirmPasswordReset.mock.calls.length - 1][0] as
@@ -147,10 +147,10 @@ describe('PasswordResetComponent submit', () => {
         authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
 
         setValidPassword(component);
-        component.onSubmit();
+        component['onSubmit']();
 
         expect(navigationServiceSpy.navigateToHomeAsync).toHaveBeenCalled();
-        expect(component.isSubmitting()).toBe(false);
+        expect(component['isSubmitting']()).toBe(false);
     });
 
     it('should handle submit error', () => {
@@ -158,25 +158,25 @@ describe('PasswordResetComponent submit', () => {
         authServiceSpy.confirmPasswordReset.mockReturnValue(throwError(() => new Error('fail')));
 
         setValidPassword(component);
-        component.onSubmit();
+        component['onSubmit']();
 
-        expect(component.state()).toBe('error');
-        expect(component.errorMessage()).toBe('AUTH.RESET.ERROR_GENERIC');
-        expect(component.isSubmitting()).toBe(false);
+        expect(component['state']()).toBe('error');
+        expect(component['errorMessage']()).toBe('AUTH.RESET.ERROR_GENERIC');
+        expect(component['isSubmitting']()).toBe(false);
     });
 });
 
 describe('PasswordResetComponent invalid states', () => {
     it('should set invalid state when token is missing', () => {
         const { component } = createComponent({ userId: '', token: '' });
-        expect(component.state()).toBe('invalid');
-        expect(component.errorMessage()).toBe('AUTH.RESET.INVALID');
+        expect(component['state']()).toBe('invalid');
+        expect(component['errorMessage']()).toBe('AUTH.RESET.INVALID');
     });
 
     it('should not submit when form is invalid', () => {
         const { authServiceSpy, component } = createComponent();
-        component.form.controls.password.setValue('');
-        component.onSubmit();
+        component['form'].controls.password.setValue('');
+        component['onSubmit']();
         expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
     });
 
@@ -185,8 +185,8 @@ describe('PasswordResetComponent invalid states', () => {
         authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
 
         setValidPassword(component);
-        component.isSubmitting.set(true);
-        component.onSubmit();
+        component['isSubmitting'].set(true);
+        component['onSubmit']();
 
         expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
     });

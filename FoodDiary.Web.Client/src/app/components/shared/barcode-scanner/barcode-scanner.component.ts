@@ -20,9 +20,9 @@ export class BarcodeScannerComponent {
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('video');
 
-    public readonly isCameraReady = signal(false);
-    public readonly isCameraError = signal(false);
-    public readonly isUnsupported = signal(false);
+    protected readonly isCameraReady = signal(false);
+    protected readonly isCameraError = signal(false);
+    protected readonly isUnsupported = signal(false);
 
     private stream: MediaStream | null = null;
     private animationFrameId = 0;
@@ -56,7 +56,7 @@ export class BarcodeScannerComponent {
         });
     }
 
-    public close(): void {
+    protected close(): void {
         this.stopCamera();
         this.dialogRef.close(null);
     }

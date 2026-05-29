@@ -34,20 +34,20 @@ export class MealListFiltersDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<MealListFiltersDialogComponent, MealListFiltersDialogResult | null>);
     private readonly data = inject<MealListFiltersDialogData>(FD_UI_DIALOG_DATA);
 
-    public readonly dateRangeControl = new FormControl<FdUiDateRangeValue | null>(this.data.dateRange ?? null);
+    protected readonly dateRangeControl = new FormControl<FdUiDateRangeValue | null>(this.data.dateRange ?? null);
 
-    public onReset(): void {
+    protected onReset(): void {
         this.dateRangeControl.setValue(null);
     }
 
-    public onApply(event?: Event): void {
+    protected onApply(event?: Event): void {
         event?.preventDefault();
         this.dialogRef.close({
             dateRange: this.dateRangeControl.value,
         });
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(null);
     }
 }

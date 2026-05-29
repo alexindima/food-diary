@@ -12,7 +12,7 @@ import { AuthComponent } from '../../components/auth/auth.component';
     imports: [FdUiDialogShellComponent, AuthComponent],
 })
 export class AuthDialogComponent {
-    public readonly data = inject<AuthDialogData | null>(FD_UI_DIALOG_DATA, {
+    protected readonly data = inject<AuthDialogData | null>(FD_UI_DIALOG_DATA, {
         optional: true,
     }) ?? { mode: 'login', returnUrl: null, adminReturnUrl: null };
 }

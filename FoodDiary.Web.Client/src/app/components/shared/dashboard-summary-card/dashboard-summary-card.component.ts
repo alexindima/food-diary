@@ -53,42 +53,42 @@ export class DashboardSummaryCardComponent {
     public readonly weeklyGoal = input.required<number | null>();
     public readonly nutrientBars = input.required<NutrientBar[] | null>();
     public readonly caloriesBurned = input<number>(0);
-    public readonly isDailyHovered = signal(false);
-    public readonly isWeeklyHovered = signal(false);
+    protected readonly isDailyHovered = signal(false);
+    protected readonly isWeeklyHovered = signal(false);
     private readonly outerRadius = this.config.ring.outerRadius;
     private readonly innerRadius = this.config.ring.innerRadius;
     private readonly gradientIdDaily = `consumption-ring-daily-${this.createRandomIdPart()}`;
     private readonly gradientIdWeekly = `consumption-ring-weekly-${this.createRandomIdPart()}`;
-    public readonly normalizedDailyGoal = computed(() => normalizeDailyGoal(this.dailyGoal()));
-    public readonly normalizedWeeklyGoal = computed(() => normalizeWeeklyGoal(this.weeklyGoal(), this.normalizedDailyGoal()));
+    protected readonly normalizedDailyGoal = computed(() => normalizeDailyGoal(this.dailyGoal()));
+    protected readonly normalizedWeeklyGoal = computed(() => normalizeWeeklyGoal(this.weeklyGoal(), this.normalizedDailyGoal()));
 
-    public readonly safeWeeklyConsumed = computed(() => Math.max(this.weeklyConsumed(), 0));
+    protected readonly safeWeeklyConsumed = computed(() => Math.max(this.weeklyConsumed(), 0));
 
-    public readonly dailyPercent = computed(() => calculateDashboardPercent(this.dailyConsumed(), this.normalizedDailyGoal()));
-    public readonly weeklyPercent = computed(() => calculateDashboardPercent(this.safeWeeklyConsumed(), this.normalizedWeeklyGoal()));
+    protected readonly dailyPercent = computed(() => calculateDashboardPercent(this.dailyConsumed(), this.normalizedDailyGoal()));
+    protected readonly weeklyPercent = computed(() => calculateDashboardPercent(this.safeWeeklyConsumed(), this.normalizedWeeklyGoal()));
 
     private readonly animatedDailyPercent = signal(0);
     private readonly animatedWeeklyPercent = signal(0);
     private readonly colorCache = new Map<string, [number, number, number]>();
 
-    public readonly dailyDasharray = computed(() => buildRingDasharray(this.animatedDailyPercent(), this.outerRadius));
-    public readonly weeklyDasharray = computed(() => buildRingDasharray(this.animatedWeeklyPercent(), this.innerRadius));
-    public readonly dailyStrokeColor = computed(() => getDashboardColorForPercent(this.animatedDailyPercent(), this.colorCache));
-    public readonly weeklyStrokeColor = computed(() => getDashboardColorForPercent(this.animatedWeeklyPercent(), this.colorCache));
-    public readonly dailyGradientStart = computed(() =>
+    protected readonly dailyDasharray = computed(() => buildRingDasharray(this.animatedDailyPercent(), this.outerRadius));
+    protected readonly weeklyDasharray = computed(() => buildRingDasharray(this.animatedWeeklyPercent(), this.innerRadius));
+    protected readonly dailyStrokeColor = computed(() => getDashboardColorForPercent(this.animatedDailyPercent(), this.colorCache));
+    protected readonly weeklyStrokeColor = computed(() => getDashboardColorForPercent(this.animatedWeeklyPercent(), this.colorCache));
+    protected readonly dailyGradientStart = computed(() =>
         mixDashboardColorWithWhite(this.dailyStrokeColor(), this.config.gradient.startWhiteMix, this.colorCache),
     );
-    public readonly dailyGradientEnd = computed(() =>
+    protected readonly dailyGradientEnd = computed(() =>
         mixDashboardColorWithWhite(this.dailyStrokeColor(), this.config.gradient.endWhiteMix, this.colorCache),
     );
-    public readonly weeklyGradientStart = computed(() =>
+    protected readonly weeklyGradientStart = computed(() =>
         mixDashboardColorWithWhite(this.weeklyStrokeColor(), this.config.gradient.startWhiteMix, this.colorCache),
     );
-    public readonly weeklyGradientEnd = computed(() =>
+    protected readonly weeklyGradientEnd = computed(() =>
         mixDashboardColorWithWhite(this.weeklyStrokeColor(), this.config.gradient.endWhiteMix, this.colorCache),
     );
-    public readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? buildDefaultDashboardNutrientBars());
-    public readonly nutrientBarViewModels = computed<NutrientBarViewModel[]>(() =>
+    protected readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? buildDefaultDashboardNutrientBars());
+    protected readonly nutrientBarViewModels = computed<NutrientBarViewModel[]>(() =>
         this.resolvedNutrientBars().map(bar => {
             this.languageVersion();
 
@@ -107,8 +107,8 @@ export class DashboardSummaryCardComponent {
     );
     private readonly hasCalorieGoal = computed(() => this.normalizedDailyGoal() > 0);
     private readonly hasMacroGoals = computed(() => (this.nutrientBars() ?? []).some(bar => bar.target > 0));
-    public readonly showNotice = computed(() => !this.hasCalorieGoal() || !this.hasMacroGoals());
-    public readonly noticeVariant = computed(() => {
+    protected readonly showNotice = computed(() => !this.hasCalorieGoal() || !this.hasMacroGoals());
+    protected readonly noticeVariant = computed(() => {
         const hasCalories = this.hasCalorieGoal();
         const hasMacros = this.hasMacroGoals();
 
@@ -123,7 +123,7 @@ export class DashboardSummaryCardComponent {
         }
         return 'ok';
     });
-    public readonly noticeTitleKey = computed(() => {
+    protected readonly noticeTitleKey = computed(() => {
         switch (this.noticeVariant()) {
             case 'none':
                 return 'DASHBOARD_SUMMARY.GOALS_TITLE';
@@ -134,7 +134,7 @@ export class DashboardSummaryCardComponent {
                 return 'DASHBOARD_SUMMARY.CALORIES_TITLE';
         }
     });
-    public readonly noticeMessageKey = computed(() => {
+    protected readonly noticeMessageKey = computed(() => {
         switch (this.noticeVariant()) {
             case 'none':
                 return 'DASHBOARD_SUMMARY.GOALS_BODY';
@@ -145,10 +145,10 @@ export class DashboardSummaryCardComponent {
                 return 'DASHBOARD_SUMMARY.CALORIES_BODY';
         }
     });
-    public readonly dailyGradientId = this.gradientIdDaily;
-    public readonly weeklyGradientId = this.gradientIdWeekly;
-    public readonly dailyGradientStroke = `url(#${this.gradientIdDaily})`;
-    public readonly weeklyGradientStroke = `url(#${this.gradientIdWeekly})`;
+    protected readonly dailyGradientId = this.gradientIdDaily;
+    protected readonly weeklyGradientId = this.gradientIdWeekly;
+    protected readonly dailyGradientStroke = `url(#${this.gradientIdDaily})`;
+    protected readonly weeklyGradientStroke = `url(#${this.gradientIdWeekly})`;
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -176,7 +176,7 @@ export class DashboardSummaryCardComponent {
         return Math.random().toString(this.config.randomId.radix).slice(this.config.randomId.start, this.config.randomId.end);
     }
 
-    public clampPercent(value: number): number {
+    protected clampPercent(value: number): number {
         return clampDashboardPercent(value);
     }
 
@@ -219,7 +219,7 @@ export class DashboardSummaryCardComponent {
         }
     }
 
-    public setDailyHover(state: boolean): void {
+    protected setDailyHover(state: boolean): void {
         if (this.normalizedDailyGoal() <= 0) {
             this.isDailyHovered.set(false);
             return;
@@ -227,7 +227,7 @@ export class DashboardSummaryCardComponent {
         this.isDailyHovered.set(state);
     }
 
-    public setWeeklyHover(state: boolean): void {
+    protected setWeeklyHover(state: boolean): void {
         if (this.normalizedDailyGoal() <= 0) {
             this.isWeeklyHovered.set(false);
             return;
@@ -235,7 +235,7 @@ export class DashboardSummaryCardComponent {
         this.isWeeklyHovered.set(state);
     }
 
-    public onGoalAction(): void {
+    protected onGoalAction(): void {
         this.goalAction.emit();
     }
 

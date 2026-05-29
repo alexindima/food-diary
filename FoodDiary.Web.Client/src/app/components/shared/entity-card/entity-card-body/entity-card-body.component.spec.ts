@@ -26,10 +26,10 @@ describe('EntityCardBodyComponent', () => {
         const stopPropagationSpy = vi.fn();
         const event = { stopPropagation: stopPropagationSpy } as unknown as Event;
         const favoriteSpy = vi.fn();
-        component.favoriteToggle.subscribe(favoriteSpy);
+        component['favoriteToggle'].subscribe(favoriteSpy);
         fixture.detectChanges();
 
-        component.handleFavoriteToggle(event);
+        component['handleFavoriteToggle'](event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
         expect(favoriteSpy).toHaveBeenCalledOnce();

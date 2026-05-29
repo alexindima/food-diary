@@ -38,7 +38,7 @@ export class FdUiButtonComponent {
         return fill === 'ghost' ? 'text' : fill;
     });
 
-    public readonly classes = computed(() =>
+    protected readonly classes = computed(() =>
         [
             'fd-ui-button',
             `fd-ui-button--${this.variant()}`,

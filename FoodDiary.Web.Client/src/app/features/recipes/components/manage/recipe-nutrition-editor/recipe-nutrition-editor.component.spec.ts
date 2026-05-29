@@ -16,11 +16,11 @@ describe('RecipeNutritionEditorComponent', () => {
     it('should render automatic nutrition state without manual validation errors', async () => {
         const { component } = await setupComponentAsync();
 
-        expect(component.isNutritionReadonly()).toBe(true);
-        expect(component.showManualNutritionHint()).toBe(false);
-        expect(component.caloriesError()).toBeNull();
-        expect(component.macrosError()).toBeNull();
-        expect(component.nutritionWarning()).toBeNull();
+        expect(component['isNutritionReadonly']()).toBe(true);
+        expect(component['showManualNutritionHint']()).toBe(false);
+        expect(component['caloriesError']()).toBeNull();
+        expect(component['macrosError']()).toBeNull();
+        expect(component['nutritionWarning']()).toBeNull();
     });
 
     it('should expose manual validation errors when manual nutrition is incomplete', async () => {
@@ -33,10 +33,10 @@ describe('RecipeNutritionEditorComponent', () => {
         form.controls.manualProteins.markAsTouched();
         fixture.detectChanges();
 
-        expect(component.isNutritionReadonly()).toBe(false);
-        expect(component.showManualNutritionHint()).toBe(true);
-        expect(component.caloriesError()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED');
-        expect(component.macrosError()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
+        expect(component['isNutritionReadonly']()).toBe(false);
+        expect(component['showManualNutritionHint']()).toBe(true);
+        expect(component['caloriesError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED');
+        expect(component['macrosError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
     });
 
     it('should calculate macro state from summary data supplied by the parent', async () => {
@@ -45,7 +45,7 @@ describe('RecipeNutritionEditorComponent', () => {
         form.patchValue({ manualProteins: 10, manualFats: 5, manualCarbs: 35 });
         fixture.detectChanges();
 
-        expect(component.macroBarState()).toEqual({
+        expect(component['macroBarState']()).toEqual({
             isEmpty: false,
             segments: [
                 { key: 'proteins', percent: 20 },
@@ -58,11 +58,11 @@ describe('RecipeNutritionEditorComponent', () => {
     it('should emit nutrition mode changes from the segmented control output', async () => {
         const { component } = await setupComponentAsync();
         let nextMode: string | null = null;
-        component.nutritionModeChange.subscribe(value => {
+        component['nutritionModeChange'].subscribe(value => {
             nextMode = value;
         });
 
-        component.nutritionModeChange.emit('manual');
+        component['nutritionModeChange'].emit('manual');
 
         expect(nextMode).toBe('manual');
     });

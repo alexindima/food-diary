@@ -44,16 +44,16 @@ export class RecipeNutritionEditorComponent {
 
     public readonly formGroup = input.required<FormGroup<RecipeFormData>>();
     public readonly nutritionScaleMode = input.required<NutritionScaleMode>();
-    public readonly nutritionWarning = signal<NutritionMismatchWarning | null>(null);
-    public readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
-    public readonly nutritionScaleModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
-    public readonly nutritionMode = computed(() => {
+    protected readonly nutritionWarning = signal<NutritionMismatchWarning | null>(null);
+    protected readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
+    protected readonly nutritionScaleModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
+    protected readonly nutritionMode = computed(() => {
         this.formRevision();
         return this.formGroup().controls.calculateNutritionAutomatically.value ? 'auto' : 'manual';
     });
-    public readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
-    public readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
-    public readonly macroBarState = computed<NutritionMacroState>(() => {
+    protected readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
+    protected readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
+    protected readonly macroBarState = computed<NutritionMacroState>(() => {
         this.formRevision();
         const form = this.formGroup();
         return calculateMacroBarState(
@@ -62,7 +62,7 @@ export class RecipeNutritionEditorComponent {
             this.getNumberValue(form.controls.manualCarbs),
         );
     });
-    public readonly nutritionControlNames: NutritionControlNames = {
+    protected readonly nutritionControlNames: NutritionControlNames = {
         calories: 'manualCalories',
         proteins: 'manualProteins',
         fats: 'manualFats',
@@ -108,7 +108,7 @@ export class RecipeNutritionEditorComponent {
         });
     }
 
-    public caloriesError(): string | null {
+    protected caloriesError(): string | null {
         if (this.formGroup().controls.calculateNutritionAutomatically.value) {
             return null;
         }
@@ -118,7 +118,7 @@ export class RecipeNutritionEditorComponent {
             : null;
     }
 
-    public macrosError(): string | null {
+    protected macrosError(): string | null {
         if (this.formGroup().controls.calculateNutritionAutomatically.value) {
             return null;
         }

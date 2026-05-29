@@ -26,16 +26,16 @@ export class AdminLessonsComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
 
-    public readonly lessons = signal<AdminLesson[]>([]);
-    public readonly isLoading = signal(false);
-    public readonly isImporting = signal(false);
-    public readonly importMessage = signal<string | null>(null);
+    protected readonly lessons = signal<AdminLesson[]>([]);
+    protected readonly isLoading = signal(false);
+    protected readonly isImporting = signal(false);
+    protected readonly importMessage = signal<string | null>(null);
 
     public constructor() {
         this.loadLessons();
     }
 
-    public loadLessons(): void {
+    protected loadLessons(): void {
         this.isLoading.set(true);
         this.lessonsService
             .getAll()
@@ -52,7 +52,7 @@ export class AdminLessonsComponent {
             });
     }
 
-    public openCreate(): void {
+    protected openCreate(): void {
         const dialogData: AdminLesson & { isNew: boolean } = {
             id: '',
             title: '',
@@ -82,7 +82,7 @@ export class AdminLessonsComponent {
             });
     }
 
-    public openEdit(lesson: AdminLesson): void {
+    protected openEdit(lesson: AdminLesson): void {
         this.dialogService
             .open(AdminLessonEditDialogComponent, {
                 size: 'lg',
@@ -97,7 +97,7 @@ export class AdminLessonsComponent {
             });
     }
 
-    public deleteLesson(lesson: AdminLesson): void {
+    protected deleteLesson(lesson: AdminLesson): void {
         this.dialogService
             .open(FdUiConfirmDialogComponent, {
                 size: 'sm',
@@ -121,7 +121,7 @@ export class AdminLessonsComponent {
             });
     }
 
-    public exportLessons(): void {
+    protected exportLessons(): void {
         const payload: AdminLessonsImportRequest = {
             version: 1,
             lessons: this.lessons().map(lesson => this.toImportLesson(lesson)),
@@ -136,7 +136,7 @@ export class AdminLessonsComponent {
         URL.revokeObjectURL(url);
     }
 
-    public importLessons(event: Event): void {
+    protected importLessons(event: Event): void {
         const input = event.target instanceof HTMLInputElement ? event.target : null;
         const file = input?.files?.[0];
         if (input === null || file === undefined || this.isImporting()) {

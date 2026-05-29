@@ -12,9 +12,9 @@ describe('MealSatietyCardComponent', () => {
     it('should emit pre meal satiety changes', async () => {
         const { component } = await setupComponentAsync();
         const handler = vi.fn();
-        component.preMealSatietyLevelChange.subscribe(handler);
+        component['preMealSatietyLevelChange'].subscribe(handler);
 
-        component.preMealSatietyLevelChange.emit(NEXT_PRE_MEAL_SATIETY_LEVEL);
+        component['preMealSatietyLevelChange'].emit(NEXT_PRE_MEAL_SATIETY_LEVEL);
 
         expect(handler).toHaveBeenCalledWith(NEXT_PRE_MEAL_SATIETY_LEVEL);
     });

@@ -51,11 +51,11 @@ export class AdminBillingComponent {
     private readonly locale = inject(LOCALE_ID);
     private loadRequestId = 0;
 
-    public readonly activeTab = signal<AdminBillingTab>('subscriptions');
-    public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
-    public readonly payments = signal<AdminBillingPayment[]>([]);
-    public readonly webhookEvents = signal<AdminBillingWebhookEvent[]>([]);
-    public readonly subscriptionItems = computed<AdminBillingSubscriptionViewModel[]>(() =>
+    protected readonly activeTab = signal<AdminBillingTab>('subscriptions');
+    protected readonly subscriptions = signal<AdminBillingSubscription[]>([]);
+    protected readonly payments = signal<AdminBillingPayment[]>([]);
+    protected readonly webhookEvents = signal<AdminBillingWebhookEvent[]>([]);
+    protected readonly subscriptionItems = computed<AdminBillingSubscriptionViewModel[]>(() =>
         this.subscriptions().map(subscription => ({
             ...subscription,
             currentPeriodStartText: this.formatDateLabel(subscription.currentPeriodStartUtc, 'shortDate'),
@@ -67,7 +67,7 @@ export class AdminBillingComponent {
             externalPaymentMethodIdText: this.shortId(subscription.externalPaymentMethodId),
         })),
     );
-    public readonly paymentItems = computed<AdminBillingPaymentViewModel[]>(() =>
+    protected readonly paymentItems = computed<AdminBillingPaymentViewModel[]>(() =>
         this.payments().map(payment => ({
             ...payment,
             createdText: this.formatDateLabel(payment.createdOnUtc),
@@ -77,7 +77,7 @@ export class AdminBillingComponent {
             webhookEventIdText: this.shortId(payment.webhookEventId),
         })),
     );
-    public readonly webhookEventItems = computed<AdminBillingWebhookEventViewModel[]>(() =>
+    protected readonly webhookEventItems = computed<AdminBillingWebhookEventViewModel[]>(() =>
         this.webhookEvents().map(event => ({
             ...event,
             processedText: this.formatDateLabel(event.processedAtUtc),
@@ -85,38 +85,38 @@ export class AdminBillingComponent {
             externalObjectIdText: this.shortId(event.externalObjectId),
         })),
     );
-    public readonly selectedMetadata = signal<string | null>(null);
-    public readonly totalPages = signal(1);
-    public readonly totalItems = signal(0);
-    public readonly page = signal(1);
-    public readonly limit = DEFAULT_PAGE_SIZE;
-    public readonly isLoading = signal(false);
-    public readonly errorMessage = signal<string | null>(null);
-    public readonly provider = signal('');
-    public readonly status = signal('');
-    public readonly kind = signal('');
-    public readonly search = signal('');
-    public readonly fromDate = signal('');
-    public readonly toDate = signal('');
+    protected readonly selectedMetadata = signal<string | null>(null);
+    protected readonly totalPages = signal(1);
+    protected readonly totalItems = signal(0);
+    protected readonly page = signal(1);
+    protected readonly limit = DEFAULT_PAGE_SIZE;
+    protected readonly isLoading = signal(false);
+    protected readonly errorMessage = signal<string | null>(null);
+    protected readonly provider = signal('');
+    protected readonly status = signal('');
+    protected readonly kind = signal('');
+    protected readonly search = signal('');
+    protected readonly fromDate = signal('');
+    protected readonly toDate = signal('');
 
     public constructor() {
         this.load();
     }
 
-    public setTab(tab: AdminBillingTab): void {
+    protected setTab(tab: AdminBillingTab): void {
         this.activeTab.set(tab);
         this.page.set(1);
         this.selectedMetadata.set(null);
         this.load();
     }
 
-    public applyFilters(): void {
+    protected applyFilters(): void {
         this.page.set(1);
         this.selectedMetadata.set(null);
         this.load();
     }
 
-    public resetFilters(): void {
+    protected resetFilters(): void {
         this.provider.set('');
         this.status.set('');
         this.kind.set('');
@@ -126,7 +126,7 @@ export class AdminBillingComponent {
         this.applyFilters();
     }
 
-    public goToPage(page: number): void {
+    protected goToPage(page: number): void {
         if (page < 1 || page > this.totalPages()) {
             return;
         }
@@ -135,7 +135,7 @@ export class AdminBillingComponent {
         this.load();
     }
 
-    public showMetadata(value?: string | null): void {
+    protected showMetadata(value?: string | null): void {
         this.selectedMetadata.set(value !== null && value !== undefined && value.length > 0 ? this.formatJson(value) : null);
     }
 
@@ -161,7 +161,7 @@ export class AdminBillingComponent {
             : value;
     }
 
-    public load(): void {
+    protected load(): void {
         const requestId = ++this.loadRequestId;
         const tab = this.activeTab();
         this.isLoading.set(true);

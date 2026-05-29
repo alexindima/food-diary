@@ -79,7 +79,7 @@ describe('FdUiRadioGroupComponent CVA', () => {
         const { component, fixture } = await setupRadioGroupAsync();
 
         setRadioOptions(fixture);
-        component.writeValue('b');
+        component['writeValue']('b');
         fixture.detectChanges();
 
         expect(component['internalValue']).toBe('b');
@@ -90,7 +90,7 @@ describe('FdUiRadioGroupComponent CVA', () => {
         const onChangeSpy = vi.fn();
 
         setRadioOptions(fixture);
-        component.registerOnChange(onChangeSpy);
+        component['registerOnChange'](onChangeSpy);
 
         component['selectOption'](TEST_OPTIONS[0]);
         fixture.detectChanges();
@@ -103,7 +103,7 @@ describe('FdUiRadioGroupComponent CVA', () => {
         const onTouchedSpy = vi.fn();
 
         setRadioOptions(fixture);
-        component.registerOnTouched(onTouchedSpy);
+        component['registerOnTouched'](onTouchedSpy);
 
         const radioInput = fixture.debugElement.query(By.css('.fd-ui-radio__input'));
         radioInput.triggerEventHandler('blur', {});
@@ -116,12 +116,12 @@ describe('FdUiRadioGroupComponent CVA', () => {
         const { component, fixture } = await setupRadioGroupAsync();
 
         setRadioOptions(fixture);
-        component.setDisabledState(true);
+        component['setDisabledState'](true);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(true);
 
-        component.setDisabledState(false);
+        component['setDisabledState'](false);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(false);

@@ -11,7 +11,7 @@ describe('SkeletonComponent', () => {
     it('uses text defaults', () => {
         const fixture = createComponent();
 
-        expect(fixture.componentInstance.styles()).toEqual({
+        expect(fixture.componentInstance['styles']()).toEqual({
             width: '100%',
             height: 'var(--fd-text-body-size)',
             'border-radius': 'var(--fd-radius-xs)',
@@ -21,7 +21,7 @@ describe('SkeletonComponent', () => {
     it('uses equal width and height for circle default width', () => {
         const fixture = createComponent({ variant: 'circle', height: CIRCLE_SIZE });
 
-        expect(fixture.componentInstance.styles()).toEqual({
+        expect(fixture.componentInstance['styles']()).toEqual({
             width: CIRCLE_SIZE,
             height: CIRCLE_SIZE,
             'border-radius': '50%',
@@ -31,7 +31,7 @@ describe('SkeletonComponent', () => {
     it('uses rect defaults and custom radius', () => {
         const fixture = createComponent({ variant: 'rect', width: RECT_WIDTH, borderRadius: CUSTOM_RADIUS });
 
-        expect(fixture.componentInstance.styles()).toEqual({
+        expect(fixture.componentInstance['styles']()).toEqual({
             width: RECT_WIDTH,
             height: 'calc((var(--fd-size-control-xl) * 2) + var(--fd-space-xs))',
             'border-radius': CUSTOM_RADIUS,

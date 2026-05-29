@@ -14,5 +14,5 @@ import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.map
 export class WeightHistoryChartCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly chartPoints = input.required<readonly WeightHistoryChartPoint[]>();
-    public readonly hasPoints = computed(() => this.chartPoints().some(point => point.value !== null));
+    protected readonly hasPoints = computed(() => this.chartPoints().some(point => point.value !== null));
 }

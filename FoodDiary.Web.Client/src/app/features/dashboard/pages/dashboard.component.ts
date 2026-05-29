@@ -90,47 +90,47 @@ export class DashboardComponent {
     private readonly themeService = inject(ThemeService);
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly facade = inject(DashboardFacade);
-    public readonly layout = inject(DashboardLayoutService);
+    protected readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
 
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
     private resizeObserver: ResizeObserver | null = null;
 
-    public readonly selectedDate = this.facade.selectedDate;
-    public readonly isTodaySelected = this.facade.isTodaySelected;
-    public readonly snapshot = this.facade.snapshot;
-    public readonly isLoading = this.facade.isLoading;
-    public readonly caloriesBurned = this.facade.caloriesBurned;
-    public readonly meals = this.facade.meals;
-    public readonly weeklyConsumed = this.facade.weeklyConsumed;
-    public readonly hydration = this.facade.hydration;
-    public readonly dailyAdvice = this.facade.dailyAdvice;
-    public readonly isHydrationLoading = this.facade.isHydrationLoading;
-    public readonly isWeightTrendLoading = this.facade.isWeightTrendLoading;
-    public readonly isWaistTrendLoading = this.facade.isWaistTrendLoading;
-    public readonly isAdviceLoading = this.facade.isAdviceLoading;
-    public readonly cycle = this.facade.cycle;
-    public readonly isCycleLoading = this.facade.isCycleLoading;
-    public readonly tdeeInsight = this.facade.tdeeInsight;
-    public readonly weightTrend = this.facade.weightTrend;
-    public readonly waistTrend = this.facade.waistTrend;
-    public readonly nutrientBars = this.facade.nutrientBars;
-    public readonly consumptionRingData = this.facade.consumptionRingData;
-    public readonly mealPreviewEntries = this.facade.mealPreviewEntries;
-    public readonly placeholderIcon = this.facade.placeholderIcon;
-    public readonly placeholderLabel = this.facade.placeholderLabel;
-    public readonly fastingIsActive = this.facade.fastingIsActive;
-    public readonly fastingCurrentSession = this.facade.currentFastingSession;
-    public readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
-    public readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
-    public readonly shouldRenderFastingWidget = computed(() => {
+    protected readonly selectedDate = this.facade.selectedDate;
+    protected readonly isTodaySelected = this.facade.isTodaySelected;
+    protected readonly snapshot = this.facade.snapshot;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly caloriesBurned = this.facade.caloriesBurned;
+    protected readonly meals = this.facade.meals;
+    protected readonly weeklyConsumed = this.facade.weeklyConsumed;
+    protected readonly hydration = this.facade.hydration;
+    protected readonly dailyAdvice = this.facade.dailyAdvice;
+    protected readonly isHydrationLoading = this.facade.isHydrationLoading;
+    protected readonly isWeightTrendLoading = this.facade.isWeightTrendLoading;
+    protected readonly isWaistTrendLoading = this.facade.isWaistTrendLoading;
+    protected readonly isAdviceLoading = this.facade.isAdviceLoading;
+    protected readonly cycle = this.facade.cycle;
+    protected readonly isCycleLoading = this.facade.isCycleLoading;
+    protected readonly tdeeInsight = this.facade.tdeeInsight;
+    protected readonly weightTrend = this.facade.weightTrend;
+    protected readonly waistTrend = this.facade.waistTrend;
+    protected readonly nutrientBars = this.facade.nutrientBars;
+    protected readonly consumptionRingData = this.facade.consumptionRingData;
+    protected readonly mealPreviewEntries = this.facade.mealPreviewEntries;
+    protected readonly placeholderIcon = this.facade.placeholderIcon;
+    protected readonly placeholderLabel = this.facade.placeholderLabel;
+    protected readonly fastingIsActive = this.facade.fastingIsActive;
+    protected readonly fastingCurrentSession = this.facade.currentFastingSession;
+    protected readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
+    protected readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
+    protected readonly shouldRenderFastingWidget = computed(() => {
         if (this.layout.isEditingLayout()) {
             return this.layout.shouldRenderBlock('fasting');
         }
 
         return this.isTodaySelected() && this.layout.isBlockVisible('fasting') && this.fastingIsActive();
     });
-    public readonly hasRenderedAsideBlocks = computed(() => {
+    protected readonly hasRenderedAsideBlocks = computed(() => {
         if (this.layout.isEditingLayout()) {
             return this.layout.hasAsideBlocks();
         }
@@ -138,19 +138,19 @@ export class DashboardComponent {
         const visibleBlocks = this.layout.visibleBlocks();
         return visibleBlocks.some(block => isDashboardAsideBlock(block));
     });
-    public readonly editSaveActionLabelKey = computed(() => (this.layout.hasLayoutChanges() ? 'DASHBOARD.SETTINGS.SAVE' : null));
-    public readonly editSaveActionLabel = computed(() => {
+    protected readonly editSaveActionLabelKey = computed(() => (this.layout.hasLayoutChanges() ? 'DASHBOARD.SETTINGS.SAVE' : null));
+    protected readonly editSaveActionLabel = computed(() => {
         const labelKey = this.editSaveActionLabelKey();
         return labelKey !== null ? this.translateService.instant(labelKey) : null;
     });
-    public readonly dashboardHeaderState = computed<DashboardHeaderState>(() => {
+    protected readonly dashboardHeaderState = computed<DashboardHeaderState>(() => {
         this.languageVersion();
         const isToday = this.isTodaySelected();
         const selectedDateLabel = this.formatSelectedDate();
 
         return buildDashboardHeaderState(isToday, selectedDateLabel);
     });
-    public readonly mealsPreviewState = computed<DashboardMealsPreviewState>(() => {
+    protected readonly mealsPreviewState = computed<DashboardMealsPreviewState>(() => {
         this.languageVersion();
         const isToday = this.isTodaySelected();
         const selectedDateLabel = this.formatSelectedDate();
@@ -158,7 +158,7 @@ export class DashboardComponent {
 
         return buildDashboardMealsPreviewState(isToday, titleForDate);
     });
-    public readonly hydrationCardState = computed(() => {
+    protected readonly hydrationCardState = computed(() => {
         const hydration = this.hydration();
 
         return {
@@ -166,7 +166,7 @@ export class DashboardComponent {
             goal: hydration?.goalMl ?? null,
         };
     });
-    public readonly cycleCardState = computed(() => {
+    protected readonly cycleCardState = computed(() => {
         const cycle = this.cycle();
 
         return {
@@ -174,7 +174,7 @@ export class DashboardComponent {
             predictions: cycle?.predictions ?? null,
         };
     });
-    public readonly dashboardSummaryData = computed<DashboardSummaryData>(() => {
+    protected readonly dashboardSummaryData = computed<DashboardSummaryData>(() => {
         const ringData = this.consumptionRingData();
 
         return {
@@ -185,7 +185,7 @@ export class DashboardComponent {
             nutrientBars: ringData.nutrientBars,
         };
     });
-    public readonly dashboardBlockStates = computed<Record<DashboardBlockId, DashboardBlockState>>(() => {
+    protected readonly dashboardBlockStates = computed<Record<DashboardBlockId, DashboardBlockState>>(() => {
         this.languageVersion();
         const editing = this.layout.isEditingLayout();
 
@@ -232,7 +232,7 @@ export class DashboardComponent {
         });
     }
 
-    public handleDateChange(value: Date | null): void {
+    protected handleDateChange(value: Date | null): void {
         if (value === null) {
             return;
         }
@@ -240,23 +240,23 @@ export class DashboardComponent {
         this.facade.setSelectedDate(value);
     }
 
-    public async openWeightHistoryAsync(): Promise<void> {
+    protected async openWeightHistoryAsync(): Promise<void> {
         await this.navigationService.navigateToWeightHistoryAsync();
     }
 
-    public async openCycleTrackingAsync(): Promise<void> {
+    protected async openCycleTrackingAsync(): Promise<void> {
         await this.navigationService.navigateToCycleTrackingAsync();
     }
 
-    public async openGoalsAsync(): Promise<void> {
+    protected async openGoalsAsync(): Promise<void> {
         await this.navigationService.navigateToGoalsAsync();
     }
 
-    public async openProfileAsync(): Promise<void> {
+    protected async openProfileAsync(): Promise<void> {
         await this.navigationService.navigateToProfileAsync();
     }
 
-    public async openNotificationSettingsAsync(): Promise<void> {
+    protected async openNotificationSettingsAsync(): Promise<void> {
         const { DashboardNotificationSettingsDialogComponent } =
             await import('../dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.component');
 
@@ -269,7 +269,7 @@ export class DashboardComponent {
             .subscribe();
     }
 
-    public async openAppearanceDialogAsync(): Promise<void> {
+    protected async openAppearanceDialogAsync(): Promise<void> {
         const { DashboardAppearanceDialogComponent } =
             await import('../dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.component');
 
@@ -286,19 +286,19 @@ export class DashboardComponent {
             .subscribe();
     }
 
-    public async addConsumptionAsync(mealType?: string | null): Promise<void> {
+    protected async addConsumptionAsync(mealType?: string | null): Promise<void> {
         await this.navigationService.navigateToConsumptionAddAsync(mealType ?? undefined);
     }
 
-    public async manageConsumptionsAsync(): Promise<void> {
+    protected async manageConsumptionsAsync(): Promise<void> {
         await this.navigationService.navigateToConsumptionListAsync();
     }
 
-    public onMealCreated(): void {
+    protected onMealCreated(): void {
         this.facade.reload(false);
     }
 
-    public onAiMealCreateRequested(result: AiInputBarResult): void {
+    protected onAiMealCreateRequested(result: AiInputBarResult): void {
         this.aiMealCreateFacade
             .createFromAiResult(result)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -309,19 +309,19 @@ export class DashboardComponent {
             });
     }
 
-    public openConsumption(consumption: { id: string }): void {
+    protected openConsumption(consumption: { id: string }): void {
         void this.navigationService.navigateToConsumptionEditAsync(consumption.id);
     }
 
-    public addHydration(amount: number): void {
+    protected addHydration(amount: number): void {
         this.facade.addHydration(amount);
     }
 
-    public applyTdeeGoal(target: number): void {
+    protected applyTdeeGoal(target: number): void {
         this.facade.applyTdeeGoal(target);
     }
 
-    public handleTdeeCardClick(event?: Event): void {
+    protected handleTdeeCardClick(event?: Event): void {
         event?.stopPropagation();
 
         if (this.layout.isEditingLayout()) {
@@ -332,7 +332,7 @@ export class DashboardComponent {
         void this.openTdeeDetailsAsync();
     }
 
-    public async openTdeeDetailsAsync(): Promise<void> {
+    protected async openTdeeDetailsAsync(): Promise<void> {
         const { TdeeInsightDialogComponent } = await import('../dialogs/tdee-insight-dialog/tdee-insight-dialog.component');
 
         this.dialogService
@@ -367,7 +367,7 @@ export class DashboardComponent {
             });
     }
 
-    public handleFastingCardClick(): void {
+    protected handleFastingCardClick(): void {
         if (this.layout.isEditingLayout()) {
             this.layout.toggleBlock('fasting');
             return;
@@ -376,7 +376,7 @@ export class DashboardComponent {
         void this.openFastingAsync();
     }
 
-    public async openFastingAsync(): Promise<void> {
+    protected async openFastingAsync(): Promise<void> {
         if (this.layout.isEditingLayout()) {
             return;
         }

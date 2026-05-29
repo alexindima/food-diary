@@ -34,7 +34,7 @@ describe('FdUiStatusBadgeComponent', () => {
         }).compileComponents();
 
         const fixture = TestBed.createComponent(TestHostComponent);
-        fixture.componentInstance.tone = tone;
+        fixture.componentInstance['tone'] = tone;
         fixture.detectChanges();
         return fixture;
     }

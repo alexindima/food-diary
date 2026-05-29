@@ -41,41 +41,41 @@ import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-de
 export class RecipeDetailComponent {
     private readonly recipeDetailFacade = inject(RecipeDetailFacade);
 
-    public readonly isFavorite = this.recipeDetailFacade.isFavorite;
-    public readonly isFavoriteLoading = this.recipeDetailFacade.isFavoriteLoading;
-    public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
-    public readonly favoriteAriaLabelKey = computed(() =>
+    protected readonly isFavorite = this.recipeDetailFacade.isFavorite;
+    protected readonly isFavoriteLoading = this.recipeDetailFacade.isFavoriteLoading;
+    protected readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
+    protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE',
     );
 
-    public readonly recipe: Recipe;
-    public readonly calories: number;
-    public readonly proteins: number;
-    public readonly fats: number;
-    public readonly carbs: number;
-    public readonly fiber: number;
-    public readonly alcohol: number;
-    public readonly qualityScore: number;
-    public readonly qualityGrade: string;
-    public readonly macroBlocks: MacroBlock[];
-    public readonly macroSummaryBlocks: MacroBlock[];
-    public readonly ingredientPreview: IngredientPreviewItem[];
-    public readonly nutritionControlNames: NutritionControlNames;
-    public readonly nutritionForm: FormGroup<RecipeDetailNutritionForm>;
-    public readonly macroBarState: NutritionMacroState;
-    public readonly tabs: FdUiTab[] = [
+    protected readonly recipe: Recipe;
+    protected readonly calories: number;
+    protected readonly proteins: number;
+    protected readonly fats: number;
+    protected readonly carbs: number;
+    protected readonly fiber: number;
+    protected readonly alcohol: number;
+    protected readonly qualityScore: number;
+    protected readonly qualityGrade: string;
+    protected readonly macroBlocks: MacroBlock[];
+    protected readonly macroSummaryBlocks: MacroBlock[];
+    protected readonly ingredientPreview: IngredientPreviewItem[];
+    protected readonly nutritionControlNames: NutritionControlNames;
+    protected readonly nutritionForm: FormGroup<RecipeDetailNutritionForm>;
+    protected readonly macroBarState: NutritionMacroState;
+    protected readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'RECIPE_DETAIL.TABS.SUMMARY' },
         { value: 'nutrients', labelKey: 'RECIPE_DETAIL.TABS.NUTRIENTS' },
     ];
-    public activeTab: 'summary' | 'nutrients' = 'summary';
-    public readonly totalTime: number | null;
-    public readonly ingredientCount: number;
-    public readonly isDeleteDisabled: boolean;
-    public readonly isEditDisabled: boolean;
-    public readonly canModify: boolean;
-    public readonly warningMessage: string | null;
+    protected activeTab: 'summary' | 'nutrients' = 'summary';
+    protected readonly totalTime: number | null;
+    protected readonly ingredientCount: number;
+    protected readonly isDeleteDisabled: boolean;
+    protected readonly isEditDisabled: boolean;
+    protected readonly canModify: boolean;
+    protected readonly warningMessage: string | null;
 
-    public readonly isDuplicateInProgress = computed(() => this.recipeDetailFacade.isDuplicateInProgress());
+    protected readonly isDuplicateInProgress = computed(() => this.recipeDetailFacade.isDuplicateInProgress());
 
     public constructor() {
         const recipe = inject<Recipe>(FD_UI_DIALOG_DATA);
@@ -107,17 +107,17 @@ export class RecipeDetailComponent {
         this.recipeDetailFacade.initialize(recipe);
     }
 
-    public close(): void {
+    protected close(): void {
         this.recipeDetailFacade.close(this.recipe);
     }
 
-    public onTabChange(tab: string): void {
+    protected onTabChange(tab: string): void {
         if (tab === 'summary' || tab === 'nutrients') {
             this.activeTab = tab;
         }
     }
 
-    public onEdit(): void {
+    protected onEdit(): void {
         if (this.isEditDisabled) {
             return;
         }
@@ -125,7 +125,7 @@ export class RecipeDetailComponent {
         this.recipeDetailFacade.edit(this.recipe);
     }
 
-    public onDelete(): void {
+    protected onDelete(): void {
         if (this.isDeleteDisabled) {
             return;
         }
@@ -133,11 +133,11 @@ export class RecipeDetailComponent {
         this.recipeDetailFacade.delete(this.recipe);
     }
 
-    public onDuplicate(): void {
+    protected onDuplicate(): void {
         this.recipeDetailFacade.duplicate(this.recipe);
     }
 
-    public toggleFavorite(): void {
+    protected toggleFavorite(): void {
         this.recipeDetailFacade.toggleFavorite(this.recipe);
     }
 

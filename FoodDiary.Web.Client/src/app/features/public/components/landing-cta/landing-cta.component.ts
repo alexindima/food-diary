@@ -15,7 +15,7 @@ import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.se
 export class LandingCtaComponent {
     private readonly authNavigationService = inject(PublicAuthNavigationService);
 
-    public async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+    protected async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
         await this.authNavigationService.navigateAsync(mode);
     }
 }

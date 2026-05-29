@@ -33,21 +33,21 @@ describe('StatisticsBodyComponent state', () => {
         const { component, fixture } = await setupStatisticsBodyAsync({ isLoading: true, hasLoadError: true, hasBodyData: false });
         fixture.detectChanges();
 
-        expect(component.sectionState()).toBe('loading');
+        expect(component['sectionState']()).toBe('loading');
     });
 
     it('uses error state when loading is finished and load failed', async () => {
         const { component, fixture } = await setupStatisticsBodyAsync({ hasLoadError: true });
         fixture.detectChanges();
 
-        expect(component.sectionState()).toBe('error');
+        expect(component['sectionState']()).toBe('error');
     });
 
     it('uses empty state when there is no body data', async () => {
         const { component, fixture } = await setupStatisticsBodyAsync({ hasBodyData: false });
         fixture.detectChanges();
 
-        expect(component.sectionState()).toBe('empty');
+        expect(component['sectionState']()).toBe('empty');
     });
 });
 
@@ -56,12 +56,12 @@ describe('StatisticsBodyComponent events', () => {
         const { component, fixture } = await setupStatisticsBodyAsync();
         const tabSpy = vi.fn();
         const retrySpy = vi.fn();
-        component.selectedTabChange.subscribe(tabSpy);
-        component.retry.subscribe(retrySpy);
+        component['selectedTabChange'].subscribe(tabSpy);
+        component['retry'].subscribe(retrySpy);
         fixture.detectChanges();
 
-        component.onTabChange('waist');
-        component.onRetry();
+        component['onTabChange']('waist');
+        component['onRetry']();
 
         expect(tabSpy).toHaveBeenCalledWith('waist');
         expect(retrySpy).toHaveBeenCalledOnce();

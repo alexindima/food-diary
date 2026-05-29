@@ -31,7 +31,7 @@ export class MealsPreviewComponent {
     public readonly add = output<string | null | undefined>();
     public readonly aiMealCreateRequested = output<AiInputBarResult>();
     public readonly open = output<MealCardItem>();
-    public readonly expandedAiSlot = signal<string | null>(null);
+    protected readonly expandedAiSlot = signal<string | null>(null);
 
     public constructor() {
         effect(() => {
@@ -41,12 +41,12 @@ export class MealsPreviewComponent {
         });
     }
 
-    public toggleAi(slot?: string | null): void {
+    protected toggleAi(slot?: string | null): void {
         const normalizedSlot = slot ?? null;
         this.expandedAiSlot.update(current => (current === normalizedSlot ? null : normalizedSlot));
     }
 
-    public handleAiMealCreateRequested(result: AiInputBarResult): void {
+    protected handleAiMealCreateRequested(result: AiInputBarResult): void {
         this.aiMealCreateRequested.emit(result);
     }
 }

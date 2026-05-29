@@ -14,9 +14,9 @@ describe('MealItemsSectionComponent', () => {
     it('should emit add item requests', async () => {
         const { component } = await setupComponentAsync();
         const handler = vi.fn();
-        component.addItem.subscribe(handler);
+        component['addItem'].subscribe(handler);
 
-        component.addItem.emit();
+        component['addItem'].emit();
 
         expect(handler).toHaveBeenCalled();
     });
@@ -26,13 +26,13 @@ describe('MealItemsSectionComponent', () => {
         const editHandler = vi.fn();
         const removeHandler = vi.fn();
         const openHandler = vi.fn();
-        component.editItem.subscribe(editHandler);
-        component.removeItem.subscribe(removeHandler);
-        component.openItemSelect.subscribe(openHandler);
+        component['editItem'].subscribe(editHandler);
+        component['removeItem'].subscribe(removeHandler);
+        component['openItemSelect'].subscribe(openHandler);
 
-        component.editItem.emit(ITEM_INDEX);
-        component.removeItem.emit(ITEM_INDEX);
-        component.openItemSelect.emit(ITEM_INDEX);
+        component['editItem'].emit(ITEM_INDEX);
+        component['removeItem'].emit(ITEM_INDEX);
+        component['openItemSelect'].emit(ITEM_INDEX);
 
         expect(editHandler).toHaveBeenCalledWith(ITEM_INDEX);
         expect(removeHandler).toHaveBeenCalledWith(ITEM_INDEX);
@@ -43,11 +43,11 @@ describe('MealItemsSectionComponent', () => {
         const { component } = await setupComponentAsync();
         const editHandler = vi.fn();
         const deleteHandler = vi.fn();
-        component.editSession.subscribe(editHandler);
-        component.deleteSession.subscribe(deleteHandler);
+        component['editSession'].subscribe(editHandler);
+        component['deleteSession'].subscribe(deleteHandler);
 
-        component.editSession.emit(SESSION_INDEX);
-        component.deleteSession.emit(SESSION_INDEX);
+        component['editSession'].emit(SESSION_INDEX);
+        component['deleteSession'].emit(SESSION_INDEX);
 
         expect(editHandler).toHaveBeenCalledWith(SESSION_INDEX);
         expect(deleteHandler).toHaveBeenCalledWith(SESSION_INDEX);

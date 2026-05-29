@@ -16,7 +16,7 @@ describe('UpdateSuccessDialogComponent', () => {
 
         const fixture = TestBed.createComponent(UpdateSuccessDialogComponent);
 
-        fixture.componentInstance.close(true);
+        fixture.componentInstance['close'](true);
 
         expect(dialogRef.close).toHaveBeenCalledWith(true);
     });

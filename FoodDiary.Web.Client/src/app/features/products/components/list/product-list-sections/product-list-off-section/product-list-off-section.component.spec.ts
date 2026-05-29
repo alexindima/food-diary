@@ -20,9 +20,9 @@ describe('ProductListOffSectionComponent', () => {
         const product = createOffProduct();
         const { component } = await setupComponentAsync({ products: [product] });
         const handler = vi.fn();
-        component.productOpen.subscribe(handler);
+        component['productOpen'].subscribe(handler);
 
-        component.productOpen.emit(product);
+        component['productOpen'].emit(product);
 
         expect(handler).toHaveBeenCalledWith(product);
     });

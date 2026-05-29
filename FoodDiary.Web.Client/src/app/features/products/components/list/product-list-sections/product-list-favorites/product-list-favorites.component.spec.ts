@@ -23,17 +23,17 @@ describe('ProductListFavoritesComponent', () => {
         const openHandler = vi.fn();
         const addHandler = vi.fn();
         const removeHandler = vi.fn();
-        component.favoritesToggle.subscribe(toggleHandler);
-        component.loadMore.subscribe(loadMoreHandler);
-        component.openProduct.subscribe(openHandler);
-        component.addToMeal.subscribe(addHandler);
-        component.favoriteRemove.subscribe(removeHandler);
+        component['favoritesToggle'].subscribe(toggleHandler);
+        component['loadMore'].subscribe(loadMoreHandler);
+        component['openProduct'].subscribe(openHandler);
+        component['addToMeal'].subscribe(addHandler);
+        component['favoriteRemove'].subscribe(removeHandler);
 
-        component.favoritesToggle.emit();
-        component.loadMore.emit();
-        component.openProduct.emit(favorite);
-        component.addToMeal.emit(favorite);
-        component.favoriteRemove.emit(favorite);
+        component['favoritesToggle'].emit();
+        component['loadMore'].emit();
+        component['openProduct'].emit(favorite);
+        component['addToMeal'].emit(favorite);
+        component['favoriteRemove'].emit(favorite);
 
         expect(toggleHandler).toHaveBeenCalled();
         expect(loadMoreHandler).toHaveBeenCalled();

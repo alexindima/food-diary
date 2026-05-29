@@ -29,7 +29,7 @@ export class StatisticsBodyComponent {
 
     public readonly selectedTabChange = output<string>();
     public readonly retry = output();
-    public readonly sectionState = computed<'loading' | 'error' | 'content' | 'empty'>(() => {
+    protected readonly sectionState = computed<'loading' | 'error' | 'content' | 'empty'>(() => {
         if (this.isLoading()) {
             return 'loading';
         }
@@ -40,7 +40,7 @@ export class StatisticsBodyComponent {
 
         return this.hasBodyData() ? 'content' : 'empty';
     });
-    public readonly bodyChartUnitKey = computed(() => {
+    protected readonly bodyChartUnitKey = computed(() => {
         const selectedTab = this.selectedTab();
 
         if (selectedTab === 'weight') {
@@ -54,11 +54,11 @@ export class StatisticsBodyComponent {
         return '';
     });
 
-    public onTabChange(value: string): void {
+    protected onTabChange(value: string): void {
         this.selectedTabChange.emit(value);
     }
 
-    public onRetry(): void {
+    protected onRetry(): void {
         this.retry.emit();
     }
 }

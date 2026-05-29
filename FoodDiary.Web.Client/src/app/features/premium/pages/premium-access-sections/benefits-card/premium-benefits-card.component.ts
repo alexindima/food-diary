@@ -12,6 +12,6 @@ import { environment } from '../../../../../../environments/environment';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PremiumBenefitsCardComponent {
-    public readonly supportEmail = environment.supportEmail ?? 'admin@fooddiary.club';
-    public readonly supportEmailHref = `mailto:${this.supportEmail}`;
+    protected readonly supportEmail = environment.supportEmail ?? 'admin@fooddiary.club';
+    protected readonly supportEmailHref = `mailto:${this.supportEmail}`;
 }

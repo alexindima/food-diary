@@ -25,10 +25,10 @@ export class MealDetailSummaryComponent {
     public readonly itemPreview = input.required<readonly MealDetailItemPreview[]>();
     public readonly isItemPreviewExpanded = input.required<boolean>();
 
-    public readonly calories = computed(() => this.consumption().totalCalories);
-    public readonly qualityGrade = computed(() => this.consumption().qualityGrade ?? MEAL_DETAIL_DEFAULT_QUALITY_GRADE);
-    public readonly qualityScore = computed(() => normalizeQualityScore(this.consumption().qualityScore));
-    public readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
+    protected readonly calories = computed(() => this.consumption().totalCalories);
+    protected readonly qualityGrade = computed(() => this.consumption().qualityGrade ?? MEAL_DETAIL_DEFAULT_QUALITY_GRADE);
+    protected readonly qualityScore = computed(() => normalizeQualityScore(this.consumption().qualityScore));
+    protected readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
 
     public readonly itemPreviewExpandedToggle = output();
 }

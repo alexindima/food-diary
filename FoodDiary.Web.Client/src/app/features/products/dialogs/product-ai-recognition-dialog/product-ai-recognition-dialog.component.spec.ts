@@ -69,37 +69,37 @@ beforeEach(() => {
 
 describe('ProductAiRecognitionDialogComponent state', () => {
     it('initializes description and disables analysis until image is selected', () => {
-        expect(component.descriptionControl.value).toBe(' fresh apple ');
-        expect(component.statusKey()).toBeNull();
-        expect(component.canApply()).toBe(false);
-        expect(component.isAnalyzeDisabled()).toBe(true);
+        expect(component['descriptionControl'].value).toBe(' fresh apple ');
+        expect(component['statusKey']()).toBeNull();
+        expect(component['canApply']()).toBe(false);
+        expect(component['isAnalyzeDisabled']()).toBe(true);
     });
 
     it('resets previous analysis state when image changes', () => {
-        component.results.set([createVisionItem()]);
-        component.nutrition.set(createNutrition());
-        component.errorKey.set('ERROR');
-        component.nutritionErrorKey.set('NUTRITION_ERROR');
-        component.hasAnalyzed.set(true);
+        component['results'].set([createVisionItem()]);
+        component['nutrition'].set(createNutrition());
+        component['errorKey'].set('ERROR');
+        component['nutritionErrorKey'].set('NUTRITION_ERROR');
+        component['hasAnalyzed'].set(true);
 
-        component.onImageChanged(createImageSelection());
+        component['onImageChanged'](createImageSelection());
 
-        expect(component.selection()).toEqual(createImageSelection());
-        expect(component.results()).toEqual([]);
-        expect(component.nutrition()).toBeNull();
-        expect(component.errorKey()).toBeNull();
-        expect(component.nutritionErrorKey()).toBeNull();
-        expect(component.hasAnalyzed()).toBe(false);
-        expect(component.isAnalyzeDisabled()).toBe(false);
+        expect(component['selection']()).toEqual(createImageSelection());
+        expect(component['results']()).toEqual([]);
+        expect(component['nutrition']()).toBeNull();
+        expect(component['errorKey']()).toBeNull();
+        expect(component['nutritionErrorKey']()).toBeNull();
+        expect(component['hasAnalyzed']()).toBe(false);
+        expect(component['isAnalyzeDisabled']()).toBe(false);
     });
 });
 
 describe('ProductAiRecognitionDialogComponent analysis', () => {
     it('runs image analysis, calculates nutrition, and applies dialog result', () => {
-        component.onImageChanged(createImageSelection());
+        component['onImageChanged'](createImageSelection());
 
-        component.startAnalysis();
-        component.apply();
+        component['startAnalysis']();
+        component['apply']();
 
         expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledWith({
             imageAssetId: 'asset-1',
@@ -108,9 +108,9 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({
             items: [{ ...createVisionItem(), unit: 'g' }],
         });
-        expect(component.statusKey()).toBe('PRODUCT_AI_DIALOG.STATUS_DONE');
-        expect(component.canApply()).toBe(true);
-        expect(component.resultForm.controls.name.value).toBe('Apple local');
+        expect(component['statusKey']()).toBe('PRODUCT_AI_DIALOG.STATUS_DONE');
+        expect(component['canApply']()).toBe(true);
+        expect(component['resultForm'].controls.name.value).toBe('Apple local');
         expect(dialogRef.close).toHaveBeenCalledWith(
             expect.objectContaining({
                 name: 'Apple local',
@@ -127,33 +127,33 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
 
     it('maps recognition API errors and skips nutrition calculation', () => {
         aiFoodService.analyzeFoodImage.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.Forbidden })));
-        component.onImageChanged(createImageSelection());
+        component['onImageChanged'](createImageSelection());
 
-        component.startAnalysis();
+        component['startAnalysis']();
 
-        expect(component.errorKey()).toBe('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
-        expect(component.hasAnalyzed()).toBe(true);
+        expect(component['errorKey']()).toBe('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
+        expect(component['hasAnalyzed']()).toBe(true);
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
     });
 
     it('maps nutrition API errors while keeping recognized items visible', () => {
         aiFoodService.calculateNutrition.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.InternalServerError })));
-        component.onImageChanged(createImageSelection());
+        component['onImageChanged'](createImageSelection());
 
-        component.startAnalysis();
+        component['startAnalysis']();
 
-        expect(component.results()).toEqual([createVisionItem()]);
-        expect(component.nutrition()).toBeNull();
-        expect(component.nutritionErrorKey()).toBe('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
-        expect(component.canApply()).toBe(false);
+        expect(component['results']()).toEqual([createVisionItem()]);
+        expect(component['nutrition']()).toBeNull();
+        expect(component['nutritionErrorKey']()).toBe('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
+        expect(component['canApply']()).toBe(false);
     });
 });
 
 describe('ProductAiRecognitionDialogComponent close', () => {
     it('deletes uploaded image asset and closes with null', () => {
-        component.onImageChanged(createImageSelection());
+        component['onImageChanged'](createImageSelection());
 
-        component.close();
+        component['close']();
 
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
         expect(dialogRef.close).toHaveBeenCalledWith(null);
@@ -161,9 +161,9 @@ describe('ProductAiRecognitionDialogComponent close', () => {
 
     it('logs cleanup errors without blocking close', () => {
         imageUploadService.deleteAsset.mockReturnValueOnce(throwError(() => new Error('Delete failed')));
-        component.onImageChanged(createImageSelection());
+        component['onImageChanged'](createImageSelection());
 
-        component.close();
+        component['close']();
 
         expect(logger.warn).toHaveBeenCalledWith('Failed to delete AI product image asset', expect.any(Error));
         expect(dialogRef.close).toHaveBeenCalledWith(null);

@@ -66,11 +66,11 @@ describe('PremiumAccessPageComponent checkout', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        await component.startCheckoutAsync('monthly', 'paddle');
+        await component['startCheckoutAsync']('monthly', 'paddle');
 
         expect(billingService.createCheckoutSession).toHaveBeenCalledWith('monthly', 'paddle');
         expect(fakeDocument.location.href).toBe(CHECKOUT_URL);
-        expect(component.checkoutLoadingPlan()).toBeNull();
+        expect(component['checkoutLoadingPlan']()).toBeNull();
     });
 
     it('shows checkout error when session URL is empty', async () => {
@@ -78,10 +78,10 @@ describe('PremiumAccessPageComponent checkout', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        await component.startCheckoutAsync('monthly');
+        await component['startCheckoutAsync']('monthly');
 
         expect(fakeDocument.location.href).toBe('');
-        expect(component.errorMessage()).toBe('Checkout URL is missing.');
+        expect(component['errorMessage']()).toBe('Checkout URL is missing.');
         expect(toastService.error).toHaveBeenCalledWith('Checkout URL is missing.');
     });
 
@@ -90,13 +90,13 @@ describe('PremiumAccessPageComponent checkout', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        void component.startCheckoutAsync('monthly', 'paddle');
+        void component['startCheckoutAsync']('monthly', 'paddle');
         await settleAsync();
-        await component.startCheckoutAsync('yearly', 'paddle');
+        await component['startCheckoutAsync']('yearly', 'paddle');
 
         expect(billingService.createCheckoutSession).toHaveBeenCalledTimes(1);
         expect(billingService.createCheckoutSession).toHaveBeenCalledWith('monthly', 'paddle');
-        expect(component.checkoutLoadingPlan()).toBe('monthly');
+        expect(component['checkoutLoadingPlan']()).toBe('monthly');
     });
 });
 
@@ -107,11 +107,11 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        await component.openPortalAsync();
+        await component['openPortalAsync']();
 
         expect(billingService.createPortalSession).toHaveBeenCalled();
         expect(fakeDocument.location.href).toBe(PORTAL_URL);
-        expect(component.portalLoading()).toBe(false);
+        expect(component['portalLoading']()).toBe(false);
     });
 
     it('does not create a second portal session while portal is loading', async () => {
@@ -119,12 +119,12 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        void component.openPortalAsync();
+        void component['openPortalAsync']();
         await settleAsync();
-        await component.openPortalAsync();
+        await component['openPortalAsync']();
 
         expect(billingService.createPortalSession).toHaveBeenCalledTimes(1);
-        expect(component.portalLoading()).toBe(true);
+        expect(component['portalLoading']()).toBe(true);
     });
 
     it('stores overview load errors when no overview is loaded', async () => {
@@ -132,9 +132,9 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        expect(component.overview()).toBeNull();
-        expect(component.errorMessage()).toBe('Network down');
-        expect(component.isLoading()).toBe(false);
+        expect(component['overview']()).toBeNull();
+        expect(component['errorMessage']()).toBe('Network down');
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('starts premium trial and refreshes token', async () => {
@@ -150,12 +150,12 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        await component.startTrialAsync();
+        await component['startTrialAsync']();
 
         expect(billingService.startPremiumTrial).toHaveBeenCalled();
         expect(authService.refreshToken).toHaveBeenCalled();
-        expect(component.overview()).toEqual(trialOverview);
-        expect(component.trialLoading()).toBe(false);
+        expect(component['overview']()).toEqual(trialOverview);
+        expect(component['trialLoading']()).toBe(false);
         expect(toastService.success).toHaveBeenCalledWith('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE');
     });
 
@@ -164,12 +164,12 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         const { component } = setupComponent();
         await settleAsync();
 
-        void component.startTrialAsync();
+        void component['startTrialAsync']();
         await settleAsync();
-        await component.startTrialAsync();
+        await component['startTrialAsync']();
 
         expect(billingService.startPremiumTrial).toHaveBeenCalledTimes(1);
-        expect(component.trialLoading()).toBe(true);
+        expect(component['trialLoading']()).toBe(true);
     });
 });
 
@@ -184,8 +184,8 @@ describe('PremiumAccessPageComponent checkout return', () => {
         await settleAsync();
 
         expect(authService.refreshToken).toHaveBeenCalled();
-        expect(component.overview()).toEqual(premiumOverview);
-        expect(component.checkoutReturnState()).toBe('success');
+        expect(component['overview']()).toEqual(premiumOverview);
+        expect(component['checkoutReturnState']()).toBe('success');
         expect(toastService.success).toHaveBeenCalledWith('PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE');
         expect(router.navigate).toHaveBeenCalledWith([], {
             relativeTo: routeStub,
@@ -204,9 +204,9 @@ describe('PremiumAccessPageComponent checkout return', () => {
         await settleAsync();
 
         expect(authService.refreshToken).toHaveBeenCalled();
-        expect(component.overview()).toEqual(premiumOverview);
-        expect(component.errorMessage()).toBe('Network down');
-        expect(component.isLoading()).toBe(false);
+        expect(component['overview']()).toEqual(premiumOverview);
+        expect(component['errorMessage']()).toBe('Network down');
+        expect(component['isLoading']()).toBe(false);
     });
 });
 

@@ -31,11 +31,11 @@ export class DailyProgressCardComponent {
     public readonly settingsClick = output();
     public readonly setGoalClick = output();
 
-    public readonly hasGoal = computed(() => this.goal() > 0);
+    protected readonly hasGoal = computed(() => this.goal() > 0);
 
-    public readonly progressPercent = computed(() => calculateDailyProgressPercent(this.consumed(), this.goal()));
+    protected readonly progressPercent = computed(() => calculateDailyProgressPercent(this.consumed(), this.goal()));
 
-    public readonly remaining = computed(() => calculateRemainingCalories(this.consumed(), this.goal()));
+    protected readonly remaining = computed(() => calculateRemainingCalories(this.consumed(), this.goal()));
 
-    public readonly motivationKey = computed(() => resolveDailyProgressMotivationKey(this.consumed(), this.goal()));
+    protected readonly motivationKey = computed(() => resolveDailyProgressMotivationKey(this.consumed(), this.goal()));
 }

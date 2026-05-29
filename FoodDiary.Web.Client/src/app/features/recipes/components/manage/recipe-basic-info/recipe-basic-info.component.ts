@@ -35,8 +35,8 @@ export class RecipeBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly formGroup = input.required<FormGroup<RecipeFormData>>();
-    public readonly visibilitySelectOptions = signal<Array<FdUiSelectOption<RecipeVisibility>>>([]);
-    public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    protected readonly visibilitySelectOptions = signal<Array<FdUiSelectOption<RecipeVisibility>>>([]);
+    protected readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
 
     public constructor() {
         effect(onCleanup => {

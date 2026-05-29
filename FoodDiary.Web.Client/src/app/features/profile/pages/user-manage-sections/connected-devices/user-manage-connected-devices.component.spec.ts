@@ -13,15 +13,15 @@ describe('UserManageConnectedDevicesComponent state', () => {
     it('derives loading, empty, and content states from inputs', async () => {
         await createComponentAsync({ isLoading: true, items: [] });
 
-        expect(component.state()).toBe('loading');
+        expect(component['state']()).toBe('loading');
 
         fixture.componentRef.setInput('isLoading', false);
         fixture.detectChanges();
-        expect(component.state()).toBe('empty');
+        expect(component['state']()).toBe('empty');
 
         fixture.componentRef.setInput('items', [createConnectedDeviceItem()]);
         fixture.detectChanges();
-        expect(component.state()).toBe('content');
+        expect(component['state']()).toBe('content');
     });
 });
 

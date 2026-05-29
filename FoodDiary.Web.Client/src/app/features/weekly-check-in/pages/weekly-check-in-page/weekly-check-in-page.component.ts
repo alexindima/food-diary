@@ -28,10 +28,10 @@ import { WeeklyCheckInFacade } from '../../lib/weekly-check-in.facade';
 export class WeeklyCheckInPageComponent {
     private readonly facade = inject(WeeklyCheckInFacade);
 
-    public readonly isLoading = this.facade.isLoading;
-    public readonly thisWeek = this.facade.thisWeek;
-    public readonly suggestionRows = this.facade.suggestionRows;
-    public readonly trendCards = this.facade.trendCards;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly thisWeek = this.facade.thisWeek;
+    protected readonly suggestionRows = this.facade.suggestionRows;
+    protected readonly trendCards = this.facade.trendCards;
 
     public constructor() {
         this.facade.initialize();

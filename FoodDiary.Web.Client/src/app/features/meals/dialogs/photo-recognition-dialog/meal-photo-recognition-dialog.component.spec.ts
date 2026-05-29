@@ -66,35 +66,35 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
     it('should analyze selected image and calculate nutrition', async () => {
         const { component } = await setupComponentAsync();
 
-        component.onImageChanged({ assetId: 'asset-1', url: 'https://example.test/photo.jpg' });
+        component['onImageChanged']({ assetId: 'asset-1', url: 'https://example.test/photo.jpg' });
 
         expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledWith({ imageAssetId: 'asset-1' });
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({ items: [visionItem] });
-        expect(component.results()).toEqual([visionItem]);
-        expect(component.nutrition()).toEqual(nutrition);
-        expect(component.statusKey()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE');
+        expect(component['results']()).toEqual([visionItem]);
+        expect(component['nutrition']()).toEqual(nutrition);
+        expect(component['statusKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE');
     });
 
     it('should set premium error when image analysis is forbidden', async () => {
         aiFoodService.analyzeFoodImage.mockReturnValue(throwError(() => ({ status: HttpStatusCode.Forbidden })));
         const { component } = await setupComponentAsync();
 
-        component.onImageChanged({ assetId: 'asset-1', url: null });
+        component['onImageChanged']({ assetId: 'asset-1', url: null });
 
-        expect(component.errorKey()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
-        expect(component.hasAnalyzed()).toBe(true);
-        expect(component.isLoading()).toBe(false);
+        expect(component['errorKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
+        expect(component['hasAnalyzed']()).toBe(true);
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('should set nutrition quota error when nutrition calculation is rate limited', async () => {
         aiFoodService.calculateNutrition.mockReturnValue(throwError(() => ({ status: HttpStatusCode.TooManyRequests })));
         const { component } = await setupComponentAsync();
 
-        component.onImageChanged({ assetId: 'asset-1', url: null });
+        component['onImageChanged']({ assetId: 'asset-1', url: null });
 
-        expect(component.nutritionErrorKey()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
-        expect(component.nutrition()).toBeNull();
-        expect(component.isNutritionLoading()).toBe(false);
+        expect(component['nutritionErrorKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+        expect(component['nutrition']()).toBeNull();
+        expect(component['isNutritionLoading']()).toBe(false);
     });
 });
 
@@ -106,28 +106,28 @@ describe('MealPhotoRecognitionDialogComponent editing', () => {
 
     it('should recalculate nutrition locally when only amount changes', async () => {
         const { component } = await setupComponentAsync();
-        component.results.set([visionItem]);
-        component.nutrition.set(nutrition);
-        component.startEditing();
+        component['results'].set([visionItem]);
+        component['nutrition'].set(nutrition);
+        component['startEditing']();
         aiFoodService.calculateNutrition.mockClear();
 
-        component.updateEditItem(0, 'amount', String(EDITED_AMOUNT));
-        component.applyEditing();
+        component['updateEditItem'](0, 'amount', String(EDITED_AMOUNT));
+        component['applyEditing']();
 
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
-        expect(component.nutrition()?.calories).toBe(EXPECTED_EDITED_CALORIES);
-        expect(component.nutrition()?.items[0].amount).toBe(EDITED_AMOUNT);
+        expect(component['nutrition']()?.calories).toBe(EXPECTED_EDITED_CALORIES);
+        expect(component['nutrition']()?.items[0].amount).toBe(EDITED_AMOUNT);
     });
 
     it('should request nutrition again when edited name changes', async () => {
         const { component } = await setupComponentAsync();
-        component.results.set([visionItem]);
-        component.nutrition.set(nutrition);
-        component.startEditing();
+        component['results'].set([visionItem]);
+        component['nutrition'].set(nutrition);
+        component['startEditing']();
         aiFoodService.calculateNutrition.mockClear();
 
-        component.updateEditItem(0, 'name', 'Pear');
-        component.applyEditing();
+        component['updateEditItem'](0, 'name', 'Pear');
+        component['applyEditing']();
 
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({
             items: [{ nameEn: 'Pear', nameLocal: 'Pear', amount: SOURCE_AMOUNT, unit: 'g', confidence: 1 }],
@@ -136,18 +136,18 @@ describe('MealPhotoRecognitionDialogComponent editing', () => {
 
     it('should reorder, remove and add edit items', async () => {
         const { component } = await setupComponentAsync();
-        component.results.set([visionItem, { ...visionItem, nameEn: 'Banana', nameLocal: null }]);
-        component.startEditing();
+        component['results'].set([visionItem, { ...visionItem, nameEn: 'Banana', nameLocal: null }]);
+        component['startEditing']();
 
-        component.onEditItemDrop({ previousIndex: 0, currentIndex: 1 });
-        expect(component.editItems()[1].nameEn).toBe('Apple');
+        component['onEditItemDrop']({ previousIndex: 0, currentIndex: 1 });
+        expect(component['editItems']()[1].nameEn).toBe('Apple');
 
-        component.removeEditItem(1);
-        expect(component.editItems()).toHaveLength(1);
+        component['removeEditItem'](1);
+        expect(component['editItems']()).toHaveLength(1);
 
-        component.addEditItem();
-        expect(component.editItems()).toHaveLength(2);
-        expect(component.editItems()[1].unit).toBe('g');
+        component['addEditItem']();
+        expect(component['editItems']()).toHaveLength(2);
+        expect(component['editItems']()[1].unit).toBe('g');
     });
 });
 
@@ -165,8 +165,8 @@ describe('MealPhotoRecognitionDialogComponent session payload', () => {
             mode: 'edit',
         });
 
-        expect(component.isEditMode()).toBe(true);
-        expect(component.results()).toEqual([
+        expect(component['isEditMode']()).toBe(true);
+        expect(component['results']()).toEqual([
             {
                 nameEn: 'Apple',
                 nameLocal: 'Яблоко',
@@ -175,9 +175,9 @@ describe('MealPhotoRecognitionDialogComponent session payload', () => {
                 confidence: 1,
             },
         ]);
-        expect(component.nutrition()?.calories).toBe(BASE_CALORIES);
+        expect(component['nutrition']()?.calories).toBe(BASE_CALORIES);
 
-        component.addToMeal();
+        component['addToMeal']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -199,7 +199,7 @@ describe('MealPhotoRecognitionDialogComponent session payload', () => {
     it('should close with null on cancel', async () => {
         const { component } = await setupComponentAsync();
 
-        component.close();
+        component['close']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });

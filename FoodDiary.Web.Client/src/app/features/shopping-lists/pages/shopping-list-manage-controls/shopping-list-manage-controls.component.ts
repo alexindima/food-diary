@@ -23,8 +23,8 @@ export class ShoppingListManageControlsComponent {
     public readonly canDeleteList = input.required<boolean>();
     public readonly canClearList = input.required<boolean>();
     public readonly isMobile = input(false);
-    public readonly listOptions = computed(() => buildShoppingListOptions(this.lists()));
-    public readonly listsCount = computed(() => this.lists().length);
+    protected readonly listOptions = computed(() => buildShoppingListOptions(this.lists()));
+    protected readonly listsCount = computed(() => this.lists().length);
 
     public readonly createList = output();
     public readonly deleteList = output();

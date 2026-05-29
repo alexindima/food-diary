@@ -20,8 +20,8 @@ import { LessonDetailContentComponent } from './lesson-detail-sections/lesson-de
 export class LessonDetailPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    public readonly facade = inject(LessonFacade);
-    public readonly lesson = computed(() => buildLessonDetailView(this.facade.selectedLesson()));
+    protected readonly facade = inject(LessonFacade);
+    protected readonly lesson = computed(() => buildLessonDetailView(this.facade.selectedLesson()));
 
     public constructor() {
         const id = this.route.snapshot.paramMap.get('id');
@@ -30,14 +30,14 @@ export class LessonDetailPageComponent {
         }
     }
 
-    public markRead(): void {
+    protected markRead(): void {
         const lesson = this.facade.selectedLesson();
         if (lesson !== null && !lesson.isRead) {
             this.facade.markRead(lesson.id);
         }
     }
 
-    public goBack(): void {
+    protected goBack(): void {
         void this.router.navigate(['/lessons']);
     }
 }

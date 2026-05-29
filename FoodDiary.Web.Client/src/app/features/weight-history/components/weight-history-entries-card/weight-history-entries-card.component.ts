@@ -19,7 +19,7 @@ export class WeightHistoryEntriesCardComponent {
 
     public readonly isLoading = input.required<boolean>();
     public readonly entries = input.required<WeightEntry[]>();
-    public readonly items = computed(() => buildWeightEntryViewModels(this.entries(), this.translateService.getCurrentLang()));
+    protected readonly items = computed(() => buildWeightEntryViewModels(this.entries(), this.translateService.getCurrentLang()));
 
     public readonly editEntry = output<WeightEntry>();
     public readonly removeEntry = output<WeightEntry>();

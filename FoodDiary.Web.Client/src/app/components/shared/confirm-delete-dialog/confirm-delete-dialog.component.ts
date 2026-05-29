@@ -24,13 +24,13 @@ export type ConfirmDeleteDialogData = {
 })
 export class ConfirmDeleteDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ConfirmDeleteDialogComponent, boolean>);
-    public readonly data = inject<ConfirmDeleteDialogData>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<ConfirmDeleteDialogData>(FD_UI_DIALOG_DATA);
 
-    public onConfirm(): void {
+    protected onConfirm(): void {
         this.dialogRef.close(true);
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(false);
     }
 }

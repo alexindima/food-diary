@@ -33,8 +33,8 @@ describe('GoalsMacroSliderComponent', () => {
         const fixture = createComponent();
         const valueInput = vi.fn();
         const sliderInput = vi.fn();
-        fixture.componentInstance.valueInput.subscribe(valueInput);
-        fixture.componentInstance.sliderInput.subscribe(sliderInput);
+        fixture.componentInstance['valueInput'].subscribe(valueInput);
+        fixture.componentInstance['sliderInput'].subscribe(sliderInput);
         const element = getElement(fixture);
 
         getRequiredElement(element, '.goals__macro-input').dispatchEvent(new Event('input'));

@@ -8,10 +8,10 @@ describe('ProductListEmptyStateComponent', () => {
     it('should render empty state and emit add product requests', async () => {
         const { component, fixture } = await setupComponentAsync('empty');
         const handler = vi.fn();
-        component.addProduct.subscribe(handler);
+        component['addProduct'].subscribe(handler);
         const element = fixture.nativeElement as HTMLElement;
 
-        component.addProduct.emit();
+        component['addProduct'].emit();
 
         expect(element.textContent).toContain('PRODUCT_LIST.EMPTY_TITLE');
         expect(handler).toHaveBeenCalled();

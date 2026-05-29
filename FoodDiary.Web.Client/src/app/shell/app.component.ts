@@ -35,10 +35,10 @@ export class AppComponent {
     private readonly routeLoadingService = inject(RouteLoadingService);
     private readonly themeService = inject(ThemeService);
 
-    public isAuthenticated = this.authService.isAuthenticated;
-    public isImpersonating = this.authService.isImpersonating;
-    public impersonationReason = this.authService.impersonationReason;
-    public readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
+    protected isAuthenticated = this.authService.isAuthenticated;
+    protected isImpersonating = this.authService.isImpersonating;
+    protected impersonationReason = this.authService.impersonationReason;
+    protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
 
     public constructor() {
         if (typeof window !== 'undefined') {
@@ -93,7 +93,7 @@ export class AppComponent {
         await this.localizationService.loadTranslationsForRouteAsync(url);
     }
 
-    public stopImpersonation(): void {
+    protected stopImpersonation(): void {
         void this.authService.onLogoutAsync(false);
     }
 }

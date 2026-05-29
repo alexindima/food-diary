@@ -26,12 +26,12 @@ export class MealDetailsFieldsComponent {
     public readonly timeChange = output<string>();
     public readonly commentChange = output<string>();
 
-    public onPreMealSatietyLevelChange(value: number | null): void {
+    protected onPreMealSatietyLevelChange(value: number | null): void {
         const normalized = normalizeSatietyLevel(value);
         this.preMealSatietyLevel.set(normalized);
     }
 
-    public onPostMealSatietyLevelChange(value: number | null): void {
+    protected onPostMealSatietyLevelChange(value: number | null): void {
         const normalized = normalizeSatietyLevel(value);
         this.postMealSatietyLevel.set(normalized);
     }

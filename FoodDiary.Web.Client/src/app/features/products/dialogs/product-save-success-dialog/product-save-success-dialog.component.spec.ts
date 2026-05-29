@@ -45,10 +45,10 @@ describe('ProductSaveSuccessDialogComponent', () => {
 
     it('should close with action', () => {
         createComponent();
-        component.close('Home');
+        component['close']('Home');
         expect(dialogRefSpy.close).toHaveBeenCalledWith('Home');
 
-        component.close('ProductList');
+        component['close']('ProductList');
         expect(dialogRefSpy.close).toHaveBeenCalledWith('ProductList');
     });
 });

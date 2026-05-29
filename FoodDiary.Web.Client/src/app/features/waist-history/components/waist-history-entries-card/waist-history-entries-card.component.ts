@@ -19,7 +19,7 @@ export class WaistHistoryEntriesCardComponent {
 
     public readonly isLoading = input.required<boolean>();
     public readonly entries = input.required<WaistEntry[]>();
-    public readonly items = computed(() => buildWaistEntryViewModels(this.entries(), this.translateService.getCurrentLang()));
+    protected readonly items = computed(() => buildWaistEntryViewModels(this.entries(), this.translateService.getCurrentLang()));
 
     public readonly editEntry = output<WaistEntry>();
     public readonly removeEntry = output<WaistEntry>();

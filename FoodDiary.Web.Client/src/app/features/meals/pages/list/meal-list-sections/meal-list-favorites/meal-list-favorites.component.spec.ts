@@ -29,8 +29,8 @@ describe('MealListFavoritesComponent', () => {
         });
         const toggleSpy = vi.fn();
         const loadMoreSpy = vi.fn();
-        component.toggleRequested.subscribe(toggleSpy);
-        component.loadMore.subscribe(loadMoreSpy);
+        component['toggleRequested'].subscribe(toggleSpy);
+        component['loadMore'].subscribe(loadMoreSpy);
 
         fixture.detectChanges();
         const section = fixture.debugElement.query(By.directive(FavoritesSectionComponent)).componentInstance as FavoritesSectionComponent;
@@ -65,8 +65,8 @@ describe('MealListFavoritesComponent', () => {
         const { component, fixture } = await setupComponentAsync({ favoriteViews: [createFavoriteView({ favorite })], isOpen: true });
         const repeatedSpy = vi.fn();
         const removedSpy = vi.fn();
-        component.favoriteRepeated.subscribe(repeatedSpy);
-        component.favoriteRemoved.subscribe(removedSpy);
+        component['favoriteRepeated'].subscribe(repeatedSpy);
+        component['favoriteRemoved'].subscribe(removedSpy);
 
         fixture.detectChanges();
         const buttons = fixture.debugElement.queryAll(By.directive(FdUiButtonComponent));

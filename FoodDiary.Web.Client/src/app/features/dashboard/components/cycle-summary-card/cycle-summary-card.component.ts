@@ -25,7 +25,7 @@ export class CycleSummaryCardComponent {
     private readonly normalizedStart = computed(() => this.normalizeDate(this.startDate()));
     private readonly normalizedReference = computed(() => this.normalizeDate(this.referenceDate()));
 
-    public readonly cycleDay = computed(() => {
+    protected readonly cycleDay = computed(() => {
         const start = this.normalizedStart();
         const reference = this.normalizedReference();
         if (start === null || reference === null) {
@@ -35,7 +35,7 @@ export class CycleSummaryCardComponent {
         return Math.max(1, diff + 1);
     });
 
-    public readonly statusKey = computed(() => {
+    protected readonly statusKey = computed(() => {
         const reference = this.normalizedReference();
         if (reference === null) {
             return null;
@@ -63,7 +63,7 @@ export class CycleSummaryCardComponent {
         return null;
     });
 
-    public readonly statusDays = computed(() => {
+    protected readonly statusDays = computed(() => {
         const reference = this.normalizedReference();
         if (reference === null) {
             return null;
@@ -90,9 +90,9 @@ export class CycleSummaryCardComponent {
         return null;
     });
 
-    public readonly hasCycle = computed(() => this.normalizedStart() !== null);
+    protected readonly hasCycle = computed(() => this.normalizedStart() !== null);
 
-    public onSetup(): void {
+    protected onSetup(): void {
         this.setupAction.emit();
     }
 

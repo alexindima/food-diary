@@ -54,7 +54,7 @@ describe('UsdaFoodSearchDialogComponent', () => {
 
         expect(facade.reset).toHaveBeenCalled();
 
-        component.onSearchChange('apple');
+        component['onSearchChange']('apple');
 
         expect(facade.updateSearchQuery).toHaveBeenCalledWith('apple');
     });
@@ -62,11 +62,11 @@ describe('UsdaFoodSearchDialogComponent', () => {
     it('delegates selection and closes with selected food', () => {
         const { component } = setupComponent();
 
-        component.selectFood(FOOD);
+        component['selectFood'](FOOD);
         expect(facade.selectFood).toHaveBeenCalledWith(FOOD);
 
         facade.selectedFood.set(FOOD);
-        component.onConfirm();
+        component['onConfirm']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(FOOD);
     });
@@ -74,7 +74,7 @@ describe('UsdaFoodSearchDialogComponent', () => {
     it('closes with null on cancel', () => {
         const { component } = setupComponent();
 
-        component.onCancel();
+        component['onCancel']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });

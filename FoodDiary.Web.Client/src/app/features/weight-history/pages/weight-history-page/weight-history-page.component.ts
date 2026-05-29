@@ -38,53 +38,53 @@ export class WeightHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WeightHistoryFacade);
 
-    public readonly selectedRange = this.facade.selectedRange;
-    public readonly currentRange = this.facade.currentRange;
-    public readonly entries = this.facade.entries;
-    public readonly isLoading = this.facade.isLoading;
-    public readonly isSaving = this.facade.isSaving;
-    public readonly isEditing = this.facade.isEditing;
-    public readonly desiredWeight = this.facade.desiredWeight;
-    public readonly isDesiredWeightSaving = this.facade.isDesiredWeightSaving;
-    public readonly isSummaryLoading = this.facade.isSummaryLoading;
-    public readonly customRangeControl = this.facade.customRangeControl;
-    public readonly entriesDescending = this.facade.entriesDescending;
-    public readonly chartPoints = this.facade.chartPoints;
-    public readonly form = this.facade.form;
-    public readonly desiredWeightControl = this.facade.desiredWeightControl;
-    public readonly bmiViewModel = this.facade.bmiViewModel;
+    protected readonly selectedRange = this.facade.selectedRange;
+    protected readonly currentRange = this.facade.currentRange;
+    protected readonly entries = this.facade.entries;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly isSaving = this.facade.isSaving;
+    protected readonly isEditing = this.facade.isEditing;
+    protected readonly desiredWeight = this.facade.desiredWeight;
+    protected readonly isDesiredWeightSaving = this.facade.isDesiredWeightSaving;
+    protected readonly isSummaryLoading = this.facade.isSummaryLoading;
+    protected readonly customRangeControl = this.facade.customRangeControl;
+    protected readonly entriesDescending = this.facade.entriesDescending;
+    protected readonly chartPoints = this.facade.chartPoints;
+    protected readonly form = this.facade.form;
+    protected readonly desiredWeightControl = this.facade.desiredWeightControl;
+    protected readonly bmiViewModel = this.facade.bmiViewModel;
 
-    public readonly rangeTabs = WEIGHT_HISTORY_RANGE_TABS;
+    protected readonly rangeTabs = WEIGHT_HISTORY_RANGE_TABS;
 
     public constructor() {
         this.facade.initialize();
     }
 
-    public navigateBack(): void {
+    protected navigateBack(): void {
         void this.navigationService.navigateToHomeAsync();
     }
 
-    public submit(): void {
+    protected submit(): void {
         this.facade.submit();
     }
 
-    public startEdit(entry: WeightEntry): void {
+    protected startEdit(entry: WeightEntry): void {
         this.facade.startEdit(entry);
     }
 
-    public cancelEdit(): void {
+    protected cancelEdit(): void {
         this.facade.cancelEdit();
     }
 
-    public deleteEntry(entry: WeightEntry): void {
+    protected deleteEntry(entry: WeightEntry): void {
         this.facade.deleteEntry(entry);
     }
 
-    public saveDesiredWeight(): void {
+    protected saveDesiredWeight(): void {
         this.facade.saveDesiredWeight();
     }
 
-    public changeRange(value: string): void {
+    protected changeRange(value: string): void {
         this.facade.changeRange(value);
     }
 }

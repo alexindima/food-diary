@@ -67,17 +67,17 @@ function registerLoadingTests(): void {
     it('loads selected client by route id', () => {
         createComponent('client-1');
 
-        expect(component.loading()).toBe(false);
-        expect(component.clientTitle()).toBe('Alex Ivanov');
-        expect(component.profileChips()).toContain('180 cm');
-        expect(component.visibleSections()).toHaveLength(2);
+        expect(component['loading']()).toBe(false);
+        expect(component['clientTitle']()).toBe('Alex Ivanov');
+        expect(component['profileChips']()).toContain('180 cm');
+        expect(component['visibleSections']()).toHaveLength(2);
     });
 
     it('sets empty client when route id does not match', () => {
         createComponent('missing-client');
 
-        expect(component.loading()).toBe(false);
-        expect(component.client()).toBeNull();
+        expect(component['loading']()).toBe(false);
+        expect(component['client']()).toBeNull();
     });
 
     it('stops loading on request error', () => {
@@ -85,14 +85,14 @@ function registerLoadingTests(): void {
 
         createComponent('client-1');
 
-        expect(component.loading()).toBe(false);
-        expect(component.client()).toBeNull();
+        expect(component['loading']()).toBe(false);
+        expect(component['client']()).toBeNull();
     });
 
     it('navigates back to clients list', () => {
         createComponent('client-1');
 
-        component.goBack();
+        component['goBack']();
 
         expect(router.navigate).toHaveBeenCalledWith(['/dietologist']);
     });
@@ -111,8 +111,8 @@ function registerLoadingTests(): void {
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledWith('client-1', expect.objectContaining({ trendDays: 14 }));
         expect(dietologistService.getClientGoals).toHaveBeenCalledWith('client-1');
-        expect(component.nutritionTiles()).toHaveLength(EXPECTED_METRIC_TILE_COUNT);
-        expect(component.goalTiles()).toHaveLength(EXPECTED_METRIC_TILE_COUNT);
+        expect(component['nutritionTiles']()).toHaveLength(EXPECTED_METRIC_TILE_COUNT);
+        expect(component['goalTiles']()).toHaveLength(EXPECTED_METRIC_TILE_COUNT);
     });
 
     it('hides period filter when only profile and goals are shared', () => {
@@ -131,8 +131,8 @@ function registerLoadingTests(): void {
 
         createComponent('client-1');
 
-        expect(component.hasAnyPermission()).toBe(true);
-        expect(component.hasPeriodFilterPermission()).toBe(false);
+        expect(component['hasAnyPermission']()).toBe(true);
+        expect(component['hasPeriodFilterPermission']()).toBe(false);
         expect(dietologistService.getClientDashboard).not.toHaveBeenCalled();
         expect(dietologistService.getClientGoals).toHaveBeenCalledWith('client-1');
     });
@@ -141,9 +141,9 @@ function registerLoadingTests(): void {
         createComponent('client-1');
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledWith('client-1', expect.objectContaining({ trendDays: 14 }));
-        expect(component.nutritionTiles()).toEqual([]);
-        expect(component.mealItems()[0]).toEqual(expect.objectContaining({ id: 'meal-1', title: 'Lunch', calories: '640 kcal' }));
-        expect(component.bodyTiles().map(tile => tile.value)).toEqual(['1']);
+        expect(component['nutritionTiles']()).toEqual([]);
+        expect(component['mealItems']()[0]).toEqual(expect.objectContaining({ id: 'meal-1', title: 'Lunch', calories: '640 kcal' }));
+        expect(component['bodyTiles']().map(tile => tile.value)).toEqual(['1']);
     });
 }
 
@@ -151,8 +151,8 @@ function registerActionTests(): void {
     it('reloads dashboard for selected period', () => {
         createComponent('client-1');
 
-        component.dateFilterForm.setValue({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
-        component.applyDateFilter();
+        component['dateFilterForm'].setValue({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
+        component['applyDateFilter']();
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
         expect(getLastDashboardPeriod()).toEqual(
@@ -166,12 +166,12 @@ function registerActionTests(): void {
     it('moves dashboard dates with period navigation', () => {
         createComponent('client-1');
 
-        component.dateFilterForm.setValue({ dateFrom: '2026-05-17', dateTo: '2026-05-23' });
-        component.applyDateFilter();
-        component.showPreviousPeriod();
+        component['dateFilterForm'].setValue({ dateFrom: '2026-05-17', dateTo: '2026-05-23' });
+        component['applyDateFilter']();
+        component['showPreviousPeriod']();
 
-        expect(component.selectedDateFrom()).toBe('2026-05-10');
-        expect(component.selectedDateTo()).toBe('2026-05-16');
+        expect(component['selectedDateFrom']()).toBe('2026-05-10');
+        expect(component['selectedDateTo']()).toBe('2026-05-16');
     });
 
     it('shows section load warning when optional details fail', () => {
@@ -179,25 +179,25 @@ function registerActionTests(): void {
 
         createComponent('client-1');
 
-        expect(component.sectionLoadError()).toBe('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
-        expect(component.dashboard()).toBeNull();
+        expect(component['sectionLoadError']()).toBe('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
+        expect(component['dashboard']()).toBeNull();
     });
 
     it('sends recommendation and prepends it to the list', () => {
         createComponent('client-1');
 
-        component.recommendationForm.controls.text.setValue('Add protein');
-        component.submitRecommendation();
+        component['recommendationForm'].controls.text.setValue('Add protein');
+        component['submitRecommendation']();
 
         expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
-        expect(component.recommendations()[0]?.id).toBe('rec-1');
+        expect(component['recommendations']()[0]?.id).toBe('rec-1');
         expect(toastService.success).toHaveBeenCalled();
     });
 
     it('disconnects selected client', () => {
         createComponent('client-1');
 
-        component.disconnectClient();
+        component['disconnectClient']();
 
         expect(dietologistService.disconnectClient).toHaveBeenCalledWith('client-1');
         expect(router.navigate).toHaveBeenCalledWith(['/dietologist']);

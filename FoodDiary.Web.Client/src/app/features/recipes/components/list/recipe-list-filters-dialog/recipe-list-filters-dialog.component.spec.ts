@@ -34,33 +34,33 @@ describe('RecipeListFiltersDialogComponent', () => {
 
     it('should initialize visibility from data when onlyMine is false', () => {
         createComponent({ onlyMine: false });
-        expect(component.visibilityValue).toBe('all');
+        expect(component['visibilityValue']).toBe('all');
     });
 
     it('should initialize visibility from data when onlyMine is true', () => {
         createComponent({ onlyMine: true });
-        expect(component.visibilityValue).toBe('mine');
+        expect(component['visibilityValue']).toBe('mine');
     });
 
     it('should change visibility', () => {
         createComponent();
-        component.onVisibilityChange('mine');
-        expect(component.visibilityValue).toBe('mine');
+        component['onVisibilityChange']('mine');
+        expect(component['visibilityValue']).toBe('mine');
 
-        component.onVisibilityChange('all');
-        expect(component.visibilityValue).toBe('all');
+        component['onVisibilityChange']('all');
+        expect(component['visibilityValue']).toBe('all');
     });
 
     it('should close with result on apply', () => {
         createComponent({ onlyMine: false });
-        component.onVisibilityChange('mine');
-        component.onApply();
+        component['onVisibilityChange']('mine');
+        component['onApply']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith({ onlyMine: true });
     });
 
     it('should close with null on cancel', () => {
         createComponent();
-        component.onCancel();
+        component['onCancel']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(null);
     });
 });

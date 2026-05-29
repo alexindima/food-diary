@@ -13,17 +13,17 @@ describe('MealSatietyFieldsComponent', () => {
     it('should normalize and emit pre meal satiety changes', async () => {
         const { component } = await setupComponentAsync();
 
-        component.onSatietyLevelChange('before', LEGACY_SATIETY_LEVEL);
+        component['onSatietyLevelChange']('before', LEGACY_SATIETY_LEVEL);
 
-        expect(component.preMealSatietyLevel()).toBe(NORMALIZED_LEGACY_SATIETY_LEVEL);
+        expect(component['preMealSatietyLevel']()).toBe(NORMALIZED_LEGACY_SATIETY_LEVEL);
     });
 
     it('should normalize and emit post meal satiety changes', async () => {
         const { component } = await setupComponentAsync();
 
-        component.onSatietyLevelChange('after', BELOW_MIN_POSITIVE_SATIETY_LEVEL);
+        component['onSatietyLevelChange']('after', BELOW_MIN_POSITIVE_SATIETY_LEVEL);
 
-        expect(component.postMealSatietyLevel()).toBe(MIN_SATIETY_LEVEL);
+        expect(component['postMealSatietyLevel']()).toBe(MIN_SATIETY_LEVEL);
     });
 
     it('should build translated aria labels from configured label keys', async () => {
@@ -31,7 +31,7 @@ describe('MealSatietyFieldsComponent', () => {
         fixture.componentRef.setInput('labelBeforeKey', 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL');
         fixture.detectChanges();
 
-        expect(component.preMealSatietyAriaLabel()).toContain('CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL');
+        expect(component['preMealSatietyAriaLabel']()).toContain('CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL');
     });
 });
 

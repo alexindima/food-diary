@@ -48,13 +48,13 @@ export class PasswordResetComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
-    public readonly state = signal<ResetState>('ready');
-    public readonly isSubmitting = signal(false);
-    public readonly errorMessage = signal<string | null>(null);
-    public readonly token = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
-    public readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    protected readonly state = signal<ResetState>('ready');
+    protected readonly isSubmitting = signal(false);
+    protected readonly errorMessage = signal<string | null>(null);
+    protected readonly token = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
+    protected readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
 
-    public readonly form = new FormGroup<PasswordResetFormGroup>({
+    protected readonly form = new FormGroup<PasswordResetFormGroup>({
         password: new FormControl<string>('', {
             nonNullable: true,
             validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
@@ -79,7 +79,7 @@ export class PasswordResetComponent {
         this.updateFieldErrors();
     }
 
-    public onSubmit(): void {
+    protected onSubmit(): void {
         if (this.state() !== 'ready' || this.form.invalid || this.isSubmitting()) {
             return;
         }
@@ -116,7 +116,7 @@ export class PasswordResetComponent {
             });
     }
 
-    public onBackToLogin(): void {
+    protected onBackToLogin(): void {
         void this.navigationService.navigateToAuthAsync('login');
     }
 

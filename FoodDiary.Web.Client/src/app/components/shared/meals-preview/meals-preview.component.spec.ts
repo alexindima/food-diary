@@ -21,11 +21,11 @@ describe('MealsPreviewComponent AI panel', () => {
         const component = fixture.componentInstance;
         fixture.detectChanges();
 
-        component.toggleAi('breakfast');
-        expect(component.expandedAiSlot()).toBe('breakfast');
+        component['toggleAi']('breakfast');
+        expect(component['expandedAiSlot']()).toBe('breakfast');
 
-        component.toggleAi('breakfast');
-        expect(component.expandedAiSlot()).toBeNull();
+        component['toggleAi']('breakfast');
+        expect(component['expandedAiSlot']()).toBeNull();
     });
 
     it('normalizes missing slot to null', async () => {
@@ -33,9 +33,9 @@ describe('MealsPreviewComponent AI panel', () => {
         const component = fixture.componentInstance;
         fixture.detectChanges();
 
-        component.toggleAi();
+        component['toggleAi']();
 
-        expect(component.expandedAiSlot()).toBeNull();
+        expect(component['expandedAiSlot']()).toBeNull();
     });
 
     it('keeps AI slot open while meal create is pending and emits created meal result', async () => {
@@ -47,15 +47,15 @@ describe('MealsPreviewComponent AI panel', () => {
             recognizedAtUtc: '2026-05-17T00:00:00Z',
             items: [],
         };
-        component.aiMealCreateRequested.subscribe(resultValue => {
+        component['aiMealCreateRequested'].subscribe(resultValue => {
             emitSpy(resultValue);
         });
-        component.toggleAi('lunch');
+        component['toggleAi']('lunch');
         fixture.detectChanges();
 
-        component.handleAiMealCreateRequested(result);
+        component['handleAiMealCreateRequested'](result);
 
-        expect(component.expandedAiSlot()).toBe('lunch');
+        expect(component['expandedAiSlot']()).toBe('lunch');
         expect(emitSpy).toHaveBeenCalledWith(result);
     });
 
@@ -64,10 +64,10 @@ describe('MealsPreviewComponent AI panel', () => {
         const component = fixture.componentInstance;
         fixture.detectChanges();
 
-        component.toggleAi('lunch');
+        component['toggleAi']('lunch');
         fixture.componentRef.setInput('aiMealClearToken', 1);
         fixture.detectChanges();
 
-        expect(component.expandedAiSlot()).toBeNull();
+        expect(component['expandedAiSlot']()).toBeNull();
     });
 });

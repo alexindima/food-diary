@@ -55,16 +55,16 @@ export class MealManualItemDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly amountValidationVersion = signal(0);
 
-    public readonly sourceType = signal(this.data.group.controls.sourceType.value);
-    public readonly product = signal<Product | null>(this.data.group.controls.product.value);
-    public readonly recipe = signal<Recipe | null>(this.data.group.controls.recipe.value);
-    public readonly amount = new FormControl<number | null>(this.data.group.controls.amount.value, {
+    protected readonly sourceType = signal(this.data.group.controls.sourceType.value);
+    protected readonly product = signal<Product | null>(this.data.group.controls.product.value);
+    protected readonly recipe = signal<Recipe | null>(this.data.group.controls.recipe.value);
+    protected readonly amount = new FormControl<number | null>(this.data.group.controls.amount.value, {
         validators: [Validators.required, Validators.min(MIN_AMOUNT)],
     });
 
-    public readonly itemSourceName = computed(() => this.recipe()?.name ?? this.product()?.name ?? '');
+    protected readonly itemSourceName = computed(() => this.recipe()?.name ?? this.product()?.name ?? '');
 
-    public readonly itemSourceIcon = computed(() => {
+    protected readonly itemSourceIcon = computed(() => {
         if (this.recipe() !== null) {
             return 'menu_book';
         }
@@ -74,17 +74,17 @@ export class MealManualItemDialogComponent {
         return 'search';
     });
 
-    public readonly amountPlaceholderKey = computed(() =>
+    protected readonly amountPlaceholderKey = computed(() =>
         this.sourceType() === ConsumptionSourceType.Recipe
             ? 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_RECIPE'
             : 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT',
     );
 
-    public readonly sourceError = computed(() =>
+    protected readonly sourceError = computed(() =>
         this.product() !== null || this.recipe() !== null ? null : this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR'),
     );
 
-    public readonly amountError = computed(() => {
+    protected readonly amountError = computed(() => {
         this.amountValidationVersion();
         return resolveMealManageControlError(this.amount, this.translateService, MIN_AMOUNT);
     });
@@ -97,7 +97,7 @@ export class MealManualItemDialogComponent {
             });
     }
 
-    public async chooseItemAsync(): Promise<void> {
+    protected async chooseItemAsync(): Promise<void> {
         const initialTab = this.sourceType() === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product';
         const selection = await firstValueFrom(
             this.fdDialogService
@@ -135,7 +135,7 @@ export class MealManualItemDialogComponent {
         });
     }
 
-    public save(): void {
+    protected save(): void {
         this.amount.markAsTouched();
         this.refreshAmountValidation();
 
@@ -157,7 +157,7 @@ export class MealManualItemDialogComponent {
         this.dialogRef.close(true);
     }
 
-    public cancel(): void {
+    protected cancel(): void {
         this.dialogRef.close(false);
     }
 

@@ -21,7 +21,7 @@ export class WeightSummaryCardComponent {
 
     private readonly translateService = inject(TranslateService);
 
-    public readonly metaText = computed(() => {
+    protected readonly metaText = computed(() => {
         const desiredValue = this.desired();
         if (desiredValue !== null) {
             return this.translateService.instant('WEIGHT_CARD.GOAL', { value: desiredValue });
@@ -30,7 +30,7 @@ export class WeightSummaryCardComponent {
         return this.translateService.instant('WEIGHT_CARD.META_EMPTY');
     });
 
-    public readonly trend = computed(() => {
+    protected readonly trend = computed(() => {
         const latest = this.latest();
         const previous = this.previous();
         if (latest === null || previous === null) {

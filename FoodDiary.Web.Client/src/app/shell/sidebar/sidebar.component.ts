@@ -63,11 +63,11 @@ export class SidebarComponent {
     private readonly mobileViewportQuery = inject(SIDEBAR_MOBILE_VIEWPORT_QUERY);
     private readonly adminLoadingUrlTtlMs = inject(ADMIN_LOADING_URL_TTL_MS);
 
-    public isAuthenticated = this.authService.isAuthenticated;
-    public isPremium = this.authService.isPremium;
-    public isDietologist = this.authService.isDietologist;
-    public isAdmin = this.authService.isAdmin;
-    public unreadNotificationCount = this.notificationService.unreadCount;
+    protected isAuthenticated = this.authService.isAuthenticated;
+    protected isPremium = this.authService.isPremium;
+    protected isDietologist = this.authService.isDietologist;
+    protected isAdmin = this.authService.isAdmin;
+    protected unreadNotificationCount = this.notificationService.unreadCount;
     protected readonly primaryNavItems = computed<SidebarNavItem[]>(() =>
         buildPrimarySidebarNavItems(this.isDietologist(), this.isAdmin()),
     );

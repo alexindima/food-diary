@@ -68,7 +68,7 @@ export class FdUiFormErrorComponent {
         });
     }
 
-    public readonly message = computed((): string | null => {
+    protected readonly message = computed((): string | null => {
         this.controlVersion();
 
         const error = this.error();

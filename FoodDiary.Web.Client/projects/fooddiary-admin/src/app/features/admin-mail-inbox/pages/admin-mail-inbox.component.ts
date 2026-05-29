@@ -31,14 +31,14 @@ export class AdminMailInboxComponent {
     private readonly mailInboxService = inject(AdminMailInboxService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly messages = signal<AdminMailInboxMessageSummary[]>([]);
-    public readonly selectedMessage = signal<AdminMailInboxMessageDetails | null>(null);
-    public readonly isLoading = signal(false);
-    public readonly isDetailsLoading = signal(false);
-    public readonly limit = signal(DEFAULT_MAIL_INBOX_LIMIT);
-    public readonly categoryFilter = signal<'all' | 'dmarc-report' | 'general'>('all');
-    public readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
-    public readonly filteredMessages = computed<AdminMailInboxMessageSummaryViewModel[]>(() => {
+    protected readonly messages = signal<AdminMailInboxMessageSummary[]>([]);
+    protected readonly selectedMessage = signal<AdminMailInboxMessageDetails | null>(null);
+    protected readonly isLoading = signal(false);
+    protected readonly isDetailsLoading = signal(false);
+    protected readonly limit = signal(DEFAULT_MAIL_INBOX_LIMIT);
+    protected readonly categoryFilter = signal<'all' | 'dmarc-report' | 'general'>('all');
+    protected readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
+    protected readonly filteredMessages = computed<AdminMailInboxMessageSummaryViewModel[]>(() => {
         const category = this.categoryFilter();
         const messages = category === 'all' ? this.messages() : this.messages().filter(message => message.category === category);
 
@@ -47,7 +47,7 @@ export class AdminMailInboxComponent {
             categoryLabel: this.formatCategory(message.category),
         }));
     });
-    public readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
+    protected readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
         const message = this.selectedMessage();
         if (message === null) {
             return null;
@@ -59,7 +59,7 @@ export class AdminMailInboxComponent {
             toRecipientsLabel: this.formatRecipients(message.toRecipients),
         };
     });
-    public readonly selectedBody = computed(() => {
+    protected readonly selectedBody = computed(() => {
         const message = this.selectedMessage();
         if (message === null) {
             return '';
@@ -75,11 +75,11 @@ export class AdminMailInboxComponent {
 
         return message.textBody ?? '';
     });
-    public readonly dmarcTotalMessages = computed(() => {
+    protected readonly dmarcTotalMessages = computed(() => {
         const report = this.selectedMessage()?.dmarcReport;
         return report?.records.reduce((total, record) => total + record.count, 0) ?? 0;
     });
-    public readonly dmarcProblemRecords = computed(() => {
+    protected readonly dmarcProblemRecords = computed(() => {
         const report = this.selectedMessage()?.dmarcReport;
         return report?.records.filter(record => record.dkim !== 'pass' || record.spf !== 'pass').length ?? 0;
     });
@@ -88,7 +88,7 @@ export class AdminMailInboxComponent {
         this.loadMessages();
     }
 
-    public loadMessages(): void {
+    protected loadMessages(): void {
         this.isLoading.set(true);
         this.mailInboxService
             .getMessages(this.limit())
@@ -105,7 +105,7 @@ export class AdminMailInboxComponent {
             });
     }
 
-    public selectMessage(message: AdminMailInboxMessageSummary): void {
+    protected selectMessage(message: AdminMailInboxMessageSummary): void {
         this.isDetailsLoading.set(true);
         this.selectedBodyMode.set('text');
         this.mailInboxService
@@ -123,7 +123,7 @@ export class AdminMailInboxComponent {
             });
     }
 
-    public updateLimit(value: string): void {
+    protected updateLimit(value: string): void {
         const parsed = Number.parseInt(value, 10);
         if (!Number.isFinite(parsed)) {
             return;
@@ -132,11 +132,11 @@ export class AdminMailInboxComponent {
         this.limit.set(Math.max(1, Math.min(parsed, MAX_MAIL_INBOX_LIMIT)));
     }
 
-    public setBodyMode(mode: 'text' | 'html' | 'raw'): void {
+    protected setBodyMode(mode: 'text' | 'html' | 'raw'): void {
         this.selectedBodyMode.set(mode);
     }
 
-    public setCategoryFilter(value: string): void {
+    protected setCategoryFilter(value: string): void {
         if (value === 'dmarc-report' || value === 'general') {
             this.categoryFilter.set(value);
             return;

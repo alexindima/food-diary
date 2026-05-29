@@ -21,19 +21,19 @@ describe('ProductListBaseComponent', () => {
     it('delegates list actions to facade', () => {
         const { component, facade } = setupComponent();
 
-        component.retryLoad();
-        component.onAddProductClick();
-        component.openBarcodeScanner();
-        component.toggleOnlyMine();
-        component.toggleMobileSearch();
-        component.openFilters();
-        component.onOffProductClick(createOpenFoodFactsProduct());
-        component.onAddToMeal(createProduct());
-        component.loadFavorites();
-        component.onProductFavoriteToggle(createProduct());
-        component.toggleFavorites();
-        component.addFavoriteProductToMeal(createFavoriteProduct());
-        component.removeFavorite(createFavoriteProduct());
+        component['retryLoad']();
+        component['onAddProductClick']();
+        component['openBarcodeScanner']();
+        component['toggleOnlyMine']();
+        component['toggleMobileSearch']();
+        component['openFilters']();
+        component['onOffProductClick'](createOpenFoodFactsProduct());
+        component['onAddToMeal'](createProduct());
+        component['loadFavorites']();
+        component['onProductFavoriteToggle'](createProduct());
+        component['toggleFavorites']();
+        component['addFavoriteProductToMeal'](createFavoriteProduct());
+        component['removeFavorite'](createFavoriteProduct());
 
         expect(facade.retryLoad).toHaveBeenCalled();
         expect(facade.onAddProductClick).toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe('ProductListBaseComponent', () => {
         const { component, facade } = setupComponent();
         const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => undefined);
 
-        component.onPageChange(PAGE_INDEX);
+        component['onPageChange'](PAGE_INDEX);
 
         expect(scrollSpy).toHaveBeenCalled();
         expect(facade.onPageChange).toHaveBeenCalledWith(PAGE_INDEX);
@@ -63,12 +63,12 @@ describe('ProductListBaseComponent', () => {
     it('opens favorite product through regular product click flow', () => {
         const { component, facade } = setupComponent();
         const product = createProduct({ id: 'favorite-product' });
-        const clickSpy = vi.spyOn(component, 'onProductClick');
+        const clickSpy = vi.spyOn(component as unknown as { onProductClick: (value: Product) => void }, 'onProductClick');
         facade.openFavoriteProduct.mockImplementation((_favorite: FavoriteProduct, openProduct: (value: Product) => void) => {
             openProduct(product);
         });
 
-        component.openFavoriteProduct(createFavoriteProduct());
+        component['openFavoriteProduct'](createFavoriteProduct());
 
         expect(facade.openFavoriteProduct).toHaveBeenCalledWith(createFavoriteProduct(), expect.any(Function));
         expect(clickSpy).toHaveBeenCalledWith(product);
@@ -79,8 +79,8 @@ describe('ProductListBaseComponent', () => {
         facade.currentPageIndex = PAGE_INDEX;
         facade.resolveImage.mockReturnValue('https://example.test/image.jpg');
 
-        expect(component.currentPageIndex).toBe(PAGE_INDEX);
-        expect(component.resolveImage(createProduct())).toBe('https://example.test/image.jpg');
+        expect(component['currentPageIndex']).toBe(PAGE_INDEX);
+        expect(component['resolveImage'](createProduct())).toBe('https://example.test/image.jpg');
     });
 });
 

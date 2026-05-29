@@ -21,10 +21,10 @@ describe('MealDetailSummaryComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.calories()).toBe(DEFAULT_TOTAL_CALORIES);
-        expect(component.qualityScore()).toBe(QUALITY_SCORE);
-        expect(component.qualityGrade()).toBe('green');
-        expect(component.qualityHintKey()).toBe('QUALITY.GREEN');
+        expect(component['calories']()).toBe(DEFAULT_TOTAL_CALORIES);
+        expect(component['qualityScore']()).toBe(QUALITY_SCORE);
+        expect(component['qualityGrade']()).toBe('green');
+        expect(component['qualityHintKey']()).toBe('QUALITY.GREEN');
     });
 
     it('should fall back quality grade and normalize missing quality score', async () => {
@@ -34,9 +34,9 @@ describe('MealDetailSummaryComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.qualityGrade()).toBe(MEAL_DETAIL_DEFAULT_QUALITY_GRADE);
-        expect(component.qualityScore()).toBe(DEFAULT_UNKNOWN_QUALITY_SCORE);
-        expect(component.qualityHintKey()).toBe(`QUALITY.${MEAL_DETAIL_DEFAULT_QUALITY_GRADE.toUpperCase()}`);
+        expect(component['qualityGrade']()).toBe(MEAL_DETAIL_DEFAULT_QUALITY_GRADE);
+        expect(component['qualityScore']()).toBe(DEFAULT_UNKNOWN_QUALITY_SCORE);
+        expect(component['qualityHintKey']()).toBe(`QUALITY.${MEAL_DETAIL_DEFAULT_QUALITY_GRADE.toUpperCase()}`);
     });
 
     it('should render macros, satiety metadata and comment', async () => {
@@ -62,7 +62,7 @@ describe('MealDetailSummaryComponent', () => {
         const itemPreview = createItemPreview();
         const { component, fixture } = await setupComponentAsync({ itemPreview, isItemPreviewExpanded: true });
         const toggleSpy = vi.fn();
-        component.itemPreviewExpandedToggle.subscribe(toggleSpy);
+        component['itemPreviewExpandedToggle'].subscribe(toggleSpy);
 
         fixture.detectChanges();
         const preview = fixture.debugElement.query(By.directive(MealDetailItemPreviewComponent))

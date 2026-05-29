@@ -61,13 +61,13 @@ export class RecipeSelectDialogComponent {
     public readonly excludedRecipeId = input<string | null>(null);
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output();
-    public readonly searchValue = signal<string | null>(null);
-    public readonly onlyMineFilter = signal(false);
-    public readonly searchSuffixIcon = computed(() => {
+    protected readonly searchValue = signal<string | null>(null);
+    protected readonly onlyMineFilter = signal(false);
+    protected readonly searchSuffixIcon = computed(() => {
         const search = this.searchValue();
         return search !== null && search.length > 0 ? 'close' : undefined;
     });
-    public readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
+    protected readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
     protected readonly recipeItems = computed<RecipeSelectItemViewModel[]>(() =>
         this.recipeData
             .items()
@@ -78,13 +78,13 @@ export class RecipeSelectDialogComponent {
             })),
     );
 
-    public readonly searchForm = new FormGroup<RecipeSearchFormGroup>({
+    protected readonly searchForm = new FormGroup<RecipeSearchFormGroup>({
         search: new FormControl<string | null>(null),
         onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
     });
 
-    public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
-    public currentPageIndex = 0;
+    protected recipeData: PagedData<Recipe> = new PagedData<Recipe>();
+    protected currentPageIndex = 0;
     protected readonly pageSize = RECIPE_SELECT_DIALOG_PAGE_SIZE;
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -115,7 +115,7 @@ export class RecipeSelectDialogComponent {
             .subscribe();
     }
 
-    public loadRecipes(page: number): Observable<void> {
+    protected loadRecipes(page: number): Observable<void> {
         this.recipeData.setLoading(true);
         const includePublic = !this.searchForm.controls.onlyMine.value;
         const filters: RecipeFilters = {
@@ -138,21 +138,21 @@ export class RecipeSelectDialogComponent {
         );
     }
 
-    public onPageChange(pageIndex: number): void {
+    protected onPageChange(pageIndex: number): void {
         this.scrollToTop();
         this.currentPageIndex = pageIndex;
         this.loadRecipes(pageIndex + RECIPE_SELECT_DIALOG_NEXT_PAGE_OFFSET).subscribe();
     }
 
-    public onRecipeClick(recipe: Recipe): void {
+    protected onRecipeClick(recipe: Recipe): void {
         this.handleSelection(recipe);
     }
 
-    public clearSearch(): void {
+    protected clearSearch(): void {
         this.searchForm.controls.search.setValue('');
     }
 
-    public toggleOnlyMine(): void {
+    protected toggleOnlyMine(): void {
         this.searchForm.controls.onlyMine.setValue(!this.onlyMineFilter());
     }
 
@@ -160,7 +160,7 @@ export class RecipeSelectDialogComponent {
         return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
     }
 
-    public onCreateRecipeClick(): void {
+    protected onCreateRecipeClick(): void {
         this.createRecipeRequested.emit();
     }
 

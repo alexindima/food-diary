@@ -31,10 +31,10 @@ describe('StatisticsNutritionComponent', () => {
     it('emits selected tab changes', async () => {
         const { component, fixture } = await setupStatisticsNutritionAsync();
         const tabSpy = vi.fn();
-        component.selectedTabChange.subscribe(tabSpy);
+        component['selectedTabChange'].subscribe(tabSpy);
         fixture.detectChanges();
 
-        component.onTabChange('distribution');
+        component['onTabChange']('distribution');
 
         expect(tabSpy).toHaveBeenCalledWith('distribution');
     });

@@ -99,29 +99,29 @@ async function setupAiInputBarAsync(mode: 'create' | 'emit' = 'emit'): Promise<A
 describe('AiInputBarComponent text recognition', () => {
     it('runs text recognition and nutrition calculation', async () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
-        component.voiceText.set(' eggs ');
+        component['voiceText'].set(' eggs ');
         fixture.detectChanges();
 
-        await component.submitTextAsync();
+        await component['submitTextAsync']();
 
         expect(aiFoodService.parseFoodText).toHaveBeenCalledWith({ text: 'eggs' });
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({ items: VISION_ITEMS });
-        expect(component.textSubmittedQuery()).toBe('eggs');
-        expect(component.textNutrition()).toEqual(NUTRITION);
+        expect(component['textSubmittedQuery']()).toBe('eggs');
+        expect(component['textNutrition']()).toEqual(NUTRITION);
     });
 
     it('emits recognized meal in emit mode and clears state', async () => {
         const { component, fixture } = await setupAiInputBarAsync('emit');
         const recognizedSpy = vi.fn<(result: AiInputBarResult) => void>();
-        component.mealRecognized.subscribe(result => {
+        component['mealRecognized'].subscribe(result => {
             recognizedSpy(result);
         });
-        component.textSubmittedQuery.set('eggs');
-        component.textResults.set(VISION_ITEMS);
-        component.textNutrition.set(NUTRITION);
+        component['textSubmittedQuery'].set('eggs');
+        component['textResults'].set(VISION_ITEMS);
+        component['textNutrition'].set(NUTRITION);
         fixture.detectChanges();
 
-        component.onTextAddToMeal(MEAL_DETAILS);
+        component['onTextAddToMeal'](MEAL_DETAILS);
 
         expect(recognizedSpy).toHaveBeenCalledOnce();
         const recognizedResult = recognizedSpy.mock.calls[0][0];
@@ -130,51 +130,51 @@ describe('AiInputBarComponent text recognition', () => {
         expect(recognizedResult.date).toBe('2026-05-17');
         expect(recognizedResult.time).toBe('09:30');
         expect(recognizedResult.recognizedAtUtc).toMatch(RECOGNIZED_AT_PATTERN);
-        expect(component.voiceText()).toBe('');
-        expect(component.hasTextResult()).toBe(false);
+        expect(component['voiceText']()).toBe('');
+        expect(component['hasTextResult']()).toBe(false);
     });
 
     it('emits created meal in create mode without clearing until parent confirms success', async () => {
         const { component, fixture } = await setupAiInputBarAsync('create');
         const createSpy = vi.fn<(result: AiInputBarResult) => void>();
-        component.mealCreateRequested.subscribe(result => {
+        component['mealCreateRequested'].subscribe(result => {
             createSpy(result);
         });
-        component.textSubmittedQuery.set('eggs');
-        component.textResults.set(VISION_ITEMS);
-        component.textNutrition.set(NUTRITION);
+        component['textSubmittedQuery'].set('eggs');
+        component['textResults'].set(VISION_ITEMS);
+        component['textNutrition'].set(NUTRITION);
         fixture.detectChanges();
 
-        component.onTextAddToMeal(MEAL_DETAILS);
+        component['onTextAddToMeal'](MEAL_DETAILS);
 
         expect(createSpy).toHaveBeenCalledOnce();
-        expect(component.hasTextResult()).toBe(true);
+        expect(component['hasTextResult']()).toBe(true);
     });
 
     it('clears create mode state when clear token changes', async () => {
         const { component, fixture } = await setupAiInputBarAsync('create');
-        component.textSubmittedQuery.set('eggs');
-        component.textResults.set(VISION_ITEMS);
-        component.textNutrition.set(NUTRITION);
+        component['textSubmittedQuery'].set('eggs');
+        component['textResults'].set(VISION_ITEMS);
+        component['textNutrition'].set(NUTRITION);
         fixture.detectChanges();
 
         fixture.componentRef.setInput('clearToken', 1);
         fixture.detectChanges();
 
-        expect(component.voiceText()).toBe('');
-        expect(component.hasTextResult()).toBe(false);
+        expect(component['voiceText']()).toBe('');
+        expect(component['hasTextResult']()).toBe(false);
     });
 
     it('does not request nutrition for empty edited items', async () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync('create');
-        component.textResults.set(VISION_ITEMS);
-        component.textNutrition.set(NUTRITION);
+        component['textResults'].set(VISION_ITEMS);
+        component['textNutrition'].set(NUTRITION);
         fixture.detectChanges();
 
-        component.onTextEditApplied({ items: [], nutrition: null });
+        component['onTextEditApplied']({ items: [], nutrition: null });
 
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
-        expect(component.textErrorKey()).toBe('AI_INPUT_BAR.EMPTY_ITEMS_ERROR');
+        expect(component['textErrorKey']()).toBe('AI_INPUT_BAR.EMPTY_ITEMS_ERROR');
     });
 });
 
@@ -183,20 +183,20 @@ describe('AiInputBarComponent photo recognition', () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
 
-        component.onPhotoSelected({ url: 'https://example.com/photo.jpg', assetId: null });
+        component['onPhotoSelected']({ url: 'https://example.com/photo.jpg', assetId: null });
 
         expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
-        expect(component.hasPhotoResult()).toBe(false);
+        expect(component['hasPhotoResult']()).toBe(false);
     });
 
     it('runs photo recognition when asset id is present', async () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
 
-        component.onPhotoSelected({ url: 'https://example.com/photo.jpg', assetId: 'asset-1' });
+        component['onPhotoSelected']({ url: 'https://example.com/photo.jpg', assetId: 'asset-1' });
 
         expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledWith({ imageAssetId: 'asset-1' });
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({ items: VISION_ITEMS });
-        expect(component.photoNutrition()).toEqual(NUTRITION);
+        expect(component['photoNutrition']()).toEqual(NUTRITION);
     });
 });

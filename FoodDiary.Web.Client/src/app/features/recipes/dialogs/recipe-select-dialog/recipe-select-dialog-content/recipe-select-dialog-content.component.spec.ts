@@ -10,7 +10,7 @@ describe('RecipeSelectDialogContentComponent', () => {
         const recipe = createRecipe();
         const { component, fixture } = setupComponent([{ recipe, imageUrl: undefined }]);
         const selected: Recipe[] = [];
-        component.recipeSelected.subscribe(value => {
+        component['recipeSelected'].subscribe(value => {
             selected.push(value);
         });
 

@@ -28,13 +28,13 @@ import { GamificationStatsGridComponent } from '../gamification-page-sections/st
 export class GamificationPageComponent {
     private readonly facade = inject(GamificationFacade);
 
-    public readonly isLoading = this.facade.isLoading;
-    public readonly currentStreak = this.facade.currentStreak;
-    public readonly longestStreak = this.facade.longestStreak;
-    public readonly totalMealsLogged = this.facade.totalMealsLogged;
-    public readonly healthScore = this.facade.healthScore;
-    public readonly weeklyAdherence = this.facade.weeklyAdherence;
-    public readonly badges = this.facade.badges;
+    protected readonly isLoading = this.facade.isLoading;
+    protected readonly currentStreak = this.facade.currentStreak;
+    protected readonly longestStreak = this.facade.longestStreak;
+    protected readonly totalMealsLogged = this.facade.totalMealsLogged;
+    protected readonly healthScore = this.facade.healthScore;
+    protected readonly weeklyAdherence = this.facade.weeklyAdherence;
+    protected readonly badges = this.facade.badges;
 
     public constructor() {
         this.facade.initialize();

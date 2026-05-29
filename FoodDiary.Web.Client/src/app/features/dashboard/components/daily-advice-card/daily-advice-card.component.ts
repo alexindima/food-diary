@@ -17,7 +17,7 @@ export class DailyAdviceCardComponent {
     public readonly advice = input.required<DailyAdvice | null>();
     public readonly isLoading = input.required<boolean>();
 
-    public readonly adviceState = computed(() => {
+    protected readonly adviceState = computed(() => {
         const advice = this.advice();
         if (advice === null) {
             return null;

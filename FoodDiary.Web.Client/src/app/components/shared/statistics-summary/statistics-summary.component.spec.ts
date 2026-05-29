@@ -24,12 +24,12 @@ describe('StatisticsSummaryComponent', () => {
         const fixture = await setupStatisticsSummaryAsync();
         const component = fixture.componentInstance;
         const exportSpy = vi.fn<(format: StatisticsSummaryExportFormat) => void>();
-        component.exportRequested.subscribe(format => {
+        component['exportRequested'].subscribe(format => {
             exportSpy(format);
         });
         fixture.detectChanges();
 
-        component.export('csv');
+        component['export']('csv');
 
         expect(exportSpy).toHaveBeenCalledWith('csv');
     });

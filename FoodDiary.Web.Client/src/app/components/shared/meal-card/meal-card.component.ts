@@ -52,25 +52,25 @@ export class MealCardComponent {
     public readonly favoriteLoading = input(false);
     public readonly open = output();
     public readonly favoriteToggle = output();
-    public readonly isFavorite = computed(() => Boolean(this.meal().isFavorite));
-    public readonly isAuthenticated = this.authService.isAuthenticated;
-    public readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.meal().id.length > 0);
-    public readonly favoriteAriaLabelKey = computed(() =>
+    protected readonly isFavorite = computed(() => Boolean(this.meal().isFavorite));
+    protected readonly isAuthenticated = this.authService.isAuthenticated;
+    protected readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.meal().id.length > 0);
+    protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE',
     );
-    public readonly nutrition = computed(() => ({
+    protected readonly nutrition = computed(() => ({
         proteins: this.meal().totalProteins,
         fats: this.meal().totalFats,
         carbs: this.meal().totalCarbs,
         fiber: this.meal().totalFiber,
         alcohol: this.meal().totalAlcohol,
     }));
-    public readonly quality = computed(() => {
+    protected readonly quality = computed(() => {
         const score = this.qualityScore();
         const grade = this.meal().qualityGrade;
         return score === null || grade === null || grade === undefined ? null : { score, grade };
     });
-    public readonly qualityScore = computed(() => {
+    protected readonly qualityScore = computed(() => {
         const score = this.meal().qualityScore;
         if (score === null || score === undefined) {
             return null;
@@ -80,7 +80,7 @@ export class MealCardComponent {
     });
     private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
 
-    public readonly coverImage = computed(() => {
+    protected readonly coverImage = computed(() => {
         const image = this.resolvePreviewImage();
         const resolved = resolveMealImageUrl(image ?? undefined, this.meal().mealType ?? undefined) ?? image;
         const itemImages = image !== undefined ? [] : this.resolveItemImages();
@@ -95,7 +95,7 @@ export class MealCardComponent {
 
         return resolved ?? this.fallbackMealImage;
     });
-    public readonly collageImages = computed<readonly EntityCardCollageImage[]>(() => {
+    protected readonly collageImages = computed<readonly EntityCardCollageImage[]>(() => {
         if (this.resolvePreviewImage() !== undefined) {
             return [];
         }
@@ -103,26 +103,26 @@ export class MealCardComponent {
         const itemImages = this.resolveItemImages();
         return itemImages.length > 1 ? itemImages : [];
     });
-    public readonly hasPreviewImage = computed(() => this.resolvePreviewImage() !== undefined || this.collageImages().length > 0);
+    protected readonly hasPreviewImage = computed(() => this.resolvePreviewImage() !== undefined || this.collageImages().length > 0);
 
-    public readonly itemCount = computed(() => {
+    protected readonly itemCount = computed(() => {
         const meal = this.meal();
         const manualCount = meal.items?.length ?? 0;
         const aiCount = meal.aiSessions?.reduce((total, session) => total + (session?.items?.length ?? 0), 0) ?? 0;
         return manualCount + aiCount;
     });
-    public readonly description = computed(() => `${this.translateService.instant('MEAL_CARD.ITEM_COUNT')}: ${this.itemCount()}`);
-    public readonly mealTime = computed(() => formatDate(this.meal().date, 'HH:mm', this.locale));
-    public readonly mealTitle = computed(() => {
+    protected readonly description = computed(() => `${this.translateService.instant('MEAL_CARD.ITEM_COUNT')}: ${this.itemCount()}`);
+    protected readonly mealTime = computed(() => formatDate(this.meal().date, 'HH:mm', this.locale));
+    protected readonly mealTitle = computed(() => {
         const mealType = this.meal().mealType?.trim();
         const normalizedMealType = mealType !== undefined && mealType.length > 0 ? mealType.toUpperCase() : 'OTHER';
         return this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${normalizedMealType}`);
     });
-    public handleOpen(): void {
+    protected handleOpen(): void {
         this.open.emit();
     }
 
-    public handlePreview(): void {
+    protected handlePreview(): void {
         const imageUrl = this.resolvePreviewImage();
         const collageImages = imageUrl !== undefined ? [] : this.collageImages();
         if (imageUrl === undefined && collageImages.length === 0) {
@@ -144,7 +144,7 @@ export class MealCardComponent {
         });
     }
 
-    public toggleFavorite(): void {
+    protected toggleFavorite(): void {
         if (this.favoriteLoading()) {
             return;
         }

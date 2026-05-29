@@ -50,36 +50,36 @@ describe('AdminUsersComponent', () => {
 
     it('should load users on init', () => {
         expect(usersService.getUsers).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null, 'active');
-        expect(component.users()).toEqual(pagedUsers.items);
-        expect(component.totalPages()).toBe(SECOND_PAGE);
-        expect(component.totalItems()).toBe(USER_TOTAL_ITEMS);
-        expect(component.isLoading()).toBe(false);
+        expect(component['users']()).toEqual(pagedUsers.items);
+        expect(component['totalPages']()).toBe(SECOND_PAGE);
+        expect(component['totalItems']()).toBe(USER_TOTAL_ITEMS);
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('should update search and reload from page 1', () => {
-        component.onSearchChange('john');
+        component['onSearchChange']('john');
 
-        expect(component.search()).toBe('john');
-        expect(component.page()).toBe(FIRST_PAGE);
+        expect(component['search']()).toBe('john');
+        expect(component['page']()).toBe(FIRST_PAGE);
         expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, 'john', 'active');
     });
 
     it('should update status and reload', () => {
-        component.onStatusChange('inactive');
+        component['onStatusChange']('inactive');
 
-        expect(component.status()).toBe('inactive');
-        expect(component.page()).toBe(FIRST_PAGE);
+        expect(component['status']()).toBe('inactive');
+        expect(component['page']()).toBe(FIRST_PAGE);
         expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, null, 'inactive');
     });
 
     it('should change page only within valid bounds', () => {
-        component.goToPage(SECOND_PAGE);
-        expect(component.page()).toBe(SECOND_PAGE);
+        component['goToPage'](SECOND_PAGE);
+        expect(component['page']()).toBe(SECOND_PAGE);
         expect(usersService.getUsers).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, null, 'active');
 
         const callCount = usersService.getUsers.mock.calls.length;
-        component.goToPage(0);
-        component.goToPage(OUT_OF_RANGE_PAGE);
+        component['goToPage'](0);
+        component['goToPage'](OUT_OF_RANGE_PAGE);
         expect(usersService.getUsers.mock.calls.length).toBe(callCount);
     });
 
@@ -89,7 +89,7 @@ describe('AdminUsersComponent', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component.openEdit(pagedUsers.items[0]);
+        component['openEdit'](pagedUsers.items[0]);
         close$.next(true);
         close$.complete();
 
@@ -104,7 +104,7 @@ describe('AdminUsersComponent', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component.startImpersonation(pagedUsers.items[0]);
+        component['startImpersonation'](pagedUsers.items[0]);
         close$.next({
             accessToken: 'token',
             expiresAtUtc: '2026-01-01T00:10:00Z',

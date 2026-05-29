@@ -49,7 +49,7 @@ describe('ProductNutritionEditorComponent options', () => {
         setRequiredInputs(form);
         fixture.detectChanges();
 
-        expect(component.nutritionModeOptions()).toEqual([
+        expect(component['nutritionModeOptions']()).toEqual([
             {
                 value: 'base',
                 label: `PRODUCT_MANAGE.NUTRITION_MODE.BASE:${DEFAULT_NUTRITION_BASE_AMOUNT}:GENERAL.UNITS.G`,
@@ -68,7 +68,7 @@ describe('ProductNutritionEditorComponent options', () => {
 
         form.controls.baseUnit.setValue(MeasurementUnit.PCS);
 
-        expect(component.nutritionModeOptions()[0]).toEqual({
+        expect(component['nutritionModeOptions']()[0]).toEqual({
             value: 'base',
             label: `PRODUCT_MANAGE.NUTRITION_MODE.BASE:${PIECE_BASE_AMOUNT}:GENERAL.UNITS.PCS`,
         });
@@ -87,9 +87,9 @@ describe('ProductNutritionEditorComponent nutrition signals', () => {
         setRequiredInputs(form);
         fixture.detectChanges();
 
-        expect(component.macroBarState().isEmpty).toBe(false);
-        expect(component.macroBarState().segments.map(segment => segment.key)).toEqual(['proteins', 'fats', 'carbs']);
-        expect(component.nutritionWarning()).toEqual({
+        expect(component['macroBarState']().isEmpty).toBe(false);
+        expect(component['macroBarState']().segments.map(segment => segment.key)).toEqual(['proteins', 'fats', 'carbs']);
+        expect(component['nutritionWarning']()).toEqual({
             expectedCalories: 290,
             actualCalories: PRODUCT_CALORIES,
         });
@@ -100,11 +100,11 @@ describe('ProductNutritionEditorComponent nutrition signals', () => {
         setRequiredInputs(form);
         fixture.detectChanges();
 
-        expect(component.macroBarState().isEmpty).toBe(true);
+        expect(component['macroBarState']().isEmpty).toBe(true);
 
         form.controls.proteinsPerBase.setValue(PRODUCT_PROTEINS);
 
-        expect(component.macroBarState()).toEqual({
+        expect(component['macroBarState']()).toEqual({
             isEmpty: false,
             segments: [{ key: 'proteins', percent: 100 }],
         });
@@ -119,7 +119,7 @@ describe('ProductNutritionEditorComponent validation messages', () => {
 
         form.controls.caloriesPerBase.markAsTouched();
 
-        expect(component.caloriesError()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED');
+        expect(component['caloriesError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED');
     });
 
     it('returns macros required error when macro controls are empty and touched', () => {
@@ -132,7 +132,7 @@ describe('ProductNutritionEditorComponent validation messages', () => {
         form.controls.carbsPerBase.markAsTouched();
         form.controls.alcoholPerBase.markAsTouched();
 
-        expect(component.macrosError()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
+        expect(component['macrosError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
     });
 });
 

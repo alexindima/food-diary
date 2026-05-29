@@ -40,8 +40,8 @@ describe('FastingEndConfirmDialogComponent', () => {
     it('closes with confirm or cancel result', () => {
         const fixture = createComponent();
 
-        fixture.componentInstance.onConfirm();
-        fixture.componentInstance.onCancel();
+        fixture.componentInstance['onConfirm']();
+        fixture.componentInstance['onCancel']();
 
         expect(dialogRef.close).toHaveBeenNthCalledWith(1, 'confirm');
         expect(dialogRef.close).toHaveBeenNthCalledWith(2, 'cancel');

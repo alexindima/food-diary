@@ -41,11 +41,11 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     public readonly valueAlign = input<'center' | 'left'>('center');
     public readonly unitLabel = input<string>();
 
-    public disabled = false;
-    public value = '';
-    public inputSize = 1;
-    public inputWidth = '1ch';
-    public readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
+    protected disabled = false;
+    protected value = '';
+    protected inputSize = 1;
+    protected inputWidth = '1ch';
+    protected readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -75,7 +75,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
         this.cdr.markForCheck();
     }
 
-    public onInput(event: Event): void {
+    protected onInput(event: Event): void {
         if (!(event.target instanceof HTMLInputElement)) {
             return;
         }
@@ -97,7 +97,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
         this.onChange(rawValue);
     }
 
-    public onBlur(): void {
+    protected onBlur(): void {
         this.onTouched();
     }
 

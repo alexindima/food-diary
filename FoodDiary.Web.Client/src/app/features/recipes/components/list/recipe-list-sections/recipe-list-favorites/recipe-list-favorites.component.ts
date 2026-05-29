@@ -18,7 +18,7 @@ export class RecipeListFavoritesComponent {
     public readonly favoriteTotalCount = input.required<number>();
     public readonly isFavoritesOpen = input.required<boolean>();
     public readonly isFavoritesLoadingMore = input.required<boolean>();
-    public readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
+    protected readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
 
     public readonly favoritesToggle = output();
     public readonly favoritesLoadMore = output();

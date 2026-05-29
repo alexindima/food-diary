@@ -13,14 +13,14 @@ describe('UserManageDietologistCardComponent', () => {
         const component = fixture.componentInstance;
         const profileToggle = vi.fn();
         const permissionChange = vi.fn();
-        component.dietologistProfileToggle.subscribe(profileToggle);
-        component.dietologistPermissionChange.subscribe(permissionChange);
+        component['dietologistProfileToggle'].subscribe(profileToggle);
+        component['dietologistPermissionChange'].subscribe(permissionChange);
         const protectedComponent = component as unknown as {
             handleDietologistPermissionChange: (change: DietologistPermissionChange) => void;
         };
 
-        protectedComponent.handleDietologistPermissionChange({ controlName: 'shareProfile', value: false });
-        protectedComponent.handleDietologistPermissionChange({ controlName: 'shareMeals', value: false });
+        protectedComponent['handleDietologistPermissionChange']({ controlName: 'shareProfile', value: false });
+        protectedComponent['handleDietologistPermissionChange']({ controlName: 'shareMeals', value: false });
 
         expect(profileToggle).toHaveBeenCalledWith(false);
         expect(permissionChange).toHaveBeenCalledWith({ controlName: 'shareMeals', value: false });

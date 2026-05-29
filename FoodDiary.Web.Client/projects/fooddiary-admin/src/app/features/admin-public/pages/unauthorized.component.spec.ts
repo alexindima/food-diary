@@ -48,8 +48,8 @@ describe('UnauthorizedComponent', () => {
         fixture.detectChanges();
 
         expect(component).toBeTruthy();
-        expect(component.reason).toBe('unauthenticated');
-        expect(component.returnUrl).toBe('/users?code=sso-code&page=2');
+        expect(component['reason']).toBe('unauthenticated');
+        expect(component['returnUrl']).toBe('/users?code=sso-code&page=2');
     });
 
     it('should try to recover from sso return url on init', async () => {

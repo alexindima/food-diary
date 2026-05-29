@@ -404,6 +404,120 @@ const isRootInjectableDecorator = node => {
     return isRootProvidedInProperty(getSingleObjectProperty(metadata));
 };
 
+const angularClassDecoratorNames = new Set(['Component', 'Directive']);
+const angularPublicApiInitializerNames = new Set([
+    'input',
+    'model',
+    'output',
+    'viewChild',
+    'viewChildren',
+    'contentChild',
+    'contentChildren',
+]);
+const frameworkPublicMemberNames = new Set([
+    'focusFirstItem',
+    'focusLastItem',
+    'openFilePicker',
+    'registerOnChange',
+    'registerOnTouched',
+    'registerOnValidatorChange',
+    'setDisabledState',
+    'templateRef',
+    'validate',
+    'writeValue',
+]);
+
+const getDecoratorCallName = decorator => {
+    const expression = decorator.expression;
+
+    if (expression.type === 'CallExpression') {
+        return getPropertyName(expression.callee);
+    }
+
+    return getPropertyName(expression);
+};
+
+const hasAngularClassDecorator = node =>
+    (node.decorators ?? []).some(decorator => angularClassDecoratorNames.has(getDecoratorCallName(decorator)));
+
+const getCallExpressionBaseName = node => {
+    if (node.type === 'Identifier') {
+        return node.name;
+    }
+
+    if (node.type === 'CallExpression') {
+        return getCallExpressionBaseName(node.callee);
+    }
+
+    if (node.type === 'MemberExpression') {
+        return getCallExpressionBaseName(node.object);
+    }
+
+    return null;
+};
+
+const hasAngularPublicApiInitializer = node => {
+    if (node.type !== 'PropertyDefinition') {
+        return false;
+    }
+
+    const baseName = node.value ? getCallExpressionBaseName(node.value) : null;
+    return baseName !== null && angularPublicApiInitializerNames.has(baseName);
+};
+
+const shouldAllowPublicAngularMember = node => {
+    if (node.kind === 'constructor') {
+        return true;
+    }
+
+    const memberName = getPropertyName(node.key);
+    return hasAngularPublicApiInitializer(node) || frameworkPublicMemberNames.has(memberName);
+};
+
+const createPreferProtectedTemplateMembersRule = context => {
+    const sourceCode = context.sourceCode;
+
+    return {
+        ClassDeclaration(node) {
+            if (!hasAngularClassDecorator(node)) {
+                return;
+            }
+
+            for (const member of node.body.body) {
+                if (member.accessibility !== 'public' || shouldAllowPublicAngularMember(member)) {
+                    continue;
+                }
+
+                context.report({
+                    node: member.key,
+                    messageId: 'preferProtected',
+                    fix(fixer) {
+                        const publicToken = sourceCode.getFirstToken(member, token => token.value === 'public');
+
+                        return publicToken ? fixer.replaceText(publicToken, 'protected') : null;
+                    },
+                });
+            }
+        },
+    };
+};
+
+const preferProtectedTemplateMembersRule = {
+    meta: {
+        type: 'suggestion',
+        fixable: 'code',
+        docs: {
+            description: 'Prefer protected members for Angular component and directive internals used by templates.',
+        },
+        messages: {
+            preferProtected:
+                'Angular component/directive internals should be protected or private. Keep public only for input(), output(), model(), signal queries, or framework contract methods.',
+        },
+        schema: [],
+    },
+    create: createPreferProtectedTemplateMembersRule,
+};
+
 const createNoLocallyCaughtThrowRule = context => {
     let caughtTryDepth = 0;
     const functionTryDepthStack = [];
@@ -515,6 +629,7 @@ const localTsPlugin = {
         'no-mojibake': noMojibakeRule,
         'no-browser-globals': noBrowserGlobalsRule,
         'no-fd-ui-kit-self-import': noFdUiKitSelfImportRule,
+        'prefer-protected-template-members': preferProtectedTemplateMembersRule,
         'async-function-suffix': {
             meta: {
                 type: 'problem',
@@ -1152,6 +1267,7 @@ export default [
             '@angular-eslint/relative-url-prefix': 'error',
             '@angular-eslint/use-component-selector': 'error',
             '@angular-eslint/use-component-view-encapsulation': 'error',
+            'local/prefer-protected-template-members': 'error',
             'no-restricted-syntax': [
                 'error',
                 ...noAnyCastSyntax,

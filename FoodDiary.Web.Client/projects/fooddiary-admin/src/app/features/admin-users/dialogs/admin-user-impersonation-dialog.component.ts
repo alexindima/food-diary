@@ -33,10 +33,10 @@ export class AdminUserImpersonationDialogComponent {
     private readonly fb = inject(FormBuilder);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly targetEmail = this.user.email;
-    public readonly isSubmitting = signal(false);
-    public readonly submitError = signal<string | null>(null);
-    public readonly form: FormGroup<AdminUserImpersonationForm> = this.fb.group({
+    protected readonly targetEmail = this.user.email;
+    protected readonly isSubmitting = signal(false);
+    protected readonly submitError = signal<string | null>(null);
+    protected readonly form: FormGroup<AdminUserImpersonationForm> = this.fb.group({
         reason: this.fb.nonNullable.control('', [
             Validators.required,
             Validators.minLength(REASON_MIN_LENGTH),
@@ -45,7 +45,7 @@ export class AdminUserImpersonationDialogComponent {
     });
     private readonly reasonValidationVersion = signal(0);
 
-    public readonly reasonError = computed((): string | null => {
+    protected readonly reasonError = computed((): string | null => {
         this.reasonValidationVersion();
 
         const control = this.form.controls.reason;
@@ -68,7 +68,7 @@ export class AdminUserImpersonationDialogComponent {
         return null;
     });
 
-    public readonly submitLabel = computed(() => (this.isSubmitting() ? 'Starting...' : 'Start'));
+    protected readonly submitLabel = computed(() => (this.isSubmitting() ? 'Starting...' : 'Start'));
 
     public constructor() {
         const reason = this.form.controls.reason;
@@ -79,11 +79,11 @@ export class AdminUserImpersonationDialogComponent {
             });
     }
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef.close(null);
     }
 
-    public submit(): void {
+    protected submit(): void {
         this.submitError.set(null);
         this.form.markAllAsTouched();
         this.refreshReasonValidation();

@@ -56,7 +56,7 @@ describe('RecipeListComponent initial loading and filters', () => {
     it('reloads recipes when only-mine filter changes', () => {
         const { component } = setupComponent();
 
-        component.searchForm.controls.onlyMine.setValue(true);
+        component['searchForm'].controls.onlyMine.setValue(true);
 
         expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, null, true);
     });
@@ -64,9 +64,9 @@ describe('RecipeListComponent initial loading and filters', () => {
     it('applies changed filter dialog result', () => {
         const { component } = setupComponent({ filterResult: { onlyMine: true } });
 
-        component.openFilters();
+        component['openFilters']();
 
-        expect(component.searchForm.controls.onlyMine.value).toBe(true);
+        expect(component['searchForm'].controls.onlyMine.value).toBe(true);
     });
 });
 
@@ -76,7 +76,7 @@ describe('RecipeListComponent detail actions', () => {
             detailResult: new RecipeDetailActionResult('recipe-1', 'FavoriteChanged'),
         });
 
-        component.onRecipeClick(createRecipe());
+        component['onRecipeClick'](createRecipe());
         await waitForAsync(() => facade.loadFavorites.mock.calls.length > 0);
 
         expect(facade.loadFavorites).toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe('RecipeListComponent detail actions', () => {
         });
         const recipe = createRecipe();
 
-        component.onRecipeClick(recipe);
+        component['onRecipeClick'](recipe);
         await waitForAsync(() => facade.handleDetailActionAsync.mock.calls.length > 0);
 
         expect(facade.handleDetailActionAsync).toHaveBeenCalledWith(expect.any(RecipeDetailActionResult), recipe, null, false);
@@ -102,7 +102,7 @@ describe('RecipeListComponent actions', () => {
         const scrollSpy = vi.fn();
         component['container']().nativeElement.scrollIntoView = scrollSpy;
 
-        component.onPageChange(SECOND_PAGE_INDEX);
+        component['onPageChange'](SECOND_PAGE_INDEX);
 
         expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
         expect(facade.loadRecipes).toHaveBeenCalledWith(SECOND_PAGE, PAGE_SIZE, null, false);
@@ -112,9 +112,11 @@ describe('RecipeListComponent actions', () => {
         const { component } = setupComponent();
         const recipe = createRecipe();
         facade.getFavoriteRecipe.mockReturnValueOnce(of(recipe));
-        const clickSpy = vi.spyOn(component, 'onRecipeClick').mockImplementation(() => undefined);
+        const clickSpy = vi
+            .spyOn(component as unknown as { onRecipeClick: (value: ReturnType<typeof createRecipe>) => void }, 'onRecipeClick')
+            .mockImplementation(() => undefined);
 
-        component.openFavoriteRecipe(createFavoriteRecipe());
+        component['openFavoriteRecipe'](createFavoriteRecipe());
 
         expect(facade.getFavoriteRecipe).toHaveBeenCalledWith(createFavoriteRecipe());
         expect(clickSpy).toHaveBeenCalledWith(recipe);
@@ -125,7 +127,7 @@ describe('RecipeListComponent actions', () => {
         const recipe = createRecipe();
         facade.getFavoriteRecipe.mockReturnValueOnce(of(recipe));
 
-        component.addFavoriteRecipeToMeal(createFavoriteRecipe());
+        component['addFavoriteRecipeToMeal'](createFavoriteRecipe());
 
         expect(facade.addToMeal).toHaveBeenCalledWith(recipe);
     });

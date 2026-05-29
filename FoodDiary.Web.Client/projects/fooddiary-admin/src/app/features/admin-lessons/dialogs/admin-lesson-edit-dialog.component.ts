@@ -40,25 +40,25 @@ const DEFAULT_SORT_ORDER = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLessonEditDialogComponent {
-    public readonly data = inject<AdminLesson>(FD_UI_DIALOG_DATA);
+    protected readonly data = inject<AdminLesson>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminLessonEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly service = inject(AdminLessonsService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
 
-    public readonly isNew = (this.data as AdminLesson & { isNew?: boolean }).isNew === true;
-    public readonly isSaving = signal(false);
-    public readonly showPreview = signal(false);
-    public readonly previewHtml = signal<SafeHtml>('');
-    public readonly contentLength = signal(this.data.content.length);
-    public readonly contentMaxLength = CONTENT_MAX_LENGTH;
-    public readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());
+    protected readonly isNew = (this.data as AdminLesson & { isNew?: boolean }).isNew === true;
+    protected readonly isSaving = signal(false);
+    protected readonly showPreview = signal(false);
+    protected readonly previewHtml = signal<SafeHtml>('');
+    protected readonly contentLength = signal(this.data.content.length);
+    protected readonly contentMaxLength = CONTENT_MAX_LENGTH;
+    protected readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());
 
-    public readonly categoryOptions: Array<FdUiSelectOption<string>> = LESSON_CATEGORIES.map(c => ({ value: c, label: c }));
-    public readonly difficultyOptions: Array<FdUiSelectOption<string>> = LESSON_DIFFICULTIES.map(d => ({ value: d, label: d }));
-    public readonly localeOptions: Array<FdUiSelectOption<string>> = LESSON_LOCALES.map(l => ({ value: l, label: l }));
+    protected readonly categoryOptions: Array<FdUiSelectOption<string>> = LESSON_CATEGORIES.map(c => ({ value: c, label: c }));
+    protected readonly difficultyOptions: Array<FdUiSelectOption<string>> = LESSON_DIFFICULTIES.map(d => ({ value: d, label: d }));
+    protected readonly localeOptions: Array<FdUiSelectOption<string>> = LESSON_LOCALES.map(l => ({ value: l, label: l }));
 
-    public readonly form = new FormGroup<LessonForm>({
+    protected readonly form = new FormGroup<LessonForm>({
         title: new FormControl(this.data.title, {
             nonNullable: true,
             validators: [Validators.required, Validators.maxLength(TITLE_MAX_LENGTH)],
@@ -102,11 +102,11 @@ export class AdminLessonEditDialogComponent {
         });
     }
 
-    public onCancel(): void {
+    protected onCancel(): void {
         this.dialogRef.close(false);
     }
 
-    public onSave(): void {
+    protected onSave(): void {
         if (this.form.invalid || this.isSaving()) {
             return;
         }
@@ -137,7 +137,7 @@ export class AdminLessonEditDialogComponent {
         });
     }
 
-    public togglePreview(): void {
+    protected togglePreview(): void {
         const next = !this.showPreview();
         this.showPreview.set(next);
         if (next) {

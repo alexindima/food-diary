@@ -18,7 +18,7 @@ export class LandingStepsComponent {
 
     protected readonly steps = LANDING_STEPS;
 
-    public async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
+    protected async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
         await this.authNavigationService.navigateAsync(mode);
     }
 }

@@ -33,7 +33,7 @@ describe('LessonsListGridComponent', () => {
         const fixture = createComponent({ lessons: [createLesson()] });
         const element = getElement(fixture);
         const lessonOpen = vi.fn();
-        fixture.componentInstance.lessonOpen.subscribe(lessonOpen);
+        fixture.componentInstance['lessonOpen'].subscribe(lessonOpen);
 
         element.querySelector<HTMLElement>('.lesson-card')?.click();
 

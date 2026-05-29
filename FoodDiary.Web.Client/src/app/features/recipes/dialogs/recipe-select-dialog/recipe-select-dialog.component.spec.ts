@@ -39,7 +39,7 @@ describe('RecipeSelectDialogComponent', () => {
         const recipe = createRecipe();
         const { component, dialogRef } = setupComponent([recipe]);
 
-        component.onRecipeClick(recipe);
+        component['onRecipeClick'](recipe);
 
         expect(dialogRef.close).toHaveBeenCalledWith(recipe);
     });
@@ -48,13 +48,13 @@ describe('RecipeSelectDialogComponent', () => {
         const recipe = createRecipe();
         const { component, fixture, dialogRef } = setupComponent([recipe]);
         const selected: Recipe[] = [];
-        component.recipeSelected.subscribe(value => {
+        component['recipeSelected'].subscribe(value => {
             selected.push(value);
         });
         fixture.componentRef.setInput('embedded', true);
         fixture.detectChanges();
 
-        component.onRecipeClick(recipe);
+        component['onRecipeClick'](recipe);
 
         expect(dialogRef.close).not.toHaveBeenCalled();
         expect(selected).toEqual([recipe]);
@@ -64,7 +64,7 @@ describe('RecipeSelectDialogComponent', () => {
         const { component, recipeService } = setupComponent([createRecipe()]);
         const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => undefined);
 
-        component.onPageChange(SECOND_PAGE_INDEX);
+        component['onPageChange'](SECOND_PAGE_INDEX);
 
         expect(scrollSpy).toHaveBeenCalled();
         expect(recipeService.query).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, { search: undefined }, true);
@@ -73,30 +73,30 @@ describe('RecipeSelectDialogComponent', () => {
     it('toggles only-mine filter through form control', () => {
         const { component } = setupComponent([createRecipe()]);
 
-        component.toggleOnlyMine();
+        component['toggleOnlyMine']();
 
-        expect(component.searchForm.controls.onlyMine.value).toBe(true);
-        expect(component.onlyMineFilter()).toBe(true);
+        expect(component['searchForm'].controls.onlyMine.value).toBe(true);
+        expect(component['onlyMineFilter']()).toBe(true);
     });
 
     it('clears search through form control', () => {
         const { component } = setupComponent([createRecipe()]);
-        component.searchForm.controls.search.setValue('salad');
+        component['searchForm'].controls.search.setValue('salad');
 
-        component.clearSearch();
+        component['clearSearch']();
 
-        expect(component.searchForm.controls.search.value).toBe('');
-        expect(component.searchValue()).toBe('');
+        expect(component['searchForm'].controls.search.value).toBe('');
+        expect(component['searchValue']()).toBe('');
     });
 
     it('emits create recipe request', () => {
         const { component } = setupComponent([createRecipe()]);
         const requests: void[] = [];
-        component.createRecipeRequested.subscribe(() => {
+        component['createRecipeRequested'].subscribe(() => {
             requests.push(undefined);
         });
 
-        component.onCreateRecipeClick();
+        component['onCreateRecipeClick']();
 
         expect(requests.length).toBe(1);
     });
@@ -105,10 +105,10 @@ describe('RecipeSelectDialogComponent', () => {
         const { component, recipeService } = setupComponent([createRecipe()]);
         recipeService.query.mockReturnValueOnce(throwError(() => new Error('load failed')));
 
-        component.loadRecipes(1).subscribe();
+        component['loadRecipes'](1).subscribe();
 
-        expect(component.recipeData.items()).toEqual([]);
-        expect(component.recipeData.isLoading()).toBe(false);
+        expect(component['recipeData'].items()).toEqual([]);
+        expect(component['recipeData'].isLoading()).toBe(false);
     });
 });
 

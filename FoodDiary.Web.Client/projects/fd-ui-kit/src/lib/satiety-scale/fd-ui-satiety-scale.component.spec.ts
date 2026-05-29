@@ -60,7 +60,7 @@ function registerRenderingTests(): void {
 function registerValueAccessorTests(): void {
     describe('value accessor', () => {
         it('should write value via CVA', () => {
-            component.writeValue(HIGH_LEVEL);
+            component['writeValue'](HIGH_LEVEL);
             fixture.detectChanges();
 
             expect(component['value']).toBe(HIGH_LEVEL);
@@ -71,7 +71,7 @@ function registerValueAccessorTests(): void {
         });
 
         it('should mark selected level', () => {
-            component.writeValue(SELECTED_LEVEL);
+            component['writeValue'](SELECTED_LEVEL);
             fixture.detectChanges();
 
             const levelButtons = buttons();
@@ -85,11 +85,11 @@ function registerValueAccessorTests(): void {
         });
 
         it('should write null value via CVA', () => {
-            component.writeValue(HIGH_LEVEL);
+            component['writeValue'](HIGH_LEVEL);
             fixture.detectChanges();
             expect(component['value']).toBe(HIGH_LEVEL);
 
-            component.writeValue(null);
+            component['writeValue'](null);
             fixture.detectChanges();
             expect(component['value']).toBeNull();
 
@@ -103,7 +103,7 @@ function registerInteractionTests(): void {
     describe('interaction', () => {
         it('should select level on click', () => {
             const onChangeSpy = vi.fn();
-            component.registerOnChange(onChangeSpy);
+            component['registerOnChange'](onChangeSpy);
 
             const levelButtons = buttons();
             levelButtons[SELECTED_LEVEL_INDEX].click();
@@ -115,8 +115,8 @@ function registerInteractionTests(): void {
 
         it('should not select when disabled', () => {
             const onChangeSpy = vi.fn();
-            component.registerOnChange(onChangeSpy);
-            component.setDisabledState(true);
+            component['registerOnChange'](onChangeSpy);
+            component['setDisabledState'](true);
             fixture.detectChanges();
 
             const levelButtons = buttons();
@@ -129,7 +129,7 @@ function registerInteractionTests(): void {
 
         it('should call onTouched when level is selected', () => {
             const onTouchedSpy = vi.fn();
-            component.registerOnTouched(onTouchedSpy);
+            component['registerOnTouched'](onTouchedSpy);
 
             const levelButtons = buttons();
             levelButtons[LOW_LEVEL_INDEX].click();

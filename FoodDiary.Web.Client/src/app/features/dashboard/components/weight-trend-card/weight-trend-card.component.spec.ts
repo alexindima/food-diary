@@ -14,8 +14,8 @@ describe('WeightTrendCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.changeTone()).toBe('positive');
-        expect(component.formattedChangeValue()).toBe(EXPECTED_FORMATTED_CHANGE);
+        expect(component['changeTone']()).toBe('positive');
+        expect(component['formattedChangeValue']()).toBe(EXPECTED_FORMATTED_CHANGE);
     });
 
     it('builds chart points from ordered weight points', async () => {
@@ -29,12 +29,12 @@ describe('WeightTrendCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component.chartPoints()).toEqual([
+        expect(component['chartPoints']()).toEqual([
             { label: '2026-05-01', value: CURRENT_WEIGHT - 1 },
             { label: '2026-05-02', value: null },
             { label: '2026-05-03', value: CURRENT_WEIGHT },
         ]);
-        expect(component.hasChartData()).toBe(true);
+        expect(component['hasChartData']()).toBe(true);
     });
 });
 

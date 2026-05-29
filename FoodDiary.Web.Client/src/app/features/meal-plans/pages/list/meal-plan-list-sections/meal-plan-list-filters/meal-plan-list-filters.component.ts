@@ -13,6 +13,6 @@ import type { DietType } from '../../../../models/meal-plan.data';
 })
 export class MealPlanListFiltersComponent {
     public readonly selectedType = input.required<DietType | null>();
-    public readonly options = computed(() => buildMealPlanDietFilterOptions(this.selectedType()));
+    protected readonly options = computed(() => buildMealPlanDietFilterOptions(this.selectedType()));
     public readonly filterChange = output<DietType | null>();
 }

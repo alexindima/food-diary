@@ -57,15 +57,15 @@ export class FdUiHintDirective {
         });
     }
 
-    public onMouseEnter(): void {
+    protected onMouseEnter(): void {
         this.queueShow(this.fdUiHintShowDelay());
     }
 
-    public onMouseLeave(): void {
+    protected onMouseLeave(): void {
         this.queueHide();
     }
 
-    public onFocusIn(): void {
+    protected onFocusIn(): void {
         if (!this.isKeyboardVisibleFocus()) {
             return;
         }
@@ -73,16 +73,16 @@ export class FdUiHintDirective {
         this.queueShow(this.fdUiHintFocusShowDelay());
     }
 
-    public onFocusOut(): void {
+    protected onFocusOut(): void {
         this.queueHide();
     }
 
-    public onClick(): void {
+    protected onClick(): void {
         this.cancelPendingDisplay();
         this.hide();
     }
 
-    public onEscape(): void {
+    protected onEscape(): void {
         this.cancelPendingDisplay();
         this.hide();
     }

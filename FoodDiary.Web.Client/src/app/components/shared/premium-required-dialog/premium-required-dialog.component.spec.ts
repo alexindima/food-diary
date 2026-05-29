@@ -34,20 +34,20 @@ describe('PremiumRequiredDialogComponent', () => {
 
     it('should close with true on confirm', () => {
         createComponent();
-        component.onConfirm();
+        component['onConfirm']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
     });
 
     it('should close with false on cancel', () => {
         createComponent();
-        component.onCancel();
+        component['onCancel']();
         expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
     });
 
     it('should work without data', () => {
         createComponent(null);
         expect(component).toBeTruthy();
-        expect(component.data).toEqual({});
+        expect(component['data']).toEqual({});
     });
 
     it('should accept custom labels', () => {
@@ -57,7 +57,7 @@ describe('PremiumRequiredDialogComponent', () => {
             actionLabel: 'Upgrade Now',
             cancelLabel: 'Maybe Later',
         });
-        expect(component.data.title).toBe('Upgrade Required');
-        expect(component.data.actionLabel).toBe('Upgrade Now');
+        expect(component['data'].title).toBe('Upgrade Required');
+        expect(component['data'].actionLabel).toBe('Upgrade Now');
     });
 });

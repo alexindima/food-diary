@@ -47,7 +47,7 @@ export class PeriodFilterComponent {
         });
     }
 
-    public onRangeChange(value: unknown): void {
+    protected onRangeChange(value: unknown): void {
         if (typeof value === 'string') {
             this.rangeChange.emit(value);
         }

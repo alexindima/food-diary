@@ -37,11 +37,11 @@ export class ShoppingListItemsPanelComponent {
 
     public readonly itemForm = input.required<FormGroup<ShoppingListItemFormGroup>>();
     public readonly items = input.required<readonly ShoppingListItem[]>();
-    public readonly unitOptions = computed(() => {
+    protected readonly unitOptions = computed(() => {
         this.activeLang();
         return buildShoppingListUnitOptions(key => this.translateService.instant(key));
     });
-    public readonly itemViewModels = computed(() => {
+    protected readonly itemViewModels = computed(() => {
         this.activeLang();
         return buildShoppingListItemViewModels(this.items(), key => this.translateService.instant(key));
     });

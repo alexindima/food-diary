@@ -25,7 +25,7 @@ export class FdUiDatePickerButtonComponent {
     protected readonly isOpen = signal(false);
     protected readonly displayMonth = signal(this.value() ?? new Date());
 
-    public open(): void {
+    protected open(): void {
         if (this.disabled()) {
             return;
         }

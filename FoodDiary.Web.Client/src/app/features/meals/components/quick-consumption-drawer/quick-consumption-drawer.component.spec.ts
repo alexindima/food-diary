@@ -75,12 +75,12 @@ describe('QuickConsumptionDrawerComponent state', () => {
     it('should hide when empty unless forceShow is enabled', async () => {
         const { component, fixture, quickService } = await setupComponentAsync([]);
 
-        expect(component.shouldRender()).toBe(false);
+        expect(component['shouldRender']()).toBe(false);
 
         fixture.componentRef.setInput('forceShow', true);
         fixture.detectChanges();
 
-        expect(component.shouldRender()).toBe(true);
+        expect(component['shouldRender']()).toBe(true);
         expect(quickService.hasItems()).toBe(false);
     });
 
@@ -90,7 +90,7 @@ describe('QuickConsumptionDrawerComponent state', () => {
             { key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS },
         ]);
 
-        expect(component.itemViews().map(item => ({ name: item.name, amount: item.amount, unitKey: item.unitKey }))).toEqual([
+        expect(component['itemViews']().map(item => ({ name: item.name, amount: item.amount, unitKey: item.unitKey }))).toEqual([
             { name: 'Yogurt', amount: PRODUCT_AMOUNT, unitKey: 'GENERAL.UNITS.G' },
             { name: 'Soup', amount: RECIPE_SERVINGS, unitKey: 'QUICK_CONSUMPTION.SERVINGS' },
         ]);
@@ -101,14 +101,14 @@ describe('QuickConsumptionDrawerComponent state', () => {
             { key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT },
         ]);
 
-        component.updateDate('2026-05-15');
-        component.updateTime('08:30');
-        component.updateComment('Breakfast');
-        component.updatePreMealSatietyLevel(PRE_MEAL_SATIETY_LEVEL);
-        component.updatePostMealSatietyLevel(null);
-        component.remove('product-product-1');
-        component.clear();
-        component.save();
+        component['updateDate']('2026-05-15');
+        component['updateTime']('08:30');
+        component['updateComment']('Breakfast');
+        component['updatePreMealSatietyLevel'](PRE_MEAL_SATIETY_LEVEL);
+        component['updatePostMealSatietyLevel'](null);
+        component['remove']('product-product-1');
+        component['clear']();
+        component['save']();
 
         expect(quickService.updateDetails).toHaveBeenCalledWith({ date: '2026-05-15' });
         expect(quickService.updateDetails).toHaveBeenCalledWith({ time: '08:30' });
@@ -124,14 +124,14 @@ describe('QuickConsumptionDrawerComponent state', () => {
         const { component, quickService, fixture } = await setupComponentAsync([
             { key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT },
         ]);
-        component.toggleCollapsed();
-        component.toggleDetails();
+        component['toggleCollapsed']();
+        component['toggleDetails']();
 
         quickService.items.set([]);
         fixture.detectChanges();
 
-        expect(component.isCollapsed()).toBe(false);
-        expect(component.isDetailsExpanded()).toBe(false);
+        expect(component['isCollapsed']()).toBe(false);
+        expect(component['isDetailsExpanded']()).toBe(false);
     });
 });
 
@@ -144,7 +144,7 @@ describe('QuickConsumptionDrawerComponent edit', () => {
             createItemGroup(ConsumptionSourceType.Product, product, null, PRODUCT_AMOUNT),
         );
 
-        component.edit({ key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT });
+        component['edit']({ key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT });
         await flushPromisesAsync();
 
         expect(quickService.updateItem).toHaveBeenCalledWith('product-product-1', {
@@ -162,7 +162,7 @@ describe('QuickConsumptionDrawerComponent edit', () => {
         mealManageFacade.resolveRecipeServingsToGramsAsync.mockResolvedValue(RECIPE_GRAMS);
         mealManageFacade.createConsumptionItem.mockReturnValue(createItemGroup(ConsumptionSourceType.Recipe, null, recipe, RECIPE_GRAMS));
 
-        component.edit({ key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS });
+        component['edit']({ key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS });
         await flushPromisesAsync();
 
         expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledWith(recipe, RECIPE_SERVINGS);

@@ -48,14 +48,14 @@ export class AdminDashboardComponent {
     private readonly usersService = inject(AdminUsersService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly summary = signal<AdminDashboardSummary | null>(null);
-    public readonly aiUsage = signal<AdminAiUsageSummary | null>(null);
-    public readonly fastingTelemetry = signal<FastingTelemetrySummary | null>(null);
-    public readonly loginSummary = signal<AdminUserLoginDeviceSummary[]>([]);
-    public readonly loginDeviceSegments = computed(() => this.buildLoginSegments('device'));
-    public readonly loginOperatingSystemSegments = computed(() => this.buildLoginSegments('os'));
-    public readonly loginBrowserSegments = computed(() => this.buildLoginSegments('browser'));
-    public readonly fastingTelemetryView = computed<FastingTelemetryViewModel | null>(() => {
+    protected readonly summary = signal<AdminDashboardSummary | null>(null);
+    protected readonly aiUsage = signal<AdminAiUsageSummary | null>(null);
+    protected readonly fastingTelemetry = signal<FastingTelemetrySummary | null>(null);
+    protected readonly loginSummary = signal<AdminUserLoginDeviceSummary[]>([]);
+    protected readonly loginDeviceSegments = computed(() => this.buildLoginSegments('device'));
+    protected readonly loginOperatingSystemSegments = computed(() => this.buildLoginSegments('os'));
+    protected readonly loginBrowserSegments = computed(() => this.buildLoginSegments('browser'));
+    protected readonly fastingTelemetryView = computed<FastingTelemetryViewModel | null>(() => {
         const telemetry = this.fastingTelemetry();
         if (telemetry === null) {
             return null;
@@ -77,13 +77,13 @@ export class AdminDashboardComponent {
             })),
         };
     });
-    public readonly isLoading = signal(false);
+    protected readonly isLoading = signal(false);
 
     public constructor() {
         this.loadSummary();
     }
 
-    public loadSummary(): void {
+    protected loadSummary(): void {
         this.isLoading.set(true);
         this.dashboardService
             .getSummary()

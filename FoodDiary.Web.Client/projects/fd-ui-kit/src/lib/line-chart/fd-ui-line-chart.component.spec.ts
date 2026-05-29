@@ -51,14 +51,14 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component.pointViews()).toHaveLength(TREND_POINT_COUNT);
-        expect(component.linePath()).toContain('M');
-        expect(component.linePath()).toContain('C');
-        expect(component.pointViews()[0]?.x).toBe(CHART_LEFT_X);
-        expect(component.pointViews()[TREND_POINT_COUNT - 1]?.x).toBe(CHART_RIGHT_X);
+        expect(component['pointViews']()).toHaveLength(TREND_POINT_COUNT);
+        expect(component['linePath']()).toContain('M');
+        expect(component['linePath']()).toContain('C');
+        expect(component['pointViews']()[0]?.x).toBe(CHART_LEFT_X);
+        expect(component['pointViews']()[TREND_POINT_COUNT - 1]?.x).toBe(CHART_RIGHT_X);
         expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(TREND_POINT_COUNT);
         expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toBe('Mon: 80');
-        expect(component.ariaLabel()).toBe('Weight: Mon 80, Tue 79, Wed 81');
+        expect(component['ariaLabel']()).toBe('Weight: Mon 80, Tue 79, Wed 81');
     });
 
     it('can render an area path', () => {
@@ -69,7 +69,7 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component.areaPath()).toContain('Z');
+        expect(component['areaPath']()).toContain('Z');
         expect(host().querySelector('.fd-ui-line-chart__area')).not.toBeNull();
     });
 
@@ -81,8 +81,8 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component.pointViews()[0]?.x).toBe(SPARKLINE_CHART_LEFT_X);
-        expect(component.pointViews()[1]?.x).toBe(SPARKLINE_CHART_RIGHT_X);
+        expect(component['pointViews']()[0]?.x).toBe(SPARKLINE_CHART_LEFT_X);
+        expect(component['pointViews']()[1]?.x).toBe(SPARKLINE_CHART_RIGHT_X);
     });
 
     it('extends sparkline area below the zero line stroke', () => {
@@ -94,8 +94,8 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component.areaPath()).toContain(`100 ${SPARKLINE_AREA_BASELINE_Y}`);
-        expect(component.areaPath()).toContain(`0 ${SPARKLINE_AREA_BASELINE_Y}`);
+        expect(component['areaPath']()).toContain(`100 ${SPARKLINE_AREA_BASELINE_Y}`);
+        expect(component['areaPath']()).toContain(`0 ${SPARKLINE_AREA_BASELINE_Y}`);
     });
 
     it('can render multiple line series with a shared y-axis', () => {
@@ -141,7 +141,7 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(MULTI_SERIES_POINT_COUNT);
         expect(host().querySelectorAll('.fd-ui-line-chart__legend span')).toHaveLength(MULTI_SERIES_COUNT);
         expect(host().querySelector('.fd-ui-line-chart__legend')?.textContent).toContain('Proteins');
-        expect(component.ariaLabel()).toContain('Proteins Mon 10');
+        expect(component['ariaLabel']()).toContain('Proteins Mon 10');
     });
 
     it('breaks line and area paths around null values', () => {
@@ -155,13 +155,13 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        const series = component.seriesViews()[0];
+        const series = component['seriesViews']()[0];
 
         expect(series.paths).toHaveLength(GAP_SEGMENT_COUNT);
         expect(series.areaPaths).toHaveLength(GAP_SEGMENT_COUNT);
         expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(GAP_SEGMENT_COUNT);
         expect(host().querySelectorAll('.fd-ui-line-chart__area')).toHaveLength(GAP_SEGMENT_COUNT);
-        expect(component.linePath().match(/\bM\b/g)).toHaveLength(GAP_SEGMENT_COUNT);
+        expect(component['linePath']().match(/\bM\b/g)).toHaveLength(GAP_SEGMENT_COUNT);
     });
 
     it('can use an explicit value range', () => {
@@ -170,7 +170,7 @@ describe('FdUiLineChartComponent', () => {
         fixture.componentRef.setInput('maxValue', EXPLICIT_MAX_VALUE);
         fixture.detectChanges();
 
-        expect(component.pointViews()[0]?.y).toBe((CHART_TOP_Y + CHART_BOTTOM_Y) / 2);
+        expect(component['pointViews']()[0]?.y).toBe((CHART_TOP_Y + CHART_BOTTOM_Y) / 2);
     });
 
     it('can render axis labels', () => {
@@ -305,7 +305,7 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="2"][x2="2"]')).not.toBeNull();
         expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="98"][x2="98"]')).not.toBeNull();
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('100');
-        expect(component.pointViews().every(point => point.y === CHART_BOTTOM_Y)).toBe(true);
+        expect(component['pointViews']().every(point => point.y === CHART_BOTTOM_Y)).toBe(true);
     });
 
     it('adds visual range around flat non-zero data', () => {
@@ -315,7 +315,7 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        const yValues = component.pointViews().map(point => point.y);
+        const yValues = component['pointViews']().map(point => point.y);
 
         expect(yValues.every(y => y > CHART_TOP_Y && y < CHART_BOTTOM_Y)).toBe(true);
     });
@@ -324,7 +324,7 @@ describe('FdUiLineChartComponent', () => {
         fixture.componentRef.setInput('points', [{ label: 'Mon', value: null }]);
         fixture.detectChanges();
 
-        expect(component.pointViews()).toHaveLength(0);
+        expect(component['pointViews']()).toHaveLength(0);
         expect(getText('.fd-ui-line-chart__empty')).toBe('No data');
     });
 });

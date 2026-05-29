@@ -55,13 +55,13 @@ describe('FdUiTabsComponent', () => {
 
     it('should emit selected value when clicking a tab', () => {
         const emitted: string[] = [];
-        component.selectedValueChange.subscribe(value => emitted.push(value));
+        component['selectedValueChange'].subscribe(value => emitted.push(value));
 
         const tabButtons = tabs();
         tabButtons[1].click();
         fixture.detectChanges();
 
-        expect(component.selectedValue()).toBe('recipes');
+        expect(component['selectedValue']()).toBe('recipes');
         expect(emitted).toEqual(['recipes']);
     });
 
@@ -72,7 +72,7 @@ describe('FdUiTabsComponent', () => {
         tabButtons[0].triggerEventHandler('keydown', new KeyboardEvent('keydown', { key: 'ArrowRight' }));
         fixture.detectChanges();
 
-        expect(component.selectedValue()).toBe('recipes');
+        expect(component['selectedValue']()).toBe('recipes');
         expect(document.activeElement).toBe(secondTab);
     });
 });

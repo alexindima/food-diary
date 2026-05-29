@@ -21,7 +21,7 @@ export class EntityCardThumbComponent {
 
     public readonly preview = output();
 
-    public handlePreview(event: Event): void {
+    protected handlePreview(event: Event): void {
         event.stopPropagation();
 
         if (!this.hasPreviewImage()) {

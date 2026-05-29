@@ -75,22 +75,22 @@ export class MealPhotoRecognitionDialogComponent {
         optional: true,
     });
 
-    public readonly isLoading = signal(false);
-    public readonly errorKey = signal<string | null>(null);
-    public readonly results = signal<FoodVisionItem[]>([]);
-    public readonly selection = signal<ImageSelection | null>(null);
-    public readonly hasAnalyzed = signal(false);
-    public readonly isNutritionLoading = signal(false);
-    public readonly nutrition = signal<FoodNutritionResponse | null>(null);
-    public readonly nutritionErrorKey = signal<string | null>(null);
-    public readonly initialSelection = this.dialogData.initialSelection ?? null;
-    public readonly isEditMode = signal(this.dialogData.mode === 'edit');
-    public readonly isEditing = signal(false);
-    public readonly editItems = signal<EditableAiItem[]>([]);
+    protected readonly isLoading = signal(false);
+    protected readonly errorKey = signal<string | null>(null);
+    protected readonly results = signal<FoodVisionItem[]>([]);
+    protected readonly selection = signal<ImageSelection | null>(null);
+    protected readonly hasAnalyzed = signal(false);
+    protected readonly isNutritionLoading = signal(false);
+    protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
+    protected readonly nutritionErrorKey = signal<string | null>(null);
+    protected readonly initialSelection = this.dialogData.initialSelection ?? null;
+    protected readonly isEditMode = signal(this.dialogData.mode === 'edit');
+    protected readonly isEditing = signal(false);
+    protected readonly editItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
     private shouldSkipNextImageChange = Boolean(this.dialogData.initialSession);
-    public readonly unitOptions = UNIT_OPTIONS;
-    public readonly resultViews = computed<RecognizedItemView[]>(() =>
+    protected readonly unitOptions = UNIT_OPTIONS;
+    protected readonly resultViews = computed<RecognizedItemView[]>(() =>
         this.results().map(item => ({
             item,
             displayName: this.toDisplayName(item),
@@ -99,7 +99,7 @@ export class MealPhotoRecognitionDialogComponent {
             unitKey: resolveAiPhotoUnitKey(item.unit),
         })),
     );
-    public readonly macroSummaryItems = computed<MacroSummaryItem[]>(() => {
+    protected readonly macroSummaryItems = computed<MacroSummaryItem[]>(() => {
         const nutrition = this.nutrition();
         if (nutrition === null) {
             return [];
@@ -114,10 +114,10 @@ export class MealPhotoRecognitionDialogComponent {
             this.toMacroSummaryItem('alcohol', 'GENERAL.NUTRIENTS.ALCOHOL', nutrition.alcohol, 'GENERAL.UNITS.G'),
         ];
     });
-    public readonly submitLabelKey = computed(() =>
+    protected readonly submitLabelKey = computed(() =>
         this.isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL',
     );
-    public readonly statusKey = computed(() => {
+    protected readonly statusKey = computed(() => {
         if (this.selection() === null) {
             return null;
         }
@@ -136,7 +136,7 @@ export class MealPhotoRecognitionDialogComponent {
 
         return null;
     });
-    public readonly hasSelectionAsset = computed(() => this.selection()?.assetId !== null && this.selection()?.assetId !== undefined);
+    protected readonly hasSelectionAsset = computed(() => this.selection()?.assetId !== null && this.selection()?.assetId !== undefined);
 
     public constructor() {
         const session = this.dialogData.initialSession;
@@ -164,7 +164,7 @@ export class MealPhotoRecognitionDialogComponent {
         return `${first.toLocaleUpperCase()}${rest.join('')}`;
     }
 
-    public onImageChanged(selection: ImageSelection | null): void {
+    protected onImageChanged(selection: ImageSelection | null): void {
         if (this.shouldSkipNextImageChange) {
             this.shouldSkipNextImageChange = false;
             this.selection.set(selection);
@@ -186,7 +186,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.runAnalysis(selection.assetId);
     }
 
-    public onReanalyze(): void {
+    protected onReanalyze(): void {
         const assetId = this.selection()?.assetId;
         if (assetId === null || assetId === undefined || this.isLoading() || this.isEditing()) {
             return;
@@ -201,7 +201,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.runAnalysis(assetId);
     }
 
-    public addToMeal(): void {
+    protected addToMeal(): void {
         const session = this.buildSessionPayload();
         if (session === null) {
             return;
@@ -209,7 +209,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.dialogRef?.close(session);
     }
 
-    public close(): void {
+    protected close(): void {
         this.dialogRef?.close(null);
     }
 
@@ -316,14 +316,14 @@ export class MealPhotoRecognitionDialogComponent {
             });
     }
 
-    public startEditing(): void {
+    protected startEditing(): void {
         const editable = buildAiEditableItems(this.results(), this.nutrition(), () => this.createEditId());
         this.editItems.set(editable);
         this.sourceItems.set(editable.map(item => ({ ...item })));
         this.isEditing.set(true);
     }
 
-    public applyEditing(): void {
+    protected applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
         const normalized = normalizeAiEditableItems(edited);
         const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
@@ -344,7 +344,7 @@ export class MealPhotoRecognitionDialogComponent {
         }
     }
 
-    public handleEditAction(): void {
+    protected handleEditAction(): void {
         if (this.isEditing()) {
             this.applyEditing();
             return;
@@ -353,7 +353,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.startEditing();
     }
 
-    public onEditItemDrop(event: PhotoAiEditItemDrop): void {
+    protected onEditItemDrop(event: PhotoAiEditItemDrop): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -363,19 +363,19 @@ export class MealPhotoRecognitionDialogComponent {
         this.editItems.set(items);
     }
 
-    public updateEditItemFromView(update: PhotoAiEditItemUpdate): void {
+    protected updateEditItemFromView(update: PhotoAiEditItemUpdate): void {
         this.updateEditItem(update.index, update.field, update.value);
     }
 
-    public updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
+    protected updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
         this.editItems.update(items => updateAiEditableItem(items, index, field, value));
     }
 
-    public removeEditItem(index: number): void {
+    protected removeEditItem(index: number): void {
         this.editItems.update(items => items.filter((_, idx) => idx !== index));
     }
 
-    public addEditItem(): void {
+    protected addEditItem(): void {
         this.editItems.update(items => [...items, createEmptyAiEditableItem(() => this.createEditId(), 'g')]);
     }
 

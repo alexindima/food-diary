@@ -18,9 +18,9 @@ describe('ProductListPaginationComponent', () => {
     it('should emit page changes', async () => {
         const { component } = await setupComponentAsync({ totalPages: 3 });
         const handler = vi.fn();
-        component.pageChange.subscribe(handler);
+        component['pageChange'].subscribe(handler);
 
-        component.pageChange.emit(PAGE_INDEX);
+        component['pageChange'].emit(PAGE_INDEX);
 
         expect(handler).toHaveBeenCalledWith(PAGE_INDEX);
     });
