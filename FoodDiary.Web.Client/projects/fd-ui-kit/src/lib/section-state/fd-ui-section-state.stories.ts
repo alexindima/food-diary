@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiSectionStateComponent } from './fd-ui-section-state.component';
+import { FdUiSectionStateComponent } from './fd-ui-section-state';
 
 const meta: Meta<FdUiSectionStateComponent> = {
     title: 'Components/SectionState',

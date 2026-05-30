@@ -20,7 +20,7 @@ const publicSeoLanding = ({
 }: PublicSeoLandingRouteConfig): Route => ({
     path,
     loadComponent: async (): Promise<Type<unknown>> =>
-        import('./features/public/pages/seo-landing/seo-landing-page/seo-landing-page.component').then(m => m.SeoLandingPageComponent),
+        import('./features/public/pages/seo-landing/seo-landing-page/seo-landing-page').then(m => m.SeoLandingPageComponent),
     data: {
         seo: {
             titleKey,
@@ -42,7 +42,7 @@ const publicSeoLanding = ({
 export const routes: Routes = [
     {
         path: '',
-        loadComponent: async () => import('./features/public/pages/landing/main.component').then(m => m.MainComponent),
+        loadComponent: async () => import('./features/public/pages/landing/main').then(m => m.MainComponent),
         canActivate: [loggedInGuard],
         canDeactivate: [unsavedChangesGuard],
         data: { seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
@@ -52,7 +52,7 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         canActivate: [authGuard],
-        loadComponent: async () => import('./features/dashboard/pages/dashboard.component').then(m => m.DashboardComponent),
+        loadComponent: async () => import('./features/dashboard/pages/dashboard').then(m => m.DashboardComponent),
         data: { preload: true, seo: { titleKey: 'SEO.DASHBOARD', descriptionKey: 'SEO.DASHBOARD_DESCRIPTION', noIndex: true } },
     },
     {
@@ -167,29 +167,24 @@ export const routes: Routes = [
         path: 'dietologist-invitations/:invitationId',
         canActivate: [authGuard],
         loadComponent: async () =>
-            import('./features/dietologist/pages/invitation/dietologist-invitation-page.component').then(
-                m => m.DietologistInvitationPageComponent,
-            ),
+            import('./features/dietologist/pages/invitation/dietologist-invitation-page').then(m => m.DietologistInvitationPageComponent),
         data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
     },
     {
         path: 'recommendations',
         canActivate: [authGuard],
         loadComponent: async () =>
-            import('./features/recommendations/pages/recommendations-page/recommendations-page.component').then(
-                m => m.RecommendationsPageComponent,
-            ),
+            import('./features/recommendations/pages/recommendations-page/recommendations-page').then(m => m.RecommendationsPageComponent),
         data: { seo: { titleKey: 'RECOMMENDATIONS.TITLE', noIndex: true } },
     },
     {
         path: 'privacy-policy',
-        loadComponent: async () =>
-            import('./features/public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
+        loadComponent: async () => import('./features/public/pages/privacy-policy/privacy-policy').then(m => m.PrivacyPolicyComponent),
         data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
     },
     {
         path: '**',
-        loadComponent: async () => import('./features/public/pages/not-found/not-found.component').then(m => m.NotFoundComponent),
+        loadComponent: async () => import('./features/public/pages/not-found/not-found').then(m => m.NotFoundComponent),
         data: { seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
     },
 ];

@@ -1,0 +1,50 @@
+<fd-ui-card
+    class="product-manage__card product-manage__card--nutrition"
+    appearance="entry"
+    tone="editor-white"
+    density="relaxed"
+    headerAlign="center"
+    accent="success"
+    [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
+>
+    <div class="product-manage__nutrition fd-stack fd-gap-lg">
+        <div class="product-manage__ai fd-stack fd-gap-md">
+            <div class="product-manage__ai-text fd-stack fd-gap-xxs">
+                <div class="product-manage__ai-title">{{ 'PRODUCT_MANAGE.AI_TITLE' | translate }}</div>
+                <div class="product-manage__ai-subtitle">{{ 'PRODUCT_MANAGE.AI_SUBTITLE' | translate }}</div>
+            </div>
+            <fd-ui-button
+                type="button"
+                appearance="ai-action"
+                variant="primary"
+                fill="solid"
+                icon="auto_awesome"
+                [fullWidth]="true"
+                (click)="openAiRecognition.emit()"
+            >
+                {{ 'PRODUCT_MANAGE.AI_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+        <fd-nutrition-editor
+            [formGroup]="formGroup()"
+            [controlNames]="nutritionControlNames"
+            [macroState]="macroBarState()"
+            [caloriesError]="caloriesError()"
+            [macrosError]="macrosError()"
+            [warning]="nutritionWarning()"
+        >
+            <fd-ui-segmented-toggle
+                nutrition-before
+                class="product-manage__nutrition-toggle"
+                appearance="soft"
+                [fullWidth]="true"
+                [stackOnNarrow]="false"
+                [options]="nutritionModeOptions()"
+                [selectedValue]="nutritionMode()"
+                [fdUiHint]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                [ariaLabel]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                (selectedValueChange)="nutritionModeChange.emit($event)"
+            />
+        </fd-nutrition-editor>
+    </div>
+</fd-ui-card>

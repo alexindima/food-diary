@@ -1,0 +1,141 @@
+<div #dashboardRoot class="dashboard fd-stack fd-gap-xl" fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
+    @if (layout.isEditingLayout()) {
+    <div class="dashboard__edit-overlay"></div>
+    }
+
+    <fd-dashboard-header
+        [headerState]="dashboardHeaderState()"
+        [selectedDate]="selectedDate()"
+        [isEditingLayout]="layout.isEditingLayout()"
+        (dateChange)="handleDateChange($event)"
+        (appearanceOpen)="openAppearanceDialogAsync()"
+        (notificationSettingsOpen)="openNotificationSettingsAsync()"
+        (settingsOpen)="layout.openSettings()"
+    />
+
+    <fd-page-body>
+        <div class="dashboard__body">
+            @if (isLoading()) {
+            <div class="dashboard__loader fd-ui-body-sm">{{ 'DASHBOARD.LOADING' | translate }}</div>
+            } @else { @if (isTodaySelected() && !layout.isEditingLayout()) {
+            <fd-dashboard-quick-add
+                [isAiMealSaving]="isAiMealSaving()"
+                [aiMealClearToken]="aiMealClearToken()"
+                (mealCreateRequested)="onAiMealCreateRequested($event)"
+                (manualAdd)="addConsumptionAsync()"
+            />
+            }
+
+            <section
+                class="dashboard__grid fd-grid fd-gap-lg fd-align-start"
+                [class.dashboard__grid--editing]="layout.isEditingLayout()"
+                [class.dashboard__grid--single]="!hasRenderedAsideBlocks() && !layout.isEditingLayout()"
+            >
+                @let blockStates = dashboardBlockStates(); @if (layout.isEditingLayout()) {
+                <fd-dashboard-edit-hint [actionLabel]="editSaveActionLabel()" (save)="layout.save()" />
+                }
+
+                <div class="dashboard__column fd-grid fd-gap-lg">
+                    <fd-dashboard-fasting-block
+                        [shouldRender]="shouldRenderFastingWidget()"
+                        [state]="blockStates.fasting"
+                        [isEditingLayout]="layout.isEditingLayout()"
+                        [session]="fastingCurrentSession()"
+                        (blockClick)="handleFastingCardClick()"
+                    />
+
+                    <fd-dashboard-summary-block
+                        [shouldRender]="layout.shouldRenderBlock('summary')"
+                        [state]="blockStates.summary"
+                        [isEditingLayout]="layout.isEditingLayout()"
+                        [data]="dashboardSummaryData()"
+                        [caloriesBurned]="caloriesBurned()"
+                        (blockToggle)="layout.toggleBlock('summary')"
+                        (goalAction)="openGoalsAsync()"
+                    />
+
+                    <fd-dashboard-meals-block
+                        [shouldRender]="layout.shouldRenderBlock('meals')"
+                        [state]="blockStates.meals"
+                        [entries]="mealPreviewEntries()"
+                        [previewState]="mealsPreviewState()"
+                        [isAiMealSaving]="isAiMealSaving()"
+                        [aiMealClearToken]="aiMealClearToken()"
+                        (blockToggle)="layout.toggleBlock('meals')"
+                        (viewAll)="manageConsumptionsAsync()"
+                        (add)="addConsumptionAsync($event)"
+                        (aiMealCreateRequested)="onAiMealCreateRequested($event)"
+                        (open)="openConsumption($event)"
+                    />
+                </div>
+
+                <div class="dashboard__column dashboard__column--aside fd-grid fd-gap-lg">
+                    <fd-dashboard-hydration-block
+                        [shouldRender]="layout.shouldRenderBlock('hydration')"
+                        [state]="blockStates.hydration"
+                        [cardState]="hydrationCardState()"
+                        [isLoading]="isHydrationLoading()"
+                        [canAdd]="isTodaySelected()"
+                        (blockToggle)="layout.toggleBlock('hydration')"
+                        (addClick)="addHydration($event)"
+                        (goalAction)="openGoalsAsync()"
+                    />
+
+                    <fd-dashboard-cycle-block
+                        [shouldRender]="layout.shouldRenderBlock('cycle')"
+                        [state]="blockStates.cycle"
+                        [cardState]="cycleCardState()"
+                        [referenceDate]="selectedDate()"
+                        [isLoading]="isCycleLoading()"
+                        (blockToggle)="layout.toggleBlock('cycle')"
+                        (setupAction)="openCycleTrackingAsync()"
+                    />
+
+                    <fd-dashboard-trend-block
+                        cardClass="dashboard__card dashboard__card--weight-trend"
+                        [shouldRender]="layout.shouldRenderBlock('weight')"
+                        [state]="blockStates.weight"
+                        [current]="weightTrend.weightTrendCurrent()"
+                        [change]="weightTrend.weightTrendChange()"
+                        [points]="weightTrend.weightTrendSeries()"
+                        [isLoading]="isWeightTrendLoading()"
+                        (blockToggle)="layout.toggleBlock('weight')"
+                    />
+
+                    <fd-dashboard-trend-block
+                        cardClass="dashboard__card dashboard__card--waist-trend"
+                        title="WAIST_CARD.TITLE"
+                        unitKey="WAIST_CARD.CM"
+                        iconName="straighten"
+                        accentColor="var(--fd-color-sky-500)"
+                        [shouldRender]="layout.shouldRenderBlock('waist')"
+                        [state]="blockStates.waist"
+                        [current]="waistTrend.waistTrendCurrent()"
+                        [change]="waistTrend.waistTrendChange()"
+                        [points]="waistTrend.waistTrendSeries()"
+                        [isLoading]="isWaistTrendLoading()"
+                        (blockToggle)="layout.toggleBlock('waist')"
+                    />
+
+                    <fd-dashboard-tdee-block
+                        [shouldRender]="layout.shouldRenderBlock('tdee')"
+                        [state]="blockStates.tdee"
+                        [insight]="tdeeInsight()"
+                        [isLoading]="isLoading()"
+                        (blockClick)="handleTdeeCardClick($event)"
+                        (applyGoal)="applyTdeeGoal($event)"
+                    />
+
+                    <fd-dashboard-advice-block
+                        [shouldRender]="layout.shouldRenderBlock('advice')"
+                        [state]="blockStates.advice"
+                        [advice]="dailyAdvice()"
+                        [isLoading]="isAdviceLoading()"
+                        (blockToggle)="layout.toggleBlock('advice')"
+                    />
+                </div>
+            </section>
+            }
+        </div>
+    </fd-page-body>
+</div>

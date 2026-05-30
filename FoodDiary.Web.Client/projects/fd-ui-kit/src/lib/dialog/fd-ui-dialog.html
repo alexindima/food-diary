@@ -1,0 +1,30 @@
+<div role="dialog" aria-modal="true" [attr.aria-labelledby]="title() ? dialogTitleId : null" [class]="hostClass()">
+    @if (hasCustomHeader()) {
+    <header class="fd-ui-dialog__header fd-ui-dialog__header--custom">
+        <ng-content select="[fdUiDialogHeader]" />
+    </header>
+    } @else if (showBuiltInHeader()) {
+    <header class="fd-ui-dialog__header">
+        <div class="fd-ui-dialog__heading">
+            @if (title(); as titleValue) {
+            <h2 class="fd-ui-dialog__title" [id]="dialogTitleId">{{ titleValue }}</h2>
+            } @if (subtitle(); as subtitleValue) {
+            <p class="fd-ui-dialog__subtitle">{{ subtitleValue }}</p>
+            }
+        </div>
+        @if (dismissible()) {
+        <button type="button" class="fd-ui-dialog__close-button" aria-label="Close dialog" (click)="close()">
+            <fd-ui-icon name="close" />
+        </button>
+        }
+    </header>
+    }
+
+    <footer class="fd-ui-dialog__footer">
+        <ng-content select="[fdUiDialogFooter]" />
+    </footer>
+
+    <section #body class="fd-ui-dialog__body">
+        <ng-content />
+    </section>
+</div>

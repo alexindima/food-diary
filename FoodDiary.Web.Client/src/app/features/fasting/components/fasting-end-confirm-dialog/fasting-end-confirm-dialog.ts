@@ -1,0 +1,35 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
+
+export type FastingEndConfirmDialogResult = 'confirm' | 'cancel';
+
+export type FastingEndConfirmDialogData = {
+    title: string;
+    message: string;
+    confirmLabel: string;
+    cancelLabel: string;
+};
+
+@Component({
+    selector: 'fd-fasting-end-confirm-dialog',
+    imports: [FdUiDialogShellComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
+    templateUrl: './fasting-end-confirm-dialog.html',
+    styleUrl: './fasting-end-confirm-dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class FastingEndConfirmDialogComponent {
+    protected readonly data = inject<FastingEndConfirmDialogData>(FD_UI_DIALOG_DATA);
+    private readonly dialogRef = inject<FdUiDialogRef<FastingEndConfirmDialogComponent, FastingEndConfirmDialogResult>>(FdUiDialogRef);
+
+    protected onConfirm(): void {
+        this.dialogRef.close('confirm');
+    }
+
+    protected onCancel(): void {
+        this.dialogRef.close('cancel');
+    }
+}

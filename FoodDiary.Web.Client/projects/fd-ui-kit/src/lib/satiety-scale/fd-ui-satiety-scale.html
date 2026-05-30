@@ -1,0 +1,43 @@
+<div class="satiety-scale" [class.satiety-scale--grid]="layout() === 'grid'" [class.satiety-scale--vertical]="layout() === 'vertical'">
+    @if (label()) {
+    <p class="satiety-scale__label">
+        {{ label() }} @if (required()) {
+        <span class="satiety-scale__required">*</span>
+        }
+    </p>
+    } @if (hint()) {
+    <p class="satiety-scale__hint">{{ hint() }}</p>
+    }
+
+    <div class="satiety-scale__list" role="radiogroup" [attr.aria-disabled]="disabled">
+        @for (level of levels(); track level.value) {
+        <button
+            fdUiAccentSurface
+            type="button"
+            class="satiety-scale__option"
+            accentSide="left"
+            role="radio"
+            [class.satiety-scale__option--selected]="isSelected(level.value)"
+            [disabled]="disabled"
+            [accentColor]="level.gradient"
+            [active]="isSelected(level.value)"
+            [tinted]="true"
+            [attr.aria-checked]="isSelected(level.value)"
+            (click)="selectLevel(level.value)"
+            (blur)="handleBlur()"
+        >
+            <div class="satiety-scale__indicator">
+                <span class="satiety-scale__emoji">{{ level.emoji }}</span>
+            </div>
+            <div class="satiety-scale__text">
+                <div class="satiety-scale__title">{{ level.titleKey | translate }}</div>
+                <div class="satiety-scale__description">{{ level.descriptionKey | translate }}</div>
+            </div>
+        </button>
+        }
+    </div>
+
+    @if (error()) {
+    <div class="satiety-scale__error">{{ error() }}</div>
+    }
+</div>

@@ -1,0 +1,58 @@
+<fd-ui-dialog size="lg">
+    <header fdUiDialogHeader class="product-detail__header">
+        <div class="product-detail__header-row">
+            <div class="product-detail__title-group">
+                <fd-ui-button
+                    class="product-detail__favorite-btn fd-favorite-button fd-inline-center"
+                    appearance="plain-icon"
+                    variant="secondary"
+                    fill="text"
+                    iconSize="sm"
+                    [icon]="favoriteIcon()"
+                    [class.product-detail__favorite-btn--active]="isFavorite()"
+                    [class.fd-favorite-button--active]="isFavorite()"
+                    [disabled]="isFavoriteLoading()"
+                    [fdUiHint]="favoriteAriaLabelKey() | translate"
+                    [ariaLabel]="favoriteAriaLabelKey() | translate"
+                    (click)="toggleFavorite()"
+                />
+                <h2 class="product-detail__title">{{ product.name }}</h2>
+            </div>
+            <button type="button" class="product-detail__close-button" aria-label="Close dialog" (click)="close()">
+                <span class="material-icons" aria-hidden="true">close</span>
+            </button>
+        </div>
+        <fd-ui-tabs class="product-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab()" (selectedValueChange)="onTabChange($event)" />
+    </header>
+
+    <div class="product-detail fd-stack fd-gap-lg">
+        @switch (activeTab()) { @case ('summary') {
+        <fd-product-detail-summary
+            [product]="product"
+            [calories]="calories"
+            [baseUnitKey]="baseUnitKey"
+            [productTypeKey]="productTypeKey"
+            [qualityScore]="qualityScore"
+            [qualityGrade]="qualityGrade"
+            [macroSummaryBlocks]="macroSummaryBlocks"
+        />
+        } @case ('nutrients') {
+        <fd-nutrition-editor
+            class="product-detail__nutrients"
+            [formGroup]="nutritionForm"
+            [controlNames]="nutritionControlNames"
+            [macroState]="macroBarState"
+            [readonly]="true"
+        />
+        } }
+    </div>
+
+    <fd-product-detail-actions
+        [canModify]="canModify()"
+        [warningMessage]="warningMessage()"
+        [isDuplicateInProgress]="isDuplicateInProgress()"
+        (edit)="onEdit()"
+        (delete)="onDelete()"
+        (duplicate)="onDuplicate()"
+    />
+</fd-ui-dialog>

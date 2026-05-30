@@ -1,0 +1,224 @@
+@use 'variables' as variables;
+
+.consumption-list {
+    margin: 0 auto;
+    box-sizing: border-box;
+    font-size: var(--fd-text-body-sm-size);
+    --fd-layout-page-section-spacing: var(--fd-space-md);
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: var(--fd-shadow-none);
+
+    &__header .fd-page-header__actions {
+        gap: var(--fd-space-sm);
+        width: auto;
+        margin-left: auto;
+        justify-content: flex-end;
+    }
+
+    &__mobile-toolbar {
+        display: none;
+        align-items: center;
+        gap: var(--fd-space-xxs);
+        flex-wrap: nowrap;
+    }
+
+    &__header-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--fd-space-sm);
+    }
+
+    &__ai-placeholder {
+        min-height: 76px;
+    }
+
+    &__loader {
+        display: block;
+        margin: var(--fd-space-lg) auto;
+    }
+
+    &__no-results {
+        font-size: var(--fd-text-title-compact-size);
+        font-weight: var(--fd-text-title-compact-weight);
+        color: var(--fd-color-text-muted);
+        text-align: center;
+        margin-top: var(--fd-space-lg);
+
+        &-icon {
+            font-size: var(--fd-size-icon-xxl);
+            color: var(--fd-color-danger);
+        }
+    }
+
+    &__empty-state {
+        @extend .consumption-list__no-results;
+        padding: var(--fd-space-lg);
+        border: var(--fd-border-dashed);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-list-empty);
+    }
+
+    &__empty-title {
+        font-size: var(--fd-text-body-size);
+        font-weight: var(--fd-text-metric-lg-weight);
+        color: var(--fd-color-text);
+    }
+
+    &__empty-copy {
+        max-width: 420px;
+        font-size: var(--fd-text-body-sm-size);
+        font-weight: var(--fd-font-weight-medium);
+        line-height: 1.5;
+    }
+
+    &__pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: var(--fd-space-lg);
+    }
+
+    &__grid {
+        grid-template-columns: 1fr;
+    }
+
+    &__day-label {
+        font-weight: var(--fd-text-metric-lg-weight);
+        font-size: var(--fd-text-card-title-size);
+        color: var(--fd-color-text);
+        white-space: nowrap;
+    }
+
+    &__day-line {
+        flex: 1;
+        height: 1px;
+        background: var(--fd-bg-overlay-subtle);
+        border-radius: var(--fd-radius-pill);
+    }
+
+    @media #{variables.$media-tablet} {
+        --fd-layout-page-vertical-padding: 0;
+        --media-card-compact-border: var(--fd-border-default);
+        --media-card-compact-border-radius: var(--fd-radius-card);
+        --media-card-compact-background: var(--fd-bg-media-card-raised);
+        --media-card-compact-shadow: var(--fd-shadow-sm);
+        --media-card-compact-hover-shadow: var(--fd-shadow-lg);
+        --media-card-compact-media-radius: var(--fd-radius-card) 0 0 var(--fd-radius-card);
+
+        &__mobile-toolbar {
+            display: flex;
+        }
+
+        &__header-actions {
+            display: none;
+        }
+
+        &__groups {
+            gap: var(--fd-space-sm);
+        }
+
+        &__day {
+            gap: var(--fd-space-xs);
+        }
+
+        &__day-header {
+            padding: 0 var(--fd-space-md);
+        }
+
+        &__day-label {
+            font-size: var(--fd-text-body-sm-size);
+        }
+
+        &__grid {
+            gap: var(--fd-space-sm);
+            margin: 0;
+            background: transparent;
+            border-top: none;
+
+            fd-meal-card {
+                border-bottom: none;
+            }
+        }
+
+        &__no-results,
+        &__loader,
+        &__pagination {
+            padding-left: var(--fd-space-md);
+            padding-right: var(--fd-space-md);
+        }
+    }
+
+    @media #{variables.$media-desktop-sm} {
+        &__header-actions {
+            gap: var(--fd-space-xs);
+        }
+    }
+
+    &__favorites {
+        display: block;
+        margin-bottom: var(--fd-space-card-profile-gap);
+    }
+
+    &__favorites-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        padding: 0 var(--fd-space-sm) var(--fd-space-sm);
+    }
+
+    &__favorite-card {
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-surface-raised);
+        border: var(--fd-border-strong);
+    }
+
+    &__favorite-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__favorite-name {
+        font-weight: var(--fd-font-weight-bold);
+        font-size: var(--fd-text-stat-value-size);
+        color: var(--fd-color-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__favorite-meta {
+        font-size: var(--fd-text-label-floating-size);
+        color: var(--fd-color-text-muted);
+        margin-top: var(--fd-space-micro);
+    }
+
+    &__favorite-btn {
+        --fd-button-width: var(--fd-size-control-sm);
+        --fd-button-min-width: var(--fd-size-control-sm);
+        --fd-button-height: var(--fd-size-control-sm);
+        --fd-button-height-explicit: var(--fd-size-control-sm);
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: var(--fd-radius-md);
+        --fd-button-background-default: transparent;
+        --fd-button-background-hover: var(--fd-bg-accent-soft);
+        --fd-button-background-active: var(--fd-bg-accent-medium);
+        --fd-button-border-default: transparent;
+        --fd-button-border-hover: transparent;
+        --fd-button-border-active: transparent;
+        --fd-button-text-default: var(--fd-color-text-muted);
+        --fd-button-text-hover: var(--fd-color-primary-500);
+        --fd-button-text-active: var(--fd-color-primary-500);
+        --fd-button-shadow-default: var(--fd-shadow-none);
+        --fd-button-shadow-hover: var(--fd-shadow-none);
+        --fd-button-shadow-active: var(--fd-shadow-none);
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+        --fd-button-icon-size: var(--fd-text-card-title-size);
+    }
+
+    &__favorite-btn--remove {
+        --fd-button-text-hover: var(--fd-color-danger);
+        --fd-button-text-active: var(--fd-color-danger);
+    }
+}

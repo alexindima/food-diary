@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiDateInputComponent } from './fd-ui-date-input.component';
+import { FdUiDateInputComponent } from './fd-ui-date-input';
 
 const meta: Meta<FdUiDateInputComponent> = {
     title: 'Components/DateInput',

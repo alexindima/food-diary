@@ -1,6 +1,6 @@
 import type { TranslateService } from '@ngx-translate/core';
-import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { MEAL_TYPE_OPTIONS } from '../../../../../shared/lib/meal-type.util';
 

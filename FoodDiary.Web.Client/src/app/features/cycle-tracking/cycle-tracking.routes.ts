@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { CycleTrackingPageComponent } from './pages/cycle-tracking-page.component';
+import { CycleTrackingPageComponent } from './pages/cycle-tracking-page';
 
 const routes: Routes = [
     {

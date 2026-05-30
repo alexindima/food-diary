@@ -1,4 +1,4 @@
-import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert.component';
+import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 
 import type { FastingCheckIn, FastingMessage, FastingSession } from '../../models/fasting.data';
 

@@ -4,7 +4,7 @@ import type { ComponentType } from '@angular/cdk/portal';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, type StaticProvider } from '@angular/core';
 
-import type { FdUiDialogSize } from './fd-ui-dialog.component';
+import type { FdUiDialogSize } from './fd-ui-dialog';
 import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 

@@ -2,7 +2,7 @@ import type { NutrientBar } from '../../../../components/shared/dashboard-summar
 import type { MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview-lib/meals-preview.types';
 import type { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 import type { FastingSession } from '../../../fasting/models/fasting.data';
-import type { WeightTrendPoint } from '../../components/weight-trend-card/weight-trend-card.component';
+import type { WeightTrendPoint } from '../../components/weight-trend-card/weight-trend-card';
 import type { DailyAdvice } from '../../models/daily-advice.data';
 import type { TdeeInsight } from '../../models/tdee-insight.data';
 

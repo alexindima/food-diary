@@ -6,7 +6,7 @@ import { from, isObservable, type Observable, of, switchMap } from 'rxjs';
 import {
     UnsavedChangesDialogComponent,
     type UnsavedChangesDialogResult,
-} from '../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
+} from '../components/shared/unsaved-changes-dialog/unsaved-changes-dialog';
 import { UnsavedChangesService } from '../services/unsaved-changes.service';
 
 const toObservable = (value: unknown): Observable<unknown> => {

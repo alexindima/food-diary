@@ -1,4 +1,4 @@
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import type { BodyTargetKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';

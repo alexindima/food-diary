@@ -8,7 +8,7 @@ import { of, switchMap, take } from 'rxjs';
 import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
-} from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+} from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { FavoriteRecipeService } from '../../../api/favorite-recipe.service';
 import { RecipeService } from '../../../api/recipe.service';
 import type { Recipe } from '../../../models/recipe.data';

@@ -1,5 +1,6 @@
 /** @type {import('stylelint').Config} */
 import designTokenValues from './stylelint-rules/design-token-values.js';
+import noComponentFileSuffix from './stylelint-rules/no-component-file-suffix.js';
 import noSassUseAsWildcard from './stylelint-rules/no-sass-use-as-wildcard.js';
 
 const componentRawColorProperties =
@@ -20,7 +21,7 @@ export default {
     extends: ['stylelint-config-standard'],
     customSyntax: 'postcss-scss',
     ignoreFiles: ['dist/**/*.css', 'dist-admin/**/*.css', 'dist-storybook/**/*.css'],
-    plugins: [designTokenValues, noSassUseAsWildcard],
+    plugins: [designTokenValues, noComponentFileSuffix, noSassUseAsWildcard],
     rules: {
         'alpha-value-notation': null,
         'at-rule-no-unknown': null,
@@ -62,6 +63,7 @@ export default {
         'property-no-deprecated': true,
         'property-no-vendor-prefix': null,
         'property-disallowed-list': ['float'],
+        'rule-empty-line-before': null,
         'rule-selector-property-disallowed-list': {
             '/^.*$/': ['font'],
         },
@@ -89,10 +91,10 @@ export default {
         ],
         'keyframes-name-pattern': null,
         'food-diary/design-token-values': true,
+        'food-diary/no-component-file-suffix': true,
         'food-diary/no-sass-use-as-wildcard': true,
         'shorthand-property-no-redundant-values': true,
         'value-keyword-case': null,
-        'rule-empty-line-before': ['always-multi-line'],
         'declaration-empty-line-before': ['never'],
     },
     overrides: [

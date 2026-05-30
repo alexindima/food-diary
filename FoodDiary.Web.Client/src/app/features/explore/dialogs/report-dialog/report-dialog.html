@@ -1,0 +1,22 @@
+<fd-ui-dialog [title]="'REPORT.TITLE' | translate">
+    <div class="report-form">
+        <label class="report-label fd-ui-field-label" for="reportReason">{{ 'REPORT.REASON_LABEL' | translate }}</label>
+        <fd-ui-textarea
+            id="reportReason"
+            [formControl]="reasonControl"
+            [placeholder]="'REPORT.REASON_PLACEHOLDER' | translate"
+            [rows]="4"
+        />
+    </div>
+    <div class="report-actions">
+        <fd-ui-button variant="outline" (click)="onCancel()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
+        <fd-ui-button
+            variant="primary"
+            [disabled]="reasonControl.invalid || isSubmitting()"
+            [loading]="isSubmitting()"
+            (click)="onSubmit()"
+        >
+            {{ 'REPORT.SUBMIT' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

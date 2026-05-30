@@ -1,0 +1,23 @@
+<div class="fd-ui-checkbox">
+    <input
+        class="fd-ui-checkbox__input"
+        type="checkbox"
+        [id]="id()"
+        [checked]="checked"
+        [disabled]="disabled()"
+        (change)="handleChange($event)"
+        (blur)="handleBlur()"
+    />
+    <label class="fd-ui-checkbox__label" [attr.for]="id()" [class.fd-ui-checkbox__label--disabled]="disabled()">
+        <span class="fd-ui-checkbox__control" aria-hidden="true">
+            <span class="fd-ui-checkbox__checkmark"></span>
+        </span>
+        <span class="fd-ui-checkbox__label-text">
+            @if (label()) { {{ label() }} }
+            <ng-content />
+        </span>
+    </label>
+    @if (hint()) {
+    <div class="fd-ui-checkbox__hint fd-ui-helper-text">{{ hint() }}</div>
+    }
+</div>

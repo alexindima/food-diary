@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiCheckboxComponent } from './fd-ui-checkbox.component';
+import { FdUiCheckboxComponent } from './fd-ui-checkbox';
 
 const meta: Meta<FdUiCheckboxComponent> = {
     title: 'Components/Checkbox',

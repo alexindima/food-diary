@@ -1,0 +1,97 @@
+@use 'variables' as variables;
+
+.daily-progress-card {
+    height: 100%;
+
+    &__label {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__value {
+        color: var(--fd-color-text);
+    }
+
+    &__percent {
+        color: var(--fd-color-primary-600);
+    }
+
+    &__badge {
+        padding: var(--fd-space-status-badge-padding);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-brand-tint-medium);
+        color: var(--fd-color-primary-700);
+        white-space: nowrap;
+    }
+
+    &__hint {
+        margin: 0;
+        padding: var(--fd-space-inline-alert-notice-padding);
+        border-radius: var(--fd-radius-lg);
+        background: linear-gradient(135deg, var(--fd-bg-surface-inset), var(--fd-bg-brand-soft));
+        color: var(--fd-color-text-muted);
+    }
+
+    &__empty {
+        padding: var(--fd-space-xs) 0;
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    &__actions-inline {
+        flex-shrink: 0;
+
+        .fd-ui-button {
+            white-space: nowrap;
+        }
+    }
+
+    &__empty-title {
+        color: var(--fd-color-text);
+    }
+
+    &__empty-subtitle {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__placeholder {
+        margin-top: var(--fd-space-xs);
+        padding: var(--fd-space-surface-padding);
+        border-radius: var(--fd-radius-lg);
+        background: var(--fd-bg-surface-inset);
+    }
+
+    &__motivation {
+        margin: var(--fd-space-sm) 0 0;
+        color: var(--fd-color-slate-700);
+    }
+
+    &__placeholder-bar {
+        width: 100%;
+        height: 12px;
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-track-muted);
+    }
+
+    &__placeholder-text {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    &__meta-label {
+        display: block;
+        color: var(--fd-color-text-muted);
+        margin-bottom: var(--fd-space-xxs);
+    }
+
+    @media #{variables.$media-phablet} {
+        &__empty {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            row-gap: var(--fd-space-card-header-gap);
+        }
+    }
+}

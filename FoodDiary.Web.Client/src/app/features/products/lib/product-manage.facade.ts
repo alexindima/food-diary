@@ -6,13 +6,13 @@ import { firstValueFrom } from 'rxjs';
 import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
-} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { PremiumRequiredDialogComponent } from '../../../components/shared/premium-required-dialog/premium-required-dialog.component';
+} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
+import { PremiumRequiredDialogComponent } from '../../../components/shared/premium-required-dialog/premium-required-dialog';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { getNumberProperty, getRecordProperty } from '../../../shared/lib/unknown-value.utils';
 import { ProductService } from '../api/product.service';
-import { ProductSaveSuccessDialogComponent } from '../dialogs/product-save-success-dialog/product-save-success-dialog.component';
+import { ProductSaveSuccessDialogComponent } from '../dialogs/product-save-success-dialog/product-save-success-dialog';
 import type { ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog/product-save-success-dialog.types';
 import type { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
 import type { ProductDeleteResult, RedirectAction } from './product-manage.types';

@@ -1,4 +1,4 @@
-import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
 export const AUTH_TABS: FdUiTab[] = [
     { value: 'login', labelKey: 'AUTH.LOGIN.TITLE' },

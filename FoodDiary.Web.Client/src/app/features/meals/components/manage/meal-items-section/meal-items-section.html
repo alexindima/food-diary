@@ -1,0 +1,34 @@
+<div class="consumption-manage__items-section fd-stack fd-gap-md">
+    <div class="consumption-manage__items-header fd-row fd-wrap fd-justify-between fd-gap-md">
+        <h2 class="consumption-manage__section-title fd-ui-section-title">{{ 'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate }}</h2>
+    </div>
+    <div class="consumption-manage__items-grid fd-grid fd-gap-lg">
+        <fd-ai-input-action-bar
+            mode="emit"
+            manualPrefixLabelKey="CONSUMPTION_MANAGE.ITEMS_OR_MANUAL"
+            manualActionLabelKey="CONSUMPTION_MANAGE.CHOOSE_ITEM"
+            manualActionIcon="search"
+            [mealType]="selectedMealType()"
+            [isProcessing]="isProcessing()"
+            (mealRecognized)="mealRecognized.emit($event)"
+            (manualAction)="addItem.emit()"
+        />
+
+        <fd-meal-items-list
+            [formArray]="items()"
+            [hasExternalItems]="aiSessions().length > 0"
+            [renderVersion]="renderVersion()"
+            (editItem)="editItem.emit($event)"
+            (removeItemEvent)="removeItem.emit($event)"
+            (openItemSelect)="openItemSelect.emit($event)"
+        >
+            @if (aiSessions().length) {
+            <fd-meal-ai-sessions
+                [aiSessions]="aiSessions()"
+                (editSession)="editSession.emit($event)"
+                (deleteSession)="deleteSession.emit($event)"
+            />
+            }
+        </fd-meal-items-list>
+    </div>
+</div>

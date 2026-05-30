@@ -1,0 +1,109 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+}
+
+.nutrient-badges {
+    --fd-nutrient-badges-border: var(--fd-border-default);
+    --fd-nutrient-badges-shadow: var(--fd-shadow-none);
+    border-radius: var(--fd-radius-nutrient-bar);
+    background: var(--fd-bg-surface);
+    color: var(--fd-color-text);
+    width: fit-content;
+    max-width: 100%;
+    border: var(--fd-nutrient-badges-border);
+    box-shadow: var(--fd-nutrient-badges-shadow);
+}
+
+.nutrient-badges__chip {
+    padding: var(--fd-space-chip-select-item-padding);
+    border-radius: 0;
+    background: transparent;
+    color: var(--chip-color, var(--fd-color-text));
+    box-shadow: var(--fd-shadow-none);
+    border-right: var(--fd-border-width) solid var(--fd-color-border-divider-soft);
+}
+
+.nutrient-badges__chip:last-child {
+    border-right: none;
+}
+
+.nutrient-badges__chip-icon {
+    font-size: var(--fd-text-body-size);
+    width: var(--fd-size-icon-sm);
+    height: var(--fd-size-icon-sm);
+    line-height: 1;
+    color: inherit;
+}
+
+.nutrient-badges__chip-value {
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+}
+
+.nutrient-badges__unit {
+    margin-left: var(--fd-space-micro);
+}
+
+.nutrient-badges__chip--protein {
+    --chip-color: var(--fd-color-sky-600);
+}
+
+.nutrient-badges__chip--carb {
+    --chip-color: var(--fd-color-teal-700);
+}
+
+.nutrient-badges__chip--fat {
+    --chip-color: var(--fd-color-orange-700);
+}
+
+.nutrient-badges__chip--fiber {
+    --chip-color: var(--fd-color-purple-700);
+}
+
+.nutrient-badges__chip--alcohol {
+    --chip-color: var(--fd-color-slate-500);
+}
+
+@container (max-width: 420px) {
+    .nutrient-badges {
+        gap: 0;
+        padding: var(--fd-space-status-badge-padding);
+        border-radius: var(--fd-radius-nutrient-bar-compact);
+        background: var(--fd-bg-surface);
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 1fr);
+        align-items: center;
+        width: max-content;
+    }
+
+    .nutrient-badges__chip {
+        flex-direction: column;
+        justify-content: center;
+        gap: var(--fd-space-pill-compact-gap);
+        padding: var(--fd-space-status-badge-padding);
+        border-right: var(--fd-border-width) solid var(--fd-color-border-divider-soft);
+        min-width: 0;
+    }
+
+    .nutrient-badges__chip:last-child {
+        border-right: none;
+    }
+
+    .nutrient-badges__chip-icon {
+        font-size: var(--fd-size-icon-xs);
+        width: var(--fd-size-icon-xs);
+        height: var(--fd-size-icon-xs);
+    }
+
+    .nutrient-badges__chip-value {
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-caption-line-height);
+    }
+
+    .nutrient-badges__unit {
+        display: none;
+    }
+}

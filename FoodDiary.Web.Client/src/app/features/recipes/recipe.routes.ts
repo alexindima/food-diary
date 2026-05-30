@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { RecipeContainerComponent } from './pages/container/recipe-container.component';
+import { RecipeContainerComponent } from './pages/container/recipe-container';
 import { recipeResolver } from './resolvers/recipe.resolver';
 
 const routes: Routes = [
@@ -10,15 +10,15 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                loadComponent: async () => import('./pages/list/recipe-list.component').then(m => m.RecipeListComponent),
+                loadComponent: async () => import('./pages/list/recipe-list').then(m => m.RecipeListComponent),
             },
             {
                 path: 'add',
-                loadComponent: async () => import('./pages/manage/recipe-add/recipe-add.component').then(m => m.RecipeAddComponent),
+                loadComponent: async () => import('./pages/manage/recipe-add/recipe-add').then(m => m.RecipeAddComponent),
             },
             {
                 path: ':id/edit',
-                loadComponent: async () => import('./pages/manage/recipe-edit/recipe-edit.component').then(m => m.RecipeEditComponent),
+                loadComponent: async () => import('./pages/manage/recipe-edit/recipe-edit').then(m => m.RecipeEditComponent),
                 resolve: { recipe: recipeResolver },
             },
         ],

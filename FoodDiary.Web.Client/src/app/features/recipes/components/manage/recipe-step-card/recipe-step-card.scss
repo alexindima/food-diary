@@ -1,0 +1,110 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+}
+
+.recipe-step-card {
+    overflow: hidden;
+}
+
+.recipe-step-card__header {
+    background: var(--fd-bg-surface-raised-blend);
+    border-bottom: var(--fd-border-default);
+    padding: var(--fd-space-sm) var(--fd-space-lg);
+    margin: calc(0px - var(--fd-space-sm)) calc(0px - var(--fd-space-lg)) 0;
+}
+
+.recipe-step-card__drag {
+    display: inline-block;
+    width: var(--fd-size-checkbox-control);
+    height: var(--fd-size-checkbox-control);
+    border-radius: var(--fd-radius-badge);
+    background-image: radial-gradient(var(--fd-color-slate-400) 1.6px, transparent 1.6px);
+    background-size: 6px 6px;
+    background-position: center;
+    opacity: 0.95;
+    cursor: grab;
+}
+
+.recipe-step-card__drag:active {
+    cursor: grabbing;
+}
+
+.recipe-step-card__drag--disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.recipe-step-card__title {
+    color: var(--fd-color-text);
+}
+
+.recipe-step-card__title-input {
+    min-width: 200px;
+}
+
+.recipe-step-card__edit {
+    margin-left: var(--fd-space-micro);
+    color: var(--fd-color-text-muted);
+}
+
+.recipe-step-card__summary {
+    padding: var(--fd-space-sm) 0 var(--fd-space-xxs);
+}
+
+.recipe-step-card__summary-description {
+    color: var(--fd-color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recipe-step-card__summary-meta {
+    color: var(--fd-color-text-muted);
+}
+
+.recipe-step-card__content {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    gap: var(--fd-space-md);
+    align-items: start;
+
+    @media #{variables.$media-mobile} {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.recipe-step-card__image {
+    width: 100%;
+}
+
+.recipe-step-card__description {
+    min-width: 0;
+}
+
+.recipe-step-card__subtitle {
+    color: var(--fd-color-text-muted);
+}
+
+.recipe-step-card__add-ingredient {
+    align-self: flex-start;
+}
+
+.recipe-ingredient {
+    @media #{variables.$media-mobile} {
+        flex-direction: column;
+    }
+}
+
+.recipe-ingredient__name {
+    flex: 1;
+}
+
+.recipe-ingredient__amount {
+    flex: 0 0 35%;
+
+    @media #{variables.$media-mobile} {
+        width: 100%;
+    }
+}

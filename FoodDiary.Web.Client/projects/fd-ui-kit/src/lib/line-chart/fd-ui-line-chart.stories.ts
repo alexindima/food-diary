@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiLineChartComponent } from './fd-ui-line-chart.component';
+import { FdUiLineChartComponent } from './fd-ui-line-chart';
 
 const meta: Meta<FdUiLineChartComponent> = {
     title: 'Components/Charts/Line Chart',

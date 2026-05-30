@@ -1,0 +1,99 @@
+.cycle-tracking {
+    &__header {
+        margin-bottom: var(--fd-page-header-gap);
+    }
+
+    &__grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    &__grid--log {
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+
+    &__card {
+        height: 100%;
+    }
+
+    &__form-row {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+
+        &--wide {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            align-items: center;
+        }
+    }
+
+    &__form-control {
+        width: 100%;
+    }
+
+    &__checkbox {
+        margin-top: var(--fd-space-card-header-gap);
+    }
+
+    &__actions {
+        justify-content: flex-start;
+    }
+
+    &__summary,
+    &__predictions {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    &__summary-item,
+    &__prediction {
+        --fd-summary-surface-padding: var(--fd-space-surface-padding);
+        --fd-summary-surface-radius: var(--fd-radius-card);
+        --fd-summary-surface-background: var(--fd-bg-surface-raised);
+    }
+
+    &__symptom-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    &__day {
+        padding: var(--fd-space-surface-padding);
+        border-radius: var(--fd-radius-lg);
+        border: var(--fd-border-muted);
+        background: var(--fd-bg-surface-raised);
+        box-shadow: var(--fd-shadow-xs);
+    }
+
+    &__day-header {
+        margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__day-date {
+        color: var(--fd-color-slate-900);
+    }
+
+    &__day-badge {
+        --fd-pill-bg: var(--fd-bg-category-sky);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-sky-700);
+
+        &--period {
+            --fd-pill-bg: var(--fd-bg-status-danger);
+            --fd-pill-color: var(--fd-color-red-700);
+        }
+    }
+
+    &__symptoms-row {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        color: var(--fd-color-slate-700);
+        margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__day-notes {
+        margin: 0;
+        color: var(--fd-color-slate-600);
+    }
+
+    &__empty,
+    &__loader {
+        margin: 0;
+        padding: var(--fd-space-section-state-compact-padding);
+        color: var(--fd-color-slate-500);
+    }
+}

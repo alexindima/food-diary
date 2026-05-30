@@ -3,7 +3,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { DestroyRef, Directive, effect, ElementRef, inject, input, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import type { FdUiMenuComponent } from './fd-ui-menu.component';
+import type { FdUiMenuComponent } from './fd-ui-menu';
 
 const MENU_OFFSET_Y = 8;
 const MENU_VIEWPORT_MARGIN = 8;

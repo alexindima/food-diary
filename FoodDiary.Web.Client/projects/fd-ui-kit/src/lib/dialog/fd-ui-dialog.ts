@@ -1,0 +1,105 @@
+import { CommonModule, DOCUMENT } from '@angular/common';
+import {
+    afterNextRender,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    DestroyRef,
+    type ElementRef,
+    inject,
+    input,
+    signal,
+    viewChild,
+} from '@angular/core';
+
+import { FdUiIconComponent } from '../icon/fd-ui-icon';
+import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
+import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
+import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
+import { FdUiDialogRef } from './fd-ui-dialog-ref';
+
+let nextDialogId = 0;
+
+export type FdUiDialogSize = 'sm' | 'md' | 'lg' | 'xl';
+export type FdUiDialogBodyScrollInset = 'default' | 'edge';
+
+export type FdUiDialogData = {
+    title?: string;
+    subtitle?: string;
+    size?: FdUiDialogSize;
+    dismissible?: boolean;
+    bodyScrollInset?: FdUiDialogBodyScrollInset;
+};
+
+@Component({
+    selector: 'fd-ui-dialog',
+    imports: [CommonModule, FdUiIconComponent],
+    templateUrl: './fd-ui-dialog.html',
+    styleUrls: ['./fd-ui-dialog.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class FdUiDialogComponent {
+    private readonly dialogRef = inject(FdUiDialogRef<FdUiDialogComponent>, { optional: true });
+    private readonly injectedData = inject<FdUiDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
+
+    protected readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
+
+    private readonly footerSlot = contentChild(FdUiDialogFooterDirective, { descendants: true });
+    private readonly headerSlot = contentChild(FdUiDialogHeaderDirective, { descendants: true });
+    private readonly body = viewChild<ElementRef<HTMLElement>>('body');
+    private readonly isBodyScrollable = signal(false);
+
+    public readonly title = input<string | undefined>(this.injectedData?.title);
+    public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);
+    public readonly size = input<FdUiDialogSize>(this.injectedData?.size ?? 'md');
+    public readonly bodyScrollInset = input<FdUiDialogBodyScrollInset>(this.injectedData?.bodyScrollInset ?? 'default');
+    public readonly dismissible = input(this.injectedData?.dismissible ?? true, {
+        transform: booleanAttribute,
+    });
+
+    protected readonly showHeader = computed(() => Boolean(this.title() ?? this.subtitle() ?? this.dismissible()));
+    protected readonly hasCustomHeader = computed(() => Boolean(this.headerSlot()));
+    protected readonly showBuiltInHeader = computed(() => this.showHeader() && !this.hasCustomHeader());
+    protected readonly isBodyScrollInsetVisible = computed(() => this.bodyScrollInset() === 'default' && this.isBodyScrollable());
+    protected readonly hasFooter = computed(() => Boolean(this.footerSlot()));
+    protected readonly hostClass = computed(
+        () =>
+            `fd-ui-dialog fd-ui-dialog--size-${this.size()} fd-ui-dialog--body-scroll-${this.bodyScrollInset()}${this.isBodyScrollInsetVisible() ? ' fd-ui-dialog--body-scrollable' : ''}${this.showBuiltInHeader() || this.hasCustomHeader() ? ' fd-ui-dialog--has-header' : ''}${this.hasFooter() ? ' fd-ui-dialog--has-footer' : ''}`,
+    );
+
+    public constructor() {
+        afterNextRender(() => {
+            const body = this.body()?.nativeElement;
+
+            if (body === undefined) {
+                return;
+            }
+
+            const updateScrollableState = (): void => {
+                this.isBodyScrollable.set(body.scrollHeight > body.clientHeight + 1);
+            };
+            const scheduleUpdate = (): void => {
+                this.document.defaultView?.requestAnimationFrame(updateScrollableState) ?? updateScrollableState();
+            };
+            const resizeObserver = new ResizeObserver(scheduleUpdate);
+            const mutationObserver = new MutationObserver(scheduleUpdate);
+
+            updateScrollableState();
+            resizeObserver.observe(body);
+            mutationObserver.observe(body, { childList: true, subtree: true, characterData: true });
+
+            this.destroyRef.onDestroy(() => {
+                resizeObserver.disconnect();
+                mutationObserver.disconnect();
+            });
+        });
+    }
+
+    protected close(result?: unknown): void {
+        this.dialogRef?.close(result);
+    }
+}

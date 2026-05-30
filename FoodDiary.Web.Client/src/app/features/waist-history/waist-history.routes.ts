@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { WaistHistoryPageComponent } from './pages/waist-history-page/waist-history-page.component';
+import { WaistHistoryPageComponent } from './pages/waist-history-page/waist-history-page';
 
 const routes: Routes = [
     {

@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiTextareaComponent } from './fd-ui-textarea.component';
+import { FdUiTextareaComponent } from './fd-ui-textarea';
 
 const meta: Meta<FdUiTextareaComponent> = {
     title: 'Components/Textarea',

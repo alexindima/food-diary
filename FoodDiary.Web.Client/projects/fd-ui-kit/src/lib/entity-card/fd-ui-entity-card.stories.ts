@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiEntityCardComponent } from './fd-ui-entity-card.component';
+import { FdUiEntityCardComponent } from './fd-ui-entity-card';
 
 const meta: Meta<FdUiEntityCardComponent> = {
     title: 'Components/EntityCard',

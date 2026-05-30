@@ -160,6 +160,38 @@ const noMojibakeRule = {
     create: createNoMojibakeRule,
 };
 
+const componentFileSuffixPattern = /\.component(?:\.spec)?\.(?:html|js|ts)$/;
+
+const createNoComponentFileSuffixRule = context => ({
+    Program(node) {
+        const fileName = (context.physicalFilename ?? context.filename ?? '').replaceAll('\\', '/');
+
+        if (!componentFileSuffixPattern.test(fileName)) {
+            return;
+        }
+
+        context.report({
+            node,
+            messageId: 'componentFileSuffix',
+        });
+    },
+});
+
+const noComponentFileSuffixRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow .component in Angular component sidecar file names.',
+        },
+        messages: {
+            componentFileSuffix:
+                'Use one component base file name without `.component`, for example `user-profile.ts`, `user-profile.html`, and `user-profile.scss`.',
+        },
+        schema: [],
+    },
+    create: createNoComponentFileSuffixRule,
+};
+
 const noAnyCastSyntax = [
     {
         selector: 'ImportDeclaration[source.value=/^rxjs\\/internal(\\/|$)/]',
@@ -331,6 +363,7 @@ const hasLabelWrappedControl = nodes =>
 const localTemplatePlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
+        'no-component-file-suffix': noComponentFileSuffixRule,
         'no-label-wrapped-control': {
             meta: {
                 type: 'problem',
@@ -719,6 +752,7 @@ const noFdUiKitSelfImportRule = {
 const localTsPlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
+        'no-component-file-suffix': noComponentFileSuffixRule,
         'no-browser-globals': noBrowserGlobalsRule,
         'no-fd-ui-kit-self-import': noFdUiKitSelfImportRule,
         'prefer-protected-template-members': preferProtectedTemplateMembersRule,
@@ -906,6 +940,7 @@ export default [
             'no-console': 'error',
             'no-constant-condition': ['error', { checkLoops: true }],
             'no-debugger': 'error',
+            'local/no-component-file-suffix': 'error',
             'local/no-mojibake': 'error',
             'local/no-locally-caught-throw': 'error',
             'no-else-return': 'error',
@@ -1279,7 +1314,7 @@ export default [
     },
     {
         files: [
-            'src/app/components/shared/ai-input-bar/ai-input-bar.component.ts',
+            'src/app/components/shared/ai-input-bar/ai-input-bar.ts',
             'src/app/features/auth/lib/google-identity.service.ts',
             'src/app/features/premium/lib/paddle-checkout.service.ts',
             'src/app/services/auth.service.ts',
@@ -1296,21 +1331,21 @@ export default [
             '**/*.spec.ts',
             '**/*.stories.ts',
             'src/app/app.config.ts',
-            'src/app/components/shared/ai-input-bar/ai-input-bar.component.ts',
-            'src/app/components/shared/barcode-scanner/barcode-scanner.component.ts',
-            'src/app/components/shared/dashboard-summary-card/dashboard-summary-card.component.ts',
-            'src/app/components/shared/nutrients-summary/nutrients-summary.component.ts',
+            'src/app/components/shared/ai-input-bar/ai-input-bar.ts',
+            'src/app/components/shared/barcode-scanner/barcode-scanner.ts',
+            'src/app/components/shared/dashboard-summary-card/dashboard-summary-card.ts',
+            'src/app/components/shared/nutrients-summary/nutrients-summary.ts',
             'src/app/constants/chart-colors.ts',
             'src/app/features/auth/components/auth/auth-lib/auth-countdown.utils.ts',
-            'src/app/features/auth/components/auth/auth.component.ts',
+            'src/app/features/auth/components/auth/auth.ts',
             'src/app/features/auth/lib/google-identity.service.ts',
-            'src/app/features/auth/pages/email-verification-pending/email-verification-pending.component.ts',
+            'src/app/features/auth/pages/email-verification-pending/email-verification-pending.ts',
             'src/app/features/dashboard/lib/dashboard-layout.service.ts',
             'src/app/features/dashboard/lib/dashboard.facade.ts',
-            'src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.component.ts',
-            'src/app/features/goals/pages/goals-page.component.ts',
+            'src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts',
+            'src/app/features/goals/pages/goals-page.ts',
             'src/app/features/premium/lib/paddle-checkout.service.ts',
-            'src/app/features/public/components/landing-preview-tour/landing-preview-tour.component.ts',
+            'src/app/features/public/components/landing-preview-tour/landing-preview-tour.ts',
             'src/app/features/statistics/lib/statistics-chart-config.ts',
             'src/app/services/auth.service.ts',
             'src/app/services/browser-storage.service.ts',
@@ -1319,8 +1354,8 @@ export default [
             'src/app/services/push-notification.service.ts',
             'src/app/services/theme.service.ts',
             'src/app/services/viewport.service.ts',
-            'src/app/shell/app.component.ts',
-            'src/app/shell/sidebar/sidebar.component.ts',
+            'src/app/shell/app.ts',
+            'src/app/shell/sidebar/sidebar.ts',
         ],
         rules: {
             'local/no-browser-globals': 'error',
@@ -1928,6 +1963,7 @@ export default [
                 },
             ],
             'local/fd-ui-button-accessible-name': 'error',
+            'local/no-component-file-suffix': 'error',
             'local/no-mojibake': 'error',
             'local/no-label-wrapped-control': 'error',
         },

@@ -1,0 +1,59 @@
+<div class="admin-billing fd-grid fd-gap-md">
+    <header class="admin-billing__header fd-row fd-align-start fd-justify-between fd-gap-md">
+        <div>
+            <h1 class="fd-page-title">Billing</h1>
+            <p class="fd-page-subtitle">Subscriptions, payments, renewal attempts and webhook events.</p>
+        </div>
+        <fd-ui-button type="button" variant="secondary" (click)="load()"> Refresh </fd-ui-button>
+    </header>
+
+    <div class="admin-billing__tabs fd-row fd-gap-sm fd-wrap">
+        <button type="button" [class.active]="activeTab() === 'subscriptions'" (click)="setTab('subscriptions')">Subscriptions</button>
+        <button type="button" [class.active]="activeTab() === 'payments'" (click)="setTab('payments')">Payments</button>
+        <button type="button" [class.active]="activeTab() === 'webhook-events'" (click)="setTab('webhook-events')">Webhooks</button>
+    </div>
+
+    <fd-admin-billing-filters
+        [activeTab]="activeTab()"
+        [search]="search()"
+        [provider]="provider()"
+        [status]="status()"
+        [kind]="kind()"
+        [fromDate]="fromDate()"
+        [toDate]="toDate()"
+        (searchChange)="search.set($event)"
+        (providerChange)="provider.set($event)"
+        (statusChange)="status.set($event)"
+        (kindChange)="kind.set($event)"
+        (fromDateChange)="fromDate.set($event)"
+        (toDateChange)="toDate.set($event)"
+        (filtersApply)="applyFilters()"
+        (filtersReset)="resetFilters()"
+    />
+
+    @if (isLoading()) {
+    <p>Loading billing records...</p>
+    } @else {
+    <p class="admin-billing__error" role="alert" [hidden]="errorMessage() === null">{{ errorMessage() }}</p>
+
+    <div class="admin-billing__summary fd-ui-action-text">Total records: {{ totalItems() }}</div>
+
+    @if (activeTab() === 'subscriptions') {
+    <fd-admin-billing-subscriptions-table [items]="subscriptionItems()" />
+    } @if (activeTab() === 'payments') {
+    <fd-admin-billing-payments-table [items]="paymentItems()" (metadataOpen)="showMetadata($event)" />
+    } @if (activeTab() === 'webhook-events') {
+    <fd-admin-billing-webhooks-table [items]="webhookEventItems()" (metadataOpen)="showMetadata($event)" />
+    }
+
+    <fd-ui-pagination
+        class="admin-billing__pagination"
+        [length]="totalItems()"
+        [pageSize]="limit"
+        [pageIndex]="page() - 1"
+        (pageIndexChange)="goToPage($event + 1)"
+    />
+    } @if (selectedMetadata(); as metadata) {
+    <fd-admin-billing-metadata-panel [metadata]="metadata" (closePanel)="selectedMetadata.set(null)" />
+    }
+</div>

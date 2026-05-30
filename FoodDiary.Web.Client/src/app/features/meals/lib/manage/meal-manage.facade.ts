@@ -11,10 +11,10 @@ import {
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
-import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
+import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { ItemSelectDialogComponent } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import { ItemSelectDialogComponent } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import type {
     ItemSelectDialogData,
     ItemSelection,
@@ -36,8 +36,8 @@ import {
     type ConsumptionManageRedirectAction,
     type ConsumptionManageSuccessDialogData,
     MealManageSuccessDialogComponent,
-} from '../../dialogs/manage-success-dialog/meal-manage-success-dialog.component';
-import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
+} from '../../dialogs/manage-success-dialog/meal-manage-success-dialog';
+import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -100,7 +100,7 @@ export class MealManageFacade {
 
     public async openEditAiPhotoSessionDialogAsync(session: ConsumptionAiSessionManageDto): Promise<ConsumptionAiSessionManageDto | null> {
         const { MealPhotoRecognitionDialogComponent } =
-            await import('../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component');
+            await import('../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog');
         const selection: ImageSelection | null =
             session.imageUrl !== null && session.imageUrl !== undefined && session.imageUrl.length > 0
                 ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }

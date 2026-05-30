@@ -1,0 +1,343 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+}
+
+.entity-card__thumb {
+    width: 100%;
+    height: 100%;
+    background: var(--fd-bg-brand-soft);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        display: block;
+    }
+
+    &--previewable {
+        cursor: zoom-in;
+    }
+
+    &--has-image {
+        display: block;
+    }
+}
+
+.entity-card__collage {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    gap: var(--fd-border-width);
+    background: var(--fd-color-border-divider-soft);
+}
+
+.entity-card__collage--count-1 {
+    display: block;
+}
+
+.entity-card__collage--count-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.entity-card__collage--count-3,
+.entity-card__collage--count-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.entity-card__collage--count-3 .entity-card__collage-image:first-child {
+    grid-row: span 2;
+}
+
+.entity-card__collage-image {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+}
+
+.entity-card__content {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+}
+
+.entity-card__summary-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.entity-card__name-row {
+    overflow: hidden;
+}
+
+.entity-card__favorite-button {
+    --fd-button-host-width: var(--fd-size-control-xs);
+    --fd-button-host-min-width: var(--fd-size-control-xs);
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
+    --fd-button-height-explicit: var(--fd-size-control-xs);
+    --fd-button-padding-x: 0;
+    --fd-button-icon-size: var(--fd-text-section-title-size);
+    --fd-button-border-radius: var(--fd-radius-pill);
+    --fd-button-transform-hover: scale(1.05);
+    --fd-button-transform-active: scale(1);
+    --fd-button-disabled-opacity: 0.7;
+    --fd-button-secondary-text-background-default: transparent;
+    --fd-button-secondary-text-background-hover: transparent;
+    --fd-button-secondary-text-background-active: transparent;
+    --fd-button-secondary-text-background-disabled: transparent;
+    --fd-button-secondary-text-border-default: transparent;
+    --fd-button-secondary-text-border-hover: transparent;
+    --fd-button-secondary-text-border-active: transparent;
+    --fd-button-secondary-text-border-disabled: transparent;
+    --fd-button-secondary-text-text-default: var(--fd-color-favorite-muted);
+    --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
+    --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
+    --fd-button-secondary-text-text-disabled: var(--fd-color-favorite-muted);
+    flex-shrink: 0;
+
+    &--active {
+        --fd-button-secondary-text-text-default: var(--fd-color-amber-500);
+        --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
+        --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
+        --fd-button-secondary-text-text-disabled: var(--fd-color-amber-500);
+    }
+}
+
+.entity-card__visibility-icon {
+    font-size: var(--fd-text-body-size);
+    width: var(--fd-text-body-size);
+    height: var(--fd-text-body-size);
+    line-height: 1;
+    color: var(--fd-color-text-muted);
+    flex-shrink: 0;
+}
+
+.entity-card__name {
+    color: var(--fd-color-text);
+    line-height: 1.35;
+    text-align: left;
+}
+
+.entity-card__title-muted {
+    color: var(--fd-color-text-muted-subtle);
+    flex-shrink: 0;
+}
+
+.entity-card__description {
+    color: var(--fd-color-text-muted-subtle);
+}
+
+.entity-card__quality {
+    display: inline-grid;
+    grid-template-columns: auto 120px auto;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    align-self: center;
+    justify-self: end;
+}
+
+.entity-card__quality-label {
+    color: var(--fd-color-text-muted-emphasis);
+}
+
+.entity-card__quality-bar {
+    position: relative;
+    height: 6px;
+    border-radius: var(--fd-radius-pill);
+    overflow: hidden;
+    background: var(--fd-bg-muted-tint-strong);
+}
+
+.entity-card__quality-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.2s ease;
+
+    &--green {
+        background: var(--fd-bg-quality-good-light);
+    }
+
+    &--yellow {
+        background: var(--fd-bg-quality-warning-light);
+    }
+
+    &--red {
+        background: var(--fd-bg-quality-danger-light);
+    }
+}
+
+.entity-card__quality-value {
+    color: var(--fd-color-text);
+    line-height: 1;
+    min-width: 2ch;
+    text-align: right;
+}
+
+.entity-card__nutrients {
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+.entity-card__nutrients-container {
+    width: 100%;
+    min-width: 0;
+}
+
+.entity-card__action-group {
+    --entity-card-action-divider-space: calc(var(--fd-space-xs) + var(--fd-space-micro));
+    --entity-card-action-divider-offset: calc(0px - var(--entity-card-action-divider-space));
+    --entity-card-action-divider-offset-compact: calc(0px - var(--fd-space-xs));
+    position: relative;
+    width: fit-content;
+    min-width: clamp(52px, 7vw, 80px);
+    padding: var(--fd-space-xxs) 0;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: var(--entity-card-action-divider-offset);
+        top: 50%;
+        width: 2px;
+        height: calc(100% - 2px);
+        transform: translateY(-50%);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-action-divider-vertical);
+        pointer-events: none;
+    }
+}
+
+.entity-card__calories-inline {
+    color: var(--fd-color-text);
+    flex-shrink: 0;
+}
+
+.entity-card__calories-value {
+    line-height: 1;
+}
+
+.entity-card__calories-unit {
+    color: var(--fd-color-text-muted);
+    letter-spacing: var(--fd-letter-spacing-wide);
+}
+
+.entity-card__action-button {
+    width: var(--fd-size-control-touch);
+    height: var(--fd-size-control-md);
+    background: transparent;
+    color: inherit;
+    box-shadow: var(--fd-shadow-none);
+    border: none;
+}
+
+@container (max-width: 760px) {
+    .entity-card__thumb {
+        background: var(--fd-bg-brand-surface-soft);
+    }
+
+    .entity-card__content {
+        align-items: center;
+        justify-items: stretch;
+    }
+
+    .entity-card__title-block {
+        align-items: flex-start;
+    }
+
+    .entity-card__favorite-button {
+        --fd-button-host-width: var(--fd-size-control-micro);
+        --fd-button-host-min-width: var(--fd-size-control-micro);
+        --fd-button-width: var(--fd-size-control-micro);
+        --fd-button-min-width: var(--fd-size-control-micro);
+        --fd-button-height: var(--fd-size-control-micro);
+        --fd-button-height-explicit: var(--fd-size-control-micro);
+    }
+
+    .entity-card__name {
+        line-height: 1.15;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .entity-card__visibility-icon {
+        font-size: var(--fd-text-helper-size);
+        width: var(--fd-text-helper-size);
+        height: var(--fd-text-helper-size);
+    }
+
+    .entity-card__title-muted,
+    .entity-card__description {
+        font-size: var(--fd-text-helper-size);
+    }
+
+    .entity-card__summary-row {
+        display: block;
+    }
+
+    .entity-card__nutrients-container {
+        &--green {
+            --fd-nutrient-badges-border: var(--fd-border-width) solid var(--fd-color-border-nutrient-good);
+            --fd-nutrient-badges-shadow: var(--fd-shadow-nutrient-good);
+        }
+
+        &--yellow {
+            --fd-nutrient-badges-border: var(--fd-border-width) solid var(--fd-color-border-nutrient-warning);
+            --fd-nutrient-badges-shadow: var(--fd-shadow-nutrient-warning);
+        }
+
+        &--red {
+            --fd-nutrient-badges-border: var(--fd-border-width) solid var(--fd-color-border-nutrient-danger);
+            --fd-nutrient-badges-shadow: var(--fd-shadow-nutrient-danger);
+        }
+    }
+
+    .entity-card__quality {
+        display: none;
+    }
+
+    .entity-card__action-group {
+        align-self: center;
+        flex-direction: column;
+        gap: var(--fd-space-entity-card-header-gap);
+        min-width: clamp(52px, 7vw, 80px);
+        padding: var(--fd-space-micro) 0;
+
+        &::before {
+            left: var(--entity-card-action-divider-offset-compact);
+            width: 2px;
+            height: calc(100% - 1px);
+            display: block;
+        }
+    }
+
+    .entity-card__calories-inline {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .entity-card__calories-value {
+        font-size: var(--fd-text-metric-unit-size);
+    }
+
+    .entity-card__calories-unit {
+        letter-spacing: normal;
+    }
+
+    .entity-card__action-button {
+        width: var(--fd-size-control-chip);
+        min-width: var(--fd-size-control-chip);
+        height: var(--fd-size-control-chip);
+        flex: 0 0 var(--fd-size-control-chip);
+    }
+}

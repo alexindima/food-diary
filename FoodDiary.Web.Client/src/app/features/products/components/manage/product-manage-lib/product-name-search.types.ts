@@ -1,4 +1,4 @@
-import type { FdUiAutocompleteOption } from 'fd-ui-kit/autocomplete/fd-ui-autocomplete.component';
+import type { FdUiAutocompleteOption } from 'fd-ui-kit/autocomplete/fd-ui-autocomplete';
 
 import type { ProductSearchSuggestion } from '../../../models/product.data';
 

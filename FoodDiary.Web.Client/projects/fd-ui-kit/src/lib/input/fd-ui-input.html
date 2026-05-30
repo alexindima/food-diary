@@ -1,0 +1,60 @@
+<div [class]="hostClass()">
+    <div
+        class="fd-ui-input__control-wrap"
+        role="presentation"
+        [class.fd-ui-input__control-wrap--with-prefix]="prefixIcon()"
+        [class.fd-ui-input__control-wrap--date]="isDateInput()"
+        [style.background]="fillColor() || null"
+        [style.--fd-input-control-background]="fillColor() || null"
+        (click)="focusControl($event, control)"
+    >
+        @if (label()) {
+        <label class="fd-ui-input__label" [attr.for]="id()">
+            <span class="fd-ui-input__label-text">{{ label() }}</span>
+            @if (required()) {
+            <span class="fd-ui-input__required">*</span>
+            }
+        </label>
+        } @if (prefixIcon(); as prefixIconName) {
+        <span class="fd-ui-input__prefix" aria-hidden="true">
+            <fd-ui-icon [name]="prefixIconName" />
+        </span>
+        }
+        <input
+            #control
+            class="fd-ui-input__control"
+            [id]="id()"
+            [attr.type]="type()"
+            [attr.autocomplete]="autocomplete() ?? null"
+            [value]="internalValue()"
+            [required]="required()"
+            [readonly]="readonly()"
+            [disabled]="disabled()"
+            [attr.placeholder]="placeholderAttribute()"
+            [attr.maxlength]="maxLength() ?? null"
+            [attr.step]="step() ?? null"
+            [attr.aria-describedby]="hasError() ? `${id()}-error` : null"
+            [attr.aria-invalid]="hasError() ? 'true' : null"
+            (animationstart)="onAnimationStart($event, control.value)"
+            (input)="onInput(control.value)"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+        />
+
+        @if (suffixButtonIcon(); as suffixIconName) {
+        <button
+            class="fd-ui-input__suffix"
+            type="button"
+            [attr.aria-label]="suffixButtonAriaLabel() || suffixIconName"
+            [disabled]="disabled()"
+            (click)="triggerSuffixButton()"
+        >
+            <fd-ui-icon [name]="suffixIconName" />
+        </button>
+        }
+    </div>
+
+    @if (hasError()) {
+    <div class="fd-ui-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+    }
+</div>

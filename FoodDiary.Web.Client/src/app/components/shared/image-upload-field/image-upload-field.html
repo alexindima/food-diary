@@ -1,0 +1,156 @@
+<div [class]="`image-upload-field fd-stack fd-gap-xs ${appearanceClass()}`" [class.image-upload-field--disabled]="disabled">
+    <div
+        class="image-upload-field__dropzone fd-place-center"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate"
+        [attr.aria-disabled]="disabled || isUploading"
+        [attr.aria-busy]="isUploading"
+        [attr.aria-describedby]="error ? errorId : null"
+        [class.image-upload-field__dropzone--dragging]="isDragging"
+        [class.image-upload-field__dropzone--uploading]="isUploading"
+        [class.image-upload-field__dropzone--has-image]="!!selection.url"
+        (click)="onZoneClick(fileInput)"
+        (keydown.enter)="onZoneClick(fileInput)"
+        (keydown.space)="onZoneClick(fileInput); $event.preventDefault()"
+        (drop)="onDrop($event)"
+    >
+        <input
+            #fileInput
+            type="file"
+            hidden
+            [accept]="acceptedTypes()"
+            [disabled]="disabled || isUploading"
+            (change)="onFileSelected($event)"
+        />
+
+        @if (selection.url) {
+        <img
+            class="image-upload-field__preview"
+            width="512"
+            height="512"
+            [ngSrc]="selection.url"
+            [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
+        />
+        <div class="image-upload-field__control">
+            <fd-ui-button
+                type="button"
+                class="image-upload-field__control-btn"
+                variant="secondary"
+                fill="text"
+                icon="autorenew"
+                [fdUiHint]="'IMAGE_UPLOAD_FIELD.REPLACE' | translate"
+                [ariaLabel]="'IMAGE_UPLOAD_FIELD.REPLACE' | translate"
+                (click)="$event.stopPropagation(); fileInput.click()"
+            />
+            <fd-ui-button
+                type="button"
+                class="image-upload-field__control-btn image-upload-field__control-btn--danger"
+                variant="danger"
+                fill="text"
+                icon="delete"
+                [fdUiHint]="'IMAGE_UPLOAD_FIELD.REMOVE' | translate"
+                [ariaLabel]="'IMAGE_UPLOAD_FIELD.REMOVE' | translate"
+                (click)="onDeleteClick($event)"
+            />
+        </div>
+        } @else {
+        <div class="image-upload-field__placeholder fd-gap-xxs">
+            <div class="image-upload-field__icon">&#8593;</div>
+            <div class="image-upload-field__main-text fd-ui-card-title">{{ 'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate }}</div>
+            <div class="image-upload-field__sub-text image-upload-field__sub-text--plain fd-ui-caption">
+                {{ 'IMAGE_UPLOAD_FIELD.DROP_HERE' | translate }}
+            </div>
+            <div class="image-upload-field__sub-text fd-ui-caption">
+                {{ description() || ('IMAGE_UPLOAD_FIELD.DEFAULT_DESCRIPTION' | translate: { maxSizeMb: maxSizeMb() }) }}
+            </div>
+            <div class="image-upload-field__hint fd-ui-helper-text">
+                {{ 'IMAGE_UPLOAD_FIELD.RECOMMENDED' | translate: { size: recommendedSize() } }}
+            </div>
+        </div>
+        } @if (isUploading) {
+        <div class="image-upload-field__overlay fd-place-center fd-ui-action-text" role="status" aria-live="polite">
+            {{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}
+        </div>
+        }
+    </div>
+    @if (error) {
+    <span class="image-upload-field__error fd-ui-error-text" role="alert" [id]="errorId">{{ error }}</span>
+    } @defer (when isCropping && cropPreviewUrl) { @if (isCropping && cropPreviewUrl) {
+    <div class="image-upload-field__cropper-backdrop fd-place-center" aria-hidden="true"></div>
+    <div
+        class="image-upload-field__cropper fd-stack fd-gap-md"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-labelledby]="cropTitleId"
+        [attr.aria-describedby]="cropSubtitleId"
+    >
+        <div class="image-upload-field__cropper-header fd-stack fd-gap-xxs">
+            <div class="image-upload-field__cropper-title fd-ui-card-title" [id]="cropTitleId">
+                {{ 'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate }}
+            </div>
+            <div class="image-upload-field__cropper-subtitle fd-ui-body-sm" [id]="cropSubtitleId">
+                {{ 'IMAGE_UPLOAD_FIELD.CROP_SUBTITLE' | translate }}
+            </div>
+        </div>
+        <div
+            #cropSurface
+            class="image-upload-field__cropper-body"
+            (pointermove)="onCropPointerMove($event)"
+            (pointerup)="onCropPointerUp($event)"
+            (pointercancel)="onCropPointerUp($event)"
+        >
+            <img
+                #cropImage
+                class="image-upload-field__cropper-image"
+                width="512"
+                height="512"
+                [src]="cropPreviewUrl"
+                [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
+                (load)="onCropImageLoaded(cropImage)"
+            />
+            @if (cropImageBounds && cropSelection) {
+            <div
+                class="image-upload-field__crop-selection"
+                role="group"
+                tabindex="0"
+                [attr.aria-label]="'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate"
+                [style.left.px]="cropSelection.x"
+                [style.top.px]="cropSelection.y"
+                [style.width.px]="cropSelection.width"
+                [style.height.px]="cropSelection.height"
+                (keydown)="onCropKeydown($event)"
+                (pointerdown)="onCropPointerDown($event, 'move')"
+            >
+                <span
+                    class="image-upload-field__crop-handle image-upload-field__crop-handle--nw"
+                    (pointerdown)="onCropPointerDown($event, 'resize-nw')"
+                ></span>
+                <span
+                    class="image-upload-field__crop-handle image-upload-field__crop-handle--ne"
+                    (pointerdown)="onCropPointerDown($event, 'resize-ne')"
+                ></span>
+                <span
+                    class="image-upload-field__crop-handle image-upload-field__crop-handle--sw"
+                    (pointerdown)="onCropPointerDown($event, 'resize-sw')"
+                ></span>
+                <span
+                    class="image-upload-field__crop-handle image-upload-field__crop-handle--se"
+                    (pointerdown)="onCropPointerDown($event, 'resize-se')"
+                ></span>
+            </div>
+            }
+        </div>
+        <div class="image-upload-field__cropper-actions fd-row fd-justify-end fd-wrap fd-gap-xs">
+            <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()"
+                >{{ 'COMMON.CANCEL' | translate }}</fd-ui-button
+            >
+            <fd-ui-button type="button" variant="primary" icon="check" (click)="confirmCrop()">
+                {{ 'IMAGE_UPLOAD_FIELD.APPLY' | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+    } } @placeholder {
+    <div></div>
+    }
+</div>

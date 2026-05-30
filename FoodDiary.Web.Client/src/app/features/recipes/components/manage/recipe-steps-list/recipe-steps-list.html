@@ -1,0 +1,48 @@
+<div class="recipe-steps-list__block fd-stack fd-gap-sm">
+    <div class="recipe-steps-list__title fd-ui-overline">{{ 'RECIPE_MANAGE.STEPS_SECTION_TITLE' | translate }}</div>
+    <section class="recipe-steps-list__section fd-stack fd-gap-sm">
+        <div
+            #dragBoundary
+            class="recipe-steps-list__steps fd-stack fd-gap-sm"
+            cdkDropList
+            [cdkDropListData]="stepsFormArray().controls"
+            (cdkDropListDropped)="onStepDrop($event)"
+        >
+            @for (step of stepsFormArray().controls; track $index) {
+            <div
+                class="recipe-step"
+                cdkDrag
+                cdkDragLockAxis="y"
+                [cdkDragDisabled]="stepsFormArray().length <= 1"
+                [cdkDragBoundary]="dragBoundary"
+            >
+                <fd-recipe-step-card
+                    [stepFormGroup]="step"
+                    [stepIndex]="$index"
+                    [isExpanded]="isStepExpanded($index)"
+                    [dragDisabled]="stepsFormArray().length <= 1"
+                    (toggleExpanded)="onToggleStepExpanded($index)"
+                    (removeStep)="onRemoveStep($index)"
+                    (addIngredient)="onAddIngredient($index)"
+                    (removeIngredient)="onRemoveIngredient($index, $event)"
+                    (selectProduct)="onSelectProduct($index, $event)"
+                />
+            </div>
+            }
+        </div>
+        <fd-ui-button
+            type="button"
+            icon="add"
+            appearance="dashed"
+            class="recipe-steps-list__add-step"
+            variant="secondary"
+            fill="outline"
+            (click)="onAddStep()"
+        >
+            {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
+        </fd-ui-button>
+        @if (stepsFormArray().invalid && stepsFormArray().touched) {
+        <div class="recipe-steps-list__array-error fd-ui-body-sm">{{ 'FORM_ERRORS.NON_EMPTY_ARRAY' | translate }}</div>
+        }
+    </section>
+</div>

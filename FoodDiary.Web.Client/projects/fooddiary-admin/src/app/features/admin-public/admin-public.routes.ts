@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { UnauthorizedComponent } from './pages/unauthorized.component';
+import { UnauthorizedComponent } from './pages/unauthorized';
 
 export const adminPublicRoutes: Routes = [
     {

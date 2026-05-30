@@ -1,0 +1,19 @@
+<div class="dashboard-widget-header fd-row fd-gap-xs fd-min-w-0" [class.dashboard-widget-header--with-icon]="hasIcon()">
+    @if (hasIcon()) {
+    <div class="dashboard-widget-header__icon fd-inline-center" aria-hidden="true" [attr.data-tone]="iconTone()">
+        @if (iconName(); as currentIconName) {
+        <fd-ui-icon [name]="currentIconName" />
+        } @else {
+        <span class="fd-ui-meta-text">{{ iconLabel() }}</span>
+        }
+    </div>
+    }
+
+    <div class="dashboard-widget-header__copy fd-stack fd-gap-xxs fd-min-w-0">
+        <div class="dashboard-widget-header__title fd-ui-card-title">{{ title() }}</div>
+
+        @if (description()) {
+        <div class="dashboard-widget-header__description fd-ui-caption">{{ description() }}</div>
+        }
+    </div>
+</div>

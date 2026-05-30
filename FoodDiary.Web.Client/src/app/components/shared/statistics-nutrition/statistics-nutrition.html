@@ -1,0 +1,65 @@
+<fd-ui-card class="stats-nutrition-card fd-stack fd-gap-md" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
+    <fd-ui-tabs
+        class="stats-nutrition-card__tabs"
+        appearance="wrap-compact"
+        [tabs]="tabs()"
+        [selectedValue]="selectedTab()"
+        (selectedValueChange)="onTabChange($event)"
+    />
+
+    <fd-ui-section-state
+        appearance="compact"
+        emptyIcon="monitoring"
+        [state]="hasData() ? 'content' : 'empty'"
+        [emptyMessage]="'STATISTICS.NO_DATA' | translate"
+    >
+        @if (selectedTab() === 'calories') {
+        <div class="stats-nutrition-card__chart-area">
+            <fd-ui-line-chart
+                class="stats-nutrition-card__calories-chart"
+                lineColor="var(--fd-color-primary-600)"
+                fillColor="var(--fd-color-chart-primary-fill)"
+                [title]="'STATISTICS.TOTAL_CALORIES' | translate"
+                [points]="caloriesTrendPoints()"
+                [showArea]="true"
+                [minValue]="0"
+                [showAxisLabels]="true"
+                [showGrid]="true"
+                [axisDecimalPlaces]="0"
+                [defaultMaxValue]="2000"
+                [valueSuffix]="'GENERAL.UNITS.KCAL' | translate"
+            />
+        </div>
+        } @if (selectedTab() === 'macros') {
+        <div class="stats-nutrition-card__chart-area">
+            <fd-ui-line-chart
+                class="stats-nutrition-card__nutrients-chart"
+                [title]="'STATISTICS.NUTRITION_TABS.MACROS' | translate"
+                [series]="nutrientTrendGroups()"
+                [showArea]="false"
+                [minValue]="0"
+                [showAxisLabels]="true"
+                [showGrid]="true"
+                [axisDecimalPlaces]="0"
+                [defaultMaxValue]="100"
+                [valueSuffix]="'GENERAL.UNITS.G' | translate"
+            />
+        </div>
+        } @if (selectedTab() === 'distribution') {
+        <div class="stats-nutrition-card__distribution-grid fd-grid fd-gap-md">
+            <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
+                <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
+                <fd-ui-pie-chart
+                    variant="pie"
+                    [title]="'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate"
+                    [segments]="nutrientPieSegments()"
+                />
+            </div>
+            <div class="stats-nutrition-card__chart-card fd-stack fd-gap-sm">
+                <h4 class="fd-ui-card-title">{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
+                <fd-ui-bar-chart [title]="'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate" [items]="nutrientBarItems()" />
+            </div>
+        </div>
+        }
+    </fd-ui-section-state>
+</fd-ui-card>

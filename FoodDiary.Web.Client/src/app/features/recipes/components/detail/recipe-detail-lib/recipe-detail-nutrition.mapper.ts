@@ -1,9 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-import type {
-    NutritionControlNames,
-    NutritionMacroState,
-} from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
+import type { NutritionControlNames, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';

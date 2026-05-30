@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiButtonComponent } from './fd-ui-button.component';
+import { FdUiButtonComponent } from './fd-ui-button';
 
 const meta: Meta<FdUiButtonComponent> = {
     title: 'Components/Button',

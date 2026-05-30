@@ -5,8 +5,8 @@ import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FdUiMenuComponent } from './fd-ui-menu.component';
-import { FdUiMenuItemComponent } from './fd-ui-menu-item.component';
+import { FdUiMenuComponent } from './fd-ui-menu';
+import { FdUiMenuItemComponent } from './fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from './fd-ui-menu-trigger.directive';
 
 const MENU_ITEM_COUNT = 3;

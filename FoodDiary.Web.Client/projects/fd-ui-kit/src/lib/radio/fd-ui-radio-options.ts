@@ -1,0 +1,31 @@
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+
+import type { FdUiRadioOption } from './fd-ui-radio.types';
+
+type FdUiRadioOptionKeydownEvent = {
+    index: number;
+    event: KeyboardEvent;
+};
+
+@Component({
+    selector: 'fd-ui-radio-options',
+    templateUrl: './fd-ui-radio-options.html',
+    styleUrl: './fd-ui-radio-group.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class FdUiRadioOptionsComponent<T = unknown> {
+    protected readonly isEqual = Object.is;
+
+    public readonly id = input.required<string>();
+    public readonly options = input.required<Array<FdUiRadioOption<T>>>();
+    public readonly disabled = input.required<boolean>();
+    public readonly value = input.required<T | null>();
+
+    public readonly optionSelected = output<FdUiRadioOption<T>>();
+    public readonly optionBlur = output();
+    public readonly optionKeydown = output<FdUiRadioOptionKeydownEvent>();
+
+    protected trackByValue(_: number, option: FdUiRadioOption<T>): unknown {
+        return option.value;
+    }
+}

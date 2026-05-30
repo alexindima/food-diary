@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { PremiumAccessPageComponent } from './pages/premium-access/premium-access-page.component';
+import { PremiumAccessPageComponent } from './pages/premium-access/premium-access-page';
 
 const routes: Routes = [
     {

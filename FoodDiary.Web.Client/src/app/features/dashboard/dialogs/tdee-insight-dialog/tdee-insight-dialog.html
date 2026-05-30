@@ -1,0 +1,21 @@
+<fd-ui-dialog size="md" bodyScrollInset="edge" [title]="'TDEE_DIALOG.TITLE' | translate">
+    <div class="tdee-dialog fd-stack fd-gap-md">
+        <fd-tdee-insight-dialog-summary
+            [insight]="insight"
+            [stateKey]="stateKey"
+            [effectiveTdee]="effectiveTdee"
+            [summaryKey]="summaryKey"
+            [confidenceKey]="confidenceKey"
+        />
+
+        @if (insight) {
+        <fd-tdee-insight-dialog-metrics [insight]="insight" [weightTrendFormatted]="weightTrendFormatted" />
+        }
+
+        <fd-tdee-insight-dialog-setup [items]="setupItems" />
+
+        <fd-tdee-insight-dialog-hint [hintKey]="hintKey" [showSuggestion]="showSuggestion" [insight]="insight" />
+    </div>
+
+    <fd-tdee-insight-dialog-footer [showSuggestion]="showSuggestion" (dialogClose)="close($event)" (suggestionApply)="applySuggestion()" />
+</fd-ui-dialog>

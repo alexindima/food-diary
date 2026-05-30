@@ -1,0 +1,23 @@
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { RecipeContainerComponent } from './recipe-container';
+
+describe('RecipeContainerComponent', () => {
+    let component: RecipeContainerComponent;
+    let fixture: ComponentFixture<RecipeContainerComponent>;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [RecipeContainerComponent],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(RecipeContainerComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

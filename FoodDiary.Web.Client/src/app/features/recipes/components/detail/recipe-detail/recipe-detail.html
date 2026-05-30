@@ -1,0 +1,77 @@
+<fd-ui-dialog size="lg">
+    <header fdUiDialogHeader class="recipe-detail__header">
+        <div class="recipe-detail__header-row">
+            <div class="recipe-detail__title-group">
+                <fd-ui-button
+                    class="recipe-detail__favorite-btn fd-favorite-button fd-inline-center"
+                    appearance="plain-icon"
+                    variant="secondary"
+                    fill="text"
+                    iconSize="sm"
+                    [icon]="favoriteIcon()"
+                    [class.recipe-detail__favorite-btn--active]="isFavorite()"
+                    [class.fd-favorite-button--active]="isFavorite()"
+                    [disabled]="isFavoriteLoading()"
+                    [fdUiHint]="favoriteAriaLabelKey() | translate"
+                    [ariaLabel]="favoriteAriaLabelKey() | translate"
+                    (click)="toggleFavorite()"
+                />
+                <h2 class="recipe-detail__title">{{ recipe.name }}</h2>
+            </div>
+            <button type="button" class="recipe-detail__close-button" aria-label="Close dialog" (click)="close()">
+                <span class="material-icons" aria-hidden="true">close</span>
+            </button>
+        </div>
+        <fd-ui-tabs class="recipe-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
+    </header>
+
+    <div class="recipe-detail fd-stack fd-gap-lg">
+        @switch (activeTab) { @case ('summary') {
+        <fd-recipe-detail-summary
+            [recipe]="recipe"
+            [calories]="calories"
+            [totalTime]="totalTime"
+            [qualityGrade]="qualityGrade"
+            [qualityScore]="qualityScore"
+            [macroSummaryBlocks]="macroSummaryBlocks"
+            [ingredientCount]="ingredientCount"
+            [ingredientPreview]="ingredientPreview"
+        />
+        } @case ('nutrients') {
+        <fd-nutrition-editor
+            class="recipe-detail__nutrients"
+            [formGroup]="nutritionForm"
+            [controlNames]="nutritionControlNames"
+            [macroState]="macroBarState"
+            [readonly]="true"
+        />
+        } }
+    </div>
+
+    <div fdUiDialogFooter class="recipe-detail__footer fd-stack fd-gap-sm">
+        @if (warningMessage) {
+        <span class="recipe-detail__warning fd-ui-stat-value">{{ warningMessage | translate }}</span>
+        }
+        <div class="recipe-detail__actions fd-ui-actions fd-ui-actions--end">
+            @if (canModify) {
+            <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
+                {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
+            </fd-ui-button>
+            <fd-ui-button size="md" variant="danger" icon="delete" [disabled]="isDeleteDisabled" (click)="onDelete()">
+                {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
+            </fd-ui-button>
+            } @else {
+            <fd-ui-button
+                size="md"
+                variant="secondary"
+                fill="outline"
+                icon="content_copy"
+                [disabled]="isDuplicateInProgress()"
+                (click)="onDuplicate()"
+            >
+                {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}
+            </fd-ui-button>
+            }
+        </div>
+    </div>
+</fd-ui-dialog>

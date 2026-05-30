@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiPaginationComponent } from './fd-ui-pagination.component';
+import { FdUiPaginationComponent } from './fd-ui-pagination';
 
 const meta: Meta<FdUiPaginationComponent> = {
     title: 'Components/Pagination',

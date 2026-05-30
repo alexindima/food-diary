@@ -1,0 +1,16 @@
+<div class="check-in fd-stack fd-gap-md" fdPageContainer>
+    <fd-page-header [title]="'WEEKLY_CHECK_IN.TITLE' | translate" [subtitle]="'WEEKLY_CHECK_IN.SUBTITLE' | translate" />
+
+    <fd-page-body>
+        @if (isLoading()) {
+        <div class="check-in__loader fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
+        } @else {
+        <fd-weekly-check-in-trends [trends]="trendCards()" />
+
+        <div class="check-in__grid fd-grid fd-gap-md">
+            <fd-weekly-check-in-stats-card [week]="thisWeek()" />
+            <fd-weekly-check-in-suggestions-card [suggestions]="suggestionRows()" />
+        </div>
+        }
+    </fd-page-body>
+</div>

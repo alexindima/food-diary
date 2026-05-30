@@ -1,0 +1,32 @@
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiIconComponent } from 'fd-ui-kit';
+
+import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
+import type { DailyAdvice } from '../../models/daily-advice.data';
+
+@Component({
+    selector: 'fd-daily-advice-card',
+    imports: [CommonModule, FdUiIconComponent, TranslatePipe, DashboardWidgetFrameComponent],
+    templateUrl: './daily-advice-card.html',
+    styleUrl: './daily-advice-card.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DailyAdviceCardComponent {
+    public readonly advice = input.required<DailyAdvice | null>();
+    public readonly isLoading = input.required<boolean>();
+
+    protected readonly adviceState = computed(() => {
+        const advice = this.advice();
+        if (advice === null) {
+            return null;
+        }
+
+        const tag = advice.tag ?? '';
+        return {
+            value: advice.value,
+            tagKey: tag.length > 0 ? `DASHBOARD.ADVICE_TAGS.${tag.toUpperCase()}` : null,
+        };
+    });
+}

@@ -1,7 +1,7 @@
 import type { Routes } from '@angular/router';
 
 import { adminAuthGuard } from '../../guards/admin-auth.guard';
-import { AdminLessonsComponent } from './pages/admin-lessons.component';
+import { AdminLessonsComponent } from './pages/admin-lessons';
 
 export const adminLessonsRoutes: Routes = [
     {

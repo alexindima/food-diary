@@ -1,0 +1,53 @@
+<section class="admin-users__section fd-grid fd-gap-md">
+    <div class="admin-users__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
+        <div>
+            <h2 class="fd-ui-title-sm">Login activity</h2>
+            <p class="fd-ui-body-xs">Successful authentication events with masked IP and parsed client details.</p>
+        </div>
+        <fd-ui-input placeholder="Search logins" [ngModel]="search()" (ngModelChange)="searchChange.emit($event)" />
+    </div>
+
+    @if (isLoading()) {
+    <p>Loading login activity...</p>
+    } @else {
+    <div class="summary fd-ui-action-text">Total login events: {{ totalItems() }}</div>
+
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>Logged in</th>
+                <th>User</th>
+                <th>Provider</th>
+                <th>Device</th>
+                <th>Browser</th>
+                <th>OS</th>
+                <th>IP</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (event of events(); track event.id) {
+            <tr>
+                <td>{{ event.loggedInAtUtc | date: 'medium' }}</td>
+                <td>{{ event.userEmail }}</td>
+                <td>{{ event.authProvider }}</td>
+                <td>{{ event.deviceType || '-' }}</td>
+                <td>{{ event.browserName || '-' }} {{ event.browserVersion || '' }}</td>
+                <td>{{ event.operatingSystem || '-' }}</td>
+                <td>{{ event.maskedIpAddress || '-' }}</td>
+            </tr>
+            } @empty {
+            <tr>
+                <td colspan="7">No login activity found.</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <fd-ui-pagination
+        [length]="totalItems()"
+        [pageSize]="pageSize()"
+        [pageIndex]="page() - 1"
+        (pageIndexChange)="pageChange.emit($event + 1)"
+    />
+    }
+</section>

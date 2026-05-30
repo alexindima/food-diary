@@ -1,0 +1,15 @@
+.fd-skeleton {
+    background: var(--fd-bg-skeleton-shimmer);
+    background-size: 200% 100%;
+    animation: fd-skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes fd-skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

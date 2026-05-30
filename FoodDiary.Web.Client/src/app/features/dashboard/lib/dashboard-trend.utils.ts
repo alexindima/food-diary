@@ -3,7 +3,7 @@ import { computed, type Signal } from '@angular/core';
 import { compareDatesAsc } from '../../../shared/lib/local-date.utils';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
-import type { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
+import type { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card';
 import { getWeightTrendRange } from './dashboard-date.utils';
 
 type WeightTrendValuePoint = WeightTrendPoint & { value: number };

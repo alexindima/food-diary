@@ -1,0 +1,29 @@
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { FastingTimerCardComponent } from '../../../../fasting/components/fasting-timer-card/fasting-timer-card';
+import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell';
+import { DashboardBlockContentDirective, DashboardBlockHostDirective } from '../../dashboard-lib/dashboard-block-host.directive';
+import type { DashboardBlockState, DashboardFastingSession } from '../../dashboard-lib/dashboard-view.types';
+
+@Component({
+    selector: 'fd-dashboard-fasting-block',
+    imports: [
+        TranslatePipe,
+        DashboardBlockContentDirective,
+        DashboardBlockHostDirective,
+        DashboardCardShellComponent,
+        FastingTimerCardComponent,
+    ],
+    templateUrl: './dashboard-fasting-block.html',
+    styleUrl: '../../dashboard.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DashboardFastingBlockComponent {
+    public readonly shouldRender = input.required<boolean>();
+    public readonly state = input.required<DashboardBlockState>();
+    public readonly isEditingLayout = input.required<boolean>();
+    public readonly session = input.required<DashboardFastingSession>();
+
+    public readonly blockClick = output();
+}

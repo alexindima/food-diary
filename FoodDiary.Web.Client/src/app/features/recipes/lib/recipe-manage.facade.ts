@@ -6,7 +6,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { finalize, map, type Observable } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
-import { ItemSelectDialogComponent } from '../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
+import { ItemSelectDialogComponent } from '../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import type {
     ItemSelectDialogData,
     ItemSelection,

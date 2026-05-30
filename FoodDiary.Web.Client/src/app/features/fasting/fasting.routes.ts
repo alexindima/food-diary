@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { FastingPageComponent } from './pages/fasting-page/fasting-page.component';
+import { FastingPageComponent } from './pages/fasting-page/fasting-page';
 
 const routes: Routes = [
     {

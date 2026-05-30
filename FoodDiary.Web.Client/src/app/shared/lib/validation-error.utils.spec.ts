@@ -1,6 +1,6 @@
 import { FormControl, Validators } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
-import type { FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import type { FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { resolveTranslatedControlError } from './validation-error.utils';

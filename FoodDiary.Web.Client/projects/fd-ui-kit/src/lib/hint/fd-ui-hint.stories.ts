@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiButtonComponent } from '../button/fd-ui-button.component';
+import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiHintDirective } from './fd-ui-hint.directive';
 
 const meta: Meta = {

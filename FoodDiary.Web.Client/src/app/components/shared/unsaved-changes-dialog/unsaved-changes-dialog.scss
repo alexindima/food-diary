@@ -1,0 +1,16 @@
+@use 'variables' as variables;
+
+.unsaved-changes-dialog__message {
+    margin: 0;
+    color: var(--fd-color-text);
+}
+
+.unsaved-changes-dialog__body {
+    padding: var(--fd-space-dialog-padding);
+}
+
+.unsaved-changes-dialog__footer {
+    --fd-actions-gap: var(--fd-space-sm);
+    padding: 0 var(--fd-space-dialog-padding) var(--fd-space-dialog-padding);
+    width: 100%;
+}

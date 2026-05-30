@@ -1,0 +1,43 @@
+<fd-ui-dialog class="fd-ui-image-preview-dialog" [dismissible]="false">
+    <div
+        class="fd-ui-image-preview-dialog__viewport"
+        tabindex="0"
+        (click)="close()"
+        (keydown.enter)="close()"
+        (keydown.space)="close(); $event.preventDefault()"
+    >
+        <button type="button" class="fd-ui-image-preview-dialog__close" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <figure
+            class="fd-ui-image-preview-dialog__figure"
+            tabindex="-1"
+            (click)="$event.stopPropagation()"
+            (keydown.enter)="$event.stopPropagation()"
+            (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+        >
+            @if (imageUrl) {
+            <img class="fd-ui-image-preview-dialog__image" width="1200" height="800" [ngSrc]="imageUrl" [alt]="alt" />
+            } @else if (collageImages.length) {
+            <div
+                role="img"
+                [class]="`fd-ui-image-preview-dialog__collage fd-ui-image-preview-dialog__collage--count-${collageImages.length}`"
+                [attr.aria-label]="alt"
+            >
+                @for (image of collageImages; track image.url) {
+                <img
+                    class="fd-ui-image-preview-dialog__collage-image"
+                    width="512"
+                    height="512"
+                    [ngSrc]="image.url"
+                    [alt]="image.alt ?? ''"
+                />
+                }
+            </div>
+            } @if (title) {
+            <figcaption class="fd-ui-image-preview-dialog__caption">{{ title }}</figcaption>
+            }
+        </figure>
+    </div>
+</fd-ui-dialog>

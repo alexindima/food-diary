@@ -1,0 +1,48 @@
+<fd-ui-card class="premium-access-page__card premium-access-page__card--overview fd-grid fd-gap-card-profile">
+    <div class="premium-access-page__section-header fd-row fd-align-start fd-justify-between fd-gap-card-header fd-wrap">
+        <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
+            <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
+            <p class="premium-access-page__text fd-ui-body">{{ viewModel().copyState.stateLabelKey | translate }}</p>
+        </div>
+
+        @if (viewModel().showManageBilling) {
+        <fd-ui-button
+            variant="secondary"
+            fill="outline"
+            [loading]="portalLoading()"
+            [disabled]="portalLoading()"
+            (click)="manageBilling.emit()"
+        >
+            {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
+        </fd-ui-button>
+        } @else if (viewModel().showStartTrial) {
+        <fd-ui-button variant="primary" [loading]="trialLoading()" [disabled]="trialLoading()" (click)="startTrial.emit()">
+            {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
+        </fd-ui-button>
+        }
+    </div>
+
+    @if (isLoading()) {
+    <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">{{ 'PREMIUM_PAGE.STATUS_LOADING' | translate }}</p>
+    } @else if (overview()) {
+    <div class="premium-access-page__badges fd-row fd-gap-pill fd-wrap">
+        @if (viewModel().badges.planLabelKey) {
+        <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
+            {{ viewModel().badges.planLabelKey | translate }}
+        </span>
+        }
+        <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
+            {{ viewModel().badges.statusLabelKey | translate }}
+        </span>
+    </div>
+
+    @if (viewModel().currentPeriodEndLabel; as currentPeriodEnd) {
+    <p class="premium-access-page__meta fd-ui-body-sm">
+        {{ viewModel().copyState.periodLabelKey | translate }}
+        <strong>{{ currentPeriodEnd }}</strong>
+    </p>
+    }
+
+    <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">{{ viewModel().hintKey | translate }}</p>
+    }
+</fd-ui-card>

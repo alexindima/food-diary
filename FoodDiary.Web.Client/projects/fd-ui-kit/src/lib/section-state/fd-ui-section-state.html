@@ -1,0 +1,17 @@
+@switch (state()) { @case ('loading') {
+<fd-ui-section-loading-state [loadingLabel]="loadingLabel()" />
+} @case ('empty') {
+<div class="fd-ui-section-state__surface">
+    <fd-ui-empty-state [title]="emptyTitle()" [message]="emptyMessage()" [icon]="emptyIcon()" [appearance]="emptyAppearance()" />
+</div>
+} @case ('error') {
+<fd-ui-section-error-state
+    [errorIcon]="errorIcon()"
+    [errorTitle]="errorTitle()"
+    [errorMessage]="errorMessage()"
+    [retryLabel]="retryLabel()"
+    (retry)="onRetry()"
+/>
+} @default {
+<ng-content />
+} }

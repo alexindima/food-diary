@@ -1,0 +1,64 @@
+<div class="consumption-manage__sticky-stack fd-stack fd-gap-lg">
+    <fd-ui-card
+        class="consumption-manage__card consumption-manage__card--nutrition"
+        appearance="entry"
+        tone="editor"
+        density="relaxed"
+        headerAlign="center"
+        accent="success"
+        [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
+    >
+        <div class="consumption-manage__nutrition fd-stack fd-gap-md">
+            <fd-nutrition-editor
+                manualHintKey="CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT"
+                [formGroup]="consumptionForm()"
+                [controlNames]="nutritionControlNames()"
+                [macroState]="macroBarState()"
+                [readonly]="isNutritionReadonly()"
+                [caloriesError]="caloriesError()"
+                [macrosError]="macrosError()"
+                [showManualHint]="showManualNutritionHint()"
+                [warning]="nutritionWarning()"
+            >
+                <fd-ui-segmented-toggle
+                    nutrition-before
+                    class="consumption-manage__nutrition-toggle"
+                    appearance="soft"
+                    [fullWidth]="true"
+                    [options]="nutritionModeOptions()"
+                    [selectedValue]="nutritionMode()"
+                    [fdUiHint]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                    [ariaLabel]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                    (selectedValueChange)="onNutritionModeChange($event)"
+                />
+            </fd-nutrition-editor>
+        </div>
+    </fd-ui-card>
+
+    <div class="consumption-manage__actions-panel">
+        <div class="consumption-manage__footer-actions fd-grid fd-gap-md fd-align-center">
+            <fd-ui-button
+                type="button"
+                class="consumption-manage__cancel-button"
+                fill="outline"
+                variant="primary"
+                icon="arrow_back"
+                (click)="onCancel()"
+            >
+                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+            </fd-ui-button>
+            @if (isEditMode()) {
+            <fd-ui-button type="submit" class="consumption-manage__action-button" appearance="brand-action" icon="save" [fullWidth]="true">
+                {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
+            </fd-ui-button>
+            } @else {
+            <fd-ui-button type="submit" class="consumption-manage__action-button" appearance="brand-action" icon="add" [fullWidth]="true">
+                {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
+            </fd-ui-button>
+            }
+        </div>
+        @if (globalError()) {
+        <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()" />
+        }
+    </div>
+</div>

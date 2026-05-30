@@ -6,7 +6,7 @@ import { filter, finalize, firstValueFrom, switchMap, tap } from 'rxjs';
 import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
-} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { AuthService } from '../../../services/auth.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -16,9 +16,9 @@ import { UserService } from '../../../shared/api/user.service';
 import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { UpdateUserDto, User } from '../../../shared/models/user.data';
-import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
-import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
-import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';
+import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog';
+import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog';
+import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileManageFacade {

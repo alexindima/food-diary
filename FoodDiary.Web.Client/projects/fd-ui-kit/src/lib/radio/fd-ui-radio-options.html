@@ -1,0 +1,24 @@
+@for (option of options(); track trackByValue($index, option)) {
+<input
+    class="fd-ui-radio__input"
+    type="radio"
+    [id]="`${id()}-${$index}`"
+    [name]="id()"
+    [value]="$index"
+    [checked]="isEqual(value(), option.value)"
+    [disabled]="disabled()"
+    (change)="optionSelected.emit(option)"
+    (blur)="optionBlur.emit()"
+    (keydown)="optionKeydown.emit({ index: $index, event: $event })"
+/>
+<label class="fd-ui-radio" [attr.for]="`${id()}-${$index}`" [class.fd-ui-radio--disabled]="disabled()">
+    <span class="fd-ui-radio__control" aria-hidden="true">
+        <span class="fd-ui-radio__dot"></span>
+    </span>
+    <span class="fd-ui-radio__text">
+        {{ option.label }} @if (option.description) {
+        <small class="fd-ui-radio__description"> {{ option.description }} </small>
+        }
+    </span>
+</label>
+}

@@ -1,0 +1,134 @@
+<div class="dashboard-summary-card">
+    <fd-dashboard-widget-frame [title]="'DASHBOARD_SUMMARY.TITLE' | translate">
+        @if (showNotice()) {
+        <fd-notice-banner
+            type="info"
+            [title]="noticeTitleKey() | translate"
+            [message]="noticeMessageKey() | translate"
+            [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
+            (action)="onGoalAction()"
+        />
+        }
+        <div class="dashboard-summary-card__layout fd-grid fd-gap-card-content">
+            <div
+                class="dashboard-summary-card__chart"
+                [class.is-daily-hovered]="isDailyHovered()"
+                [class.is-weekly-hovered]="isWeeklyHovered()"
+                [class.is-goal-missing]="normalizedDailyGoal() <= 0"
+            >
+                <svg class="dashboard-summary-card__svg" viewBox="-5 -5 270 270" aria-hidden="true" focusable="false">
+                    <defs>
+                        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" [id]="dailyGradientId">
+                            <stop offset="0%" [attr.stop-color]="dailyGradientStart()" />
+                            <stop offset="100%" [attr.stop-color]="dailyGradientEnd()" />
+                        </linearGradient>
+                        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" [id]="weeklyGradientId">
+                            <stop offset="0%" [attr.stop-color]="weeklyGradientStart()" />
+                            <stop offset="100%" [attr.stop-color]="weeklyGradientEnd()" />
+                        </linearGradient>
+                    </defs>
+                    <g
+                        class="dashboard-summary-card__ring dashboard-summary-card__ring--daily"
+                        [class.is-hovered]="isDailyHovered()"
+                        [style.--ring-color]="dailyStrokeColor()"
+                        (mouseenter)="setDailyHover(true)"
+                        (mouseleave)="setDailyHover(false)"
+                    >
+                        <circle
+                            class="dashboard-summary-card__track dashboard-summary-card__track--daily"
+                            cx="130"
+                            cy="130"
+                            r="112"
+                            [class.is-hovered]="isDailyHovered()"
+                        />
+                        <circle
+                            class="dashboard-summary-card__progress dashboard-summary-card__progress--daily"
+                            cx="130"
+                            cy="130"
+                            r="112"
+                            [class.is-hovered]="isDailyHovered()"
+                            [attr.stroke-dasharray]="dailyDasharray()"
+                            [attr.stroke]="dailyGradientStroke"
+                        />
+                    </g>
+
+                    <g
+                        class="dashboard-summary-card__ring dashboard-summary-card__ring--weekly"
+                        [class.is-hovered]="isWeeklyHovered()"
+                        [style.--ring-color]="weeklyStrokeColor()"
+                        (mouseenter)="setWeeklyHover(true)"
+                        (mouseleave)="setWeeklyHover(false)"
+                    >
+                        <circle
+                            class="dashboard-summary-card__track dashboard-summary-card__track--weekly"
+                            cx="130"
+                            cy="130"
+                            r="88"
+                            [class.is-hovered]="isWeeklyHovered()"
+                        />
+                        <circle
+                            class="dashboard-summary-card__progress dashboard-summary-card__progress--weekly"
+                            cx="130"
+                            cy="130"
+                            r="88"
+                            [class.is-hovered]="isWeeklyHovered()"
+                            [attr.stroke-dasharray]="weeklyDasharray()"
+                            [attr.stroke]="weeklyGradientStroke"
+                        />
+                    </g>
+                </svg>
+
+                <div
+                    class="dashboard-summary-card__center fd-stack fd-center fd-gap-card-header"
+                    [class.is-daily-hovered]="isDailyHovered()"
+                    [class.is-weekly-hovered]="isWeeklyHovered()"
+                >
+                    <div
+                        class="dashboard-summary-card__percent fd-row fd-align-baseline fd-gap-card-header fd-ui-metric-hero"
+                        [hidden]="normalizedDailyGoal() <= 0"
+                    >
+                        <span class="dashboard-summary-card__percent-value">{{ dailyPercent() }}</span>
+                        <span class="dashboard-summary-card__percent-sign fd-ui-metric-unit">%</span>
+                    </div>
+                    <div
+                        class="dashboard-summary-card__primary-line fd-ui-stat-value"
+                        [class.dashboard-summary-card__primary-line--solo]="normalizedDailyGoal() <= 0"
+                    >
+                        {{ dailyConsumed() | number: '1.0-0' }}
+                        <span [hidden]="normalizedDailyGoal() <= 0"> / {{ normalizedDailyGoal() | number: '1.0-0' }} </span>
+                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                    </div>
+                    <div class="dashboard-summary-card__secondary-line fd-ui-body-sm" [hidden]="normalizedDailyGoal() <= 0">
+                        {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
+                    </div>
+                    <div class="dashboard-summary-card__burned-line fd-ui-overline" [hidden]="caloriesBurned() <= 0">
+                        {{ 'CONSUMPTION_RING.BURNED' | translate }}: {{ caloriesBurned() | number: '1.0-0' }} {{ 'CONSUMPTION_RING.UNIT' |
+                        translate }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-summary-card__bars fd-grid fd-gap-card-relaxed">
+                @for (bar of nutrientBarViewModels(); track bar.id) {
+                <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
+                    <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">
+                        <span class="dashboard-summary-card__bar-label fd-ui-body-sm"> {{ bar.labelText }} </span>
+                        <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="bar.valueColor">
+                            {{ bar.current | number: '1.0-0' }}
+                            <span [hidden]="bar.target <= 0"> / {{ bar.target | number: '1.0-0' }} </span>
+                            {{ bar.unitText }}
+                        </span>
+                    </div>
+                    <div class="dashboard-summary-card__bar-track fd-ui-progress-track">
+                        <div
+                            class="dashboard-summary-card__bar-fill fd-ui-progress-fill"
+                            [style.background]="bar.fillBackground"
+                            [style.width.%]="bar.fillWidth"
+                        ></div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </fd-dashboard-widget-frame>
+</div>

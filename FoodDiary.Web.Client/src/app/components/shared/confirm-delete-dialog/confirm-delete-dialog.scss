@@ -1,0 +1,10 @@
+.confirm-delete-dialog {
+    &__message {
+        margin: 0;
+        color: var(--fd-color-text-main);
+    }
+
+    &__footer {
+        --fd-actions-gap: var(--fd-space-sm);
+    }
+}

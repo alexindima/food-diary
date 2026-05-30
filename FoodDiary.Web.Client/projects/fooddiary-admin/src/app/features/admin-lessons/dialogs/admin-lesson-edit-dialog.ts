@@ -1,0 +1,156 @@
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
+
+import { AdminLessonsService } from '../api/admin-lessons.service';
+import { type AdminLesson, CONTENT_MAX_LENGTH, LESSON_CATEGORIES, LESSON_DIFFICULTIES, LESSON_LOCALES } from '../models/admin-lesson.data';
+
+type LessonForm = {
+    title: FormControl<string>;
+    content: FormControl<string>;
+    summary: FormControl<string>;
+    locale: FormControl<string>;
+    category: FormControl<string>;
+    difficulty: FormControl<string>;
+    estimatedReadMinutes: FormControl<number>;
+    sortOrder: FormControl<number>;
+};
+
+const TITLE_MAX_LENGTH = 256;
+const SUMMARY_MAX_LENGTH = 512;
+const DEFAULT_LOCALE = 'ru';
+const DEFAULT_CATEGORY = 'NutritionBasics';
+const DEFAULT_DIFFICULTY = 'Beginner';
+const DEFAULT_ESTIMATED_READ_MINUTES = 5;
+const DEFAULT_SORT_ORDER = 0;
+
+@Component({
+    selector: 'fd-admin-lesson-edit-dialog',
+    imports: [CommonModule, ReactiveFormsModule, FdUiInputComponent, FdUiTextareaComponent, FdUiButtonComponent, FdUiSelectComponent],
+    templateUrl: './admin-lesson-edit-dialog.html',
+    styleUrl: './admin-lesson-edit-dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AdminLessonEditDialogComponent {
+    protected readonly data = inject<AdminLesson>(FD_UI_DIALOG_DATA);
+    private readonly dialogRef = inject<FdUiDialogRef<AdminLessonEditDialogComponent, boolean>>(FdUiDialogRef);
+    private readonly service = inject(AdminLessonsService);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly sanitizer = inject(DomSanitizer);
+
+    protected readonly isNew = (this.data as AdminLesson & { isNew?: boolean }).isNew === true;
+    protected readonly isSaving = signal(false);
+    protected readonly showPreview = signal(false);
+    protected readonly previewHtml = signal<SafeHtml>('');
+    protected readonly contentLength = signal(this.data.content.length);
+    protected readonly contentMaxLength = CONTENT_MAX_LENGTH;
+    protected readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());
+
+    protected readonly categoryOptions: Array<FdUiSelectOption<string>> = LESSON_CATEGORIES.map(c => ({ value: c, label: c }));
+    protected readonly difficultyOptions: Array<FdUiSelectOption<string>> = LESSON_DIFFICULTIES.map(d => ({ value: d, label: d }));
+    protected readonly localeOptions: Array<FdUiSelectOption<string>> = LESSON_LOCALES.map(l => ({ value: l, label: l }));
+
+    protected readonly form = new FormGroup<LessonForm>({
+        title: new FormControl(this.data.title, {
+            nonNullable: true,
+            validators: [Validators.required, Validators.maxLength(TITLE_MAX_LENGTH)],
+        }),
+        content: new FormControl(this.data.content, {
+            nonNullable: true,
+            validators: [Validators.required, Validators.maxLength(CONTENT_MAX_LENGTH)],
+        }),
+        summary: new FormControl(this.data.summary ?? '', { nonNullable: true, validators: [Validators.maxLength(SUMMARY_MAX_LENGTH)] }),
+        locale: new FormControl(this.resolveStringValue(this.data.locale, DEFAULT_LOCALE), {
+            nonNullable: true,
+            validators: [Validators.required],
+        }),
+        category: new FormControl(this.resolveStringValue(this.data.category, DEFAULT_CATEGORY), {
+            nonNullable: true,
+            validators: [Validators.required],
+        }),
+        difficulty: new FormControl(this.resolveStringValue(this.data.difficulty, DEFAULT_DIFFICULTY), {
+            nonNullable: true,
+            validators: [Validators.required],
+        }),
+        estimatedReadMinutes: new FormControl(
+            this.data.estimatedReadMinutes > DEFAULT_SORT_ORDER ? this.data.estimatedReadMinutes : DEFAULT_ESTIMATED_READ_MINUTES,
+            {
+                nonNullable: true,
+                validators: [Validators.required, Validators.min(1)],
+            },
+        ),
+        sortOrder: new FormControl(this.data.sortOrder, {
+            nonNullable: true,
+            validators: [Validators.min(DEFAULT_SORT_ORDER)],
+        }),
+    });
+
+    public constructor() {
+        this.form.controls.content.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+            this.contentLength.set(value.length);
+            if (this.showPreview()) {
+                this.updatePreview();
+            }
+        });
+    }
+
+    protected onCancel(): void {
+        this.dialogRef.close(false);
+    }
+
+    protected onSave(): void {
+        if (this.form.invalid || this.isSaving()) {
+            return;
+        }
+
+        this.isSaving.set(true);
+        const value = this.form.getRawValue();
+        const request = {
+            title: value.title,
+            content: value.content,
+            summary: value.summary.length > 0 ? value.summary : null,
+            locale: value.locale,
+            category: value.category,
+            difficulty: value.difficulty,
+            estimatedReadMinutes: value.estimatedReadMinutes,
+            sortOrder: value.sortOrder,
+        };
+
+        const operation = this.isNew ? this.service.create(request) : this.service.update(this.data.id, request);
+
+        operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: () => {
+                this.isSaving.set(false);
+                this.dialogRef.close(true);
+            },
+            error: () => {
+                this.isSaving.set(false);
+            },
+        });
+    }
+
+    protected togglePreview(): void {
+        const next = !this.showPreview();
+        this.showPreview.set(next);
+        if (next) {
+            this.updatePreview();
+        }
+    }
+
+    private updatePreview(): void {
+        const html = this.form.controls.content.value;
+        this.previewHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
+    }
+
+    private resolveStringValue(value: string, fallback: string): string {
+        return value.length > 0 ? value : fallback;
+    }
+}

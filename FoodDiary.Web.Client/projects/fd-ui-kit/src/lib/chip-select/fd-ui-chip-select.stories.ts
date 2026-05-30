@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiChipSelectComponent } from './fd-ui-chip-select.component';
+import { FdUiChipSelectComponent } from './fd-ui-chip-select';
 
 const meta: Meta<FdUiChipSelectComponent> = {
     title: 'Selection/Chip Select',

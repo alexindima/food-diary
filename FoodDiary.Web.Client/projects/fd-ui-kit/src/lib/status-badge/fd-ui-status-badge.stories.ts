@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiStatusBadgeComponent } from './fd-ui-status-badge.component';
+import { FdUiStatusBadgeComponent } from './fd-ui-status-badge';
 
 const meta: Meta<FdUiStatusBadgeComponent> = {
     title: 'Components/StatusBadge',

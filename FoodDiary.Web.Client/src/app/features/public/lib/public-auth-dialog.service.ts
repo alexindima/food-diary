@@ -19,7 +19,7 @@ export class PublicAuthDialogService {
     private readonly fdDialogService = inject(FdUiDialogService);
 
     public async openAsync({ mode, returnUrl = null, adminReturnUrl = null }: PublicAuthDialogOptions): Promise<PublicAuthDialogRef> {
-        const { AuthDialogComponent } = await import('../../auth/dialogs/auth-dialog/auth-dialog.component');
+        const { AuthDialogComponent } = await import('../../auth/dialogs/auth-dialog/auth-dialog');
 
         return this.fdDialogService.open(AuthDialogComponent, {
             preset: 'form',

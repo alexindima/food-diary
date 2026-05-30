@@ -1,0 +1,33 @@
+<div [class]="hostClass()">
+    <div class="fd-ui-textarea__control-wrap" role="presentation" [style.background]="fillColor() || null" (click)="focusControl(control)">
+        @if (label()) {
+        <label class="fd-ui-textarea__label" [attr.for]="id()">
+            <span class="fd-ui-textarea__label-text">{{ label() }}</span>
+            @if (required()) {
+            <span class="fd-ui-textarea__required">*</span>
+            }
+        </label>
+        }
+        <textarea
+            #control
+            class="fd-ui-textarea__control"
+            [id]="id()"
+            [value]="internalValue()"
+            [required]="required()"
+            [readonly]="readonly()"
+            [disabled]="disabled()"
+            [attr.placeholder]="placeholderAttribute()"
+            [attr.maxlength]="maxLength() ?? null"
+            [attr.rows]="rows()"
+            [attr.aria-describedby]="hasError() ? `${id()}-error` : null"
+            [attr.aria-invalid]="hasError() ? 'true' : null"
+            (input)="onInput(control.value)"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+        ></textarea>
+    </div>
+
+    @if (hasError()) {
+    <div class="fd-ui-textarea__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+    }
+</div>

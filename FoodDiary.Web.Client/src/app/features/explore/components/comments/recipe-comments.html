@@ -1,0 +1,31 @@
+<div class="comments-section">
+    <h3 class="comments-title fd-ui-section-title">{{ 'COMMENTS.TITLE' | translate }}</h3>
+
+    <div class="comment-form">
+        <fd-ui-textarea [formControl]="commentControl" [placeholder]="'COMMENTS.WRITE_PLACEHOLDER' | translate" [rows]="3" />
+        <div class="comment-form-actions">
+            @if (editingCommentId()) {
+            <fd-ui-button variant="outline" size="sm" (click)="onCancelEdit()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
+            }
+            <fd-ui-button
+                variant="primary"
+                size="sm"
+                [disabled]="commentControl.invalid || isSubmitting()"
+                [loading]="isSubmitting()"
+                (click)="onSubmit()"
+            >
+                {{ submitLabelKey() | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+
+    <fd-recipe-comments-list
+        [isLoading]="isLoading()"
+        [commentsCount]="comments().length"
+        [items]="commentItems()"
+        [hasMore]="hasMore()"
+        (edit)="onEdit($event)"
+        (delete)="onDelete($event)"
+        (loadMore)="onLoadMore()"
+    />
+</div>

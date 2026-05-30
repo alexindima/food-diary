@@ -1,0 +1,84 @@
+<div class="product-manage fd-stack" fdPageContainer>
+    <fd-manage-header
+        class="product-manage__header"
+        [title]="manageHeaderState().titleKey | translate"
+        [subtitle]="'PRODUCT_MANAGE.SUBTITLE' | translate"
+        [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
+        (back)="onCancelAsync()"
+    />
+
+    <form
+        class="product-manage__form fd-stack fd-gap-lg"
+        [formGroup]="productForm"
+        [attr.aria-busy]="isSubmitting() || isDeleting()"
+        (ngSubmit)="onSubmitAsync()"
+    >
+        <div class="product-manage__grid fd-grid fd-gap-xl">
+            <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
+                <fd-product-basic-info
+                    [formGroup]="productForm"
+                    [nameOptions]="nameSearch.options()"
+                    [isNameSearchLoading]="nameSearch.isLoading()"
+                    (openBarcodeScanner)="openBarcodeScanner()"
+                    (openAiRecognition)="openAiRecognitionDialog()"
+                    (nameQueryChange)="onNameQueryChange($event)"
+                    (nameSuggestionSelected)="onNameSuggestionSelected($event)"
+                />
+            </div>
+
+            <div class="product-manage__column product-manage__column--secondary fd-stack fd-gap-xl">
+                <div class="product-manage__sticky-stack fd-stack fd-gap-lg">
+                    <fd-product-nutrition-editor
+                        [formGroup]="productForm"
+                        [nutritionMode]="nutritionMode"
+                        (nutritionModeChange)="onNutritionModeChange($event)"
+                        (openAiRecognition)="openAiRecognitionDialog()"
+                    />
+
+                    <div class="product-manage__actions-panel">
+                        <div class="product-manage__footer-actions fd-row fd-gap-md">
+                            <fd-ui-button
+                                type="button"
+                                class="product-manage__cancel-button"
+                                fill="outline"
+                                variant="primary"
+                                icon="arrow_back"
+                                (click)="onCancelAsync()"
+                            >
+                                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+                            </fd-ui-button>
+                            @if (canShowDeleteButton()) {
+                            <fd-ui-button
+                                type="button"
+                                class="product-manage__delete-button product-manage__delete-button--icon"
+                                variant="danger"
+                                fill="outline"
+                                icon="delete"
+                                [fdUiHint]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
+                                [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
+                                [loading]="isDeleting()"
+                                [disabled]="isSubmitting()"
+                                (click)="onDeleteProductAsync()"
+                            />
+                            }
+                            <fd-ui-button
+                                type="submit"
+                                class="product-manage__action-button"
+                                appearance="brand-action"
+                                [icon]="manageHeaderState().submitIcon"
+                                [fullWidth]="true"
+                                [disabled]="productForm.invalid || isSubmitting() || isDeleting()"
+                                [loading]="isSubmitting()"
+                            >
+                                {{ manageHeaderState().submitLabelKey | translate }}
+                            </fd-ui-button>
+                        </div>
+                        @if (globalError()) {
+                        <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

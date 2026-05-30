@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import routes from './explore.routes';
-import { ExplorePageComponent } from './pages/explore/explore-page.component';
+import { ExplorePageComponent } from './pages/explore/explore-page';
 
 describe('explore routes', () => {
     it('registers explore page as the default route', () => {

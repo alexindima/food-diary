@@ -2,7 +2,7 @@ import { provideRouter } from '@angular/router';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig } from '@storybook/angular';
 
-import { FdUiSidebarComponent } from './fd-ui-sidebar.component';
+import { FdUiSidebarComponent } from './fd-ui-sidebar';
 
 const meta: Meta<FdUiSidebarComponent> = {
     title: 'Components/Sidebar',

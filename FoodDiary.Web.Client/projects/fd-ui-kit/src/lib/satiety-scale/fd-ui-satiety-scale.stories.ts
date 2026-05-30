@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiSatietyScaleComponent } from './fd-ui-satiety-scale.component';
+import { FdUiSatietyScaleComponent } from './fd-ui-satiety-scale';
 
 const meta: Meta<FdUiSatietyScaleComponent> = {
     title: 'Components/SatietyScale',

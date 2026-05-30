@@ -1,4 +1,4 @@
-import type { MealCardItem } from '../../meal-card/meal-card.component';
+import type { MealCardItem } from '../../meal-card/meal-card';
 
 export type MealPreviewEntry = {
     meal?: MealCardItem | null;

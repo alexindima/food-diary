@@ -1,0 +1,269 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    container-type: inline-size;
+}
+
+.dashboard-summary-card {
+    --crc-surface: var(--fd-color-surface);
+    border-radius: var(--fd-radius-card);
+    padding: var(--fd-space-card-profile-padding);
+    border: var(--fd-border-strong);
+    background: var(--crc-surface);
+    box-shadow: var(--fd-shadow-lg);
+    overflow: hidden;
+    color: var(--fd-color-text);
+
+    fd-notice-banner {
+        display: block;
+        margin-bottom: var(--fd-space-card-content-gap);
+    }
+
+    &__layout {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+
+        @media #{variables.$media-tablet} {
+            grid-template-columns: 1fr;
+            gap: var(--fd-space-card-relaxed-gap);
+        }
+    }
+
+    &__chart {
+        position: relative;
+        width: clamp(220px, 40vw, 320px);
+        margin: 0;
+        aspect-ratio: 1 / 1;
+        z-index: 1;
+        max-width: 100%;
+
+        &.is-daily-hovered {
+            .dashboard-summary-card__center {
+                transform: translateY(4px) scale(1.12);
+            }
+
+            .dashboard-summary-card__secondary-line {
+                transform: scale(0.9);
+                opacity: 0.75;
+            }
+        }
+
+        &.is-weekly-hovered {
+            .dashboard-summary-card__secondary-line {
+                transform: scale(1.12);
+                opacity: 1;
+                color: var(--fd-color-text);
+            }
+        }
+
+        &.is-goal-missing {
+            .dashboard-summary-card__secondary-line,
+            .dashboard-summary-card__percent,
+            .dashboard-summary-card__primary-line {
+                transform: none;
+                opacity: 1;
+            }
+        }
+    }
+
+    &__svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+        transition: transform 0.2s ease;
+    }
+
+    &__ring circle {
+        fill: none;
+    }
+
+    &__ring {
+        outline: none;
+    }
+
+    &__ring:focus,
+    &__ring:focus-visible {
+        outline: none;
+    }
+
+    &__track {
+        stroke: var(--fd-color-border-summary-track);
+        opacity: 1;
+        stroke-linecap: round;
+        transition:
+            stroke 0.2s ease,
+            filter 0.2s ease,
+            transform 0.2s ease;
+        transform-box: fill-box;
+        transform-origin: center;
+
+        &--daily {
+            stroke-width: 20;
+        }
+
+        &--weekly {
+            stroke-width: 10;
+        }
+    }
+
+    &__progress {
+        stroke-linecap: round;
+        transition:
+            stroke-dasharray 0s,
+            stroke 0.8s linear,
+            opacity 0.35s ease-in-out,
+            transform 0.2s ease,
+            filter 0.2s ease;
+        transform-box: fill-box;
+        transform-origin: center;
+
+        &--daily {
+            stroke-width: 20;
+        }
+
+        &--weekly {
+            stroke-width: 10;
+        }
+    }
+
+    &__center {
+        position: absolute;
+        inset: 0;
+        text-align: center;
+        padding: var(--fd-space-surface-padding);
+        color: var(--fd-color-text);
+        transition:
+            transform 0.2s ease,
+            opacity 0.2s ease;
+        pointer-events: none;
+
+        &.is-daily-hovered .dashboard-summary-card__secondary-line {
+            transform: scale(0.8);
+            opacity: 0.6;
+        }
+
+        &.is-weekly-hovered .dashboard-summary-card__secondary-line {
+            transform: scale(1.25);
+        }
+
+        &.is-weekly-hovered .dashboard-summary-card__percent,
+        &.is-weekly-hovered .dashboard-summary-card__primary-line {
+            transform: scale(0.85);
+            opacity: 0.6;
+        }
+    }
+
+    &__percent {
+        color: var(--fd-color-text-strong);
+        transition:
+            transform 0.25s ease,
+            opacity 0.25s ease;
+        padding-left: var(--fd-space-xxs);
+    }
+
+    &__percent-value {
+        letter-spacing: inherit;
+    }
+
+    &__percent-sign {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__primary-line {
+        color: var(--fd-color-text);
+        transition:
+            transform 0.25s ease,
+            opacity 0.25s ease;
+
+        &--solo {
+            color: var(--fd-color-text-strong);
+        }
+    }
+
+    &__secondary-line {
+        color: var(--fd-color-text-muted);
+        transition:
+            transform 0.2s ease,
+            color 0.2s ease,
+            opacity 0.2s ease;
+    }
+
+    &__burned-line {
+        color: var(--fd-color-orange-500);
+    }
+
+    &__legend {
+        display: grid;
+        gap: var(--fd-space-card-content-gap);
+    }
+
+    &__bar {
+        transition:
+            transform 0.2s ease,
+            filter 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px) scale(1.02);
+            filter: var(--fd-shadow-filter-drop-sm);
+
+            .dashboard-summary-card__bar-fill {
+                opacity: 1;
+                filter: var(--fd-shadow-filter-glow-sm);
+            }
+        }
+    }
+
+    &__bar-header {
+        color: var(--fd-color-text);
+    }
+
+    &__bar-label {
+        color: var(--fd-color-text);
+    }
+
+    &__bar-value {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__bar-track {
+        width: 100%;
+        --fd-progress-height: var(--fd-size-progress-height-xl);
+        --fd-progress-radius: var(--fd-radius-pill);
+        --fd-progress-track-background: var(--fd-bg-progress-track-strong);
+        position: relative;
+    }
+
+    &__bar-fill {
+        position: absolute;
+        inset: 0;
+        width: 0;
+        opacity: 0.96;
+        transition:
+            width 0.4s ease,
+            opacity 0.2s ease;
+    }
+}
+
+@container (max-width: 520px) {
+    .dashboard-summary-card {
+        &__layout {
+            grid-template-columns: 1fr;
+            gap: var(--fd-space-card-content-gap);
+            justify-items: center;
+        }
+
+        &__chart {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        &__legend {
+            width: 100%;
+        }
+
+        &__bars {
+            width: 100%;
+        }
+    }
+}

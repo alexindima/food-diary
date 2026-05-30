@@ -1,0 +1,90 @@
+<div class="fd-ui-line-chart" role="img" [attr.aria-label]="ariaLabel()">
+    @if (pointViews().length) {
+    <div class="fd-ui-line-chart__plot" [class.fd-ui-line-chart__plot--with-axis-labels]="showAxisLabels()">
+        @if (showAxisLabels()) {
+        <div class="fd-ui-line-chart__y-axis" aria-hidden="true">
+            <div class="fd-ui-line-chart__y-axis-sizer">
+                @for (gridLine of gridLines(); track $index) {
+                <span>{{ gridLine.label }}</span>
+                }
+            </div>
+
+            @for (gridLine of gridLines(); track $index) {
+            <span class="fd-ui-line-chart__y-axis-label" [style.top]="gridLine.yPercent">{{ gridLine.label }}</span>
+            }
+        </div>
+        }
+
+        <div class="fd-ui-line-chart__surface">
+            <svg class="fd-ui-line-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">
+                @if (showGrid()) { @for (gridLine of gridLines(); track $index) {
+                <line
+                    class="fd-ui-line-chart__grid-line"
+                    [attr.x1]="chartLeft()"
+                    [attr.x2]="chartRight()"
+                    [attr.y1]="gridLine.y"
+                    [attr.y2]="gridLine.y"
+                />
+                } @for (gridLine of verticalGridLines(); track $index) {
+                <line
+                    class="fd-ui-line-chart__grid-line"
+                    [attr.x1]="gridLine.x"
+                    [attr.x2]="gridLine.x"
+                    [attr.y1]="chartTop()"
+                    [attr.y2]="chartBottom()"
+                />
+                } }
+
+                <line
+                    class="fd-ui-line-chart__axis"
+                    [attr.x1]="chartLeft()"
+                    [attr.x2]="chartRight()"
+                    [attr.y1]="chartBottom()"
+                    [attr.y2]="chartBottom()"
+                />
+
+                @if (showArea()) { @for (series of seriesViews(); track series.label) { @for (areaPath of series.areaPaths; track $index) {
+                <path class="fd-ui-line-chart__area" [attr.d]="areaPath" [style.fill]="series.fillColor" />
+                } } } @for (series of seriesViews(); track series.label) { @for (path of series.paths; track $index) {
+                <path class="fd-ui-line-chart__line" [attr.d]="path" [style.stroke]="series.color" />
+                } }
+            </svg>
+
+            @if (showPoints()) { @for (point of pointViews(); track $index) {
+            <span
+                class="fd-ui-line-chart__point"
+                [style.background]="point.color"
+                [style.left]="point.xPercent"
+                [style.top]="point.yPercent"
+                [attr.title]="point.tooltip"
+            ></span>
+            } }
+        </div>
+
+        @if (showAxisLabels()) {
+        <div class="fd-ui-line-chart__x-axis fd-ui-line-chart__x-axis--angled" aria-hidden="true">
+            @for (label of xAxisLabels(); track label.xPercent) {
+            <span
+                [class.fd-ui-line-chart__x-axis-label--start]="label.position === 'start'"
+                [class.fd-ui-line-chart__x-axis-label--end]="label.position === 'end'"
+                [style.left]="label.xPercent"
+            >
+                {{ label.label }}
+            </span>
+            }
+        </div>
+        } @if (shouldShowSeriesLegend()) {
+        <div class="fd-ui-line-chart__legend" aria-hidden="true">
+            @for (series of seriesViews(); track series.label) {
+            <span>
+                <i [style.background]="series.color"></i>
+                {{ series.label }}
+            </span>
+            }
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="fd-ui-line-chart__empty">{{ emptyLabel() }}</div>
+    }
+</div>

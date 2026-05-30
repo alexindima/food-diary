@@ -4,7 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, map, type Observable, of, switchMap, take, tap } from 'rxjs';
 
-import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner.component';
+import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../../services/navigation.service';
 import { ViewportService } from '../../../../../services/viewport.service';
@@ -24,7 +24,7 @@ import {
     PRODUCT_LIST_RECENT_LIMIT,
 } from '../product-list.config';
 import type { ProductCardViewModel } from '../product-list.types';
-import { ProductListFiltersDialogComponent } from '../product-list-filters-dialog/product-list-filters-dialog.component';
+import { ProductListFiltersDialogComponent } from '../product-list-filters-dialog/product-list-filters-dialog';
 import type { ProductListFiltersDialogResult } from '../product-list-filters-dialog/product-list-filters-dialog.types';
 
 @Injectable({ providedIn: 'root' })

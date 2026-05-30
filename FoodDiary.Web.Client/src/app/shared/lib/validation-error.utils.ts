@@ -1,6 +1,6 @@
 import type { AbstractControl } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
-import type { FdValidationErrorConfig, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import type { FdValidationErrorConfig, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 export function resolveTranslatedControlError(
     control: AbstractControl | null,

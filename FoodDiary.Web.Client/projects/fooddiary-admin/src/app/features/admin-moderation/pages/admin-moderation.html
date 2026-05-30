@@ -1,0 +1,60 @@
+<div class="admin-moderation">
+    <div class="toolbar fd-row fd-gap-sm">
+        <select [ngModel]="statusFilter()" (ngModelChange)="onStatusChange($event)">
+            <option value="">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Dismissed">Dismissed</option>
+        </select>
+    </div>
+
+    @if (isLoading()) {
+    <p>Loading reports...</p>
+    } @else {
+    <div class="summary">Total reports: {{ totalItems() }}</div>
+
+    <table class="reports-table">
+        <thead>
+            <tr>
+                <th>Target</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Reviewed</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (report of reportItems(); track report.id) {
+            <tr>
+                <td>{{ report.targetType }} ({{ report.targetIdShort }})</td>
+                <td class="reason-cell">{{ report.reason }}</td>
+                <td>
+                    <span [class]="`status-badge status-badge--${(report.status | lowercase)}`"> {{ report.status }} </span>
+                </td>
+                <td>{{ report.createdText }}</td>
+                <td>{{ report.reviewedText }}</td>
+                <td>
+                    @if (report.status === 'Pending') {
+                    <div class="action-buttons fd-row fd-gap-control">
+                        <fd-ui-button type="button" variant="primary" size="sm" (click)="openAction(report, 'review')">
+                            Review
+                        </fd-ui-button>
+                        <fd-ui-button type="button" variant="secondary" size="sm" (click)="openAction(report, 'dismiss')">
+                            Dismiss
+                        </fd-ui-button>
+                    </div>
+                    }
+                </td>
+            </tr>
+            } @empty {
+            <tr>
+                <td colspan="6">No reports found.</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <fd-ui-pagination [length]="totalItems()" [pageSize]="limit" [pageIndex]="page() - 1" (pageIndexChange)="goToPage($event + 1)" />
+    }
+</div>

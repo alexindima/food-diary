@@ -1,0 +1,149 @@
+import { signal } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { of } from 'rxjs';
+import { describe, expect, it, vi } from 'vitest';
+
+import { type NotificationItem, NotificationService } from '../../../services/notification.service';
+import { NotificationsDialogComponent } from './notifications-dialog';
+
+type NotificationsDialogComponentTestApi = NotificationsDialogComponent & {
+    notificationItems: () => Array<{ icon: string }>;
+};
+type NotificationsDialogTestContext = {
+    component: NotificationsDialogComponent;
+    dialogRef: { close: ReturnType<typeof vi.fn> };
+    fixture: ComponentFixture<NotificationsDialogComponent>;
+    notificationService: {
+        ensureNotificationsLoaded: ReturnType<typeof vi.fn>;
+        markAllRead: ReturnType<typeof vi.fn>;
+        markAsRead: ReturnType<typeof vi.fn>;
+        notifications: ReturnType<typeof signal<NotificationItem[]>>;
+        notificationsLoading: ReturnType<typeof signal<boolean>>;
+    };
+    router: { navigateByUrl: ReturnType<typeof vi.fn> };
+};
+
+function setupNotificationsDialog(notifications: NotificationItem[]): NotificationsDialogTestContext {
+    const dialogRef = { close: vi.fn() };
+    const router = { navigateByUrl: vi.fn().mockResolvedValue(true) };
+    const notificationService = {
+        notifications: signal(notifications),
+        notificationsLoading: signal(false),
+        ensureNotificationsLoaded: vi.fn(),
+        markAsRead: vi.fn().mockReturnValue(of(void 0)),
+        markAllRead: vi.fn().mockReturnValue(of(void 0)),
+    };
+
+    TestBed.configureTestingModule({
+        imports: [NotificationsDialogComponent, TranslateModule.forRoot()],
+        providers: [
+            { provide: FdUiDialogRef, useValue: dialogRef },
+            { provide: NotificationService, useValue: notificationService },
+            { provide: Router, useValue: router },
+        ],
+    });
+
+    const fixture = TestBed.createComponent(NotificationsDialogComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    return { component, dialogRef, fixture, notificationService, router };
+}
+
+describe('NotificationsDialogComponent invitations', () => {
+    it('renders a highlighted dietologist invitation card', () => {
+        const { component, fixture } = setupNotificationsDialog([createInvitationNotification()]);
+
+        const host = fixture.nativeElement as HTMLElement;
+        const card = host.querySelector('.notifications-dialog__item--dietologist');
+        expect(card).toBeTruthy();
+        expect(host.textContent).toContain('NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE');
+        expect(host.textContent).toContain('NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION');
+        expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('medical_information');
+    });
+
+    it('marks unread invitation as read before navigation', () => {
+        const { dialogRef, fixture, notificationService, router } = setupNotificationsDialog([createInvitationNotification()]);
+
+        const host = fixture.nativeElement as HTMLElement;
+        const card = host.querySelector<HTMLButtonElement>('.notifications-dialog__item');
+        if (card === null) {
+            throw new Error('Expected notification card to exist.');
+        }
+
+        card.click();
+        fixture.detectChanges();
+
+        expect(notificationService.markAsRead).toHaveBeenCalledWith('n1');
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/dietologist-invitations/inv-1');
+        expect(dialogRef.close).toHaveBeenCalled();
+    });
+});
+
+describe('NotificationsDialogComponent password reminders', () => {
+    it('renders a highlighted password setup reminder card', () => {
+        const { component, fixture } = setupNotificationsDialog([createPasswordSetupNotification()]);
+
+        const host = fixture.nativeElement as HTMLElement;
+        const card = host.querySelector('.notifications-dialog__item--security');
+        expect(card).toBeTruthy();
+        expect(host.textContent).toContain('NOTIFICATIONS.PASSWORD_SETUP_BADGE');
+        expect(host.textContent).toContain('NOTIFICATIONS.PASSWORD_SETUP_ACTION');
+        expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('password');
+    });
+});
+
+describe('NotificationsDialogComponent recommendations', () => {
+    it('renders recommendation notification as an actionable dietologist card', () => {
+        const { component, fixture } = setupNotificationsDialog([createRecommendationNotification()]);
+
+        const host = fixture.nativeElement as HTMLElement;
+        const card = host.querySelector('.notifications-dialog__item--dietologist');
+        expect(card).toBeTruthy();
+        expect(host.textContent).toContain('NOTIFICATIONS.RECOMMENDATION_BADGE');
+        expect(host.textContent).toContain('NOTIFICATIONS.RECOMMENDATION_ACTION');
+        expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('medical_information');
+    });
+});
+
+function createInvitationNotification(): NotificationItem {
+    return {
+        id: 'n1',
+        type: 'DietologistInvitationReceived',
+        title: 'Dietologist invitation',
+        body: 'Client invited you',
+        targetUrl: '/dietologist-invitations/inv-1',
+        referenceId: 'inv-1',
+        isRead: false,
+        createdAtUtc: '2026-04-15T00:00:00Z',
+    };
+}
+
+function createPasswordSetupNotification(): NotificationItem {
+    return {
+        id: 'n2',
+        type: 'PasswordSetupSuggested',
+        title: 'Add a backup password',
+        body: 'Set a password to keep a backup sign-in method besides Google.',
+        targetUrl: '/profile?intent=set-password',
+        referenceId: 'password-setup:user-1',
+        isRead: false,
+        createdAtUtc: '2026-04-15T00:00:00Z',
+    };
+}
+
+function createRecommendationNotification(): NotificationItem {
+    return {
+        id: 'n3',
+        type: 'NewRecommendation',
+        title: 'New recommendation',
+        body: null,
+        targetUrl: '/recommendations?recommendationId=rec-1',
+        referenceId: 'rec-1',
+        isRead: false,
+        createdAtUtc: '2026-04-15T00:00:00Z',
+    };
+}

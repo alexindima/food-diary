@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { GamificationPageComponent } from './pages/gamification-page/gamification-page.component';
+import { GamificationPageComponent } from './pages/gamification-page/gamification-page';
 
 const routes: Routes = [
     {

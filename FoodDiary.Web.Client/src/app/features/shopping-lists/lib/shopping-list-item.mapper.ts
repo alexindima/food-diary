@@ -1,4 +1,4 @@
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { MeasurementUnit } from '../../products/models/product.data';
 import type { ShoppingListItem, ShoppingListItemDto } from '../models/shopping-list.data';

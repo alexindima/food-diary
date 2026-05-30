@@ -1,0 +1,82 @@
+.dynamic-progress-bar-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.dynamic-progress-bar {
+    position: relative;
+    width: 100%;
+    --dynamic-progress-height: calc(var(--fd-size-control-xs) + var(--fd-border-width));
+    --dynamic-progress-title-offset: calc(0px - var(--fd-border-width));
+    --dynamic-progress-overflow-line-space: calc(var(--fd-space-xxs) + var(--fd-border-width));
+    --dynamic-progress-overflow-line-offset: calc(0px - var(--dynamic-progress-overflow-line-space));
+    --dynamic-progress-overflow-text-offset: calc(0px - var(--dynamic-progress-height));
+    --dynamic-progress-overflow-label-offset: var(--fd-radius-sm);
+    --fd-progress-height: var(--dynamic-progress-height);
+    --fd-progress-radius: var(--fd-radius-lg);
+    --fd-progress-track-background: var(--fd-bg-track-muted);
+    height: var(--dynamic-progress-height);
+    margin: var(--fd-space-lg) 0;
+}
+
+.dynamic-progress-bar-line {
+    height: 100%;
+    color: var(--fd-color-white);
+    transition:
+        background-color 0.3s ease,
+        width 0.3s ease;
+}
+
+.dynamic-progress-bar-title {
+    position: absolute;
+    transform: translateX(-50%);
+    top: var(--dynamic-progress-title-offset);
+    transition:
+        left 0.3s ease,
+        width 0.3s ease;
+
+    &.text-black {
+        color: var(--fd-color-slate-900);
+    }
+
+    &.text-white {
+        color: var(--fd-color-white);
+    }
+}
+
+.dynamic-progress-bar-overflow-line {
+    position: absolute;
+    top: var(--dynamic-progress-overflow-line-offset);
+    bottom: var(--dynamic-progress-overflow-line-offset);
+    width: 2px;
+    background-color: var(--fd-bg-overlay-medium);
+    transform: translateX(-50%);
+    transition:
+        left 0.3s ease,
+        width 0.3s ease;
+}
+
+.dynamic-progress-bar-overflow-text {
+    position: absolute;
+    bottom: var(--dynamic-progress-overflow-text-offset);
+    text-align: center;
+    transform: translateX(-100%);
+    width: max-content;
+    color: var(--fd-color-slate-900);
+    transition:
+        left 0.3s ease,
+        width 0.3s ease;
+}
+
+.dynamic-progress-bar-threshold {
+    display: none;
+}
+
+.dynamic-progress-bar-overflow-label {
+    position: absolute;
+    top: calc(100% + var(--dynamic-progress-overflow-label-offset));
+    transform: translateX(-50%);
+    color: var(--fd-color-dialog-overlay);
+    line-height: 1;
+    white-space: nowrap;
+}

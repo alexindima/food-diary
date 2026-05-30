@@ -1,8 +1,8 @@
 import type { FdUiBarChartItem, FdUiLineChartPoint, FdUiPieChartSegment } from 'fd-ui-kit';
 
-import type { StatisticsBodyChartPoint } from '../../../components/shared/statistics-body/statistics-body.component';
-import type { NutritionTrendGroup } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
-import type { SummaryMetrics, SummarySparklinePoint } from '../../../components/shared/statistics-summary/statistics-summary.component';
+import type { StatisticsBodyChartPoint } from '../../../components/shared/statistics-body/statistics-body';
+import type { NutritionTrendGroup } from '../../../components/shared/statistics-nutrition/statistics-nutrition';
+import type { SummaryMetrics, SummarySparklinePoint } from '../../../components/shared/statistics-summary/statistics-summary';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { normalizeEndOfLocalDay, normalizeStartOfLocalDay } from '../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../shared/lib/time.constants';

@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiButtonComponent } from '../button/fd-ui-button.component';
-import { FdUiIconComponent } from '../icon/fd-ui-icon.component';
-import { FdUiMenuComponent } from './fd-ui-menu.component';
-import { FdUiMenuDividerComponent } from './fd-ui-menu-divider.component';
-import { FdUiMenuItemComponent } from './fd-ui-menu-item.component';
+import { FdUiButtonComponent } from '../button/fd-ui-button';
+import { FdUiIconComponent } from '../icon/fd-ui-icon';
+import { FdUiMenuComponent } from './fd-ui-menu';
+import { FdUiMenuDividerComponent } from './fd-ui-menu-divider';
+import { FdUiMenuItemComponent } from './fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from './fd-ui-menu-trigger.directive';
 
 const meta: Meta<FdUiMenuComponent> = {

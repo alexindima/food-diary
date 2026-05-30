@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiSelectComponent } from './fd-ui-select.component';
+import { FdUiSelectComponent } from './fd-ui-select';
 
 const meta: Meta<FdUiSelectComponent<string>> = {
     title: 'Components/Select',

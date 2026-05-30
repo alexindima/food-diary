@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiIconComponent } from './fd-ui-icon.component';
+import { FdUiIconComponent } from './fd-ui-icon';
 
 const meta: Meta<FdUiIconComponent> = {
     title: 'Icon/FdUiIcon',

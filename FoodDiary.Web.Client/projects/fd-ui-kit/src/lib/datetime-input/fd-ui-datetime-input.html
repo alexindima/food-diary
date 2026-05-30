@@ -1,0 +1,46 @@
+<div [class]="hostClass()">
+    <div class="fd-ui-datetime-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
+        @if (label()) {
+        <label class="fd-ui-datetime-input__label" [attr.for]="id()">
+            <span class="fd-ui-datetime-input__label-text">{{ label() }}</span>
+            @if (required()) {
+            <span class="fd-ui-datetime-input__required">*</span>
+            }
+        </label>
+        }
+        <div class="fd-ui-datetime-input__fields">
+            <div class="fd-ui-datetime-input__segment fd-ui-datetime-input__segment--date">
+                <fd-ui-date-input
+                    [id]="`${id()}-date`"
+                    [formControl]="dateControl"
+                    [placeholder]="shouldFloatLabel() ? '' : (placeholder() ?? '')"
+                    [size]="size()"
+                />
+            </div>
+
+            <div class="fd-ui-datetime-input__divider" aria-hidden="true"></div>
+
+            <div class="fd-ui-datetime-input__segment">
+                <input
+                    #timeInput
+                    class="fd-ui-datetime-input__control fd-ui-datetime-input__control--time"
+                    type="time"
+                    step="60"
+                    inputmode="numeric"
+                    [value]="timeValue()"
+                    [attr.placeholder]="shouldFloatLabel() ? null : 'HH:mm'"
+                    [disabled]="disabled()"
+                    (input)="onTimeInput(timeInput.value)"
+                    (blur)="onTimeBlur()"
+                />
+                <button type="button" class="fd-ui-datetime-input__suffix" [disabled]="disabled()" (click)="focusTimeInput(timeInput)">
+                    <fd-ui-icon name="schedule" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (error()) {
+    <div class="fd-ui-datetime-input__error">{{ error() }}</div>
+    }
+</div>

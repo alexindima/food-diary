@@ -1,0 +1,59 @@
+<div class="weight-history-page fd-stack fd-gap-page-header" fdPageContainer>
+    <fd-page-header
+        class="weight-history-page__header"
+        [title]="'WEIGHT_HISTORY.TITLE' | translate"
+        [subtitle]="'WEIGHT_HISTORY.SUBTITLE' | translate"
+    />
+
+    <fd-page-body>
+        <fd-period-filter
+            class="weight-history-page__period"
+            [tabs]="rangeTabs"
+            [selectedValue]="selectedRange()"
+            [rangeControl]="customRangeControl"
+            [displayRange]="currentRange()"
+            [startLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
+            [endLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
+            [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            (rangeChange)="changeRange($event)"
+        />
+
+        <fd-weight-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
+
+        @defer (on viewport) {
+        <fd-weight-history-bmi-card [viewModel]="bmiViewModel()" />
+        } @placeholder {
+        <div class="weight-history-page__placeholder" aria-hidden="true"></div>
+        }
+
+        <div class="weight-history-page__content weight-history-page__content--form fd-grid fd-gap-card-content">
+            <fd-weight-history-form-card
+                [form]="form"
+                [isSaving]="isSaving()"
+                [isEditing]="isEditing()"
+                (formSubmit)="submit()"
+                (editCancel)="cancelEdit()"
+            />
+
+            <fd-weight-history-goal-card
+                [control]="desiredWeightControl"
+                [isSaving]="isDesiredWeightSaving()"
+                (saveGoal)="saveDesiredWeight()"
+            />
+        </div>
+
+        @defer (on viewport) {
+        <div class="weight-history-page__content weight-history-page__content--full fd-grid fd-gap-card-content">
+            <fd-weight-history-entries-card
+                [isLoading]="isLoading()"
+                [entries]="entriesDescending()"
+                (editEntry)="startEdit($event)"
+                (removeEntry)="deleteEntry($event)"
+            />
+        </div>
+        } @placeholder {
+        <div class="weight-history-page__placeholder" aria-hidden="true"></div>
+        }
+    </fd-page-body>
+</div>

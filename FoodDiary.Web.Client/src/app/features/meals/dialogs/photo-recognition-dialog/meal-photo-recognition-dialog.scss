@@ -1,0 +1,336 @@
+@use 'variables' as variables;
+
+.photo-ai-dialog {
+    --photo-ai-card-radius: var(--fd-radius-card);
+    --photo-ai-field-radius: var(--fd-radius-input);
+    --photo-ai-surface: var(--fd-color-surface-raised);
+    --photo-ai-surface-muted: var(--fd-color-surface);
+    --photo-ai-border: var(--fd-color-border-photo-ai);
+    padding-right: 0;
+}
+
+.photo-ai-dialog__upload {
+    position: relative;
+}
+
+.photo-ai-dialog__status {
+    position: absolute;
+    top: var(--fd-space-sm);
+    right: var(--fd-space-sm);
+    letter-spacing: var(--fd-letter-spacing-subtle);
+    --fd-pill-bg: var(--fd-bg-dialog);
+    --fd-pill-color: var(--fd-color-primary-700);
+    --fd-pill-border: var(--fd-color-border-control-radio);
+    box-shadow: var(--fd-shadow-lg);
+    z-index: 2;
+}
+
+.photo-ai-dialog__status--loading {
+    --fd-pill-color: var(--fd-color-primary-900);
+    --fd-pill-border: var(--fd-color-border-ai-loading-pill);
+    box-shadow: var(--fd-shadow-accent);
+}
+
+.photo-ai-dialog__scan-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--fd-radius-dialog);
+    overflow: hidden;
+    pointer-events: none;
+    background: var(--fd-bg-ai-scan-overlay);
+}
+
+.photo-ai-dialog__scan-overlay:has(.photo-ai-dialog__scan-line--nutrition) {
+    background: var(--fd-bg-ai-scan-overlay-nutrition);
+}
+
+.photo-ai-dialog__scan-line {
+    position: absolute;
+    left: var(--fd-space-md);
+    right: var(--fd-space-md);
+    height: 7px;
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-ai-dialog-scan-line);
+    box-shadow: var(--fd-shadow-ai-dialog-scan-line);
+    filter: var(--fd-shadow-filter-ai-dialog-scan-line);
+    animation: photo-ai-scan 4s ease-in-out infinite;
+}
+
+.photo-ai-dialog__scan-line--nutrition {
+    background: var(--fd-bg-ai-dialog-scan-line-nutrition);
+    box-shadow: var(--fd-shadow-ai-dialog-scan-line-nutrition);
+    filter: var(--fd-shadow-filter-ai-dialog-scan-line-nutrition);
+}
+
+@keyframes photo-ai-scan {
+    0% {
+        top: var(--fd-space-sm);
+        opacity: 0.6;
+    }
+
+    50% {
+        top: calc(100% - var(--fd-space-lg));
+        opacity: 1;
+    }
+
+    100% {
+        top: var(--fd-space-sm);
+        opacity: 0.6;
+    }
+}
+
+.photo-ai-dialog__error {
+    margin: 0;
+}
+
+.photo-ai-dialog__results-title {
+    color: var(--fd-color-text-strong);
+    width: 100%;
+}
+
+.photo-ai-dialog__edit-header {
+    justify-content: flex-end;
+}
+
+.photo-ai-dialog__edit-list {
+    padding: var(--fd-space-sm);
+    border-radius: var(--photo-ai-card-radius);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
+    background: var(--photo-ai-surface);
+}
+
+.photo-ai-dialog__edit-row {
+    grid-template-columns: 28px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) 28px;
+    padding: var(--fd-space-xs) var(--fd-space-sm);
+    border-radius: var(--photo-ai-field-radius);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
+    background: var(--photo-ai-surface-muted);
+}
+
+.photo-ai-dialog__edit-handle {
+    cursor: grab;
+    color: var(--fd-color-slate-400);
+}
+
+.photo-ai-dialog__edit-input,
+.photo-ai-dialog__edit-select {
+    height: var(--fd-size-control-toolbar);
+    border-radius: var(--fd-radius-input);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
+    padding: 0 var(--fd-space-sm);
+    background: var(--fd-bg-dialog);
+}
+
+.photo-ai-dialog__edit-input--amount {
+    text-align: right;
+}
+
+.photo-ai-dialog__edit-remove {
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
+    --fd-button-height-explicit: var(--fd-size-control-xs);
+    --fd-button-padding-x: 0;
+    --fd-button-background-default: transparent;
+    --fd-button-background-hover: transparent;
+    --fd-button-background-active: transparent;
+    --fd-button-border-default: transparent;
+    --fd-button-border-hover: transparent;
+    --fd-button-border-active: transparent;
+    --fd-button-text-default: var(--fd-color-slate-400);
+    --fd-button-text-hover: var(--fd-color-danger);
+    --fd-button-text-active: var(--fd-color-danger);
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
+    --fd-button-icon-size: var(--fd-size-icon-md);
+}
+
+.photo-ai-dialog__edit-add {
+    margin-top: var(--fd-space-xs);
+    --fd-button-height: var(--fd-size-control-md-plus);
+    --fd-button-height-explicit: var(--fd-size-control-md-plus);
+    --fd-button-border-radius: var(--fd-radius-pill);
+    --fd-button-text-default: var(--fd-color-slate-500);
+    --fd-button-text-hover: var(--fd-color-slate-700);
+    --fd-button-text-active: var(--fd-color-slate-700);
+}
+
+.photo-ai-dialog__title-actions {
+    padding-left: var(--fd-space-xxs);
+    margin-left: auto;
+}
+
+.photo-ai-dialog__edit-toggle {
+    --fd-button-font-size: var(--fd-text-action-size);
+    --fd-button-font-weight: var(--fd-text-action-weight);
+}
+
+.photo-ai-dialog__action-button {
+    --fd-button-width: var(--fd-size-control-xs);
+    --fd-button-min-width: var(--fd-size-control-xs);
+    --fd-button-height: var(--fd-size-control-xs);
+    --fd-button-height-explicit: var(--fd-size-control-xs);
+    --fd-button-padding-x: 0;
+    --fd-button-background-default: transparent;
+    --fd-button-background-hover: transparent;
+    --fd-button-background-active: transparent;
+    --fd-button-border-default: transparent;
+    --fd-button-border-hover: transparent;
+    --fd-button-border-active: transparent;
+    --fd-button-text-default: var(--fd-color-slate-400);
+    --fd-button-text-hover: var(--fd-color-slate-500);
+    --fd-button-text-active: var(--fd-color-slate-500);
+    --fd-button-shadow-default: var(--fd-shadow-none);
+    --fd-button-shadow-hover: var(--fd-shadow-none);
+    --fd-button-shadow-active: var(--fd-shadow-none);
+    --fd-button-transform-hover: none;
+    --fd-button-transform-active: none;
+    --fd-button-icon-size: var(--fd-size-icon-md);
+}
+
+.photo-ai-dialog__table {
+    border: var(--fd-border-width) solid var(--photo-ai-border);
+    border-radius: var(--photo-ai-card-radius);
+    overflow: hidden;
+    background: var(--photo-ai-surface);
+}
+
+.photo-ai-dialog__table-head,
+.photo-ai-dialog__table-row {
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 0.8fr);
+}
+
+.photo-ai-dialog__table-head {
+    background: var(--photo-ai-surface-muted);
+    color: var(--fd-color-text-muted);
+    padding: var(--fd-space-xs) var(--fd-space-md);
+}
+
+.photo-ai-dialog__table-row {
+    padding: var(--fd-space-sm) var(--fd-space-md);
+    color: var(--fd-color-text);
+    border-top: var(--fd-border-width) solid var(--photo-ai-border);
+}
+
+.photo-ai-dialog__table-row:first-child {
+    border-top: none;
+}
+
+.photo-ai-dialog__cell--amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--fd-color-text-strong);
+}
+
+.photo-ai-dialog__nutrition {
+    margin-top: var(--fd-space-card-profile-gap);
+    padding: var(--fd-space-surface-padding);
+    border: var(--fd-border-width) solid var(--photo-ai-border);
+    border-radius: var(--photo-ai-card-radius);
+    background: var(--photo-ai-surface);
+}
+
+.photo-ai-dialog__nutrition-title {
+    color: var(--fd-color-text);
+}
+
+.photo-ai-dialog__nutrition-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--fd-space-xs) var(--fd-space-sm);
+}
+
+.photo-ai-dialog__nutrition-label {
+    color: var(--fd-color-text-muted);
+}
+
+.photo-ai-dialog__nutrition-value {
+    color: var(--fd-color-text-strong);
+    font-variant-numeric: tabular-nums;
+}
+
+.photo-ai-dialog__nutrition-loading {
+    margin-top: var(--fd-space-card-profile-gap);
+    padding: var(--fd-space-sm) var(--fd-space-md);
+    border-radius: var(--fd-radius-input);
+    border: var(--fd-border-dashed);
+    background: var(--fd-bg-nutrition-loading);
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-sm);
+}
+
+.photo-ai-dialog__nutrition-bar {
+    position: relative;
+    width: 160px;
+    height: 6px;
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-nutrition-loading-track);
+    overflow: hidden;
+}
+
+.photo-ai-dialog__nutrition-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -30%;
+    width: 45%;
+    height: 100%;
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-nutrition-loading-bar);
+    animation: nutrition-progress 1.8s ease-in-out infinite;
+}
+
+.photo-ai-dialog__nutrition-text {
+    font-size: var(--fd-text-body-sm-size);
+    line-height: var(--fd-text-body-sm-line-height);
+    font-weight: var(--fd-text-body-sm-weight);
+    color: var(--fd-color-text-muted);
+}
+
+.photo-ai-dialog__nutrition-error {
+    margin-top: var(--fd-space-sm);
+}
+
+@keyframes nutrition-progress {
+    0% {
+        left: -30%;
+        opacity: 0.5;
+    }
+
+    50% {
+        left: 85%;
+        opacity: 1;
+    }
+
+    100% {
+        left: -30%;
+        opacity: 0.5;
+    }
+}
+
+.photo-ai-dialog__actions {
+    --fd-actions-gap: var(--fd-space-sm);
+}
+
+@media #{variables.$media-phablet} {
+    .photo-ai-dialog__table-head,
+    .photo-ai-dialog__table-row {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);
+    }
+
+    .photo-ai-dialog__nutrition-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .photo-ai-dialog__nutrition-loading {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .photo-ai-dialog__nutrition-bar {
+        width: 100%;
+    }
+}

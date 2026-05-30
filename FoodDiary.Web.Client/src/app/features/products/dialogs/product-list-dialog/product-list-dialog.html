@@ -1,0 +1,56 @@
+<div class="product-select fd-stack fd-gap-md">
+    @if (!embedded()) {
+    <div class="product-select__header fd-row fd-justify-between">
+        <div>
+            <h2 class="product-select__title fd-page-title">{{ 'PRODUCT_LIST.TITLE' | translate }}</h2>
+            <p class="product-select__subtitle fd-ui-body-sm">{{ 'PRODUCT_LIST.SUBTITLE' | translate }}</p>
+        </div>
+    </div>
+    }
+
+    <div class="product-select__controls fd-grid fd-gap-sm fd-align-center">
+        <form class="product-select__search-form" [formGroup]="searchForm">
+            <fd-ui-input
+                class="product-select__search-input"
+                appearance="search"
+                formControlName="search"
+                prefixIcon="search"
+                [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+            />
+        </form>
+        <fd-ui-button
+            class="product-select__filter-button"
+            appearance="chip"
+            variant="secondary"
+            fill="outline"
+            [icon]="filterIcon()"
+            [fdUiHint]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
+            [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
+            [class.product-select__filter-button--active]="onlyMineFilter()"
+            (click)="toggleOnlyMine()"
+        />
+    </div>
+
+    <fd-product-list-dialog-content
+        [isLoading]="productData.isLoading()"
+        [items]="productItems()"
+        (productSelected)="onProductClick($event)"
+    />
+
+    @if (productData.totalPages > 1) {
+    <fd-ui-pagination
+        class="product-select__pagination"
+        [length]="productData.totalItems"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPageIndex"
+        (pageIndexChange)="onPageChange($event)"
+    />
+    } @if (!embedded()) {
+    <div class="product-select__footer fd-row fd-justify-end">
+        <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
+            {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
+        </fd-ui-button>
+    </div>
+    }
+</div>

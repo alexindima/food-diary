@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiBarChartComponent } from './fd-ui-bar-chart.component';
+import { FdUiBarChartComponent } from './fd-ui-bar-chart';
 
 const meta: Meta<FdUiBarChartComponent> = {
     title: 'Components/Charts/Bar Chart',

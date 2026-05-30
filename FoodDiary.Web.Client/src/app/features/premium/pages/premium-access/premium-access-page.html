@@ -1,0 +1,26 @@
+<section fdPageContainer class="premium-access-page fd-stack">
+    <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate" />
+
+    <fd-premium-access-banners
+        [checkoutReturnState]="checkoutReturnState()"
+        [overviewCopyState]="overviewViewModel().copyState"
+        [errorMessage]="errorMessage()"
+        (retry)="reloadOverviewAsync()"
+    />
+
+    <fd-premium-overview-card
+        [viewModel]="overviewViewModel()"
+        [portalLoading]="portalLoading()"
+        [trialLoading]="trialLoading()"
+        [isLoading]="isLoading()"
+        [overview]="overview()"
+        (manageBilling)="openPortalAsync()"
+        (startTrial)="startTrialAsync()"
+    />
+
+    @if (showPlans()) {
+    <fd-premium-plans-card [cards]="planCards()" (checkout)="startCheckoutFromViewAsync($event)" />
+    }
+
+    <fd-premium-benefits-card />
+</section>

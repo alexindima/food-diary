@@ -1,0 +1,108 @@
+@let chrome = cardChrome();
+<fd-ui-card
+    class="fasting-timer-card"
+    [class.fasting-timer-card--setup]="isSetupLayout()"
+    [density]="chrome.density"
+    [title]="chrome.title"
+>
+    <div
+        class="fasting-timer-card__layout"
+        [class.fasting-timer-card__layout--summary]="isDashboardLayout()"
+        [class.fasting-timer-card__layout--page-summary]="isPageSummaryLayout()"
+        [class.fasting-timer-card__layout--setup]="isSetupLayout()"
+    >
+        @if (isDashboardLayout()) {
+        <fd-dashboard-widget-frame [title]="'FASTING.TITLE' | translate">
+            <div class="fasting-timer-card__content fasting-timer-card__content--summary fd-grid fd-gap-card-relaxed fd-align-center">
+                <ng-container [ngTemplateOutlet]="summaryRing" />
+                <ng-container [ngTemplateOutlet]="summaryContent" />
+            </div>
+        </fd-dashboard-widget-frame>
+        } @else {
+        <div
+            class="fasting-timer-card__content fd-stack fd-align-center fd-gap-card-relaxed"
+            [class.fasting-timer-card__content--setup]="isSetupLayout()"
+            [class.fasting-timer-card__content--page-summary]="isPageSummaryLayout()"
+        >
+            <ng-container [ngTemplateOutlet]="mainRing" />
+        </div>
+
+        @if (isPageSummaryLayout()) {
+        <ng-container [ngTemplateOutlet]="summaryContent" />
+        } } @if (chrome.showPageControls) {
+        <div
+            class="fasting-timer-card__controls-slot"
+            [class.fasting-timer-card__controls-slot--page-summary]="isPageSummaryLayout()"
+            [class.fasting-timer-card__controls-slot--setup]="isSetupLayout()"
+        >
+            <fd-fasting-controls />
+        </div>
+        }
+    </div>
+</fd-ui-card>
+
+<ng-template #summaryRing>
+    <div class="fasting-timer-card__ring fasting-timer-card__ring--summary" [style.box-shadow]="ringGlow()">
+        <ng-container [ngTemplateOutlet]="ringProgress" />
+        <ng-container [ngTemplateOutlet]="summaryRingContent" />
+    </div>
+</ng-template>
+
+<ng-template #mainRing>
+    <div class="fasting-timer-card__ring" [style.box-shadow]="ringGlow()">
+        <ng-container [ngTemplateOutlet]="ringProgress" />
+        @if (isPageSummaryLayout()) {
+        <ng-container [ngTemplateOutlet]="summaryRingContent" />
+        } @else {
+        <div class="fasting-timer-card__ring-content fd-stack fd-center fd-gap-micro">
+            <fd-fasting-timer-card-items [items]="mainRingItems()" />
+        </div>
+        }
+    </div>
+</ng-template>
+
+<ng-template #summaryRingContent>
+    <div class="fasting-timer-card__ring-content fasting-timer-card__ring-content--summary fd-stack fd-center fd-gap-xxs">
+        <fd-fasting-timer-card-items [items]="summaryRingItems()" />
+    </div>
+</ng-template>
+
+<ng-template #ringProgress>
+    @let state = viewState();
+    <svg class="fasting-timer-card__ring-svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+        <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
+        <circle
+            class="fasting-timer-card__ring-progress"
+            cx="100"
+            cy="100"
+            r="90"
+            fill="none"
+            stroke-width="8"
+            stroke-linecap="round"
+            [class.fasting-timer-card__ring-progress--overtime]="state.isOvertime"
+            [style.stroke]="progressStrokeColor()"
+            [style.stroke-dasharray]="ringStrokeDasharray"
+            [style.stroke-dashoffset]="ringStrokeDashoffset()"
+        />
+    </svg>
+</ng-template>
+
+<ng-template #summaryContent>
+    @let state = viewState();
+    <div class="fasting-timer-card__summary fd-stack fd-gap-card-header">
+        <div class="fasting-timer-card__summary-top fd-stack fd-gap-card-header">
+            <div class="fasting-timer-card__summary-labels fd-stack fd-gap-card-header">
+                <div class="fasting-timer-card__summary-protocol-line fd-row fd-wrap fd-align-baseline fd-gap-card-header">
+                    <span class="fasting-timer-card__label fd-ui-meta-text">{{ state.labelKey | translate }}</span>
+                    <span class="fasting-timer-card__summary-protocol-separator" [hidden]="state.detailLabel === null">&middot;</span>
+                    <span class="fasting-timer-card__detail fasting-timer-card__detail--summary" [hidden]="state.detailLabel === null">
+                        {{ state.detailLabel }}
+                    </span>
+                </div>
+                <span class="fasting-timer-card__meta fd-ui-body-sm" [hidden]="state.metaLabel === null">{{ state.metaLabel }}</span>
+            </div>
+        </div>
+
+        <fd-fasting-timer-card-groups [groups]="summaryContentGroups()" />
+    </div>
+</ng-template>

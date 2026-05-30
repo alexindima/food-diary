@@ -1,0 +1,22 @@
+﻿<header class="fd-manage-header">
+    <div class="fd-manage-header__top-row fd-row fd-gap-page-header">
+        <fd-ui-button
+            type="button"
+            class="fd-manage-header__back"
+            appearance="plain-icon"
+            variant="secondary"
+            fill="outline"
+            icon="arrow_back"
+            [fdUiHint]="backAriaLabel()"
+            [ariaLabel]="backAriaLabel()"
+            (click)="onBackClick()"
+        />
+        <h1 class="fd-manage-header__title fd-page-title">{{ title() }}</h1>
+        <div class="fd-manage-header__actions fd-inline-center fd-gap-page-header-actions">
+            <ng-content select="[fdManageHeaderActions]" />
+        </div>
+    </div>
+    @if (subtitle()) {
+    <p class="fd-manage-header__subtitle fd-page-subtitle">{{ subtitle() }}</p>
+    }
+</header>

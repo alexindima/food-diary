@@ -1,0 +1,41 @@
+@use 'variables' as variables;
+
+.fasting-checkin-chart-dialog__body {
+    padding: var(--fd-space-md) var(--fd-space-lg) var(--fd-space-lg);
+}
+
+.fasting-checkin-chart-dialog__charts {
+    display: grid;
+    gap: var(--fd-space-md);
+}
+
+.fasting-checkin-chart-dialog__chart {
+    --fd-line-chart-height: 160px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: var(--fd-space-md);
+    border: 1px solid var(--fd-color-border);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-bg-surface);
+
+    h3 {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-xs);
+        margin: 0;
+        color: var(--fd-color-text);
+    }
+}
+
+.fasting-checkin-chart-dialog__swatch {
+    width: var(--fd-space-sm);
+    height: var(--fd-space-sm);
+    border-radius: var(--fd-radius-pill);
+}
+
+@media #{variables.$media-tablet} {
+    .fasting-checkin-chart-dialog__body {
+        padding: var(--fd-space-sm) var(--fd-space-sm) var(--fd-space-md);
+    }
+}

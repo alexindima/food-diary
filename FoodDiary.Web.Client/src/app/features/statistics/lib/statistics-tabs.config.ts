@@ -1,4 +1,4 @@
-import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
 export const STATISTICS_RANGE_TABS: FdUiTab[] = [
     { value: 'week', labelKey: 'STATISTICS.RANGES.WEEK' },

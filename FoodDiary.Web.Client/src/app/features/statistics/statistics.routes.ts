@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { StatisticsComponent } from './pages/statistics.component';
+import { StatisticsComponent } from './pages/statistics';
 
 const routes: Routes = [
     {

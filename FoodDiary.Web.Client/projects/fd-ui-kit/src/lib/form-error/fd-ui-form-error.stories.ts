@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { FdUiFormErrorComponent } from './fd-ui-form-error.component';
+import { FdUiFormErrorComponent } from './fd-ui-form-error';
 
 const meta: Meta<FdUiFormErrorComponent> = {
     title: 'Components/FormError',

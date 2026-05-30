@@ -1,0 +1,71 @@
+<div class="recipe-manage fd-stack" fdPageContainer>
+    <fd-manage-header
+        class="recipe-manage__header"
+        [title]="manageHeaderState().titleKey | translate"
+        [subtitle]="'RECIPE_MANAGE.SUBTITLE' | translate"
+        [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
+        (back)="onCancelAsync()"
+    />
+
+    <form class="recipe-manage__form fd-stack fd-gap-lg" [formGroup]="recipeForm" [attr.aria-busy]="isSubmitting()" (ngSubmit)="onSubmit()">
+        @if (globalError()) {
+        <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
+            {{ globalError() }}
+        </div>
+        }
+
+        <div class="recipe-manage__grid fd-grid fd-gap-lg">
+            <div class="recipe-manage__column recipe-manage__column--primary fd-stack">
+                <fd-recipe-basic-info [formGroup]="recipeForm" />
+
+                <fd-recipe-steps-list
+                    [stepsFormArray]="steps"
+                    [expandedSteps]="expandedStepsSet"
+                    (stepExpandedToggle)="toggleStepExpanded($event)"
+                    (addStep)="addStep()"
+                    (removeStep)="removeStep($event)"
+                    (addIngredient)="addIngredientToStep($event)"
+                    (removeIngredient)="removeIngredientFromStep($event)"
+                    (selectProduct)="onProductSelectClick($event)"
+                />
+            </div>
+
+            <div class="recipe-manage__column recipe-manage__column--secondary fd-stack">
+                <div class="recipe-manage__sticky-stack fd-stack fd-gap-lg">
+                    <fd-recipe-nutrition-editor
+                        [formGroup]="recipeForm"
+                        [nutritionScaleMode]="nutritionScaleMode"
+                        (nutritionModeChange)="onNutritionModeChange($event)"
+                        (nutritionScaleModeChange)="onNutritionScaleModeChange($event)"
+                    />
+
+                    <div class="recipe-manage__actions-panel">
+                        <div class="recipe-manage__footer-actions fd-ui-actions fd-ui-actions--split">
+                            <fd-ui-button
+                                type="button"
+                                class="recipe-manage__cancel-button"
+                                variant="secondary"
+                                fill="outline"
+                                icon="arrow_back"
+                                (click)="onCancelAsync()"
+                            >
+                                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+                            </fd-ui-button>
+                            <fd-ui-button
+                                type="submit"
+                                class="recipe-manage__action-button"
+                                appearance="brand-action"
+                                icon="save"
+                                [fullWidth]="true"
+                                [disabled]="recipeForm.invalid || isSubmitting()"
+                                [loading]="isSubmitting()"
+                            >
+                                {{ manageHeaderState().submitLabelKey | translate }}
+                            </fd-ui-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,18 @@
+<div class="tdee-card fd-stack fd-gap-sm" [class.tdee-card--loading]="isLoading()">
+    <fd-dashboard-widget-frame iconName="local_fire_department" iconTone="energy" [title]="'TDEE_CARD.TITLE' | translate">
+        <div class="tdee-card__body">
+            @if (isLoading()) {
+            <div class="tdee-card__loading fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
+                <fd-ui-icon name="hourglass_empty" />
+                <span>{{ 'TDEE_CARD.LOADING' | translate }}</span>
+            </div>
+            } @else if (effectiveTdee(); as currentEffectiveTdee) {
+            <fd-tdee-insight-card-content [insight]="insight()" [effectiveTdee]="currentEffectiveTdee" (applyGoal)="onApplyGoal($event)" />
+            } @else {
+            <div class="tdee-card__empty fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
+                <span>{{ 'TDEE_CARD.EMPTY' | translate }}</span>
+            </div>
+            }
+        </div>
+    </fd-dashboard-widget-frame>
+</div>

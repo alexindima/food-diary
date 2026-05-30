@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input.component';
+import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input';
 
 const meta: Meta<FdUiNutrientInputComponent> = {
     title: 'Components/NutrientInput',

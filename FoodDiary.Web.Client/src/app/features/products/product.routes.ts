@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 
-import { ProductContainerComponent } from './pages/container/product-container.component';
+import { ProductContainerComponent } from './pages/container/product-container';
 import { productResolver } from './resolvers/product.resolver';
 
 const routes: Routes = [
@@ -10,15 +10,15 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                loadComponent: async () => import('./pages/list/product-list-page.component').then(m => m.ProductListPageComponent),
+                loadComponent: async () => import('./pages/list/product-list-page').then(m => m.ProductListPageComponent),
             },
             {
                 path: 'add',
-                loadComponent: async () => import('./pages/manage/product-add/product-add.component').then(m => m.ProductAddComponent),
+                loadComponent: async () => import('./pages/manage/product-add/product-add').then(m => m.ProductAddComponent),
             },
             {
                 path: ':id/edit',
-                loadComponent: async () => import('./pages/manage/product-edit/product-edit.component').then(m => m.ProductEditComponent),
+                loadComponent: async () => import('./pages/manage/product-edit/product-edit').then(m => m.ProductEditComponent),
                 resolve: { product: productResolver },
             },
         ],

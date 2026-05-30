@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { formatDateInputValue } from '../../../../../shared/lib/local-date.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';

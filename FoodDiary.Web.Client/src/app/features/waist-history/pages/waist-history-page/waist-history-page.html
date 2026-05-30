@@ -1,0 +1,59 @@
+<div class="waist-history-page" fdPageContainer>
+    <fd-page-header
+        class="waist-history-page__header"
+        [title]="'WAIST_HISTORY.TITLE' | translate"
+        [subtitle]="'WAIST_HISTORY.SUBTITLE' | translate"
+    />
+
+    <fd-page-body>
+        <fd-period-filter
+            class="waist-history-page__period"
+            [tabs]="rangeTabs"
+            [selectedValue]="selectedRange()"
+            [rangeControl]="customRangeControl"
+            [displayRange]="currentRange()"
+            [startLabel]="'WAIST_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
+            [endLabel]="'WAIST_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
+            [startPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            [endPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            (rangeChange)="changeRange($event)"
+        />
+
+        <fd-waist-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
+
+        @defer (on viewport) {
+        <fd-waist-history-wht-card [viewModel]="whtViewModel()" />
+        } @placeholder {
+        <div class="waist-history-page__placeholder" aria-hidden="true"></div>
+        }
+
+        <div class="waist-history-page__content waist-history-page__content--form">
+            <fd-waist-history-form-card
+                [form]="form"
+                [isSaving]="isSaving()"
+                [isEditing]="isEditing()"
+                (formSubmit)="submit()"
+                (editCancel)="cancelEdit()"
+            />
+
+            <fd-waist-history-goal-card
+                [control]="desiredWaistControl"
+                [isSaving]="isDesiredWaistSaving()"
+                (saveGoal)="saveDesiredWaist()"
+            />
+        </div>
+
+        @defer (on viewport) {
+        <div class="waist-history-page__content waist-history-page__content--full">
+            <fd-waist-history-entries-card
+                [isLoading]="isLoading()"
+                [entries]="entriesDescending()"
+                (editEntry)="startEdit($event)"
+                (removeEntry)="deleteEntry($event)"
+            />
+        </div>
+        } @placeholder {
+        <div class="waist-history-page__placeholder" aria-hidden="true"></div>
+        }
+    </fd-page-body>
+</div>

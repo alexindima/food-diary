@@ -1,0 +1,13 @@
+.meal-list-filters-dialog {
+    &__date-range {
+        display: block;
+        margin-bottom: var(--fd-space-xs);
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--fd-space-xs);
+        flex-wrap: wrap;
+    }
+}

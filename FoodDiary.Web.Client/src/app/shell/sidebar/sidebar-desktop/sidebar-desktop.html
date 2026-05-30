@@ -1,0 +1,28 @@
+<fd-ui-sidebar
+    brandTitle="Food Diary"
+    logoMaskUrl="/assets/images/header/logo-mask.svg"
+    [brandSubtitle]="brandStatusKey() | translate"
+    [notificationAriaLabel]="'NOTIFICATIONS.TITLE' | translate"
+    [notificationHint]="'NOTIFICATIONS.TITLE' | translate"
+    [notificationBadge]="unreadNotificationCount()"
+    [pendingRoute]="pendingRoute()"
+    [sections]="sidebarSections()"
+    [bottomSections]="sidebarBottomSections()"
+    (notificationClick)="notificationsOpen.emit()"
+    (routeSelected)="onSidebarRouteSelected($event.item)"
+    (actionSelected)="onSidebarActionSelected($event.item)"
+    (sectionToggled)="onSidebarSectionToggle($event.section.id)"
+>
+    @if (currentUser(); as user) {
+    <fd-sidebar-user-menu
+        fdUiSidebarFooter
+        [user]="user"
+        [userPlanLabelKey]="userPlanLabelKey()"
+        [isOpen]="isUserMenuOpen()"
+        [pendingRoute]="pendingRoute()"
+        (toggleMenu)="userMenuToggle.emit($event)"
+        (directRouteClick)="directRouteClick.emit($event)"
+        (logout)="logout.emit()"
+    />
+    }
+</fd-ui-sidebar>

@@ -1,4 +1,4 @@
-import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import type { ShoppingListSummary } from '../models/shopping-list.data';
 

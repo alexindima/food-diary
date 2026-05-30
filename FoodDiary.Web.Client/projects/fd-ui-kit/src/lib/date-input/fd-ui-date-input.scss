@@ -1,0 +1,171 @@
+@use '../../../../../src/styles/variables' as variables;
+
+:host {
+    display: block;
+}
+
+.fd-ui-date-input {
+    --fd-date-height: var(--fd-size-control-md);
+    --fd-date-radius: var(--fd-radius-input);
+    --fd-date-border: var(--fd-border-default);
+    --fd-date-label-bg: var(--fd-bg-surface-raised);
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-space-control-gap);
+}
+
+.fd-ui-date-input--size-sm {
+    --fd-date-height: var(--fd-size-control-sm);
+}
+
+.fd-ui-date-input--size-md {
+    --fd-date-height: var(--fd-size-control-md);
+}
+
+.fd-ui-date-input--size-lg {
+    --fd-date-height: var(--fd-size-control-lg);
+}
+
+.fd-ui-date-input__label {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-label-size);
+    font-weight: var(--fd-text-label-weight);
+    line-height: var(--fd-text-label-line-height);
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    left: var(--fd-space-control-label-inset-inline);
+    transform: translateY(-50%);
+    transition:
+        transform 0.15s ease,
+        top 0.15s ease,
+        font-size 0.15s ease;
+    background: var(--fd-date-label-bg);
+    padding: 0 var(--fd-space-field-label-padding-x);
+    border-radius: var(--fd-radius-field-label);
+    pointer-events: none;
+}
+
+.fd-ui-date-input__required {
+    margin-left: 0;
+    color: var(--fd-color-danger);
+}
+
+.fd-ui-date-input__control-wrap {
+    height: var(--fd-date-height);
+    box-sizing: border-box;
+    border: var(--fd-date-border);
+    border-radius: var(--fd-date-radius);
+    background: var(--fd-bg-surface-raised);
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+    position: relative;
+}
+
+.fd-ui-date-input__control-wrap:focus-within {
+    border-color: var(--fd-color-primary-500);
+    box-shadow: var(--fd-shadow-focus);
+}
+
+.fd-ui-date-input__segment {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 var(--fd-space-control-segment-padding-x);
+    width: 100%;
+}
+
+/* Keep icon and input vertically centered even when label floats */
+
+.fd-ui-date-input--floating .fd-ui-date-input__segment {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.fd-ui-date-input__control {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--fd-color-text);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+.fd-ui-date-input__control::placeholder {
+    color: var(--fd-color-text-muted);
+}
+
+.fd-ui-date-input__suffix {
+    position: static;
+    margin-left: var(--fd-space-xs);
+    transform: none;
+    border: none;
+    background: transparent;
+    color: var(--fd-color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--fd-size-control-xxs);
+    height: var(--fd-size-control-xxs);
+    cursor: pointer;
+    margin-top: 0;
+}
+
+.fd-ui-date-input__suffix:hover:not(:disabled) {
+    color: var(--fd-color-text);
+}
+
+.fd-ui-date-input__suffix fd-ui-icon {
+    width: var(--fd-size-icon-lg);
+    height: var(--fd-size-icon-lg);
+    font-size: var(--fd-text-card-title-size);
+    line-height: 1;
+    display: block;
+}
+
+.fd-ui-date-input__panel {
+    display: inline-flex;
+}
+
+.fd-ui-date-input--has-error .fd-ui-date-input__control-wrap {
+    border-color: var(--fd-color-danger);
+}
+
+.fd-ui-date-input--floating .fd-ui-date-input__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: var(--fd-text-label-floating-size);
+}
+
+/* No extra padding when label floats to avoid shifting suffix */
+
+.fd-ui-date-input--floating .fd-ui-date-input__control-wrap {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.fd-ui-date-input__error {
+    color: var(--fd-color-danger);
+    font-size: var(--fd-text-helper-size);
+    line-height: var(--fd-text-helper-line-height);
+    margin-top: calc(var(--fd-space-xxs) / 2);
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

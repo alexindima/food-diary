@@ -5,7 +5,7 @@ import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, Tem
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 
 import { FD_UI_HINT_SHOW_DELAY_MS } from './fd-ui-hint.tokens';
-import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay.component';
+import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay';
 
 type HintContent = string | TemplateRef<unknown> | null;
 type HintPosition = 'top' | 'bottom' | 'left' | 'right';
