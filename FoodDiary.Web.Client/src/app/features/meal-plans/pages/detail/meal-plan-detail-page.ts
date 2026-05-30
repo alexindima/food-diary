@@ -5,7 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanDetailView } from '../../lib/meal-plan-view.mapper';
 import { MealPlanDetailDaysComponent } from './meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days';

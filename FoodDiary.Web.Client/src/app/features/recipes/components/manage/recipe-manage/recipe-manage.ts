@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header';
-import { FdPageContainerDirective } from '../../../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { Recipe, RecipeDto } from '../../../models/recipe.data';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info';

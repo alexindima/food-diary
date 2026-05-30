@@ -7,8 +7,8 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import { type NotificationItem, NotificationService } from '../../../services/notification.service';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
+import { type NotificationItem, NotificationService } from '../../../shared/notifications/notification.service';
 import type { NotificationViewModel } from './notifications-dialog-lib/notifications-dialog.types';
 import { NotificationsDialogListComponent } from './notifications-dialog-list/notifications-dialog-list';
 

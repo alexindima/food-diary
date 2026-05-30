@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminAiUsageService } from '../api/admin-ai-usage.service';
+import { AdminAiUsageFacade } from '../lib/admin-ai-usage.facade';
 import { AdminAiUsageComponent } from './admin-ai-usage';
 
 const TOTAL_TOKENS = 1000;
@@ -30,7 +30,7 @@ describe('AdminAiUsageComponent', () => {
 
         await TestBed.configureTestingModule({
             imports: [AdminAiUsageComponent],
-            providers: [{ provide: AdminAiUsageService, useValue: aiUsageService }],
+            providers: [{ provide: AdminAiUsageFacade, useValue: aiUsageService }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminAiUsageComponent);

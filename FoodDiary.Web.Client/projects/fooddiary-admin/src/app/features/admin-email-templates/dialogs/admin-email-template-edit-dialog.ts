@@ -12,7 +12,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
+import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 
 type TemplateForm = {
@@ -43,7 +43,7 @@ type TemplateForm = {
 export class AdminEmailTemplateEditDialogComponent {
     protected readonly data = inject<AdminEmailTemplate>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(FdUiDialogRef);
-    private readonly service = inject(AdminEmailTemplatesService);
+    private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
 
@@ -95,7 +95,7 @@ export class AdminEmailTemplateEditDialogComponent {
         const key = this.form.controls.key.value.trim();
         const locale = this.form.controls.locale.value.trim();
 
-        this.service
+        this.templatesFacade
             .upsert(key, locale, {
                 subject: this.form.controls.subject.value,
                 htmlBody: this.form.controls.htmlBody.value,
@@ -126,7 +126,7 @@ export class AdminEmailTemplateEditDialogComponent {
         }
 
         this.isSendingTest.set(true);
-        this.service
+        this.templatesFacade
             .sendTest({
                 toEmail: this.testEmailControl.value.trim(),
                 key: this.form.controls.key.value.trim(),

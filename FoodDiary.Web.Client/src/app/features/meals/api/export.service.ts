@@ -4,16 +4,7 @@ import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-
-export type ExportFormat = 'csv' | 'pdf';
-
-export type ExportDiaryRequest = {
-    dateFrom: string;
-    dateTo: string;
-    format?: ExportFormat;
-    locale?: string;
-    timeZoneOffsetMinutes?: number;
-};
+import type { ExportDiaryRequest } from '../models/export.models';
 
 @Injectable({ providedIn: 'root' })
 export class ExportService extends ApiService {

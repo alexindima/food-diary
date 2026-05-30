@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FrontendLoggerService } from '../../../../../services/frontend-logger.service';
-import { ImageUploadService } from '../../../../../shared/api/image-upload.service';
+import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { Gender } from '../../../../../shared/models/user.data';
 import { createUserManageForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageAccountCardComponent } from './user-manage-account-card';
@@ -29,7 +29,7 @@ async function createComponentAsync(): Promise<ComponentFixture<UserManageAccoun
         imports: [UserManageAccountCardComponent, TranslateModule.forRoot()],
         providers: [
             {
-                provide: ImageUploadService,
+                provide: ImageUploadFacade,
                 useValue: { uploadImage: vi.fn().mockReturnValue(of(null)), deleteAsset: vi.fn().mockReturnValue(of(void 0)) },
             },
             { provide: FrontendLoggerService, useValue: { warn: vi.fn(), error: vi.fn() } },

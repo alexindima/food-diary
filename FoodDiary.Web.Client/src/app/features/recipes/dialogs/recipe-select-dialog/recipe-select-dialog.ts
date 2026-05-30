@@ -23,8 +23,8 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Obs
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import { RecipeService } from '../../api/recipe.service';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
+import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
 import type { Recipe, RecipeFilters } from '../../models/recipe.data';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content/recipe-select-dialog-content';
 import {
@@ -50,7 +50,7 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
     ],
 })
 export class RecipeSelectDialogComponent {
-    private readonly recipeService = inject(RecipeService);
+    private readonly recipeSelectFacade = inject(RecipeSelectFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
@@ -122,7 +122,7 @@ export class RecipeSelectDialogComponent {
             search: this.searchForm.controls.search.value ?? undefined,
         };
 
-        return this.recipeService.query(page, RECIPE_SELECT_DIALOG_PAGE_SIZE, filters, includePublic).pipe(
+        return this.recipeSelectFacade.query(page, RECIPE_SELECT_DIALOG_PAGE_SIZE, filters, includePublic).pipe(
             tap(pageData => {
                 this.recipeData.setData(pageData);
                 this.currentPageIndex = pageData.page - 1;

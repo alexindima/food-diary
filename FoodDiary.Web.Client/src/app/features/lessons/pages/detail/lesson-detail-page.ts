@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
 import { buildLessonDetailView } from '../../lib/lesson-view.mapper';
 import { LessonDetailContentComponent } from './lesson-detail-sections/lesson-detail-content/lesson-detail-content';

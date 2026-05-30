@@ -2,7 +2,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { AdminBillingService, type AdminBillingSubscription } from '../api/admin-billing.service';
+import { AdminBillingFacade } from '../lib/admin-billing.facade';
+import type { AdminBillingSubscription } from '../models/admin-billing.models';
 import { AdminBillingComponent } from './admin-billing';
 
 const PAGE_SIZE = 20;
@@ -24,7 +25,7 @@ type BillingTestContext = {
 async function setupBillingAsync(billingService: BillingServiceMock = createBillingServiceMock()): Promise<BillingTestContext> {
     await TestBed.configureTestingModule({
         imports: [AdminBillingComponent],
-        providers: [{ provide: AdminBillingService, useValue: billingService }],
+        providers: [{ provide: AdminBillingFacade, useValue: billingService }],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AdminBillingComponent);

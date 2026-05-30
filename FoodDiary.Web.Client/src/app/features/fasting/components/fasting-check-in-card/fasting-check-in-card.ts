@@ -18,7 +18,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import type { FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
 import { EMPTY, type Observable } from 'rxjs';
 
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import {
     FASTING_ENERGY_EMOJI_SCALE,
     FASTING_HUNGER_EMOJI_SCALE,

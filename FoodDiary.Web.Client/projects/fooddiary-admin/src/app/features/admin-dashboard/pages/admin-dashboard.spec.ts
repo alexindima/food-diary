@@ -2,10 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
-import { AdminUsersService } from '../../admin-users/api/admin-users.service';
-import { AdminDashboardService } from '../api/admin-dashboard.service';
-import { AdminTelemetryService } from '../api/admin-telemetry.service';
+import { AdminDashboardFacade } from '../lib/admin-dashboard.facade';
 import { AdminDashboardComponent } from './admin-dashboard';
 
 const TOTAL_USERS = 10;
@@ -27,37 +24,36 @@ const COMPLETION_RATE_PERCENT = 66.7;
 const CHECK_IN_RATE_PERCENT = 41.7;
 const AVERAGE_COMPLETED_DURATION_HOURS = 18.2;
 
-type DashboardServiceMock = { getSummary: ReturnType<typeof vi.fn> };
+type DashboardFacadeMock = {
+    getAiUsageSummary: ReturnType<typeof vi.fn>;
+    getFastingSummary: ReturnType<typeof vi.fn>;
+    getLoginSummary: ReturnType<typeof vi.fn>;
+    getSummary: ReturnType<typeof vi.fn>;
+};
 type DashboardTestContext = {
-    aiUsageService: DashboardServiceMock;
+    dashboardFacade: DashboardFacadeMock;
     component: AdminDashboardComponent;
-    dashboardService: DashboardServiceMock;
     fixture: ComponentFixture<AdminDashboardComponent>;
-    telemetryService: { getFastingSummary: ReturnType<typeof vi.fn> };
-    usersService: { getLoginSummary: ReturnType<typeof vi.fn> };
 };
 
 async function setupDashboardAsync(): Promise<DashboardTestContext> {
-    const dashboardService = { getSummary: vi.fn().mockReturnValue(of(createDashboardSummary())) };
-    const aiUsageService = { getSummary: vi.fn().mockReturnValue(of(createAiUsageSummary())) };
-    const telemetryService = { getFastingSummary: vi.fn().mockReturnValue(of(createFastingSummary())) };
-    const usersService = { getLoginSummary: vi.fn().mockReturnValue(of(createLoginSummary())) };
+    const dashboardFacade: DashboardFacadeMock = {
+        getAiUsageSummary: vi.fn().mockReturnValue(of(createAiUsageSummary())),
+        getFastingSummary: vi.fn().mockReturnValue(of(createFastingSummary())),
+        getLoginSummary: vi.fn().mockReturnValue(of(createLoginSummary())),
+        getSummary: vi.fn().mockReturnValue(of(createDashboardSummary())),
+    };
 
     await TestBed.configureTestingModule({
         imports: [AdminDashboardComponent],
-        providers: [
-            { provide: AdminDashboardService, useValue: dashboardService },
-            { provide: AdminAiUsageService, useValue: aiUsageService },
-            { provide: AdminTelemetryService, useValue: telemetryService },
-            { provide: AdminUsersService, useValue: usersService },
-        ],
+        providers: [{ provide: AdminDashboardFacade, useValue: dashboardFacade }],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AdminDashboardComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    return { aiUsageService, component, dashboardService, fixture, telemetryService, usersService };
+    return { component, dashboardFacade, fixture };
 }
 
 describe('AdminDashboardComponent', () => {
@@ -68,12 +64,12 @@ describe('AdminDashboardComponent', () => {
     });
 
     it('should load dashboard summary, ai usage, fasting telemetry, and login summary on init', async () => {
-        const { aiUsageService, component, dashboardService, telemetryService, usersService } = await setupDashboardAsync();
+        const { component, dashboardFacade } = await setupDashboardAsync();
 
-        expect(dashboardService.getSummary).toHaveBeenCalledTimes(1);
-        expect(aiUsageService.getSummary).toHaveBeenCalledTimes(1);
-        expect(telemetryService.getFastingSummary).toHaveBeenCalledTimes(1);
-        expect(usersService.getLoginSummary).toHaveBeenCalledTimes(1);
+        expect(dashboardFacade.getSummary).toHaveBeenCalledTimes(1);
+        expect(dashboardFacade.getAiUsageSummary).toHaveBeenCalledTimes(1);
+        expect(dashboardFacade.getFastingSummary).toHaveBeenCalledTimes(1);
+        expect(dashboardFacade.getLoginSummary).toHaveBeenCalledTimes(1);
         expect(component['summary']()?.totalUsers).toBe(TOTAL_USERS);
         expect(component['aiUsage']()?.totalTokens).toBe(TOTAL_TOKENS);
         expect(component['fastingTelemetry']()?.startedSessions).toBe(STARTED_SESSIONS);
@@ -87,10 +83,10 @@ describe('AdminDashboardComponent', () => {
     });
 
     it('should reset summary and loading state on dashboard error', async () => {
-        const { aiUsageService, dashboardService, telemetryService } = await setupDashboardAsync();
-        dashboardService.getSummary.mockReturnValueOnce(throwError(() => new Error('dashboard failed')));
-        aiUsageService.getSummary.mockReturnValueOnce(of(null));
-        telemetryService.getFastingSummary.mockReturnValueOnce(of(null));
+        const { dashboardFacade } = await setupDashboardAsync();
+        dashboardFacade.getSummary.mockReturnValueOnce(throwError(() => new Error('dashboard failed')));
+        dashboardFacade.getAiUsageSummary.mockReturnValueOnce(of(null));
+        dashboardFacade.getFastingSummary.mockReturnValueOnce(of(null));
 
         const errorFixture = TestBed.createComponent(AdminDashboardComponent);
         const errorComponent = errorFixture.componentInstance;

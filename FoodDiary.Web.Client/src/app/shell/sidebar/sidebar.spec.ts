@@ -10,9 +10,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ADMIN_LOADING_URL_TTL_MS, SIDEBAR_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { AuthService } from '../../services/auth.service';
-import { NotificationService } from '../../services/notification.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UserService } from '../../shared/api/user.service';
+import { NotificationService } from '../../shared/notifications/notification.service';
 import { SidebarComponent } from './sidebar';
 import type { MobileSheetId, SidebarRouteItem } from './sidebar-lib/sidebar.models';
 

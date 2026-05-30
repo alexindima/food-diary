@@ -12,9 +12,9 @@ import { EMPTY, merge, type Observable } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { matchFieldValidator } from '../../../../shared/forms/match-field.validator';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
-import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { AUTH_VALIDATION_ERRORS_PROVIDER } from '../../components/auth/auth-lib/auth-validation-errors.provider';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';

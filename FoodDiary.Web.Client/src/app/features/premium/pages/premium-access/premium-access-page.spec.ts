@@ -8,8 +8,8 @@ import { NEVER, type Observable, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
-import { PremiumBillingService } from '../../api/premium-billing.service';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
+import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
 import type {
     BillingOverview,
     BillingPlan,
@@ -261,7 +261,7 @@ function setupComponent(): {
 
 function getPremiumAccessPageProviders(): unknown[] {
     return [
-        { provide: PremiumBillingService, useValue: billingService },
+        { provide: PremiumBillingFacade, useValue: billingService },
         {
             provide: PaddleCheckoutService,
             useValue: {

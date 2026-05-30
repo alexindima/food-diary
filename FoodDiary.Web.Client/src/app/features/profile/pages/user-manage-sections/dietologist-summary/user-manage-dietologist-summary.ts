@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
-import { LocalizationService } from '../../../../../services/localization.service';
+import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
 import type { DietologistFormData } from '../../user-manage/user-manage-lib/user-manage.types';
 import { formatUserManageDate } from '../../user-manage/user-manage-lib/user-manage-date.mapper';

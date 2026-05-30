@@ -192,6 +192,232 @@ const noComponentFileSuffixRule = {
     create: createNoComponentFileSuffixRule,
 };
 
+const legacyTypeBucketFilePattern =
+    /(?:^|\/)(?:src\/app\/(?:components\/(?!shared\/)|directives\/|guards\/|pipes\/|services\/|validators\/)|projects\/fooddiary-admin\/src\/app\/(?:guards\/|pages\/|services\/)).+\.(?:js|ts)$/;
+
+const allowedLegacyTypeBucketFilePatterns = [
+    /(?:^|\/)src\/app\/services\/(?:api|auth|error-handler|frontend-logger|frontend-observability|global-loading|jwt-decoder|logging-api|navigation|route-loading|seo|token-storage|unsaved-changes)\.service(?:\.spec)?\.ts$/,
+    /(?:^|\/)src\/app\/services\/idle-selective-preloading\.strategy(?:\.spec)?\.ts$/,
+    /(?:^|\/)src\/app\/guards\/(?:auth|dietologist|logged-in|unsaved-changes)\.guard(?:\.spec)?\.ts$/,
+    /(?:^|\/)projects\/fooddiary-admin\/src\/app\/guards\/admin-auth\.guard(?:\.spec)?\.ts$/,
+];
+
+const createNoLegacyTypeBucketFileRule = context => ({
+    Program(node) {
+        const fileName = (context.physicalFilename ?? context.filename ?? '').replaceAll('\\', '/');
+
+        if (!legacyTypeBucketFilePattern.test(fileName)) {
+            return;
+        }
+
+        if (allowedLegacyTypeBucketFilePatterns.some(pattern => pattern.test(fileName))) {
+            return;
+        }
+
+        context.report({
+            node,
+            messageId: 'legacyTypeBucket',
+        });
+    },
+});
+
+const noLegacyTypeBucketFileRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow new Angular files in legacy type bucket folders.',
+        },
+        messages: {
+            legacyTypeBucket:
+                'Place Angular code by feature area or an explicit shared/common theme instead of legacy type buckets such as services, guards, directives, pipes, validators, pages, or top-level components.',
+        },
+        schema: [],
+    },
+    create: createNoLegacyTypeBucketFileRule,
+};
+
+const angularSpecificFieldCallees = new Set([
+    'inject',
+    'input',
+    'output',
+    'model',
+    'viewChild',
+    'viewChildren',
+    'contentChild',
+    'contentChildren',
+]);
+
+const unwrapExpression = expression => {
+    let current = expression;
+
+    while (
+        current?.type === 'ChainExpression' ||
+        current?.type === 'TSAsExpression' ||
+        current?.type === 'TSTypeAssertion' ||
+        current?.type === 'TSNonNullExpression'
+    ) {
+        current = current.expression;
+    }
+
+    return current;
+};
+
+const getAngularSpecificFieldKind = node => {
+    const initializer = unwrapExpression(node.value);
+
+    if (initializer?.type !== 'CallExpression' || initializer.callee.type !== 'Identifier') {
+        return null;
+    }
+
+    return angularSpecificFieldCallees.has(initializer.callee.name) ? initializer.callee.name : null;
+};
+
+const isMethodLikeClassElement = node =>
+    node.type === 'MethodDefinition' ||
+    node.type === 'TSAbstractMethodDefinition' ||
+    (node.type === 'PropertyDefinition' && node.value?.type === 'FunctionExpression');
+
+const createAngularSpecificFieldsBeforeMethodsRule = context => ({
+    ClassBody(node) {
+        let seenMethod = false;
+
+        for (const member of node.body) {
+            if (isMethodLikeClassElement(member)) {
+                seenMethod = true;
+                continue;
+            }
+
+            if (member.type !== 'PropertyDefinition' || !seenMethod) {
+                continue;
+            }
+
+            const fieldKind = getAngularSpecificFieldKind(member);
+
+            if (fieldKind === null) {
+                continue;
+            }
+
+            context.report({
+                node: member,
+                messageId: 'angularFieldAfterMethod',
+                data: {
+                    fieldKind,
+                },
+            });
+        }
+    },
+});
+
+const angularSpecificFieldsBeforeMethodsRule = {
+    meta: {
+        type: 'suggestion',
+        docs: {
+            description: 'Require Angular-specific class fields to be declared before methods.',
+        },
+        messages: {
+            angularFieldAfterMethod:
+                'Move this `{{fieldKind}}()` field above constructors, getters, setters, and methods so Angular-specific fields stay grouped at the top of the class.',
+        },
+        schema: [],
+    },
+    create: createAngularSpecificFieldsBeforeMethodsRule,
+};
+
+const presentationFilePattern =
+    /(?:^|\/)(?:src\/app\/(?:components\/shared|shared\/dialogs|features\/[^/]+\/(?:components|dialogs|pages))|projects\/fooddiary-admin\/src\/app\/features\/[^/]+\/(?:components|dialogs|pages))\/.+\.ts$/;
+
+const isPresentationFile = context => {
+    const fileName = (context.physicalFilename ?? context.filename ?? '').replaceAll('\\', '/');
+
+    return !/\.(?:spec|stories)\.ts$/.test(fileName) && presentationFilePattern.test(fileName);
+};
+
+const importsIdentifier = (node, name) =>
+    node.specifiers.some(specifier => {
+        if (specifier.type === 'ImportSpecifier') {
+            return getPropertyName(specifier.imported) === name;
+        }
+
+        return specifier.type === 'ImportNamespaceSpecifier' && name === '*';
+    });
+
+const createNoHttpClientInPresentationRule = context => ({
+    ImportDeclaration(node) {
+        if (!isPresentationFile(context) || node.source.value !== '@angular/common/http') {
+            return;
+        }
+
+        if (!importsIdentifier(node, 'HttpClient')) {
+            return;
+        }
+
+        context.report({
+            node: node.source,
+            messageId: 'httpClientInPresentation',
+        });
+    },
+});
+
+const noHttpClientInPresentationRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow direct HttpClient usage in presentation-layer Angular files.',
+        },
+        messages: {
+            httpClientInPresentation:
+                'Presentation files should not use HttpClient directly. Move transport code to an api service or feature lib/facade and keep the component focused on presentation.',
+        },
+        schema: [],
+    },
+    create: createNoHttpClientInPresentationRule,
+};
+
+const allowedPresentationApiImports = new Set();
+
+const getProjectRelativeFileName = context => {
+    const fileName = (context.physicalFilename ?? context.filename ?? '').replaceAll('\\', '/');
+    const projectStart = fileName.search(/(?:^|\/)(?:src\/app|projects\/fooddiary-admin\/src\/app)\//);
+
+    return projectStart === -1 ? fileName : fileName.slice(fileName[projectStart] === '/' ? projectStart + 1 : projectStart);
+};
+
+const isApiImportSource = value => typeof value === 'string' && value.includes('/api/');
+
+const createNoNewApiImportInPresentationRule = context => ({
+    ImportDeclaration(node) {
+        if (!isPresentationFile(context) || node.importKind === 'type' || !isApiImportSource(node.source.value)) {
+            return;
+        }
+
+        const importKey = `${getProjectRelativeFileName(context)}::${node.source.value}`;
+
+        if (allowedPresentationApiImports.has(importKey)) {
+            return;
+        }
+
+        context.report({
+            node: node.source,
+            messageId: 'apiImportInPresentation',
+        });
+    },
+});
+
+const noNewApiImportInPresentationRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow new direct API imports in presentation-layer Angular files.',
+        },
+        messages: {
+            apiImportInPresentation:
+                'Do not add new direct API imports to presentation files. Route data and behavior through a feature lib/facade so components, dialogs, and pages stay focused on presentation.',
+        },
+        schema: [],
+    },
+    create: createNoNewApiImportInPresentationRule,
+};
+
 const noAnyCastSyntax = [
     {
         selector: 'ImportDeclaration[source.value=/^rxjs\\/internal(\\/|$)/]',
@@ -292,6 +518,12 @@ const appBoundaryElements = [
     { type: 'app-shared-api', pattern: 'src/app/shared/api', mode: 'folder' },
     { type: 'app-shared-lib', pattern: 'src/app/shared/lib', mode: 'folder' },
     { type: 'app-shared-dialogs', pattern: 'src/app/shared/dialogs', mode: 'folder' },
+    { type: 'app-shared-forms', pattern: 'src/app/shared/forms', mode: 'folder' },
+    { type: 'app-shared-i18n', pattern: 'src/app/shared/i18n', mode: 'folder' },
+    { type: 'app-shared-notifications', pattern: 'src/app/shared/notifications', mode: 'folder' },
+    { type: 'app-shared-platform', pattern: 'src/app/shared/platform', mode: 'folder' },
+    { type: 'app-shared-theme', pattern: 'src/app/shared/theme', mode: 'folder' },
+    { type: 'app-shared-ui-code', pattern: 'src/app/shared/ui', mode: 'folder' },
     { type: 'app-shared-ui', pattern: 'src/app/components/shared', mode: 'folder' },
     { type: 'app-feature-api', pattern: 'src/app/features/(*)/api', mode: 'folder', capture: ['feature'] },
     { type: 'app-feature-models', pattern: 'src/app/features/(*)/models', mode: 'folder', capture: ['feature'] },
@@ -753,6 +985,10 @@ const localTsPlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
         'no-component-file-suffix': noComponentFileSuffixRule,
+        'no-legacy-type-bucket-file': noLegacyTypeBucketFileRule,
+        'angular-specific-fields-before-methods': angularSpecificFieldsBeforeMethodsRule,
+        'no-http-client-in-presentation': noHttpClientInPresentationRule,
+        'no-new-api-import-in-presentation': noNewApiImportInPresentationRule,
         'no-browser-globals': noBrowserGlobalsRule,
         'no-fd-ui-kit-self-import': noFdUiKitSelfImportRule,
         'prefer-protected-template-members': preferProtectedTemplateMembersRule,
@@ -941,6 +1177,10 @@ export default [
             'no-constant-condition': ['error', { checkLoops: true }],
             'no-debugger': 'error',
             'local/no-component-file-suffix': 'error',
+            'local/no-legacy-type-bucket-file': 'error',
+            'local/angular-specific-fields-before-methods': 'error',
+            'local/no-http-client-in-presentation': 'error',
+            'local/no-new-api-import-in-presentation': 'error',
             'local/no-mojibake': 'error',
             'local/no-locally-caught-throw': 'error',
             'no-else-return': 'error',
@@ -1348,12 +1588,12 @@ export default [
             'src/app/features/public/components/landing-preview-tour/landing-preview-tour.ts',
             'src/app/features/statistics/lib/statistics-chart-config.ts',
             'src/app/services/auth.service.ts',
-            'src/app/services/browser-storage.service.ts',
             'src/app/services/error-handler.service.ts',
             'src/app/services/frontend-observability.service.ts',
-            'src/app/services/push-notification.service.ts',
-            'src/app/services/theme.service.ts',
-            'src/app/services/viewport.service.ts',
+            'src/app/shared/notifications/push-notification.service.ts',
+            'src/app/shared/platform/browser-storage.service.ts',
+            'src/app/shared/platform/viewport.service.ts',
+            'src/app/shared/theme/theme.service.ts',
             'src/app/shell/app.ts',
             'src/app/shell/sidebar/sidebar.ts',
         ],
@@ -1617,6 +1857,23 @@ export default [
         },
     },
     {
+        files: ['src/app/shared/{forms,i18n,notifications,platform,theme,ui}/**/*.ts'],
+        ignores: ['src/app/shared/**/*.spec.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['../../features/**', '../../../features/**', '../../../../features/**', 'src/app/features/**'],
+                            message: 'Shared common-theme code must stay feature-agnostic.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
         files: ['src/app/components/shared/**/*.ts'],
         rules: {
             'no-restricted-imports': [
@@ -1732,7 +1989,7 @@ export default [
         ignores: [
             'src/app/app.routes.ts',
             'src/app/features/**/*.routes.ts',
-            'src/app/services/viewport.service.ts',
+            'src/app/shared/platform/viewport.service.ts',
             'src/app/**/*.spec.ts',
         ],
         rules: {

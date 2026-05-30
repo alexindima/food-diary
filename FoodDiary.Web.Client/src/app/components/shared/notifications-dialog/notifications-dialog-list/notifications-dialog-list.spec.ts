@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { NotificationItem } from '../../../../services/notification.service';
+import type { NotificationItem } from '../../../../shared/notifications/notification.service';
 import type { NotificationViewModel } from '../notifications-dialog-lib/notifications-dialog.types';
 import { NotificationsDialogListComponent } from './notifications-dialog-list';
 

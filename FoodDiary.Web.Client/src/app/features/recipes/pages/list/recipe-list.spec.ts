@@ -5,8 +5,8 @@ import { EMPTY, type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
-import { ViewportService } from '../../../../services/viewport.service';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import { type FavoriteRecipe, type Recipe, RecipeVisibility } from '../../models/recipe.data';

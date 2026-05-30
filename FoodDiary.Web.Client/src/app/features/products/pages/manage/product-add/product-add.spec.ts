@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { OpenFoodFactsProduct } from '../../../api/open-food-facts.service';
+import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import { ProductAddComponent } from './product-add';
 
 const PRODUCT_CALORIES = 120;

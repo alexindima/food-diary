@@ -5,7 +5,8 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import { type AdminUser, AdminUsersService } from './admin-users.service';
+import type { AdminUser } from '../models/admin-user.models';
+import { AdminUsersService } from './admin-users.service';
 
 const LOGIN_EVENTS_PAGE = 1;
 const LOGIN_EVENTS_LIMIT = 3;

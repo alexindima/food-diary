@@ -5,7 +5,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
 import type { FastingProtocol, FastingSession } from '../../models/fasting.data';
 import { FastingControlsComponent } from './fasting-controls';

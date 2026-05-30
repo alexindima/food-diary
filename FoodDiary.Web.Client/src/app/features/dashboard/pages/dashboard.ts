@@ -16,10 +16,10 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
-import { ThemeService } from '../../../services/theme.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { ThemeService } from '../../../shared/theme/theme.service';
+import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
 import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog';
 import type {

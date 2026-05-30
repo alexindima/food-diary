@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { type AdminImpersonationSession, AdminUsersService } from '../api/admin-users.service';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
+import type { AdminImpersonationSession } from '../models/admin-user.models';
 import { AdminSessionsSectionComponent } from './admin-sessions-section';
 
 const ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE = 20;
@@ -13,7 +14,7 @@ const ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE = 20;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminImpersonationSessionsPageComponent {
-    private readonly usersService = inject(AdminUsersService);
+    private readonly usersService = inject(AdminUsersFacade);
     private readonly destroyRef = inject(DestroyRef);
     protected readonly pageSize = ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE;
 

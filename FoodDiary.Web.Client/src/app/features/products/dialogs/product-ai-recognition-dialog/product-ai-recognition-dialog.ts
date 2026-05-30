@@ -11,10 +11,9 @@ import { catchError, of } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field';
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import { ImageUploadService } from '../../../../shared/api/image-upload.service';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
 import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action/product-ai-recognition-action';
 import type { ProductAiDialogData, ProductAiRecognitionFormGroup, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
 import {
@@ -50,8 +49,7 @@ export class ProductAiRecognitionDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductAiRecognitionDialogComponent, ProductAiRecognitionResult | null>, {
         optional: true,
     });
-    private readonly aiFoodService = inject(AiFoodService);
-    private readonly imageUploadService = inject(ImageUploadService);
+    private readonly productAiRecognitionFacade = inject(ProductAiRecognitionFacade);
     private readonly logger = inject(FrontendLoggerService);
     protected readonly isLoading = signal(false);
     protected readonly isNutritionLoading = signal(false);
@@ -156,7 +154,7 @@ export class ProductAiRecognitionDialogComponent {
 
     private runAnalysis(assetId: string): void {
         this.isLoading.set(true);
-        this.aiFoodService
+        this.productAiRecognitionFacade
             .analyzeFoodImage({
                 imageAssetId: assetId,
                 description: this.getDescription(),
@@ -185,7 +183,7 @@ export class ProductAiRecognitionDialogComponent {
         this.isNutritionLoading.set(true);
         this.nutritionErrorKey.set(null);
         const normalizedItems = normalizeItemsForNutrition(items);
-        this.aiFoodService
+        this.productAiRecognitionFacade
             .calculateNutrition({ items: normalizedItems })
             .pipe(
                 catchError((err: unknown) => {
@@ -214,7 +212,7 @@ export class ProductAiRecognitionDialogComponent {
             return;
         }
 
-        this.imageUploadService.deleteAsset(assetId).subscribe({
+        this.productAiRecognitionFacade.deleteAsset(assetId).subscribe({
             error: (err: unknown) => {
                 this.logger.warn('Failed to delete AI product image asset', err);
             },

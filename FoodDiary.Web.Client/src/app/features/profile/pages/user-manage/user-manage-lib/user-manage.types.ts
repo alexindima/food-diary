@@ -1,8 +1,8 @@
-import type { WebPushSubscriptionItem } from '../../../../../services/notification.service';
 import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { ActivityLevelOption, Gender, UiStyleOption } from '../../../../../shared/models/user.data';
+import type { WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
 import type { AppThemeName } from '../../../../../theme/app-theme.config';
 import type { BillingOverview } from '../../../../premium/models/billing.models';
 

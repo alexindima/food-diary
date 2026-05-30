@@ -3,11 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent, FdUiPieChartComponent, type FdUiPieChartSegment } from 'fd-ui-kit';
 
-import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
 import type { AdminAiUsageSummary } from '../../admin-ai-usage/models/admin-ai-usage.data';
-import { type AdminUserLoginDeviceSummary, AdminUsersService } from '../../admin-users/api/admin-users.service';
-import { AdminDashboardService } from '../api/admin-dashboard.service';
-import { AdminTelemetryService } from '../api/admin-telemetry.service';
+import type { AdminUserLoginDeviceSummary } from '../../admin-users/models/admin-user.models';
+import { AdminDashboardFacade } from '../lib/admin-dashboard.facade';
 import type { AdminDashboardSummary } from '../models/admin-dashboard.data';
 import type { FastingTelemetryPresetSummary, FastingTelemetrySummary } from '../models/admin-telemetry.data';
 
@@ -42,10 +40,7 @@ const HOURS_PER_DAY = 24;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent {
-    private readonly dashboardService = inject(AdminDashboardService);
-    private readonly aiUsageService = inject(AdminAiUsageService);
-    private readonly telemetryService = inject(AdminTelemetryService);
-    private readonly usersService = inject(AdminUsersService);
+    private readonly adminDashboardFacade = inject(AdminDashboardFacade);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly summary = signal<AdminDashboardSummary | null>(null);
@@ -85,7 +80,7 @@ export class AdminDashboardComponent {
 
     protected loadSummary(): void {
         this.isLoading.set(true);
-        this.dashboardService
+        this.adminDashboardFacade
             .getSummary()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -99,8 +94,8 @@ export class AdminDashboardComponent {
                 },
             });
 
-        this.aiUsageService
-            .getSummary()
+        this.adminDashboardFacade
+            .getAiUsageSummary()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -111,7 +106,7 @@ export class AdminDashboardComponent {
                 },
             });
 
-        this.telemetryService
+        this.adminDashboardFacade
             .getFastingSummary()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -123,7 +118,7 @@ export class AdminDashboardComponent {
                 },
             });
 
-        this.usersService
+        this.adminDashboardFacade
             .getLoginSummary()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

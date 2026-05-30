@@ -9,7 +9,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { catchError, of } from 'rxjs';
 
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
     buildAiEditableItems,
@@ -70,7 +70,7 @@ const NUTRITION_FRACTION_THRESHOLD = 0.01;
 })
 export class MealPhotoRecognitionDialogComponent {
     private readonly dialogData = inject<PhotoAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
-    private readonly aiFoodService = inject(AiFoodService);
+    private readonly aiFoodFacade = inject(AiFoodFacade);
     private readonly dialogRef = inject(FdUiDialogRef<MealPhotoRecognitionDialogComponent, MealAiSessionManageDto | null>, {
         optional: true,
     });
@@ -260,7 +260,7 @@ export class MealPhotoRecognitionDialogComponent {
 
     private runAnalysis(assetId: string): void {
         this.isLoading.set(true);
-        this.aiFoodService
+        this.aiFoodFacade
             .analyzeFoodImage({ imageAssetId: assetId })
             .pipe(
                 catchError((err: unknown) => {
@@ -294,7 +294,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.nutrition.set(null);
         this.nutritionErrorKey.set(null);
 
-        this.aiFoodService
+        this.aiFoodFacade
             .calculateNutrition({ items })
             .pipe(
                 catchError((err: unknown) => {

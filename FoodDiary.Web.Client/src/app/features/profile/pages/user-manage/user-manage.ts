@@ -29,13 +29,13 @@ import { EMPTY, finalize, merge, type Observable } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
-import { DietologistService } from '../../../dietologist/api/dietologist.service';
-import { PremiumBillingService } from '../../../premium/api/premium-billing.service';
+import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
+import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
 import type { BillingOverview } from '../../../premium/models/billing.models';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import { UserManageAccountCardComponent } from '../user-manage-sections/account-card/user-manage-account-card';
@@ -108,8 +108,8 @@ export class UserManageComponent {
     protected readonly notifications = inject(UserManageNotificationsFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly cdr = inject(ChangeDetectorRef);
-    private readonly dietologistService = inject(DietologistService);
-    private readonly billingService = inject(PremiumBillingService);
+    private readonly dietologistFacade = inject(DietologistFacade);
+    private readonly billingFacade = inject(PremiumBillingFacade);
     private readonly toastService = inject(FdUiToastService);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
@@ -310,7 +310,7 @@ export class UserManageComponent {
         }
 
         this.isSavingDietologist.set(true);
-        this.dietologistService
+        this.dietologistFacade
             .invite({
                 dietologistEmail: this.dietologistForm.controls.email.getRawValue(),
                 permissions: getDietologistPermissions(this.dietologistForm),
@@ -351,7 +351,7 @@ export class UserManageComponent {
         }
 
         this.isSavingDietologist.set(true);
-        this.dietologistService
+        this.dietologistFacade
             .updatePermissions(getDietologistPermissions(this.dietologistForm))
             .pipe(
                 finalize(() => {
@@ -482,7 +482,7 @@ export class UserManageComponent {
 
         this.billingError.set(null);
         this.isOpeningBillingPortal.set(true);
-        this.billingService
+        this.billingFacade
             .createPortalSession()
             .pipe(
                 finalize(() => {
@@ -531,7 +531,7 @@ export class UserManageComponent {
 
     private loadDietologistRelationship(): void {
         this.isLoadingDietologist.set(true);
-        this.dietologistService
+        this.dietologistFacade
             .getRelationship()
             .pipe(
                 finalize(() => {
@@ -552,7 +552,7 @@ export class UserManageComponent {
     private loadBillingOverview(): void {
         this.isLoadingBilling.set(true);
         this.billingError.set(null);
-        this.billingService
+        this.billingFacade
             .getOverview()
             .pipe(
                 finalize(() => {
@@ -585,7 +585,7 @@ export class UserManageComponent {
 
     private executeDietologistRevoke(): void {
         this.isSavingDietologist.set(true);
-        this.dietologistService
+        this.dietologistFacade
             .revokeRelationship()
             .pipe(
                 finalize(() => {

@@ -7,7 +7,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import { AdminModerationService } from '../api/admin-moderation.service';
+import { AdminModerationFacade } from '../lib/admin-moderation.facade';
 import type { AdminContentReport } from '../models/admin-moderation.data';
 
 export type AdminModerationActionDialogData = {
@@ -36,7 +36,7 @@ export class AdminModerationActionDialogComponent {
     protected readonly data = inject<AdminModerationActionDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef =
         inject<FdUiDialogRef<AdminModerationActionDialogComponent, AdminModerationActionDialogResult>>(FdUiDialogRef);
-    private readonly moderationService = inject(AdminModerationService);
+    private readonly moderationFacade = inject(AdminModerationFacade);
     private readonly destroyRef = inject(DestroyRef);
 
     protected adminNote = '';
@@ -64,8 +64,8 @@ export class AdminModerationActionDialogComponent {
 
         const operation =
             this.data.action === 'review'
-                ? this.moderationService.reviewReport(this.data.report.id, action)
-                : this.moderationService.dismissReport(this.data.report.id, action);
+                ? this.moderationFacade.reviewReport(this.data.report.id, action)
+                : this.moderationFacade.dismissReport(this.data.report.id, action);
 
         operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: () => {

@@ -9,12 +9,13 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
-import { LocalizationService } from '../../../../services/localization.service';
-import { NotificationService, type WebPushSubscriptionItem } from '../../../../services/notification.service';
-import { PushNotificationService } from '../../../../services/push-notification.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import type { User } from '../../../../shared/models/user.data';
-import { DietologistService } from '../../../dietologist/api/dietologist.service';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../../shared/notifications/notification.service';
+import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
+import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
+import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import { UserManageComponent } from './user-manage';
 
@@ -374,7 +375,8 @@ async function createComponentAsync(
 
 function createTestingProviders(queryParams: Record<string, string>): unknown[] {
     return [
-        { provide: DietologistService, useValue: dietologistService },
+        { provide: DietologistFacade, useValue: dietologistService },
+        { provide: PremiumBillingFacade, useValue: createPremiumBillingFacadeMock() },
         { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
         { provide: ActivatedRoute, useValue: { queryParamMap: of(convertToParamMap(queryParams)) } },
         { provide: Router, useValue: router },
@@ -393,6 +395,34 @@ function createDietologistServiceMock(relationship: DietologistRelationship | nu
         invite: vi.fn().mockReturnValue(of(void 0)),
         updatePermissions: vi.fn().mockReturnValue(of(void 0)),
         revokeRelationship: vi.fn().mockReturnValue(of(void 0)),
+    };
+}
+
+function createPremiumBillingFacadeMock(): { getOverview: ReturnType<typeof vi.fn>; createPortalSession: ReturnType<typeof vi.fn> } {
+    return {
+        getOverview: vi.fn().mockReturnValue(
+            of({
+                isPremium: false,
+                subscriptionStatus: null,
+                plan: null,
+                subscriptionProvider: null,
+                currentPeriodStartUtc: null,
+                currentPeriodEndUtc: null,
+                nextBillingAttemptUtc: null,
+                cancelAtPeriodEnd: false,
+                renewalEnabled: false,
+                manageBillingAvailable: false,
+                premiumTrialStartUtc: null,
+                premiumTrialEndUtc: null,
+                premiumTrialActive: false,
+                premiumTrialUsed: false,
+                canStartPremiumTrial: true,
+                provider: 'none',
+                paddleClientToken: null,
+                availableProviders: [],
+            }),
+        ),
+        createPortalSession: vi.fn().mockReturnValue(of({ url: 'https://billing.example/session' })),
     };
 }
 

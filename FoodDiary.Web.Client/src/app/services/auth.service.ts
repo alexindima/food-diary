@@ -13,13 +13,13 @@ import type {
 } from '../features/auth/models/auth.data';
 import type { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
 import { QuickMealService } from '../features/meals/lib/quick/quick-meal.service';
+import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
+import { ThemeService } from '../shared/theme/theme.service';
 import { ApiService } from './api.service';
 import { FrontendLoggerService } from './frontend-logger.service';
 import { JwtDecoderService } from './jwt-decoder.service';
-import { LocalizationService } from './localization.service';
 import { NavigationService } from './navigation.service';
-import { ThemeService } from './theme.service';
 import { TokenStorageService } from './token-storage.service';
 
 declare global {

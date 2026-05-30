@@ -3,7 +3,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
+import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesComponent } from './admin-email-templates';
 
@@ -39,7 +39,7 @@ describe('AdminEmailTemplatesComponent', () => {
         await TestBed.configureTestingModule({
             imports: [AdminEmailTemplatesComponent],
             providers: [
-                { provide: AdminEmailTemplatesService, useValue: templatesService },
+                { provide: AdminEmailTemplatesFacade, useValue: templatesService },
                 { provide: FdUiDialogService, useValue: dialogService },
             ],
         }).compileComponents();

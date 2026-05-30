@@ -6,10 +6,9 @@ import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../../../services/navigation.service';
-import { UsdaService } from '../../../../usda/api/usda.service';
 import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
-import { OpenFoodFactsService } from '../../../api/open-food-facts.service';
 import { ProductService } from '../../../api/product.service';
+import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import { MeasurementUnit, type Product, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
 import { ProductManageFormComponent } from './product-manage-form';
@@ -86,10 +85,11 @@ type ProductManageFacadeMock = {
     submitProductAsync: ReturnType<typeof vi.fn>;
 };
 
-type UsdaServiceMock = {
-    getFoodDetail: ReturnType<typeof vi.fn>;
-    linkProduct: ReturnType<typeof vi.fn>;
-    unlinkProduct: ReturnType<typeof vi.fn>;
+type ProductExternalFoodFacadeMock = {
+    searchByBarcode: ReturnType<typeof vi.fn>;
+    getUsdaFoodDetail: ReturnType<typeof vi.fn>;
+    linkUsdaProduct: ReturnType<typeof vi.fn>;
+    unlinkUsdaProduct: ReturnType<typeof vi.fn>;
 };
 
 type ProductManageFormSetup = {
@@ -99,10 +99,7 @@ type ProductManageFormSetup = {
     navigationService: {
         navigateToProductListAsync: ReturnType<typeof vi.fn>;
     };
-    openFoodFactsService: {
-        searchByBarcode: ReturnType<typeof vi.fn>;
-    };
-    usdaService: UsdaServiceMock;
+    externalFoodFacade: ProductExternalFoodFacadeMock;
 };
 
 describe('ProductManageFormComponent header state', () => {
@@ -171,9 +168,9 @@ describe('ProductManageFormComponent product inputs', () => {
 
 describe('ProductManageFormComponent prefill behavior', () => {
     it('should ignore stale Open Food Facts lookup response when barcode changes', async () => {
-        const { component, fixture, openFoodFactsService } = await setupComponentAsync();
+        const { component, fixture, externalFoodFacade } = await setupComponentAsync();
         const lookupResult$ = new Subject<typeof OFF_PRODUCT | null>();
-        openFoodFactsService.searchByBarcode.mockReturnValue(lookupResult$);
+        externalFoodFacade.searchByBarcode.mockReturnValue(lookupResult$);
 
         fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode });
         fixture.detectChanges();
@@ -210,10 +207,10 @@ describe('ProductManageFormComponent USDA behavior', () => {
     });
 
     it('should ignore stale USDA detail response when a later USDA suggestion is selected', async () => {
-        const { component, usdaService } = await setupComponentAsync();
+        const { component, externalFoodFacade } = await setupComponentAsync();
         const firstDetail$ = new Subject<UsdaFoodDetail | null>();
         const secondDetail$ = new Subject<UsdaFoodDetail | null>();
-        usdaService.getFoodDetail.mockImplementation((fdcId: number) => (fdcId === USDA_FDC_ID ? firstDetail$ : secondDetail$));
+        externalFoodFacade.getUsdaFoodDetail.mockImplementation((fdcId: number) => (fdcId === USDA_FDC_ID ? firstDetail$ : secondDetail$));
 
         component['onNameSuggestionSelected'](USDA_SUGGESTION);
         component['onNameSuggestionSelected'](SECOND_USDA_SUGGESTION);
@@ -311,12 +308,9 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
 
 async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
-    const usdaService = createUsdaServiceMock();
+    const externalFoodFacade = createProductExternalFoodFacadeMock();
     const navigationService = {
         navigateToProductListAsync: vi.fn().mockResolvedValue(void 0),
-    };
-    const openFoodFactsService = {
-        searchByBarcode: vi.fn().mockReturnValue(of(null)),
     };
 
     await TestBed.configureTestingModule({
@@ -328,14 +322,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
                     searchSuggestions: vi.fn().mockReturnValue(of([])),
                 },
             },
-            {
-                provide: OpenFoodFactsService,
-                useValue: openFoodFactsService,
-            },
-            {
-                provide: UsdaService,
-                useValue: usdaService,
-            },
+            { provide: ProductExternalFoodFacade, useValue: externalFoodFacade },
             {
                 provide: FdUiDialogService,
                 useValue: {
@@ -359,8 +346,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
         component: fixture.componentInstance,
         productManageFacade,
         navigationService,
-        openFoodFactsService,
-        usdaService,
+        externalFoodFacade,
     };
 }
 
@@ -373,11 +359,12 @@ function createProductManageFacadeMock(): ProductManageFacadeMock {
     };
 }
 
-function createUsdaServiceMock(): UsdaServiceMock {
+function createProductExternalFoodFacadeMock(): ProductExternalFoodFacadeMock {
     return {
-        getFoodDetail: vi.fn().mockReturnValue(of(createUsdaFoodDetail(USDA_FDC_ID, 'USDA detail'))),
-        linkProduct: vi.fn().mockReturnValue(of(null)),
-        unlinkProduct: vi.fn().mockReturnValue(of(null)),
+        searchByBarcode: vi.fn().mockReturnValue(of(null)),
+        getUsdaFoodDetail: vi.fn().mockReturnValue(of(createUsdaFoodDetail(USDA_FDC_ID, 'USDA detail'))),
+        linkUsdaProduct: vi.fn().mockReturnValue(of(null)),
+        unlinkUsdaProduct: vi.fn().mockReturnValue(of(null)),
     };
 }
 

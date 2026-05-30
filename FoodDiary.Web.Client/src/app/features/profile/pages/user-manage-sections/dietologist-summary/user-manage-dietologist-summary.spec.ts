@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { LocalizationService } from '../../../../../services/localization.service';
+import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
 import { createDietologistForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageDietologistSummaryComponent } from './user-manage-dietologist-summary';

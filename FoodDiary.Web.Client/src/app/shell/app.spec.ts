@@ -6,12 +6,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
-import { LocalizationService } from '../services/localization.service';
-import { NotificationRealtimeService } from '../services/notification-realtime.service';
-import { PushNotificationService } from '../services/push-notification.service';
 import { RouteLoadingService } from '../services/route-loading.service';
 import { SeoService } from '../services/seo.service';
-import { ThemeService } from '../services/theme.service';
+import { LocalizationService } from '../shared/i18n/localization.service';
+import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
+import { PushNotificationService } from '../shared/notifications/push-notification.service';
+import { ThemeService } from '../shared/theme/theme.service';
 import { AppComponent } from './app';
 
 const NAVIGATION_ID = 1;

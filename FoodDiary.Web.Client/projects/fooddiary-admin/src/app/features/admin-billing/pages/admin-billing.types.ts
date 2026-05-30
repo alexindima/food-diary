@@ -1,4 +1,4 @@
-import type { AdminBillingPayment, AdminBillingSubscription, AdminBillingWebhookEvent } from '../api/admin-billing.service';
+import type { AdminBillingPayment, AdminBillingSubscription, AdminBillingWebhookEvent } from '../models/admin-billing.models';
 
 export type AdminBillingSubscriptionViewModel = {
     currentPeriodStartText: string;

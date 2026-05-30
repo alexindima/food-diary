@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { matchFieldValidator } from '../../../../../validators/match-field.validator';
+import { matchFieldValidator } from '../../../../../shared/forms/match-field.validator';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../lib/auth.constants';
 import type {
     LoginFieldErrors,

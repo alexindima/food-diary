@@ -4,7 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
 import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 

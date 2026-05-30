@@ -10,11 +10,11 @@ import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
 
-import { BrowserNotificationCapabilityService } from '../../../../services/browser-notification-capability.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { NotificationService } from '../../../../services/notification.service';
-import { PushNotificationService } from '../../../../services/push-notification.service';
+import { BrowserNotificationCapabilityService } from '../../../../shared/notifications/browser-notification-capability.service';
+import { NotificationService } from '../../../../shared/notifications/notification.service';
+import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
 
 @Component({
     selector: 'fd-dashboard-notification-settings-dialog',

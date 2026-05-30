@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { type AdminUserLoginEvent, AdminUsersService } from '../api/admin-users.service';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
+import type { AdminUserLoginEvent } from '../models/admin-user.models';
 import { AdminLoginActivitySectionComponent } from './admin-login-activity-section';
 
 const ADMIN_LOGIN_ACTIVITY_PAGE_SIZE = 20;
@@ -13,7 +14,7 @@ const ADMIN_LOGIN_ACTIVITY_PAGE_SIZE = 20;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLoginActivityPageComponent {
-    private readonly usersService = inject(AdminUsersService);
+    private readonly usersService = inject(AdminUsersFacade);
     private readonly destroyRef = inject(DestroyRef);
     protected readonly pageSize = ADMIN_LOGIN_ACTIVITY_PAGE_SIZE;
 

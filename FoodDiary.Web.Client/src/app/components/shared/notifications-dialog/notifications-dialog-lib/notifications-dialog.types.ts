@@ -1,4 +1,4 @@
-import type { NotificationItem } from '../../../../services/notification.service';
+import type { NotificationItem } from '../../../../shared/notifications/notification.service';
 
 export type NotificationViewModel = {
     notification: NotificationItem;

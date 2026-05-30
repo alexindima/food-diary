@@ -4,12 +4,7 @@ import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import type { AdminContentReport, AdminReportAction } from '../models/admin-moderation.data';
-
-export type PagedResponse<T> = {
-    items: T[];
-    totalPages: number;
-    totalItems: number;
-};
+import type { PagedResponse } from '../models/admin-moderation-page.models';
 
 type ApiPagedResponse<T> = {
     data: T[];

@@ -24,9 +24,9 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ViewportService } from '../../../../services/viewport.service';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { ViewportService } from '../../../../shared/platform/viewport.service';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
 import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, type Observable, of } from 'rxjs';
 
 import { AuthService } from '../../../../../services/auth.service';
-import { LocalizationService } from '../../../../../services/localization.service';
+import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
 import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 

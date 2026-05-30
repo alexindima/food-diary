@@ -14,10 +14,10 @@ import {
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
+import { ProductDetailFacade } from '../../../lib/detail/product-detail.facade';
 import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
 import type { Product } from '../../../models/product.data';
 import { ProductDetailActionsComponent } from '../product-detail-actions/product-detail-actions';
-import { ProductDetailFacade } from '../product-detail-lib/product-detail.facade';
 import type { ProductDetailTab } from '../product-detail-lib/product-detail.types';
 import {
     buildProductDetailNutritionViewModel,

@@ -18,16 +18,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { catchError, firstValueFrom, of } from 'rxjs';
+import { catchError, firstValueFrom, type Observable, of } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
-import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { AiFoodService } from '../../../shared/api/ai-food.service';
-import { UserService } from '../../../shared/api/user.service';
+import { LocalizationService } from '../../../shared/i18n/localization.service';
+import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
-import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
+import { UserFacade } from '../../../shared/lib/user.facade';
+import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
@@ -84,8 +84,8 @@ declare global {
     imports: [TranslatePipe, FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, AiPhotoResultComponent, ImageUploadFieldComponent],
 })
 export class AiInputBarComponent {
-    private readonly aiFoodService = inject(AiFoodService);
-    private readonly userService = inject(UserService);
+    private readonly aiFoodFacade = inject(AiFoodFacade);
+    private readonly userFacade = inject(UserFacade);
     private readonly localizationService = inject(LocalizationService);
     private readonly authService = inject(AuthService);
     private readonly navigationService = inject(NavigationService);
@@ -395,7 +395,7 @@ export class AiInputBarComponent {
     private runTextAnalysis(text: string): void {
         this.runAnalysisRequest(
             this.textState(),
-            this.aiFoodService.parseFoodText({ text }),
+            this.aiFoodFacade.parseFoodText({ text }),
             {
                 premium: 'AI_INPUT_BAR.TEXT_ERROR_PREMIUM',
                 quota: 'AI_INPUT_BAR.TEXT_ERROR_QUOTA',
@@ -422,7 +422,7 @@ export class AiInputBarComponent {
     private runPhotoAnalysis(assetId: string): void {
         this.runAnalysisRequest(
             this.photoState(),
-            this.aiFoodService.analyzeFoodImage({ imageAssetId: assetId }),
+            this.aiFoodFacade.analyzeFoodImage({ imageAssetId: assetId }),
             {
                 premium: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM',
                 quota: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
@@ -473,12 +473,12 @@ export class AiInputBarComponent {
     }
 
     private async ensureAiConsentAsync(): Promise<boolean> {
-        const cachedUser = this.userService.user();
+        const cachedUser = this.userFacade.user();
         if (cachedUser?.aiConsentAcceptedAt !== null && cachedUser?.aiConsentAcceptedAt !== undefined) {
             return true;
         }
 
-        const freshUser = await firstValueFrom(this.userService.getInfoSilently());
+        const freshUser = await firstValueFrom(this.userFacade.getInfoSilently());
         if (freshUser?.aiConsentAcceptedAt !== null && freshUser?.aiConsentAcceptedAt !== undefined) {
             return true;
         }
@@ -496,7 +496,7 @@ export class AiInputBarComponent {
             return false;
         }
 
-        await firstValueFrom(this.userService.acceptAiConsent());
+        await firstValueFrom(this.userFacade.acceptAiConsent());
         return true;
     }
 
@@ -532,7 +532,7 @@ export class AiInputBarComponent {
 
     private runAnalysisRequest(
         state: AiInputBarChannelState,
-        request$: ReturnType<AiFoodService['parseFoodText']>,
+        request$: Observable<FoodVisionResponse>,
         errorKeys: { premium: string; quota: string; generic: string },
         onItems: (items: FoodVisionItem[]) => void,
     ): void {
@@ -580,7 +580,7 @@ export class AiInputBarComponent {
         state.nutrition.set(null);
         state.nutritionErrorKey.set(null);
 
-        this.aiFoodService
+        this.aiFoodFacade
             .calculateNutrition({ items })
             .pipe(
                 catchError((err: unknown) => {

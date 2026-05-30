@@ -10,8 +10,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
+import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
 import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';

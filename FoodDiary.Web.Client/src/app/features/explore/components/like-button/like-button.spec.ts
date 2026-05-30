@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LikeService } from '../../api/like.service';
+import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeLikeStatus } from '../../models/like.data';
 import { LikeButtonComponent } from './like-button';
 
@@ -13,14 +13,14 @@ const UPDATED_LIKES = 3;
 
 let fixture: ComponentFixture<LikeButtonComponent>;
 let component: LikeButtonComponent;
-let likeService: LikeServiceMock;
+let likeService: ExploreInteractionsFacadeMock;
 
 beforeEach(() => {
-    likeService = createLikeServiceMock();
+    likeService = createExploreInteractionsFacadeMock();
 
     TestBed.configureTestingModule({
         imports: [LikeButtonComponent, TranslateModule.forRoot()],
-        providers: [{ provide: LikeService, useValue: likeService }],
+        providers: [{ provide: ExploreInteractionsFacade, useValue: likeService }],
     });
 
     fixture = TestBed.createComponent(LikeButtonComponent);
@@ -31,7 +31,7 @@ beforeEach(() => {
 
 describe('LikeButtonComponent', () => {
     it('loads like status for the recipe', () => {
-        expect(likeService.getStatus).toHaveBeenCalledWith('recipe-1');
+        expect(likeService.getLikeStatus).toHaveBeenCalledWith('recipe-1');
         expect(component['isLiked']()).toBe(false);
         expect(component['totalLikes']()).toBe(INITIAL_LIKES);
         expect(component['icon']()).toBe('favorite_border');
@@ -40,7 +40,7 @@ describe('LikeButtonComponent', () => {
     it('toggles like status', () => {
         component['onToggle']();
 
-        expect(likeService.toggle).toHaveBeenCalledWith('recipe-1');
+        expect(likeService.toggleLike).toHaveBeenCalledWith('recipe-1');
         expect(component['isLiked']()).toBe(true);
         expect(component['totalLikes']()).toBe(UPDATED_LIKES);
         expect(component['isToggling']()).toBe(false);
@@ -48,7 +48,7 @@ describe('LikeButtonComponent', () => {
     });
 
     it('resets toggling state on toggle failure', () => {
-        likeService.toggle.mockReturnValueOnce(throwError(() => new Error('failed')));
+        likeService.toggleLike.mockReturnValueOnce(throwError(() => new Error('failed')));
 
         component['onToggle']();
 
@@ -56,15 +56,15 @@ describe('LikeButtonComponent', () => {
     });
 });
 
-type LikeServiceMock = {
-    getStatus: ReturnType<typeof vi.fn>;
-    toggle: ReturnType<typeof vi.fn>;
+type ExploreInteractionsFacadeMock = {
+    getLikeStatus: ReturnType<typeof vi.fn>;
+    toggleLike: ReturnType<typeof vi.fn>;
 };
 
-function createLikeServiceMock(): LikeServiceMock {
+function createExploreInteractionsFacadeMock(): ExploreInteractionsFacadeMock {
     return {
-        getStatus: vi.fn(() => of(createStatus({ isLiked: false, totalLikes: INITIAL_LIKES }))),
-        toggle: vi.fn(() => of(createStatus({ isLiked: true, totalLikes: UPDATED_LIKES }))),
+        getLikeStatus: vi.fn(() => of(createStatus({ isLiked: false, totalLikes: INITIAL_LIKES }))),
+        toggleLike: vi.fn(() => of(createStatus({ isLiked: true, totalLikes: UPDATED_LIKES }))),
     };
 }
 

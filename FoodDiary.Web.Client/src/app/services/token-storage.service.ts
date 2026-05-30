@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 
-import { BrowserStorageService } from './browser-storage.service';
+import { BrowserStorageService } from '../shared/platform/browser-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class TokenStorageService {

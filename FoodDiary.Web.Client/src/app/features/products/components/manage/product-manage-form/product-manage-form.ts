@@ -28,16 +28,23 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner';
 import type { ConfirmDeleteDialogData } from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header';
-import { FdPageContainerDirective } from '../../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../../services/navigation.service';
 import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
-import { UsdaService } from '../../../../usda/api/usda.service';
+import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
-import { type OpenFoodFactsProduct, OpenFoodFactsService } from '../../../api/open-food-facts.service';
 import { ProductAiRecognitionDialogComponent } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog';
 import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
+import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
+import { ProductNameSearchFacade } from '../../../lib/manage/product-name-search.facade';
+import {
+    buildOpenFoodFactsLookupPatch,
+    buildResetNutritionPatch,
+    buildSourceProductPrefillPatch,
+    buildUsdaFoodDetailPrefillPatch,
+} from '../../../lib/manage/product-nutrition-prefill.mapper';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
+import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import type { Product } from '../../../models/product.data';
 import { ProductBasicInfoComponent } from '../product-basic-info/product-basic-info';
 import {
@@ -55,14 +62,7 @@ import type {
     ProductManageMode,
     ProductManagePrefill,
 } from '../product-manage-lib/product-manage-form.types';
-import { ProductNameSearchFacade } from '../product-manage-lib/product-name-search.facade';
 import type { ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
-import {
-    buildOpenFoodFactsLookupPatch,
-    buildResetNutritionPatch,
-    buildSourceProductPrefillPatch,
-    buildUsdaFoodDetailPrefillPatch,
-} from '../product-manage-lib/product-nutrition-prefill.mapper';
 import { ProductNutritionEditorComponent } from '../product-nutrition-editor/product-nutrition-editor';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -101,8 +101,7 @@ export class ProductManageFormComponent {
     protected readonly nameSearch = inject(ProductNameSearchFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly productManageFacade = inject(ProductManageFacade);
-    private readonly openFoodFactsService = inject(OpenFoodFactsService);
-    private readonly usdaService = inject(UsdaService);
+    private readonly externalFoodFacade = inject(ProductExternalFoodFacade);
 
     public readonly product = input<Product | null>(null);
     public readonly prefill = input<ProductManagePrefill | null>(null);
@@ -223,7 +222,7 @@ export class ProductManageFormComponent {
             return;
         }
 
-        this.openFoodFactsService
+        this.externalFoodFacade
             .searchByBarcode(barcode)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(offProduct => {
@@ -382,8 +381,8 @@ export class ProductManageFormComponent {
             this.productForm.patchValue(buildResetNutritionPatch());
             this.nameSearch.setSelectedSuggestion(suggestion);
             const requestId = ++this.usdaDetailRequestId;
-            this.usdaService
-                .getFoodDetail(fdcId)
+            this.externalFoodFacade
+                .getUsdaFoodDetail(fdcId)
                 .pipe(
                     catchError(() => of<UsdaFoodDetail | null>(null)),
                     takeUntilDestroyed(this.destroyRef),
@@ -468,12 +467,12 @@ export class ProductManageFormComponent {
         }
 
         if (nextFdcId !== null) {
-            await firstValueFrom(this.usdaService.linkProduct(savedProduct.id, nextFdcId));
+            await firstValueFrom(this.externalFoodFacade.linkUsdaProduct(savedProduct.id, nextFdcId));
             return;
         }
 
         if (previousFdcId !== null) {
-            await firstValueFrom(this.usdaService.unlinkProduct(savedProduct.id));
+            await firstValueFrom(this.externalFoodFacade.unlinkUsdaProduct(savedProduct.id));
         }
     }
 

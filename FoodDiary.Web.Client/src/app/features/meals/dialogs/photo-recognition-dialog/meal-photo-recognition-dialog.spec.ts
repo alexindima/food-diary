@@ -6,7 +6,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { MealAiSessionManageDto } from '../../models/meal.data';
 import { MealPhotoRecognitionDialogComponent } from './meal-photo-recognition-dialog';
@@ -212,7 +212,7 @@ async function setupComponentAsync(
         .configureTestingModule({
             imports: [MealPhotoRecognitionDialogComponent, TranslateModule.forRoot()],
             providers: [
-                { provide: AiFoodService, useValue: aiFoodService },
+                { provide: AiFoodFacade, useValue: aiFoodService },
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],

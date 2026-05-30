@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DietologistService } from '../../api/dietologist.service';
+import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from './dietologist-clients-lib/dietologist-clients.test-data';
 import { DietologistClientsPageComponent } from './dietologist-clients-page';
 
@@ -53,7 +53,7 @@ function createComponent(): void {
     TestBed.configureTestingModule({
         imports: [DietologistClientsPageComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: DietologistService, useValue: dietologistService },
+            { provide: DietologistFacade, useValue: dietologistService },
             { provide: Router, useValue: router },
         ],
     });

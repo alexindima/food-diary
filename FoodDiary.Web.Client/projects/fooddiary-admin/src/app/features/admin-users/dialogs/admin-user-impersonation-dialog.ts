@@ -9,8 +9,9 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { merge } from 'rxjs';
 
-import { type AdminImpersonationStart, type AdminUser, AdminUsersService } from '../api/admin-users.service';
 import { ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH } from '../lib/admin-user.constants';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
+import type { AdminImpersonationStart, AdminUser } from '../models/admin-user.models';
 
 type AdminUserImpersonationForm = {
     reason: FormControl<string>;
@@ -29,7 +30,7 @@ export class AdminUserImpersonationDialogComponent {
     private readonly dialogRef =
         inject<FdUiDialogRef<AdminUserImpersonationDialogComponent, AdminImpersonationStart | null>>(FdUiDialogRef);
     private readonly user = inject<AdminUser>(FD_UI_DIALOG_DATA);
-    private readonly usersService = inject(AdminUsersService);
+    private readonly usersService = inject(AdminUsersFacade);
     private readonly fb = inject(FormBuilder);
     private readonly destroyRef = inject(DestroyRef);
 

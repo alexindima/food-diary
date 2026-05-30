@@ -7,9 +7,9 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import type { DietologistRecommendation } from '../../../../shared/models/dietologist.data';
-import { RecommendationsService } from '../../api/recommendations.service';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { RecommendationsFacade } from '../../lib/recommendations.facade';
 
 type RecommendationViewModel = DietologistRecommendation & {
     dietologistName: string | null;
@@ -27,7 +27,7 @@ type RecommendationViewModel = DietologistRecommendation & {
 export class RecommendationsPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly route = inject(ActivatedRoute);
-    private readonly recommendationsService = inject(RecommendationsService);
+    private readonly recommendationsFacade = inject(RecommendationsFacade);
 
     protected readonly recommendations = signal<DietologistRecommendation[]>([]);
     protected readonly selectedRecommendationId = signal<string | null>(null);
@@ -58,7 +58,7 @@ export class RecommendationsPageComponent {
         }
 
         this.markingReadIds.update(ids => new Set(ids).add(recommendation.id));
-        this.recommendationsService
+        this.recommendationsFacade
             .markAsRead(recommendation.id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -88,7 +88,7 @@ export class RecommendationsPageComponent {
     private loadRecommendations(): void {
         this.isLoading.set(true);
         this.errorKey.set(null);
-        this.recommendationsService
+        this.recommendationsFacade
             .getMyRecommendations()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

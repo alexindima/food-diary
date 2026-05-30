@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminUsersService } from '../api/admin-users.service';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminImpersonationSessionsPageComponent } from './admin-impersonation-sessions-page';
 
 const FIRST_PAGE = 1;
@@ -30,7 +30,7 @@ describe('AdminImpersonationSessionsPageComponent', () => {
 
         await TestBed.configureTestingModule({
             imports: [AdminImpersonationSessionsPageComponent],
-            providers: [{ provide: AdminUsersService, useValue: usersService }],
+            providers: [{ provide: AdminUsersFacade, useValue: usersService }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminImpersonationSessionsPageComponent);

@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { LocalizationService } from '../../../../../services/localization.service';
+import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { BillingOverview } from '../../../../premium/models/billing.models';
 import type { BillingViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
 import { UserManageBillingSummaryComponent } from './user-manage-billing-summary';

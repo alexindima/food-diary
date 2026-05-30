@@ -8,7 +8,8 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { forkJoin } from 'rxjs';
 
-import { type AdminUser, type AdminUserLoginEvent, type AdminUserRoleAuditEvent, AdminUsersService } from '../api/admin-users.service';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
+import type { AdminUser, AdminUserLoginEvent, AdminUserRoleAuditEvent } from '../models/admin-user.models';
 
 const ACTIVITY_PREVIEW_LIMIT = 3;
 
@@ -34,7 +35,7 @@ export type AdminUserDetailsDialogResult = 'edit' | 'impersonate' | null;
 export class AdminUserDetailsDialogComponent {
     private readonly dialogRef = inject<FdUiDialogRef<AdminUserDetailsDialogComponent, AdminUserDetailsDialogResult>>(FdUiDialogRef);
     private readonly initialUser = inject<AdminUser>(FD_UI_DIALOG_DATA);
-    private readonly usersService = inject(AdminUsersService);
+    private readonly usersService = inject(AdminUsersFacade);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly user = signal<AdminUser>(this.initialUser);

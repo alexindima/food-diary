@@ -9,7 +9,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
-import { ReportService } from '../../api/report.service';
+import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { CreateReportDto } from '../../models/report.data';
 import { REPORT_REASON_MAX_LENGTH } from './report-dialog.tokens';
 
@@ -28,7 +28,7 @@ export type ReportDialogData = {
 export class ReportDialogComponent {
     private readonly dialogRef = inject<FdUiDialogRef<ReportDialogComponent, boolean>>(FdUiDialogRef);
     private readonly data = inject<ReportDialogData>(FD_UI_DIALOG_DATA);
-    private readonly reportService = inject(ReportService);
+    private readonly exploreInteractionsFacade = inject(ExploreInteractionsFacade);
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
@@ -50,8 +50,8 @@ export class ReportDialogComponent {
             reason,
         };
 
-        this.reportService
-            .create(dto)
+        this.exploreInteractionsFacade
+            .createReport(dto)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {

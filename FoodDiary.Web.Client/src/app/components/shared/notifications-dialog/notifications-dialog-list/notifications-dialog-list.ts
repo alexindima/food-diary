@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import type { NotificationItem } from '../../../../services/notification.service';
+import type { NotificationItem } from '../../../../shared/notifications/notification.service';
 import { NotificationsDialogItemComponent } from '../notifications-dialog-item/notifications-dialog-item';
 import type { NotificationViewModel } from '../notifications-dialog-lib/notifications-dialog.types';
 

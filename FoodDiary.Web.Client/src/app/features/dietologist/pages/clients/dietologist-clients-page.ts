@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import type { ClientSummary } from '../../../../shared/models/dietologist.data';
-import { DietologistService } from '../../api/dietologist.service';
+import { DietologistFacade } from '../../lib/dietologist.facade';
 import { buildClientCardViewModels } from './dietologist-clients-lib/dietologist-clients.mapper';
 import type { ClientCardViewModel } from './dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientsListComponent } from './dietologist-clients-list/dietologist-clients-list';
@@ -17,7 +17,7 @@ import { DietologistClientsListComponent } from './dietologist-clients-list/diet
     styleUrls: ['./dietologist-clients-page.scss'],
 })
 export class DietologistClientsPageComponent {
-    private readonly dietologistService = inject(DietologistService);
+    private readonly dietologistFacade = inject(DietologistFacade);
     private readonly router = inject(Router);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
@@ -35,7 +35,7 @@ export class DietologistClientsPageComponent {
             this.languageVersion.update(version => version + 1);
         });
 
-        this.dietologistService
+        this.dietologistFacade
             .getMyClients()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

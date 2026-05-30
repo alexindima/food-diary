@@ -22,7 +22,6 @@ import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../shared/lib/nutrition.constants';
@@ -30,6 +29,7 @@ import { calculateMacroBarState, checkCaloriesError, checkMacrosError } from '..
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
     type Consumption,

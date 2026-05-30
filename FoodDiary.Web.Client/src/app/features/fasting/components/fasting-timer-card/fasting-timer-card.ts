@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { FastingFacade } from '../../lib/fasting.facade';

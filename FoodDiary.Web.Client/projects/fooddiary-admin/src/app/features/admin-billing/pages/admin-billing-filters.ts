@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
-import type { AdminBillingTab } from '../api/admin-billing.service';
+import type { AdminBillingTab } from '../models/admin-billing.models';
 
 @Component({
     selector: 'fd-admin-billing-filters',

@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { GamificationFacade } from '../../lib/gamification.facade';
 import { GamificationBadgesCardComponent } from '../gamification-page-sections/badges-card/gamification-badges-card';
 import { GamificationHealthScoreCardComponent } from '../gamification-page-sections/health-score-card/gamification-health-score-card';

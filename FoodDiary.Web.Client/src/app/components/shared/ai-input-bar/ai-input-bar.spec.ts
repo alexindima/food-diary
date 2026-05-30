@@ -7,11 +7,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
-import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { AiFoodService } from '../../../shared/api/ai-food.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
-import { UserService } from '../../../shared/api/user.service';
+import { LocalizationService } from '../../../shared/i18n/localization.service';
+import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
+import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
+import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import { AiInputBarComponent } from './ai-input-bar';
 import type { AiInputBarMealDetails, AiInputBarResult } from './ai-input-bar.types';
@@ -65,9 +65,9 @@ async function setupAiInputBarAsync(mode: 'create' | 'emit' = 'emit'): Promise<A
     await TestBed.configureTestingModule({
         imports: [AiInputBarComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: AiFoodService, useValue: aiFoodService },
+            { provide: AiFoodFacade, useValue: aiFoodService },
             {
-                provide: UserService,
+                provide: UserFacade,
                 useValue: {
                     user: signal({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' }),
                     getInfoSilently: vi.fn().mockReturnValue(of(null)),
@@ -79,7 +79,7 @@ async function setupAiInputBarAsync(mode: 'create' | 'emit' = 'emit'): Promise<A
             { provide: NavigationService, useValue: { navigateToPremiumAccessAsync: vi.fn() } },
             { provide: FdUiDialogService, useValue: { open: vi.fn() } },
             {
-                provide: ImageUploadService,
+                provide: ImageUploadFacade,
                 useValue: {
                     requestUploadUrl: vi.fn(),
                     uploadToPresignedUrl: vi.fn(),

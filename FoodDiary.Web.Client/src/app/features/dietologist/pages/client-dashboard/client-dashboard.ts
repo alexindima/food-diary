@@ -14,7 +14,7 @@ import { catchError, forkJoin, type Observable, of, switchMap, tap } from 'rxjs'
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import type { ClientSummary, DietologistClientGoals, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
 import type { DashboardSnapshot } from '../../../dashboard/models/dashboard.data';
-import { DietologistService } from '../../api/dietologist.service';
+import { DietologistFacade } from '../../lib/dietologist.facade';
 import {
     buildBodyTiles,
     buildClientDashboardSections,
@@ -71,7 +71,7 @@ const PERIOD_PRESET_DAYS = {
 export class ClientDashboardComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly dietologistService = inject(DietologistService);
+    private readonly dietologistFacade = inject(DietologistFacade);
     private readonly formBuilder = inject(NonNullableFormBuilder);
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
@@ -142,7 +142,7 @@ export class ClientDashboardComponent {
 
     public constructor() {
         const clientId = this.route.snapshot.paramMap.get('clientId');
-        this.dietologistService
+        this.dietologistFacade
             .getMyClients()
             .pipe(
                 switchMap(clients => {
@@ -227,7 +227,7 @@ export class ClientDashboardComponent {
         }
 
         this.savingRecommendation.set(true);
-        this.dietologistService
+        this.dietologistFacade
             .createRecommendation(client.userId, { text })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -250,7 +250,7 @@ export class ClientDashboardComponent {
             return;
         }
 
-        this.dietologistService
+        this.dietologistFacade
             .disconnectClient(client.userId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -277,11 +277,9 @@ export class ClientDashboardComponent {
                 ? this.loadDashboardSnapshot(client, language).pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
                 : of(null),
             goals: client.permissions.shareGoals
-                ? this.dietologistService
-                      .getClientGoals(client.userId)
-                      .pipe(this.handleSectionLoadError<DietologistClientGoals, null>(null))
+                ? this.dietologistFacade.getClientGoals(client.userId).pipe(this.handleSectionLoadError<DietologistClientGoals, null>(null))
                 : of(null),
-            recommendations: this.dietologistService
+            recommendations: this.dietologistFacade
                 .getRecommendationsForClient(client.userId)
                 .pipe(this.handleSectionLoadError<DietologistRecommendation[], DietologistRecommendation[]>([])),
         }).pipe(
@@ -312,7 +310,7 @@ export class ClientDashboardComponent {
 
     private loadDashboardSnapshot(client: ClientSummary, language: string): Observable<DashboardSnapshot> {
         const period = this.getSelectedPeriodValue();
-        return this.dietologistService.getClientDashboard(client.userId, {
+        return this.dietologistFacade.getClientDashboard(client.userId, {
             dateFrom: period.dateFrom,
             dateTo: period.dateTo,
             locale: language,

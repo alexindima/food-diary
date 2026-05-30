@@ -5,7 +5,6 @@ import { catchError, map, type Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { ApiService } from '../../services/api.service';
-import type { NotificationPreferences, WebPushSubscriptionItem } from '../../services/notification.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import type { DietologistRelationship } from '../models/dietologist.data';
 import type {
@@ -18,6 +17,7 @@ import type {
     UpdateUserDto,
     User,
 } from '../models/user.data';
+import type { NotificationPreferences, WebPushSubscriptionItem } from '../notifications/notification.service';
 
 export type UserProfileOverview = {
     user: User;

@@ -4,9 +4,9 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { finalize } from 'rxjs';
 
-import { ThemeService } from '../../../../services/theme.service';
-import { UserService } from '../../../../shared/api/user.service';
+import { UserFacade } from '../../../../shared/lib/user.facade';
 import { UpdateUserAppearanceDto } from '../../../../shared/models/user.data';
+import { ThemeService } from '../../../../shared/theme/theme.service';
 import {
     APP_THEMES,
     APP_UI_STYLES,
@@ -30,7 +30,7 @@ export type DashboardAppearanceDialogData = {
 })
 export class DashboardAppearanceDialogComponent {
     private readonly themeService = inject(ThemeService);
-    private readonly userService = inject(UserService);
+    private readonly userFacade = inject(UserFacade);
     private readonly translateService = inject(TranslateService);
     private readonly data = inject<DashboardAppearanceDialogData>(FD_UI_DIALOG_DATA);
     private readonly initialTheme = this.data.theme;
@@ -91,7 +91,7 @@ export class DashboardAppearanceDialogComponent {
         const requestedUiStyle = this.selectedUiStyle();
         this.isSaving.set(true);
 
-        this.userService
+        this.userFacade
             .updateAppearance(
                 new UpdateUserAppearanceDto({
                     theme: requestedTheme,

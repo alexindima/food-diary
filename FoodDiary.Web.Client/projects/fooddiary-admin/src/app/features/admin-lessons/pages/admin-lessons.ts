@@ -6,8 +6,8 @@ import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialo
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { filter, switchMap } from 'rxjs';
 
-import { AdminLessonsService } from '../api/admin-lessons.service';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog';
+import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
 import type { AdminLesson, AdminLessonCreateRequest, AdminLessonsImportRequest } from '../models/admin-lesson.data';
 
 const DEFAULT_ESTIMATED_READ_MINUTES = 5;
@@ -21,7 +21,7 @@ const EXPORT_DATE_LENGTH = 10;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLessonsComponent {
-    private readonly lessonsService = inject(AdminLessonsService);
+    private readonly lessonsFacade = inject(AdminLessonsFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
@@ -37,7 +37,7 @@ export class AdminLessonsComponent {
 
     protected loadLessons(): void {
         this.isLoading.set(true);
-        this.lessonsService
+        this.lessonsFacade
             .getAll()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -111,7 +111,7 @@ export class AdminLessonsComponent {
             .afterClosed()
             .pipe(
                 filter((confirmed): confirmed is true => confirmed === true),
-                switchMap(() => this.lessonsService.delete(lesson.id)),
+                switchMap(() => this.lessonsFacade.delete(lesson.id)),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
@@ -158,7 +158,7 @@ export class AdminLessonsComponent {
                 return;
             }
 
-            this.lessonsService
+            this.lessonsFacade
                 .importLessons(payload)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({

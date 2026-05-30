@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
-import { ImageUploadService } from '../../../../shared/api/image-upload.service';
+import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
 import { PhotoUploadDialogComponent } from './photo-upload-dialog';
 
 type PhotoUploadDialogTestContext = {
@@ -20,7 +20,7 @@ async function setupPhotoUploadDialogAsync(): Promise<PhotoUploadDialogTestConte
         providers: [
             { provide: FdUiDialogRef, useValue: dialogRef },
             {
-                provide: ImageUploadService,
+                provide: ImageUploadFacade,
                 useValue: {
                     requestUploadUrl: vi.fn(),
                     uploadToPresignedUrl: vi.fn(),

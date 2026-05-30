@@ -11,11 +11,11 @@ import { type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { EMPTY, merge, type Observable } from 'rxjs';
 
-import { UserService } from '../../../../shared/api/user.service';
+import { matchFieldValidator } from '../../../../shared/forms/match-field.validator';
 import type { FormGroupControls } from '../../../../shared/lib/common.data';
+import { UserFacade } from '../../../../shared/lib/user.facade';
 import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
-import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../auth/lib/auth.constants';
 
 export type ChangePasswordDialogData = {
@@ -50,7 +50,7 @@ const CHANGE_PASSWORD_VALIDATION_ERRORS: FdValidationErrors = {
 })
 export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);
-    private readonly userService = inject(UserService);
+    private readonly userFacade = inject(UserFacade);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly data = inject<ChangePasswordDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
@@ -112,11 +112,11 @@ export class ChangePasswordDialogComponent {
         this.passwordError.set(null);
 
         const request$ = this.hasPassword
-            ? this.userService.changePassword({
+            ? this.userFacade.changePassword({
                   currentPassword,
                   newPassword,
               } satisfies ChangePasswordRequest)
-            : this.userService.setPassword({
+            : this.userFacade.setPassword({
                   newPassword,
               } satisfies SetPasswordRequest);
 

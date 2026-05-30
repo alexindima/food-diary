@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
-import { AdminMailInboxService } from '../api/admin-mail-inbox.service';
+import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
 
 type AdminMailInboxMessageSummaryViewModel = {
@@ -28,7 +28,7 @@ const MAX_MAIL_INBOX_LIMIT = 200;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminMailInboxComponent {
-    private readonly mailInboxService = inject(AdminMailInboxService);
+    private readonly mailInboxFacade = inject(AdminMailInboxFacade);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly messages = signal<AdminMailInboxMessageSummary[]>([]);
@@ -90,7 +90,7 @@ export class AdminMailInboxComponent {
 
     protected loadMessages(): void {
         this.isLoading.set(true);
-        this.mailInboxService
+        this.mailInboxFacade
             .getMessages(this.limit())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -108,7 +108,7 @@ export class AdminMailInboxComponent {
     protected selectMessage(message: AdminMailInboxMessageSummary): void {
         this.isDetailsLoading.set(true);
         this.selectedBodyMode.set('text');
-        this.mailInboxService
+        this.mailInboxFacade
             .getMessage(message.id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

@@ -6,7 +6,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DietologistService } from '../../api/dietologist.service';
+import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from '../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import { ClientDashboardComponent } from './client-dashboard';
 
@@ -208,7 +208,7 @@ function createComponent(clientId: string): void {
     TestBed.configureTestingModule({
         imports: [ClientDashboardComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: DietologistService, useValue: dietologistService },
+            { provide: DietologistFacade, useValue: dietologistService },
             { provide: Router, useValue: router },
             { provide: FdUiToastService, useValue: toastService },
             {

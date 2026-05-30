@@ -7,7 +7,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ReportService } from '../../api/report.service';
+import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ContentReport, CreateReportDto } from '../../models/report.data';
 import { ReportDialogComponent, type ReportDialogData } from './report-dialog';
 import { REPORT_REASON_MAX_LENGTH } from './report-dialog.tokens';
@@ -21,13 +21,13 @@ const dialogData: ReportDialogData = {
 
 let fixture: ComponentFixture<ReportDialogComponent>;
 let component: ReportDialogComponent;
-let reportService: ReportServiceMock;
+let reportService: ExploreInteractionsFacadeMock;
 let dialogRef: { close: ReturnType<typeof vi.fn> };
 let toastService: { success: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     reportService = {
-        create: vi.fn((dto: CreateReportDto) => of(createReport(dto))),
+        createReport: vi.fn((dto: CreateReportDto) => of(createReport(dto))),
     };
     dialogRef = { close: vi.fn() };
     toastService = { success: vi.fn() };
@@ -35,7 +35,7 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [ReportDialogComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: ReportService, useValue: reportService },
+            { provide: ExploreInteractionsFacade, useValue: reportService },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: dialogData },
             { provide: FdUiToastService, useValue: toastService },
@@ -54,7 +54,7 @@ describe('ReportDialogComponent', () => {
 
         component['onSubmit']();
 
-        expect(reportService.create).toHaveBeenCalledWith({
+        expect(reportService.createReport).toHaveBeenCalledWith({
             targetType: 'Recipe',
             targetId: 'recipe-1',
             reason: 'Spam',
@@ -68,11 +68,11 @@ describe('ReportDialogComponent', () => {
 
         component['onSubmit']();
 
-        expect(reportService.create).not.toHaveBeenCalled();
+        expect(reportService.createReport).not.toHaveBeenCalled();
     });
 
     it('resets submitting state on failure', () => {
-        reportService.create.mockReturnValueOnce(throwError(() => new Error('failed')));
+        reportService.createReport.mockReturnValueOnce(throwError(() => new Error('failed')));
         component['reasonControl'].setValue('Spam');
 
         component['onSubmit']();
@@ -93,12 +93,12 @@ describe('ReportDialogComponent', () => {
         component['onSubmit']();
 
         expect(component['reasonControl'].hasError('maxlength')).toBe(true);
-        expect(reportService.create).not.toHaveBeenCalled();
+        expect(reportService.createReport).not.toHaveBeenCalled();
     });
 });
 
-type ReportServiceMock = {
-    create: ReturnType<typeof vi.fn>;
+type ExploreInteractionsFacadeMock = {
+    createReport: ReturnType<typeof vi.fn>;
 };
 
 function createReport(dto: CreateReportDto): ContentReport {

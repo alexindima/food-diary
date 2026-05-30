@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
-import { FdCardHoverDirective } from '../../../../../../directives/card-hover.directive';
+import { FdCardHoverDirective } from '../../../../../../shared/ui/card-hover.directive';
 import type { LessonListItemViewModel } from '../../../../lib/lesson-view.mapper';
 
 @Component({

@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
 import { FastingCheckInCardComponent } from './fasting-check-in-card';
 

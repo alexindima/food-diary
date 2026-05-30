@@ -7,7 +7,8 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
-import { type AdminUser, AdminUsersService, type AdminUserUpdate } from '../api/admin-users.service';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
+import type { AdminUser, AdminUserUpdate } from '../models/admin-user.models';
 
 type AdminUserForm = {
     isActive: FormControl<boolean>;
@@ -26,7 +27,7 @@ type AdminUserForm = {
 export class AdminUserEditDialogComponent {
     private readonly dialogRef = inject<FdUiDialogRef<AdminUserEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly data = inject<AdminUser>(FD_UI_DIALOG_DATA);
-    private readonly usersService = inject(AdminUsersService);
+    private readonly usersService = inject(AdminUsersFacade);
     private readonly fb = inject(FormBuilder);
 
     protected readonly roles = ['Admin', 'Premium', 'Support'];

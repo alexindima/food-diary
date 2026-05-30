@@ -8,7 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
-import { ExploreService } from '../../api/explore.service';
+import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ExploreRecipe } from '../../models/explore.data';
 import { ExplorePageComponent } from './explore-page';
 import { EXPLORE_PAGE_SIZE } from './explore-page-lib/explore-page.constants';
@@ -22,12 +22,12 @@ const SELECTED_API_PAGE = 3;
 
 let fixture: ComponentFixture<ExplorePageComponent>;
 let component: ExplorePageComponent;
-let exploreService: { query: ReturnType<typeof vi.fn> };
+let exploreService: { queryRecipes: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     exploreService = {
-        query: vi.fn(() => of(createPage())),
+        queryRecipes: vi.fn(() => of(createPage())),
     };
     dialogService = {
         open: vi.fn(),
@@ -36,7 +36,7 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [ExplorePageComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: ExploreService, useValue: exploreService },
+            { provide: ExploreInteractionsFacade, useValue: exploreService },
             { provide: EXPLORE_SEARCH_DEBOUNCE_MS, useValue: 0 },
             { provide: FdUiDialogService, useValue: dialogService },
         ],
@@ -49,7 +49,7 @@ beforeEach(() => {
 
 describe('ExplorePageComponent', () => {
     it('loads newest recipes on init', () => {
-        expect(exploreService.query).toHaveBeenCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
+        expect(exploreService.queryRecipes).toHaveBeenCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
         expect(component['recipeData'].items()).toEqual([createRecipe()]);
     });
 
@@ -58,14 +58,14 @@ describe('ExplorePageComponent', () => {
 
         expect(component['sortBy']()).toBe('popular');
         expect(component['currentPageIndex']()).toBe(0);
-        expect(exploreService.query).toHaveBeenLastCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'popular' });
+        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'popular' });
     });
 
     it('loads selected page using one-based API page number', () => {
         component['onPageChange'](SELECTED_PAGE_INDEX);
 
         expect(component['currentPageIndex']()).toBe(SELECTED_PAGE_INDEX);
-        expect(exploreService.query).toHaveBeenLastCalledWith(SELECTED_API_PAGE, EXPLORE_PAGE_SIZE, {
+        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(SELECTED_API_PAGE, EXPLORE_PAGE_SIZE, {
             search: '',
             sortBy: 'newest',
         });

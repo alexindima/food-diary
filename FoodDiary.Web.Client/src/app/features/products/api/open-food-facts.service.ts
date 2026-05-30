@@ -4,20 +4,8 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
+import type { OpenFoodFactsProduct } from '../models/open-food-facts.data';
 import { OPEN_FOOD_FACTS_SEARCH_LIMIT } from './product-api.tokens';
-
-export type OpenFoodFactsProduct = {
-    barcode: string;
-    name: string;
-    brand?: string | null;
-    category?: string | null;
-    imageUrl?: string | null;
-    caloriesPer100G?: number | null;
-    proteinsPer100G?: number | null;
-    fatsPer100G?: number | null;
-    carbsPer100G?: number | null;
-    fiberPer100G?: number | null;
-};
 
 @Injectable({ providedIn: 'root' })
 export class OpenFoodFactsService extends ApiService {

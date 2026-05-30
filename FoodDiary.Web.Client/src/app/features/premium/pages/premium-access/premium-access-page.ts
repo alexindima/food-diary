@@ -8,11 +8,11 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../../services/auth.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
-import { PremiumBillingService } from '../../api/premium-billing.service';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
+import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../../models/billing.models';
 import { PremiumAccessBannersComponent } from '../premium-access-sections/access-banners/premium-access-banners';
 import { PremiumBenefitsCardComponent } from '../premium-access-sections/benefits-card/premium-benefits-card';
@@ -46,7 +46,7 @@ export class PremiumAccessPageComponent {
     private static readonly CheckoutActivationPollAttempts = 6;
     private static readonly CheckoutActivationPollDelayMs = 1500;
 
-    private readonly billingService = inject(PremiumBillingService);
+    private readonly billingService = inject(PremiumBillingFacade);
     private readonly paddleCheckoutService = inject(PaddleCheckoutService);
     private readonly authService = inject(AuthService);
     private readonly toastService = inject(FdUiToastService);

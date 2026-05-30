@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
-import { LikeService } from '../../api/like.service';
+import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 
 @Component({
     selector: 'fd-like-button',
@@ -12,7 +12,7 @@ import { LikeService } from '../../api/like.service';
     imports: [FdUiButtonComponent],
 })
 export class LikeButtonComponent {
-    private readonly likeService = inject(LikeService);
+    private readonly exploreInteractionsFacade = inject(ExploreInteractionsFacade);
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly recipeId = input.required<string>();
@@ -24,8 +24,8 @@ export class LikeButtonComponent {
 
     public constructor() {
         effect(() => {
-            this.likeService
-                .getStatus(this.recipeId())
+            this.exploreInteractionsFacade
+                .getLikeStatus(this.recipeId())
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(status => {
                     this.isLiked.set(status.isLiked);
@@ -40,8 +40,8 @@ export class LikeButtonComponent {
         }
 
         this.isToggling.set(true);
-        this.likeService
-            .toggle(this.recipeId())
+        this.exploreInteractionsFacade
+            .toggleLike(this.recipeId())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: status => {

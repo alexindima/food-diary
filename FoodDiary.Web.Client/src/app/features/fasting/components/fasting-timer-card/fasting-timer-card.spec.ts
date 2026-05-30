@@ -6,7 +6,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
 import type { FastingSession } from '../../models/fasting.data';
 import { FastingTimerCardComponent } from './fasting-timer-card';

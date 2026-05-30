@@ -5,11 +5,11 @@ import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
-import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { NotificationService } from '../../../services/notification.service';
 import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
+import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { UpdateUserDto, type User } from '../../../shared/models/user.data';
+import { NotificationService } from '../../../shared/notifications/notification.service';
 import { ProfileManageFacade } from './profile-manage.facade';
 
 const AUTOSAVE_DEBOUNCE_MS = 700;

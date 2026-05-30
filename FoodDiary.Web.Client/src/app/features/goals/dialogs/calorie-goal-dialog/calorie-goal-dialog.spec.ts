@@ -5,7 +5,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { GoalsService } from '../../api/goals.service';
+import { CalorieGoalFacade } from '../../lib/calorie-goal.facade';
 import type { GoalsResponse } from '../../models/goals.data';
 import { CalorieGoalDialogComponent, type CalorieGoalDialogData } from './calorie-goal-dialog';
 
@@ -18,17 +18,17 @@ const DEFAULT_DIALOG_DATA = { dailyCalorieTarget: DEFAULT_CALORIE_TARGET };
 describe('CalorieGoalDialogComponent', () => {
     let component: CalorieGoalDialogComponent;
     let fixture: ComponentFixture<CalorieGoalDialogComponent>;
-    let goalsServiceSpy: { updateGoals: ReturnType<typeof vi.fn> };
+    let calorieGoalFacadeSpy: { updateGoals: ReturnType<typeof vi.fn> };
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
     function createComponent(data: CalorieGoalDialogData | null = DEFAULT_DIALOG_DATA): void {
-        goalsServiceSpy = { updateGoals: vi.fn() };
+        calorieGoalFacadeSpy = { updateGoals: vi.fn() };
         dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
             imports: [CalorieGoalDialogComponent, TranslateModule.forRoot()],
             providers: [
-                { provide: GoalsService, useValue: goalsServiceSpy },
+                { provide: CalorieGoalFacade, useValue: calorieGoalFacadeSpy },
                 { provide: FdUiDialogRef, useValue: dialogRefSpy },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],
@@ -68,18 +68,18 @@ describe('CalorieGoalDialogComponent', () => {
     it('should submit updated goal', () => {
         createComponent();
         const updatedGoals: GoalsResponse = { dailyCalorieTarget: UPDATED_CALORIE_TARGET, calorieCyclingEnabled: false };
-        goalsServiceSpy.updateGoals.mockReturnValue(of(updatedGoals));
+        calorieGoalFacadeSpy.updateGoals.mockReturnValue(of(updatedGoals));
 
         component['form'].controls.dailyCalorieTarget.setValue(UPDATED_CALORIE_TARGET);
         component['save']();
 
-        expect(goalsServiceSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: UPDATED_CALORIE_TARGET });
+        expect(calorieGoalFacadeSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: UPDATED_CALORIE_TARGET });
         expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
     });
 
     it('should close dialog with false on update error', () => {
         createComponent();
-        goalsServiceSpy.updateGoals.mockReturnValue(throwError(() => new Error('fail')));
+        calorieGoalFacadeSpy.updateGoals.mockReturnValue(throwError(() => new Error('fail')));
 
         component['form'].controls.dailyCalorieTarget.setValue(UPDATED_CALORIE_TARGET);
         component['save']();
@@ -97,17 +97,17 @@ describe('CalorieGoalDialogComponent', () => {
         createComponent();
         component['form'].controls.dailyCalorieTarget.setValue(-1);
         component['save']();
-        expect(goalsServiceSpy.updateGoals).not.toHaveBeenCalled();
+        expect(calorieGoalFacadeSpy.updateGoals).not.toHaveBeenCalled();
     });
 
     it('should submit null when calorie target is cleared', () => {
         createComponent();
         const updatedGoals: GoalsResponse = { dailyCalorieTarget: null, calorieCyclingEnabled: false };
-        goalsServiceSpy.updateGoals.mockReturnValue(of(updatedGoals));
+        calorieGoalFacadeSpy.updateGoals.mockReturnValue(of(updatedGoals));
 
         component['form'].controls.dailyCalorieTarget.setValue(null);
         component['save']();
 
-        expect(goalsServiceSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: null });
+        expect(calorieGoalFacadeSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: null });
     });
 });

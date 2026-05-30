@@ -6,10 +6,9 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import { ImageUploadService } from '../../../../shared/api/image-upload.service';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
 import { MeasurementUnit } from '../../models/product.data';
 import { ProductAiRecognitionDialogComponent } from './product-ai-recognition-dialog';
 
@@ -23,20 +22,18 @@ const CONFIDENCE = 0.95;
 
 let fixture: ComponentFixture<ProductAiRecognitionDialogComponent>;
 let component: ProductAiRecognitionDialogComponent;
-let aiFoodService: {
+let productAiRecognitionFacade: {
     analyzeFoodImage: ReturnType<typeof vi.fn>;
     calculateNutrition: ReturnType<typeof vi.fn>;
+    deleteAsset: ReturnType<typeof vi.fn>;
 };
-let imageUploadService: { deleteAsset: ReturnType<typeof vi.fn> };
 let dialogRef: { close: ReturnType<typeof vi.fn> };
 let logger: { warn: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
-    aiFoodService = {
+    productAiRecognitionFacade = {
         analyzeFoodImage: vi.fn(),
         calculateNutrition: vi.fn(),
-    };
-    imageUploadService = {
         deleteAsset: vi.fn().mockReturnValue(of(null)),
     };
     dialogRef = {
@@ -45,14 +42,13 @@ beforeEach(() => {
     logger = {
         warn: vi.fn(),
     };
-    aiFoodService.analyzeFoodImage.mockReturnValue(of({ items: [createVisionItem()] }));
-    aiFoodService.calculateNutrition.mockReturnValue(of(createNutrition()));
+    productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(of({ items: [createVisionItem()] }));
+    productAiRecognitionFacade.calculateNutrition.mockReturnValue(of(createNutrition()));
 
     TestBed.configureTestingModule({
         imports: [ProductAiRecognitionDialogComponent],
         providers: [
-            { provide: AiFoodService, useValue: aiFoodService },
-            { provide: ImageUploadService, useValue: imageUploadService },
+            { provide: ProductAiRecognitionFacade, useValue: productAiRecognitionFacade },
             { provide: FrontendLoggerService, useValue: logger },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: { initialDescription: ' fresh apple ' } },
@@ -101,11 +97,11 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
         component['startAnalysis']();
         component['apply']();
 
-        expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledWith({
+        expect(productAiRecognitionFacade.analyzeFoodImage).toHaveBeenCalledWith({
             imageAssetId: 'asset-1',
             description: 'fresh apple',
         });
-        expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({
+        expect(productAiRecognitionFacade.calculateNutrition).toHaveBeenCalledWith({
             items: [{ ...createVisionItem(), unit: 'g' }],
         });
         expect(component['statusKey']()).toBe('PRODUCT_AI_DIALOG.STATUS_DONE');
@@ -126,18 +122,20 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
     });
 
     it('maps recognition API errors and skips nutrition calculation', () => {
-        aiFoodService.analyzeFoodImage.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.Forbidden })));
+        productAiRecognitionFacade.analyzeFoodImage.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.Forbidden })));
         component['onImageChanged'](createImageSelection());
 
         component['startAnalysis']();
 
         expect(component['errorKey']()).toBe('PRODUCT_AI_DIALOG.ERROR_PREMIUM');
         expect(component['hasAnalyzed']()).toBe(true);
-        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        expect(productAiRecognitionFacade.calculateNutrition).not.toHaveBeenCalled();
     });
 
     it('maps nutrition API errors while keeping recognized items visible', () => {
-        aiFoodService.calculateNutrition.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.InternalServerError })));
+        productAiRecognitionFacade.calculateNutrition.mockReturnValueOnce(
+            throwError(() => ({ status: HttpStatusCode.InternalServerError })),
+        );
         component['onImageChanged'](createImageSelection());
 
         component['startAnalysis']();
@@ -155,12 +153,12 @@ describe('ProductAiRecognitionDialogComponent close', () => {
 
         component['close']();
 
-        expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
+        expect(productAiRecognitionFacade.deleteAsset).toHaveBeenCalledWith('asset-1');
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });
 
     it('logs cleanup errors without blocking close', () => {
-        imageUploadService.deleteAsset.mockReturnValueOnce(throwError(() => new Error('Delete failed')));
+        productAiRecognitionFacade.deleteAsset.mockReturnValueOnce(throwError(() => new Error('Delete failed')));
         component['onImageChanged'](createImageSelection());
 
         component['close']();

@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
-import type { AdminUser } from '../api/admin-users.service';
+import type { AdminUser } from '../models/admin-user.models';
 
 @Component({
     selector: 'fd-admin-users-table',

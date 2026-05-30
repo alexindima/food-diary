@@ -8,8 +8,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { AUTH_EMAIL_RESEND_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { UserService } from '../../../../shared/api/user.service';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
+import { UserFacade } from '../../../../shared/lib/user.facade';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { EmailVerificationRealtimeService } from '../../lib/email-verification-r
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailVerificationPendingComponent {
-    private readonly userService = inject(UserService);
+    private readonly userFacade = inject(UserFacade);
     private readonly authService = inject(AuthService);
     private readonly navigationService = inject(NavigationService);
     private readonly translateService = inject(TranslateService);
@@ -48,7 +48,7 @@ export class EmailVerificationPendingComponent {
 
     protected onRefreshStatus(): void {
         this.isChecking.set(true);
-        this.userService
+        this.userFacade
             .getInfo()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(user => {
@@ -123,7 +123,7 @@ export class EmailVerificationPendingComponent {
     }
 
     private loadCurrentUser(): void {
-        this.userService
+        this.userFacade
             .getInfo()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(user => {

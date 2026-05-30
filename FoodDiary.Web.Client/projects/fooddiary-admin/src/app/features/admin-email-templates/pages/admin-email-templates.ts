@@ -4,8 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
-import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
 import { AdminEmailTemplateEditDialogComponent } from '../dialogs/admin-email-template-edit-dialog';
+import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 
 @Component({
@@ -16,7 +16,7 @@ import type { AdminEmailTemplate } from '../models/admin-email-template.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEmailTemplatesComponent {
-    private readonly templatesService = inject(AdminEmailTemplatesService);
+    private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -29,7 +29,7 @@ export class AdminEmailTemplatesComponent {
 
     protected loadTemplates(): void {
         this.isLoading.set(true);
-        this.templatesService
+        this.templatesFacade
             .getAll()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

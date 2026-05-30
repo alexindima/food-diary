@@ -5,7 +5,7 @@ import type { FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { EMPTY, type Observable } from 'rxjs';
 
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { parseIntegerInput } from '../../../../shared/lib/number.utils';
 import { HOURS_PER_DAY } from '../../../../shared/lib/time.constants';
 import {

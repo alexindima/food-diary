@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
+import { FdCardHoverDirective } from '../../../../shared/ui/card-hover.directive';
 
 @Component({
     selector: 'fd-dashboard-card-shell',

@@ -3,7 +3,7 @@ import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../../services/auth.service';
-import { LocalizationService } from '../../../../../services/localization.service';
+import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import { AuthFlowFacade } from './auth-flow.facade';
 
 let authServiceMock: {

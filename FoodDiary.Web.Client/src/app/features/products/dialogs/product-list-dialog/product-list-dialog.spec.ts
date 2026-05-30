@@ -7,8 +7,8 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import type { OpenFoodFactsProduct } from '../../api/open-food-facts.service';
-import { ProductListFacade } from '../../components/list/product-list-lib/product-list.facade';
+import { ProductListFacade } from '../../lib/list/product-list.facade';
+import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { ProductAddDialogComponent } from '../product-add-dialog/product-add-dialog';
 import { ProductListDialogComponent } from './product-list-dialog';

@@ -8,14 +8,18 @@ import {
     type ConfirmDeleteDialogData,
 } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { AuthService } from '../../../services/auth.service';
-import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { type NotificationPreferences, NotificationService, type WebPushSubscriptionItem } from '../../../services/notification.service';
-import { ThemeService } from '../../../services/theme.service';
 import { UserService } from '../../../shared/api/user.service';
+import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { UpdateUserDto, User } from '../../../shared/models/user.data';
+import {
+    type NotificationPreferences,
+    NotificationService,
+    type WebPushSubscriptionItem,
+} from '../../../shared/notifications/notification.service';
+import { ThemeService } from '../../../shared/theme/theme.service';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog';

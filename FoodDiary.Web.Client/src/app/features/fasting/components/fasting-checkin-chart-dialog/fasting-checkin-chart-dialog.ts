@@ -5,7 +5,7 @@ import { FdUiLineChartComponent, type FdUiLineChartPoint } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
 
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { FastingCheckIn } from '../../models/fasting.data';
 

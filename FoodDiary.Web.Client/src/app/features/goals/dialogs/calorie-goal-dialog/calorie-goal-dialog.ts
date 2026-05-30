@@ -8,7 +8,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
-import { GoalsService } from '../../api/goals.service';
+import { CalorieGoalFacade } from '../../lib/calorie-goal.facade';
 
 export type CalorieGoalDialogData = {
     dailyCalorieTarget?: number | null;
@@ -24,7 +24,7 @@ export type CalorieGoalDialogData = {
 export class CalorieGoalDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<CalorieGoalDialogComponent>);
     private readonly data = inject<CalorieGoalDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
-    private readonly goalsService = inject(GoalsService);
+    private readonly calorieGoalFacade = inject(CalorieGoalFacade);
 
     protected readonly form = new FormGroup({
         dailyCalorieTarget: new FormControl<number | null>(null, [Validators.min(0)]),
@@ -46,7 +46,7 @@ export class CalorieGoalDialogComponent {
             dailyCalorieTarget: this.form.value.dailyCalorieTarget ?? null,
         };
 
-        this.goalsService.updateGoals(payload).subscribe({
+        this.calorieGoalFacade.updateGoals(payload).subscribe({
             next: result => {
                 this.dialogRef.close(result !== null);
             },

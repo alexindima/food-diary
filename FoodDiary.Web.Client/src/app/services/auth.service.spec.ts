@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../environments/environment';
 import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../features/auth/models/auth.data';
 import { QuickMealService } from '../features/meals/lib/quick/quick-meal.service';
+import { LocalizationService } from '../shared/i18n/localization.service';
 import { AuthService } from './auth.service';
-import { LocalizationService } from './localization.service';
 import { NavigationService } from './navigation.service';
 
 const JWT_SECONDS_PER_MS = 1000;

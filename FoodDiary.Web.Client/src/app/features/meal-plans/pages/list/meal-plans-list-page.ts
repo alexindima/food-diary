@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanCards } from '../../lib/meal-plan-view.mapper';
 import type { DietType } from '../../models/meal-plan.data';

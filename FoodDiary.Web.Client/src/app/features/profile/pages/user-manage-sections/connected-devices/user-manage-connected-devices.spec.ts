@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import type { WebPushSubscriptionItem } from '../../../../../services/notification.service';
+import type { WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
 import type { ConnectedDeviceViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
 import { UserManageConnectedDevicesComponent } from './user-manage-connected-devices';
 

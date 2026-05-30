@@ -8,8 +8,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { NotificationService } from '../../../../services/notification.service';
-import { PushNotificationService } from '../../../../services/push-notification.service';
+import { NotificationService } from '../../../../shared/notifications/notification.service';
+import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
 import { DashboardNotificationSettingsDialogComponent } from './dashboard-notification-settings-dialog';
 
 type NotificationSettingsContext = {

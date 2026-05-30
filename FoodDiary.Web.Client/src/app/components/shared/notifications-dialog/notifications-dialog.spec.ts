@@ -6,7 +6,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { type NotificationItem, NotificationService } from '../../../services/notification.service';
+import { type NotificationItem, NotificationService } from '../../../shared/notifications/notification.service';
 import { NotificationsDialogComponent } from './notifications-dialog';
 
 type NotificationsDialogComponentTestApi = NotificationsDialogComponent & {

@@ -9,10 +9,10 @@ import { EMPTY, type Observable } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { LocalizationService } from '../../../../services/localization.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../../shared/lib/time.constants';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { FastingCheckInCardComponent } from '../../components/fasting-check-in-card/fasting-check-in-card';
 import {
     FastingCheckInChartDialogComponent,

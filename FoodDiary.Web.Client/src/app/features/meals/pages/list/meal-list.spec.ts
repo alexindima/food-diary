@@ -8,9 +8,9 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';

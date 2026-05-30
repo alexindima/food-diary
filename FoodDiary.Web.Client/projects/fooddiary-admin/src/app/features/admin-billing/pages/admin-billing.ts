@@ -4,15 +4,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
-import {
-    type AdminBillingFilters,
-    type AdminBillingPayment,
-    AdminBillingService,
-    type AdminBillingSubscription,
-    type AdminBillingTab,
-    type AdminBillingWebhookEvent,
-    type PagedResponse,
-} from '../api/admin-billing.service';
+import { AdminBillingFacade } from '../lib/admin-billing.facade';
+import type {
+    AdminBillingFilters,
+    AdminBillingPayment,
+    AdminBillingSubscription,
+    AdminBillingTab,
+    AdminBillingWebhookEvent,
+    PagedResponse,
+} from '../models/admin-billing.models';
 import type {
     AdminBillingPaymentViewModel,
     AdminBillingSubscriptionViewModel,
@@ -46,7 +46,7 @@ const SHORT_ID_SUFFIX_START = -6;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminBillingComponent {
-    private readonly billingService = inject(AdminBillingService);
+    private readonly billingService = inject(AdminBillingFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly locale = inject(LOCALE_ID);
     private loadRequestId = 0;

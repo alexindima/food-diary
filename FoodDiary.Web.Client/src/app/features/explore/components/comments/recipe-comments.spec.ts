@@ -6,7 +6,7 @@ import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { PageOf } from '../../../../shared/models/page-of.data';
-import { CommentService } from '../../api/comment.service';
+import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeComment } from '../../models/comment.data';
 import { RecipeCommentsComponent } from './recipe-comments';
 import { COMMENTS_PAGE_SIZE } from './recipe-comments-lib/recipe-comments.constants';
@@ -15,11 +15,11 @@ const TOTAL_ITEMS = 2;
 
 let fixture: ComponentFixture<RecipeCommentsComponent>;
 let component: RecipeCommentsComponent;
-let commentService: CommentServiceMock;
+let commentService: ExploreInteractionsFacadeMock;
 let dialogService: { open: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
-    commentService = createCommentServiceMock();
+    commentService = createExploreInteractionsFacadeMock();
     dialogService = {
         open: vi.fn(() => ({
             afterClosed: (): Observable<boolean> => of(true),
@@ -29,7 +29,7 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [RecipeCommentsComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: CommentService, useValue: commentService },
+            { provide: ExploreInteractionsFacade, useValue: commentService },
             { provide: FdUiDialogService, useValue: dialogService },
         ],
     });
@@ -93,14 +93,14 @@ describe('RecipeCommentsComponent', () => {
     });
 });
 
-type CommentServiceMock = {
+type ExploreInteractionsFacadeMock = {
     getComments: ReturnType<typeof vi.fn>;
     createComment: ReturnType<typeof vi.fn>;
     updateComment: ReturnType<typeof vi.fn>;
     deleteComment: ReturnType<typeof vi.fn>;
 };
 
-function createCommentServiceMock(): CommentServiceMock {
+function createExploreInteractionsFacadeMock(): ExploreInteractionsFacadeMock {
     return {
         getComments: vi.fn(() => of(createPage([createComment()]))),
         createComment: vi.fn(() => of(createComment())),

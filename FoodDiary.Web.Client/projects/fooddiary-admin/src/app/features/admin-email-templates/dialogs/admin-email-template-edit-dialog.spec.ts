@@ -4,7 +4,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
+import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import { AdminEmailTemplateEditDialogComponent } from './admin-email-template-edit-dialog';
 
 const TEMPLATE = {
@@ -40,7 +40,7 @@ async function setupEmailTemplateDialogAsync(): Promise<EmailTemplateDialogConte
     await TestBed.configureTestingModule({
         imports: [AdminEmailTemplateEditDialogComponent],
         providers: [
-            { provide: AdminEmailTemplatesService, useValue: service },
+            { provide: AdminEmailTemplatesFacade, useValue: service },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: TEMPLATE },
         ],

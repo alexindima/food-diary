@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import { ImageUploadFieldComponent } from './image-upload-field';
 
 type ImageUploadFieldTestContext = {
@@ -34,7 +34,7 @@ async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext
     await TestBed.configureTestingModule({
         imports: [ImageUploadFieldComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: ImageUploadService, useValue: imageUploadService },
+            { provide: ImageUploadFacade, useValue: imageUploadService },
             { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },
         ],
     }).compileComponents();

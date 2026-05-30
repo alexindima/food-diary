@@ -6,12 +6,12 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
-import { AdminModerationService } from '../api/admin-moderation.service';
 import {
     AdminModerationActionDialogComponent,
     type AdminModerationActionDialogData,
     type AdminModerationActionDialogResult,
 } from '../dialogs/admin-moderation-action-dialog';
+import { AdminModerationFacade } from '../lib/admin-moderation.facade';
 import type { AdminContentReport } from '../models/admin-moderation.data';
 
 type AdminContentReportViewModel = {
@@ -31,7 +31,7 @@ const ADMIN_MODERATION_PAGE_SIZE = 20;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminModerationComponent {
-    private readonly moderationService = inject(AdminModerationService);
+    private readonly moderationFacade = inject(AdminModerationFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly locale = inject(LOCALE_ID);
@@ -58,7 +58,7 @@ export class AdminModerationComponent {
 
     protected loadReports(): void {
         this.isLoading.set(true);
-        this.moderationService
+        this.moderationFacade
             .getReports(this.page(), this.limit, this.resolveStatusFilter())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

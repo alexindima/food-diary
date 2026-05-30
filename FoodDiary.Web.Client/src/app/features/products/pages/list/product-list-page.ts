@@ -11,15 +11,15 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base';
-import { ProductListFacade } from '../../components/list/product-list-lib/product-list.facade';
 import { ProductListEmptyStateComponent } from '../../components/list/product-list-sections/product-list-empty-state/product-list-empty-state';
 import { ProductListFavoritesComponent } from '../../components/list/product-list-sections/product-list-favorites/product-list-favorites';
 import { ProductListGroupsComponent } from '../../components/list/product-list-sections/product-list-groups/product-list-groups';
 import { ProductListOffSectionComponent } from '../../components/list/product-list-sections/product-list-off-section/product-list-off-section';
 import { ProductListPaginationComponent } from '../../components/list/product-list-sections/product-list-pagination/product-list-pagination';
+import { ProductListFacade } from '../../lib/list/product-list.facade';
 import type { Product } from '../../models/product.data';
 
 @Component({

@@ -23,13 +23,13 @@ import { GlobalLoadingInterceptor } from './interceptor/global-loading.intercept
 import { RetryInterceptor } from './interceptor/retry.interceptor';
 import { AuthService } from './services/auth.service';
 import { GlobalErrorHandler } from './services/error-handler.service';
-import { FoodDiaryTranslationLoader } from './services/food-diary-translation.loader';
 import { FrontendObservabilityService } from './services/frontend-observability.service';
 import { IdleSelectivePreloadingStrategy } from './services/idle-selective-preloading.strategy';
-import { LocalizationService } from './services/localization.service';
 import { LoggingApiService } from './services/logging-api.service';
-import { ThemeService } from './services/theme.service';
 import { UserService } from './shared/api/user.service';
+import { FoodDiaryTranslationLoader } from './shared/i18n/food-diary-translation.loader';
+import { LocalizationService } from './shared/i18n/localization.service';
+import { ThemeService } from './shared/theme/theme.service';
 
 const isBrowserEnvironment = typeof window !== 'undefined';
 

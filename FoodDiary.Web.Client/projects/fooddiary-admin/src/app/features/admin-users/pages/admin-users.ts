@@ -7,10 +7,11 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { environment } from '../../../../environments/environment';
-import { type AdminImpersonationStart, type AdminUser, AdminUsersService, type AdminUserStatusFilter } from '../api/admin-users.service';
 import { AdminUserDetailsDialogComponent, type AdminUserDetailsDialogResult } from '../dialogs/admin-user-details-dialog';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
+import type { AdminImpersonationStart, AdminUser, AdminUserStatusFilter } from '../models/admin-user.models';
 import { AdminUsersTableComponent } from './admin-users-table';
 
 const ADMIN_USERS_PAGE_SIZE = 20;
@@ -23,7 +24,7 @@ const ADMIN_USERS_PAGE_SIZE = 20;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminUsersComponent {
-    private readonly usersService = inject(AdminUsersService);
+    private readonly usersService = inject(AdminUsersFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);

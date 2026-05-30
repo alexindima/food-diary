@@ -7,9 +7,9 @@ import { EMPTY, type Observable, of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import type { OpenFoodFactsProduct } from '../../api/open-food-facts.service';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
-import { ProductListFacade } from '../../components/list/product-list-lib/product-list.facade';
+import { ProductListFacade } from '../../lib/list/product-list.facade';
+import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { ProductListPageComponent } from './product-list-page';
 

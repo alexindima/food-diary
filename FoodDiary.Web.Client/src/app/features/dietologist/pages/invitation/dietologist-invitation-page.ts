@@ -11,7 +11,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
-import { DietologistService } from '../../api/dietologist.service';
+import { DietologistFacade } from '../../lib/dietologist.facade';
 
 type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expired' | 'revoked' | 'error';
 
@@ -24,7 +24,7 @@ type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expi
 })
 export class DietologistInvitationPageComponent {
     private readonly route = inject(ActivatedRoute);
-    private readonly dietologistService = inject(DietologistService);
+    private readonly dietologistFacade = inject(DietologistFacade);
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
@@ -70,7 +70,7 @@ export class DietologistInvitationPageComponent {
         }
 
         this.isSubmitting.set(true);
-        this.dietologistService
+        this.dietologistFacade
             .acceptInvitationForCurrentUser(invitationId)
             .pipe(
                 switchMap(() => this.authService.refreshToken().pipe(catchError(() => of(null)))),
@@ -97,7 +97,7 @@ export class DietologistInvitationPageComponent {
         }
 
         this.isSubmitting.set(true);
-        this.dietologistService
+        this.dietologistFacade
             .declineInvitationForCurrentUser(invitationId)
             .pipe(
                 finalize(() => {
@@ -133,7 +133,7 @@ export class DietologistInvitationPageComponent {
         }
 
         this.state.set('loading');
-        this.dietologistService
+        this.dietologistFacade
             .getInvitationForCurrentUser(invitationId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

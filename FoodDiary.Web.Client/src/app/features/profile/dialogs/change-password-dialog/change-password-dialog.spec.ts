@@ -5,7 +5,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { UserService } from '../../../../shared/api/user.service';
+import { UserFacade } from '../../../../shared/lib/user.facade';
 import { ChangePasswordDialogComponent, type ChangePasswordDialogData } from './change-password-dialog';
 
 let component: ChangePasswordDialogComponent;
@@ -21,7 +21,7 @@ function configureComponent(dialogData: ChangePasswordDialogData | null = null):
     TestBed.configureTestingModule({
         imports: [ChangePasswordDialogComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: UserService, useValue: userServiceSpy },
+            { provide: UserFacade, useValue: userServiceSpy },
             { provide: FdUiDialogRef, useValue: dialogRefSpy },
             { provide: FD_UI_DIALOG_DATA, useValue: dialogData },
         ],

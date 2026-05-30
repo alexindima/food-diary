@@ -10,7 +10,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import { AdminLessonsService } from '../api/admin-lessons.service';
+import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
 import { type AdminLesson, CONTENT_MAX_LENGTH, LESSON_CATEGORIES, LESSON_DIFFICULTIES, LESSON_LOCALES } from '../models/admin-lesson.data';
 
 type LessonForm = {
@@ -42,7 +42,7 @@ const DEFAULT_SORT_ORDER = 0;
 export class AdminLessonEditDialogComponent {
     protected readonly data = inject<AdminLesson>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminLessonEditDialogComponent, boolean>>(FdUiDialogRef);
-    private readonly service = inject(AdminLessonsService);
+    private readonly lessonsFacade = inject(AdminLessonsFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
 
@@ -124,7 +124,7 @@ export class AdminLessonEditDialogComponent {
             sortOrder: value.sortOrder,
         };
 
-        const operation = this.isNew ? this.service.create(request) : this.service.update(this.data.id, request);
+        const operation = this.isNew ? this.lessonsFacade.create(request) : this.lessonsFacade.update(this.data.id, request);
 
         operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: () => {

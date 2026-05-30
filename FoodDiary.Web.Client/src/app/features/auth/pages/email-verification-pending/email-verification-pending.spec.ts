@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { UserService } from '../../../../shared/api/user.service';
+import { UserFacade } from '../../../../shared/lib/user.facade';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
 import { EmailVerificationPendingComponent } from './email-verification-pending';
 
@@ -87,7 +87,7 @@ function createComponent(autoResend: boolean): void {
     TestBed.configureTestingModule({
         imports: [EmailVerificationPendingComponent],
         providers: [
-            { provide: UserService, useValue: userServiceMock },
+            { provide: UserFacade, useValue: userServiceMock },
             { provide: AuthService, useValue: authServiceMock },
             { provide: NavigationService, useValue: navigationServiceMock },
             { provide: EmailVerificationRealtimeService, useValue: realtimeServiceMock },

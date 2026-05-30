@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { DietologistService } from '../../api/dietologist.service';
+import { DietologistFacade } from '../../lib/dietologist.facade';
 import { DietologistInvitationPageComponent } from './dietologist-invitation-page';
 
 let fixture: ComponentFixture<DietologistInvitationPageComponent>;
@@ -77,7 +77,7 @@ function createComponent(): void {
     TestBed.configureTestingModule({
         imports: [DietologistInvitationPageComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: DietologistService, useValue: dietologistService },
+            { provide: DietologistFacade, useValue: dietologistService },
             { provide: NavigationService, useValue: navigationService },
             { provide: AuthService, useValue: authService },
             {

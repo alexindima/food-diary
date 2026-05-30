@@ -1,0 +1,131 @@
+import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, makeStateKey, PLATFORM_ID, type StateKey, TransferState } from '@angular/core';
+import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
+import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+import { PUBLIC_SEO_PATHS } from '../../config/public-seo-landing-routes.config';
+
+type TranslationDictionary = TranslationObject;
+type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
+
+function makeTranslationStateKey(lang: string, bundle: TranslationBundle): StateKey<TranslationDictionary> {
+    return makeStateKey<TranslationDictionary>(`fd-i18n:${lang}:${bundle}`);
+}
+
+@Injectable({ providedIn: 'root' })
+export class FoodDiaryTranslationLoader extends TranslateLoader {
+    private readonly http = inject(HttpClient);
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly transferState = inject(TransferState);
+    private readonly cache = new Map<string, Observable<TranslationDictionary>>();
+
+    public getTranslation(lang: string): Observable<TranslationDictionary> {
+        return this.loadBundles(lang, this.getInitialBundles(this.document.location.pathname));
+    }
+
+    public loadApplicationTranslations(lang: string): Observable<TranslationDictionary> {
+        return this.loadBundles(lang, ['app']);
+    }
+
+    public loadRouteTranslations(lang: string, pathname: string): Observable<TranslationDictionary> {
+        return this.loadBundles(lang, this.getInitialBundles(pathname));
+    }
+
+    public isPublicRoute(pathname: string): boolean {
+        return this.isPublicPath(pathname);
+    }
+
+    private loadBundles(lang: string, bundles: readonly TranslationBundle[]): Observable<TranslationDictionary> {
+        if (bundles.length === 0) {
+            return of({});
+        }
+
+        return forkJoin(bundles.map(bundle => this.loadBundle(lang, bundle))).pipe(map(parts => mergeTranslations(parts)));
+    }
+
+    private loadBundle(lang: string, bundle: TranslationBundle): Observable<TranslationDictionary> {
+        const key = `${lang}:${bundle}`;
+        const cached = this.cache.get(key);
+        if (cached !== undefined) {
+            return cached;
+        }
+
+        const transferStateKey = makeTranslationStateKey(lang, bundle);
+        if (isPlatformBrowser(this.platformId) && this.transferState.hasKey(transferStateKey)) {
+            const transferred = this.transferState.get(transferStateKey, {});
+            this.transferState.remove(transferStateKey);
+            const request = of(transferred).pipe(shareReplay({ bufferSize: 1, refCount: false }));
+            this.cache.set(key, request);
+            return request;
+        }
+
+        const url = `./assets/i18n/${lang}/${bundle}.json?v=${environment.buildVersion ?? 'dev'}`;
+        const request = this.http.get<TranslationDictionary>(url).pipe(
+            catchError(() => of({})),
+            tap(translations => {
+                if (isPlatformServer(this.platformId)) {
+                    this.transferState.set(transferStateKey, translations);
+                }
+            }),
+            shareReplay({ bufferSize: 1, refCount: false }),
+        );
+        this.cache.set(key, request);
+        return request;
+    }
+
+    private getInitialBundles(pathname: string): readonly TranslationBundle[] {
+        const normalizedPath = normalizePath(pathname);
+        if (this.isLandingPath(normalizedPath)) {
+            return ['core', 'landing'];
+        }
+
+        if (normalizedPath === '/privacy-policy') {
+            return ['core', 'privacy'];
+        }
+
+        if (this.isSeoPath(normalizedPath)) {
+            return ['core', 'seo'];
+        }
+
+        return ['core', 'app'];
+    }
+
+    private isPublicPath(pathname: string): boolean {
+        const normalizedPath = normalizePath(pathname);
+        return this.isLandingPath(normalizedPath) || normalizedPath === '/privacy-policy' || this.isSeoPath(normalizedPath);
+    }
+
+    private isLandingPath(normalizedPath: string): boolean {
+        return normalizedPath === '/' || normalizedPath.startsWith('/auth');
+    }
+
+    private isSeoPath(normalizedPath: string): boolean {
+        return PUBLIC_SEO_PATHS.has(normalizedPath);
+    }
+}
+
+function normalizePath(pathname: string): string {
+    return pathname.split(/[?#]/u, 1)[0].toLowerCase();
+}
+
+function mergeTranslations(parts: readonly TranslationDictionary[]): TranslationDictionary {
+    return parts.reduce<TranslationDictionary>((result, part) => deepMerge(result, part), {});
+}
+
+function deepMerge(target: TranslationDictionary, source: TranslationDictionary): TranslationDictionary {
+    const output: TranslationDictionary = { ...target };
+
+    for (const [key, value] of Object.entries(source)) {
+        const targetValue = output[key];
+        output[key] = isDictionary(targetValue) && isDictionary(value) ? deepMerge(targetValue, value) : value;
+    }
+
+    return output;
+}
+
+function isDictionary(value: unknown): value is TranslationDictionary {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}

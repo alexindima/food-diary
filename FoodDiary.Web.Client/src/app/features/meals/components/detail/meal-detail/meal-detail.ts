@@ -15,9 +15,9 @@ import {
     NutritionEditorComponent,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import { MealDetailFacade } from '../../../lib/detail/meal-detail.facade';
 import type { Meal } from '../../../models/meal.data';
 import { MEAL_DETAIL_MACRO_SUMMARY_LIMIT } from '../meal-detail-lib/meal-detail.config';
-import { MealDetailFacade } from '../meal-detail-lib/meal-detail.facade';
 import { buildMealDetailViewModel, type MealDetailNutritionForm } from '../meal-detail-lib/meal-detail.mapper';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';
 import { MealDetailSummaryComponent } from '../meal-detail-summary/meal-detail-summary';

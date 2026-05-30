@@ -12,8 +12,8 @@ import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/
 import { StatisticsBodyComponent } from '../../../components/shared/statistics-body/statistics-body';
 import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition';
 import { StatisticsSummaryComponent } from '../../../components/shared/statistics-summary/statistics-summary';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import type { ExportFormat } from '../../meals/api/export.service';
+import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
+import type { ExportFormat } from '../../meals/models/export.models';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
 import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';

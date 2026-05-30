@@ -6,10 +6,10 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
-import { LocalizationService } from '../../../../../services/localization.service';
-import { NotificationService, type WebPushSubscriptionItem } from '../../../../../services/notification.service';
-import { PushNotificationService } from '../../../../../services/push-notification.service';
+import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { User } from '../../../../../shared/models/user.data';
+import { NotificationService, type WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
+import { PushNotificationService } from '../../../../../shared/notifications/push-notification.service';
 import { ProfileManageFacade } from '../../../lib/profile-manage.facade';
 import { UserManageNotificationsFacade } from './user-manage-notifications.facade';
 

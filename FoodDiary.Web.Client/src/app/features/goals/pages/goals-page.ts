@@ -7,7 +7,7 @@ import { ErrorStateComponent } from '../../../components/shared/error-state/erro
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { MAX_BODY_TARGET } from '../lib/goals.constants';
 import { type BodyTargetKey, GoalsFacade, type MacroKey, type MacroPresetKey } from '../lib/goals.facade';
 import { type DayCalorieKey, DAYS_OF_WEEK } from '../models/goals.data';

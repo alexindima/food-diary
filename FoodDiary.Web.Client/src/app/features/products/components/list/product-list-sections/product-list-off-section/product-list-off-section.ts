@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { SkeletonCardComponent } from '../../../../../../components/shared/skeleton-card/skeleton-card';
-import type { OpenFoodFactsProduct } from '../../../../api/open-food-facts.service';
+import type { OpenFoodFactsProduct } from '../../../../models/open-food-facts.data';
 
 @Component({
     selector: 'fd-product-list-off-section',

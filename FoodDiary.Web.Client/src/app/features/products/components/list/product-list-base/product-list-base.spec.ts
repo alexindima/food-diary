@@ -4,9 +4,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PagedData } from '../../../../../shared/lib/paged-data.data';
-import type { OpenFoodFactsProduct } from '../../../api/open-food-facts.service';
+import { ProductListFacade } from '../../../lib/list/product-list.facade';
+import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
-import { ProductListFacade } from '../product-list-lib/product-list.facade';
 import { ProductListBaseComponent } from './product-list-base';
 
 const PRODUCT_CALORIES = 120;

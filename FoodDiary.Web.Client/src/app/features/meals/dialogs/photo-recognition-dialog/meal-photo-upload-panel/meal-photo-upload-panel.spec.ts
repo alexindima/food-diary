@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import { FrontendLoggerService } from '../../../../../services/frontend-logger.service';
-import { ImageUploadService } from '../../../../../shared/api/image-upload.service';
+import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { MealPhotoUploadPanelComponent } from './meal-photo-upload-panel';
 
@@ -75,7 +75,7 @@ async function setupComponentAsync(
             imports: [MealPhotoUploadPanelComponent, TranslateModule.forRoot()],
             providers: [
                 {
-                    provide: ImageUploadService,
+                    provide: ImageUploadFacade,
                     useValue: {
                         deleteAsset: vi.fn().mockReturnValue(of(void 0)),
                         requestUploadUrl: vi.fn(),

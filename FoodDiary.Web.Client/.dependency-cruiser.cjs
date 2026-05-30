@@ -94,6 +94,17 @@ module.exports = {
             },
         },
         {
+            name: 'shared-common-themes-must-not-import-features',
+            severity: 'error',
+            from: {
+                path: '^src/app/shared/(forms|i18n|notifications|platform|theme|ui)/',
+                pathNot: '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$',
+            },
+            to: {
+                path: '^src/app/features/',
+            },
+        },
+        {
             name: 'feature-models-must-not-import-feature-implementation',
             severity: 'error',
             from: {

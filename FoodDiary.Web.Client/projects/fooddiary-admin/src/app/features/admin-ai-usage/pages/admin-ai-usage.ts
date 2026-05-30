@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
-import { AdminAiUsageService } from '../api/admin-ai-usage.service';
+import { AdminAiUsageFacade } from '../lib/admin-ai-usage.facade';
 import type { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 
 @Component({
@@ -14,7 +14,7 @@ import type { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAiUsageComponent {
-    private readonly aiUsageService = inject(AdminAiUsageService);
+    private readonly aiUsageFacade = inject(AdminAiUsageFacade);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly usage = signal<AdminAiUsageSummary | null>(null);
@@ -26,7 +26,7 @@ export class AdminAiUsageComponent {
 
     protected loadUsage(): void {
         this.isLoading.set(true);
-        this.aiUsageService
+        this.aiUsageFacade
             .getSummary()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

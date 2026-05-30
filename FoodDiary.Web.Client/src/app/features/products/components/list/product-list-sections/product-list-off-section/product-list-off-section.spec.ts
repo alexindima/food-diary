@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { OpenFoodFactsProduct } from '../../../../api/open-food-facts.service';
+import type { OpenFoodFactsProduct } from '../../../../models/open-food-facts.data';
 import { ProductListOffSectionComponent } from './product-list-off-section';
 
 describe('ProductListOffSectionComponent', () => {

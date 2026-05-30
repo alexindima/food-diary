@@ -3,8 +3,9 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { type AdminUser, AdminUsersService, type PagedResponse } from '../api/admin-users.service';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
+import type { AdminUser, PagedResponse } from '../models/admin-user.models';
 import { AdminUsersComponent } from './admin-users';
 
 const FIRST_PAGE = 1;
@@ -136,7 +137,7 @@ async function setupComponentAsync(): Promise<void> {
     await TestBed.configureTestingModule({
         imports: [AdminUsersComponent],
         providers: [
-            { provide: AdminUsersService, useValue: usersService },
+            { provide: AdminUsersFacade, useValue: usersService },
             { provide: FdUiDialogService, useValue: dialogService },
         ],
     }).compileComponents();

@@ -13,8 +13,8 @@ import {
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ViewportService } from '../../../../services/viewport.service';
+import { ViewportService } from '../../../../shared/platform/viewport.service';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { MeasurementUnit } from '../../../products/models/product.data';
 import { ShoppingListFacade } from '../../lib/shopping-list.facade';
 import type { ShoppingListItemFormGroup } from '../../lib/shopping-list-form.types';

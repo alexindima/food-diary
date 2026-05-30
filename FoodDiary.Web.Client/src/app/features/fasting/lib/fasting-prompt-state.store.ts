@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
-import { BrowserStorageService } from '../../../services/browser-storage.service';
 import { isRecord } from '../../../shared/lib/unknown-value.utils';
+import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
 
 type FastingPromptState = {
     dismissed?: boolean;

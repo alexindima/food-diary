@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { WaistHistoryChartCardComponent } from '../../components/waist-history-chart-card/waist-history-chart-card';
 import { WaistHistoryEntriesCardComponent } from '../../components/waist-history-entries-card/waist-history-entries-card';
 import { WaistHistoryFormCardComponent } from '../../components/waist-history-form-card/waist-history-form-card';

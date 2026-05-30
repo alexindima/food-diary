@@ -4,8 +4,8 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ThemeService } from '../../../../services/theme.service';
-import { UserService } from '../../../../shared/api/user.service';
+import { UserFacade } from '../../../../shared/lib/user.facade';
+import { ThemeService } from '../../../../shared/theme/theme.service';
 import { DashboardAppearanceDialogComponent } from './dashboard-appearance-dialog';
 
 describe('DashboardAppearanceDialogComponent', () => {
@@ -39,7 +39,7 @@ describe('DashboardAppearanceDialogComponent', () => {
             imports: [DashboardAppearanceDialogComponent, TranslateModule.forRoot()],
             providers: [
                 { provide: ThemeService, useValue: themeService },
-                { provide: UserService, useValue: userService },
+                { provide: UserFacade, useValue: userService },
                 {
                     provide: FD_UI_DIALOG_DATA,
                     useValue: {

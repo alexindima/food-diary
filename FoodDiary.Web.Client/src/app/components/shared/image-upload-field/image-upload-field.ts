@@ -18,7 +18,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { finalize, map, switchMap } from 'rxjs';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import {
     calculateImageResizeDimensions,
@@ -73,7 +73,7 @@ type CropInteraction = {
 })
 export class ImageUploadFieldComponent implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
-    private readonly imageUploadService = inject(ImageUploadService);
+    private readonly imageUploadFacade = inject(ImageUploadFacade);
     private readonly translateService = inject(TranslateService);
     private readonly logger = inject(FrontendLoggerService);
     private readonly document = inject(DOCUMENT);
@@ -207,7 +207,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.cdr.markForCheck();
 
         if (this.deleteOnClear() && assetId !== null) {
-            this.imageUploadService.deleteAsset(assetId).subscribe({
+            this.imageUploadFacade.deleteAsset(assetId).subscribe({
                 error: (err: unknown) => {
                     this.logger.warn('Failed to delete orphan image asset', err);
                 },
@@ -447,11 +447,11 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.isUploading = true;
         this.cdr.markForCheck();
 
-        this.imageUploadService
+        this.imageUploadFacade
             .requestUploadUrl(file)
             .pipe(
                 switchMap(presign =>
-                    this.imageUploadService
+                    this.imageUploadFacade
                         .uploadToPresignedUrl(presign.uploadUrl, file)
                         .pipe(map(() => ({ url: presign.fileUrl, assetId: presign.assetId }))),
                 ),

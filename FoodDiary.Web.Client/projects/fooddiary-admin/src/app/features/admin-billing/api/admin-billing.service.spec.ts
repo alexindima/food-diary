@@ -4,7 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import { type AdminBillingPayment, AdminBillingService } from './admin-billing.service';
+import type { AdminBillingPayment } from '../models/admin-billing.models';
+import { AdminBillingService } from './admin-billing.service';
 
 const PAGE = 2;
 const LIMIT = 20;
@@ -28,7 +29,7 @@ afterEach(() => {
     httpMock.verify();
 });
 
-describe('AdminBillingService payments', () => {
+describe('AdminBillingFacade payments', () => {
     it('should request filtered payments and map paged response', () => {
         const response = createPaymentsResponse();
 
@@ -64,7 +65,7 @@ describe('AdminBillingService payments', () => {
     });
 });
 
-describe('AdminBillingService subscriptions', () => {
+describe('AdminBillingFacade subscriptions', () => {
     it('should omit empty filters for subscriptions', () => {
         service.getSubscriptions(1, LIMIT, { provider: '', status: null, search: undefined }).subscribe(result => {
             expect(result.items).toEqual([]);
@@ -84,7 +85,7 @@ describe('AdminBillingService subscriptions', () => {
     });
 });
 
-describe('AdminBillingService webhook events', () => {
+describe('AdminBillingFacade webhook events', () => {
     it('should request webhook events endpoint', () => {
         service.getWebhookEvents(1, LIMIT, { provider: 'YooKassa' }).subscribe(result => {
             expect(result.items[0].eventId).toBe('evt_1');

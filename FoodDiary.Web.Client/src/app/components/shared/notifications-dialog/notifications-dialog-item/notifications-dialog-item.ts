@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
-import type { NotificationItem } from '../../../../services/notification.service';
+import type { NotificationItem } from '../../../../shared/notifications/notification.service';
 import type { NotificationViewModel } from '../notifications-dialog-lib/notifications-dialog.types';
 
 @Component({

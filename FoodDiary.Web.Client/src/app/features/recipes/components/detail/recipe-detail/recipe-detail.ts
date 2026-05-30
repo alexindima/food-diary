@@ -14,8 +14,8 @@ import {
     NutritionEditorComponent,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
 import type { Recipe } from '../../../models/recipe.data';
-import { RecipeDetailFacade } from '../recipe-detail-lib/recipe-detail.facade';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
 import { buildRecipeDetailViewModel, type RecipeDetailNutritionForm } from '../recipe-detail-lib/recipe-detail-nutrition.mapper';
 import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-detail-summary';

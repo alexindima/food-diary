@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Router } from '@angular/router';
 
 import { getRecordProperty, getStringProperty } from '../../../../../shared/lib/unknown-value.utils';
-import type { OpenFoodFactsProduct } from '../../../api/open-food-facts.service';
 import { ProductManageFormComponent } from '../../../components/manage/product-manage-form/product-manage-form';
 import type { ProductManagePrefill } from '../../../components/manage/product-manage-lib/product-manage-form.types';
+import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 
 @Component({
     selector: 'fd-product-add',

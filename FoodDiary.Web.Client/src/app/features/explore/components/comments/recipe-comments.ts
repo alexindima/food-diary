@@ -8,7 +8,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { filter, finalize, switchMap } from 'rxjs';
 
-import { CommentService } from '../../api/comment.service';
+import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeComment } from '../../models/comment.data';
 import { COMMENT_MAX_LENGTH, COMMENTS_PAGE_SIZE } from './recipe-comments-lib/recipe-comments.constants';
 import { buildRecipeCommentViewModels } from './recipe-comments-lib/recipe-comments.mapper';
@@ -23,7 +23,7 @@ import { RecipeCommentsListComponent } from './recipe-comments-list/recipe-comme
     imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, RecipeCommentsListComponent],
 })
 export class RecipeCommentsComponent {
-    private readonly commentService = inject(CommentService);
+    private readonly exploreInteractionsFacade = inject(ExploreInteractionsFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
@@ -73,8 +73,8 @@ export class RecipeCommentsComponent {
 
         const operation =
             editId !== null
-                ? this.commentService.updateComment(this.recipeId(), editId, { text })
-                : this.commentService.createComment(this.recipeId(), { text });
+                ? this.exploreInteractionsFacade.updateComment(this.recipeId(), editId, { text })
+                : this.exploreInteractionsFacade.createComment(this.recipeId(), { text });
 
         operation
             .pipe(
@@ -113,7 +113,7 @@ export class RecipeCommentsComponent {
             .afterClosed()
             .pipe(
                 filter((confirmed): confirmed is true => confirmed === true),
-                switchMap(() => this.commentService.deleteComment(this.recipeId(), comment.id)),
+                switchMap(() => this.exploreInteractionsFacade.deleteComment(this.recipeId(), comment.id)),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -129,7 +129,7 @@ export class RecipeCommentsComponent {
 
     private loadComments(page: number, append = false): void {
         this.isLoading.set(true);
-        this.commentService
+        this.exploreInteractionsFacade
             .getComments(this.recipeId(), page, this.pageSize)
             .pipe(
                 finalize(() => {
