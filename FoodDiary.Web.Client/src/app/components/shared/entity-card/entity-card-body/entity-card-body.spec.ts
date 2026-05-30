@@ -29,7 +29,7 @@ describe('EntityCardBodyComponent', () => {
         component['favoriteToggle'].subscribe(favoriteSpy);
         fixture.detectChanges();
 
-        component['handleFavoriteToggle'](event);
+        component['toggleFavorite'](event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
         expect(favoriteSpy).toHaveBeenCalledOnce();

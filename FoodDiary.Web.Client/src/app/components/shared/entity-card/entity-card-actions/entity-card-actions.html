@@ -12,7 +12,7 @@
         fill="solid"
         [icon]="actionIcon()"
         [ariaLabel]="actionAriaLabel() ?? ''"
-        (click)="handleAction($event)"
+        (click)="emitCardAction($event)"
     >
         {{ actionAriaLabel() }}
     </fd-ui-button>

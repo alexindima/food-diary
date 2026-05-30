@@ -88,7 +88,7 @@ let nextHintId = 0;
         '(mouseleave)': 'onMouseLeave()',
         '(focusin)': 'onFocusIn()',
         '(focusout)': 'onFocusOut()',
-        '(click)': 'onClick()',
+        '(click)': 'toggleHint()',
         '(keydown.escape)': 'onEscape()',
     },
 })
@@ -143,7 +143,7 @@ export class FdUiHintDirective {
         this.queueHide();
     }
 
-    protected onClick(): void {
+    protected toggleHint(): void {
         this.cancelPendingDisplay();
         this.hide();
     }

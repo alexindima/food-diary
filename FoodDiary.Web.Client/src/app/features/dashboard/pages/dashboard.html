@@ -7,7 +7,7 @@
         [headerState]="dashboardHeaderState()"
         [selectedDate]="selectedDate()"
         [isEditingLayout]="layout.isEditingLayout()"
-        (dateChange)="handleDateChange($event)"
+        (dateChange)="changeDashboardDate($event)"
         (appearanceOpen)="openAppearanceDialogAsync()"
         (notificationSettingsOpen)="openNotificationSettingsAsync()"
         (settingsOpen)="layout.openSettings()"
@@ -41,7 +41,7 @@
                         [state]="blockStates.fasting"
                         [isEditingLayout]="layout.isEditingLayout()"
                         [session]="fastingCurrentSession()"
-                        (blockClick)="handleFastingCardClick()"
+                        (blockClick)="openFastingPage()"
                     />
 
                     <fd-dashboard-summary-block
@@ -122,7 +122,7 @@
                         [state]="blockStates.tdee"
                         [insight]="tdeeInsight()"
                         [isLoading]="isLoading()"
-                        (blockClick)="handleTdeeCardClick($event)"
+                        (blockClick)="openTdeeInsight($event)"
                         (applyGoal)="applyTdeeGoal($event)"
                     />
 

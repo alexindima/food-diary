@@ -108,19 +108,19 @@ export class EntityCardComponent {
         });
     }
 
-    protected handleOpen(): void {
+    protected openCard(): void {
         this.open.emit();
     }
 
-    protected handlePreview(): void {
+    protected previewCardImage(): void {
         this.preview.emit();
     }
 
-    protected handleFavoriteToggle(): void {
+    protected toggleFavorite(): void {
         this.favoriteToggle.emit();
     }
 
-    protected handleAction(): void {
+    protected emitCardAction(): void {
         this.action.emit();
     }
 }

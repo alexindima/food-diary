@@ -37,7 +37,7 @@ export class UserManageDietologistCardComponent {
     public readonly dietologistProfileToggle = output<boolean>();
     public readonly dietologistPermissionChange = output<DietologistPermissionChange>();
 
-    protected handleDietologistPermissionChange(change: DietologistPermissionChange): void {
+    protected changeDietologistPermission(change: DietologistPermissionChange): void {
         if (change.controlName === 'shareProfile') {
             this.dietologistProfileToggle.emit(change.value);
             return;

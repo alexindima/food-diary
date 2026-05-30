@@ -33,7 +33,7 @@ describe('EntityCardThumbComponent', () => {
         component['preview'].subscribe(previewSpy);
         fixture.detectChanges();
 
-        component['handlePreview'](event);
+        component['previewCardImage'](event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
         expect(previewSpy).toHaveBeenCalledOnce();
@@ -46,7 +46,7 @@ describe('EntityCardThumbComponent', () => {
         component['preview'].subscribe(previewSpy);
         fixture.detectChanges();
 
-        component['handlePreview']({ stopPropagation: vi.fn() } as unknown as Event);
+        component['previewCardImage']({ stopPropagation: vi.fn() } as unknown as Event);
 
         expect(previewSpy).not.toHaveBeenCalled();
     });

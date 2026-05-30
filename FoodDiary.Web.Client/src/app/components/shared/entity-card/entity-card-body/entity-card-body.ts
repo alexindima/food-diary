@@ -29,7 +29,7 @@ export class EntityCardBodyComponent {
 
     public readonly favoriteToggle = output();
 
-    protected handleFavoriteToggle(event: Event): void {
+    protected toggleFavorite(event: Event): void {
         event.stopPropagation();
         this.favoriteToggle.emit();
     }

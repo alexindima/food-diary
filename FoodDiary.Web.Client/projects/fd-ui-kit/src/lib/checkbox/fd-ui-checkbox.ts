@@ -43,7 +43,7 @@ export class FdUiCheckboxComponent implements ControlValueAccessor {
         this.disabled.set(isDisabled);
     }
 
-    protected handleChange(event: Event): void {
+    protected updateCheckedValue(event: Event): void {
         if (!(event.target instanceof HTMLInputElement)) {
             return;
         }
@@ -53,7 +53,7 @@ export class FdUiCheckboxComponent implements ControlValueAccessor {
         this.onChange(checkboxInput.checked);
     }
 
-    protected handleBlur(): void {
+    protected touchControl(): void {
         this.onTouched();
     }
 }

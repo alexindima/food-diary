@@ -72,13 +72,13 @@ describe('FdUiCheckboxComponent', () => {
         component['registerOnChange'](onChangeSpy);
 
         const changeEvent = dispatchCheckboxChange(true);
-        component['handleChange'](changeEvent);
+        component['updateCheckedValue'](changeEvent);
 
         expect(component['checked']).toBe(true);
         expect(onChangeSpy).toHaveBeenCalledWith(true);
 
         const uncheckEvent = dispatchCheckboxChange(false);
-        component['handleChange'](uncheckEvent);
+        component['updateCheckedValue'](uncheckEvent);
 
         expect(component['checked']).toBe(false);
         expect(onChangeSpy).toHaveBeenCalledWith(false);
@@ -88,7 +88,7 @@ describe('FdUiCheckboxComponent', () => {
         const onTouchedSpy = vi.fn();
         component['registerOnTouched'](onTouchedSpy);
 
-        component['handleBlur']();
+        component['touchControl']();
 
         expect(onTouchedSpy).toHaveBeenCalled();
     });

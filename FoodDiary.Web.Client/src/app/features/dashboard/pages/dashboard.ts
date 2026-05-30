@@ -232,7 +232,7 @@ export class DashboardComponent {
         });
     }
 
-    protected handleDateChange(value: Date | null): void {
+    protected changeDashboardDate(value: Date | null): void {
         if (value === null) {
             return;
         }
@@ -320,7 +320,7 @@ export class DashboardComponent {
         this.facade.applyTdeeGoal(target);
     }
 
-    protected handleTdeeCardClick(event?: Event): void {
+    protected openTdeeInsight(event?: Event): void {
         event?.stopPropagation();
 
         if (this.layout.isEditingLayout()) {
@@ -372,7 +372,7 @@ export class DashboardComponent {
             });
     }
 
-    protected handleFastingCardClick(): void {
+    protected openFastingPage(): void {
         if (this.layout.isEditingLayout()) {
             this.layout.toggleBlock('fasting');
             return;

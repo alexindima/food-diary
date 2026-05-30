@@ -102,15 +102,15 @@ export class RecipeCardComponent {
 
         return `${ingredients} - ${totalTime} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
     });
-    protected handleOpen(): void {
+    protected openCard(): void {
         this.open.emit();
     }
 
-    protected handleAdd(): void {
+    protected addToMealFromCard(): void {
         this.addToMeal.emit();
     }
 
-    protected handlePreview(): void {
+    protected previewCardImage(): void {
         const imageUrl = this.imageUrl()?.trim();
         if (imageUrl === undefined || imageUrl.length === 0) {
             return;

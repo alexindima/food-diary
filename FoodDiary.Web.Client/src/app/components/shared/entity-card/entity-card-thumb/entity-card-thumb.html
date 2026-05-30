@@ -7,9 +7,9 @@
     [attr.role]="previewInteraction().role"
     [attr.tabindex]="previewInteraction().tabIndex"
     [attr.aria-label]="previewInteraction().ariaLabel"
-    (click)="handlePreview($event)"
-    (keydown.enter)="handlePreview($event)"
-    (keydown.space)="handlePreview($event); $event.preventDefault()"
+    (click)="previewCardImage($event)"
+    (keydown.enter)="previewCardImage($event)"
+    (keydown.space)="previewCardImage($event); $event.preventDefault()"
 >
     @if (imageUrl(); as imageSrc) {
     <img width="96" height="96" [attr.src]="imageSrc" [alt]="imageAlt()" />

@@ -15,7 +15,7 @@
     [quality]="quality()"
     [calories]="meal().totalCalories"
     [showAction]="false"
-    (open)="handleOpen()"
-    (preview)="handlePreview()"
+    (open)="openCard()"
+    (preview)="previewCardImage()"
     (favoriteToggle)="toggleFavorite()"
 />

@@ -45,7 +45,7 @@ export class MealsPreviewComponent {
         this.expandedAiSlot.update(current => (current === slot ? null : slot));
     }
 
-    protected handleAiMealCreateRequested(result: AiInputBarResult): void {
+    protected createMealFromAiResult(result: AiInputBarResult): void {
         this.aiMealCreateRequested.emit(result);
     }
 }

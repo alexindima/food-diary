@@ -13,8 +13,8 @@ const MENU_VIEWPORT_MARGIN = 8;
     host: {
         '[attr.aria-haspopup]': '"menu"',
         '[attr.aria-expanded]': 'overlayRef?.hasAttached() ? "true" : "false"',
-        '(click)': 'handleClick($event)',
-        '(keydown)': 'handleKeydown($event)',
+        '(click)': 'toggleMenuFromClick($event)',
+        '(keydown)': 'toggleMenuFromKeyboard($event)',
     },
 })
 export class FdUiMenuTriggerDirective {
@@ -58,12 +58,12 @@ export class FdUiMenuTriggerDirective {
         });
     }
 
-    protected handleClick(event: MouseEvent): void {
+    protected toggleMenuFromClick(event: MouseEvent): void {
         event.preventDefault();
         this.toggle();
     }
 
-    protected handleKeydown(event: KeyboardEvent): void {
+    protected toggleMenuFromKeyboard(event: KeyboardEvent): void {
         switch (event.key) {
             case 'ArrowDown':
             case 'Enter':

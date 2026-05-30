@@ -344,7 +344,7 @@ export class MealPhotoRecognitionDialogComponent {
         }
     }
 
-    protected handleEditAction(): void {
+    protected applyEditAction(): void {
         if (this.isEditing()) {
             this.applyEditing();
             return;

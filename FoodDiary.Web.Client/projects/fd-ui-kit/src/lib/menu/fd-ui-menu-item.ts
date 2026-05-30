@@ -37,7 +37,7 @@ export class FdUiMenuItemComponent {
         return this.document.activeElement === this.host.nativeElement;
     }
 
-    protected onClick(event: Event): void {
+    protected selectMenuItem(event: Event): void {
         this.itemClick.emit(event);
 
         if (!event.defaultPrevented && !this.disabled()) {

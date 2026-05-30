@@ -82,7 +82,7 @@ export class FdUiEmojiPickerComponent {
         this.selectedValue.set(option.value);
     }
 
-    protected handleKeydown(index: number, event: KeyboardEvent): void {
+    protected navigateEmojiGrid(index: number, event: KeyboardEvent): void {
         switch (event.key) {
             case 'ArrowRight':
             case 'ArrowDown': {

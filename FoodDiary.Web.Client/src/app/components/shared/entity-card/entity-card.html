@@ -2,9 +2,9 @@
     class="entity-card"
     role="button"
     tabindex="0"
-    (click)="handleOpen()"
-    (keydown.enter)="handleOpen()"
-    (keydown.space)="handleOpen(); $event.preventDefault()"
+    (click)="openCard()"
+    (keydown.enter)="openCard()"
+    (keydown.space)="openCard(); $event.preventDefault()"
 >
     @let previewInteraction = previewInteractionState();
     <fd-entity-card-thumb
@@ -15,7 +15,7 @@
         [collage]="collageState()"
         [hasPreviewImage]="hasPreviewImage()"
         [previewInteraction]="previewInteraction"
-        (preview)="handlePreview()"
+        (preview)="previewCardImage()"
     />
 
     <fd-entity-card-body
@@ -31,7 +31,7 @@
         [description]="description()"
         [nutrition]="nutrition()"
         [quality]="normalizedQuality()"
-        (favoriteToggle)="handleFavoriteToggle()"
+        (favoriteToggle)="toggleFavorite()"
     />
 
     <fd-entity-card-actions
@@ -40,6 +40,6 @@
         [showAction]="showAction()"
         [actionIcon]="actionIcon()"
         [actionAriaLabel]="actionAriaLabel()"
-        (action)="handleAction()"
+        (action)="emitCardAction()"
     />
 </fd-media-card>

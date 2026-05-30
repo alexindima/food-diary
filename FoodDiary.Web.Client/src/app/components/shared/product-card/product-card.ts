@@ -72,15 +72,15 @@ export class ProductCardComponent {
         return normalizeQualityScore(score);
     });
     protected readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
-    protected handleOpen(): void {
+    protected openCard(): void {
         this.open.emit();
     }
 
-    protected handleAdd(): void {
+    protected addToMealFromCard(): void {
         this.addToMeal.emit();
     }
 
-    protected handlePreview(): void {
+    protected previewCardImage(): void {
         const imageUrl = this.imageUrl()?.trim();
         if (imageUrl === undefined || imageUrl.length === 0) {
             return;

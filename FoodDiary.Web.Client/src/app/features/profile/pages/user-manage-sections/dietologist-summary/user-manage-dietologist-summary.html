@@ -38,7 +38,7 @@
             [icon]="action.icon"
             [disabled]="action.disabled"
             [loading]="isSavingDietologist()"
-            (click)="handleSummaryAction(action.action)"
+            (click)="executeSummaryAction(action.action)"
         >
             {{ action.labelKey | translate }}
         </fd-ui-button>

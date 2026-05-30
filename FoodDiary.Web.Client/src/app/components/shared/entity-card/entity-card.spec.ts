@@ -112,10 +112,10 @@ describe('EntityCardComponent events', () => {
         component['action'].subscribe(actionSpy);
         fixture.detectChanges();
 
-        component['handleOpen']();
-        component['handlePreview']();
-        component['handleFavoriteToggle']();
-        component['handleAction']();
+        component['openCard']();
+        component['previewCardImage']();
+        component['toggleFavorite']();
+        component['emitCardAction']();
 
         expect(openSpy).toHaveBeenCalledOnce();
         expect(previewSpy).toHaveBeenCalledOnce();

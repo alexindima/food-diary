@@ -79,7 +79,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
         this.cdr.markForCheck();
     }
 
-    protected handleBlur(): void {
+    protected touchRange(): void {
         this.onTouched();
     }
 

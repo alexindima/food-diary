@@ -24,7 +24,7 @@
             [tinted]="true"
             [attr.aria-checked]="isSelected(level.value)"
             (click)="selectLevel(level.value)"
-            (blur)="handleBlur()"
+            (blur)="touchControl()"
         >
             <div class="satiety-scale__indicator">
                 <span class="satiety-scale__emoji">{{ level.emoji }}</span>

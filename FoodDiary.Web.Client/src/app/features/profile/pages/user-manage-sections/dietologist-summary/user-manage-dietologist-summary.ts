@@ -101,7 +101,7 @@ export class UserManageDietologistSummaryComponent {
 
     protected readonly showPendingStatus = computed(() => this.hasDietologistRelationship() && !this.isDietologistConnected());
 
-    protected handleSummaryAction(action: DietologistSummaryAction['action']): void {
+    protected executeSummaryAction(action: DietologistSummaryAction['action']): void {
         if (action === 'invite') {
             this.dietologistInvite.emit();
             return;

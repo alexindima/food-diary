@@ -4,8 +4,8 @@
         [label]="startLabel()"
         [size]="size()"
         [placeholder]="startPlaceholder()"
-        (blur)="handleBlur()"
+        (blur)="touchRange()"
     />
     <span class="fd-ui-date-range-input__divider" aria-hidden="true">&mdash;</span>
-    <fd-ui-date-input formControlName="end" [label]="endLabel()" [size]="size()" [placeholder]="endPlaceholder()" (blur)="handleBlur()" />
+    <fd-ui-date-input formControlName="end" [label]="endLabel()" [size]="size()" [placeholder]="endPlaceholder()" (blur)="touchRange()" />
 </div>

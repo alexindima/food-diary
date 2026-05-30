@@ -64,11 +64,11 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
         this.onChange(option.value);
     }
 
-    protected handleBlur(): void {
+    protected touchControl(): void {
         this.onTouched();
     }
 
-    protected handleKeydown(index: number, event: KeyboardEvent): void {
+    protected selectOptionByKeyboard(index: number, event: KeyboardEvent): void {
         const options = this.options();
         if (options.length === 0) {
             return;

@@ -151,7 +151,7 @@ export class FdUiSatietyScaleComponent implements ControlValueAccessor {
         this.levelSelected.emit(level);
     }
 
-    protected handleBlur(): void {
+    protected touchControl(): void {
         this.onTouched();
     }
 

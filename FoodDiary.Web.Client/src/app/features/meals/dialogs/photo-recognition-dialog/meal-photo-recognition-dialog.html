@@ -22,7 +22,7 @@
                 [hasSelectionAsset]="hasSelectionAsset()"
                 [isEditing]="isEditing()"
                 (reanalyze)="onReanalyze()"
-                (editAction)="handleEditAction()"
+                (editAction)="applyEditAction()"
             />
 
             @if (isEditing()) {

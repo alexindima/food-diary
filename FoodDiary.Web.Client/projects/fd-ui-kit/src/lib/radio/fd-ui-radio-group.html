@@ -19,8 +19,8 @@
             [disabled]="disabled()"
             [value]="internalValue"
             (optionSelected)="selectOption($event)"
-            (optionBlur)="handleBlur()"
-            (optionKeydown)="handleKeydown($event.index, $event.event)"
+            (optionBlur)="touchControl()"
+            (optionKeydown)="selectOptionByKeyboard($event.index, $event.event)"
         />
     </div>
 

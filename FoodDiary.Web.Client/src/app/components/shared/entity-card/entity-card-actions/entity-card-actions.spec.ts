@@ -28,7 +28,7 @@ describe('EntityCardActionsComponent', () => {
         component['action'].subscribe(actionSpy);
         fixture.detectChanges();
 
-        component['handleAction'](event);
+        component['emitCardAction'](event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
         expect(actionSpy).toHaveBeenCalledOnce();

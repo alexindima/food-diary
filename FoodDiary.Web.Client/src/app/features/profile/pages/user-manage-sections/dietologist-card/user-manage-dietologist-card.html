@@ -25,7 +25,7 @@
         <fd-user-manage-dietologist-permissions
             [permissions]="dietologistPermissions()"
             [isSavingDietologist]="isSavingDietologist()"
-            (permissionChange)="handleDietologistPermissionChange($event)"
+            (permissionChange)="changeDietologistPermission($event)"
         />
 
         <fd-ui-form-error class="user-manage__error user-manage__error--dietologist" [error]="dietologistError()" />

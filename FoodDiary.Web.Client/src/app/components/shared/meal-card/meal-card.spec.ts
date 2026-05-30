@@ -202,7 +202,7 @@ describe('MealCardComponent collage images', () => {
         fixture.componentRef.setInput('meal', createItemCollageMeal());
         fixture.detectChanges();
 
-        component['handlePreview']();
+        component['previewCardImage']();
 
         const call = openSpy.mock.calls[0] as Parameters<FdUiDialogService['open']> | undefined;
         const data = call?.[1]?.data as FdUiImagePreviewDialogData | undefined;

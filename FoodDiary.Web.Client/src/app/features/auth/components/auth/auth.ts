@@ -149,7 +149,7 @@ export class AuthComponent {
         });
     }
 
-    protected handleTabChange(value: string): void {
+    protected changeAuthMode(value: string): void {
         const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
         void this.onTabChangeAsync(mode);
     }

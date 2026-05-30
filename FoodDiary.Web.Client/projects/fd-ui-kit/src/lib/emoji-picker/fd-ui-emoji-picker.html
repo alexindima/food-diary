@@ -15,7 +15,7 @@
         [fdUiHint]="option.hint ?? null"
         [fdUiHintDisabled]="!option.hint"
         (click)="select(option)"
-        (keydown)="handleKeydown($index, $event)"
+        (keydown)="navigateEmojiGrid($index, $event)"
     >
         <span class="fd-ui-emoji-picker__emoji" aria-hidden="true">{{ option.emoji }}</span>
 

@@ -15,7 +15,7 @@
                 [fdUiHintDisabled]="!favoriteAriaLabel()"
                 [ariaLabel]="favoriteAriaLabel() ?? undefined"
                 [disabled]="favoriteLoading()"
-                (click)="handleFavoriteToggle($event)"
+                (click)="toggleFavorite($event)"
             />
             } @if (ownershipIcon(); as icon) {
             <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />

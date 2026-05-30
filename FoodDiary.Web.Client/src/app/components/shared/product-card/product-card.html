@@ -15,8 +15,8 @@
     [calories]="product().caloriesPerBase"
     [showAction]="true"
     [actionAriaLabel]="'PRODUCT_CARD.ADD_TO_CONSUMPTION' | translate"
-    (open)="handleOpen()"
-    (preview)="handlePreview()"
+    (open)="openCard()"
+    (preview)="previewCardImage()"
     (favoriteToggle)="toggleFavorite()"
-    (action)="handleAdd()"
+    (action)="addToMealFromCard()"
 />

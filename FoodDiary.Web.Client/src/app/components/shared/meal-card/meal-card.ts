@@ -118,11 +118,11 @@ export class MealCardComponent {
         const normalizedMealType = mealType !== undefined && mealType.length > 0 ? mealType.toUpperCase() : 'OTHER';
         return this.translateService.instant(`MEAL_CARD.MEAL_TYPES.${normalizedMealType}`);
     });
-    protected handleOpen(): void {
+    protected openCard(): void {
         this.open.emit();
     }
 
-    protected handlePreview(): void {
+    protected previewCardImage(): void {
         const imageUrl = this.resolvePreviewImage();
         const collageImages = imageUrl !== undefined ? [] : this.collageImages();
         if (imageUrl === undefined && collageImages.length === 0) {

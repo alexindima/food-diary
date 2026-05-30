@@ -592,10 +592,79 @@ const hasLabelWrappedControl = nodes =>
         return false;
     });
 
+const genericEventHandlerNamePattern = /^(?:handle[A-Z]\w*|onClick)$/;
+
+const isGenericEventHandlerName = name => typeof name === 'string' && genericEventHandlerNamePattern.test(name);
+
+const getTemplateCallName = node => {
+    if (node?.type !== 'Call' || node.receiver?.type !== 'PropertyRead') {
+        return null;
+    }
+
+    return node.receiver.receiver?.type === 'ImplicitReceiver' ? node.receiver.name : null;
+};
+
+const visitTemplateExpression = (node, visitor) => {
+    if (!node || typeof node !== 'object') {
+        return;
+    }
+
+    visitor(node);
+
+    for (const childKey of ['ast', 'expressions', 'receiver', 'args', 'condition', 'trueExp', 'falseExp', 'left', 'right', 'exp']) {
+        const child = node[childKey];
+
+        if (Array.isArray(child)) {
+            for (const item of child) {
+                visitTemplateExpression(item, visitor);
+            }
+            continue;
+        }
+
+        visitTemplateExpression(child, visitor);
+    }
+};
+
+const createActionOrientedTemplateEventHandlersRule = context => ({
+    BoundEvent(node) {
+        visitTemplateExpression(node.handler, expression => {
+            const handlerName = getTemplateCallName(expression);
+
+            if (!isGenericEventHandlerName(handlerName)) {
+                return;
+            }
+
+            context.report({
+                node: expression,
+                messageId: 'genericEventHandler',
+                data: {
+                    name: handlerName,
+                },
+            });
+        });
+    },
+});
+
+const actionOrientedTemplateEventHandlersRule = {
+    meta: {
+        type: 'suggestion',
+        docs: {
+            description: 'Require Angular template event handlers to be named after the user action.',
+        },
+        messages: {
+            genericEventHandler:
+                'Rename `{{name}}` to the user action or outcome, for example `openCard()` instead of `handleClick()` or `handleOpen()`.',
+        },
+        schema: [],
+    },
+    create: createActionOrientedTemplateEventHandlersRule,
+};
+
 const localTemplatePlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
         'no-component-file-suffix': noComponentFileSuffixRule,
+        'action-oriented-event-handlers': actionOrientedTemplateEventHandlersRule,
         'no-label-wrapped-control': {
             meta: {
                 type: 'problem',
@@ -875,6 +944,50 @@ const preferProtectedTemplateMembersRule = {
     create: createPreferProtectedTemplateMembersRule,
 };
 
+const hostEventPropertyNamePattern = /^\(.+\)$/;
+const genericHostEventHandlerPattern = /\b(?:handle[A-Z]\w*|onClick)\s*\(/;
+
+const createActionOrientedHostEventHandlersRule = context => ({
+    Property(node) {
+        if (node.computed || !hostEventPropertyNamePattern.test(getPropertyName(node.key) ?? '')) {
+            return;
+        }
+
+        if (node.value.type !== 'Literal' || typeof node.value.value !== 'string') {
+            return;
+        }
+
+        const [handlerName] = node.value.value.match(/\b(?:handle[A-Z]\w*|onClick)\b/) ?? [];
+
+        if (!handlerName || !genericHostEventHandlerPattern.test(node.value.value)) {
+            return;
+        }
+
+        context.report({
+            node: node.value,
+            messageId: 'genericHostEventHandler',
+            data: {
+                name: handlerName,
+            },
+        });
+    },
+});
+
+const actionOrientedHostEventHandlersRule = {
+    meta: {
+        type: 'suggestion',
+        docs: {
+            description: 'Require Angular host event handlers to be named after the user action.',
+        },
+        messages: {
+            genericHostEventHandler:
+                'Rename `{{name}}` to the user action or outcome, for example `openMenu()` instead of `handleClick()` or `onClick()`.',
+        },
+        schema: [],
+    },
+    create: createActionOrientedHostEventHandlersRule,
+};
+
 const createNoLocallyCaughtThrowRule = context => {
     let caughtTryDepth = 0;
     const functionTryDepthStack = [];
@@ -992,6 +1105,7 @@ const localTsPlugin = {
         'no-browser-globals': noBrowserGlobalsRule,
         'no-fd-ui-kit-self-import': noFdUiKitSelfImportRule,
         'prefer-protected-template-members': preferProtectedTemplateMembersRule,
+        'action-oriented-host-event-handlers': actionOrientedHostEventHandlersRule,
         'async-function-suffix': {
             meta: {
                 type: 'problem',
@@ -1636,6 +1750,7 @@ export default [
             '@angular-eslint/relative-url-prefix': 'error',
             '@angular-eslint/use-component-selector': 'error',
             '@angular-eslint/use-component-view-encapsulation': 'error',
+            'local/action-oriented-host-event-handlers': 'error',
             'local/prefer-protected-template-members': 'error',
             'no-restricted-syntax': [
                 'error',
@@ -2220,6 +2335,7 @@ export default [
                 },
             ],
             'local/fd-ui-button-accessible-name': 'error',
+            'local/action-oriented-event-handlers': 'error',
             'local/no-component-file-suffix': 'error',
             'local/no-mojibake': 'error',
             'local/no-label-wrapped-control': 'error',

@@ -53,7 +53,7 @@ describe('MealsPreviewComponent AI panel', () => {
         component['toggleAi']('lunch');
         fixture.detectChanges();
 
-        component['handleAiMealCreateRequested'](result);
+        component['createMealFromAiResult'](result);
 
         expect(component['expandedAiSlot']()).toBe('lunch');
         expect(emitSpy).toHaveBeenCalledWith(result);

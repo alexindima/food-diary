@@ -5,8 +5,8 @@
         [id]="id()"
         [checked]="checked"
         [disabled]="disabled()"
-        (change)="handleChange($event)"
-        (blur)="handleBlur()"
+        (change)="updateCheckedValue($event)"
+        (blur)="touchControl()"
     />
     <label class="fd-ui-checkbox__label" [attr.for]="id()" [class.fd-ui-checkbox__label--disabled]="disabled()">
         <span class="fd-ui-checkbox__control" aria-hidden="true">

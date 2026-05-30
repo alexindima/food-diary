@@ -120,7 +120,7 @@ describe('ProductCardComponent events', () => {
         const addSpy = vi.fn();
         component['addToMeal'].subscribe(addSpy);
 
-        component['handleAdd']();
+        component['addToMealFromCard']();
 
         expect(addSpy).toHaveBeenCalledOnce();
     });

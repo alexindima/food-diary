@@ -15,8 +15,8 @@
     [calories]="recipe().totalCalories ?? 0"
     [showAction]="true"
     [actionAriaLabel]="'RECIPE_CARD.ADD_TO_MEAL' | translate"
-    (open)="handleOpen()"
-    (preview)="handlePreview()"
+    (open)="openCard()"
+    (preview)="previewCardImage()"
     (favoriteToggle)="toggleFavorite()"
-    (action)="handleAdd()"
+    (action)="addToMealFromCard()"
 />
