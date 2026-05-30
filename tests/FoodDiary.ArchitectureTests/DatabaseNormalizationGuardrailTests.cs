@@ -51,8 +51,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
     };
 
     private static readonly HashSet<string> AllowedRawSqlDocumentColumns = new(StringComparer.Ordinal) {
-        "FoodDiary.MailInbox.Infrastructure\\Services\\NpgsqlInboundMailStore.cs:to_recipients_json",
-        "FoodDiary.MailRelay.Infrastructure\\Services\\MailRelayQueueStore.cs:to_recipients_json",
+        "FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs:to_recipients_json",
+        "FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs:to_recipients_json",
     };
 
     private static readonly BusinessKeyExpectation[] ExpectedBusinessKeys = [
@@ -285,7 +285,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
     }
 
     private static IEnumerable<string> ReadRawSqlJsonColumns(string path) {
-        var relativePath = Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path);
+        var relativePath = Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)
+            .Replace(Path.DirectorySeparatorChar, '/');
 
         foreach (var line in File.ReadLines(path)) {
             var normalized = line.Trim();
