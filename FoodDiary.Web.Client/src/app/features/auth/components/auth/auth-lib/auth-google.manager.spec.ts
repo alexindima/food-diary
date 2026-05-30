@@ -12,7 +12,7 @@ let googleIdentityServiceSpy: {
 
 beforeEach(() => {
     googleIdentityServiceSpy = {
-        initializeAsync: vi.fn().mockResolvedValue(undefined),
+        initializeAsync: vi.fn().mockResolvedValue(void 0),
         prompt: vi.fn(),
         renderButton: vi.fn(),
     };

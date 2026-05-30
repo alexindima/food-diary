@@ -15,7 +15,7 @@ describe('app theme config', () => {
 
         expect(isAppThemeName('unknown')).toBe(false);
         expect(isAppThemeName(null)).toBe(false);
-        expect(isAppThemeName(undefined)).toBe(false);
+        expect(isAppThemeName(void 0)).toBe(false);
     });
 
     it('should validate UI style names', () => {
@@ -25,6 +25,6 @@ describe('app theme config', () => {
 
         expect(isAppUiStyleName('unknown')).toBe(false);
         expect(isAppUiStyleName(null)).toBe(false);
-        expect(isAppUiStyleName(undefined)).toBe(false);
+        expect(isAppUiStyleName(void 0)).toBe(false);
     });
 });

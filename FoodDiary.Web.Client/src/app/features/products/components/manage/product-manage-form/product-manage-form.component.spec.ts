@@ -313,7 +313,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
     const usdaService = createUsdaServiceMock();
     const navigationService = {
-        navigateToProductListAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToProductListAsync: vi.fn().mockResolvedValue(void 0),
     };
     const openFoodFactsService = {
         searchByBarcode: vi.fn().mockReturnValue(of(null)),

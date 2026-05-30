@@ -24,7 +24,7 @@ async function setupPhotoUploadDialogAsync(): Promise<PhotoUploadDialogTestConte
                 useValue: {
                     requestUploadUrl: vi.fn(),
                     uploadToPresignedUrl: vi.fn(),
-                    deleteAsset: vi.fn().mockReturnValue(of(undefined)),
+                    deleteAsset: vi.fn().mockReturnValue(of(void 0)),
                 },
             },
             { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },

@@ -51,8 +51,8 @@ beforeEach(() => {
     };
     notificationService = {
         getWebPushConfiguration: vi.fn(() => of({ enabled: true, publicKey: 'public-key' })),
-        upsertWebPushSubscription: vi.fn(() => of(undefined)),
-        removeWebPushSubscription: vi.fn(() => of(undefined)),
+        upsertWebPushSubscription: vi.fn(() => of(void 0)),
+        removeWebPushSubscription: vi.fn(() => of(void 0)),
         fetchUnreadCount: vi.fn(),
         notifyNotificationsChanged: vi.fn(),
     };

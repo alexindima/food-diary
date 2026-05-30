@@ -67,7 +67,7 @@ beforeEach(() => {
         add: vi.fn().mockReturnValue(of(favoriteMeal)),
         getAll: vi.fn().mockReturnValue(of([favoriteMeal])),
         isFavorite: vi.fn().mockReturnValue(of(false)),
-        remove: vi.fn().mockReturnValue(of(undefined)),
+        remove: vi.fn().mockReturnValue(of(void 0)),
     };
 
     TestBed.configureTestingModule({

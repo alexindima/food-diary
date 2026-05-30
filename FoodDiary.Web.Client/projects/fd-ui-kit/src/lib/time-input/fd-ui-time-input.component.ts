@@ -43,8 +43,8 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly document = inject(DOCUMENT);
 
-    private onChange: (value: string | null) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: string | null) => void = () => {};
+    private onTouched: () => void = () => {};
 
     protected readonly sizeClass = computed(() => `fd-ui-time-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {

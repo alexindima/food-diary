@@ -55,7 +55,7 @@ describe('unsavedChangesGuard', () => {
     });
 
     it('should block navigation when dialog is cancelled', async () => {
-        setupGuard(createHandler({ hasChanges: true }), undefined);
+        setupGuard(createHandler({ hasChanges: true }));
 
         const result = await runGuard();
 

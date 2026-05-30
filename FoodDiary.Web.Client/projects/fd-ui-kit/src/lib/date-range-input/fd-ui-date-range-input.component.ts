@@ -43,8 +43,8 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     });
     protected isDisabled = false;
 
-    private onChange: (value: FdUiDateRangeValue) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: FdUiDateRangeValue) => void = () => {};
+    private onTouched: () => void = () => {};
 
     public constructor() {
         this.rangeGroup.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {

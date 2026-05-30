@@ -52,7 +52,7 @@ function translateValidationResult(
 
     return translateService.instant(result.key, {
         ...controlParams,
-        ...(result.params ?? {}),
+        ...result.params,
     });
 }
 

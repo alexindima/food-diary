@@ -105,7 +105,7 @@ function createCommentServiceMock(): CommentServiceMock {
         getComments: vi.fn(() => of(createPage([createComment()]))),
         createComment: vi.fn(() => of(createComment())),
         updateComment: vi.fn(() => of(createComment())),
-        deleteComment: vi.fn(() => of(undefined)),
+        deleteComment: vi.fn(() => of(void 0)),
     };
 }
 

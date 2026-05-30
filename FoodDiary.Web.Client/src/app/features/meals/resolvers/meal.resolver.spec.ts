@@ -24,7 +24,7 @@ describe('mealResolver', () => {
 
     beforeEach(() => {
         mealServiceSpy = { getById: vi.fn() };
-        navSpy = { navigateToConsumptionListAsync: vi.fn().mockResolvedValue(undefined) };
+        navSpy = { navigateToConsumptionListAsync: vi.fn().mockResolvedValue(void 0) };
 
         TestBed.configureTestingModule({
             providers: [

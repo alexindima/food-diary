@@ -33,8 +33,8 @@ function setupNotificationsDialog(notifications: NotificationItem[]): Notificati
         notifications: signal(notifications),
         notificationsLoading: signal(false),
         ensureNotificationsLoaded: vi.fn(),
-        markAsRead: vi.fn().mockReturnValue(of(undefined)),
-        markAllRead: vi.fn().mockReturnValue(of(undefined)),
+        markAsRead: vi.fn().mockReturnValue(of(void 0)),
+        markAllRead: vi.fn().mockReturnValue(of(void 0)),
     };
 
     TestBed.configureTestingModule({

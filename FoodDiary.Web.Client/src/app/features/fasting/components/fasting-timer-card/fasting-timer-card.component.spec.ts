@@ -141,8 +141,8 @@ function registerContentTests(): void {
             fixture.detectChanges();
 
             const separator = requireElement(fixture, '.fasting-timer-card__summary-protocol-separator');
-            expect(separator.textContent.trim()).toBe('\u00b7');
-            expect(host(fixture).textContent).not.toContain('\u00c2');
+            expect(separator.textContent.trim()).toBe('\u00B7');
+            expect(host(fixture).textContent).not.toContain('\u00C2');
         });
     });
 }
@@ -330,7 +330,7 @@ async function createHostFixtureWithoutFacadeAsync(): Promise<ComponentFixture<F
 function createDialogServiceStub(): Pick<FdUiDialogService, 'open'> {
     return {
         open: () => ({
-            afterClosed: () => of(undefined),
+            afterClosed: () => of(void 0),
         }),
     } as unknown as Pick<FdUiDialogService, 'open'>;
 }
@@ -378,6 +378,7 @@ type FastingFacadeStub = {
 
 function createFastingFacadeStub(): FastingFacadeStub {
     const currentSession = signal<FastingSession | null>(null);
+    const noop = (): void => {};
 
     return {
         isActive: computed(() => currentSession() !== null && currentSession()?.endedAtUtc === null),
@@ -400,24 +401,24 @@ function createFastingFacadeStub(): FastingFacadeStub {
         isUpdatingCycle: signal(false),
         canExtendActiveSession: computed(() => false),
         elapsedMs: signal(0),
-        selectMode: () => undefined,
-        selectProtocol: () => undefined,
-        setCustomHours: () => undefined,
-        setCustomIntermittentFastHours: () => undefined,
-        setCyclicPreset: () => undefined,
-        selectCustomCyclicPreset: () => undefined,
-        setCyclicFastDays: () => undefined,
-        setCyclicEatDays: () => undefined,
-        selectCyclicEatDayProtocol: () => undefined,
-        setCyclicEatDayFastHours: () => undefined,
-        startFasting: () => undefined,
-        endFasting: () => undefined,
-        setExtendHours: () => undefined,
-        setReduceHours: () => undefined,
-        extendByHours: () => undefined,
-        reduceTargetByHours: () => undefined,
-        skipCyclicDay: () => undefined,
-        postponeCyclicDay: () => undefined,
+        selectMode: noop,
+        selectProtocol: noop,
+        setCustomHours: noop,
+        setCustomIntermittentFastHours: noop,
+        setCyclicPreset: noop,
+        selectCustomCyclicPreset: noop,
+        setCyclicFastDays: noop,
+        setCyclicEatDays: noop,
+        selectCyclicEatDayProtocol: noop,
+        setCyclicEatDayFastHours: noop,
+        startFasting: noop,
+        endFasting: noop,
+        setExtendHours: noop,
+        setReduceHours: noop,
+        extendByHours: noop,
+        reduceTargetByHours: noop,
+        skipCyclicDay: noop,
+        postponeCyclicDay: noop,
     };
 }
 

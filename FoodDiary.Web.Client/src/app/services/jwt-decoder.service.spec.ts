@@ -31,8 +31,8 @@ describe('JwtDecoderService decodePayload', () => {
         const payload = { data: 'test+value/end' };
         const json = JSON.stringify(payload);
         const bytes = new TextEncoder().encode(json);
-        const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
-        const urlSafe = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        const binary = Array.from(bytes, byte => String.fromCodePoint(byte)).join('');
+        const urlSafe = btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
         const token = `header.${urlSafe}.sig`;
         expect(service.decodePayload(token)).toEqual(payload);
     });
@@ -108,7 +108,7 @@ describe('JwtDecoderService extractRoles', () => {
 function encodePayload(payload: Record<string, unknown>): string {
     const json = JSON.stringify(payload);
     const bytes = new TextEncoder().encode(json);
-    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+    const binary = Array.from(bytes, byte => String.fromCodePoint(byte)).join('');
     const base64 = btoa(binary);
     return `header.${base64}.signature`;
 }

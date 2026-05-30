@@ -283,7 +283,7 @@ export class ShoppingListFacade {
             return;
         }
 
-        this.saveQueue.schedule(undefined);
+        this.saveQueue.schedule();
     }
 
     private persistList(): void {

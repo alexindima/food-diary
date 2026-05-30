@@ -67,7 +67,7 @@ beforeEach(() => {
             }),
         ),
         getById: vi.fn().mockReturnValue(of(recipe)),
-        deleteById: vi.fn().mockReturnValue(of(undefined)),
+        deleteById: vi.fn().mockReturnValue(of(void 0)),
     };
 
     favoriteRecipeService = {

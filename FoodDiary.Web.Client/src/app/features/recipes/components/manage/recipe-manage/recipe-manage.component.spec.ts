@@ -285,7 +285,7 @@ function createRecipeManageFacadeMock(overrides: Partial<RecipeManageFacadeMock>
         addRecipe: vi.fn(),
         applyItemSelection: vi.fn(),
         calculateAutoSummary: vi.fn().mockReturnValue(EMPTY_SUMMARY),
-        cancelManageAsync: vi.fn().mockResolvedValue(undefined),
+        cancelManageAsync: vi.fn().mockResolvedValue(void 0),
         clearGlobalError: vi.fn(),
         fromRecipeTotal: vi.fn((value: number | null | undefined) => Number(value ?? 0)),
         getSummaryFromRecipe: vi.fn((recipe: Recipe | null, fallback: RecipeNutritionSummary) =>

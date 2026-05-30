@@ -17,7 +17,7 @@ const mockState = {} as unknown as RouterStateSnapshot;
 describe('productResolver', () => {
     beforeEach(() => {
         productServiceSpy = { getById: vi.fn() };
-        navSpy = { navigateToProductListAsync: vi.fn().mockResolvedValue(undefined) };
+        navSpy = { navigateToProductListAsync: vi.fn().mockResolvedValue(void 0) };
 
         TestBed.configureTestingModule({
             providers: [

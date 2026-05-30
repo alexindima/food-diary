@@ -68,7 +68,7 @@ beforeEach(() => {
         getInfo: vi.fn().mockReturnValue(of({ height: USER_HEIGHT_CM })),
     };
     exportService = {
-        exportDiary: vi.fn().mockReturnValue(of(undefined)),
+        exportDiary: vi.fn().mockReturnValue(of(void 0)),
     };
     currentLanguage = 'en';
     languageChanges = new Subject<unknown>();

@@ -10,7 +10,7 @@ const DINNER_START_MINUTES = 1020;
 const SNACK_START_MINUTES = 1320;
 
 export function isMealTypeOption(value: string): value is MealTypeOption {
-    return MEAL_TYPE_OPTIONS.some(option => option === value);
+    return (MEAL_TYPE_OPTIONS as readonly string[]).includes(value);
 }
 
 export function normalizeMealType(value: string | null | undefined): MealTypeOption | null {

@@ -435,7 +435,10 @@ export class FdUiLineChartComponent {
 
     private buildAreaPath(path: string, points: readonly FdUiLineChartPointViewModel[]): string {
         const first = points[0];
-        const last = points[points.length - 1];
+        const last = points.at(-1);
+        if (last === undefined) {
+            return path;
+        }
 
         const baseline = this.areaBaseline();
 

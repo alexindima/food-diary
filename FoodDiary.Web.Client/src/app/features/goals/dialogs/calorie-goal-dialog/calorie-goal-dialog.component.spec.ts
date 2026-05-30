@@ -13,6 +13,7 @@ const DEFAULT_CALORIE_TARGET = 2000;
 const CURRENT_CALORIE_TARGET = 2500;
 const UPDATED_CALORIE_TARGET = 1800;
 const INVALID_CALORIE_TARGET = -100;
+const DEFAULT_DIALOG_DATA = { dailyCalorieTarget: DEFAULT_CALORIE_TARGET };
 
 describe('CalorieGoalDialogComponent', () => {
     let component: CalorieGoalDialogComponent;
@@ -20,7 +21,7 @@ describe('CalorieGoalDialogComponent', () => {
     let goalsServiceSpy: { updateGoals: ReturnType<typeof vi.fn> };
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
-    function createComponent(data: CalorieGoalDialogData | null = { dailyCalorieTarget: DEFAULT_CALORIE_TARGET }): void {
+    function createComponent(data: CalorieGoalDialogData | null = DEFAULT_DIALOG_DATA): void {
         goalsServiceSpy = { updateGoals: vi.fn() };
         dialogRefSpy = { close: vi.fn() };
 

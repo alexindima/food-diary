@@ -121,7 +121,7 @@ export class FdUiFormErrorComponent {
 
         return this.translateMessage(result.key, {
             ...controlParams,
-            ...(result.params ?? {}),
+            ...result.params,
             ...context,
         });
     }

@@ -232,27 +232,30 @@ export class FdUiToastService {
 
     private buildSemanticOptions(kind: FdUiToastSemanticKind, options: FdUiToastOptions): FdUiToastOptions {
         switch (kind) {
-            case 'success':
+            case 'success': {
                 return {
                     appearance: 'positive',
                     duration: SUCCESS_DURATION_MS,
                     politeness: 'polite',
                     ...options,
                 };
-            case 'error':
+            }
+            case 'error': {
                 return {
                     appearance: 'negative',
                     duration: DEFAULT_DURATION_MS,
                     politeness: 'assertive',
                     ...options,
                 };
-            case 'info':
+            }
+            case 'info': {
                 return {
                     appearance: 'info',
                     duration: INFO_DURATION_MS,
                     politeness: 'polite',
                     ...options,
                 };
+            }
         }
     }
 }

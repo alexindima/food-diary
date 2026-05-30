@@ -111,7 +111,7 @@ function normalizeLanguage(value: string | null | undefined): string | null {
         return null;
     }
 
-    const [code] = normalized.split(/[-_]/);
+    const [code] = normalized.split(/[_-]/);
     return code.length > 0 ? code : null;
 }
 
@@ -175,7 +175,7 @@ function mapUserActivityLevel(value: string | null | undefined): ActivityLevelOp
 }
 
 function isActivityLevelOption(value: string): value is ActivityLevelOption {
-    return ACTIVITY_LEVEL_OPTIONS.some(option => option === value);
+    return (ACTIVITY_LEVEL_OPTIONS as readonly string[]).includes(value);
 }
 
 function mapUserProfileImage(user: User): ImageSelection | null {

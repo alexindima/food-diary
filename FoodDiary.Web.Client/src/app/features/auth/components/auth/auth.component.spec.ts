@@ -42,13 +42,13 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
         startAdminSso: vi.fn(),
     };
     const navigationServiceSpy = {
-        navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(undefined),
-        navigateToReturnUrlAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToReturnUrlAsync: vi.fn().mockResolvedValue(void 0),
     };
     const routerSpy = { navigate: vi.fn().mockResolvedValue(true) };
     const googleManagerSpy = {
         ready: vi.fn().mockReturnValue(false),
-        initializeAsync: vi.fn().mockResolvedValue(undefined),
+        initializeAsync: vi.fn().mockResolvedValue(void 0),
         renderButton: vi.fn(),
     };
 

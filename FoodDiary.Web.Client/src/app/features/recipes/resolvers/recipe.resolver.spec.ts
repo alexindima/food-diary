@@ -18,7 +18,7 @@ describe('recipeResolver', () => {
 
     beforeEach(() => {
         recipeServiceSpy = { getById: vi.fn() };
-        navSpy = { navigateToRecipeListAsync: vi.fn().mockResolvedValue(undefined) };
+        navSpy = { navigateToRecipeListAsync: vi.fn().mockResolvedValue(void 0) };
 
         TestBed.configureTestingModule({
             providers: [

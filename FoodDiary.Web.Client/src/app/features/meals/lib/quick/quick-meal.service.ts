@@ -99,7 +99,7 @@ export class QuickMealService {
             const withoutCurrent = items.filter(current => current.key !== key);
             const existingIndex = withoutCurrent.findIndex(current => current.key === item.key);
 
-            if (existingIndex >= 0) {
+            if (existingIndex !== -1) {
                 const updated = [...withoutCurrent];
                 updated[existingIndex] = {
                     ...updated[existingIndex],
@@ -111,7 +111,7 @@ export class QuickMealService {
 
             const originalIndex = items.findIndex(current => current.key === key);
             const updatedItem = { ...item, flashId };
-            if (originalIndex < 0) {
+            if (originalIndex === -1) {
                 return [...withoutCurrent, updatedItem];
             }
 
@@ -200,7 +200,7 @@ export class QuickMealService {
         this.itemsSignal.update(items => {
             const flashId = ++this.nextFlashId;
             const existingIndex = items.findIndex(item => item.key === newItem.key);
-            if (existingIndex >= 0) {
+            if (existingIndex !== -1) {
                 const updated = [...items];
                 updated[existingIndex] = {
                     ...updated[existingIndex],

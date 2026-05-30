@@ -90,35 +90,47 @@ export function getPremiumPlanLabelKey(plan: BillingPlan): string {
 
 export function getPremiumStatusLabelKey(status: string | null): string {
     switch (status) {
-        case 'active':
+        case 'active': {
             return 'PREMIUM_PAGE.STATUS.ACTIVE';
-        case 'trialing':
+        }
+        case 'trialing': {
             return 'PREMIUM_PAGE.STATUS.TRIALING';
-        case 'past_due':
+        }
+        case 'past_due': {
             return 'PREMIUM_PAGE.STATUS.PAST_DUE';
-        case 'canceled':
+        }
+        case 'canceled': {
             return 'PREMIUM_PAGE.STATUS.CANCELED';
-        case 'unpaid':
+        }
+        case 'unpaid': {
             return 'PREMIUM_PAGE.STATUS.UNPAID';
-        case 'incomplete':
+        }
+        case 'incomplete': {
             return 'PREMIUM_PAGE.STATUS.INCOMPLETE';
-        case null:
+        }
+        case null: {
             return 'PREMIUM_PAGE.STATUS.NONE';
-        default:
+        }
+        default: {
             return 'PREMIUM_PAGE.STATUS.NONE';
+        }
     }
 }
 
 export function getPremiumProviderLabel(provider: BillingProvider): string {
     switch (provider.toLowerCase()) {
-        case 'yookassa':
+        case 'yookassa': {
             return 'YooKassa';
-        case 'paddle':
+        }
+        case 'paddle': {
             return 'Paddle';
-        case 'stripe':
+        }
+        case 'stripe': {
             return 'Stripe';
-        default:
+        }
+        default: {
             return provider;
+        }
     }
 }
 

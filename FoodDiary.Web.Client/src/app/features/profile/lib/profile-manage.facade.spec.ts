@@ -85,20 +85,20 @@ beforeEach(() => {
             }),
         ),
         getWebPushSubscriptions: vi.fn().mockReturnValue(of(overview.webPushSubscriptions)),
-        removeWebPushSubscription: vi.fn().mockReturnValue(of(undefined)),
+        removeWebPushSubscription: vi.fn().mockReturnValue(of(void 0)),
     };
     dialogService = {
         open: vi.fn(),
     };
     authService = {
-        onLogoutAsync: vi.fn().mockResolvedValue(undefined),
+        onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         startAdminSso: vi.fn().mockReturnValue(of({ code: 'abc123', expiresAtUtc: '2026-04-02T00:00:00Z' })),
     };
     localizationService = {
-        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
+        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(void 0),
     };
     navigationService = {
-        navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
     };
 
     dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
@@ -161,7 +161,7 @@ describe('ProfileManageFacade loading and submit', () => {
 
 describe('ProfileManageFacade account actions', () => {
     it('opens password success dialog after successful password dialog close', () => {
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) }).mockReturnValueOnce({ afterClosed: () => of(undefined) });
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) }).mockReturnValueOnce({ afterClosed: () => of(void 0) });
         facade.user.set(user);
 
         facade.openChangePasswordDialog();

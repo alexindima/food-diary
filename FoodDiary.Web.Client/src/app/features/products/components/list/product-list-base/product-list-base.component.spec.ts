@@ -52,7 +52,7 @@ describe('ProductListBaseComponent', () => {
 
     it('scrolls to top before loading selected page', () => {
         const { component, facade } = setupComponent();
-        const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => undefined);
+        const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => {});
 
         component['onPageChange'](PAGE_INDEX);
 

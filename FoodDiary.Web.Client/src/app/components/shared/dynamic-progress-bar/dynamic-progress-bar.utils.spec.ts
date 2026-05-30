@@ -46,10 +46,9 @@ describe('dynamic progress bar utils', () => {
     it('calculates text position for low, normal, and overflow progress', () => {
         expect(calculateTextPosition(LOW_PROGRESS, LOW_PROGRESS, MAX_PERCENT, MAX_PERCENT)).toBe(LOW_TEXT_POSITION);
         expect(calculateTextPosition(NORMAL_PROGRESS, NORMAL_PROGRESS, MAX_PERCENT, MAX_PERCENT)).toBe(NORMAL_TEXT_POSITION);
-        expect(parseFloat(calculateTextPosition(OVERFLOW_PROGRESS, OVERFLOW_PROGRESS, MAX_PERCENT, OVERFLOW_MAX_POSITION))).toBeCloseTo(
-            OVERFLOW_TEXT_POSITION,
-            1,
-        );
+        expect(
+            Number.parseFloat(calculateTextPosition(OVERFLOW_PROGRESS, OVERFLOW_PROGRESS, MAX_PERCENT, OVERFLOW_MAX_POSITION)),
+        ).toBeCloseTo(OVERFLOW_TEXT_POSITION, 1);
     });
 
     it('resolves progress colors across normal, warning, and danger ranges', () => {

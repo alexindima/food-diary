@@ -47,8 +47,8 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     protected inputWidth = '1ch';
     protected readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
 
-    private onChange: (value: string) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: string) => void = () => {};
+    private onTouched: () => void = () => {};
 
     protected get hostClass(): string {
         const error = this.error();
@@ -106,7 +106,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
             return '';
         }
 
-        const normalized = value.replace(',', '.').replace(/[^0-9.]/g, '');
+        const normalized = value.replace(',', '.').replaceAll(/[^\d.]/g, '');
         const parts = normalized.split('.');
 
         if (parts.length <= 1) {

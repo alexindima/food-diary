@@ -27,7 +27,7 @@ describe('adminAuthGuard', () => {
             isAdmin: vi.fn(),
             tryUpgradeToAdminAsync: vi.fn(),
         };
-        authService.applySsoFromQueryAsync.mockResolvedValue(undefined);
+        authService.applySsoFromQueryAsync.mockResolvedValue(void 0);
         authService.tryUpgradeToAdminAsync.mockResolvedValue(false);
 
         router = {

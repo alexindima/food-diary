@@ -27,22 +27,30 @@ export function getBillingPlanLabelKey(overview: BillingOverview): string {
 
 export function getBillingStatusLabelKey(overview: BillingOverview): string {
     switch (overview.subscriptionStatus) {
-        case 'active':
+        case 'active': {
             return 'USER_MANAGE.BILLING_STATUS_ACTIVE';
-        case 'trialing':
+        }
+        case 'trialing': {
             return 'USER_MANAGE.BILLING_STATUS_TRIALING';
-        case 'past_due':
+        }
+        case 'past_due': {
             return 'USER_MANAGE.BILLING_STATUS_PAST_DUE';
-        case 'canceled':
+        }
+        case 'canceled': {
             return 'USER_MANAGE.BILLING_STATUS_CANCELED';
-        case 'unpaid':
+        }
+        case 'unpaid': {
             return 'USER_MANAGE.BILLING_STATUS_UNPAID';
-        case 'incomplete':
+        }
+        case 'incomplete': {
             return 'USER_MANAGE.BILLING_STATUS_INCOMPLETE';
-        case null:
+        }
+        case null: {
             return 'USER_MANAGE.BILLING_STATUS_FREE';
-        default:
+        }
+        default: {
             return 'USER_MANAGE.BILLING_STATUS_FREE';
+        }
     }
 }
 
@@ -53,14 +61,18 @@ export function getBillingProviderLabel(provider: BillingProvider | null | undef
     }
 
     switch (normalizedProvider.toLowerCase()) {
-        case 'yookassa':
+        case 'yookassa': {
             return 'YooKassa';
-        case 'paddle':
+        }
+        case 'paddle': {
             return 'Paddle';
-        case 'stripe':
+        }
+        case 'stripe': {
             return 'Stripe';
-        default:
+        }
+        default: {
             return normalizedProvider;
+        }
     }
 }
 

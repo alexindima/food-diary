@@ -31,7 +31,7 @@ describe('parseDecimalInput', () => {
 
     it('returns null for empty or invalid values', () => {
         expect(parseDecimalInput(null)).toBeNull();
-        expect(parseDecimalInput(undefined)).toBeNull();
+        expect(parseDecimalInput(void 0)).toBeNull();
         expect(parseDecimalInput('abc')).toBeNull();
         expect(parseDecimalInput(Number.NaN)).toBeNull();
     });

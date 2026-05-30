@@ -203,31 +203,41 @@ export class FastingPageComponent {
 
     protected getHistoryAccentColor(session: FastingSession): string {
         switch (session.status) {
-            case 'Completed':
+            case 'Completed': {
                 return 'var(--fd-color-green-500)';
-            case 'Interrupted':
+            }
+            case 'Interrupted': {
                 return 'var(--fd-color-orange-500)';
-            case 'Skipped':
+            }
+            case 'Skipped': {
                 return 'var(--fd-color-sky-500)';
-            case 'Postponed':
+            }
+            case 'Postponed': {
                 return 'var(--fd-color-ai)';
-            case 'Active':
+            }
+            case 'Active': {
                 return 'var(--fd-color-slate-400)';
+            }
         }
     }
 
     protected getHistoryBadgeKey(status: FastingSessionStatus): string {
         switch (status) {
-            case 'Completed':
+            case 'Completed': {
                 return 'FASTING.BADGE_COMPLETED';
-            case 'Interrupted':
+            }
+            case 'Interrupted': {
                 return 'FASTING.BADGE_INTERRUPTED';
-            case 'Skipped':
+            }
+            case 'Skipped': {
                 return 'FASTING.BADGE_SKIPPED';
-            case 'Postponed':
+            }
+            case 'Postponed': {
                 return 'FASTING.BADGE_POSTPONED';
-            case 'Active':
+            }
+            case 'Active': {
                 return 'FASTING.BADGE_INCOMPLETE';
+            }
         }
     }
 
@@ -476,12 +486,15 @@ export class FastingPageComponent {
 
     private getAlertSeverity(message: FastingMessage): FdUiInlineAlertSeverity {
         switch (message.tone) {
-            case 'warning':
+            case 'warning': {
                 return 'warning';
-            case 'positive':
+            }
+            case 'positive': {
                 return 'success';
-            case 'neutral':
+            }
+            case 'neutral': {
                 return 'info';
+            }
         }
     }
 

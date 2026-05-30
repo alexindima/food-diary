@@ -7,7 +7,7 @@ import { WeeklyCheckInStatsCardComponent } from './weekly-check-in-stats-card.co
 
 describe('WeeklyCheckInStatsCardComponent', () => {
     it('renders card title without week data', () => {
-        const fixture = setupComponent(undefined);
+        const fixture = setupComponent(void 0);
 
         expect(getText(fixture)).toContain('WEEKLY_CHECK_IN.THIS_WEEK');
     });

@@ -173,6 +173,6 @@ export class DashboardFacade {
         const currentLang = this.translateService.getCurrentLang();
         const fallbackLang = this.translateService.getFallbackLang() ?? 'en';
         const lang = currentLang.length > 0 ? currentLang : fallbackLang.length > 0 ? fallbackLang : 'en';
-        return lang.split(/[-_]/)[0];
+        return lang.split(/[_-]/)[0];
     }
 }

@@ -6,12 +6,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { type ConsumptionManageSuccessDialogData, MealManageSuccessDialogComponent } from './meal-manage-success-dialog.component';
 
+const DEFAULT_DIALOG_DATA = { isEdit: false };
+
 describe('MealManageSuccessDialogComponent', () => {
     let component: MealManageSuccessDialogComponent;
     let fixture: ComponentFixture<MealManageSuccessDialogComponent>;
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
-    function createComponent(data: ConsumptionManageSuccessDialogData = { isEdit: false }): void {
+    function createComponent(data: ConsumptionManageSuccessDialogData = DEFAULT_DIALOG_DATA): void {
         dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({

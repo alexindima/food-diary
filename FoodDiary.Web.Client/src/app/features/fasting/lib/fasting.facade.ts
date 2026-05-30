@@ -489,7 +489,7 @@ export class FastingFacade {
     private upsertHistorySession(session: FastingSession): void {
         this.history.update(current => {
             const existingIndex = current.findIndex(item => item.id === session.id);
-            if (existingIndex < 0) {
+            if (existingIndex === -1) {
                 return current;
             }
 

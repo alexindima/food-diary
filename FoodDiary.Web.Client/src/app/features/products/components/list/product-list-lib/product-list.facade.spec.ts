@@ -82,7 +82,7 @@ beforeEach(() => {
     );
     productService.query.mockReturnValue(of(createPage([createProduct({ id: 'query-product', name: 'Query product' })])));
     productService.getById.mockReturnValue(of(createProduct()));
-    productService.deleteById.mockReturnValue(of(undefined));
+    productService.deleteById.mockReturnValue(of(void 0));
     favoriteProductService.getAll.mockReturnValue(of([createFavoriteProduct()]));
     favoriteProductService.add.mockReturnValue(of(createFavoriteProduct()));
     favoriteProductService.remove.mockReturnValue(of(null));

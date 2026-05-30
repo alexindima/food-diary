@@ -49,7 +49,7 @@ describe('LocalizedDatePipe', () => {
     });
 
     it('should return undefined for undefined input', () => {
-        const result = pipe.transform(undefined);
+        const result = pipe.transform(void 0);
         expect(result).toBeUndefined();
     });
 

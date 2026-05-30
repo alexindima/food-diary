@@ -31,7 +31,7 @@ describe('authGuard', () => {
             isEmailConfirmed,
             ensureSessionReadyAsync: vi.fn(),
         };
-        authServiceMock.ensureSessionReadyAsync.mockResolvedValue(undefined);
+        authServiceMock.ensureSessionReadyAsync.mockResolvedValue(void 0);
 
         navigationServiceMock = {
             navigateToAuthAsync: vi.fn(),

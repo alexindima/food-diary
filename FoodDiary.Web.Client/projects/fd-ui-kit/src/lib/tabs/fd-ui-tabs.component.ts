@@ -45,7 +45,7 @@ export class FdUiTabsComponent {
     protected readonly appearanceClass = computed(() => `fd-ui-tabs--appearance-${this.appearance()}`);
     protected readonly selectedIndex = computed(() => {
         const index = this.tabs().findIndex(tab => tab.value === this.selectedValue());
-        return index >= 0 ? index : 0;
+        return Math.max(index, 0);
     });
     protected readonly tabItems = computed<FdUiTabViewModel[]>(() => {
         this.languageVersion();
@@ -81,26 +81,32 @@ export class FdUiTabsComponent {
 
         switch (event.key) {
             case 'ArrowRight':
-            case 'ArrowDown':
+            case 'ArrowDown': {
                 nextIndex = (index + 1) % tabs.length;
                 break;
+            }
             case 'ArrowLeft':
-            case 'ArrowUp':
+            case 'ArrowUp': {
                 nextIndex = (index - 1 + tabs.length) % tabs.length;
                 break;
-            case 'Home':
+            }
+            case 'Home': {
                 nextIndex = 0;
                 break;
-            case 'End':
+            }
+            case 'End': {
                 nextIndex = tabs.length - 1;
                 break;
+            }
             case 'Enter':
-            case ' ':
+            case ' ': {
                 event.preventDefault();
                 this.selectIndex(index);
                 return;
-            default:
+            }
+            default: {
                 return;
+            }
         }
 
         event.preventDefault();

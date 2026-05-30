@@ -120,8 +120,8 @@ export class FdUiSatietyScaleComponent implements ControlValueAccessor {
     protected value: number | null = null;
     protected disabled = false;
 
-    private onChange: (value: number | null) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: number | null) => void = () => {};
+    private onTouched: () => void = () => {};
 
     public writeValue(value: number | null): void {
         this.value = value;

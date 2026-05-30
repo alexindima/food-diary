@@ -19,11 +19,11 @@ import { FdUiSidebarSectionComponent } from './fd-ui-sidebar-section.component';
 })
 export class FdUiSidebarComponent {
     public readonly brandTitle = input.required<string>();
-    public readonly brandSubtitle = input<string | undefined>(undefined);
-    public readonly logoText = input<string | undefined>(undefined);
-    public readonly logoMaskUrl = input<string | undefined>(undefined);
-    public readonly notificationAriaLabel = input<string | undefined>(undefined);
-    public readonly notificationHint = input<string | undefined>(undefined);
+    public readonly brandSubtitle = input<string | undefined>();
+    public readonly logoText = input<string | undefined>();
+    public readonly logoMaskUrl = input<string | undefined>();
+    public readonly notificationAriaLabel = input<string | undefined>();
+    public readonly notificationHint = input<string | undefined>();
     public readonly notificationBadge = input(0);
     public readonly pendingRoute = input<string | null>(null);
     public readonly sections = input.required<FdUiSidebarSection[]>();

@@ -17,7 +17,7 @@ describe('normalizeProductType', () => {
 
     it('should return null for empty or unknown values', () => {
         expect(normalizeProductType(null)).toBeNull();
-        expect(normalizeProductType(undefined)).toBeNull();
+        expect(normalizeProductType()).toBeNull();
         expect(normalizeProductType('')).toBeNull();
         expect(normalizeProductType('not-a-type')).toBeNull();
     });

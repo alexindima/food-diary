@@ -18,7 +18,7 @@ let loggingSpy: { logEvent: ReturnType<typeof vi.fn> };
 beforeEach(() => {
     environment.enableClientObservability = true;
     loggingSpy = {
-        logEvent: vi.fn().mockReturnValue(of(undefined)),
+        logEvent: vi.fn().mockReturnValue(of(void 0)),
     };
 
     TestBed.configureTestingModule({

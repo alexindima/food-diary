@@ -373,8 +373,8 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             ctx.drawImage(image, 0, 0, dimensions.width, dimensions.height);
             const blob = await this.canvasToBlobAsync(canvas, file.type, this.resizeQuality());
             return new File([blob], file.name, { type: file.type, lastModified: file.lastModified });
-        } catch (err) {
-            this.logger.warn('Failed to resize image before upload', err);
+        } catch (error) {
+            this.logger.warn('Failed to resize image before upload', error);
             return file;
         }
     }

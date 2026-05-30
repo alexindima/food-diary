@@ -114,7 +114,7 @@ describe('RecipeListComponent actions', () => {
         facade.getFavoriteRecipe.mockReturnValueOnce(of(recipe));
         const clickSpy = vi
             .spyOn(component as unknown as { onRecipeClick: (value: ReturnType<typeof createRecipe>) => void }, 'onRecipeClick')
-            .mockImplementation(() => undefined);
+            .mockImplementation(() => {});
 
         component['openFavoriteRecipe'](createFavoriteRecipe());
 
@@ -200,22 +200,22 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         favoriteRecipes: signal<FavoriteRecipe[]>([]),
         favoriteTotalCount: signal(0),
         getFavoriteRecipe: vi.fn().mockReturnValue(of(createRecipe())),
-        handleDetailActionAsync: vi.fn().mockResolvedValue(undefined),
+        handleDetailActionAsync: vi.fn().mockResolvedValue(void 0),
         hasActiveFilters: vi.fn((onlyMine: boolean) => onlyMine),
         hasSearch: vi.fn((search: string | null) => search !== null && search.length > 0),
         hasVisibleRecipes: signal(true),
         isDeleting: signal(false),
         isFavoritesLoadingMore: signal(false),
-        loadFavorites: vi.fn().mockReturnValue(of(undefined)),
-        loadInitialOverview: vi.fn().mockReturnValue(of(undefined)),
-        loadRecipes: vi.fn().mockReturnValue(of(undefined)),
+        loadFavorites: vi.fn().mockReturnValue(of(void 0)),
+        loadInitialOverview: vi.fn().mockReturnValue(of(void 0)),
+        loadRecipes: vi.fn().mockReturnValue(of(void 0)),
         navigateToAddRecipeAsync: vi.fn().mockResolvedValue(true),
         pageSize: PAGE_SIZE,
         recipeData,
         recentRecipes: signal<Recipe[]>([]),
-        removeFavorite: vi.fn().mockReturnValue(of(undefined)),
+        removeFavorite: vi.fn().mockReturnValue(of(void 0)),
         showRecentSection: signal(false),
-        toggleRecipeFavorite: vi.fn().mockReturnValue(of(undefined)),
+        toggleRecipeFavorite: vi.fn().mockReturnValue(of(void 0)),
     } as unknown as RecipeListFacadeMock;
 }
 

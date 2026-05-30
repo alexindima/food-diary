@@ -41,9 +41,8 @@ export class MealsPreviewComponent {
         });
     }
 
-    protected toggleAi(slot?: string | null): void {
-        const normalizedSlot = slot ?? null;
-        this.expandedAiSlot.update(current => (current === normalizedSlot ? null : normalizedSlot));
+    protected toggleAi(slot: string | null = null): void {
+        this.expandedAiSlot.update(current => (current === slot ? null : slot));
     }
 
     protected handleAiMealCreateRequested(result: AiInputBarResult): void {

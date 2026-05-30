@@ -131,5 +131,5 @@ function createToken(payload: Record<string, unknown>): string {
 }
 
 function encodeSegment(value: Record<string, unknown>): string {
-    return btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/u, '');
+    return btoa(JSON.stringify(value)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/u, '');
 }

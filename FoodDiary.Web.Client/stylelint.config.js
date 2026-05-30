@@ -5,8 +5,8 @@ import noSassUseAsWildcard from './stylelint-rules/no-sass-use-as-wildcard.js';
 const componentRawColorProperties =
     '/^(?:color|background|background-color|border|border-color|border-top|border-right|border-bottom|border-left|box-shadow|text-shadow|outline|outline-color|fill|stroke)$/';
 
-const rawColorValues = [/#[0-9a-fA-F]{3,8}\b/, /\brgba?\(/, /\bhsla?\(/];
-const fdVarFallbackValue = /var\(--fd-[^,)]+,\s*/;
+const rawColorValues = [/#[\dA-Fa-f]{3,8}\b/, /\brgba?\(/, /\bhsla?\(/];
+const fdVarFallbackValue = /var\(--fd-[^),]+,\s*/;
 
 const restrictedValueRules = {
     '/^.*$/': [fdVarFallbackValue],

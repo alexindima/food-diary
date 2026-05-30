@@ -17,8 +17,8 @@ describe('FrontendLoggerService', () => {
 
     it('writes warning and error messages through controlled console boundary', () => {
         const service = setup();
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
         service.warn(MESSAGE, ERROR);
         service.error(MESSAGE, ERROR);
@@ -30,7 +30,7 @@ describe('FrontendLoggerService', () => {
     it('skips dev-only logging outside dev builds', () => {
         environment.buildVersion = 'production';
         const service = setup();
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         service.warn(MESSAGE, ERROR, { devOnly: true });
 

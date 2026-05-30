@@ -81,7 +81,7 @@ describe('SidebarComponent behavior', () => {
     it('blocks page scroll without shifting content while a mobile sheet is open', () => {
         const { component } = createComponent({ isMobileViewport: true });
         const harness = component as unknown as SidebarHarness;
-        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
         Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1200 });
         Object.defineProperty(window, 'scrollY', { configurable: true, value: LOCKED_SCROLL_Y });
         Object.defineProperty(document.documentElement, 'clientWidth', { configurable: true, value: 1183 });
@@ -238,7 +238,7 @@ function createAuthServiceMock(): {
         isPremium: signal(false),
         isDietologist: signal(false),
         isAdmin: signal(false),
-        onLogoutAsync: vi.fn().mockResolvedValue(undefined),
+        onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         startAdminSso: vi.fn(),
     };
 }

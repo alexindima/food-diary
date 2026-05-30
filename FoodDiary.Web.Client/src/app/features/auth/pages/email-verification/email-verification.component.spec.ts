@@ -23,8 +23,8 @@ beforeEach(() => {
         verifyEmail: vi.fn().mockReturnValue(of(true)),
     };
     navigationServiceMock = {
-        navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
-        navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToAuthAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
     };
 });
 

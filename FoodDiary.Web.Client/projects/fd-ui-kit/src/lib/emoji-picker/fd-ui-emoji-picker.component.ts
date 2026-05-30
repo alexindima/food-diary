@@ -85,23 +85,27 @@ export class FdUiEmojiPickerComponent {
     protected handleKeydown(index: number, event: KeyboardEvent): void {
         switch (event.key) {
             case 'ArrowRight':
-            case 'ArrowDown':
+            case 'ArrowDown': {
                 event.preventDefault();
                 this.focusRelative(index, NEXT_OPTION_OFFSET);
                 break;
+            }
             case 'ArrowLeft':
-            case 'ArrowUp':
+            case 'ArrowUp': {
                 event.preventDefault();
                 this.focusRelative(index, PREVIOUS_OPTION_OFFSET);
                 break;
-            case 'Home':
+            }
+            case 'Home': {
                 event.preventDefault();
                 this.focusIndex(this.findEnabledIndex(FIRST_OPTION_INDEX, NEXT_OPTION_OFFSET));
                 break;
-            case 'End':
+            }
+            case 'End': {
                 event.preventDefault();
                 this.focusIndex(this.findEnabledIndex(this.options().length + PREVIOUS_OPTION_OFFSET, PREVIOUS_OPTION_OFFSET));
                 break;
+            }
             case ' ':
             case 'Enter': {
                 event.preventDefault();
@@ -111,8 +115,9 @@ export class FdUiEmojiPickerComponent {
                 }
                 break;
             }
-            default:
+            default: {
                 break;
+            }
         }
     }
 

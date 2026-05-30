@@ -16,12 +16,12 @@ export class FdUiButtonComponent {
     public readonly fill = input<FdUiButtonFill>('solid');
     public readonly appearance = input<FdUiButtonAppearance>('default');
     public readonly size = input<FdUiButtonSize>('md');
-    public readonly icon = input<string | undefined>(undefined);
+    public readonly icon = input<string | undefined>();
     public readonly iconSize = input<FdUiButtonIconSize>('md');
     public readonly disabled = input(false, { transform: booleanAttribute });
     public readonly loading = input(false, { transform: booleanAttribute });
     public readonly fullWidth = input(false, { transform: booleanAttribute });
-    public readonly ariaLabel = input<string | undefined>(undefined);
+    public readonly ariaLabel = input<string | undefined>();
 
     private readonly normalizedFill = computed<FdUiButtonFill>(() => {
         const variant = this.variant();

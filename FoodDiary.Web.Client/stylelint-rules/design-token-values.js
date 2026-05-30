@@ -13,7 +13,7 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
     transitionTime: property => `Use --fd-duration-* or --fd-transition-* tokens for ${property} values.`,
 });
 
-const zeroValuePattern = /(?:^|\s|[(,])-?0(?:\.0+)?(?:[a-z%]+)?(?=$|\s|[),])/i;
+const zeroValuePattern = /(?:^|\s|[(,])-?0(?:\.0+)?(?:[%a-z]+)?(?=$|\s|[),])/i;
 const lengthPattern = /(?:^|[\s(,])(?:0?\.\d+|[1-9]\d*(?:\.\d+)?)(?:px|r?em|vh|vw|vmin|vmax|ch|ex|%)\b/i;
 const transitionTimePattern = /(?:^|[\s(,])(?:0?\.\d+|[1-9]\d*(?:\.\d+)?)(?:ms|s)\b/i;
 const numericPattern = /(?:^|[\s(,])(?:0?\.\d+|[1-9]\d*(?:\.\d+)?)\b/i;

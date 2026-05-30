@@ -49,7 +49,7 @@ export class NavigationService {
         const navigationExtras =
             mealType !== undefined && mealType.length > 0
                 ? {
-                      state: { mealType, ...(extras?.state ?? {}) },
+                      state: { mealType, ...extras?.state },
                       queryParams: { mealType },
                   }
                 : { state: extras?.state };

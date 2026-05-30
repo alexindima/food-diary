@@ -37,8 +37,8 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
 
-    private onChange: (value: string) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: string) => void = () => {};
+    private onTouched: () => void = () => {};
 
     protected readonly sizeClass = computed(() => `fd-ui-textarea--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);

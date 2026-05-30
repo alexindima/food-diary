@@ -70,8 +70,8 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         }).format(value);
     });
 
-    private onChange: (value: string | null) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: string | null) => void = () => {};
+    private onTouched: () => void = () => {};
 
     public writeValue(value: string | Date | null): void {
         const parsed = fdUiParseLocalDate(value);
@@ -156,16 +156,18 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         switch (event.key) {
             case 'ArrowDown':
             case 'Enter':
-            case ' ':
+            case ' ': {
                 event.preventDefault();
                 this.openDatePicker();
                 break;
-            case 'Escape':
+            }
+            case 'Escape': {
                 if (this.isOpen()) {
                     event.preventDefault();
                     this.closeDatePicker();
                 }
                 break;
+            }
         }
     }
 

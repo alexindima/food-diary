@@ -168,7 +168,7 @@ async function createComponentAsync(): Promise<void> {
         success: vi.fn(),
     };
     dialogService = {
-        open: vi.fn((): { afterClosed: () => Observable<undefined> } => ({ afterClosed: () => of(undefined) })),
+        open: vi.fn((): { afterClosed: () => Observable<undefined> } => ({ afterClosed: () => of(void 0) })),
     };
 
     await TestBed.configureTestingModule({

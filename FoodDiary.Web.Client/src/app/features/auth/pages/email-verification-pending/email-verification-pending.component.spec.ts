@@ -42,12 +42,12 @@ beforeEach(() => {
         resendEmailVerification: vi.fn().mockReturnValue(of(true)),
     };
     navigationServiceMock = {
-        navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
-        navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToAuthAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
     };
     realtimeServiceMock = {
-        connectAsync: vi.fn().mockResolvedValue(undefined),
-        disconnectAsync: vi.fn().mockResolvedValue(undefined),
+        connectAsync: vi.fn().mockResolvedValue(void 0),
+        disconnectAsync: vi.fn().mockResolvedValue(void 0),
     };
 });
 

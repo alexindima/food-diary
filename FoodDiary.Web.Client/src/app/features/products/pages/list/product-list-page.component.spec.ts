@@ -42,9 +42,9 @@ describe('ProductListPageComponent', () => {
 
     it('deletes owned product and scrolls to top after delete action in detail dialog', async () => {
         const { component, facade, dialogService } = setupComponent();
-        const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => undefined);
+        const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => {});
         dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
-        facade.deleteProductAndReload.mockReturnValue(of(undefined));
+        facade.deleteProductAndReload.mockReturnValue(of(void 0));
 
         await handleProductClickAsync(component, createProduct({ isOwnedByCurrentUser: true }));
 
@@ -163,7 +163,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         addFavoriteProductToMeal: vi.fn(),
         removeFavorite: vi.fn(),
         reloadCurrentPage: vi.fn(),
-        deleteProductAndReload: vi.fn().mockReturnValue(of(undefined)),
+        deleteProductAndReload: vi.fn().mockReturnValue(of(void 0)),
     } as unknown as ProductListFacadeMock;
 }
 

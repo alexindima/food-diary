@@ -254,7 +254,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
             sessions.filter((_session, currentIndex) => currentIndex !== index),
         ),
         replaceAiSession: vi.fn(),
-        showSuccessRedirectAsync: vi.fn().mockResolvedValue(undefined),
+        showSuccessRedirectAsync: vi.fn().mockResolvedValue(void 0),
         submitConsumptionAsync: vi.fn().mockResolvedValue(null),
         syncManualNutritionFromTotals: vi.fn(),
         updateItemValidationRules: vi.fn(),

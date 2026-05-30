@@ -27,8 +27,8 @@ async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext
             .mockReturnValue(
                 of({ uploadUrl: 'https://upload.example.com', fileUrl: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' }),
             ),
-        uploadToPresignedUrl: vi.fn().mockReturnValue(of(undefined)),
-        deleteAsset: vi.fn().mockReturnValue(of(undefined)),
+        uploadToPresignedUrl: vi.fn().mockReturnValue(of(void 0)),
+        deleteAsset: vi.fn().mockReturnValue(of(void 0)),
     };
 
     await TestBed.configureTestingModule({

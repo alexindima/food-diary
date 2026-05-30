@@ -207,13 +207,13 @@ function registerTextPositionTests({ component, setInputs }: TestContext): void 
 
         it('should position text based on maxPosition when progress is 100-200%', () => {
             setInputs(CURRENT_150, MAX_PERCENT);
-            const position = parseFloat(component()['textPosition']());
+            const position = Number.parseFloat(component()['textPosition']());
             expect(position).toBeCloseTo(OVERFLOW_EXPECTED_POSITION, 1);
         });
 
         it('should use overflow formula when progress exceeds 200%', () => {
             setInputs(CURRENT_300, MAX_PERCENT);
-            const position = parseFloat(component()['textPosition']());
+            const position = Number.parseFloat(component()['textPosition']());
             expect(position).toBeCloseTo(HIGH_OVERFLOW_EXPECTED_POSITION, 1);
         });
     });

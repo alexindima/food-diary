@@ -105,7 +105,7 @@ const mockNavigationService = {
 };
 
 const mockDialogRef = {
-    afterClosed: vi.fn().mockReturnValue(of(undefined)),
+    afterClosed: vi.fn().mockReturnValue(of(void 0)),
 };
 
 const mockFdDialogService = {

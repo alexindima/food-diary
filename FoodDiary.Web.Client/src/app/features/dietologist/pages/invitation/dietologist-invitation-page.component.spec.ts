@@ -31,8 +31,8 @@ beforeEach(() => {
         declineInvitationForCurrentUser: vi.fn(),
     };
     navigationService = {
-        navigateToDietologistAsync: vi.fn().mockResolvedValue(undefined),
-        navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToDietologistAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
     };
     authService = {
         refreshToken: vi.fn().mockReturnValue(of({})),

@@ -33,7 +33,7 @@ type EmailTemplateDialogContext = {
 async function setupEmailTemplateDialogAsync(): Promise<EmailTemplateDialogContext> {
     const service = {
         upsert: vi.fn().mockReturnValue(of(TEMPLATE)),
-        sendTest: vi.fn().mockReturnValue(of(undefined)),
+        sendTest: vi.fn().mockReturnValue(of(void 0)),
     };
     const dialogRef = { close: vi.fn() };
 

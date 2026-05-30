@@ -2,6 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 export type FdUiIconSize = 'sm' | 'md' | 'lg' | 'xl';
 
+const ICON_SIZE_TOKENS: Record<FdUiIconSize, string> = {
+    sm: 'var(--fd-size-icon-sm)',
+    md: 'var(--fd-size-icon-md)',
+    lg: 'var(--fd-size-icon-lg)',
+    xl: 'var(--fd-size-icon-xl)',
+};
+
 @Component({
     selector: 'fd-ui-icon',
     templateUrl: './fd-ui-icon.component.html',
@@ -33,16 +40,6 @@ export class FdUiIconComponent {
             return `${size}px`;
         }
 
-        switch (size) {
-            case 'sm':
-                return 'var(--fd-size-icon-sm)';
-            case 'lg':
-                return 'var(--fd-size-icon-lg)';
-            case 'xl':
-                return 'var(--fd-size-icon-xl)';
-            case 'md':
-            default:
-                return 'var(--fd-size-icon-md)';
-        }
+        return ICON_SIZE_TOKENS[size];
     });
 }

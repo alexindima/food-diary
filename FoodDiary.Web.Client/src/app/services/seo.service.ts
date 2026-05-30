@@ -30,7 +30,7 @@ export class SeoService {
     private readonly document = inject(DOCUMENT);
     private readonly translate = inject(TranslateService);
     private readonly siteUrls = environment.siteUrls ?? DEFAULT_SITE_URLS;
-    private readonly russianHosts = new Set(environment.russianDefaultHosts ?? []);
+    private readonly russianHosts = new Set(environment.russianDefaultHosts);
 
     public update(data: SeoData): void {
         const currentSiteUrl = this.getCurrentSiteUrl();

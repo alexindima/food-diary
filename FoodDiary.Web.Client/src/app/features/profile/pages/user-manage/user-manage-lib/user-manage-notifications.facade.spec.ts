@@ -286,7 +286,7 @@ function createNotificationServiceMock(shouldFail: boolean): {
 } {
     return {
         notificationsChangedVersion: signal(0),
-        scheduleTestNotification: vi.fn().mockReturnValue(shouldFail ? throwError(() => new Error('Schedule failed')) : of(undefined)),
+        scheduleTestNotification: vi.fn().mockReturnValue(shouldFail ? throwError(() => new Error('Schedule failed')) : of(void 0)),
     };
 }
 

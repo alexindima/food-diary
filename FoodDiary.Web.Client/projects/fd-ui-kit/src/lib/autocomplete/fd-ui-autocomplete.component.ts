@@ -62,8 +62,8 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
-    private onChange: (value: T | string | null) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: T | string | null) => void = () => {};
+    private onTouched: () => void = () => {};
 
     protected readonly sizeClass = computed(() => `fd-ui-autocomplete--size-${this.size()}`);
     protected readonly hasError = computed(() => {
@@ -172,28 +172,32 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
     protected onControlKeydown(event: KeyboardEvent): void {
         switch (event.key) {
-            case 'ArrowDown':
+            case 'ArrowDown': {
                 event.preventDefault();
                 this.openMenu();
                 this.moveActive(NEXT_OPTION_OFFSET);
                 break;
-            case 'ArrowUp':
+            }
+            case 'ArrowUp': {
                 event.preventDefault();
                 this.openMenu();
                 this.moveActive(PREVIOUS_OPTION_OFFSET);
                 break;
-            case 'Enter':
+            }
+            case 'Enter': {
                 if (this.isOpen() && this.activeIndex() >= FIRST_OPTION_INDEX) {
                     event.preventDefault();
                     this.selectOption(this.options()[this.activeIndex()]);
                 }
                 break;
-            case 'Escape':
+            }
+            case 'Escape': {
                 if (this.isOpen()) {
                     event.preventDefault();
                     this.closeMenu();
                 }
                 break;
+            }
         }
     }
 

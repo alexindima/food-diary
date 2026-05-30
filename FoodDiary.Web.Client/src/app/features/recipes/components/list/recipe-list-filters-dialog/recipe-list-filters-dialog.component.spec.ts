@@ -7,11 +7,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { RecipeListFiltersDialogComponent } from './recipe-list-filters-dialog.component';
 import type { RecipeListFiltersDialogData } from './recipe-list-filters-dialog.types';
 
+const DEFAULT_DIALOG_DATA: RecipeListFiltersDialogData = { onlyMine: false };
+
 describe('RecipeListFiltersDialogComponent', () => {
     let component: RecipeListFiltersDialogComponent;
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
-    function createComponent(data: RecipeListFiltersDialogData = { onlyMine: false }): void {
+    function createComponent(data: RecipeListFiltersDialogData = DEFAULT_DIALOG_DATA): void {
         dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({

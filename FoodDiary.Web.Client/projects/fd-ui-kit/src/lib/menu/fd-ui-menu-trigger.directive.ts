@@ -67,20 +67,23 @@ export class FdUiMenuTriggerDirective {
         switch (event.key) {
             case 'ArrowDown':
             case 'Enter':
-            case ' ':
+            case ' ': {
                 event.preventDefault();
                 this.open();
                 break;
-            case 'ArrowUp':
+            }
+            case 'ArrowUp': {
                 event.preventDefault();
                 this.open('last');
                 break;
-            case 'Escape':
+            }
+            case 'Escape': {
                 if (this.overlayRef?.hasAttached() === true) {
                     event.preventDefault();
                     this.close();
                 }
                 break;
+            }
         }
     }
 

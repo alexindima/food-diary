@@ -65,9 +65,9 @@ describe('local-date.utils', () => {
 
     it('keeps empty optional dates undefined', () => {
         expect(toLocalDayStartIso(null)).toBeUndefined();
-        expect(toLocalDayEndIso(undefined)).toBeUndefined();
+        expect(toLocalDayEndIso(void 0)).toBeUndefined();
         expect(toUtcDayStartIso(null)).toBeUndefined();
-        expect(toUtcDayEndIso(undefined)).toBeUndefined();
+        expect(toUtcDayEndIso(void 0)).toBeUndefined();
     });
 
     it('formats date and time input values', () => {

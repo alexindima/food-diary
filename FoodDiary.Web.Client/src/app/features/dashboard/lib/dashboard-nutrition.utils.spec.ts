@@ -90,7 +90,7 @@ function registerPlaceholderTests(): void {
         });
 
         it('should return default icon for undefined', () => {
-            expect(placeholderIcon(undefined)).toBe('restaurant_menu');
+            expect(placeholderIcon()).toBe('restaurant_menu');
         });
     });
 
@@ -101,7 +101,7 @@ function registerPlaceholderTests(): void {
 
         it('should return OTHER key for null/undefined', () => {
             expect(placeholderLabel(null)).toBe('MEAL_CARD.MEAL_TYPES.OTHER');
-            expect(placeholderLabel(undefined)).toBe('MEAL_CARD.MEAL_TYPES.OTHER');
+            expect(placeholderLabel()).toBe('MEAL_CARD.MEAL_TYPES.OTHER');
         });
     });
 }

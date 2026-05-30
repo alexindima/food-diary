@@ -10,6 +10,6 @@ describe('locale constants', () => {
     it('uses English app locale as fallback', () => {
         expect(resolveAppLocale('en')).toBe(APP_LOCALE_EN);
         expect(resolveAppLocale(null)).toBe(APP_LOCALE_EN);
-        expect(resolveAppLocale(undefined)).toBe(APP_LOCALE_EN);
+        expect(resolveAppLocale(void 0)).toBe(APP_LOCALE_EN);
     });
 });

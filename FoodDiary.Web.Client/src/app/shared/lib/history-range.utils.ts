@@ -47,14 +47,18 @@ export function calculateHistoryRangeDates(
     now = new Date(),
 ): HistoryDateRange {
     switch (range) {
-        case 'week':
+        case 'week': {
             return buildOffsetRange(now, date => date.setDate(date.getDate() - WEEK_DAYS));
-        case 'month':
+        }
+        case 'month': {
             return buildOffsetRange(now, date => date.setMonth(date.getMonth() - DEFAULT_MONTH_OFFSET));
-        case 'year':
+        }
+        case 'year': {
             return buildOffsetRange(now, date => date.setFullYear(date.getFullYear() - DEFAULT_MONTH_OFFSET));
-        case 'custom':
+        }
+        case 'custom': {
             return buildCustomRange(customRange, now);
+        }
     }
 }
 
@@ -125,13 +129,17 @@ function buildCustomRange(customRange: HistoryCustomRange | null | undefined, no
 
 function getHistoryQuantizationDays(range: HistoryRange, totalDays: number, config: HistoryFilterConfig): number {
     switch (range) {
-        case 'week':
+        case 'week': {
             return 1;
-        case 'month':
+        }
+        case 'month': {
             return config.monthQuantizationDays;
-        case 'year':
+        }
+        case 'year': {
             return config.yearQuantizationDays;
-        case 'custom':
+        }
+        case 'custom': {
             return Math.max(1, Math.round(totalDays / config.customQuantizationDivisor));
+        }
     }
 }

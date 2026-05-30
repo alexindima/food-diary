@@ -62,7 +62,7 @@ describe('RecipeSelectDialogComponent', () => {
 
     it('loads requested page and scrolls to top on page change', () => {
         const { component, recipeService } = setupComponent([createRecipe()]);
-        const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => undefined);
+        const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => {});
 
         component['onPageChange'](SECOND_PAGE_INDEX);
 

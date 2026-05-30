@@ -9,13 +9,14 @@ import { MealSatietyLevelDialogComponent, type SatietyLevelDialogData } from './
 const LOW_SATIETY = 3;
 const SELECTED_SATIETY = 4;
 const HIGH_SATIETY = 5;
+const DEFAULT_DIALOG_DATA = { titleKey: 'TITLE', value: null };
 
 describe('MealSatietyLevelDialogComponent', () => {
     let component: MealSatietyLevelDialogComponent;
     let fixture: ComponentFixture<MealSatietyLevelDialogComponent>;
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
-    function createComponent(data: SatietyLevelDialogData = { titleKey: 'TITLE', value: null }): void {
+    function createComponent(data: SatietyLevelDialogData = DEFAULT_DIALOG_DATA): void {
         dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({

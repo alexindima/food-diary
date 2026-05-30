@@ -56,8 +56,8 @@ export class ExportService extends ApiService {
             return null;
         }
 
-        const match = /filename\*?=(?:UTF-8''|"?)([^";]+)/i.exec(contentDisposition);
-        const fileName = match?.[1]?.replace(/"/g, '') ?? null;
+        const match = /filename\*?=(?:utf-8''|"?)([^";]+)/i.exec(contentDisposition);
+        const fileName = match?.[1]?.replaceAll('"', '') ?? null;
         if (fileName === null) {
             return null;
         }

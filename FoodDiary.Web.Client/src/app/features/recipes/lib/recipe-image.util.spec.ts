@@ -11,7 +11,7 @@ describe('resolveRecipeImageUrl', () => {
 
     it('returns stub image URL for blank or missing values', () => {
         expect(resolveRecipeImageUrl(null)).toBe(STUB_IMAGE_URL);
-        expect(resolveRecipeImageUrl(undefined)).toBe(STUB_IMAGE_URL);
+        expect(resolveRecipeImageUrl(void 0)).toBe(STUB_IMAGE_URL);
         expect(resolveRecipeImageUrl('   ')).toBe(STUB_IMAGE_URL);
     });
 });

@@ -46,7 +46,7 @@ beforeEach(() => {
                 readAtUtc: null,
             }),
         ),
-        disconnectClient: vi.fn(() => of(undefined)),
+        disconnectClient: vi.fn(() => of(void 0)),
     };
     router = {
         navigate: vi.fn().mockResolvedValue(true),

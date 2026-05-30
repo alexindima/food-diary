@@ -12,21 +12,28 @@ const MEAL_SLOTS: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
 
 export function placeholderIcon(slot?: string | null): string {
     switch (slot) {
-        case 'BREAKFAST':
+        case 'BREAKFAST': {
             return 'wb_sunny';
-        case 'LUNCH':
+        }
+        case 'LUNCH': {
             return 'lunch_dining';
-        case 'DINNER':
+        }
+        case 'DINNER': {
             return 'nights_stay';
-        case 'SNACK':
+        }
+        case 'SNACK': {
             return 'cookie';
-        case 'OTHER':
+        }
+        case 'OTHER': {
             return 'more_horiz';
+        }
         case null:
-        case undefined:
+        case undefined: {
             return 'restaurant_menu';
-        default:
+        }
+        default: {
             return 'restaurant_menu';
+        }
     }
 }
 
@@ -134,7 +141,7 @@ export function createMealPreviewSignal(meals: Signal<Meal[]>, isTodaySelected: 
 
         for (const slot of MEAL_SLOTS) {
             const index = mealList.findIndex(m => (m.mealType ?? '').toUpperCase() === slot);
-            if (index >= 0) {
+            if (index !== -1) {
                 result.push({ meal: mealList[index], slot });
                 mealList.splice(index, 1);
             } else {

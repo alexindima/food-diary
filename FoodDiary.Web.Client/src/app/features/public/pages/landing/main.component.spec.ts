@@ -23,14 +23,14 @@ let routeStub: object;
 beforeEach(() => {
     TestBed.resetTestingModule();
     authDialogServiceMock = {
-        openAsync: vi.fn().mockResolvedValue({ afterClosed: () => of(undefined) }),
+        openAsync: vi.fn().mockResolvedValue({ afterClosed: () => of(void 0) }),
     };
     authServiceMock = {
         isAuthenticated: signal(false),
         isAuthReady: signal(true),
     };
     navigationServiceMock = {
-        navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
     };
     queryParamMapSubject = new BehaviorSubject(convertToParamMap({}));
     routerMock = { navigate: vi.fn().mockResolvedValue(true) };

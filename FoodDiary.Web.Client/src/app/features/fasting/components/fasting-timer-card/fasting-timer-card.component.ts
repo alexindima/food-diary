@@ -447,12 +447,15 @@ export class FastingTimerCardComponent {
         }
 
         switch (session.planType) {
-            case 'Cyclic':
+            case 'Cyclic': {
                 return 'FASTING.CYCLIC_TYPE';
-            case 'Extended':
+            }
+            case 'Extended': {
                 return 'FASTING.EXTENDED_TYPE';
-            case 'Intermittent':
+            }
+            case 'Intermittent': {
                 return 'FASTING.INTERMITTENT_TYPE';
+            }
         }
     }
 

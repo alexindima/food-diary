@@ -119,7 +119,7 @@ function registerClampPercentTests({ component, fixture }: TestContext): void {
 
         it('should return 0 for NaN', () => {
             fixture().detectChanges();
-            expect(component()['clampPercent'](NaN)).toBe(0);
+            expect(component()['clampPercent'](Number.NaN)).toBe(0);
         });
     });
 }

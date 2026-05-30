@@ -281,7 +281,7 @@ export class UserManageNotificationsFacade {
     private handlePushSubscriptionResult(result: Awaited<ReturnType<PushNotificationService['ensureSubscriptionAsync']>>): void {
         switch (result) {
             case 'subscribed':
-            case 'already-subscribed':
+            case 'already-subscribed': {
                 this.frontendObservability.recordNotificationPreferenceChanged('push', true, {
                     permission: this.notificationPermission(),
                 });
@@ -289,15 +289,18 @@ export class UserManageNotificationsFacade {
                 this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'));
                 this.facade.refreshWebPushSubscriptions();
                 break;
-            case 'unsupported':
+            }
+            case 'unsupported': {
                 this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unsupported', { result });
                 this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT'));
                 break;
-            case 'blocked':
+            }
+            case 'blocked': {
                 this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'blocked', { result });
                 this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT'));
                 break;
-            case 'unavailable':
+            }
+            case 'unavailable': {
                 this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unavailable', { result });
                 this.toastService.info(
                     this.translateService.instant(
@@ -307,6 +310,7 @@ export class UserManageNotificationsFacade {
                     ),
                 );
                 break;
+            }
         }
     }
 

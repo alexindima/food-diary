@@ -74,7 +74,7 @@ describe('weekly check-in trend cards mapper', () => {
 
     it('returns empty cards when trends are missing', () => {
         expect(buildWeeklyCheckInTrendCards(null)).toEqual([]);
-        expect(buildWeeklyCheckInTrendCards(undefined)).toEqual([]);
+        expect(buildWeeklyCheckInTrendCards(void 0)).toEqual([]);
     });
 
     it('builds single trend card formatting metadata', () => {

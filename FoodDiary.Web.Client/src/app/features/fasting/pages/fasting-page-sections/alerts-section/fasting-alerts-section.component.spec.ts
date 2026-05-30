@@ -31,8 +31,8 @@ describe('FastingAlertsSectionComponent', () => {
 
         expect(element.textContent).toContain('Hydrate');
         expect(element.textContent).toContain('Drink water');
-        alert.triggerEventHandler('primaryAction', undefined);
-        alert.triggerEventHandler('secondaryAction', undefined);
+        alert.triggerEventHandler('primaryAction');
+        alert.triggerEventHandler('secondaryAction');
 
         expect(promptSnooze).toHaveBeenCalledWith('alert-1');
         expect(promptDismiss).toHaveBeenCalledWith('alert-1');

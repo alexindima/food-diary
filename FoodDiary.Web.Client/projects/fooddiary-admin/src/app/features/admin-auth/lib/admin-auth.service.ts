@@ -240,7 +240,7 @@ export class AdminAuthService {
 
         const payloadSegment = tokenSegments[1];
         try {
-            const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
+            const normalized = payloadSegment.replaceAll('-', '+').replaceAll('_', '/');
             const remainder = normalized.length % BASE64_BLOCK_SIZE;
             const padLength =
                 (BASE64_BLOCK_SIZE - (remainder === BASE64_REMAINDER_NONE ? BASE64_BLOCK_SIZE : remainder)) % BASE64_BLOCK_SIZE;

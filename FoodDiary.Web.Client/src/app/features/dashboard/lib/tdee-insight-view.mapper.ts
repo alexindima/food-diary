@@ -16,9 +16,12 @@ export function formatTdeeWeightTrend(value: number | null | undefined): string 
     return `${sign}${value.toFixed(TDEE_WEIGHT_TREND_FRACTION_DIGITS)}`;
 }
 
-export function buildTdeeHintKey(hint: string | null | undefined): string | null {
-    const value = hint ?? '';
-    return value.length > 0 ? `TDEE_CARD.HINTS.${value.replace('hint.', '').toUpperCase()}` : null;
+export function buildTdeeHintKey(hint: string | null | undefined = ''): string | null {
+    if (hint === null || hint.length === 0) {
+        return null;
+    }
+
+    return `TDEE_CARD.HINTS.${hint.replace('hint.', '').toUpperCase()}`;
 }
 
 export function buildTdeeConfidenceKey(insight: TdeeInsight | null, emptyConfidenceKey: string): string {

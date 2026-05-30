@@ -102,7 +102,7 @@ describe('WeightEntriesService latest', () => {
 
 describe('WeightEntriesService mutations', () => {
     it('should create entry', () => {
-        const payload = { date: '2026-03-28', weight: 76.0 };
+        const payload = { date: '2026-03-28', weight: 76 };
 
         service.create(payload).subscribe(entry => {
             expect(entry).toEqual(MOCK_ENTRY);
@@ -115,8 +115,8 @@ describe('WeightEntriesService mutations', () => {
     });
 
     it('should update entry', () => {
-        const payload = { date: '2026-03-28', weight: 77.0 };
-        const updated = { ...MOCK_ENTRY, weight: 77.0 };
+        const payload = { date: '2026-03-28', weight: 77 };
+        const updated = { ...MOCK_ENTRY, weight: 77 };
 
         service.update('w-1', payload).subscribe(entry => {
             expect(entry).toEqual(updated);

@@ -104,7 +104,7 @@ export class FdUiBarChartComponent {
             .map(item => ({
                 ...item,
                 label: item.label.trim().length > 0 ? item.label : this.emptyLabel(),
-                value: item.value > 0 ? item.value : 0,
+                value: Math.max(item.value, 0),
             })),
     );
 }

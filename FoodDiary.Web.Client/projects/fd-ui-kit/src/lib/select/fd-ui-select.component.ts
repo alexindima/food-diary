@@ -55,8 +55,8 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
-    private onChange: (value: T | null) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: T | null) => void = () => {};
+    private onTouched: () => void = () => {};
 
     protected readonly sizeClass = computed(() => `fd-ui-select--size-${this.size()}`);
     protected readonly hasError = computed(() => {
@@ -177,15 +177,17 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
             case 'ArrowDown':
             case 'ArrowUp':
             case 'Enter':
-            case ' ':
+            case ' ': {
                 this.openMenu(event);
                 break;
-            case 'Escape':
+            }
+            case 'Escape': {
                 if (this.isOpen()) {
                     event.preventDefault();
                     this.closeMenu();
                 }
                 break;
+            }
         }
     }
 

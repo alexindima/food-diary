@@ -166,9 +166,9 @@ export class AdminEmailTemplateEditDialogComponent {
 
     private applyTokens(value: string, link: string, brand: string, clientName: string): string {
         return value
-            .replace(/{{\s*link\s*}}/gi, link)
-            .replace(/{{\s*brand\s*}}/gi, brand)
-            .replace(/{{\s*clientName\s*}}/gi, clientName);
+            .replaceAll(/{{\s*link\s*}}/gi, link)
+            .replaceAll(/{{\s*brand\s*}}/gi, brand)
+            .replaceAll(/{{\s*clientname\s*}}/gi, clientName);
     }
 
     private getDefaultPreviewLink(key: string): string {

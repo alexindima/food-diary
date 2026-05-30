@@ -12,6 +12,72 @@ type HintPosition = 'top' | 'bottom' | 'left' | 'right';
 
 const OVERLAY_VIEWPORT_MARGIN = 8;
 const OVERLAY_POSITION_OFFSET = 6;
+const HINT_POSITIONS: Record<HintPosition, ConnectedPosition[]> = {
+    top: [
+        {
+            originX: 'center',
+            originY: 'top',
+            overlayX: 'center',
+            overlayY: 'bottom',
+            offsetY: -OVERLAY_POSITION_OFFSET,
+        },
+        {
+            originX: 'center',
+            originY: 'bottom',
+            overlayX: 'center',
+            overlayY: 'top',
+            offsetY: OVERLAY_POSITION_OFFSET,
+        },
+    ],
+    bottom: [
+        {
+            originX: 'center',
+            originY: 'bottom',
+            overlayX: 'center',
+            overlayY: 'top',
+            offsetY: OVERLAY_POSITION_OFFSET,
+        },
+        {
+            originX: 'center',
+            originY: 'top',
+            overlayX: 'center',
+            overlayY: 'bottom',
+            offsetY: -OVERLAY_POSITION_OFFSET,
+        },
+    ],
+    left: [
+        {
+            originX: 'start',
+            originY: 'center',
+            overlayX: 'end',
+            overlayY: 'center',
+            offsetX: -OVERLAY_POSITION_OFFSET,
+        },
+        {
+            originX: 'end',
+            originY: 'center',
+            overlayX: 'start',
+            overlayY: 'center',
+            offsetX: OVERLAY_POSITION_OFFSET,
+        },
+    ],
+    right: [
+        {
+            originX: 'end',
+            originY: 'center',
+            overlayX: 'start',
+            overlayY: 'center',
+            offsetX: OVERLAY_POSITION_OFFSET,
+        },
+        {
+            originX: 'start',
+            originY: 'center',
+            overlayX: 'end',
+            overlayY: 'center',
+            offsetX: -OVERLAY_POSITION_OFFSET,
+        },
+    ],
+};
 
 let nextHintId = 0;
 
@@ -194,82 +260,7 @@ export class FdUiHintDirective {
     }
 
     private getPositions(): ConnectedPosition[] {
-        const offset = OVERLAY_POSITION_OFFSET;
-        const top: ConnectedPosition[] = [
-            {
-                originX: 'center',
-                originY: 'top',
-                overlayX: 'center',
-                overlayY: 'bottom',
-                offsetY: -offset,
-            },
-            {
-                originX: 'center',
-                originY: 'bottom',
-                overlayX: 'center',
-                overlayY: 'top',
-                offsetY: offset,
-            },
-        ];
-        const bottom: ConnectedPosition[] = [
-            {
-                originX: 'center',
-                originY: 'bottom',
-                overlayX: 'center',
-                overlayY: 'top',
-                offsetY: offset,
-            },
-            {
-                originX: 'center',
-                originY: 'top',
-                overlayX: 'center',
-                overlayY: 'bottom',
-                offsetY: -offset,
-            },
-        ];
-        const left: ConnectedPosition[] = [
-            {
-                originX: 'start',
-                originY: 'center',
-                overlayX: 'end',
-                overlayY: 'center',
-                offsetX: -offset,
-            },
-            {
-                originX: 'end',
-                originY: 'center',
-                overlayX: 'start',
-                overlayY: 'center',
-                offsetX: offset,
-            },
-        ];
-        const right: ConnectedPosition[] = [
-            {
-                originX: 'end',
-                originY: 'center',
-                overlayX: 'start',
-                overlayY: 'center',
-                offsetX: offset,
-            },
-            {
-                originX: 'start',
-                originY: 'center',
-                overlayX: 'end',
-                overlayY: 'center',
-                offsetX: -offset,
-            },
-        ];
-
-        switch (this.fdUiHintPosition()) {
-            case 'bottom':
-                return bottom;
-            case 'left':
-                return left;
-            case 'right':
-                return right;
-            case 'top':
-                return top;
-        }
+        return HINT_POSITIONS[this.fdUiHintPosition()];
     }
 
     private hasContent(): boolean {

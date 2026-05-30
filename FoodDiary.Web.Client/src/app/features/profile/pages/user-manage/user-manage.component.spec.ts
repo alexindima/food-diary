@@ -351,7 +351,7 @@ async function createComponentAsync(
         navigate: vi.fn().mockResolvedValue(true),
     };
     notificationService = {
-        scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)),
+        scheduleTestNotification: vi.fn().mockReturnValue(of(void 0)),
         notificationsChangedVersion: signal(0),
     };
 
@@ -390,9 +390,9 @@ function createTestingProviders(queryParams: Record<string, string>): unknown[] 
 function createDietologistServiceMock(relationship: DietologistRelationship | null): DietologistServiceMock {
     return {
         getRelationship: vi.fn().mockReturnValue(of(relationship)),
-        invite: vi.fn().mockReturnValue(of(undefined)),
-        updatePermissions: vi.fn().mockReturnValue(of(undefined)),
-        revokeRelationship: vi.fn().mockReturnValue(of(undefined)),
+        invite: vi.fn().mockReturnValue(of(void 0)),
+        updatePermissions: vi.fn().mockReturnValue(of(void 0)),
+        revokeRelationship: vi.fn().mockReturnValue(of(void 0)),
     };
 }
 
@@ -409,7 +409,7 @@ function createLocalizationServiceMock(): {
     getCurrentLanguage: ReturnType<typeof vi.fn>;
 } {
     return {
-        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
+        applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(void 0),
         getCurrentLanguage: vi.fn(() => 'en'),
     };
 }

@@ -21,7 +21,7 @@ beforeEach(() => {
     service = TestBed.inject(ExportService);
     httpMock = TestBed.inject(HttpTestingController);
     createObjectUrlSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue(BLOB_URL);
-    revokeObjectUrlSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
+    revokeObjectUrlSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
     clickedDownloadName = null;
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
         clickedDownloadName = this.download;

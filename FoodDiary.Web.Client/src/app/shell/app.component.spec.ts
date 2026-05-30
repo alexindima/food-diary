@@ -60,7 +60,7 @@ async function createComponentAsync(): Promise<{
     const routerEvents = new Subject<unknown>();
     const router = { events: routerEvents, url: '/dashboard' };
     const routeLoadingService = { beginLoad: vi.fn(), endLoad: vi.fn() };
-    const localizationService = { loadTranslationsForRouteAsync: vi.fn().mockResolvedValue(undefined) };
+    const localizationService = { loadTranslationsForRouteAsync: vi.fn().mockResolvedValue(void 0) };
     const seoService = { update: vi.fn() };
     const themeService = { applyThemeForRoute: vi.fn() };
 
@@ -73,7 +73,7 @@ async function createComponentAsync(): Promise<{
                     isAuthenticated: signal(false),
                     isImpersonating: signal(false),
                     impersonationReason: signal<string | null>(null),
-                    onLogoutAsync: vi.fn().mockResolvedValue(undefined),
+                    onLogoutAsync: vi.fn().mockResolvedValue(void 0),
                 },
             },
             { provide: Router, useValue: router },

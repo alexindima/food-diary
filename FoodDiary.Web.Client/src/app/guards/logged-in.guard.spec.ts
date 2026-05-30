@@ -25,7 +25,7 @@ describe('loggedInGuard', () => {
             isAuthenticated,
             ensureSessionReadyAsync: vi.fn(),
         };
-        authServiceMock.ensureSessionReadyAsync.mockResolvedValue(undefined);
+        authServiceMock.ensureSessionReadyAsync.mockResolvedValue(void 0);
 
         dashboardUrlTree = { toString: (): string => '/dashboard' };
         routerMock = { createUrlTree: vi.fn().mockReturnValue(dashboardUrlTree) };

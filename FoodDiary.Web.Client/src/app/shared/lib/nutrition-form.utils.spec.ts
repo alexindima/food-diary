@@ -44,7 +44,7 @@ const FULL_PERCENT = 100;
 const PRECISION_10 = 10;
 const MACRO_SEGMENT_COUNT = 3;
 const STRICT_THRESHOLD = 0.05;
-const PERMISSIVE_THRESHOLD = 2.0;
+const PERMISSIVE_THRESHOLD = 2;
 
 describe('nutrition-form.utils', () => {
     registerCaloriesFromMacrosTests();
@@ -71,11 +71,11 @@ function registerCaloriesFromMacrosTests(): void {
         });
 
         it('should treat undefined values as 0', () => {
-            expect(calculateCaloriesFromMacros(undefined, undefined, undefined, undefined)).toBe(0);
+            expect(calculateCaloriesFromMacros(void 0, void 0, void 0)).toBe(0);
         });
 
         it('should treat NaN as 0', () => {
-            expect(calculateCaloriesFromMacros(NaN, NaN, NaN, NaN)).toBe(0);
+            expect(calculateCaloriesFromMacros(Number.NaN, Number.NaN, Number.NaN, Number.NaN)).toBe(0);
         });
 
         it('should treat Infinity as 0', () => {
@@ -91,7 +91,7 @@ function registerCaloriesFromMacrosTests(): void {
         });
 
         it('should handle a mix of valid and null values', () => {
-            expect(calculateCaloriesFromMacros(PROTEIN_10, null, undefined)).toBe(CALORIES_40);
+            expect(calculateCaloriesFromMacros(PROTEIN_10, null, void 0)).toBe(CALORIES_40);
         });
     });
 }

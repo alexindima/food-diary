@@ -17,7 +17,7 @@ export class LocalizationService {
     private readonly router = inject(Router);
     private readonly storage = inject(BrowserStorageService);
     private readonly translationLoader = inject(FoodDiaryTranslationLoader);
-    private readonly russianDefaultHosts = new Set(environment.russianDefaultHosts ?? []);
+    private readonly russianDefaultHosts = new Set(environment.russianDefaultHosts);
     private readonly storageKey = 'fd_language';
     private readonly applicationTranslationLanguages = new Set<string>();
     private readonly routeTranslationKeys = new Set<string>();
@@ -53,7 +53,7 @@ export class LocalizationService {
     public async applyLanguagePreferenceAsync(language: string | null | undefined): Promise<void> {
         const normalized = this.normalizeLanguage(language);
         if (normalized.length === 0) {
-            return Promise.resolve();
+            return;
         }
 
         const currentLang = this.translateService.getCurrentLang();
@@ -62,7 +62,7 @@ export class LocalizationService {
         if (current === normalized) {
             this.persistLanguage(normalized);
             this.setDocumentLang(normalized);
-            return Promise.resolve();
+            return;
         }
 
         return firstValueFrom(this.translateService.use(normalized)).then(() => void 0);
@@ -78,7 +78,7 @@ export class LocalizationService {
     public async loadApplicationTranslationsAsync(): Promise<void> {
         const currentLang = this.getCurrentLanguage();
         if (this.applicationTranslationLanguages.has(currentLang)) {
-            return Promise.resolve();
+            return;
         }
 
         return firstValueFrom(this.translationLoader.loadApplicationTranslations(currentLang)).then(translations => {
@@ -98,7 +98,7 @@ export class LocalizationService {
         const normalizedPath = this.normalizeRouteKey(pathname);
         const cacheKey = `${currentLang}:${normalizedPath}`;
         if (this.routeTranslationKeys.has(cacheKey)) {
-            return Promise.resolve();
+            return;
         }
 
         return firstValueFrom(this.translationLoader.loadRouteTranslations(currentLang, pathname)).then(translations => {

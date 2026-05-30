@@ -44,7 +44,7 @@ describe('ShoppingListFacade', () => {
         shoppingListService.getById.mockReturnValue(of(list));
         shoppingListService.create.mockReturnValue(of(list));
         shoppingListService.update.mockReturnValue(of(list));
-        shoppingListService.deleteById.mockReturnValue(of(undefined));
+        shoppingListService.deleteById.mockReturnValue(of(void 0));
         toastService = { open: vi.fn(), error: vi.fn() };
 
         TestBed.configureTestingModule({
@@ -131,7 +131,7 @@ describe('ShoppingListFacade autosave', () => {
             getById: vi.fn().mockReturnValue(of(list)),
             create: vi.fn().mockReturnValue(of(list)),
             update: vi.fn().mockReturnValue(of(list)),
-            deleteById: vi.fn().mockReturnValue(of(undefined)),
+            deleteById: vi.fn().mockReturnValue(of(void 0)),
         };
 
         TestBed.configureTestingModule({

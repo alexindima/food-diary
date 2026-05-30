@@ -38,14 +38,18 @@ export class FdUiInlineAlertComponent {
 
     protected readonly iconName = computed(() => {
         switch (this.severity()) {
-            case 'warning':
+            case 'warning': {
                 return 'warning_amber';
-            case 'success':
+            }
+            case 'success': {
                 return 'task_alt';
-            case 'danger':
+            }
+            case 'danger': {
                 return 'error';
-            case 'info':
+            }
+            case 'info': {
                 return 'info';
+            }
         }
     });
 

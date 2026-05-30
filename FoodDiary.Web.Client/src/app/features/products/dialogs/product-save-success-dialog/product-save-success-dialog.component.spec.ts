@@ -7,12 +7,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { ProductSaveSuccessDialogComponent } from './product-save-success-dialog.component';
 import type { ProductSaveSuccessDialogData } from './product-save-success-dialog.types';
 
+const DEFAULT_DIALOG_DATA = { isEdit: false };
+
 describe('ProductSaveSuccessDialogComponent', () => {
     let component: ProductSaveSuccessDialogComponent;
     let fixture: ComponentFixture<ProductSaveSuccessDialogComponent>;
     let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
-    function createComponent(data: ProductSaveSuccessDialogData = { isEdit: false }): void {
+    function createComponent(data: ProductSaveSuccessDialogData = DEFAULT_DIALOG_DATA): void {
         dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({

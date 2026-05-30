@@ -157,8 +157,8 @@ function setupFacade(): {
         getSnapshot: vi.fn(() => of(snapshot)),
         getSnapshotSilentlyStrict: vi.fn(() => of(snapshot)),
     };
-    const goalsService = { updateGoals: vi.fn(() => of(undefined)) };
-    const hydrationService = { addEntry: vi.fn(() => of(undefined)) };
+    const goalsService = { updateGoals: vi.fn(() => of(void 0)) };
+    const hydrationService = { addEntry: vi.fn(() => of(void 0)) };
     const layout = { initializeLayout: vi.fn(), updateViewportWidth: vi.fn() };
     const translateService = {
         getCurrentLang: vi.fn(() => 'en'),

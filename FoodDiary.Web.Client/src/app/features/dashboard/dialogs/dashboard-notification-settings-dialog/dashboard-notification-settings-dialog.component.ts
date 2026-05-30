@@ -263,7 +263,7 @@ export class DashboardNotificationSettingsDialogComponent {
 
         switch (result) {
             case 'subscribed':
-            case 'already-subscribed':
+            case 'already-subscribed': {
                 this.frontendObservability.recordNotificationPreferenceChanged('push', true, {
                     permission: this.notificationPermission(),
                     source: 'dashboard-dialog',
@@ -274,21 +274,24 @@ export class DashboardNotificationSettingsDialogComponent {
                 });
                 this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'));
                 break;
-            case 'unsupported':
+            }
+            case 'unsupported': {
                 this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unsupported', {
                     result,
                     source: 'dashboard-dialog',
                 });
                 this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT'));
                 break;
-            case 'blocked':
+            }
+            case 'blocked': {
                 this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'blocked', {
                     result,
                     source: 'dashboard-dialog',
                 });
                 this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT'));
                 break;
-            case 'unavailable':
+            }
+            case 'unavailable': {
                 this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'unavailable', {
                     result,
                     source: 'dashboard-dialog',
@@ -301,6 +304,7 @@ export class DashboardNotificationSettingsDialogComponent {
                     ),
                 );
                 break;
+            }
         }
     }
 }

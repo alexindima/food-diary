@@ -77,8 +77,8 @@ function setupGuard(): {
         isDietologist: signal(false),
     };
     const navigationServiceMock = {
-        navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
-        navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToAuthAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(void 0),
     };
     const routerMock = {
         createUrlTree: vi.fn().mockReturnValue(urlTree),

@@ -23,24 +23,27 @@ export class SkeletonComponent {
         const v = this.variant();
 
         switch (v) {
-            case 'circle':
+            case 'circle': {
                 return {
                     width: this.width() !== '100%' ? this.width() : this.height(),
                     height: this.height(),
                     'border-radius': '50%',
                 };
-            case 'rect':
+            }
+            case 'rect': {
                 return {
                     width: this.width(),
                     height: this.height() !== this.defaultTextHeight ? this.height() : this.defaultRectHeight,
                     'border-radius': this.borderRadius() !== this.defaultRadius ? this.borderRadius() : this.defaultRectRadius,
                 };
-            case 'text':
+            }
+            case 'text': {
                 return {
                     width: this.width(),
                     height: this.height(),
                     'border-radius': this.borderRadius(),
                 };
+            }
         }
     });
 }

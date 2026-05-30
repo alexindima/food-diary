@@ -125,24 +125,30 @@ export class DashboardSummaryCardComponent {
     });
     protected readonly noticeTitleKey = computed(() => {
         switch (this.noticeVariant()) {
-            case 'none':
+            case 'none': {
                 return 'DASHBOARD_SUMMARY.GOALS_TITLE';
-            case 'macros':
+            }
+            case 'macros': {
                 return 'DASHBOARD_SUMMARY.MACROS_TITLE';
+            }
             case 'calories':
-            case 'ok':
+            case 'ok': {
                 return 'DASHBOARD_SUMMARY.CALORIES_TITLE';
+            }
         }
     });
     protected readonly noticeMessageKey = computed(() => {
         switch (this.noticeVariant()) {
-            case 'none':
+            case 'none': {
                 return 'DASHBOARD_SUMMARY.GOALS_BODY';
-            case 'macros':
+            }
+            case 'macros': {
                 return 'DASHBOARD_SUMMARY.MACROS_BODY';
+            }
             case 'calories':
-            case 'ok':
+            case 'ok': {
                 return 'DASHBOARD_SUMMARY.CALORIES_BODY';
+            }
         }
     });
     protected readonly dailyGradientId = this.gradientIdDaily;

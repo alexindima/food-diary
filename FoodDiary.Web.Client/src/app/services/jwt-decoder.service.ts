@@ -14,12 +14,12 @@ export class JwtDecoderService {
         }
 
         try {
-            const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
+            const normalized = payloadSegment.replaceAll('-', '+').replaceAll('_', '/');
             const remainder = normalized.length % BASE64_BLOCK_SIZE;
             const padLength = (BASE64_BLOCK_SIZE - (remainder === 0 ? BASE64_BLOCK_SIZE : remainder)) % BASE64_BLOCK_SIZE;
             const padded = normalized.padEnd(normalized.length + padLength, '=');
             const decoded = atob(padded);
-            const bytes = Uint8Array.from(decoded, character => character.charCodeAt(0));
+            const bytes = Uint8Array.from(decoded, character => character.codePointAt(0) ?? 0);
             const payload = new TextDecoder().decode(bytes);
             const parsed: unknown = JSON.parse(payload);
             return isRecord(parsed) ? parsed : null;

@@ -183,15 +183,18 @@ export class SidebarComponent {
 
     protected onPrimaryAction(action: SidebarActionItem['action']): void {
         switch (action) {
-            case 'openAdminPanel':
+            case 'openAdminPanel': {
                 this.openAdminPanel();
                 break;
-            case 'openNotifications':
+            }
+            case 'openNotifications': {
                 void this.openNotificationsAsync();
                 break;
-            case 'logout':
+            }
+            case 'logout': {
                 void this.logoutAsync();
                 break;
+            }
         }
     }
 

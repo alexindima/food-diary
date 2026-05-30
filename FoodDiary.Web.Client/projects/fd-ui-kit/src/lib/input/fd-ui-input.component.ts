@@ -70,8 +70,8 @@ export class FdUiInputComponent implements ControlValueAccessor {
     protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
 
-    private onChange: (value: string) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: string) => void = () => {};
+    private onTouched: () => void = () => {};
     private autofillSyncTimers: Array<ReturnType<typeof setTimeout>> = [];
 
     public constructor() {

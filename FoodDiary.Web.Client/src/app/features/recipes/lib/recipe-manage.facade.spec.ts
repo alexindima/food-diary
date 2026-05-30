@@ -137,7 +137,7 @@ describe('RecipeManageFacade submit', () => {
 
 describe('RecipeManageFacade selection', () => {
     it('opens item selection dialog and normalizes undefined dialog result to null', async () => {
-        const afterClosed = of(undefined);
+        const afterClosed = of(void 0);
         dialogService.open.mockReturnValue({
             afterClosed: () => afterClosed,
         });

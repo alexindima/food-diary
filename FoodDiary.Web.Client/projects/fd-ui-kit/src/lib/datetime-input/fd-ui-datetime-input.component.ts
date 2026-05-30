@@ -62,8 +62,8 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly document = inject(DOCUMENT);
 
-    private onChange: (value: string | null) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: string | null) => void = () => {};
+    private onTouched: () => void = () => {};
     private lastValidTime = DEFAULT_TIME_VALUE;
 
     public constructor() {

@@ -346,23 +346,29 @@ export class DashboardComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(action => {
                 switch (action?.type) {
-                    case 'profile':
+                    case 'profile': {
                         void this.openProfileAsync();
                         break;
-                    case 'meal':
+                    }
+                    case 'meal': {
                         void this.addConsumptionAsync();
                         break;
-                    case 'weight':
+                    }
+                    case 'weight': {
                         void this.openWeightHistoryAsync();
                         break;
-                    case 'goals':
+                    }
+                    case 'goals': {
                         void this.openGoalsAsync();
                         break;
-                    case 'applyGoal':
+                    }
+                    case 'applyGoal': {
                         this.applyTdeeGoal(action.target);
                         break;
-                    case undefined:
+                    }
+                    case undefined: {
                         break;
+                    }
                 }
             });
     }

@@ -168,17 +168,22 @@ function buildIntermittentEatingWindowState(input: {
 
 export function getFastingOccurrenceLabel(translate: TranslateFn, kind?: FastingOccurrenceKind | null): string | null {
     switch (kind) {
-        case 'FastDay':
+        case 'FastDay': {
             return translate('FASTING.FAST_DAY');
-        case 'EatDay':
+        }
+        case 'EatDay': {
             return translate('FASTING.EAT_DAY');
-        case 'FastingWindow':
+        }
+        case 'FastingWindow': {
             return translate('FASTING.FASTING_WINDOW');
-        case 'EatingWindow':
+        }
+        case 'EatingWindow': {
             return translate('FASTING.EATING_WINDOW');
+        }
         case null:
-        case undefined:
+        case undefined: {
             return null;
+        }
     }
 }
 

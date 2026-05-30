@@ -49,16 +49,21 @@ export function calculateSidebarDailyProgressPercent(consumed: number, goal: num
 
 export function getSidebarMobileSheetLabelKey(sheet: MobileSheetId): string {
     switch (sheet) {
-        case 'food':
+        case 'food': {
             return 'SIDEBAR.FOOD_TRACKING';
-        case 'body':
+        }
+        case 'body': {
             return 'SIDEBAR.BODY_TRACKING';
-        case 'reports':
+        }
+        case 'reports': {
             return 'SIDEBAR.REPORTS_AND_GOALS';
-        case 'user':
+        }
+        case 'user': {
             return 'SIDEBAR.USER_MENU';
-        case null:
+        }
+        case null: {
             return '';
+        }
     }
 }
 
@@ -69,15 +74,19 @@ export function getSidebarMobileSheetRouteItems(
     reportItems: SidebarRouteItem[],
 ): SidebarRouteItem[] {
     switch (sheet) {
-        case 'food':
+        case 'food': {
             return foodItems;
-        case 'body':
+        }
+        case 'body': {
             return bodyItems;
-        case 'reports':
+        }
+        case 'reports': {
             return reportItems;
+        }
         case 'user':
-        case null:
+        case null: {
             return [];
+        }
     }
 }
 

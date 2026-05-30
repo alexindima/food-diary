@@ -120,7 +120,7 @@ export class ProductListBaseComponent {
     }
 
     protected async handleProductClickAsync(_product: Product): Promise<void> {
-        return Promise.resolve();
+        await Promise.resolve();
     }
 
     protected onAddToMeal(product: Product): void {

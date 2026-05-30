@@ -27,6 +27,7 @@ const AUTH_RESPONSE: AuthResponse = {
     refreshToken: 'refresh-token',
     user: USER,
 };
+const DEFAULT_QUERY_PARAMS = { userId: 'user-1', token: 'tok-abc' };
 
 type PasswordResetTestContext = {
     authServiceSpy: { confirmPasswordReset: ReturnType<typeof vi.fn> };
@@ -38,7 +39,7 @@ type PasswordResetTestContext = {
     };
 };
 
-function createComponent(queryParams: Record<string, string> = { userId: 'user-1', token: 'tok-abc' }): PasswordResetTestContext {
+function createComponent(queryParams: Record<string, string> = DEFAULT_QUERY_PARAMS): PasswordResetTestContext {
     const authServiceSpy = { confirmPasswordReset: vi.fn() };
     const navigationServiceSpy = { navigateToHomeAsync: vi.fn(), navigateToAuthAsync: vi.fn() };
     navigationServiceSpy.navigateToHomeAsync.mockReturnValue(Promise.resolve());
@@ -130,9 +131,9 @@ describe('PasswordResetComponent submit', () => {
         component['onSubmit']();
 
         expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledTimes(1);
-        const arg = authServiceSpy.confirmPasswordReset.mock.calls[authServiceSpy.confirmPasswordReset.mock.calls.length - 1][0] as
-            | ConfirmPasswordResetRequest
-            | undefined;
+        const call = authServiceSpy.confirmPasswordReset.mock.calls.at(-1);
+        expect(call).toBeDefined();
+        const arg = call?.[0] as ConfirmPasswordResetRequest | undefined;
         if (arg === undefined) {
             throw new Error('Expected confirm password reset argument.');
         }

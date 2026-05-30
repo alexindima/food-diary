@@ -70,7 +70,7 @@ const mockProductService = {
 const mockFavoriteProductService = {
     isFavorite: vi.fn().mockReturnValue(of(false)),
     add: vi.fn().mockReturnValue(of(mockFavoriteProduct)),
-    remove: vi.fn().mockReturnValue(of(undefined)),
+    remove: vi.fn().mockReturnValue(of(void 0)),
     getAll: vi.fn().mockReturnValue(of([mockFavoriteProduct])),
 };
 
@@ -101,7 +101,7 @@ beforeEach(async () => {
     mockProductService.duplicate.mockReturnValue(of({ ...mockProduct, id: '2', name: 'Test Product (Copy)' }));
     mockFavoriteProductService.isFavorite.mockReturnValue(of(false));
     mockFavoriteProductService.add.mockReturnValue(of(mockFavoriteProduct));
-    mockFavoriteProductService.remove.mockReturnValue(of(undefined));
+    mockFavoriteProductService.remove.mockReturnValue(of(void 0));
     mockFavoriteProductService.getAll.mockReturnValue(of([mockFavoriteProduct]));
     await createComponentAsync();
 });

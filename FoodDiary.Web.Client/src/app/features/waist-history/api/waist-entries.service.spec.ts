@@ -13,7 +13,7 @@ const MOCK_ENTRY: WaistEntry = {
     id: 'wa-1',
     userId: 'user-1',
     date: '2026-03-01',
-    circumference: 82.0,
+    circumference: 82,
 };
 
 let service: WaistEntriesService;
@@ -102,7 +102,7 @@ describe('WaistEntriesService latest', () => {
 
 describe('WaistEntriesService mutations', () => {
     it('should create entry', () => {
-        const payload = { date: '2026-03-28', circumference: 80.0 };
+        const payload = { date: '2026-03-28', circumference: 80 };
 
         service.create(payload).subscribe(entry => {
             expect(entry).toEqual(MOCK_ENTRY);
@@ -115,8 +115,8 @@ describe('WaistEntriesService mutations', () => {
     });
 
     it('should update entry', () => {
-        const payload = { date: '2026-03-28', circumference: 81.0 };
-        const updated = { ...MOCK_ENTRY, circumference: 81.0 };
+        const payload = { date: '2026-03-28', circumference: 81 };
+        const updated = { ...MOCK_ENTRY, circumference: 81 };
 
         service.update('wa-1', payload).subscribe(entry => {
             expect(entry).toEqual(updated);

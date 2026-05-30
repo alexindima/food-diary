@@ -17,7 +17,7 @@ describe('api error utils', () => {
 
     it('logs and returns fallback value when global handler is disabled', async () => {
         environment.enableGlobalErrorHandler = false;
-        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
         await expect(firstValueFrom(fallbackApiError(ERROR_MESSAGE, ERROR_VALUE, 'fallback'))).resolves.toBe('fallback');
 
@@ -26,7 +26,7 @@ describe('api error utils', () => {
 
     it('logs and rethrows source error when global handler is disabled', async () => {
         environment.enableGlobalErrorHandler = false;
-        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
         await expect(firstValueFrom(rethrowApiError(ERROR_MESSAGE, ERROR_VALUE))).rejects.toBe(ERROR_VALUE);
 
@@ -35,7 +35,7 @@ describe('api error utils', () => {
 
     it('skips fallback logging when global handler is enabled', async () => {
         environment.enableGlobalErrorHandler = true;
-        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
         await expect(firstValueFrom(fallbackApiError(ERROR_MESSAGE, ERROR_VALUE, 'fallback'))).resolves.toBe('fallback');
 

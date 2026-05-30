@@ -56,26 +56,31 @@ export class FdUiMenuComponent {
         const currentIndex = items.findIndex(item => item.isFocused());
 
         switch (event.key) {
-            case 'ArrowDown':
+            case 'ArrowDown': {
                 event.preventDefault();
                 items[(currentIndex + 1 + items.length) % items.length].focus();
                 break;
-            case 'ArrowUp':
+            }
+            case 'ArrowUp': {
                 event.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
                 break;
-            case 'Home':
+            }
+            case 'Home': {
                 event.preventDefault();
                 items[0].focus();
                 break;
-            case 'End':
+            }
+            case 'End': {
                 event.preventDefault();
-                items[items.length - 1].focus();
+                items.at(-1)?.focus();
                 break;
-            case 'Escape':
+            }
+            case 'Escape': {
                 event.preventDefault();
                 this.close();
                 break;
+            }
         }
     }
 

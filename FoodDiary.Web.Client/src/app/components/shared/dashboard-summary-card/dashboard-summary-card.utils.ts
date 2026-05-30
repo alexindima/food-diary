@@ -83,12 +83,16 @@ export function clampDashboardPercent(value: number): number {
 
 export function getDashboardColorForPercent(percent: number, colorCache = new Map<string, [number, number, number]>()): string {
     const clamped = Math.max(percent, 0);
+    const lastColorStop = COLOR_STOPS.at(-1);
+    if (lastColorStop === undefined) {
+        return COLOR_FALLBACK;
+    }
 
     if (clamped <= COLOR_STOPS[0].percent) {
         return COLOR_STOPS[0].color;
     }
-    if (clamped >= COLOR_STOPS[COLOR_STOPS.length - 1].percent) {
-        return COLOR_STOPS[COLOR_STOPS.length - 1].color;
+    if (clamped >= lastColorStop.percent) {
+        return lastColorStop.color;
     }
 
     for (let i = 1; i < COLOR_STOPS.length; i += 1) {
@@ -109,7 +113,7 @@ export function getDashboardColorForPercent(percent: number, colorCache = new Ma
         }
     }
 
-    return COLOR_STOPS[COLOR_STOPS.length - 1].color;
+    return lastColorStop.color;
 }
 
 export function mixDashboardColorWithWhite(color: string, ratio: number, colorCache = new Map<string, [number, number, number]>()): string {
@@ -192,7 +196,7 @@ function hexToChannels(hex: string): [number, number, number] {
                   .map(character => character + character)
                   .join('')
             : normalized;
-    const numeric = parseInt(value, COLOR_HEX_RADIX);
+    const numeric = Number.parseInt(value, COLOR_HEX_RADIX);
     const red = (numeric >> COLOR_RED_SHIFT) & COLOR_BYTE_MASK;
     const green = (numeric >> COLOR_GREEN_SHIFT) & COLOR_BYTE_MASK;
     const blue = numeric & COLOR_BYTE_MASK;

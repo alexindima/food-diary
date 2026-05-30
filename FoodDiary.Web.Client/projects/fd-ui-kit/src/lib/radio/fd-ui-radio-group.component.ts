@@ -36,8 +36,8 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
     protected readonly disabled = model(false);
     protected internalValue: T | null = null;
 
-    private onChange: (value: T | null) => void = () => undefined;
-    private onTouched: () => void = () => undefined;
+    private onChange: (value: T | null) => void = () => {};
+    private onTouched: () => void = () => {};
 
     public writeValue(value: T | null): void {
         this.internalValue = value;
@@ -78,21 +78,26 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
 
         switch (event.key) {
             case 'ArrowRight':
-            case 'ArrowDown':
+            case 'ArrowDown': {
                 nextIndex = (index + 1) % options.length;
                 break;
+            }
             case 'ArrowLeft':
-            case 'ArrowUp':
+            case 'ArrowUp': {
                 nextIndex = (index - 1 + options.length) % options.length;
                 break;
-            case 'Home':
+            }
+            case 'Home': {
                 nextIndex = 0;
                 break;
-            case 'End':
+            }
+            case 'End': {
                 nextIndex = options.length - 1;
                 break;
-            default:
+            }
+            default: {
                 return;
+            }
         }
 
         event.preventDefault();

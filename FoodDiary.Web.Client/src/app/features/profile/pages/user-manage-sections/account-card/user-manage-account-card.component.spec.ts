@@ -30,7 +30,7 @@ async function createComponentAsync(): Promise<ComponentFixture<UserManageAccoun
         providers: [
             {
                 provide: ImageUploadService,
-                useValue: { uploadImage: vi.fn().mockReturnValue(of(null)), deleteAsset: vi.fn().mockReturnValue(of(undefined)) },
+                useValue: { uploadImage: vi.fn().mockReturnValue(of(null)), deleteAsset: vi.fn().mockReturnValue(of(void 0)) },
             },
             { provide: FrontendLoggerService, useValue: { warn: vi.fn(), error: vi.fn() } },
         ],

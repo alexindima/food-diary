@@ -150,16 +150,21 @@ export class DietologistInvitationPageComponent {
 
     private resolveState(status: string): InvitationPageState {
         switch (status) {
-            case 'Accepted':
+            case 'Accepted': {
                 return 'accepted';
-            case 'Declined':
+            }
+            case 'Declined': {
                 return 'declined';
-            case 'Expired':
+            }
+            case 'Expired': {
                 return 'expired';
-            case 'Revoked':
+            }
+            case 'Revoked': {
                 return 'revoked';
-            default:
+            }
+            default: {
                 return 'ready';
+            }
         }
     }
 

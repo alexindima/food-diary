@@ -10,7 +10,7 @@ const HIGH_LEGACY_SCALE_VALUE = 20;
 describe('satiety level utils', () => {
     it('uses default for missing, invalid, or non-positive values', () => {
         expect(normalizeSatietyLevel(null)).toBe(DEFAULT_SATIETY_LEVEL);
-        expect(normalizeSatietyLevel(undefined)).toBe(DEFAULT_SATIETY_LEVEL);
+        expect(normalizeSatietyLevel(void 0)).toBe(DEFAULT_SATIETY_LEVEL);
         expect(normalizeSatietyLevel(Number.NaN)).toBe(DEFAULT_SATIETY_LEVEL);
         expect(normalizeSatietyLevel(0)).toBe(DEFAULT_SATIETY_LEVEL);
     });

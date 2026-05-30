@@ -59,8 +59,10 @@ describe('AuthLoginFormComponent', () => {
         form.dispatchEvent(new Event('input', { bubbles: true }));
 
         const buttons = Array.from(root.querySelectorAll('button'));
+        const lastButton = buttons.at(-1);
         buttons.find(button => button.type === 'button')?.click();
-        buttons[buttons.length - 1].click();
+        expect(lastButton).toBeDefined();
+        lastButton?.click();
 
         expect(submitSpy).toHaveBeenCalledTimes(1);
         expect(inputSpy).toHaveBeenCalledTimes(1);

@@ -12,10 +12,102 @@ import rxjsXPlugin from 'eslint-plugin-rxjs-x';
 import securityPlugin from 'eslint-plugin-security';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
+import unicornPlugin from 'eslint-plugin-unicorn';
 
 const securityRecommendedRules = Object.fromEntries(
     Object.keys(securityPlugin.configs.recommended.rules).map(ruleName => [ruleName, 'error']),
 );
+
+const unicornCandidateRules = {
+    'unicorn/better-regex': 'error',
+    'unicorn/catch-error-name': 'error',
+    'unicorn/consistent-date-clone': 'error',
+    'unicorn/consistent-empty-array-spread': 'error',
+    'unicorn/consistent-existence-index-check': 'error',
+    'unicorn/consistent-template-literal-escape': 'error',
+    'unicorn/custom-error-definition': 'error',
+    'unicorn/error-message': 'error',
+    'unicorn/escape-case': 'error',
+    'unicorn/explicit-length-check': 'error',
+    'unicorn/filename-case': [
+        'error',
+        {
+            case: 'kebabCase',
+            ignore: ['^_.*\\.scss$'],
+        },
+    ],
+    'unicorn/new-for-builtins': 'error',
+    'unicorn/no-abusive-eslint-disable': 'error',
+    'unicorn/no-accessor-recursion': 'error',
+    'unicorn/no-await-expression-member': 'error',
+    'unicorn/no-await-in-promise-methods': 'error',
+    'unicorn/no-console-spaces': 'error',
+    'unicorn/no-document-cookie': 'error',
+    'unicorn/no-empty-file': 'error',
+    'unicorn/no-hex-escape': 'error',
+    'unicorn/no-instanceof-builtins': 'error',
+    'unicorn/no-invalid-fetch-options': 'error',
+    'unicorn/no-invalid-remove-event-listener': 'error',
+    'unicorn/no-magic-array-flat-depth': 'error',
+    'unicorn/no-negation-in-equality-check': 'error',
+    'unicorn/no-new-array': 'error',
+    'unicorn/no-new-buffer': 'error',
+    'unicorn/no-object-as-default-parameter': 'error',
+    'unicorn/no-process-exit': 'error',
+    'unicorn/no-single-promise-in-promise-methods': 'error',
+    'unicorn/no-static-only-class': 'error',
+    'unicorn/no-this-assignment': 'error',
+    'unicorn/no-typeof-undefined': 'error',
+    'unicorn/no-unnecessary-array-flat-depth': 'error',
+    'unicorn/no-unnecessary-array-splice-count': 'error',
+    'unicorn/no-unnecessary-await': 'error',
+    'unicorn/no-unnecessary-slice-end': 'error',
+    'unicorn/no-unreadable-array-destructuring': 'error',
+    'unicorn/no-unreadable-iife': 'error',
+    'unicorn/no-useless-collection-argument': 'error',
+    'unicorn/no-useless-error-capture-stack-trace': 'error',
+    'unicorn/no-useless-fallback-in-spread': 'error',
+    'unicorn/no-useless-iterator-to-array': 'error',
+    'unicorn/no-useless-length-check': 'error',
+    'unicorn/no-useless-promise-resolve-reject': 'error',
+    'unicorn/no-useless-spread': 'error',
+    'unicorn/no-useless-switch-case': 'error',
+    'unicorn/no-useless-undefined': 'error',
+    'unicorn/no-zero-fractions': 'error',
+    'unicorn/prefer-array-find': 'error',
+    'unicorn/prefer-array-flat': 'error',
+    'unicorn/prefer-array-flat-map': 'error',
+    'unicorn/prefer-array-index-of': 'error',
+    'unicorn/prefer-array-some': 'error',
+    'unicorn/prefer-at': 'error',
+    'unicorn/prefer-class-fields': 'error',
+    'unicorn/prefer-code-point': 'error',
+    'unicorn/prefer-date-now': 'error',
+    'unicorn/prefer-default-parameters': 'error',
+    'unicorn/prefer-includes': 'error',
+    'unicorn/prefer-logical-operator-over-ternary': 'error',
+    'unicorn/prefer-math-min-max': 'error',
+    'unicorn/prefer-math-trunc': 'error',
+    'unicorn/prefer-negative-index': 'error',
+    'unicorn/prefer-number-properties': 'error',
+    'unicorn/prefer-object-from-entries': 'error',
+    'unicorn/prefer-optional-catch-binding': 'error',
+    'unicorn/prefer-regexp-test': 'error',
+    'unicorn/prefer-set-has': 'error',
+    'unicorn/prefer-set-size': 'error',
+    'unicorn/prefer-simple-condition-first': 'error',
+    'unicorn/prefer-string-replace-all': 'error',
+    'unicorn/prefer-string-slice': 'error',
+    'unicorn/prefer-string-starts-ends-with': 'error',
+    'unicorn/prefer-string-trim-start-end': 'error',
+    'unicorn/relative-url-style': 'error',
+    'unicorn/require-array-join-separator': 'error',
+    'unicorn/require-number-to-fixed-digits-argument': 'error',
+    'unicorn/switch-case-braces': 'error',
+    'unicorn/switch-case-break-position': 'error',
+    'unicorn/text-encoding-identifier-case': 'error',
+    'unicorn/throw-new-error': 'error',
+};
 
 const getTemplateAttributes = node => [...(node.attributes ?? []), ...(node.inputs ?? [])];
 
@@ -30,7 +122,7 @@ const mojibakeMarkers = [
     { codePoint: 0x00f0, label: 'U+00F0' },
 ].map(marker => ({
     ...marker,
-    value: String.fromCharCode(marker.codePoint),
+    value: String.fromCodePoint(marker.codePoint),
 }));
 
 const createNoMojibakeRule = context => ({
@@ -796,6 +888,7 @@ export default [
             security: securityPlugin,
             sonarjs: sonarjsPlugin,
             'rxjs-x': rxjsXPlugin,
+            unicorn: unicornPlugin,
             local: localTsPlugin,
         },
         settings: {
@@ -806,6 +899,7 @@ export default [
         rules: {
             ...eslintConfigPrettier.rules,
             ...securityRecommendedRules,
+            ...unicornCandidateRules,
             'security/detect-object-injection': 'off',
             complexity: ['error', 10],
             'no-alert': 'error',

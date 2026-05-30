@@ -152,7 +152,7 @@ export class AdminDashboardComponent {
 
     private parseLoginSummaryKey(key: string): { category: string; label: string } {
         const separatorIndex = key.indexOf(':');
-        if (separatorIndex < 0) {
+        if (separatorIndex === -1) {
             return { category: key.toLowerCase(), label: 'Unknown' };
         }
 

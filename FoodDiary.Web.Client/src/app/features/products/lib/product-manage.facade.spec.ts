@@ -94,7 +94,7 @@ beforeEach(() => {
     dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
     productService.create.mockReturnValue(of(product));
     productService.update.mockReturnValue(of(product));
-    productService.deleteById.mockReturnValue(of(undefined));
+    productService.deleteById.mockReturnValue(of(void 0));
     authService.isPremium.mockReturnValue(true);
 
     TestBed.configureTestingModule({

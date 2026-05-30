@@ -28,7 +28,7 @@ export function calculateRemainingCalories(consumed: number, goal: number): numb
     }
 
     const remaining = goal - consumed;
-    return remaining > 0 ? remaining : 0;
+    return Math.max(remaining, 0);
 }
 
 export function resolveDailyProgressMotivationKey(consumed: number, goal: number): string | null {

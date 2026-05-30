@@ -17,7 +17,7 @@ describe('api query params utils', () => {
         const params: ApiQueryParams = {};
 
         addOptionalStringParam(params, 'search', '');
-        addOptionalStringParam(params, 'category', undefined);
+        addOptionalStringParam(params, 'category', void 0);
 
         expect(params).toEqual({});
     });
@@ -26,7 +26,7 @@ describe('api query params utils', () => {
         const params: ApiQueryParams = {};
 
         addOptionalNumberParam(params, 'limit', LIMIT);
-        addOptionalNumberParam(params, 'offset', undefined);
+        addOptionalNumberParam(params, 'offset', void 0);
 
         expect(params).toEqual({ limit: LIMIT });
     });

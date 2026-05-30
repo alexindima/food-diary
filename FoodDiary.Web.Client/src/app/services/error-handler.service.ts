@@ -11,8 +11,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     public handleError(error: unknown): void {
         try {
             this.frontendObservabilityService.recordClientError(this.buildErrorPayload(error));
-        } catch (err) {
-            this.logger.error('Failed to send log to backend:', err);
+        } catch (error_) {
+            this.logger.error('Failed to send log to backend:', error_);
         }
     }
 

@@ -130,7 +130,7 @@ export function formatNutrientsSummaryTooltip(context: NutrientsSummaryTooltipCo
     const label = context.label.length > 0 ? context.label : '';
     const rawValue = Number(context.raw);
     const value = Number.isNaN(rawValue) ? 0 : rawValue;
-    const formattedValue = parseFloat(value.toFixed(TOOLTIP_DECIMAL_PLACES));
+    const formattedValue = Number.parseFloat(value.toFixed(TOOLTIP_DECIMAL_PLACES));
 
     return `${label}: ${formattedValue} ${gramsLabel}`;
 }

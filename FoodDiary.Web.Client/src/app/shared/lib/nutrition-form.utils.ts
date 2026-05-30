@@ -126,7 +126,7 @@ export function getControlNumericValue(control: { value: number | string | null 
     if (raw === null || raw === undefined || raw === '') {
         return 0;
     }
-    const value = typeof raw === 'string' ? Number(raw.replace(',', '.').replace(/[^0-9.-]/g, '')) : Number(raw);
+    const value = typeof raw === 'string' ? Number(raw.replace(',', '.').replaceAll(/[^\d.-]/g, '')) : Number(raw);
     return Number.isFinite(value) ? Math.max(0, value) : 0;
 }
 

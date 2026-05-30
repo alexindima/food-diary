@@ -39,9 +39,13 @@ async function setupNotificationSettingsAsync(): Promise<NotificationSettingsCon
         isSupported: signal(true),
         isSubscribed: signal(false),
         isBusy: signal(false),
-        ensureSubscriptionAsync: vi.fn(async () => Promise.resolve('subscribed')),
+        ensureSubscriptionAsync: vi.fn(async () => {
+            await Promise.resolve();
+
+            return 'subscribed';
+        }),
     };
-    const navigationService = { navigateToProfileAsync: vi.fn(async () => Promise.resolve()) };
+    const navigationService = { navigateToProfileAsync: vi.fn(async () => {}) };
     const dialogRef = { close: vi.fn() };
     const toastService = { success: vi.fn(), info: vi.fn() };
     const frontendObservability = {

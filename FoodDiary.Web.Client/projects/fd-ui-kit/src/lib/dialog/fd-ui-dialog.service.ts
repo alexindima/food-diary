@@ -116,25 +116,31 @@ export class FdUiDialogService {
 
     private resolvePreset(preset: FdUiDialogPreset | undefined): ResolvedDialogPreset {
         switch (preset) {
-            case 'confirm':
+            case 'confirm': {
                 return { size: 'sm' };
-            case 'form':
+            }
+            case 'form': {
                 return { size: 'md' };
-            case 'list':
+            }
+            case 'list': {
                 return { size: 'lg' };
-            case 'detail':
+            }
+            case 'detail': {
                 return {
                     size: 'lg',
                     panelClass: ['fd-ui-dialog-panel--detail'],
                     backdropClass: ['fd-ui-dialog-backdrop--detail'],
                 };
-            case 'fullscreen':
+            }
+            case 'fullscreen': {
                 return {
                     size: 'xl',
                     panelClass: ['fd-ui-dialog-panel--fullscreen'],
                 };
-            case undefined:
+            }
+            case undefined: {
                 return {};
+            }
         }
     }
 

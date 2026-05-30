@@ -34,7 +34,7 @@ import { FastingActiveExtendedControlsComponent } from './active-extended/fastin
 import { FastingSetupControlsComponent } from './setup/fasting-setup-controls.component';
 
 const CYCLIC_PRESET_SEPARATOR = ':';
-const FASTING_MODES: readonly FastingMode[] = ['intermittent', 'extended', 'cyclic'];
+const FASTING_MODES = new Set<FastingMode>(['intermittent', 'extended', 'cyclic']);
 
 @Component({
     selector: 'fd-fasting-controls',
@@ -344,7 +344,7 @@ export class FastingControlsComponent {
     }
 
     private isFastingMode(value: string): value is FastingMode {
-        return FASTING_MODES.some(mode => mode === value);
+        return (FASTING_MODES as ReadonlySet<string>).has(value);
     }
 
     private isFastingProtocol(value: string): value is FastingProtocol {

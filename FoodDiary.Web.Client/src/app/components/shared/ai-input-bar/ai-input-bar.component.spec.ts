@@ -71,7 +71,7 @@ async function setupAiInputBarAsync(mode: 'create' | 'emit' = 'emit'): Promise<A
                 useValue: {
                     user: signal({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' }),
                     getInfoSilently: vi.fn().mockReturnValue(of(null)),
-                    acceptAiConsent: vi.fn().mockReturnValue(of(undefined)),
+                    acceptAiConsent: vi.fn().mockReturnValue(of(void 0)),
                 },
             },
             { provide: AuthService, useValue: { isPremium: signal(true) } },
@@ -83,7 +83,7 @@ async function setupAiInputBarAsync(mode: 'create' | 'emit' = 'emit'): Promise<A
                 useValue: {
                     requestUploadUrl: vi.fn(),
                     uploadToPresignedUrl: vi.fn(),
-                    deleteAsset: vi.fn().mockReturnValue(of(undefined)),
+                    deleteAsset: vi.fn().mockReturnValue(of(void 0)),
                 },
             },
             { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },

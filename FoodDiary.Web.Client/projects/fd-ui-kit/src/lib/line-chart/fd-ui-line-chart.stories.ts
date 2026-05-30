@@ -28,7 +28,7 @@ export const Default: Story = {
             { label: 'Mon', value: 82.4 },
             { label: 'Tue', value: 82.1 },
             { label: 'Wed', value: 81.9 },
-            { label: 'Thu', value: 82.0 },
+            { label: 'Thu', value: 82 },
             { label: 'Fri', value: 81.6 },
             { label: 'Sat', value: 81.4 },
             { label: 'Sun', value: 81.2 },
