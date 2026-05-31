@@ -1,11 +1,20 @@
+using FoodDiary.MailInbox.Presentation.Filters;
+using FoodDiary.MailInbox.Presentation.Options;
 using FoodDiary.MailInbox.Presentation.Responses;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.MailInbox.Presentation.Extensions;
 
 public static class MailInboxPresentationServiceCollectionExtensions {
-    public static IServiceCollection AddMailInboxPresentation(this IServiceCollection services) {
+    public static IServiceCollection AddMailInboxPresentation(this IServiceCollection services, IConfiguration configuration) {
+        services.AddScoped<MailInboxApiKeyAuthorizationFilter>();
+        services.AddOptions<MailInboxHttpOptions>()
+            .Bind(configuration.GetSection(MailInboxHttpOptions.SectionName))
+            .Validate(MailInboxHttpOptions.HasValidApiKey, "MailInboxHttp:RequireApiKey must be true and MailInboxHttp:ApiKey must be provided.")
+            .ValidateOnStart();
+
         services
             .AddControllers()
             .ConfigureApiBehaviorOptions(options => {

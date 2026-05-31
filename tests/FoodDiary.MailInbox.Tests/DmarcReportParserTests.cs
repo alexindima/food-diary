@@ -35,50 +35,84 @@ public sealed class DmarcReportParserTests {
         Assert.Null(report);
     }
 
+    [Fact]
+    public void TryParse_WhenGzipReportExpandsPastLimit_ReturnsNull() {
+        var rawMime = CreateRawMessage(CreateGzipAttachment(new string('a', 2 * 1024 * 1024 + 1)));
+        var parser = new DmarcReportParser();
+
+        var report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenXmlContainsDtd_ReturnsNull() {
+        var rawMime = CreateRawMessage(new MimePart("application", "xml") {
+            FileName = "report.xml",
+            Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes("""
+                <!DOCTYPE feedback [
+                  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+                ]>
+                <feedback><report_metadata><org_name>&xxe;</org_name></report_metadata></feedback>
+                """))),
+            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+            ContentTransferEncoding = ContentEncoding.Base64
+        });
+        var parser = new DmarcReportParser();
+
+        var report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
     private static MimePart CreateGzipReportAttachment() {
+        return CreateGzipAttachment("""
+                                    <?xml version="1.0" encoding="UTF-8"?>
+                                    <feedback>
+                                      <report_metadata>
+                                        <org_name>google.com</org_name>
+                                        <report_id>report-1</report_id>
+                                        <date_range>
+                                          <begin>1777161600</begin>
+                                          <end>1777247999</end>
+                                        </date_range>
+                                      </report_metadata>
+                                      <policy_published>
+                                        <domain>fooddiary.club</domain>
+                                      </policy_published>
+                                      <record>
+                                        <row>
+                                          <source_ip>193.109.69.58</source_ip>
+                                          <count>2</count>
+                                          <policy_evaluated>
+                                            <disposition>none</disposition>
+                                            <dkim>pass</dkim>
+                                            <spf>pass</spf>
+                                          </policy_evaluated>
+                                        </row>
+                                        <identifiers>
+                                          <header_from>fooddiary.club</header_from>
+                                        </identifiers>
+                                        <auth_results>
+                                          <dkim>
+                                            <domain>fooddiary.club</domain>
+                                            <result>pass</result>
+                                          </dkim>
+                                          <spf>
+                                            <domain>fooddiary.club</domain>
+                                            <result>pass</result>
+                                          </spf>
+                                        </auth_results>
+                                      </record>
+                                    </feedback>
+                                    """);
+    }
+
+    private static MimePart CreateGzipAttachment(string payload) {
         using var compressed = new MemoryStream();
         using (var gzip = new GZipStream(compressed, CompressionMode.Compress, leaveOpen: true))
         using (var writer = new StreamWriter(gzip, Encoding.UTF8)) {
-            writer.Write("""
-                         <?xml version="1.0" encoding="UTF-8"?>
-                         <feedback>
-                           <report_metadata>
-                             <org_name>google.com</org_name>
-                             <report_id>report-1</report_id>
-                             <date_range>
-                               <begin>1777161600</begin>
-                               <end>1777247999</end>
-                             </date_range>
-                           </report_metadata>
-                           <policy_published>
-                             <domain>fooddiary.club</domain>
-                           </policy_published>
-                           <record>
-                             <row>
-                               <source_ip>193.109.69.58</source_ip>
-                               <count>2</count>
-                               <policy_evaluated>
-                                 <disposition>none</disposition>
-                                 <dkim>pass</dkim>
-                                 <spf>pass</spf>
-                               </policy_evaluated>
-                             </row>
-                             <identifiers>
-                               <header_from>fooddiary.club</header_from>
-                             </identifiers>
-                             <auth_results>
-                               <dkim>
-                                 <domain>fooddiary.club</domain>
-                                 <result>pass</result>
-                               </dkim>
-                               <spf>
-                                 <domain>fooddiary.club</domain>
-                                 <result>pass</result>
-                               </spf>
-                             </auth_results>
-                           </record>
-                         </feedback>
-                         """);
+            writer.Write(payload);
         }
 
         return new MimePart("application", "gzip") {

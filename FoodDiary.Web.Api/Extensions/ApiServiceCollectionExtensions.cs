@@ -97,6 +97,12 @@ public static class ApiServiceCollectionExtensions {
             .Validate(ApiBuildInfoOptions.HasValidImageTag,
                 "BuildInfo:ImageTag must be empty or shorter than 257 characters.")
             .ValidateOnStart();
+        services
+            .AddOptions<InitialAdminOptions>()
+            .BindConfiguration(InitialAdminOptions.SectionName)
+            .Validate(InitialAdminOptions.HasValidConfiguration,
+                "InitialAdmin requires a valid email and a password of at least 12 characters when configured.")
+            .ValidateOnStart();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
         services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
@@ -153,6 +159,7 @@ public static class ApiServiceCollectionExtensions {
         services.AddRateLimiter(static _ => { });
         services.AddOutputCache(static _ => { });
         services.AddHostedService<FastingNotificationHostedService>();
+        services.AddHostedService<InitialAdminHostedService>();
         services.AddHostedService<UserLoginEventCleanupHostedService>();
         services.AddPresentationApi();
         services.AddEndpointsApiExplorer();

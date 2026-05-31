@@ -64,6 +64,20 @@ public sealed class JwtTokenGeneratorTests {
         Assert.Contains("SecretKey", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Theory]
+    [InlineData("change-me-via-user-secrets-or-env-32")]
+    [InlineData("change-me-local-jwt-secret-min-32")]
+    [InlineData("your-32-character-or-longer-secret-key")]
+    public void HasValidSecretKey_WithRepositoryPlaceholder_ReturnsFalse(string secretKey) {
+        Assert.False(JwtOptions.HasValidSecretKey(new JwtOptions {
+            Issuer = "FoodDiary",
+            Audience = "FoodDiaryClients",
+            SecretKey = secretKey,
+            ExpirationMinutes = 60,
+            RefreshTokenExpirationDays = 7,
+        }));
+    }
+
     private static IOptions<JwtOptions> CreateOptions(
         int expirationMinutes = 60,
         int refreshDays = 7,

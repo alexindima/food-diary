@@ -112,6 +112,7 @@ public static class DependencyInjection {
         services.AddMailInboxClient(options => {
             var section = configuration.GetSection(MailInboxClientOptions.SectionName);
             options.BaseUrl = section["BaseUrl"] ?? string.Empty;
+            options.ApiKey = section["ApiKey"] ?? string.Empty;
             options.Timeout = TimeSpan.FromSeconds(15);
         });
         services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();

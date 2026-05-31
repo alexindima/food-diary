@@ -2,11 +2,14 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.MailInbox.Client.Models;
+using FoodDiary.MailInbox.Client.Options;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailInbox.Client;
 
-public sealed class MailInboxClient(HttpClient httpClient) : IMailInboxClient {
+public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxClientOptions> options) : IMailInboxClient {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private readonly MailInboxClientOptions _options = options.Value;
 
     public async Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(
         int? limit,
@@ -16,7 +19,8 @@ public sealed class MailInboxClient(HttpClient httpClient) : IMailInboxClient {
         var path = limit.HasValue
             ? $"/api/mail-inbox/messages?limit={limit.Value}"
             : "/api/mail-inbox/messages";
-        using var response = await httpClient.GetAsync(path, cancellationToken);
+        using var request = CreateRequest(HttpMethod.Get, path);
+        using var response = await httpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         IReadOnlyList<InboundMailMessageSummaryResponse>? payload;
@@ -36,7 +40,8 @@ public sealed class MailInboxClient(HttpClient httpClient) : IMailInboxClient {
         CancellationToken cancellationToken) {
         EnsureBaseAddress();
 
-        using var response = await httpClient.GetAsync($"/api/mail-inbox/messages/{id}", cancellationToken);
+        using var request = CreateRequest(HttpMethod.Get, $"/api/mail-inbox/messages/{id}");
+        using var response = await httpClient.SendAsync(request, cancellationToken);
         if (response.StatusCode == HttpStatusCode.NotFound) {
             return null;
         }
@@ -59,5 +64,14 @@ public sealed class MailInboxClient(HttpClient httpClient) : IMailInboxClient {
         if (httpClient.BaseAddress is null) {
             throw new InvalidOperationException("MailInbox client base URL is not configured.");
         }
+    }
+
+    private HttpRequestMessage CreateRequest(HttpMethod method, string path) {
+        var request = new HttpRequestMessage(method, path);
+        if (!string.IsNullOrWhiteSpace(_options.ApiKey)) {
+            request.Headers.TryAddWithoutValidation("X-MailInbox-Api-Key", _options.ApiKey);
+        }
+
+        return request;
     }
 }

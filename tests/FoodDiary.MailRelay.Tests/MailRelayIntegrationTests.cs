@@ -18,6 +18,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         var transport = new RecordingRelayDeliveryTransport();
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
         using var client = factory.CreateClient();
+        AddRelayApiKey(client);
 
         long? deliveryCount = null;
         string? deliveryOutcome = null;
@@ -58,6 +59,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         var transport = new RecordingRelayDeliveryTransport(remainingFailures: 5);
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
         using var client = factory.CreateClient();
+        AddRelayApiKey(client);
 
         var response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
             "noreply@example.com",
@@ -87,6 +89,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         var transport = new RecordingRelayDeliveryTransport();
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
         using var client = factory.CreateClient();
+        AddRelayApiKey(client);
 
         var suppressionResponse = await client.PostAsJsonAsync("/api/email/suppressions", new CreateSuppressionRequest(
             "user@example.com",
@@ -120,6 +123,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         var transport = new RecordingRelayDeliveryTransport();
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
         using var client = factory.CreateClient();
+        AddRelayApiKey(client);
 
         var eventResponse = await client.PostAsJsonAsync("/api/email/events", new IngestMailEventRequest(
             "bounce",
@@ -203,6 +207,9 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         listener.Start();
         return listener;
     }
+
+    private static void AddRelayApiKey(HttpClient client) =>
+        client.DefaultRequestHeaders.Add("X-Relay-Api-Key", "integration-relay-api-key");
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
         foreach (var tag in tags) {

@@ -10,7 +10,7 @@ public static class MailRelayServiceCollectionExtensions {
     public static IServiceCollection AddMailRelayOptions(this IServiceCollection services, IConfiguration configuration) {
         services.AddOptions<MailRelayOptions>()
             .Bind(configuration.GetSection(MailRelayOptions.SectionName))
-            .Validate(MailRelayOptions.HasValidListenApiKey, "MailRelay:ApiKey must be provided when RequireApiKey is enabled.")
+            .Validate(MailRelayOptions.HasValidListenApiKey, "MailRelay:RequireApiKey must be true and MailRelay:ApiKey must be provided.")
             .ValidateOnStart();
         services.AddOptions<MailRelaySmtpOptions>()
             .Bind(configuration.GetSection(MailRelaySmtpOptions.SectionName))

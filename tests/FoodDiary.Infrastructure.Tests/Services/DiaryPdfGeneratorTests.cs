@@ -59,8 +59,8 @@ public sealed class DiaryPdfGeneratorTests {
     public async Task GenerateAsync_WithIngredientImagesAndNoMealImage_DownloadsCollageSources() {
         var userId = UserId.New();
         var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
-        AddProductItem(meal, CreateProduct(userId, "Rice", "https://example.test/rice.png"), 150);
-        AddProductItem(meal, CreateProduct(userId, "Carrot", "https://example.test/carrot.png"), 80);
+        AddProductItem(meal, CreateProduct(userId, "Rice", "https://93.184.216.34/rice.png"), 150);
+        AddProductItem(meal, CreateProduct(userId, "Carrot", "https://93.184.216.34/carrot.png"), 80);
         var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
@@ -76,16 +76,16 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.True(pdf.Length > 1024);
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(2, imageHandler.RequestCount);
-        Assert.Contains("https://example.test/rice.png", imageHandler.RequestedUrls);
-        Assert.Contains("https://example.test/carrot.png", imageHandler.RequestedUrls);
+        Assert.Contains("https://93.184.216.34/rice.png", imageHandler.RequestedUrls);
+        Assert.Contains("https://93.184.216.34/carrot.png", imageHandler.RequestedUrls);
     }
 
     [Fact]
     public async Task GenerateAsync_WithAiSessionImagesAndNoMealImage_DownloadsCollageSources() {
         var userId = UserId.New();
         var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
-        AddAiSessionWithImage(meal, userId, "https://example.test/ai-1.png");
-        AddAiSessionWithImage(meal, userId, "https://example.test/ai-2.png");
+        AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-1.png");
+        AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-2.png");
         var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
@@ -101,8 +101,8 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.True(pdf.Length > 1024);
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(2, imageHandler.RequestCount);
-        Assert.Contains("https://example.test/ai-1.png", imageHandler.RequestedUrls);
-        Assert.Contains("https://example.test/ai-2.png", imageHandler.RequestedUrls);
+        Assert.Contains("https://93.184.216.34/ai-1.png", imageHandler.RequestedUrls);
+        Assert.Contains("https://93.184.216.34/ai-2.png", imageHandler.RequestedUrls);
     }
 
     [Fact]
@@ -164,6 +164,28 @@ public sealed class DiaryPdfGeneratorTests {
         var pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 4, 20, 20, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
+            null,
+            240,
+            null,
+            CancellationToken.None);
+
+        Assert.True(pdf.Length > 1024);
+        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal(0, imageHandler.RequestCount);
+    }
+
+    [Fact]
+    public async Task GenerateAsync_WithPrivateNetworkImageUrl_DoesNotRequestImage() {
+        var userId = UserId.New();
+        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        meal.UpdateImage("http://127.0.0.1/admin.png");
+        var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
+        var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
+
+        var pdf = await generator.GenerateAsync(
+            [meal],
+            new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             null,
             240,

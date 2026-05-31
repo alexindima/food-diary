@@ -53,7 +53,7 @@ public sealed class OpenTelemetryConfigurationTests {
     private static IConfiguration CreateConfiguration(string? otlpEndpoint) {
         var values = new Dictionary<string, string?> {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
-            ["Jwt:SecretKey"] = "change-me-local-jwt-secret-min-32",
+            ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
             ["Jwt:Issuer"] = "FoodDiaryApi",
             ["Jwt:Audience"] = "FoodDiaryClient",
             ["Jwt:ExpirationMinutes"] = "60",

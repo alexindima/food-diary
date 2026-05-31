@@ -21,8 +21,13 @@ public sealed class JwtOptions {
     [Range(1, int.MaxValue)]
     public int RefreshTokenExpirationDays { get; init; }
 
-    public static bool HasValidSecretKey(JwtOptions options) =>
-        !string.IsNullOrWhiteSpace(options.SecretKey) && options.SecretKey.Length >= 32;
+    public static bool HasValidSecretKey(JwtOptions options) {
+        var value = options.SecretKey.Trim();
+        return value.Length >= 32 &&
+               !value.Equals("change-me-via-user-secrets-or-env-32", StringComparison.OrdinalIgnoreCase) &&
+               !value.Equals("change-me-local-jwt-secret-min-32", StringComparison.OrdinalIgnoreCase) &&
+               !value.Equals("your-32-character-or-longer-secret-key", StringComparison.OrdinalIgnoreCase);
+    }
 
     public static bool HasValidIssuer(JwtOptions options) => !string.IsNullOrWhiteSpace(options.Issuer);
 

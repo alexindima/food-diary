@@ -53,4 +53,17 @@ public static class DietologistAccessPolicy {
                permissions.ShareHydration ||
                permissions.ShareFasting;
     }
+
+    public static Error? EnsureAllPermissions(DietologistPermissionsModel permissions) {
+        return permissions.ShareMeals &&
+               permissions.ShareStatistics &&
+               permissions.ShareWeight &&
+               permissions.ShareWaist &&
+               permissions.ShareGoals &&
+               permissions.ShareHydration &&
+               permissions.ShareProfile &&
+               permissions.ShareFasting
+            ? null
+            : Errors.Dietologist.PermissionDenied;
+    }
 }

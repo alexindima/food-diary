@@ -25,7 +25,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         _issuer = jwtOptions.Issuer;
         _audience = jwtOptions.Audience;
 
-        if (string.IsNullOrWhiteSpace(secretKey)) {
+        if (!JwtOptions.HasValidSecretKey(jwtOptions)) {
             throw new InvalidOperationException($"{JwtOptions.SectionName}:SecretKey is not configured.");
         }
 

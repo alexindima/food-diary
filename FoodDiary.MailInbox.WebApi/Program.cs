@@ -12,7 +12,7 @@ if (!builder.Environment.IsDevelopment()) {
 
 builder.Services
     .AddMailInboxApplication()
-    .AddMailInboxPresentation()
+    .AddMailInboxPresentation(builder.Configuration)
     .AddMailInboxInfrastructure(builder.Configuration);
 
 var app = builder.Build();

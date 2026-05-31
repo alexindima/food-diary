@@ -902,6 +902,39 @@ public class DietologistFeatureTests {
         Assert.True(notificationPusher.PushCalled);
     }
 
+    [Fact]
+    public async Task CreateRecommendation_WhenAnyPermissionIsMissing_ReturnsFailure() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var limitedPermissions = new DietologistPermissions(
+            ShareMeals: true,
+            ShareStatistics: true,
+            ShareWeight: true,
+            ShareWaist: true,
+            ShareGoals: true,
+            ShareHydration: true,
+            ShareProfile: false,
+            ShareFasting: true);
+        var invitation = CreateAcceptedInvitation(clientId, dietologistId, limitedPermissions);
+        var invRepo = new InMemoryInvitationRepository();
+        invRepo.Seed(invitation);
+        var recRepo = new InMemoryRecommendationRepository();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var handler = CreateRecommendationHandler(
+            invitationRepository: invRepo,
+            recommendationRepository: recRepo,
+            userRepository: userRepo);
+
+        var result = await handler.Handle(
+            new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("PermissionDenied", result.Error.Code);
+        Assert.Empty(recRepo.Added);
+    }
+
     // ── MarkRecommendationRead ──
 
     [Fact]

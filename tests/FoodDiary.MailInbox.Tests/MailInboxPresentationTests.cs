@@ -1,11 +1,17 @@
 using FoodDiary.MailInbox.Application.Common.Result;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Presentation.Extensions;
+using FoodDiary.MailInbox.Presentation.Filters;
 using FoodDiary.MailInbox.Presentation.Features.Health.Mappings;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
+using FoodDiary.MailInbox.Presentation.Options;
 using FoodDiary.MailInbox.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailInbox.Tests;
 
@@ -99,4 +105,55 @@ public sealed class MailInboxPresentationTests {
         Assert.NotNull(response.Errors);
         Assert.Equal(["Required"], response.Errors["Request.RawMime"]);
     }
+
+    [Fact]
+    public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyIsMissing_ReturnsUnauthorized() {
+        var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
+            RequireApiKey = true,
+            ApiKey = "secret"
+        }));
+        var context = CreateAuthorizationContext();
+
+        filter.OnAuthorization(context);
+
+        var result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
+        var response = Assert.IsType<MailInboxApiErrorHttpResponse>(result.Value);
+        Assert.Equal("MailInbox.Unauthorized", response.Error);
+    }
+
+    [Fact]
+    public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
+        var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
+            RequireApiKey = false,
+            ApiKey = "secret"
+        }));
+        var context = CreateAuthorizationContext();
+        context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
+
+        filter.OnAuthorization(context);
+
+        Assert.IsType<UnauthorizedObjectResult>(context.Result);
+    }
+
+    [Fact]
+    public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
+        var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
+            RequireApiKey = true,
+            ApiKey = "secret"
+        }));
+        var context = CreateAuthorizationContext();
+        context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
+
+        filter.OnAuthorization(context);
+
+        Assert.Null(context.Result);
+    }
+
+    private static AuthorizationFilterContext CreateAuthorizationContext() =>
+        new(
+            new ActionContext(
+                new DefaultHttpContext(),
+                new RouteData(),
+                new ActionDescriptor()),
+            []);
 }

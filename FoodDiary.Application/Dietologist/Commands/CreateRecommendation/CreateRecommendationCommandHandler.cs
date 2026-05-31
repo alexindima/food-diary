@@ -43,6 +43,11 @@ public class CreateRecommendationCommandHandler(
             return Result.Failure<RecommendationModel>(accessResult.Error);
         }
 
+        var permissionError = DietologistAccessPolicy.EnsureAllPermissions(accessResult.Value);
+        if (permissionError is not null) {
+            return Result.Failure<RecommendationModel>(permissionError);
+        }
+
         var recommendation = Recommendation.Create(dietologistUserId, clientUserId, command.Text);
         await recommendationRepository.AddAsync(recommendation, cancellationToken);
         await NotifyClientAsync(recommendation, cancellationToken);

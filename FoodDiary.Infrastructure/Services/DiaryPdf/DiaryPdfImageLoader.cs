@@ -1,10 +1,14 @@
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using SkiaSharp;
+using System.Net;
+using System.Net.Sockets;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
+    private const int MaxDataUrlBase64Length = ((MaxMealImageBytes + 2) / 3) * 4;
+
     private async Task<IReadOnlyDictionary<MealId, byte[]>> LoadMealImagesAsync(
         IReadOnlyList<Meal> meals,
         CancellationToken cancellationToken) {
@@ -106,7 +110,7 @@ internal sealed partial class DiaryPdfGenerator {
             }
 
             if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out var uri) ||
-                uri.Scheme is not ("http" or "https")) {
+                !await IsAllowedRemoteImageUriAsync(uri, cancellationToken)) {
                 return null;
             }
 
@@ -128,7 +132,7 @@ internal sealed partial class DiaryPdfGenerator {
             }
 
             return memory.Length == 0 ? null : PrepareMealImage(memory.ToArray());
-        } catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or TaskCanceledException or FormatException) {
+        } catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or TaskCanceledException or FormatException or IOException or SocketException) {
             return null;
         }
     }
@@ -155,8 +159,66 @@ internal sealed partial class DiaryPdfGenerator {
             return false;
         }
 
-        bytes = Convert.FromBase64String(value[(markerIndex + marker.Length)..]);
+        var base64 = value[(markerIndex + marker.Length)..];
+        if (base64.Length > MaxDataUrlBase64Length) {
+            return false;
+        }
+
+        bytes = Convert.FromBase64String(base64);
         return bytes.Length <= MaxMealImageBytes;
+    }
+
+    private static async Task<bool> IsAllowedRemoteImageUriAsync(Uri uri, CancellationToken cancellationToken) {
+        if (uri.Scheme is not ("http" or "https") || string.IsNullOrWhiteSpace(uri.Host)) {
+            return false;
+        }
+
+        var host = uri.IdnHost;
+        if (host.Equals("localhost", StringComparison.OrdinalIgnoreCase) ||
+            host.EndsWith(".localhost", StringComparison.OrdinalIgnoreCase)) {
+            return false;
+        }
+
+        if (IPAddress.TryParse(host, out var literalAddress)) {
+            return IsPublicAddress(literalAddress);
+        }
+
+        var addresses = await Dns.GetHostAddressesAsync(host, cancellationToken);
+        return addresses.Length > 0 && addresses.All(IsPublicAddress);
+    }
+
+    private static bool IsPublicAddress(IPAddress address) {
+        if (address.IsIPv4MappedToIPv6) {
+            address = address.MapToIPv4();
+        }
+
+        if (IPAddress.IsLoopback(address)) {
+            return false;
+        }
+
+        if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) {
+            var bytes = address.GetAddressBytes();
+            return bytes[0] is not (0 or 10 or 127) &&
+                   (bytes[0] != 100 || bytes[1] < 64 || bytes[1] > 127) &&
+                   (bytes[0] != 169 || bytes[1] != 254) &&
+                   (bytes[0] != 172 || bytes[1] < 16 || bytes[1] > 31) &&
+                   (bytes[0] != 192 || bytes[1] != 0 || bytes[2] != 0) &&
+                   (bytes[0] != 192 || bytes[1] != 168) &&
+                   (bytes[0] != 198 || bytes[1] is not (18 or 19)) &&
+                   bytes[0] < 224;
+        }
+
+        if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6) {
+            var bytes = address.GetAddressBytes();
+            return !address.IsIPv6LinkLocal &&
+                   !address.IsIPv6Multicast &&
+                   !address.IsIPv6SiteLocal &&
+                   !address.Equals(IPAddress.IPv6Any) &&
+                   !address.Equals(IPAddress.IPv6Loopback) &&
+                   (bytes[0] & 0xfe) != 0xfc;
+        }
+
+        return false;
     }
 
     private static byte[]? PrepareMealImage(byte[] imageBytes) {

@@ -59,6 +59,22 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
+    public void RelayApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
+        var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
+            RequireApiKey = false,
+            ApiKey = "secret"
+        }));
+        var context = CreateAuthorizationContext();
+        context.HttpContext.Request.Headers["X-Relay-Api-Key"] = "secret";
+
+        filter.OnAuthorization(context);
+
+        var result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
+        var response = Assert.IsType<MailRelayApiErrorHttpResponse>(result.Value);
+        Assert.Equal("MailRelay.Unauthorized", response.Error);
+    }
+
+    [Fact]
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
         var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
             RequireApiKey = true,

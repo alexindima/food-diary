@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.MailInbox.Presentation.Features.Messages;
 
 [Route("api/mail-inbox/messages")]
-public sealed class MailInboxMessagesController(ISender sender) : MailInboxControllerBase(sender) {
+public sealed class MailInboxMessagesController(ISender sender) : AuthorizedMailInboxEndpointBase(sender) {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<InboundMailMessageSummaryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> Get([FromQuery] int? limit) =>

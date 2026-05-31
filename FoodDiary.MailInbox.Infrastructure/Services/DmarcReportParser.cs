@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.IO.Compression;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using MimeKit;
@@ -8,6 +9,10 @@ using MimeKit;
 namespace FoodDiary.MailInbox.Infrastructure.Services;
 
 public sealed class DmarcReportParser {
+    private const int MaxDmarcAttachmentBytes = 5 * 1024 * 1024;
+    private const int MaxDmarcXmlCharacters = 2 * 1024 * 1024;
+    private const int MaxZipXmlEntries = 4;
+
     public DmarcReportPreview? TryParse(string rawMime) {
         try {
             foreach (var xml in ExtractXmlPayloads(rawMime)) {
@@ -35,6 +40,10 @@ public sealed class DmarcReportParser {
 
             using var content = new MemoryStream();
             part.Content.DecodeTo(content);
+            if (content.Length > MaxDmarcAttachmentBytes) {
+                continue;
+            }
+
             var bytes = content.ToArray();
 
             if (fileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
@@ -64,24 +73,37 @@ public sealed class DmarcReportParser {
     private static IEnumerable<string> ExtractZipXmlPayloads(byte[] bytes) {
         using var stream = new MemoryStream(bytes);
         using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
-        foreach (var entry in archive.Entries.Where(static entry => entry.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))) {
+        var xmlEntries = archive.Entries
+            .Where(static entry => entry.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+            .Take(MaxZipXmlEntries);
+
+        foreach (var entry in xmlEntries) {
+            if (entry.Length > MaxDmarcXmlCharacters) {
+                continue;
+            }
+
             using var entryStream = entry.Open();
-            using var reader = new StreamReader(entryStream, Encoding.UTF8);
-            yield return reader.ReadToEnd();
+            yield return ReadTextWithLimit(entryStream);
         }
     }
 
     private static string DecompressGzip(byte[] bytes) {
         using var input = new MemoryStream(bytes);
         using var gzip = new GZipStream(input, CompressionMode.Decompress);
-        using var reader = new StreamReader(gzip, Encoding.UTF8);
-        return reader.ReadToEnd();
+        return ReadTextWithLimit(gzip);
     }
 
     private static DmarcReportPreview? TryParseXml(string xml) {
         XDocument document;
         try {
-            document = XDocument.Parse(xml);
+            using var reader = XmlReader.Create(
+                new StringReader(xml),
+                new XmlReaderSettings {
+                    DtdProcessing = DtdProcessing.Prohibit,
+                    MaxCharactersInDocument = MaxDmarcXmlCharacters,
+                    XmlResolver = null
+                });
+            document = XDocument.Load(reader);
         } catch (Exception) {
             return null;
         }
@@ -143,4 +165,21 @@ public sealed class DmarcReportParser {
         long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
             ? DateTimeOffset.FromUnixTimeSeconds(result)
             : null;
+
+    private static string ReadTextWithLimit(Stream stream) {
+        using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, leaveOpen: false);
+        var builder = new StringBuilder();
+        var buffer = new char[8192];
+        int read;
+
+        while ((read = reader.Read(buffer, 0, buffer.Length)) > 0) {
+            if (builder.Length + read > MaxDmarcXmlCharacters) {
+                throw new InvalidDataException("DMARC XML payload exceeds the maximum allowed size.");
+            }
+
+            builder.Append(buffer, 0, read);
+        }
+
+        return builder.ToString();
+    }
 }

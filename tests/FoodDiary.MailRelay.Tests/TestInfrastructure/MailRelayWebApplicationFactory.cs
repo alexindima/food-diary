@@ -17,7 +17,8 @@ public sealed class MailRelayWebApplicationFactory(
         builder.ConfigureAppConfiguration((_, configBuilder) => {
             configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
                 ["ConnectionStrings:DefaultConnection"] = databaseConnectionString,
-                ["MailRelay:RequireApiKey"] = "false",
+                ["MailRelay:RequireApiKey"] = "true",
+                ["MailRelay:ApiKey"] = "integration-relay-api-key",
                 ["MailRelayBroker:Backend"] = "RabbitMq",
                 ["MailRelayBroker:HostName"] = fixture.RabbitMqHostName,
                 ["MailRelayBroker:Port"] = fixture.RabbitMqPort.ToString(),

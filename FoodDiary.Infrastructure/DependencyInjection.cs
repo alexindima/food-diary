@@ -110,8 +110,8 @@ public static class DependencyInjection {
 
         services.AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
-            .Validate(static options => !string.IsNullOrWhiteSpace(options.SecretKey) && options.SecretKey.Length >= 32,
-                $"{JwtOptions.SectionName}:SecretKey must be at least 32 characters long.")
+            .Validate(JwtOptions.HasValidSecretKey,
+                $"{JwtOptions.SectionName}:SecretKey must be at least 32 characters long and must not use a repository placeholder.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Issuer),
                 $"{JwtOptions.SectionName}:Issuer is required.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Audience),
@@ -185,6 +185,8 @@ public static class DependencyInjection {
         services.AddScoped<IWearableSyncRepository, WearableSyncRepository>();
         services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => {
             client.Timeout = TimeSpan.FromSeconds(5);
+        }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
+            AllowAutoRedirect = false
         });
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
