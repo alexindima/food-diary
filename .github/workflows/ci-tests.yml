@@ -110,6 +110,69 @@ jobs:
             fi
           done
 
+      - name: Append backend .NET summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          logs_dir="${RUNNER_TEMP}/ci-test-logs"
+          failed_log_name=""
+          if [ -f "${logs_dir}/failure-meta.env" ]; then
+            failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
+          fi
+
+          status_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            if [ -n "$failed_log_name" ] && [ "$(basename "$log_file")" = "$failed_log_name" ]; then
+              printf 'Failed'
+              return
+            fi
+
+            printf 'Passed'
+          }
+
+          test_details_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            local summary
+            summary=$(grep -E 'Passed!|Failed!' "$log_file" | tail -n 1 | xargs || true)
+            if [ -n "$summary" ]; then
+              printf '%s' "$summary"
+            else
+              printf 'dotnet test'
+            fi
+          }
+
+          {
+            echo "## Backend .NET checks"
+            echo
+            echo "| Area | Check | Status | Details |"
+            echo "| --- | --- | --- | --- |"
+            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx |"
+            echo "| Quality | Formatting | $(status_for_log "${logs_dir}/dotnet-format.log") | dotnet format --verify-no-changes |"
+            echo "| Build | Solution build | $(status_for_log "${logs_dir}/build.log") | dotnet build Release |"
+
+            shopt -s nullglob
+            projects=(tests/*/*.csproj)
+            for project in "${projects[@]}"; do
+              safe_name="${project//\//_}"
+              safe_name="${safe_name//\\/_}"
+              log_file="${logs_dir}/${safe_name}.log"
+              project_name=$(basename "$project" .csproj)
+              echo "| Tests | ${project_name} | $(status_for_log "$log_file") | $(test_details_for_log "$log_file") |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload CI failure logs
         if: failure()
         uses: actions/upload-artifact@v7
@@ -217,6 +280,60 @@ jobs:
             exit "$status"
           fi
 
+      - name: Append PostgreSQL critical-flow summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          logs_dir="${RUNNER_TEMP}/postgres-critical-flow-logs"
+          failed_log_name=""
+          if [ -f "${logs_dir}/failure-meta.env" ]; then
+            failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
+          fi
+
+          status_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            if [ -n "$failed_log_name" ] && [ "$(basename "$log_file")" = "$failed_log_name" ]; then
+              printf 'Failed'
+              return
+            fi
+
+            printf 'Passed'
+          }
+
+          test_details_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            local summary
+            summary=$(grep -E 'Passed!|Failed!' "$log_file" | tail -n 1 | xargs || true)
+            if [ -n "$summary" ]; then
+              printf '%s' "$summary"
+            else
+              printf 'dotnet test'
+            fi
+          }
+
+          {
+            echo "## Backend PostgreSQL critical flows"
+            echo
+            echo "| Area | Check | Status | Details |"
+            echo "| --- | --- | --- | --- |"
+            echo "| Setup | Docker availability | $(status_for_log "${logs_dir}/docker-version.log") | docker version |"
+            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx |"
+            echo "| Tests | API critical flows | $(status_for_log "${logs_dir}/web-api-critical-flows.log") | $(test_details_for_log "${logs_dir}/web-api-critical-flows.log") |"
+            echo "| Tests | Infrastructure critical flows | $(status_for_log "${logs_dir}/infrastructure-critical-flows.log") | $(test_details_for_log "${logs_dir}/infrastructure-critical-flows.log") |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload PostgreSQL critical-flow failure logs
         if: failure()
         uses: actions/upload-artifact@v7
@@ -298,6 +415,74 @@ jobs:
               exit 1
             fi
           done
+
+      - name: Append dependency audit summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          logs_dir="${RUNNER_TEMP}/dependency-audit-logs"
+          failed_log_name=""
+          if [ -f "${logs_dir}/failure-meta.env" ]; then
+            failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
+          fi
+
+          status_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            if [ -n "$failed_log_name" ] && [ "$(basename "$log_file")" = "$failed_log_name" ]; then
+              printf 'Failed'
+              return
+            fi
+
+            printf 'Passed'
+          }
+
+          audit_details_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            if grep -qE 'has the following vulnerable packages|severity:[[:space:]]*(Critical|High|Moderate|Low)' "$log_file"; then
+              printf 'Vulnerable package detected'
+              return
+            fi
+
+            if grep -q 'has no vulnerable packages' "$log_file"; then
+              printf 'No vulnerable packages'
+              return
+            fi
+
+            printf 'dotnet list package --vulnerable'
+          }
+
+          projects=(
+            "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
+            "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
+            "FoodDiary.Application/FoodDiary.Application.csproj"
+          )
+
+          {
+            echo "## Backend dependency audit"
+            echo
+            echo "| Area | Check | Status | Details |"
+            echo "| --- | --- | --- | --- |"
+            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx |"
+            for project in "${projects[@]}"; do
+              safe_name="${project//\//_}"
+              safe_name="${safe_name//\\/_}"
+              log_file="${logs_dir}/${safe_name}.log"
+              project_name=$(basename "$project" .csproj)
+              echo "| Security | ${project_name} dependencies | $(status_for_log "$log_file") | $(audit_details_for_log "$log_file") |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload dependency audit failure logs
         if: failure()
