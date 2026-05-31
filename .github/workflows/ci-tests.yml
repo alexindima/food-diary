@@ -10,6 +10,7 @@ on:
 
 jobs:
   dotnet-tests:
+    name: Backend .NET tests and formatting
     runs-on: ubuntu-latest
 
     steps:
@@ -118,6 +119,7 @@ jobs:
           if-no-files-found: ignore
 
   backend-postgres-critical-flows:
+    name: Backend PostgreSQL critical flows
     runs-on: ubuntu-latest
 
     steps:
@@ -224,6 +226,7 @@ jobs:
           if-no-files-found: ignore
 
   backend-dependency-audit:
+    name: Backend dependency audit
     runs-on: ubuntu-latest
 
     steps:
@@ -305,6 +308,7 @@ jobs:
           if-no-files-found: ignore
 
   frontend-checks:
+    name: Frontend checks, tests, and builds
     runs-on: ubuntu-latest
 
     steps:
@@ -438,14 +442,14 @@ jobs:
             exit "$status"
           fi
 
-      - name: Run frontend unit tests
+      - name: Run frontend app unit tests
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/unit-tests.log"
           set +e
-          npx ng test --watch=false > "$log_file" 2>&1
+          npx ng test food-diary-web-client --watch=false --reporters=default > "$log_file" 2>&1
           status=$?
           set -e
           if [ "$status" -ne 0 ]; then
@@ -473,6 +477,41 @@ jobs:
           fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
+      - name: Run admin frontend unit tests
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/admin-unit-tests.log"
+          set +e
+          npx ng test fooddiary-admin --watch=false --reporters=default > "$log_file" 2>&1
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            echo "::group::Admin frontend unit test failure summary"
+            failure_summary=$(sed -n '/Failed Suites/,$p' "$log_file" | head -n 240 || true)
+            if [ -z "$failure_summary" ]; then
+              failure_summary=$(sed -n '/Failed Tests/,$p' "$log_file" | head -n 240 || true)
+            fi
+            if [ -z "$failure_summary" ]; then
+              failure_summary=$(grep -E -A 20 '(^|[[:space:]])FAIL[[:space:]]|Error:|AssertionError' "$log_file" | head -n 240 || true)
+            fi
+            if [ -n "$failure_summary" ]; then
+              printf '%s\n' "$failure_summary"
+            else
+              tail -n 160 "$log_file"
+            fi
+            echo "::endgroup::"
+            echo "Full admin frontend unit test log is uploaded as a CI artifact."
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Run admin frontend unit tests"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+          grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
+
       - name: Run fd-ui-kit unit tests
         shell: bash
         working-directory: FoodDiary.Web.Client
@@ -480,7 +519,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-ui-kit-tests.log"
           set +e
-          npx ng test fd-ui-kit --watch=false > "$log_file" 2>&1
+          npx ng test fd-ui-kit --watch=false --reporters=default > "$log_file" 2>&1
           status=$?
           set -e
           if [ "$status" -ne 0 ]; then
@@ -564,6 +603,72 @@ jobs:
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
+
+      - name: Append frontend checks summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          logs_dir="${RUNNER_TEMP}/frontend-checks-logs"
+          failed_log_name=""
+          if [ -f "${logs_dir}/failure-meta.env" ]; then
+            failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
+          fi
+
+          strip_ansi() {
+            sed -E 's/\x1B\[[0-9;]*[A-Za-z]//g'
+          }
+
+          status_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            if [ -n "$failed_log_name" ] && [ "$(basename "$log_file")" = "$failed_log_name" ]; then
+              printf 'Failed'
+              return
+            fi
+
+            printf 'Passed'
+          }
+
+          test_summary_for_log() {
+            local log_file="$1"
+            if [ ! -f "$log_file" ]; then
+              printf 'Not run'
+              return
+            fi
+
+            local summary
+            summary=$(grep -E 'Test Files|Tests' "$log_file" | strip_ansi | tail -n 2 | xargs || true)
+            if [ -n "$summary" ]; then
+              printf '%s' "$summary"
+            else
+              printf 'See uploaded log'
+            fi
+          }
+
+          {
+            echo "## Frontend checks"
+            echo
+            echo "| Area | Check | Status | Details |"
+            echo "| --- | --- | --- | --- |"
+            echo "| Setup | Install dependencies | $(status_for_log "${logs_dir}/npm-ci.log") | npm ci |"
+            echo "| Quality | i18n consistency | $(status_for_log "${logs_dir}/i18n-check.log") | npm run check:i18n |"
+            echo "| Quality | ESLint | $(status_for_log "${logs_dir}/lint.log") | npm run lint |"
+            echo "| Quality | Dependency graph lint | $(status_for_log "${logs_dir}/dependency-graph.log") | npm run lint:deps |"
+            echo "| Quality | Stylelint | $(status_for_log "${logs_dir}/stylelint.log") | npm run stylelint |"
+            echo "| Quality | Formatting | $(status_for_log "${logs_dir}/prettier.log") | prettier --check |"
+            echo "| Tests | Frontend app unit tests | $(status_for_log "${logs_dir}/unit-tests.log") | $(test_summary_for_log "${logs_dir}/unit-tests.log") |"
+            echo "| Tests | Admin frontend unit tests | $(status_for_log "${logs_dir}/admin-unit-tests.log") | $(test_summary_for_log "${logs_dir}/admin-unit-tests.log") |"
+            echo "| Tests | fd-ui-kit unit tests | $(status_for_log "${logs_dir}/fd-ui-kit-tests.log") | $(test_summary_for_log "${logs_dir}/fd-ui-kit-tests.log") |"
+            echo "| Build | Frontend production build | $(status_for_log "${logs_dir}/build-frontend.log") | npm run build:prod |"
+            echo "| Build | SEO prerender check | $(status_for_log "${logs_dir}/seo-prerender-check.log") | npm run check:seo-prerender |"
+            echo "| Build | Admin frontend build | $(status_for_log "${logs_dir}/build-admin-frontend.log") | npm run build:admin |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload frontend failure logs
         if: failure()
