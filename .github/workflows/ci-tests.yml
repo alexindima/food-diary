@@ -827,10 +827,12 @@ jobs:
               return
             fi
 
-            local summary
-            summary=$(grep -E 'Test Files|Tests' "$log_file" | strip_ansi | tail -n 2 | xargs || true)
-            if [ -n "$summary" ]; then
-              printf '%s' "$summary"
+            local test_files
+            local tests
+            test_files=$(grep 'Test Files' "$log_file" | strip_ansi | tail -n 1 | sed -E 's/.*\(([0-9]+)\).*/\1/' || true)
+            tests=$(grep 'Tests' "$log_file" | strip_ansi | tail -n 1 | sed -E 's/.*\(([0-9]+)\).*/\1/' || true)
+            if [ -n "$test_files" ] && [ -n "$tests" ]; then
+              printf '%s files, %s tests' "$test_files" "$tests"
             else
               printf 'See uploaded log'
             fi
