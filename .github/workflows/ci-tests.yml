@@ -1026,6 +1026,13 @@ jobs:
               echo
               failure_summary=$(sed -n '/Failed Suites/,$p' "${FAILED_LOG_FILE}" | head -n 180 || true)
               if [ -z "${failure_summary}" ]; then
+                failure_summary=$(awk '
+                  /\[FAIL\]|^  Failed |Error Message:|Stack Trace:|Assert\./ {capture=1}
+                  capture {print; count++}
+                  capture && count >= 180 {exit}
+                ' "${FAILED_LOG_FILE}" || true)
+              fi
+              if [ -z "${failure_summary}" ]; then
                 failure_summary=$(sed -n '/Failed Tests/,$p' "${FAILED_LOG_FILE}" | head -n 180 || true)
               fi
               if [ -z "${failure_summary}" ]; then
