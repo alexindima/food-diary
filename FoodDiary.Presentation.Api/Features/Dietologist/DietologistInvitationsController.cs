@@ -48,6 +48,6 @@ public class DietologistInvitationsController(ISender mediator) : AuthorizedCont
     [HttpGet("invitation/{invitationId:guid}")]
     [ProducesResponseType<InvitationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> GetInvitation(Guid invitationId) =>
-        HandleOk(invitationId.ToInvitationQuery(), static value => value.ToHttpResponse());
+    public Task<IActionResult> GetInvitation(Guid invitationId, [FromCurrentUser] Guid userId) =>
+        HandleOk(invitationId.ToInvitationQuery(userId), static value => value.ToHttpResponse());
 }

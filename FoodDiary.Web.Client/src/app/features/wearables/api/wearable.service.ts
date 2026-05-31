@@ -22,8 +22,8 @@ export class WearableService extends ApiService {
         );
     }
 
-    public connect(provider: string, code: string): Observable<WearableConnection> {
-        return this.post<WearableConnection>(`${provider}/connect`, { code }).pipe(
+    public connect(provider: string, code: string, state: string): Observable<WearableConnection> {
+        return this.post<WearableConnection>(`${provider}/connect`, { code, state }).pipe(
             catchError((error: unknown) => rethrowApiError('Connect wearable error', error)),
         );
     }

@@ -7,4 +7,5 @@ namespace FoodDiary.Application.Wearables.Commands.ConnectWearable;
 public record ConnectWearableCommand(
     Guid? UserId,
     string Provider,
-    string Code) : ICommand<Result<WearableConnectionModel>>, IUserRequest;
+    string Code,
+    string State) : ICommand<Result<WearableConnectionModel>>, IUserRequest;

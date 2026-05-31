@@ -19,8 +19,8 @@ public class WearablesController(ISender mediator) : AuthorizedController(mediat
 
     [HttpGet("{provider}/auth-url")]
     [ProducesResponseType<WearableAuthUrlHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAuthUrl(string provider, [FromQuery] string state) =>
-        HandleOk(WearableHttpMappings.ToAuthUrlQuery(provider, state),
+    public Task<IActionResult> GetAuthUrl([FromCurrentUser] Guid userId, string provider, [FromQuery] string state) =>
+        HandleOk(WearableHttpMappings.ToAuthUrlQuery(userId, provider, state),
             static url => new WearableAuthUrlHttpResponse(url));
 
     [HttpPost("{provider}/connect")]

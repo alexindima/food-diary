@@ -127,6 +127,25 @@ public class RecipeCommentsFeatureTests {
         Assert.True(result.IsFailure);
     }
 
+    [Fact]
+    public async Task DeleteRecipeComment_ByRecipeOwnerWithCommentFromDifferentRecipe_ReturnsNotFound() {
+        var ownerId = UserId.New();
+        var ownedRecipe = Recipe.Create(ownerId, "Owned", 1);
+        var otherRecipeId = RecipeId.New();
+        var comment = RecipeComment.Create(UserId.New(), otherRecipeId, "Text");
+        var repo = new InMemoryRecipeCommentRepository();
+        repo.Seed(comment);
+
+        var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(ownedRecipe));
+        var result = await handler.Handle(
+            new DeleteRecipeCommentCommand(ownerId.Value, ownedRecipe.Id.Value, comment.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("RecipeComment.NotFound", result.Error.Code);
+        Assert.NotNull(await repo.GetByIdAsync(comment.Id));
+    }
+
     private sealed class InMemoryRecipeCommentRepository : IRecipeCommentRepository {
         private readonly List<RecipeComment> _comments = [];
 

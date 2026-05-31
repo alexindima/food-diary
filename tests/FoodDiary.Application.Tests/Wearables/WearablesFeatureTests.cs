@@ -18,9 +18,11 @@ public class WearablesFeatureTests {
             "access-token", "refresh-token", "ext-user-123", DateTime.UtcNow.AddHours(1)));
         var repo = new InMemoryWearableConnectionRepository();
 
-        var handler = new ConnectWearableCommandHandler([client], repo);
+        var stateService = new StubWearableOAuthStateService();
+        var state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
+        var handler = new ConnectWearableCommandHandler([client], repo, stateService);
         var result = await handler.Handle(
-            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code"),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -31,10 +33,13 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task ConnectWearable_WithInvalidProvider_ReturnsFailure() {
-        var handler = new ConnectWearableCommandHandler([], new InMemoryWearableConnectionRepository());
+        var handler = new ConnectWearableCommandHandler(
+            [],
+            new InMemoryWearableConnectionRepository(),
+            new StubWearableOAuthStateService());
 
         var result = await handler.Handle(
-            new ConnectWearableCommand(Guid.NewGuid(), "InvalidProvider", "code"),
+            new ConnectWearableCommand(Guid.NewGuid(), "InvalidProvider", "code", "state"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -43,10 +48,13 @@ public class WearablesFeatureTests {
     [Fact]
     public async Task ConnectWearable_WhenAuthFails_ReturnsFailure() {
         var client = new StubWearableClient(WearableProvider.Fitbit, null);
-        var handler = new ConnectWearableCommandHandler([client], new InMemoryWearableConnectionRepository());
+        var userId = UserId.New();
+        var stateService = new StubWearableOAuthStateService();
+        var state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
+        var handler = new ConnectWearableCommandHandler([client], new InMemoryWearableConnectionRepository(), stateService);
 
         var result = await handler.Handle(
-            new ConnectWearableCommand(Guid.NewGuid(), "Fitbit", "bad-code"),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "bad-code", state),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -64,12 +72,33 @@ public class WearablesFeatureTests {
         var newToken = new WearableTokenResult("new-token", "new-refresh", "ext-user", DateTime.UtcNow.AddHours(1));
         var client = new StubWearableClient(WearableProvider.Fitbit, newToken);
 
-        var handler = new ConnectWearableCommandHandler([client], repo);
+        var stateService = new StubWearableOAuthStateService();
+        var state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
+        var handler = new ConnectWearableCommandHandler([client], repo, stateService);
         var result = await handler.Handle(
-            new ConnectWearableCommand(userId.Value, "Fitbit", "code"),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "code", state),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public async Task ConnectWearable_WithInvalidState_ReturnsFailureBeforeTokenExchange() {
+        var userId = UserId.New();
+        var client = new StubWearableClient(WearableProvider.Fitbit, new WearableTokenResult(
+            "access-token", "refresh-token", "ext-user-123", DateTime.UtcNow.AddHours(1)));
+        var handler = new ConnectWearableCommandHandler(
+            [client],
+            new InMemoryWearableConnectionRepository(),
+            new StubWearableOAuthStateService());
+
+        var result = await handler.Handle(
+            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", "tampered-state"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("InvalidState", result.Error.Code);
+        Assert.Equal(0, client.ExchangeCodeCallCount);
     }
 
     [Fact]
@@ -115,19 +144,22 @@ public class WearablesFeatureTests {
     [Fact]
     public async Task GetWearableAuthUrl_WithConfiguredProvider_ReturnsClientUrl() {
         var client = new StubWearableClient(WearableProvider.Fitbit, null);
-        var handler = new GetWearableAuthUrlQueryHandler([client]);
+        var userId = UserId.New();
+        var handler = new GetWearableAuthUrlQueryHandler([client], new StubWearableOAuthStateService());
 
-        var result = await handler.Handle(new GetWearableAuthUrlQuery("Fitbit", "state-123"), CancellationToken.None);
+        var result = await handler.Handle(
+            new GetWearableAuthUrlQuery(userId.Value, "Fitbit", "state-123"),
+            CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal("https://auth.example.com?state=state-123", result.Value);
+        Assert.Equal("https://auth.example.com?state=Fitbit:state-123", result.Value);
     }
 
     [Fact]
     public async Task GetWearableAuthUrl_WithUnconfiguredProvider_ReturnsFailure() {
-        var handler = new GetWearableAuthUrlQueryHandler([]);
+        var handler = new GetWearableAuthUrlQueryHandler([], new StubWearableOAuthStateService());
 
-        var result = await handler.Handle(new GetWearableAuthUrlQuery("Fitbit", "state"), CancellationToken.None);
+        var result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.NewGuid(), "Fitbit", "state"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Contains("ProviderNotConfigured", result.Error.Code);
@@ -187,14 +219,30 @@ public class WearablesFeatureTests {
         public WearableProvider Provider => provider;
         public WearableTokenResult? RefreshTokenResult { get; init; } = new("new-access", "new-refresh", "ext", DateTime.UtcNow.AddHours(1));
         public IReadOnlyList<WearableDataPoint> DataPoints { get; init; } = [];
+        public int ExchangeCodeCallCount { get; private set; }
 
         public string GetAuthorizationUrl(string state) => $"https://auth.example.com?state={state}";
-        public Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken ct = default) =>
-            Task.FromResult(tokenResult);
+        public Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken ct = default) {
+            ExchangeCodeCallCount++;
+            return Task.FromResult(tokenResult);
+        }
         public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken ct = default) =>
             Task.FromResult(RefreshTokenResult);
         public Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken ct = default) =>
             Task.FromResult(DataPoints);
+    }
+
+    private sealed class StubWearableOAuthStateService : IWearableOAuthStateService {
+        private readonly HashSet<string> _validStates = [];
+
+        public string CreateState(UserId userId, WearableProvider provider, string? clientState) {
+            var state = $"{provider}:{clientState}";
+            _validStates.Add(state);
+            return state;
+        }
+
+        public bool IsValidState(string state, UserId userId, WearableProvider provider) =>
+            _validStates.Contains(state) && state.StartsWith($"{provider}:", StringComparison.Ordinal);
     }
 
     private sealed class InMemoryWearableConnectionRepository : IWearableConnectionRepository {

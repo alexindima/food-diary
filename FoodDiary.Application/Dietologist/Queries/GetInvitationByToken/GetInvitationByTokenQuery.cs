@@ -4,4 +4,4 @@ using FoodDiary.Application.Dietologist.Models;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 
-public record GetInvitationByTokenQuery(Guid InvitationId) : IQuery<Result<InvitationModel>>;
+public record GetInvitationByTokenQuery(Guid? UserId, Guid InvitationId) : IQuery<Result<InvitationModel>>, IUserRequest;

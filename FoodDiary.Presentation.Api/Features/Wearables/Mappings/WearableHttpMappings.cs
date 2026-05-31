@@ -13,13 +13,14 @@ namespace FoodDiary.Presentation.Api.Features.Wearables.Mappings;
 public static class WearableHttpMappings {
     public static GetWearableConnectionsQuery ToQuery(Guid userId) => new(userId);
 
-    public static GetWearableAuthUrlQuery ToAuthUrlQuery(string provider, string state) => new(provider, state);
+    public static GetWearableAuthUrlQuery ToAuthUrlQuery(Guid userId, string provider, string state) =>
+        new(userId, provider, state);
 
     public static GetWearableDailySummaryQuery ToDailySummaryQuery(Guid userId, DateTime date) => new(userId, date);
 
     public static ConnectWearableCommand ToCommand(
         this ConnectWearableHttpRequest request, Guid userId, string provider) =>
-        new(userId, provider, request.Code);
+        new(userId, provider, request.Code, request.State);
 
     public static DisconnectWearableCommand ToDisconnectCommand(Guid userId, string provider) =>
         new(userId, provider);

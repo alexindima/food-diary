@@ -1,3 +1,3 @@
 namespace FoodDiary.Presentation.Api.Features.Wearables.Requests;
 
-public sealed record ConnectWearableHttpRequest(string Code);
+public sealed record ConnectWearableHttpRequest(string Code, string State);

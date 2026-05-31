@@ -308,6 +308,50 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task YooKassaWebhook_WhenPayloadEventIsCanceledButFetchedPaymentSucceeded_MapsVerifiedActiveEvent() {
+        var userId = Guid.NewGuid();
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent($$"""
+                {
+                  "id": "pay_123",
+                  "status": "succeeded",
+                  "paid": true,
+                  "amount": { "value": "299.00", "currency": "RUB" },
+                  "payment_method": { "id": "pm_123" },
+                  "metadata": {
+                    "user_id": "{{userId}}",
+                    "plan": "monthly"
+                  },
+                  "created_at": "2026-05-06T00:00:00Z",
+                  "captured_at": "2026-05-06T00:01:00Z"
+                }
+                """),
+        });
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new YooKassaOptions {
+                ShopId = "shop",
+                SecretKey = "secret",
+                ApiBaseUrl = "https://api.yookassa.test/v3",
+                PremiumMonthlyAmount = "299",
+                PremiumYearlyAmount = "2990",
+                ReturnUrl = "https://app.example/billing/return",
+            }));
+
+        var result = await gateway.ParseWebhookEventAsync(
+            "{\"event\":\"payment.canceled\",\"object\":{\"id\":\"pay_123\"}}",
+            signatureHeader: "",
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal("payment.succeeded", result.Value.EventType);
+        Assert.Equal("payment.succeeded:pay_123:succeeded", result.Value.EventId);
+        Assert.Equal("active", result.Value.Status);
+        Assert.Equal(userId, result.Value.UserId);
+    }
+
+    [Fact]
     public async Task YooKassaCreateRecurringPayment_WhenPaymentSucceeded_MapsActiveSubscriptionPeriod() {
         var capturedAt = new DateTime(2026, 5, 6, 10, 0, 0, DateTimeKind.Utc);
         var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {

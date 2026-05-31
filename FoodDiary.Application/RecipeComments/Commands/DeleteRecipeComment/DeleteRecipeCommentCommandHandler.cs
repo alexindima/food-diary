@@ -19,17 +19,17 @@ public class DeleteRecipeCommentCommandHandler(
             return Result.Failure(userIdResult.Error);
         }
 
+        var recipeId = (RecipeId)command.RecipeId;
         var commentId = (RecipeCommentId)command.CommentId;
         var comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken);
 
-        if (comment is null) {
+        if (comment is null || comment.RecipeId != recipeId) {
             return Result.Failure(Errors.RecipeComment.NotFound(command.CommentId));
         }
 
         // Author or recipe owner can delete
         var isAuthor = comment.UserId == userIdResult.Value;
         if (!isAuthor) {
-            var recipeId = (RecipeId)command.RecipeId;
             var recipe = await recipeRepository.GetByIdAsync(
                 recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken);
 

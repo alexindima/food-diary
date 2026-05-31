@@ -49,7 +49,7 @@ public static class DietologistHttpMappings {
 
     public static GetMyClientsQuery ToMyClientsQuery(this Guid userId) => new(userId);
 
-    public static GetInvitationByTokenQuery ToInvitationQuery(this Guid invitationId) => new(invitationId);
+    public static GetInvitationByTokenQuery ToInvitationQuery(this Guid invitationId, Guid userId) => new(userId, invitationId);
 
     public static GetInvitationForCurrentUserQuery ToCurrentUserInvitationQuery(this Guid invitationId, Guid userId) =>
         new(userId, invitationId);

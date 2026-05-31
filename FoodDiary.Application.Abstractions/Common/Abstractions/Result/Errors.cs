@@ -564,6 +564,11 @@ public static class Errors {
             "Wearable.AuthFailed",
             $"Authentication with '{provider}' failed.",
             kind: ErrorKind.Unauthorized);
+
+        public static Error InvalidState => new(
+            "Wearable.InvalidState",
+            "Wearable authentication state is invalid or expired.",
+            kind: ErrorKind.Unauthorized);
     }
 
     public static class MailInbox {

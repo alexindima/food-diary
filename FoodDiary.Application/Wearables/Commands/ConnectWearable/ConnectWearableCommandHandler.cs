@@ -10,7 +10,8 @@ namespace FoodDiary.Application.Wearables.Commands.ConnectWearable;
 
 public class ConnectWearableCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
-    IWearableConnectionRepository connectionRepository)
+    IWearableConnectionRepository connectionRepository,
+    IWearableOAuthStateService stateService)
     : ICommandHandler<ConnectWearableCommand, Result<WearableConnectionModel>> {
     public async Task<Result<WearableConnectionModel>> Handle(
         ConnectWearableCommand command,
@@ -27,6 +28,10 @@ public class ConnectWearableCommandHandler(
         var client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
             return Result.Failure<WearableConnectionModel>(Errors.Wearable.ProviderNotConfigured(command.Provider));
+        }
+
+        if (!stateService.IsValidState(command.State, userIdResult.Value, provider)) {
+            return Result.Failure<WearableConnectionModel>(Errors.Wearable.InvalidState);
         }
 
         var tokenResult = await client.ExchangeCodeAsync(command.Code, cancellationToken);

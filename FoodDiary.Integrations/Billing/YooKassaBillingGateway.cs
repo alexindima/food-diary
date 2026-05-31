@@ -169,12 +169,13 @@ public sealed class YooKassaBillingGateway(
         var plan = ReadMetadata(metadata, "plan");
         var periodStart = payment.CapturedAt ?? payment.CreatedAt;
         var periodEnd = ResolvePeriodEnd(periodStart, plan);
-        var status = MapStatus(notification.Event, payment);
+        var verifiedEventType = ResolveVerifiedEventType(payment);
+        var status = MapStatus(payment);
         var paymentMethodId = payment.PaymentMethod?.Id;
 
         return Result.Success<BillingWebhookEventModel?>(new BillingWebhookEventModel(
-            $"{notification.Event}:{payment.Id}:{payment.Status}",
-            notification.Event,
+            $"{verifiedEventType}:{payment.Id}:{payment.Status}",
+            verifiedEventType,
             userId?.ToString() ?? ReadMetadata(metadata, "user_id") ?? payment.Id,
             payment.Id,
             paymentMethodId ?? payment.Id,
@@ -258,9 +259,13 @@ public sealed class YooKassaBillingGateway(
     private string BuildDescription(string plan) =>
         $"{_options.Description.Trim()} ({plan})";
 
-    private static string MapStatus(string eventType, YooKassaPayment payment) {
-        if (string.Equals(eventType, "payment.succeeded", StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase) &&
+    private static string ResolveVerifiedEventType(YooKassaPayment payment) =>
+        string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase) && payment.Paid
+            ? "payment.succeeded"
+            : "payment.canceled";
+
+    private static string MapStatus(YooKassaPayment payment) {
+        if (string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase) &&
             payment.Paid) {
             return "active";
         }

@@ -72,13 +72,13 @@ describe('WearableService connections', () => {
     });
 
     it('connects and disconnects provider', () => {
-        service.connect('Fitbit', 'code-1').subscribe(connection => {
+        service.connect('Fitbit', 'code-1', 'state-1').subscribe(connection => {
             expect(connection).toEqual(CONNECTION);
         });
 
         const connectReq = httpMock.expectOne(`${BASE_URL}/Fitbit/connect`);
         expect(connectReq.request.method).toBe('POST');
-        expect(connectReq.request.body).toEqual({ code: 'code-1' });
+        expect(connectReq.request.body).toEqual({ code: 'code-1', state: 'state-1' });
         connectReq.flush(CONNECTION);
 
         service.disconnect('Fitbit').subscribe();

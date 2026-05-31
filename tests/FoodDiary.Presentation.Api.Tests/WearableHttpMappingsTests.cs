@@ -16,8 +16,11 @@ public sealed class WearableHttpMappingsTests {
 
     [Fact]
     public void ToAuthUrlQuery_MapsProviderAndState() {
-        var query = WearableHttpMappings.ToAuthUrlQuery("fitbit", "state123");
+        var userId = Guid.NewGuid();
 
+        var query = WearableHttpMappings.ToAuthUrlQuery(userId, "fitbit", "state123");
+
+        Assert.Equal(userId, query.UserId);
         Assert.Equal("fitbit", query.Provider);
         Assert.Equal("state123", query.State);
     }
@@ -36,13 +39,14 @@ public sealed class WearableHttpMappingsTests {
     [Fact]
     public void ConnectWearableRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var request = new ConnectWearableHttpRequest("auth-code-123");
+        var request = new ConnectWearableHttpRequest("auth-code-123", "state-123");
 
         var command = request.ToCommand(userId, "fitbit");
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("fitbit", command.Provider);
         Assert.Equal("auth-code-123", command.Code);
+        Assert.Equal("state-123", command.State);
     }
 
     [Fact]

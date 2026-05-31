@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -183,10 +185,12 @@ public static class DependencyInjection {
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
         services.AddScoped<IWearableConnectionRepository, WearableConnectionRepository>();
         services.AddScoped<IWearableSyncRepository, WearableSyncRepository>();
+        services.AddSingleton<IWearableOAuthStateService, WearableOAuthStateService>();
         services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => {
             client.Timeout = TimeSpan.FromSeconds(5);
         }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
-            AllowAutoRedirect = false
+            AllowAutoRedirect = false,
+            ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync
         });
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
@@ -196,5 +200,63 @@ public static class DependencyInjection {
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
 
         return services;
+    }
+
+    private static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(
+        SocketsHttpConnectionContext context,
+        CancellationToken cancellationToken) {
+        var addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken);
+        var publicAddress = addresses.FirstOrDefault(IsPublicAddress);
+        if (publicAddress is null) {
+            throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
+        }
+
+        var socket = new Socket(publicAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp) {
+            NoDelay = true,
+        };
+
+        try {
+            await socket.ConnectAsync(new IPEndPoint(publicAddress, context.DnsEndPoint.Port), cancellationToken);
+            return new NetworkStream(socket, ownsSocket: true);
+        } catch {
+            socket.Dispose();
+            throw;
+        }
+    }
+
+    private static bool IsPublicAddress(IPAddress address) {
+        if (IPAddress.IsLoopback(address) ||
+            address.Equals(IPAddress.Any) ||
+            address.Equals(IPAddress.IPv6Any) ||
+            address.Equals(IPAddress.None) ||
+            address.Equals(IPAddress.IPv6None)) {
+            return false;
+        }
+
+        if (address.IsIPv4MappedToIPv6) {
+            address = address.MapToIPv4();
+        }
+
+        if (address.AddressFamily == AddressFamily.InterNetwork) {
+            var bytes = address.GetAddressBytes();
+            return bytes[0] != 10 &&
+                   bytes[0] != 127 &&
+                   !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
+                   !(bytes[0] == 192 && bytes[1] == 168) &&
+                   !(bytes[0] == 169 && bytes[1] == 254) &&
+                   !(bytes[0] == 100 && bytes[1] is >= 64 and <= 127) &&
+                   !(bytes[0] == 0) &&
+                   !(bytes[0] >= 224);
+        }
+
+        if (address.AddressFamily == AddressFamily.InterNetworkV6) {
+            var bytes = address.GetAddressBytes();
+            return !address.IsIPv6LinkLocal &&
+                   !address.IsIPv6SiteLocal &&
+                   !address.IsIPv6Multicast &&
+                   (bytes[0] & 0xfe) != 0xfc;
+        }
+
+        return false;
     }
 }
