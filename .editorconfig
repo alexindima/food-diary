@@ -107,6 +107,9 @@ dotnet_diagnostic.MA0048.severity = warning
 [FoodDiary.Application.Abstractions/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 
+[FoodDiary.Application/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
 [FoodDiary.MailInbox.Application/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 

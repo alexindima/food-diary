@@ -1,6 +1,6 @@
 namespace FoodDiary.Application.MealPlans.Models;
 
-public sealed record MealPlanModel(
+public sealed record MealPlanSummaryModel(
     Guid Id,
     string Name,
     string? Description,
@@ -8,4 +8,4 @@ public sealed record MealPlanModel(
     int DurationDays,
     double? TargetCaloriesPerDay,
     bool IsCurated,
-    IReadOnlyList<MealPlanDayModel> Days);
+    int TotalRecipes);

@@ -55,11 +55,3 @@ public static class MealNutritionCalculator {
         return new MealNutritionSummary(calories, proteins, fats, carbs, fiber, alcohol);
     }
 }
-
-public sealed record MealNutritionSummary(
-    double Calories,
-    double Proteins,
-    double Fats,
-    double Carbs,
-    double Fiber,
-    double Alcohol);

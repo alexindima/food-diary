@@ -133,12 +133,3 @@ public static class ShoppingListItemBuilder {
     private static int ResolveSortOrder(int? sortOrder, int index) =>
         sortOrder is > 0 ? sortOrder.Value : index + 1;
 }
-
-public sealed record ShoppingListItemData(
-    string Name,
-    ProductId? ProductId,
-    double? Amount,
-    MeasurementUnit? Unit,
-    string? Category,
-    bool IsChecked,
-    int SortOrder);

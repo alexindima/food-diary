@@ -32,48 +32,6 @@ using User = FoodDiary.Domain.Entities.Users.User;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
-public interface IDashboardSnapshotBuilder {
-    Task<Result<DashboardSnapshotModel>> BuildAsync(
-        DashboardSnapshotRequest request,
-        CancellationToken cancellationToken = default);
-}
-
-public sealed record DashboardSnapshotRequest(
-    Guid UserId,
-    DateTime Date,
-    DateTime? DateTo,
-    string Locale,
-    int TrendDays,
-    int Page,
-    int PageSize,
-    DashboardSnapshotSections? Sections = null);
-
-public sealed record DashboardSnapshotSections(
-    bool IncludeStatistics,
-    bool IncludeMeals,
-    bool IncludeWeight,
-    bool IncludeWaist,
-    bool IncludeHydration,
-    bool IncludeFasting,
-    bool IncludeAdvice,
-    bool IncludeLayout,
-    bool IncludeExercise,
-    bool IncludeTdee,
-    bool IncludeCycle) {
-    public static DashboardSnapshotSections All { get; } = new(
-        IncludeStatistics: true,
-        IncludeMeals: true,
-        IncludeWeight: true,
-        IncludeWaist: true,
-        IncludeHydration: true,
-        IncludeFasting: true,
-        IncludeAdvice: true,
-        IncludeLayout: true,
-        IncludeExercise: true,
-        IncludeTdee: true,
-        IncludeCycle: true);
-}
-
 public class DashboardSnapshotBuilder(
     ISender sender,
     IUserRepository userRepository,

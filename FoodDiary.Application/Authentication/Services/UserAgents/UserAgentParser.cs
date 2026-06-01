@@ -98,9 +98,3 @@ internal static class UserAgentParser {
         return end > start ? value[start..end] : null;
     }
 }
-
-internal sealed record ParsedUserAgent(
-    string? BrowserName,
-    string? BrowserVersion,
-    string? OperatingSystem,
-    string? DeviceType);

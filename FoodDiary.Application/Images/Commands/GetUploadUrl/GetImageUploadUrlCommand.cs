@@ -8,9 +8,3 @@ public sealed record GetImageUploadUrlCommand(
     string FileName,
     string ContentType,
     long FileSizeBytes) : IRequest<Result<GetImageUploadUrlResult>>;
-
-public sealed record GetImageUploadUrlResult(
-    string UploadUrl,
-    string FileUrl,
-    DateTime ExpiresAtUtc,
-    Guid AssetId);
