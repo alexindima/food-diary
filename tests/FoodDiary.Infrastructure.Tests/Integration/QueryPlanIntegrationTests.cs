@@ -54,7 +54,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
         Assert.True(
             ContainsIndexName(plan, "IX_Products_UserId_CreatedOnUtc"),
-            $"Expected product paging plan to use IX_Products_UserId_CreatedOnUtc, but got:{Environment.NewLine}{plan}");
+            $"Expected product paging plan to use IX_Products_UserId_CreatedOnUtc, but got:{Environment.NewLine}{FormatPlan(plan)}");
     }
 
     [RequiresDockerFact]
@@ -90,7 +90,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
         Assert.True(
             ContainsIndexName(plan, "IX_Recipes_UserId_CreatedOnUtc"),
-            $"Expected recipe paging plan to use IX_Recipes_UserId_CreatedOnUtc, but got:{Environment.NewLine}{plan}");
+            $"Expected recipe paging plan to use IX_Recipes_UserId_CreatedOnUtc, but got:{Environment.NewLine}{FormatPlan(plan)}");
     }
 
     [RequiresDockerFact]
@@ -222,7 +222,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
         Assert.True(
             ContainsIndexName(plan, "IX_Meals_UserId_Date_CreatedOnUtc"),
-            $"Expected meal paging plan to use IX_Meals_UserId_Date_CreatedOnUtc, but got:{Environment.NewLine}{plan}");
+            $"Expected meal paging plan to use IX_Meals_UserId_Date_CreatedOnUtc, but got:{Environment.NewLine}{FormatPlan(plan)}");
     }
 
     private static async Task<JsonDocument> ExplainAnalyzeAsync(
