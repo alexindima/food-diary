@@ -34,33 +34,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
         }
 
-        var duplicate = Recipe.Create(
-            userId,
-            original.Name,
-            original.Servings,
-            original.Description,
-            original.Comment,
-            original.Category,
-            original.ImageUrl,
-            null,
-            original.PrepTime,
-            original.CookTime,
-            original.Visibility);
-
-        AddStepsFromOriginal(duplicate, original);
-
-        if (original.IsNutritionAutoCalculated) {
-            duplicate.EnableAutoNutrition();
-        } else {
-            duplicate.SetManualNutrition(
-                original.ManualCalories ?? original.TotalCalories,
-                original.ManualProteins ?? original.TotalProteins,
-                original.ManualFats ?? original.TotalFats,
-                original.ManualCarbs ?? original.TotalCarbs,
-                original.ManualFiber ?? original.TotalFiber,
-                original.ManualAlcohol ?? original.TotalAlcohol);
-        }
-
+        var duplicate = CreateDuplicate(userId, original);
         await recipeRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
         var created = await recipeRepository.GetByIdAsync(
@@ -78,6 +52,40 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
         await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(created.ToModel(0, true));
+    }
+
+    private static Recipe CreateDuplicate(UserId userId, Recipe original) {
+        var duplicate = Recipe.Create(
+            userId,
+            original.Name,
+            original.Servings,
+            original.Description,
+            original.Comment,
+            original.Category,
+            original.ImageUrl,
+            null,
+            original.PrepTime,
+            original.CookTime,
+            original.Visibility);
+
+        AddStepsFromOriginal(duplicate, original);
+        ApplyNutritionSettings(duplicate, original);
+        return duplicate;
+    }
+
+    private static void ApplyNutritionSettings(Recipe duplicate, Recipe original) {
+        if (original.IsNutritionAutoCalculated) {
+            duplicate.EnableAutoNutrition();
+            return;
+        }
+
+        duplicate.SetManualNutrition(
+            original.ManualCalories ?? original.TotalCalories,
+            original.ManualProteins ?? original.TotalProteins,
+            original.ManualFats ?? original.TotalFats,
+            original.ManualCarbs ?? original.TotalCarbs,
+            original.ManualFiber ?? original.TotalFiber,
+            original.ManualAlcohol ?? original.TotalAlcohol);
     }
 
     private static void AddStepsFromOriginal(Recipe target, Recipe source) {

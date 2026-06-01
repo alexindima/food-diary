@@ -13,6 +13,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 
@@ -62,22 +63,7 @@ public class InviteDietologistCommandHandler(
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
         var registeredDietologist = await userRepository.GetByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
-        var emailSent = false;
-
-        try {
-            await emailSender.SendDietologistInvitationAsync(
-                new DietologistInvitationMessage(
-                    normalizedEmail,
-                    invitation.Id.Value,
-                    rawToken,
-                    user.FirstName,
-                    user.LastName,
-                    user.Language),
-                cancellationToken).ConfigureAwait(false);
-            emailSent = true;
-        } catch (Exception ex) {
-            logger.LogWarning(ex, "Dietologist invitation email dispatch failed for {DietologistEmail}", normalizedEmail);
-        }
+        var emailSent = await TrySendInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken).ConfigureAwait(false);
 
         if (!emailSent && registeredDietologist is null) {
             return Result.Failure(Errors.Validation.Invalid(
@@ -88,23 +74,53 @@ public class InviteDietologistCommandHandler(
         await invitationRepository.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
 
         if (registeredDietologist is not null) {
-            var clientName = $"{user.FirstName} {user.LastName}".Trim();
-            if (string.IsNullOrWhiteSpace(clientName)) {
-                clientName = user.Email;
-            }
-
-            var notification = NotificationFactory.CreateDietologistInvitationReceived(
-                registeredDietologist.Id,
-                clientName,
-                invitation.Id.Value.ToString());
-
-            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
-
-            var unreadCount = await notificationRepository.GetUnreadCountAsync(registeredDietologist.Id, cancellationToken).ConfigureAwait(false);
-            await notificationPusher.PushUnreadCountAsync(registeredDietologist.Id.Value, unreadCount, cancellationToken).ConfigureAwait(false);
-            await notificationPusher.PushNotificationsChangedAsync(registeredDietologist.Id.Value, cancellationToken).ConfigureAwait(false);
+            await NotifyRegisteredDietologistAsync(registeredDietologist, user, invitation, cancellationToken).ConfigureAwait(false);
         }
 
         return Result.Success();
+    }
+
+    private async Task<bool> TrySendInvitationEmailAsync(
+        string normalizedEmail,
+        DietologistInvitation invitation,
+        string rawToken,
+        User user,
+        CancellationToken cancellationToken) {
+        try {
+            await emailSender.SendDietologistInvitationAsync(
+                new DietologistInvitationMessage(
+                    normalizedEmail,
+                    invitation.Id.Value,
+                    rawToken,
+                    user.FirstName,
+                    user.LastName,
+                    user.Language),
+                cancellationToken).ConfigureAwait(false);
+            return true;
+        } catch (Exception ex) {
+            logger.LogWarning(ex, "Dietologist invitation email dispatch failed for {DietologistEmail}", normalizedEmail);
+            return false;
+        }
+    }
+
+    private async Task NotifyRegisteredDietologistAsync(
+        User registeredDietologist,
+        User client,
+        DietologistInvitation invitation,
+        CancellationToken cancellationToken) {
+        var notification = NotificationFactory.CreateDietologistInvitationReceived(
+            registeredDietologist.Id,
+            ResolveClientName(client),
+            invitation.Id.Value.ToString());
+
+        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        var unreadCount = await notificationRepository.GetUnreadCountAsync(registeredDietologist.Id, cancellationToken).ConfigureAwait(false);
+        await notificationPusher.PushUnreadCountAsync(registeredDietologist.Id.Value, unreadCount, cancellationToken).ConfigureAwait(false);
+        await notificationPusher.PushNotificationsChangedAsync(registeredDietologist.Id.Value, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static string ResolveClientName(User user) {
+        var clientName = $"{user.FirstName} {user.LastName}".Trim();
+        return string.IsNullOrWhiteSpace(clientName) ? user.Email : clientName;
     }
 }

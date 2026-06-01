@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -32,7 +33,29 @@ public class GenerateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
         }
 
-        // Aggregate all product ingredients from all recipes in the plan
+        var shoppingList = CreateShoppingList(userIdResult.Value, plan);
+        await shoppingListRepository.AddAsync(shoppingList, cancellationToken).ConfigureAwait(false);
+
+        return Result.Success(shoppingList.ToModel());
+    }
+
+    private static ShoppingList CreateShoppingList(UserId userId, MealPlan plan) {
+        var shoppingList = ShoppingList.Create(userId, plan.Name);
+        foreach (var item in AggregateIngredients(plan).Values.OrderBy(i => i.SortOrder)) {
+            shoppingList.AddItem(
+                item.Name,
+                item.ProductId,
+                Math.Round(item.TotalAmount, 1),
+                item.Unit,
+                item.Category,
+                isChecked: false,
+                item.SortOrder);
+        }
+
+        return shoppingList;
+    }
+
+    private static Dictionary<ProductId, AggregatedIngredient> AggregateIngredients(MealPlan plan) {
         var aggregated = new Dictionary<ProductId, AggregatedIngredient>();
         var sortOrder = 0;
 
@@ -73,21 +96,7 @@ public class GenerateShoppingListCommandHandler(
             }
         }
 
-        var shoppingList = ShoppingList.Create(userIdResult.Value, plan.Name);
-        foreach (var item in aggregated.Values.OrderBy(i => i.SortOrder)) {
-            shoppingList.AddItem(
-                item.Name,
-                item.ProductId,
-                Math.Round(item.TotalAmount, 1),
-                item.Unit,
-                item.Category,
-                isChecked: false,
-                item.SortOrder);
-        }
-
-        await shoppingListRepository.AddAsync(shoppingList, cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(shoppingList.ToModel());
+        return aggregated;
     }
 
     private sealed class AggregatedIngredient {
