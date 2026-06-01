@@ -84,9 +84,3 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
         };
     }
 }
-
-public enum FoodQualityGrade {
-    Red = 0,
-    Yellow = 1,
-    Green = 2
-}

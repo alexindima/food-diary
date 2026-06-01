@@ -1,10 +1,5 @@
 namespace FoodDiary.MailInbox.Domain.Common;
 
-public interface IAggregateWithEvents {
-    IReadOnlyList<IDomainEvent> DomainEvents { get; }
-    void ClearDomainEvents();
-}
-
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateWithEvents
     where TId : notnull {
     private readonly List<IDomainEvent> _domainEvents = new();

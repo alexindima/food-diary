@@ -83,14 +83,3 @@ public readonly record struct HealthAreaScores(
         return new HealthAreaScore(score, grade);
     }
 }
-
-[StructLayout(LayoutKind.Auto)]
-public readonly record struct HealthAreaScore(int Score, HealthAreaGrade Grade);
-
-public enum HealthAreaGrade {
-    Unknown = 0,
-    Low = 1,
-    Fair = 2,
-    Good = 3,
-    Excellent = 4
-}

@@ -1,0 +1,6 @@
+namespace FoodDiary.MailRelay.Domain.Common;
+
+public interface IAggregateWithEvents {
+    IReadOnlyList<IDomainEvent> DomainEvents { get; }
+    void ClearDomainEvents();
+}
