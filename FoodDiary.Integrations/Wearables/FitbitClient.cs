@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -98,7 +99,7 @@ internal sealed class FitbitClient(
 
     public async Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(
         string accessToken, DateTime date, CancellationToken cancellationToken = default) {
-        var dateStr = date.ToString("yyyy-MM-dd");
+        var dateStr = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var results = new List<WearableDataPoint>();
 
         try {

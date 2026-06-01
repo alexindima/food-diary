@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.Telegram.Bot;
 
 internal static class BotInputParser {
@@ -11,7 +13,7 @@ internal static class BotInputParser {
         }
 
         var amountText = callbackData[WaterPrefix.Length..];
-        if (int.TryParse(amountText, out amountMl) && amountMl > 0) return true;
+        if (int.TryParse(amountText, NumberStyles.Integer, CultureInfo.InvariantCulture, out amountMl) && amountMl > 0) return true;
         amountMl = 0;
         return false;
     }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 
 namespace FoodDiary.Web.Api.Options;
@@ -33,7 +34,7 @@ public sealed class ApiForwardedHeadersOptions {
             return false;
         }
 
-        if (!int.TryParse(parts[1], out var prefixLength)) {
+        if (!int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var prefixLength)) {
             return false;
         }
 

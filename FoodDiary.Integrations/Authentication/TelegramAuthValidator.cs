@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -35,7 +36,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
         var dataCheckString = BuildDataCheckString(parsed);
         if (!IsValidHash(dataCheckString, hash) ||
             !parsed.TryGetValue("auth_date", out var authDateValues) ||
-            !long.TryParse(authDateValues.ToString(), out var authDateSeconds)) {
+            !long.TryParse(authDateValues.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var authDateSeconds)) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
@@ -102,7 +103,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
         var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
         var sb = new StringBuilder(hash.Length * 2);
         foreach (var b in hash) {
-            sb.Append(b.ToString("x2"));
+            sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
         }
 
         return sb.ToString();

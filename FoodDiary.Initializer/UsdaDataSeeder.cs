@@ -128,7 +128,7 @@ internal static class UsdaDataSeeder {
         if (File.Exists(categoryCsvPath)) {
             await foreach (var line in ReadCsvLinesAsync(categoryCsvPath)) {
                 var fields = ParseCsvLine(line);
-                if (fields.Length >= 2 && int.TryParse(fields[0], out var catId)) {
+                if (fields.Length >= 2 && int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var catId)) {
                     categories[catId] = fields[1];
                 }
             }
@@ -142,12 +142,12 @@ internal static class UsdaDataSeeder {
             var fields = ParseCsvLine(line);
             // food.csv: fdc_id, data_type, description, food_category_id, publication_date
             if (fields.Length < 4) continue;
-            if (!int.TryParse(fields[0], out var fdcId)) continue;
+            if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var fdcId)) continue;
 
             // Only import SR Legacy foods
             if (fields[1] != "sr_legacy_food") continue;
 
-            int? foodCategoryId = int.TryParse(fields[3], out var catId2) ? catId2 : null;
+            int? foodCategoryId = int.TryParse(fields[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out var catId2) ? catId2 : null;
             var foodCategory = foodCategoryId.HasValue && categories.TryGetValue(foodCategoryId.Value, out var catName)
                 ? catName : null;
 
@@ -185,7 +185,7 @@ internal static class UsdaDataSeeder {
             var fields = ParseCsvLine(line);
             // nutrient.csv: id, name, unit_name, nutrient_nbr, rank
             if (fields.Length < 3) continue;
-            if (!int.TryParse(fields[0], out var id)) continue;
+            if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)) continue;
 
             await writer.StartRowAsync();
             await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer);
@@ -215,9 +215,9 @@ internal static class UsdaDataSeeder {
             var fields = ParseCsvLine(line);
             // food_nutrient.csv: id, fdc_id, nutrient_id, amount, ...
             if (fields.Length < 4) continue;
-            if (!int.TryParse(fields[0], out var id)) continue;
-            if (!int.TryParse(fields[1], out var fdcId)) continue;
-            if (!int.TryParse(fields[2], out var nutrientId)) continue;
+            if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)) continue;
+            if (!int.TryParse(fields[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var fdcId)) continue;
+            if (!int.TryParse(fields[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out var nutrientId)) continue;
             if (!double.TryParse(fields[3], NumberStyles.Float, CultureInfo.InvariantCulture, out var amount)) continue;
 
             if (!validFdcIds.Contains(fdcId)) continue;
@@ -250,8 +250,8 @@ internal static class UsdaDataSeeder {
             var fields = ParseCsvLine(line);
             // food_portion.csv: id, fdc_id, seq_num, amount, measure_unit_id, portion_description, modifier, gram_weight, ...
             if (fields.Length < 8) continue;
-            if (!int.TryParse(fields[0], out var id)) continue;
-            if (!int.TryParse(fields[1], out var fdcId)) continue;
+            if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)) continue;
+            if (!int.TryParse(fields[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var fdcId)) continue;
 
             if (!validFdcIds.Contains(fdcId)) continue;
 
@@ -303,7 +303,7 @@ internal static class UsdaDataSeeder {
     private static async Task<long> CountRowsAsync(NpgsqlConnection connection, string tableName) {
         await using var cmd = new NpgsqlCommand($"SELECT COUNT(*) FROM {tableName}", connection);
         var result = await cmd.ExecuteScalarAsync();
-        return Convert.ToInt64(result);
+        return Convert.ToInt64(result, CultureInfo.InvariantCulture);
     }
 
     private static async Task ExecuteNonQueryAsync(NpgsqlConnection connection, string sql) {

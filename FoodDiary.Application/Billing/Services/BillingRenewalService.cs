@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
@@ -155,7 +156,7 @@ public sealed class BillingRenewalService(
     }
 
     private static string BuildRenewalIdempotenceKey(BillingSubscription subscription) {
-        var periodKey = subscription.CurrentPeriodEndUtc?.ToUniversalTime().ToString("yyyyMMddHHmmss") ?? "initial";
+        var periodKey = subscription.CurrentPeriodEndUtc?.ToUniversalTime().ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture) ?? "initial";
         return $"billing-renewal:{subscription.Id:N}:{periodKey}:{subscription.Plan}";
     }
 

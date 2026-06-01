@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.MailInbox.Application.Common.Result;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Presentation.Extensions;
@@ -42,8 +43,8 @@ public sealed class MailInboxPresentationTests {
                 "google.com",
                 "report-1",
                 "fooddiary.club",
-                DateTimeOffset.Parse("2026-05-01T00:00:00Z"),
-                DateTimeOffset.Parse("2026-05-02T00:00:00Z"),
+                DateTimeOffset.Parse("2026-05-01T00:00:00Z", CultureInfo.InvariantCulture),
+                DateTimeOffset.Parse("2026-05-02T00:00:00Z", CultureInfo.InvariantCulture),
                 [
                     new DmarcReportRecordPreview(
                         "192.0.2.1",

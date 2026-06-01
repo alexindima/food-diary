@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
@@ -51,8 +52,8 @@ public class ExportDiaryQueryHandler(
             .ToList();
 
         var displayOffset = ResolveDisplayOffset(normalizedFrom, query.TimeZoneOffsetMinutes);
-        var fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd");
-        var toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd");
+        var fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        var toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         return query.Format switch {
             ExportFormat.Pdf => Result.Success(new FileExportResult(

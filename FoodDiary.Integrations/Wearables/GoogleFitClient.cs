@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -154,7 +155,7 @@ internal sealed class GoogleFitClient(
                 }
             }
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
-            logger.LogWarning(ex, "Google Fit data fetch failed for {Date}", date.ToString("yyyy-MM-dd"));
+            logger.LogWarning(ex, "Google Fit data fetch failed for {Date}", date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
 
         return results;

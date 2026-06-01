@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
@@ -47,8 +48,8 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
 
     private static string BuildDataCheckString(TelegramLoginWidgetData data) {
         var pairs = new SortedDictionary<string, string>(StringComparer.Ordinal) {
-            ["auth_date"] = data.AuthDate.ToString(),
-            ["id"] = data.Id.ToString(),
+            ["auth_date"] = data.AuthDate.ToString(CultureInfo.InvariantCulture),
+            ["id"] = data.Id.ToString(CultureInfo.InvariantCulture),
         };
 
         if (!string.IsNullOrWhiteSpace(data.FirstName)) {
@@ -83,7 +84,7 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
         var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
         var sb = new StringBuilder(hash.Length * 2);
         foreach (var b in hash) {
-            sb.Append(b.ToString("x2"));
+            sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
         }
 
         return sb.ToString();

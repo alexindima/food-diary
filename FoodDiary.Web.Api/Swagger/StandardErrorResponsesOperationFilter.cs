@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -42,7 +43,7 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
     private static void AddApiErrorResponse(OpenApiOperation operation, OperationFilterContext context, int statusCode) {
         operation.Responses ??= new OpenApiResponses();
 
-        var statusCodeText = statusCode.ToString();
+        var statusCodeText = statusCode.ToString(CultureInfo.InvariantCulture);
         if (operation.Responses.ContainsKey(statusCodeText)) {
             return;
         }

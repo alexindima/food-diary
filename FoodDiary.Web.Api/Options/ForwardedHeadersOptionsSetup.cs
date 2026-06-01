@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Options;
@@ -25,6 +26,6 @@ public sealed class ForwardedHeadersOptionsSetup(IOptions<ApiForwardedHeadersOpt
 
     private static System.Net.IPNetwork ParseNetwork(string cidr) {
         var parts = cidr.Split('/', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-        return new System.Net.IPNetwork(IPAddress.Parse(parts[0]), int.Parse(parts[1]));
+        return new System.Net.IPNetwork(IPAddress.Parse(parts[0]), int.Parse(parts[1], CultureInfo.InvariantCulture));
     }
 }
