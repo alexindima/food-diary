@@ -119,6 +119,9 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.Telegram.Bot/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[FoodDiary.Web.Api/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [FoodDiary.JobManager/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 

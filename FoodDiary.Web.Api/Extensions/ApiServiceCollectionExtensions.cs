@@ -29,12 +29,39 @@ namespace FoodDiary.Web.Api.Extensions;
 
 public static class ApiServiceCollectionExtensions {
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration) {
+        services.AddApplicationModules(configuration);
+        services.AddApiOptions();
+        services.AddApiAuthentication();
+        services.AddApiHostServices();
+        services.AddApiSwagger();
+        services.AddConfiguredOpenTelemetry();
+        services.AddApiHealthChecks();
+
+        return services;
+    }
+
+    private static IServiceCollection AddApplicationModules(this IServiceCollection services, IConfiguration configuration) {
         services.AddApplication();
         services.AddInfrastructure(configuration);
         services.AddIntegrations(configuration);
         services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
         services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
         services.AddDistributedMemoryCache();
+        services.AddPresentationApi();
+        services.AddEndpointsApiExplorer();
+
+        return services;
+    }
+
+    private static IServiceCollection AddApiOptions(this IServiceCollection services) {
+        services.AddHostBoundaryOptions();
+        services.AddTelemetryAndAuthOptions();
+        services.AddBackgroundJobOptions();
+
+        return services;
+    }
+
+    private static IServiceCollection AddHostBoundaryOptions(this IServiceCollection services) {
         services
             .AddOptions<ApiCorsOptions>()
             .BindConfiguration(ApiCorsOptions.SectionName)
@@ -65,6 +92,11 @@ public static class ApiServiceCollectionExtensions {
             .Validate(ApiOutputCacheOptions.HasValidAdminAiUsage,
                 "OutputCache:AdminAiUsage:ExpirationSeconds must be greater than zero.")
             .ValidateOnStart();
+
+        return services;
+    }
+
+    private static IServiceCollection AddTelemetryAndAuthOptions(this IServiceCollection services) {
         services
             .AddOptions<OpenTelemetryOptions>()
             .BindConfiguration(OpenTelemetryOptions.SectionName)
@@ -77,6 +109,27 @@ public static class ApiServiceCollectionExtensions {
             .Validate(TelegramBotAuthOptions.HasValidApiSecret,
                 "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
             .ValidateOnStart();
+
+        services
+            .AddOptions<ApiBuildInfoOptions>()
+            .BindConfiguration(ApiBuildInfoOptions.SectionName)
+            .Validate(ApiBuildInfoOptions.HasValidCommitSha,
+                "BuildInfo:CommitSha must be empty or shorter than 129 characters.")
+            .Validate(ApiBuildInfoOptions.HasValidImageTag,
+                "BuildInfo:ImageTag must be empty or shorter than 257 characters.")
+            .ValidateOnStart();
+
+        services
+            .AddOptions<InitialAdminOptions>()
+            .BindConfiguration(InitialAdminOptions.SectionName)
+            .Validate(InitialAdminOptions.HasValidConfiguration,
+                "InitialAdmin requires a valid email and a password of at least 12 characters when configured.")
+            .ValidateOnStart();
+
+        return services;
+    }
+
+    private static IServiceCollection AddBackgroundJobOptions(this IServiceCollection services) {
         services
             .AddOptions<FastingNotificationOptions>()
             .BindConfiguration(FastingNotificationOptions.SectionName)
@@ -89,20 +142,11 @@ public static class ApiServiceCollectionExtensions {
             .Validate(UserLoginEventCleanupOptions.HasValidConfiguration,
                 "UserLoginEventCleanup requires positive RetentionDays, BatchSize, and PollIntervalHours when enabled.")
             .ValidateOnStart();
-        services
-            .AddOptions<ApiBuildInfoOptions>()
-            .BindConfiguration(ApiBuildInfoOptions.SectionName)
-            .Validate(ApiBuildInfoOptions.HasValidCommitSha,
-                "BuildInfo:CommitSha must be empty or shorter than 129 characters.")
-            .Validate(ApiBuildInfoOptions.HasValidImageTag,
-                "BuildInfo:ImageTag must be empty or shorter than 257 characters.")
-            .ValidateOnStart();
-        services
-            .AddOptions<InitialAdminOptions>()
-            .BindConfiguration(InitialAdminOptions.SectionName)
-            .Validate(InitialAdminOptions.HasValidConfiguration,
-                "InitialAdmin requires a valid email and a password of at least 12 characters when configured.")
-            .ValidateOnStart();
+
+        return services;
+    }
+
+    private static IServiceCollection AddApiAuthentication(this IServiceCollection services) {
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
         services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
@@ -118,34 +162,44 @@ public static class ApiServiceCollectionExtensions {
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
         services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
-            .Configure<IOptions<JwtOptions>>((options, jwtOptionsAccessor) => {
-                var jwtOptions = jwtOptionsAccessor.Value;
-                options.TokenValidationParameters = new TokenValidationParameters {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidateAudience = true,
-                    ValidAudience = jwtOptions.Audience,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                };
-                options.Events = new JwtBearerEvents {
-                    OnMessageReceived = context => {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrWhiteSpace(accessToken) &&
-                            (path.StartsWithSegments("/hubs/email-verification", StringComparison.Ordinal) ||
-                                path.StartsWithSegments("/hubs/notifications", StringComparison.Ordinal))) {
-                            context.Token = accessToken;
-                        }
-
-                        return Task.CompletedTask;
-                    },
-                };
-            });
+            .Configure<IOptions<JwtOptions>>(ConfigureJwtBearerOptions);
 
         services.AddAuthorization();
+
+        return services;
+    }
+
+    private static void ConfigureJwtBearerOptions(JwtBearerOptions options, IOptions<JwtOptions> jwtOptionsAccessor) {
+        var jwtOptions = jwtOptionsAccessor.Value;
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
+            ValidateIssuer = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtOptions.Audience,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+        };
+        options.Events = new JwtBearerEvents {
+            OnMessageReceived = context => {
+                ExtractSignalRAccessToken(context);
+                return Task.CompletedTask;
+            }
+        };
+    }
+
+    private static void ExtractSignalRAccessToken(MessageReceivedContext context) {
+        var accessToken = context.Request.Query["access_token"];
+        var path = context.HttpContext.Request.Path;
+        if (!string.IsNullOrWhiteSpace(accessToken) &&
+            (path.StartsWithSegments("/hubs/email-verification", StringComparison.Ordinal) ||
+             path.StartsWithSegments("/hubs/notifications", StringComparison.Ordinal))) {
+            context.Token = accessToken;
+        }
+    }
+
+    private static IServiceCollection AddApiHostServices(this IServiceCollection services) {
         services.AddHttpLogging(options => {
             options.LoggingFields = HttpLoggingFields.RequestMethod |
                                     HttpLoggingFields.RequestPath |
@@ -161,8 +215,11 @@ public static class ApiServiceCollectionExtensions {
         services.AddHostedService<FastingNotificationHostedService>();
         services.AddHostedService<InitialAdminHostedService>();
         services.AddHostedService<UserLoginEventCleanupHostedService>();
-        services.AddPresentationApi();
-        services.AddEndpointsApiExplorer();
+
+        return services;
+    }
+
+    private static IServiceCollection AddApiSwagger(this IServiceCollection services) {
         services.AddSwaggerGen(options => {
             options.SwaggerDoc("v1", new OpenApiInfo {
                 Title = "FoodDiary API",
@@ -181,8 +238,6 @@ public static class ApiServiceCollectionExtensions {
                 [new OpenApiSecuritySchemeReference("Bearer", document, null)] = []
             });
         });
-        services.AddConfiguredOpenTelemetry();
-        services.AddApiHealthChecks();
 
         return services;
     }

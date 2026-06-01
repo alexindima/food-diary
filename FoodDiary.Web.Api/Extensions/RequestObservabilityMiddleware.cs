@@ -5,76 +5,124 @@ using Microsoft.AspNetCore.OutputCaching;
 namespace FoodDiary.Web.Api.Extensions;
 
 public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger<RequestObservabilityMiddleware> logger) {
+    private sealed record RequestObservation(
+        string PathLabel,
+        string ScopeLabel,
+        string? UserId);
+
     public async Task InvokeAsync(HttpContext context) {
         var stopwatch = Stopwatch.StartNew();
         var request = context.Request;
-        var sensitivity = RequestSensitivity.From(request.Path);
-        var userId = sensitivity.IncludeUserIdInTelemetry
-            ? context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous"
-            : null;
-        var pathLabel = sensitivity.PathLabel;
+        var observation = CreateObservation(context);
         using var activity = ApiTelemetry.ActivitySource.StartActivity("fooddiary.http.request", ActivityKind.Internal);
-        activity?.SetTag("http.request.method", request.Method);
-        activity?.SetTag("url.path", pathLabel);
-        activity?.SetTag("fooddiary.request.sensitivity", sensitivity.ScopeLabel);
-        if (userId is not null) {
-            activity?.SetTag("enduser.id", userId);
-        }
-
-        using var scope = logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
-            ["TraceId"] = context.TraceIdentifier,
-            ["RequestPath"] = pathLabel,
-            ["RequestSensitivity"] = sensitivity.ScopeLabel,
-            ["UserId"] = userId,
-        });
+        ConfigureActivity(activity, request.Method, observation);
+        using var scope = BeginRequestScope(context, observation);
 
         try {
             await next(context).ConfigureAwait(false);
         } catch (Exception exception) {
-            activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
-            activity?.SetTag("error.type", exception.GetType().FullName);
-            ApiTelemetry.RequestExceptionCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("http.request.method", request.Method),
-                new KeyValuePair<string, object?>("url.path", pathLabel));
+            ObserveException(activity, request.Method, observation.PathLabel, exception);
             throw;
         } finally {
             stopwatch.Stop();
-            var elapsedMs = stopwatch.Elapsed.TotalMilliseconds;
-            activity?.SetTag("http.response.status_code", context.Response.StatusCode);
-            var businessFlow = BusinessFlow.From(request.Method, request.Path);
-            if (businessFlow is not null) {
-                ApiTelemetry.BusinessFlowCounter.Add(
-                    1,
-                    new KeyValuePair<string, object?>("fooddiary.business_flow", businessFlow.Value.FlowName),
-                    new KeyValuePair<string, object?>("fooddiary.business_outcome", ResolveOutcome(context.Response.StatusCode)),
-                    new KeyValuePair<string, object?>("http.response.status_code", context.Response.StatusCode));
-            }
-            var outputCacheObservation = OutputCacheObservation.From(context);
-            if (outputCacheObservation is not null) {
-                ApiTelemetry.OutputCacheCounter.Add(
-                    1,
-                    new KeyValuePair<string, object?>("fooddiary.output_cache.policy", outputCacheObservation.Value.PolicyName),
-                    new KeyValuePair<string, object?>("fooddiary.output_cache.outcome", outputCacheObservation.Value.Outcome),
-                    new KeyValuePair<string, object?>("http.response.status_code", context.Response.StatusCode));
-            }
-            ApiTelemetry.RequestCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("http.request.method", request.Method),
-                new KeyValuePair<string, object?>("url.path", pathLabel),
-                new KeyValuePair<string, object?>("http.response.status_code", context.Response.StatusCode));
-            ApiTelemetry.RequestDuration.Record(
-                elapsedMs,
-                new KeyValuePair<string, object?>("http.request.method", request.Method),
-                new KeyValuePair<string, object?>("url.path", pathLabel),
-                new KeyValuePair<string, object?>("http.response.status_code", context.Response.StatusCode));
-            logger.LogInformation(
-                "HTTP {Method} {Path} responded {StatusCode} in {ElapsedMs} ms",
-                request.Method,
-                pathLabel,
-                context.Response.StatusCode,
-                elapsedMs);
+            ObserveCompletedRequest(context, activity, observation, stopwatch.Elapsed.TotalMilliseconds);
         }
+    }
+
+    private static RequestObservation CreateObservation(HttpContext context) {
+        var sensitivity = RequestSensitivity.From(context.Request.Path);
+        var userId = sensitivity.IncludeUserIdInTelemetry
+            ? context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous"
+            : null;
+        return new RequestObservation(sensitivity.PathLabel, sensitivity.ScopeLabel, userId);
+    }
+
+    private static void ConfigureActivity(Activity? activity, string method, RequestObservation observation) {
+        activity?.SetTag("http.request.method", method);
+        activity?.SetTag("url.path", observation.PathLabel);
+        activity?.SetTag("fooddiary.request.sensitivity", observation.ScopeLabel);
+        if (observation.UserId is not null) {
+            activity?.SetTag("enduser.id", observation.UserId);
+        }
+    }
+
+    private IDisposable? BeginRequestScope(HttpContext context, RequestObservation observation) =>
+        logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
+            ["TraceId"] = context.TraceIdentifier,
+            ["RequestPath"] = observation.PathLabel,
+            ["RequestSensitivity"] = observation.ScopeLabel,
+            ["UserId"] = observation.UserId,
+        });
+
+    private static void ObserveException(
+        Activity? activity,
+        string method,
+        string pathLabel,
+        Exception exception) {
+        activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
+        activity?.SetTag("error.type", exception.GetType().FullName);
+        ApiTelemetry.RequestExceptionCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("http.request.method", method),
+            new KeyValuePair<string, object?>("url.path", pathLabel));
+    }
+
+    private void ObserveCompletedRequest(
+        HttpContext context,
+        Activity? activity,
+        RequestObservation observation,
+        double elapsedMs) {
+        var request = context.Request;
+        var statusCode = context.Response.StatusCode;
+        activity?.SetTag("http.response.status_code", statusCode);
+        ObserveBusinessFlow(request.Method, request.Path, statusCode);
+        ObserveOutputCache(context, statusCode);
+        RecordRequestMetrics(request.Method, observation.PathLabel, statusCode, elapsedMs);
+        logger.LogInformation(
+            "HTTP {Method} {Path} responded {StatusCode} in {ElapsedMs} ms",
+            request.Method,
+            observation.PathLabel,
+            statusCode,
+            elapsedMs);
+    }
+
+    private static void ObserveBusinessFlow(string method, PathString path, int statusCode) {
+        var businessFlow = BusinessFlow.From(method, path);
+        if (businessFlow is null) {
+            return;
+        }
+
+        ApiTelemetry.BusinessFlowCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.business_flow", businessFlow.Value.FlowName),
+            new KeyValuePair<string, object?>("fooddiary.business_outcome", ResolveOutcome(statusCode)),
+            new KeyValuePair<string, object?>("http.response.status_code", statusCode));
+    }
+
+    private static void ObserveOutputCache(HttpContext context, int statusCode) {
+        var outputCacheObservation = OutputCacheObservation.From(context);
+        if (outputCacheObservation is null) {
+            return;
+        }
+
+        ApiTelemetry.OutputCacheCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.output_cache.policy", outputCacheObservation.Value.PolicyName),
+            new KeyValuePair<string, object?>("fooddiary.output_cache.outcome", outputCacheObservation.Value.Outcome),
+            new KeyValuePair<string, object?>("http.response.status_code", statusCode));
+    }
+
+    private static void RecordRequestMetrics(string method, string pathLabel, int statusCode, double elapsedMs) {
+        ApiTelemetry.RequestCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("http.request.method", method),
+            new KeyValuePair<string, object?>("url.path", pathLabel),
+            new KeyValuePair<string, object?>("http.response.status_code", statusCode));
+        ApiTelemetry.RequestDuration.Record(
+            elapsedMs,
+            new KeyValuePair<string, object?>("http.request.method", method),
+            new KeyValuePair<string, object?>("url.path", pathLabel),
+            new KeyValuePair<string, object?>("http.response.status_code", statusCode));
     }
 
     private static string ResolveOutcome(int statusCode) {
