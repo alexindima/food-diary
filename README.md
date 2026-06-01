@@ -77,6 +77,15 @@ Architecture guardrails:
 dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
 ```
 
+Backend verification:
+
+```bash
+dotnet restore FoodDiary.slnx
+dotnet format FoodDiary.slnx --verify-no-changes --no-restore
+dotnet build FoodDiary.slnx --configuration Release --no-restore
+dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --configuration Release --no-restore
+```
+
 Frontend checks:
 
 ```bash
