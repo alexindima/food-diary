@@ -21,10 +21,10 @@ public sealed class WearableClientTests {
 
         var url = client.GetAuthorizationUrl("state value/1");
 
-        Assert.Contains("client_id=fitbit-client", url);
-        Assert.Contains("redirect_uri=https%3A%2F%2Fapp.example%2Fauth%2Fcallback%3Fprovider%3Dfitbit", url);
-        Assert.Contains("scope=activity+heartrate+sleep", url);
-        Assert.Contains("state=state%20value%2F1", url);
+        Assert.Contains("client_id=fitbit-client", url, StringComparison.Ordinal);
+        Assert.Contains("redirect_uri=https%3A%2F%2Fapp.example%2Fauth%2Fcallback%3Fprovider%3Dfitbit", url, StringComparison.Ordinal);
+        Assert.Contains("scope=activity+heartrate+sleep", url, StringComparison.Ordinal);
+        Assert.Contains("state=state%20value%2F1", url, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -55,8 +55,8 @@ public sealed class WearableClientTests {
         Assert.Equal("refresh", result.RefreshToken);
         Assert.Equal("fitbit-user", result.ExternalUserId);
         Assert.Equal("Basic", handler.Requests.Single().Headers.Authorization?.Scheme);
-        Assert.Contains("grant_type=authorization_code", handler.RequestBodies.Single());
-        Assert.Contains("code=auth-code", handler.RequestBodies.Single());
+        Assert.Contains("grant_type=authorization_code", handler.RequestBodies.Single(), StringComparison.Ordinal);
+        Assert.Contains("code=auth-code", handler.RequestBodies.Single(), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -115,12 +115,12 @@ public sealed class WearableClientTests {
 
         var url = client.GetAuthorizationUrl("state value/1");
 
-        Assert.Contains("client_id=google-client", url);
-        Assert.Contains("redirect_uri=https%3A%2F%2Fapp.example%2Fauth%2Fgoogle-fit", url);
-        Assert.Contains("fitness.activity.read", url);
-        Assert.Contains("state=state%20value%2F1", url);
-        Assert.Contains("access_type=offline", url);
-        Assert.Contains("prompt=consent", url);
+        Assert.Contains("client_id=google-client", url, StringComparison.Ordinal);
+        Assert.Contains("redirect_uri=https%3A%2F%2Fapp.example%2Fauth%2Fgoogle-fit", url, StringComparison.Ordinal);
+        Assert.Contains("fitness.activity.read", url, StringComparison.Ordinal);
+        Assert.Contains("state=state%20value%2F1", url, StringComparison.Ordinal);
+        Assert.Contains("access_type=offline", url, StringComparison.Ordinal);
+        Assert.Contains("prompt=consent", url, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -150,8 +150,8 @@ public sealed class WearableClientTests {
         Assert.Equal("access", result.AccessToken);
         Assert.Equal("refresh", result.RefreshToken);
         Assert.Equal("google-user", result.ExternalUserId);
-        Assert.Contains("grant_type=authorization_code", handler.RequestBodies[0]);
-        Assert.Contains("code=auth-code", handler.RequestBodies[0]);
+        Assert.Contains("grant_type=authorization_code", handler.RequestBodies[0], StringComparison.Ordinal);
+        Assert.Contains("code=auth-code", handler.RequestBodies[0], StringComparison.Ordinal);
     }
 
     [Fact]

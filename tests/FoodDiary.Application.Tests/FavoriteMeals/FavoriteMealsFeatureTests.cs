@@ -44,7 +44,7 @@ public class FavoriteMealsFeatureTests {
             new AddFavoriteMealCommand(user.Id.Value, Guid.NewGuid(), null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotFound", result.Error.Code);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class FavoriteMealsFeatureTests {
             new AddFavoriteMealCommand(user.Id.Value, meal.Id.Value, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AlreadyExists", result.Error.Code);
+        Assert.Contains("AlreadyExists", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class FavoriteMealsFeatureTests {
             new RemoveFavoriteMealCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotFound", result.Error.Code);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

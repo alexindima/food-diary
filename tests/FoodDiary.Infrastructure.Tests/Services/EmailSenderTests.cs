@@ -73,7 +73,7 @@ public sealed class EmailSenderTests {
             new PasswordResetMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "ru", "https://xn--b1adbcbrouc8l.xn--p1ai"),
             CancellationToken.None);
 
-        Assert.Contains("https://дневникеды.рф/reset-password?", transport.Body);
+        Assert.Contains("https://дневникеды.рф/reset-password?", transport.Body, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -94,8 +94,8 @@ public sealed class EmailSenderTests {
             new EmailVerificationMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "en", "https://evil.example.com"),
             CancellationToken.None);
 
-        Assert.Contains("https://fooddiary.club/verify-email?", transport.Body);
-        Assert.DoesNotContain("evil.example.com", transport.Body);
+        Assert.Contains("https://fooddiary.club/verify-email?", transport.Body, StringComparison.Ordinal);
+        Assert.DoesNotContain("evil.example.com", transport.Body, StringComparison.Ordinal);
     }
 
     private static EmailSender CreateSender(IEmailTransport transport, EmailOptions? options = null) {

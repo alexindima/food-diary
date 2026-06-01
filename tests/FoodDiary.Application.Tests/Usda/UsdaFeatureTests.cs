@@ -38,7 +38,7 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotAccessible", result.Error.Code);
+        Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("FoodNotFound", result.Error.Code);
+        Assert.Contains("FoodNotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

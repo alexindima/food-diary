@@ -95,7 +95,7 @@ public class FastingFeatureTests {
             new StartFastingCommand(user.Id.Value, "F18_6", null, null, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AlreadyActive", result.Error.Code);
+        Assert.Contains("AlreadyActive", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -263,7 +263,7 @@ public class FastingFeatureTests {
             new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NoActiveSession", result.Error.Code);
+        Assert.Contains("NoActiveSession", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -320,7 +320,7 @@ public class FastingFeatureTests {
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NoActiveSession", result.Error.Code);
+        Assert.Contains("NoActiveSession", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

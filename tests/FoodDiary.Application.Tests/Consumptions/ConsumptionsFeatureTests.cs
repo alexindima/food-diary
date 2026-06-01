@@ -51,7 +51,7 @@ public class ConsumptionsFeatureTests {
         var result = SatietyLevelValidator.Validate(-1, 5);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("PreMealSatietyLevel", result.Error.Message);
+        Assert.Contains("PreMealSatietyLevel", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]

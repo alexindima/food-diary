@@ -88,7 +88,7 @@ public sealed class OpenFoodFactsServiceTests {
         await service.GetByBarcodeAsync(" 123/456 ");
 
         Assert.NotNull(handler.LastRequestUri);
-        Assert.Contains("/api/v2/product/123%2F456", handler.LastRequestUri!.ToString());
+        Assert.Contains("/api/v2/product/123%2F456", handler.LastRequestUri!.ToString(), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -256,7 +256,7 @@ public sealed class OpenFoodFactsServiceTests {
         await service.SearchAsync("milk", limit: 500);
 
         Assert.NotNull(handler.LastRequestUri);
-        Assert.Contains("page_size=50", handler.LastRequestUri!.Query);
+        Assert.Contains("page_size=50", handler.LastRequestUri!.Query, StringComparison.Ordinal);
     }
 
     private static OpenFoodFactsService CreateService(HttpMessageHandler handler) {

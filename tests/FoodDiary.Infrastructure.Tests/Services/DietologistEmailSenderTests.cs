@@ -33,7 +33,7 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("Invitation", transport.LastSubject);
+        Assert.Contains("Invitation", transport.LastSubject, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435", transport.LastSubject);
+        Assert.Contains("\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435", transport.LastSubject, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -57,9 +57,9 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("dietologist/accept", transport.LastHtmlBody);
-        Assert.Contains(invitationId.ToString(), transport.LastHtmlBody);
-        Assert.Contains("test-token", transport.LastHtmlBody);
+        Assert.Contains("dietologist/accept", transport.LastHtmlBody, StringComparison.Ordinal);
+        Assert.Contains(invitationId.ToString(), transport.LastHtmlBody, StringComparison.Ordinal);
+        Assert.Contains("test-token", transport.LastHtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u0418\u0432\u0430\u043d\u043e\u0432", transport.LastHtmlBody);
+        Assert.Contains("\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u0418\u0432\u0430\u043d\u043e\u0432", transport.LastHtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -83,7 +83,7 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("A user", transport.LastHtmlBody);
+        Assert.Contains("A user", transport.LastHtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -95,7 +95,7 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("Invitation", transport.LastSubject);
+        Assert.Contains("Invitation", transport.LastSubject, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -114,8 +114,8 @@ public sealed class DietologistEmailSenderTests {
         Assert.Equal("dietologist_invitation", templateProvider.LastKey);
         Assert.Equal("en", templateProvider.LastLocale);
         Assert.Equal("Invite John Doe to FoodDiary", transport.LastSubject);
-        Assert.Contains("John Doe", transport.LastHtmlBody);
-        Assert.Contains("dietologist/accept", transport.LastHtmlBody);
+        Assert.Contains("John Doe", transport.LastHtmlBody, StringComparison.Ordinal);
+        Assert.Contains("dietologist/accept", transport.LastHtmlBody, StringComparison.Ordinal);
     }
 
     private static DietologistEmailSender CreateSender(

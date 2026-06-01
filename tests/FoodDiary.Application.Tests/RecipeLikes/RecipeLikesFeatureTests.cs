@@ -53,7 +53,7 @@ public class RecipeLikesFeatureTests {
             new ToggleRecipeLikeCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotFound", result.Error.Code);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

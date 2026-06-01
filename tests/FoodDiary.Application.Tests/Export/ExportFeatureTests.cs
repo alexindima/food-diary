@@ -43,8 +43,8 @@ public class ExportFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal("text/csv", result.Value.ContentType);
-        Assert.Contains("food-diary-", result.Value.FileName);
-        Assert.EndsWith(".csv", result.Value.FileName);
+        Assert.Contains("food-diary-", result.Value.FileName, StringComparison.Ordinal);
+        Assert.EndsWith(".csv", result.Value.FileName, StringComparison.Ordinal);
         Assert.True(result.Value.Content.Length > 0);
     }
 
@@ -61,7 +61,7 @@ public class ExportFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal("application/pdf", result.Value.ContentType);
-        Assert.EndsWith(".pdf", result.Value.FileName);
+        Assert.EndsWith(".pdf", result.Value.FileName, StringComparison.Ordinal);
         Assert.Equal("ru", pdfGenerator.LastLocale);
         Assert.Equal(240, pdfGenerator.LastTimeZoneOffsetMinutes);
         Assert.Equal("https://дневникеды.рф", pdfGenerator.LastReportOrigin);
@@ -114,9 +114,9 @@ public class ExportFeatureTests {
 
         Assert.True(result.IsSuccess);
         var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
-        Assert.Contains("inside period", content);
-        Assert.DoesNotContain("outside before", content);
-        Assert.DoesNotContain("outside after", content);
+        Assert.Contains("inside period", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("outside before", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("outside after", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -132,10 +132,10 @@ public class ExportFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName);
+        Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
         var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
-        Assert.Contains("2026-05-04,Breakfast", content);
-        Assert.Contains("local day meal", content);
+        Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
+        Assert.Contains("local day meal", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -151,9 +151,9 @@ public class ExportFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName);
+        Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
         var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
-        Assert.Contains("2026-05-04,Breakfast", content);
+        Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class ExportFeatureTests {
 
         Assert.True(result.IsSuccess);
         var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
-        Assert.Contains("Date,MealType,Calories", content);
+        Assert.Contains("Date,MealType,Calories", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -231,9 +231,9 @@ public class ExportFeatureTests {
         var csv = DiaryCsvGenerator.Generate([meal]);
         var content = System.Text.Encoding.UTF8.GetString(csv);
 
-        Assert.Contains("500", content);
-        Assert.Contains("30", content);
-        Assert.Contains("Breakfast", content);
+        Assert.Contains("500", content, StringComparison.Ordinal);
+        Assert.Contains("30", content, StringComparison.Ordinal);
+        Assert.Contains("Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -248,8 +248,8 @@ public class ExportFeatureTests {
         var csv = DiaryCsvGenerator.Generate([meal]);
         var content = System.Text.Encoding.UTF8.GetString(csv);
 
-        Assert.Contains("400", content);
-        Assert.Contains("25", content);
+        Assert.Contains("400", content, StringComparison.Ordinal);
+        Assert.Contains("25", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -259,7 +259,7 @@ public class ExportFeatureTests {
         var csv = DiaryCsvGenerator.Generate([meal]);
         var content = System.Text.Encoding.UTF8.GetString(csv);
 
-        Assert.Contains("\"eggs, bacon\"", content);
+        Assert.Contains("\"eggs, bacon\"", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -269,7 +269,7 @@ public class ExportFeatureTests {
         var csv = DiaryCsvGenerator.Generate([meal]);
         var content = System.Text.Encoding.UTF8.GetString(csv);
 
-        Assert.Contains("\"she said \"\"hello\"\"\"", content);
+        Assert.Contains("\"she said \"\"hello\"\"\"", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -281,7 +281,7 @@ public class ExportFeatureTests {
 
         Assert.True(lines.Length >= 2);
         var dataLine = lines[1];
-        Assert.Contains(",,", dataLine);
+        Assert.Contains(",,", dataLine, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -291,7 +291,7 @@ public class ExportFeatureTests {
         var csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 240);
         var content = System.Text.Encoding.UTF8.GetString(csv);
 
-        Assert.Contains("2026-05-04,Breakfast", content);
+        Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]

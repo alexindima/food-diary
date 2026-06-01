@@ -91,7 +91,7 @@ public class ShoppingListsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("Unit", result.Error.Message);
+        Assert.Contains("Unit", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]

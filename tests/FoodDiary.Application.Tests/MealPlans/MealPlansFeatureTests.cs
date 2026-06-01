@@ -16,7 +16,7 @@ public class MealPlansFeatureTests {
             new AdoptMealPlanCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotFound", result.Error.Code);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class MealPlansFeatureTests {
             new AdoptMealPlanCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotCurated", result.Error.Code);
+        Assert.Contains("NotCurated", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

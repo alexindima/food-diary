@@ -36,7 +36,7 @@ public class MealNutritionServiceTests {
         var result = await service.CalculateAsync(meal, userId);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotAccessible", result.Error.Code);
+        Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class MealNutritionServiceTests {
         var result = await service.CalculateAsync(meal, userId);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotAccessible", result.Error.Code);
+        Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

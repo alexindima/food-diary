@@ -29,7 +29,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             transport.SendAsync(request, CancellationToken.None));
 
-        Assert.Contains("private or loopback", ex.InnerException?.Message ?? ex.Message);
+        Assert.Contains("private or loopback", ex.InnerException?.Message ?? ex.Message, StringComparison.Ordinal);
     }
 
     private sealed class StubMxResolver(IReadOnlyList<MxRecord> records) : IMxResolver {

@@ -28,8 +28,8 @@ public sealed class StructuredAuditLoggerTests {
 
         auditLogger.Log("user.deleted", actorId, "User", "123", null);
 
-        Assert.Contains("user.deleted", logger.LastMessage);
-        Assert.Contains(actorId.Value.ToString(), logger.LastMessage);
+        Assert.Contains("user.deleted", logger.LastMessage, StringComparison.Ordinal);
+        Assert.Contains(actorId.Value.ToString(), logger.LastMessage, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public sealed class StructuredAuditLoggerTests {
 
         auditLogger.Log("test.action", actorId, null, null, null);
 
-        Assert.Contains("-", logger.LastMessage);
+        Assert.Contains("-", logger.LastMessage, StringComparison.Ordinal);
     }
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {

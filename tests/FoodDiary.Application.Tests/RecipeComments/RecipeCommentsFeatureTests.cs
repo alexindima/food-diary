@@ -96,7 +96,7 @@ public class RecipeCommentsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotAuthor", result.Error.Code);
+        Assert.Contains("NotAuthor", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -135,8 +135,8 @@ public static class ApiServiceCollectionExtensions {
                         var accessToken = context.Request.Query["access_token"];
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrWhiteSpace(accessToken) &&
-                            (path.StartsWithSegments("/hubs/email-verification") ||
-                                path.StartsWithSegments("/hubs/notifications"))) {
+                            (path.StartsWithSegments("/hubs/email-verification", StringComparison.Ordinal) ||
+                                path.StartsWithSegments("/hubs/notifications", StringComparison.Ordinal))) {
                             context.Token = accessToken;
                         }
 

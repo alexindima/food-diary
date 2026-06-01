@@ -214,11 +214,11 @@ public class NotificationsFeatureTests {
         Assert.Equal(20, user.FastingCheckInFollowUpReminderHours);
         Assert.Equal("notifications.preferences.updated", auditLogger.Action);
         Assert.Equal(user.Id, auditLogger.ActorId);
-        Assert.Contains("push=True", auditLogger.Details);
-        Assert.Contains("fasting=False", auditLogger.Details);
-        Assert.Contains("social=True", auditLogger.Details);
-        Assert.Contains("fastingReminder=12", auditLogger.Details);
-        Assert.Contains("fastingReminderFollowUp=20", auditLogger.Details);
+        Assert.Contains("push=True", auditLogger.Details, StringComparison.Ordinal);
+        Assert.Contains("fasting=False", auditLogger.Details, StringComparison.Ordinal);
+        Assert.Contains("social=True", auditLogger.Details, StringComparison.Ordinal);
+        Assert.Contains("fastingReminder=12", auditLogger.Details, StringComparison.Ordinal);
+        Assert.Contains("fastingReminderFollowUp=20", auditLogger.Details, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -319,7 +319,7 @@ public class NotificationsFeatureTests {
         var subscription = Assert.Single(repository.Subscriptions);
         Assert.Equal(user.Id, subscription.UserId);
         Assert.Equal("notifications.push-subscription.connected", auditLogger.Action);
-        Assert.Contains("endpointHost=push.example.com", auditLogger.Details);
+        Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -366,7 +366,7 @@ public class NotificationsFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Empty(repository.Subscriptions);
         Assert.Equal("notifications.push-subscription.disconnected", auditLogger.Action);
-        Assert.Contains("endpointHost=push.example.com", auditLogger.Details);
+        Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -391,7 +391,7 @@ public class NotificationsFeatureTests {
         Assert.Equal(user.Id.Value, scheduler.UserId);
         Assert.Equal("notifications.test.scheduled", auditLogger.Action);
         Assert.Equal(NotificationTypes.FastingCompleted, auditLogger.TargetId);
-        Assert.Contains("delaySeconds=15", auditLogger.Details);
+        Assert.Contains("delaySeconds=15", auditLogger.Details, StringComparison.Ordinal);
     }
 
     [Fact]

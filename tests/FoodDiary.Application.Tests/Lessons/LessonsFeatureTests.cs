@@ -45,7 +45,7 @@ public class LessonsFeatureTests {
             new MarkLessonReadCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotFound", result.Error.Code);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

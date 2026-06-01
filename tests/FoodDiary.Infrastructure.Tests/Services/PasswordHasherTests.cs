@@ -40,6 +40,6 @@ public class PasswordHasherTests {
     public void Hash_ProducesBCryptFormat() {
         var hash = _hasher.Hash("test");
 
-        Assert.StartsWith("$2", hash);
+        Assert.StartsWith("$2", hash, StringComparison.Ordinal);
     }
 }

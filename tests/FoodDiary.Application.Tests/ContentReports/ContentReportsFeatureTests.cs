@@ -35,7 +35,7 @@ public class ContentReportsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AlreadyReported", result.Error.Code);
+        Assert.Contains("AlreadyReported", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

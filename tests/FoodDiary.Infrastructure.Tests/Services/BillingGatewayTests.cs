@@ -145,8 +145,8 @@ public sealed class BillingGatewayTests {
         Assert.Equal(HttpMethod.Post, handler.LastRequest.Method);
         Assert.Equal("https://api.paddle.test/transactions", handler.LastRequest.RequestUri?.ToString());
         Assert.Equal("Bearer", handler.LastRequest.Headers.Authorization?.Scheme);
-        Assert.Contains("\"customer_id\":\"ctm_123\"", handler.LastRequestBody);
-        Assert.Contains("\"price_id\":\"pri_yearly\"", handler.LastRequestBody);
+        Assert.Contains("\"customer_id\":\"ctm_123\"", handler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains("\"price_id\":\"pri_yearly\"", handler.LastRequestBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -171,8 +171,8 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("400 Bad Request", result.Error.Message);
-        Assert.Contains("invalid customer", result.Error.Message);
+        Assert.Contains("400 Bad Request", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("invalid customer", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -216,8 +216,8 @@ public sealed class BillingGatewayTests {
         Assert.Equal("https://api.yookassa.test/v3/payments", handler.LastRequest.RequestUri?.ToString());
         Assert.True(handler.LastRequest.Headers.Contains("Idempotence-Key"));
         Assert.Equal("Basic", handler.LastRequest.Headers.Authorization?.Scheme);
-        Assert.Contains("\"plan\":\"monthly\"", handler.LastRequestBody);
-        Assert.Contains(userId.ToString(), handler.LastRequestBody);
+        Assert.Contains("\"plan\":\"monthly\"", handler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains(userId.ToString(), handler.LastRequestBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -403,8 +403,8 @@ public sealed class BillingGatewayTests {
         Assert.NotNull(handler.LastRequest);
         Assert.Equal("https://api.yookassa.test/v3/payments", handler.LastRequest.RequestUri?.ToString());
         Assert.Equal("billing-renewal:test", handler.LastRequest.Headers.GetValues("Idempotence-Key").Single());
-        Assert.Contains("\"renewal\":\"true\"", handler.LastRequestBody);
-        Assert.Contains("\"payment_method_id\":\"pm_123\"", handler.LastRequestBody);
+        Assert.Contains("\"renewal\":\"true\"", handler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains("\"payment_method_id\":\"pm_123\"", handler.LastRequestBody, StringComparison.Ordinal);
     }
 
     [Fact]

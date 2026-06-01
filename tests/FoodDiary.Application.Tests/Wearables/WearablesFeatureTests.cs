@@ -58,7 +58,7 @@ public class WearablesFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AuthFailed", result.Error.Code);
+        Assert.Contains("AuthFailed", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public class WearablesFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("InvalidState", result.Error.Code);
+        Assert.Contains("InvalidState", result.Error.Code, StringComparison.Ordinal);
         Assert.Equal(0, client.ExchangeCodeCallCount);
     }
 
@@ -127,7 +127,7 @@ public class WearablesFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("NotConnected", result.Error.Code);
+        Assert.Contains("NotConnected", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class WearablesFeatureTests {
         var result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.NewGuid(), "Fitbit", "state"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("ProviderNotConfigured", result.Error.Code);
+        Assert.Contains("ProviderNotConfigured", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -210,7 +210,7 @@ public class WearablesFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AuthFailed", result.Error.Code);
+        Assert.Contains("AuthFailed", result.Error.Code, StringComparison.Ordinal);
         Assert.False(connection.IsActive);
         Assert.True(connectionRepository.UpdateCalled);
     }

@@ -17,7 +17,7 @@ public class DietologistAccessPolicyTests {
             repo, UserId.New(), UserId.New(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AccessDenied", result.Error.Code);
+        Assert.Contains("AccessDenied", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class DietologistAccessPolicyTests {
         var error = DietologistAccessPolicy.EnsurePermission(perms, "Meals");
 
         Assert.NotNull(error);
-        Assert.Contains("PermissionDenied", error.Code);
+        Assert.Contains("PermissionDenied", error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

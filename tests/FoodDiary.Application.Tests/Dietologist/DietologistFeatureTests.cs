@@ -872,7 +872,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AccountDeleted", result.Error.Code);
+        Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -931,7 +931,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("PermissionDenied", result.Error.Code);
+        Assert.Contains("PermissionDenied", result.Error.Code, StringComparison.Ordinal);
         Assert.Empty(recRepo.Added);
     }
 
@@ -1017,7 +1017,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AccountDeleted", result.Error.Code);
+        Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
         Assert.False(recommendation.IsRead);
     }
 
@@ -1321,7 +1321,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AccountDeleted", result.Error.Code);
+        Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
     // ── GetClientGoals ──
@@ -1405,7 +1405,7 @@ public class DietologistFeatureTests {
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AccountDeleted", result.Error.Code);
+        Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
     // ── GetMyRecommendations ──
@@ -1513,7 +1513,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Contains("AccountDeleted", result.Error.Code);
+        Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
     // ── RecommendationCreatedEventHandler ──
