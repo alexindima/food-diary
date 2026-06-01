@@ -40,7 +40,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
 
     public async Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
         where TRequest : IRequest {
-        await Send<Unit>(request, cancellationToken);
+        await Send<Unit>(request, cancellationToken).ConfigureAwait(false);
     }
 
     public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
@@ -93,7 +93,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
             .GetMethod(nameof(IRequestHandler<IRequest<TResponse>, TResponse>.Handle))!
             .Invoke(handler, [request, cancellationToken]);
 
-        return await (Task<TResponse>)result!;
+        return await ((Task<TResponse>)result!).ConfigureAwait(false);
     }
 
     private static async Task<TResponse> InvokeBehavior<TResponse>(
@@ -106,7 +106,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
             .GetMethod(nameof(IPipelineBehavior<object, TResponse>.Handle))!
             .Invoke(behavior, [request, next, cancellationToken]);
 
-        return await (Task<TResponse>)result!;
+        return await ((Task<TResponse>)result!).ConfigureAwait(false);
     }
 
     private static Type? GetRequestResponseType(Type requestType) {
@@ -132,7 +132,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
             .MakeGenericMethod(responseType);
 
         var task = (Task)method.Invoke(this, [request, cancellationToken])!;
-        await task;
+        await task.ConfigureAwait(false);
 
         return task.GetType().GetProperty(nameof(Task<object>.Result))?.GetValue(task);
     }

@@ -25,7 +25,7 @@ public sealed class MailRelayClient(HttpClient httpClient, IOptions<MailRelayCli
             requestMessage.Headers.TryAddWithoutValidation("X-Relay-Api-Key", _options.ApiKey);
         }
 
-        using var response = await httpClient.SendAsync(requestMessage, cancellationToken);
+        using var response = await httpClient.SendAsync(requestMessage, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         if (response.Content.Headers.ContentLength == 0) {
@@ -36,7 +36,7 @@ public sealed class MailRelayClient(HttpClient httpClient, IOptions<MailRelayCli
         try {
             payload = await response.Content.ReadFromJsonAsync<EnqueueMailRelayEmailResponse>(
                 JsonOptions,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         } catch (JsonException ex) {
             throw new InvalidOperationException("Mail relay returned an invalid enqueue response.", ex);
         }

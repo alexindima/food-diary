@@ -85,3 +85,18 @@ dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA1716.severity = none
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1859.severity = none
+
+[FoodDiary.MailInbox.Client/MailInboxClient.cs]
+dotnet_diagnostic.MA0004.severity = warning
+
+[FoodDiary.MailRelay.Client/MailRelayClient.cs]
+dotnet_diagnostic.MA0004.severity = warning
+
+[FoodDiary.Telegram.Bot/Program.cs]
+dotnet_diagnostic.MA0004.severity = warning
+
+[FoodDiary.Telegram.Bot/TelegramBotWorker.cs]
+dotnet_diagnostic.MA0004.severity = warning
+
+[Shared/FoodDiary.Mediator/Mediator.cs]
+dotnet_diagnostic.MA0004.severity = warning

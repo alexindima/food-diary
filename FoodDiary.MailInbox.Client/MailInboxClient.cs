@@ -20,14 +20,14 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
             ? $"/api/mail-inbox/messages?limit={limit.Value}"
             : "/api/mail-inbox/messages";
         using var request = CreateRequest(HttpMethod.Get, path);
-        using var response = await httpClient.SendAsync(request, cancellationToken);
+        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         IReadOnlyList<InboundMailMessageSummaryResponse>? payload;
         try {
             payload = await response.Content.ReadFromJsonAsync<IReadOnlyList<InboundMailMessageSummaryResponse>>(
                 JsonOptions,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         } catch (JsonException ex) {
             throw new InvalidOperationException("MailInbox returned an invalid message list response.", ex);
         }
@@ -41,7 +41,7 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         EnsureBaseAddress();
 
         using var request = CreateRequest(HttpMethod.Get, $"/api/mail-inbox/messages/{id}");
-        using var response = await httpClient.SendAsync(request, cancellationToken);
+        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.NotFound) {
             return null;
         }
@@ -52,7 +52,7 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         try {
             payload = await response.Content.ReadFromJsonAsync<InboundMailMessageDetailsResponse>(
                 JsonOptions,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         } catch (JsonException ex) {
             throw new InvalidOperationException("MailInbox returned an invalid message details response.", ex);
         }

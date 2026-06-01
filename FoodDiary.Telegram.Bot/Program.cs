@@ -25,4 +25,4 @@ builder.Services.AddHostedService<TelegramBotWorker>();
 
 var app = builder.Build();
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

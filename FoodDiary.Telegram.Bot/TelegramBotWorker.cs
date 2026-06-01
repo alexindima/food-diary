@@ -24,7 +24,7 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        var me = await botClient.GetMe(stoppingToken);
+        var me = await botClient.GetMe(stoppingToken).ConfigureAwait(false);
         logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
         var receiverOptions = new ReceiverOptions {
@@ -38,7 +38,7 @@ public sealed class TelegramBotWorker(
             cancellationToken: stoppingToken);
 
         try {
-            await Task.Delay(Timeout.Infinite, stoppingToken);
+            await Task.Delay(Timeout.Infinite, stoppingToken).ConfigureAwait(false);
         } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
             logger.LogInformation("Telegram bot stopping.");
         }
@@ -46,7 +46,7 @@ public sealed class TelegramBotWorker(
 
     private async Task HandleUpdateAsync(ITelegramBotClient tBotClient, Update update, CancellationToken cancellationToken) {
         if (update is { Type: UpdateType.CallbackQuery, CallbackQuery: not null }) {
-            await HandleCallbackAsync(update.CallbackQuery, cancellationToken);
+            await HandleCallbackAsync(update.CallbackQuery, cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -62,19 +62,19 @@ public sealed class TelegramBotWorker(
         var command = message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
         switch (command) {
             case "/start":
-                await SendStartAsync(message.Chat.Id, message.From?.Id, cancellationToken);
+                await SendStartAsync(message.Chat.Id, message.From?.Id, cancellationToken).ConfigureAwait(false);
                 return;
             case "/help":
-                await SendHelpAsync(message.Chat.Id, cancellationToken);
+                await SendHelpAsync(message.Chat.Id, cancellationToken).ConfigureAwait(false);
                 return;
             default:
-                await SendHelpAsync(message.Chat.Id, cancellationToken);
+                await SendHelpAsync(message.Chat.Id, cancellationToken).ConfigureAwait(false);
                 return;
         }
     }
 
     private async Task SendStartAsync(long chatId, long? telegramUserId, CancellationToken cancellationToken) {
-        var isLinked = await IsLinkedAsync(telegramUserId, cancellationToken);
+        var isLinked = await IsLinkedAsync(telegramUserId, cancellationToken).ConfigureAwait(false);
         if (!isLinked) {
             var notLinkedText = "To use the bot, open the WebApp once and log in or register.";
             var markup = BuildWebAppMarkup();
@@ -82,7 +82,7 @@ public sealed class TelegramBotWorker(
                 chatId,
                 notLinkedText,
                 replyMarkup: markup,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -92,7 +92,7 @@ public sealed class TelegramBotWorker(
             chatId,
             text,
             replyMarkup: keyboard,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     private Task SendHelpAsync(long chatId, CancellationToken cancellationToken) {
@@ -107,18 +107,18 @@ public sealed class TelegramBotWorker(
 
         if (callbackQuery.Data.StartsWith("water:", StringComparison.Ordinal)) {
             if (!BotInputParser.TryParseWaterAmount(callbackQuery.Data, out var amountMl)) {
-                await AnswerCallbackAsync(callbackQuery, "Invalid amount.", cancellationToken);
+                await AnswerCallbackAsync(callbackQuery, "Invalid amount.", cancellationToken).ConfigureAwait(false);
                 return;
             }
 
-            var accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken);
+            var accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken).ConfigureAwait(false);
             if (accessToken is null) {
-                await AnswerCallbackAsync(callbackQuery, "Please open the WebApp and log in once.", cancellationToken);
+                await AnswerCallbackAsync(callbackQuery, "Please open the WebApp and log in once.", cancellationToken).ConfigureAwait(false);
                 return;
             }
 
-            var success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken);
-            await AnswerCallbackAsync(callbackQuery, success ? $"Added {amountMl} ml." : "Failed to add water.", cancellationToken);
+            var success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken).ConfigureAwait(false);
+            await AnswerCallbackAsync(callbackQuery, success ? $"Added {amountMl} ml." : "Failed to add water.", cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -166,7 +166,7 @@ public sealed class TelegramBotWorker(
             return false;
         }
 
-        var token = await TryGetAccessTokenAsync(telegramUserId.Value, cancellationToken);
+        var token = await TryGetAccessTokenAsync(telegramUserId.Value, cancellationToken).ConfigureAwait(false);
         return token is not null;
     }
 
@@ -184,13 +184,13 @@ public sealed class TelegramBotWorker(
         var response = await client.PostAsJsonAsync(
             "/api/auth/telegram/bot/auth",
             new TelegramBotAuthRequest(telegramUserId),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode) {
             return null;
         }
 
-        var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>(cancellationToken: cancellationToken);
+        var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
         return authResponse?.AccessToken;
     }
 
@@ -205,7 +205,7 @@ public sealed class TelegramBotWorker(
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
         var request = new CreateHydrationRequest(DateTime.UtcNow, amountMl);
-        var response = await client.PostAsJsonAsync("/api/hydrations", request, cancellationToken);
+        var response = await client.PostAsJsonAsync("/api/hydrations", request, cancellationToken).ConfigureAwait(false);
         return response.IsSuccessStatusCode;
     }
 
