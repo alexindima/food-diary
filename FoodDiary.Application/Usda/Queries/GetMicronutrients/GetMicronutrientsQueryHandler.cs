@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Usda.Mappings;
 using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Usda.Queries.GetMicronutrients;
@@ -16,27 +17,38 @@ public class GetMicronutrientsQueryHandler(
         CancellationToken cancellationToken) {
         var food = await repository.GetByFdcIdAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
         if (food is null) {
-            var brandedDetail = await brandedSearchService.GetFoodDetailAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
-            if (brandedDetail is null) {
-                return Result.Failure<UsdaFoodDetailModel>(Errors.Usda.FoodNotFound(query.FdcId));
-            }
-
-            var brandedDailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-            var brandedNutrientModels = ApplyDailyValues(brandedDetail.Nutrients, brandedDailyValues);
-            var brandedNutrientAmounts = brandedNutrientModels.ToDictionary(n => n.NutrientId, n => n.AmountPer100g);
-            var brandedDvAmounts = brandedDailyValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value);
-            var brandedHealthScores = HealthAreaScores.Calculate(brandedNutrientAmounts, brandedDvAmounts);
-
-            return Result.Success(brandedDetail with {
-                Nutrients = brandedNutrientModels,
-                HealthScores = brandedHealthScores.ToModel(),
-            });
+            return await BuildBrandedDetailAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
         }
 
         var nutrients = await repository.GetNutrientsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
         var portions = await repository.GetPortionsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
         var dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        return Result.Success(BuildLocalDetail(food, nutrients, portions, dailyValues));
+    }
 
+    private async Task<Result<UsdaFoodDetailModel>> BuildBrandedDetailAsync(int fdcId, CancellationToken cancellationToken) {
+        var brandedDetail = await brandedSearchService.GetFoodDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
+        if (brandedDetail is null) {
+            return Result.Failure<UsdaFoodDetailModel>(Errors.Usda.FoodNotFound(fdcId));
+        }
+
+        var dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        var nutrientModels = ApplyDailyValues(brandedDetail.Nutrients, dailyValues);
+        var nutrientAmounts = nutrientModels.ToDictionary(n => n.NutrientId, n => n.AmountPer100g);
+        var dvAmounts = dailyValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value);
+        var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
+
+        return Result.Success(brandedDetail with {
+            Nutrients = nutrientModels,
+            HealthScores = healthScores.ToModel(),
+        });
+    }
+
+    private static UsdaFoodDetailModel BuildLocalDetail(
+        UsdaFood food,
+        IReadOnlyList<UsdaFoodNutrient> nutrients,
+        IReadOnlyList<UsdaFoodPortion> portions,
+        IReadOnlyDictionary<int, Domain.Entities.Usda.DailyReferenceValue> dailyValues) {
         var nutrientModels = nutrients
             .Select(n => {
                 dailyValues.TryGetValue(n.NutrientId, out var drv);
@@ -67,15 +79,13 @@ public class GetMicronutrientsQueryHandler(
         var dvAmounts = dailyValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value);
         var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
 
-        var model = new UsdaFoodDetailModel(
+        return new UsdaFoodDetailModel(
             food.FdcId,
             food.Description,
             food.FoodCategory,
             nutrientModels,
             portionModels,
             healthScores.ToModel());
-
-        return Result.Success(model);
     }
 
     private static IReadOnlyList<MicronutrientModel> ApplyDailyValues(

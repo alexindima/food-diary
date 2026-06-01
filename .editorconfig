@@ -107,6 +107,24 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.Application/**/*Mappings.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[FoodDiary.Application/Admin/Commands/StartAdminImpersonation/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Application/Dietologist/Commands/InviteDietologist/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Application/ShoppingLists/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Application/Usda/Queries/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Application/Recipes/Commands/DuplicateRecipe/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [FoodDiary.MailInbox.Client/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 

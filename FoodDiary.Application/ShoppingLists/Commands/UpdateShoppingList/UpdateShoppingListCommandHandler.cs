@@ -19,28 +19,13 @@ public class UpdateShoppingListCommandHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         UpdateShoppingListCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
+        var validationResult = await ValidateCommandAsync(command, cancellationToken).ConfigureAwait(false);
+        if (validationResult.IsFailure) {
+            return Result.Failure<ShoppingListModel>(validationResult.Error);
         }
 
-        if (command.ShoppingListId == Guid.Empty) {
-            return Result.Failure<ShoppingListModel>(
-                Errors.Validation.Invalid(nameof(command.ShoppingListId), "Shopping list id must not be empty."));
-        }
-
-        var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<ShoppingListModel>(accessError);
-        }
-
-        if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
-            return Result.Failure<ShoppingListModel>(
-                Errors.Validation.Required(nameof(command.Items)));
-        }
-
+        var userId = validationResult.Value;
         var shoppingListId = new ShoppingListId(command.ShoppingListId);
-
         var list = await shoppingListRepository.GetByIdAsync(
             shoppingListId,
             userId,
@@ -56,31 +41,68 @@ public class UpdateShoppingListCommandHandler(
             list.UpdateName(command.Name);
         }
 
-        if (command.Items is not null) {
-            var itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
-                command.Items,
-                userId,
-                productLookupService,
-                cancellationToken).ConfigureAwait(false);
-
-            if (itemsResult.IsFailure) {
-                return Result.Failure<ShoppingListModel>(itemsResult.Error);
-            }
-
-            list.ClearItems();
-            foreach (var item in itemsResult.Value) {
-                list.AddItem(
-                    item.Name,
-                    item.ProductId,
-                    item.Amount,
-                    item.Unit,
-                    item.Category,
-                    item.IsChecked,
-                    item.SortOrder);
-            }
+        var itemsResult = await ApplyItemsAsync(command, userId, list, cancellationToken).ConfigureAwait(false);
+        if (itemsResult.IsFailure) {
+            return Result.Failure<ShoppingListModel>(itemsResult.Error);
         }
 
         await shoppingListRepository.UpdateAsync(list, cancellationToken).ConfigureAwait(false);
         return Result.Success(list.ToModel());
+    }
+
+    private static Result<UserId> ValidateUser(UpdateShoppingListCommand command) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
+            return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
+        }
+
+        if (command.ShoppingListId == Guid.Empty) {
+            return Result.Failure<UserId>(
+                Errors.Validation.Invalid(nameof(command.ShoppingListId), "Shopping list id must not be empty."));
+        }
+
+        if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
+            return Result.Failure<UserId>(Errors.Validation.Required(nameof(command.Items)));
+        }
+
+        return Result.Success(new UserId(command.UserId.Value));
+    }
+
+    private async Task<Result<UserId>> ValidateCommandAsync(UpdateShoppingListCommand command, CancellationToken cancellationToken) {
+        var userResult = ValidateUser(command);
+        if (userResult.IsFailure) {
+            return userResult;
+        }
+
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userResult.Value, cancellationToken).ConfigureAwait(false);
+        return accessError is null
+            ? userResult
+            : Result.Failure<UserId>(accessError);
+    }
+
+    private async Task<Result> ApplyItemsAsync(
+        UpdateShoppingListCommand command,
+        UserId userId,
+        Domain.Entities.Shopping.ShoppingList list,
+        CancellationToken cancellationToken) {
+        if (command.Items is null) {
+            return Result.Success();
+        }
+
+        var itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
+            command.Items,
+            userId,
+            productLookupService,
+            cancellationToken).ConfigureAwait(false);
+
+        if (itemsResult.IsFailure) {
+            return Result.Failure(itemsResult.Error);
+        }
+
+        list.ClearItems();
+        foreach (var item in itemsResult.Value) {
+            list.AddItem(item.Name, item.ProductId, item.Amount, item.Unit, item.Category, item.IsChecked, item.SortOrder);
+        }
+
+        return Result.Success();
     }
 }
