@@ -59,7 +59,7 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(250, userLoginEventCleanup.BatchSize);
         Assert.Equal(12, userLoginEventCleanup.PollIntervalHours);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
-        Assert.Contains(forwardedHeadersOptions.KnownProxies, ip => ip.ToString() == "10.0.0.10");
-        Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => network.BaseAddress.ToString() == "10.0.0.0" && network.PrefixLength == 24);
+        Assert.Contains(forwardedHeadersOptions.KnownProxies, ip => string.Equals(ip.ToString(), "10.0.0.10", StringComparison.Ordinal));
+        Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "10.0.0.0", StringComparison.Ordinal) && network.PrefixLength == 24);
     }
 }

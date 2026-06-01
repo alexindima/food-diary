@@ -20,7 +20,7 @@ public sealed class DietologistEmailSender(
         CancellationToken cancellationToken = default) {
         var link = BuildInvitationLink(message.InvitationId, message.Token);
         var locale = NormalizeLanguage(message.Language);
-        var isRu = locale == "ru";
+        var isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
         var clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
         var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
         var template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken);

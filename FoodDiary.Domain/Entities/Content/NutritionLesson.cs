@@ -62,10 +62,10 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         var newReadMinutes = Math.Max(1, estimatedReadMinutes);
         var newSortOrder = Math.Max(0, sortOrder);
 
-        if (Title == newTitle &&
-            Content == newContent &&
-            Summary == newSummary &&
-            Locale == newLocale &&
+        if (string.Equals(Title, newTitle, StringComparison.Ordinal) &&
+            string.Equals(Content, newContent, StringComparison.Ordinal) &&
+            string.Equals(Summary, newSummary, StringComparison.Ordinal) &&
+            string.Equals(Locale, newLocale, StringComparison.Ordinal) &&
             Category == category &&
             Difficulty == difficulty &&
             EstimatedReadMinutes == newReadMinutes &&

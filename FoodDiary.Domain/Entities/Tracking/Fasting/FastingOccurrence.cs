@@ -194,7 +194,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
 
     public void UpdateNotes(string? notes) {
         var normalizedNotes = NormalizeNotes(notes);
-        if (Notes == normalizedNotes) {
+        if (string.Equals(Notes, normalizedNotes, StringComparison.Ordinal)) {
             return;
         }
 

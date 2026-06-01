@@ -26,10 +26,9 @@ public class UpdateRecipeCommandValidatorTests {
         var result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e =>
-            e.PropertyName == "Steps"
-            && e.ErrorCode == "Validation.Invalid"
-            && e.ErrorMessage == "Step order values must be unique");
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps"
+, StringComparison.Ordinal) && string.Equals(e.ErrorCode, "Validation.Invalid"
+, StringComparison.Ordinal) && string.Equals(e.ErrorMessage, "Step order values must be unique", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -98,7 +97,7 @@ public class UpdateRecipeCommandValidatorTests {
         var result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.ErrorMessage == "Description cannot be provided when ClearDescription is true");
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Description cannot be provided when ClearDescription is true", StringComparison.Ordinal));
     }
 
     private static RecipeStepInput CreateStep(int order, string description) {

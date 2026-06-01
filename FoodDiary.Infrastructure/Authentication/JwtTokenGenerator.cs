@@ -78,8 +78,8 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             }, out var validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userIdValue = Guid.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            var email = jwtToken.Claims.First(x => x.Type == ClaimTypes.Email).Value;
+            var userIdValue = Guid.Parse(jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.NameIdentifier, StringComparison.Ordinal)).Value);
+            var email = jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.Email, StringComparison.Ordinal)).Value;
 
             return (new UserId(userIdValue), email);
         } catch (Exception ex) when (ex is SecurityTokenException or ArgumentException or FormatException or InvalidOperationException) {

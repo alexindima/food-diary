@@ -125,7 +125,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         var method = typeof(Mediator)
             .GetMethods(BindingFlags.Instance | BindingFlags.Public)
             .Single(static method =>
-                method.Name == nameof(Send) &&
+                string.Equals(method.Name, nameof(Send), StringComparison.Ordinal) &&
                 method.IsGenericMethodDefinition &&
                 method.GetParameters() is [{ ParameterType.IsGenericType: true } firstParameter, _] &&
                 firstParameter.ParameterType.GetGenericTypeDefinition() == typeof(IRequest<>))

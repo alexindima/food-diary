@@ -14,7 +14,7 @@ public sealed class RequestObservabilityMiddlewareTests {
         Activity? capturedActivity = null;
 
         using var listener = new ActivityListener {
-            ShouldListenTo = source => source.Name == ApiTelemetry.TelemetryName,
+            ShouldListenTo = source => string.Equals(source.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal),
             Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
             SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
             ActivityStopped = activity => {
@@ -50,8 +50,8 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         using var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name == ApiTelemetry.TelemetryName &&
-                instrument.Name == "fooddiary.api.request.duration") {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+string.Equals(instrument.Name, "fooddiary.api.request.duration", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
@@ -81,7 +81,7 @@ public sealed class RequestObservabilityMiddlewareTests {
         Activity? capturedActivity = null;
 
         using var listener = new ActivityListener {
-            ShouldListenTo = source => source.Name == ApiTelemetry.TelemetryName,
+            ShouldListenTo = source => string.Equals(source.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal),
             Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
             SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
             ActivityStopped = activity => {
@@ -122,8 +122,8 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         using var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name == ApiTelemetry.TelemetryName &&
-                instrument.Name == "fooddiary.api.business_flow.events") {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+string.Equals(instrument.Name, "fooddiary.api.business_flow.events", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
@@ -160,8 +160,8 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         using var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name == ApiTelemetry.TelemetryName &&
-                instrument.Name == "fooddiary.api.business_flow.events") {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+string.Equals(instrument.Name, "fooddiary.api.business_flow.events", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
@@ -198,8 +198,8 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         using var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name == ApiTelemetry.TelemetryName &&
-                instrument.Name == "fooddiary.api.output_cache.events") {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
@@ -243,8 +243,8 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         using var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name == ApiTelemetry.TelemetryName &&
-                instrument.Name == "fooddiary.api.output_cache.events") {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };

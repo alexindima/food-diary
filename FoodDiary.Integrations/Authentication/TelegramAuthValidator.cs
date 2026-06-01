@@ -78,7 +78,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
 
     private string BuildDataCheckString(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> parsed) {
         var pairs = parsed
-            .Where(entry => entry.Key != "hash")
+            .Where(entry => !string.Equals(entry.Key, "hash", StringComparison.Ordinal))
             .OrderBy(entry => entry.Key, StringComparer.Ordinal)
             .Select(entry => $"{entry.Key}={entry.Value}");
 

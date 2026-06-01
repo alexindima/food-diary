@@ -25,7 +25,7 @@ public sealed partial class User {
         EnsureLanguage(update.Language, nameof(update.Language));
         var normalizedLanguage = NormalizeOptionalLanguage(update.Language, nameof(update.Language));
         var preferenceState = GetPreferenceState();
-        if (preferenceState.Language == normalizedLanguage) {
+        if (string.Equals(preferenceState.Language, normalizedLanguage, StringComparison.Ordinal)) {
             return;
         }
 

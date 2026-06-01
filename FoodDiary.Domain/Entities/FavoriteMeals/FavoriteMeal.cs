@@ -40,7 +40,7 @@ public sealed class FavoriteMeal : Entity<FavoriteMealId> {
 
     public void UpdateName(string? name) {
         var normalized = NormalizeOptionalText(name);
-        if (Name != normalized) {
+        if (!string.Equals(Name, normalized, StringComparison.Ordinal)) {
             Name = normalized;
             SetModified();
         }

@@ -71,8 +71,8 @@ internal sealed partial class DiaryPdfGenerator {
 
     private static string FormatMealItems(Meal meal, DiaryReportData report) {
         var items = FormatMealItemsList(meal, report);
-        return items == report.Texts.ItemsNotSpecified
-            ? $"{report.Texts.ItemsPrefix}: {report.Texts.ItemsNotSpecified}"
+        return string.Equals(items, report.Texts.ItemsNotSpecified
+, StringComparison.Ordinal) ? $"{report.Texts.ItemsPrefix}: {report.Texts.ItemsNotSpecified}"
             : $"{report.Texts.ItemsPrefix}: {items}";
     }
 
@@ -160,7 +160,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static string ResolveAiItemName(MealAiItem item, DiaryReportData report) {
-        if (report.Culture.TwoLetterISOLanguageName != "en" && !string.IsNullOrWhiteSpace(item.NameLocal)) {
+        if (!string.Equals(report.Culture.TwoLetterISOLanguageName, "en", StringComparison.Ordinal) && !string.IsNullOrWhiteSpace(item.NameLocal)) {
             return item.NameLocal.Trim();
         }
 

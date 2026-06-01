@@ -38,7 +38,7 @@ public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
         var normalizedText = NormalizeRequired(promptText, PromptTextMaxLength, nameof(promptText));
         var changed = false;
 
-        if (PromptText != normalizedText) {
+        if (!string.Equals(PromptText, normalizedText, StringComparison.Ordinal)) {
             PromptText = normalizedText;
             Version++;
             changed = true;

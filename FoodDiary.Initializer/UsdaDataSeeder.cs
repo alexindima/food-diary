@@ -145,7 +145,7 @@ internal static class UsdaDataSeeder {
             if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var fdcId)) continue;
 
             // Only import SR Legacy foods
-            if (fields[1] != "sr_legacy_food") continue;
+            if (!string.Equals(fields[1], "sr_legacy_food", StringComparison.Ordinal)) continue;
 
             int? foodCategoryId = int.TryParse(fields[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out var catId2) ? catId2 : null;
             var foodCategory = foodCategoryId.HasValue && categories.TryGetValue(foodCategoryId.Value, out var catName)

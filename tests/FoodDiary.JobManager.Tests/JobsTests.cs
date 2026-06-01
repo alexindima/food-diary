@@ -407,7 +407,7 @@ public sealed class JobsTests {
         Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name != JobManagerMeterName) {
+            if (!string.Equals(instrument.Meter.Name, JobManagerMeterName, StringComparison.Ordinal)) {
                 return;
             }
 
@@ -420,9 +420,9 @@ public sealed class JobsTests {
                 return;
             }
 
-            if (instrument.Name == "fooddiary.job.execution.events") {
+            if (string.Equals(instrument.Name, "fooddiary.job.execution.events", StringComparison.Ordinal)) {
                 onExecution?.Invoke(value, tags);
-            } else if (instrument.Name == "fooddiary.job.deleted_items") {
+            } else if (string.Equals(instrument.Name, "fooddiary.job.deleted_items", StringComparison.Ordinal)) {
                 onDeletedItems?.Invoke(value, tags);
             }
         });
@@ -431,7 +431,7 @@ public sealed class JobsTests {
                 return;
             }
 
-            if (instrument.Name == "fooddiary.job.execution.duration") {
+            if (string.Equals(instrument.Name, "fooddiary.job.execution.duration", StringComparison.Ordinal)) {
                 onDuration?.Invoke(value, tags);
             }
         });

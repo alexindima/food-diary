@@ -58,9 +58,9 @@ public sealed class ForwardedHeadersMiddlewareTests {
         setup.Configure(options);
 
         Assert.Equal(2, options.ForwardLimit);
-        Assert.Contains(options.KnownProxies, ip => ip.ToString() == "10.0.0.10");
-        Assert.Contains(options.KnownIPNetworks, network => network.BaseAddress.ToString() == "10.0.0.0" && network.PrefixLength == 24);
-        Assert.Contains(options.KnownIPNetworks, network => network.BaseAddress.ToString() == "2001:db8::" && network.PrefixLength == 32);
+        Assert.Contains(options.KnownProxies, ip => string.Equals(ip.ToString(), "10.0.0.10", StringComparison.Ordinal));
+        Assert.Contains(options.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "10.0.0.0", StringComparison.Ordinal) && network.PrefixLength == 24);
+        Assert.Contains(options.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "2001:db8::", StringComparison.Ordinal) && network.PrefixLength == 32);
     }
 
     private static ForwardedHeadersMiddleware CreateMiddleware(Microsoft.AspNetCore.Builder.ForwardedHeadersOptions options) {

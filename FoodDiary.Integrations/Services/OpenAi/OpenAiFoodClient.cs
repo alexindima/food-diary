@@ -208,7 +208,7 @@ public sealed class OpenAiFoodClient(
         string? description,
         string promptTemplate) {
         var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
-        var includeLocal = language != "en";
+        var includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
         var languageHint = includeLocal
             ? $"Return nameEn in English and nameLocal in language '{language}'."
             : "Return nameEn in English and set nameLocal to null.";
@@ -272,7 +272,7 @@ public sealed class OpenAiFoodClient(
 
     private static object BuildTextParseRequest(string model, string text, string? userLanguage, string promptTemplate) {
         var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
-        var includeLocal = language != "en";
+        var includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
         var languageHint = includeLocal
             ? $"Return nameEn in English and nameLocal in language '{language}'."
             : "Return nameEn in English and set nameLocal to null.";
@@ -449,7 +449,7 @@ public sealed class OpenAiFoodClient(
 
             foreach (var part in content.EnumerateArray()) {
                 if (part.TryGetProperty("type", out var type) &&
-                    type.GetString() == "output_text" &&
+string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
                     part.TryGetProperty("text", out var text)) {
                     return text.GetString();
                 }

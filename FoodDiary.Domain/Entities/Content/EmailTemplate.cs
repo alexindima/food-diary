@@ -53,9 +53,9 @@ public sealed class EmailTemplate : Entity<Guid> {
         var normalizedHtmlBody = NormalizeRequired(htmlBody, nameof(htmlBody));
         var normalizedTextBody = NormalizeRequired(textBody, nameof(textBody));
 
-        if (Subject == normalizedSubject &&
-            HtmlBody == normalizedHtmlBody &&
-            TextBody == normalizedTextBody &&
+        if (string.Equals(Subject, normalizedSubject, StringComparison.Ordinal) &&
+            string.Equals(HtmlBody, normalizedHtmlBody, StringComparison.Ordinal) &&
+            string.Equals(TextBody, normalizedTextBody, StringComparison.Ordinal) &&
             IsActive == isActive) {
             return;
         }

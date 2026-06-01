@@ -23,7 +23,7 @@ public sealed class ControllerSecurityContractTests {
         var rateLimit = AssertSingleAttribute<EnableRateLimitingAttribute>(typeof(AiFoodController));
 
         Assert.NotEmpty(authorizeAttributes);
-        Assert.Contains(authorizeAttributes, static attribute => attribute.Roles == PresentationRoleNames.Premium);
+        Assert.Contains(authorizeAttributes, static attribute => string.Equals(attribute.Roles, PresentationRoleNames.Premium, StringComparison.Ordinal));
         Assert.Equal(PresentationPolicyNames.AiRateLimitPolicyName, rateLimit.PolicyName);
     }
 
@@ -83,7 +83,7 @@ public sealed class ControllerSecurityContractTests {
         var authorizeAttributes = typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
 
         Assert.NotEmpty(authorizeAttributes);
-        Assert.Contains(authorizeAttributes, static attribute => attribute.Roles == PresentationRoleNames.Admin);
+        Assert.Contains(authorizeAttributes, static attribute => string.Equals(attribute.Roles, PresentationRoleNames.Admin, StringComparison.Ordinal));
     }
 
     [Fact]

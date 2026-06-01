@@ -75,11 +75,11 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
 
         var summary = await repository.GetDeviceSummaryAsync(fromUtc, toUtc);
 
-        var desktop = Assert.Single(summary, item => item.Key == "device:Desktop");
+        var desktop = Assert.Single(summary, item => string.Equals(item.Key, "device:Desktop", StringComparison.Ordinal));
         Assert.Equal(2, desktop.Count);
         Assert.Equal(latestDesktopAtUtc, desktop.LastSeenAtUtc);
-        Assert.Contains(summary, item => item.Key == "browser:Chrome" && item.Count == 2);
-        Assert.Contains(summary, item => item.Key == "os:iOS" && item.Count == 1);
+        Assert.Contains(summary, item => string.Equals(item.Key, "browser:Chrome", StringComparison.Ordinal) && item.Count == 2);
+        Assert.Contains(summary, item => string.Equals(item.Key, "os:iOS", StringComparison.Ordinal) && item.Count == 1);
         Assert.DoesNotContain(summary, item => item.LastSeenAtUtc < fromUtc || item.LastSeenAtUtc > toUtc);
     }
 

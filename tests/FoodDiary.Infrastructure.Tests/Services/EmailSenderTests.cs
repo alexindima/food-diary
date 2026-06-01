@@ -115,16 +115,16 @@ public sealed class EmailSenderTests {
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>> onDispatch) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name != EmailMeterName) {
+            if (!string.Equals(instrument.Meter.Name, EmailMeterName, StringComparison.Ordinal)) {
                 return;
             }
 
-            if (instrument.Name == "fooddiary.email.dispatch.events") {
+            if (string.Equals(instrument.Name, "fooddiary.email.dispatch.events", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
         listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
-            if (instrument.Name == "fooddiary.email.dispatch.events") {
+            if (string.Equals(instrument.Name, "fooddiary.email.dispatch.events", StringComparison.Ordinal)) {
                 onDispatch(value, tags);
             }
         });

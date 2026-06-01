@@ -668,8 +668,8 @@ public class FastingFeatureTests {
         var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Contains(result.Value.Alerts, x => x.Id == "mid");
-        Assert.Contains(result.Value.Insights, x => x.Id == "symptom-headache");
+        Assert.Contains(result.Value.Alerts, x => string.Equals(x.Id, "mid", StringComparison.Ordinal));
+        Assert.Contains(result.Value.Insights, x => string.Equals(x.Id, "symptom-headache", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -829,8 +829,8 @@ public class FastingFeatureTests {
         Assert.NotNull(result.Value.CurrentSession);
         Assert.Single(result.Value.CurrentSession!.CheckIns);
         Assert.Equal(2, result.Value.Stats.TotalCompleted);
-        Assert.Contains(result.Value.Insights.Alerts, x => x.Id == "current-warning");
-        Assert.Contains(result.Value.Insights.Insights, x => x.Id == "symptom-headache");
+        Assert.Contains(result.Value.Insights.Alerts, x => string.Equals(x.Id, "current-warning", StringComparison.Ordinal));
+        Assert.Contains(result.Value.Insights.Insights, x => string.Equals(x.Id, "symptom-headache", StringComparison.Ordinal));
         Assert.Equal(1, result.Value.History.Page);
         Assert.True(result.Value.History.Data.Count >= 3);
     }
@@ -979,8 +979,8 @@ public class FastingFeatureTests {
         Assert.Equal(0, secondCreated);
         Assert.Equal(2, notificationRepo.Stored.Count);
         Assert.Equal(2, webPushSender.Sent.Count);
-        Assert.Contains(notificationRepo.Stored, x => x.ReferenceId == $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}");
-        Assert.Contains(notificationRepo.Stored, x => x.ReferenceId == $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInFollowUpReminderHours}");
+        Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}", StringComparison.Ordinal));
+        Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInFollowUpReminderHours}", StringComparison.Ordinal));
     }
 
     private static StubUserRepository CreateUserRepository(UserId userId) =>
@@ -1146,13 +1146,13 @@ public class FastingFeatureTests {
         public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Stored.Any(x => x.UserId == userId && x.Type == type && x.ReferenceId == referenceId));
+            Task.FromResult(Stored.Any(x => x.UserId == userId && string.Equals(x.Type, type, StringComparison.Ordinal) && string.Equals(x.ReferenceId, referenceId, StringComparison.Ordinal)));
 
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead));
 
         public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead && x.Type == type));
+            Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead && string.Equals(x.Type, type, StringComparison.Ordinal)));
 
         public Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) => Task.CompletedTask;
 

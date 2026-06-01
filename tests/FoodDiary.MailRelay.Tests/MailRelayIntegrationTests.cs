@@ -23,7 +23,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         long? deliveryCount = null;
         string? deliveryOutcome = null;
         using var listener = CreateMailRelayListener((instrument, value, tags) => {
-            if (instrument.Name != "fooddiary.mailrelay.delivery.events") {
+            if (!string.Equals(instrument.Name, "fooddiary.mailrelay.delivery.events", StringComparison.Ordinal)) {
                 return;
             }
 
@@ -45,7 +45,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
 
         await WaitForAsync(async () => {
             var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
-            return message?.Status == "sent";
+            return string.Equals(message?.Status, "sent", StringComparison.Ordinal);
         });
 
         Assert.Single(transport.SentMessages);
@@ -75,7 +75,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
 
         await WaitForAsync(async () => {
             var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
-            return message?.Status == "failed";
+            return string.Equals(message?.Status, "failed", StringComparison.Ordinal);
         }, timeout: TimeSpan.FromSeconds(20));
 
         var failedMessage = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
@@ -111,7 +111,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
 
         await WaitForAsync(async () => {
             var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
-            return message?.Status == "suppressed";
+            return string.Equals(message?.Status, "suppressed", StringComparison.Ordinal);
         });
 
         Assert.Empty(transport.SentMessages);
@@ -199,7 +199,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         Action<Instrument, long, ReadOnlySpan<KeyValuePair<string, object?>>> onMeasurement) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name == MailRelayTelemetry.MeterName) {
+            if (string.Equals(instrument.Meter.Name, MailRelayTelemetry.MeterName, StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };

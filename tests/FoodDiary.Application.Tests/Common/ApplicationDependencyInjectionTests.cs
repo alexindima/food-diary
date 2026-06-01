@@ -25,10 +25,10 @@ public sealed class ApplicationDependencyInjectionTests {
         Assert.Contains(services, ServiceDescriptorMatches<IAuthenticationTokenService, AuthenticationTokenService>(ServiceLifetime.Scoped));
         Assert.Contains(services, ServiceDescriptorMatches<IDateTimeProvider, SystemDateTimeProvider>(ServiceLifetime.Singleton));
         Assert.Equal(2, services.Count(d => d.ServiceType == typeof(IProductSearchSuggestionProvider)));
-        Assert.Contains(services, d => d.ServiceType.IsGenericType && d.ServiceType.GetGenericTypeDefinition().FullName == "FluentValidation.IValidator`1");
+        Assert.Contains(services, d => d.ServiceType.IsGenericType && string.Equals(d.ServiceType.GetGenericTypeDefinition().FullName, "FluentValidation.IValidator`1", StringComparison.Ordinal));
         Assert.Contains(services, d => d.ImplementationType == typeof(LoggingBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(ValidationBehavior<,>));
-        Assert.Contains(services, d => d.ImplementationType?.Name == "UnitOfWorkBehavior`2");
+        Assert.Contains(services, d => string.Equals(d.ImplementationType?.Name, "UnitOfWorkBehavior`2", StringComparison.Ordinal));
     }
 
     private static Predicate<ServiceDescriptor> ServiceDescriptorMatches<TService, TImplementation>(ServiceLifetime lifetime) =>

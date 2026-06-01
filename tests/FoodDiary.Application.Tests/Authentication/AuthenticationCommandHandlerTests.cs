@@ -219,7 +219,7 @@ public sealed class AuthenticationCommandHandlerTests {
     private sealed class StubPasswordHasher : IPasswordHasher {
         public string Hash(string password) => password;
 
-        public bool Verify(string password, string hashedPassword) => password == hashedPassword;
+        public bool Verify(string password, string hashedPassword) => string.Equals(password, hashedPassword, StringComparison.Ordinal);
     }
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {
@@ -253,13 +253,13 @@ public sealed class AuthenticationCommandHandlerTests {
         public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Notifications.Any(x => x.UserId == userId && x.Type == type && x.ReferenceId == referenceId));
+            Task.FromResult(Notifications.Any(x => x.UserId == userId && string.Equals(x.Type, type, StringComparison.Ordinal) && string.Equals(x.ReferenceId, referenceId, StringComparison.Ordinal)));
 
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead));
 
         public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead && x.Type == type));
+            Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead && string.Equals(x.Type, type, StringComparison.Ordinal)));
 
         public Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) => Task.CompletedTask;
 

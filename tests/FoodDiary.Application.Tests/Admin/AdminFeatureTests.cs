@@ -154,7 +154,7 @@ public class AdminFeatureTests {
         var result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.ErrorMessage == "Unknown role.");
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Unknown role.", StringComparison.Ordinal));
     }
 
     [Fact]

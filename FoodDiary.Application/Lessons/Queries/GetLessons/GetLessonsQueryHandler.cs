@@ -26,7 +26,7 @@ public class GetLessonsQueryHandler(INutritionLessonRepository repository)
         var locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale.Trim().ToLowerInvariant();
         var lessons = await repository.GetByLocaleAsync(locale, categoryFilter, cancellationToken);
 
-        if (lessons.Count == 0 && locale != "en") {
+        if (lessons.Count == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
             lessons = await repository.GetByLocaleAsync("en", categoryFilter, cancellationToken);
         }
 

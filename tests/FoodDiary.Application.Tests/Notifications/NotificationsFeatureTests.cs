@@ -476,13 +476,13 @@ public class NotificationsFeatureTests {
         public Task UpdateAsync(Notification notification, CancellationToken ct = default) => Task.CompletedTask;
 
         public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken ct = default) =>
-            Task.FromResult(_notifications.Any(n => n.UserId == userId && n.Type == type && n.ReferenceId == referenceId));
+            Task.FromResult(_notifications.Any(n => n.UserId == userId && string.Equals(n.Type, type, StringComparison.Ordinal) && string.Equals(n.ReferenceId, referenceId, StringComparison.Ordinal)));
 
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead));
 
         public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken ct = default) =>
-            Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead && n.Type == type));
+            Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead && string.Equals(n.Type, type, StringComparison.Ordinal)));
 
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) {
             MarkAllReadCalled = true;
@@ -547,7 +547,7 @@ public class NotificationsFeatureTests {
             string endpoint,
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<WebPushSubscription?>(_subscriptions.FirstOrDefault(subscription => subscription.Endpoint == endpoint));
+            Task.FromResult<WebPushSubscription?>(_subscriptions.FirstOrDefault(subscription => string.Equals(subscription.Endpoint, endpoint, StringComparison.Ordinal)));
 
         public Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(
             UserId userId,

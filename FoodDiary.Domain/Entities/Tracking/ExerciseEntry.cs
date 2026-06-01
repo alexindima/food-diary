@@ -87,14 +87,14 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
             if (Name is not null) { Name = null; changed = true; }
         } else if (name is not null) {
             var normalized = NormalizeOptionalText(name, NameMaxLength, nameof(name));
-            if (Name != normalized) { Name = normalized; changed = true; }
+            if (!string.Equals(Name, normalized, StringComparison.Ordinal)) { Name = normalized; changed = true; }
         }
 
         if (clearNotes) {
             if (Notes is not null) { Notes = null; changed = true; }
         } else if (notes is not null) {
             var normalized = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes));
-            if (Notes != normalized) { Notes = normalized; changed = true; }
+            if (!string.Equals(Notes, normalized, StringComparison.Ordinal)) { Notes = normalized; changed = true; }
         }
 
         if (date.HasValue) {

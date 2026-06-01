@@ -222,7 +222,7 @@ public class AdminLessonFeatureTests {
             new CreateAdminLessonCommand("", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Title");
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Title", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -233,7 +233,7 @@ public class AdminLessonFeatureTests {
             new CreateAdminLessonCommand("Title", "", null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Content");
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Content", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -244,7 +244,7 @@ public class AdminLessonFeatureTests {
             new CreateAdminLessonCommand("Title", "Content", null, "en", "NutritionBasics", "Beginner", 0, 0));
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "EstimatedReadMinutes");
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "EstimatedReadMinutes", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -265,7 +265,7 @@ public class AdminLessonFeatureTests {
             new UpdateAdminLessonCommand(Guid.Empty, "Title", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Id");
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Id", StringComparison.Ordinal));
     }
 
     [Fact]

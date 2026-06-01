@@ -57,7 +57,7 @@ public class AuthenticationValidatorsTests {
         var result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.ErrorCode == "Validation.Invalid");
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class AuthenticationValidatorsTests {
         var result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.ErrorCode == "Validation.Invalid");
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
     }
 
     [Fact]

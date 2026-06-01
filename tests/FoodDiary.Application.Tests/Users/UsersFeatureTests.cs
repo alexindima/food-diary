@@ -275,7 +275,7 @@ public class UsersFeatureTests {
 
     private sealed class PassthroughPasswordHasher : IPasswordHasher {
         public string Hash(string password) => password;
-        public bool Verify(string password, string hashedPassword) => password == hashedPassword;
+        public bool Verify(string password, string hashedPassword) => string.Equals(password, hashedPassword, StringComparison.Ordinal);
     }
 
     private sealed class NullAuditLogger : IAuditLogger {
@@ -314,7 +314,7 @@ public class UsersFeatureTests {
 
     private sealed class FixedWebPushSubscriptionRepository(IReadOnlyList<WebPushSubscription> subscriptions) : IWebPushSubscriptionRepository {
         public Task<WebPushSubscription?> GetByEndpointAsync(string endpoint, bool asTracking = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult(subscriptions.FirstOrDefault(item => item.Endpoint == endpoint));
+            Task.FromResult(subscriptions.FirstOrDefault(item => string.Equals(item.Endpoint, endpoint, StringComparison.Ordinal)));
 
         public Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<WebPushSubscription>>(subscriptions.Where(item => item.UserId == userId).ToList());

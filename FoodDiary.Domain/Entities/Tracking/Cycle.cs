@@ -73,7 +73,7 @@ public sealed class Cycle : AggregateRoot<CycleId> {
                 changed = true;
             }
         } else if (notes is not null) {
-            if (Notes != normalizedNotes) {
+            if (!string.Equals(Notes, normalizedNotes, StringComparison.Ordinal)) {
                 Notes = normalizedNotes;
                 changed = true;
             }
@@ -98,7 +98,7 @@ public sealed class Cycle : AggregateRoot<CycleId> {
             var hasChanges =
                 existing.IsPeriod != isPeriod ||
                 !existing.Symptoms.Equals(symptoms) ||
-                existing.Notes != (clearNotes ? null : normalizedNotes);
+                !string.Equals(existing.Notes, clearNotes ? null : normalizedNotes, StringComparison.Ordinal);
 
             if (!hasChanges) {
                 return existing;

@@ -32,7 +32,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         Assert.NotNull(payload.CurrentSession);
         Assert.Equal(current.Id.Value, payload.CurrentSession!.Id);
         Assert.Equal(1, payload.Stats.TotalCompleted);
-        Assert.Contains(payload.Insights.Alerts, x => x.Id == "mid");
+        Assert.Contains(payload.Insights.Alerts, x => string.Equals(x.Id, "mid", StringComparison.Ordinal));
         Assert.NotEmpty(payload.History.Data);
     }
 

@@ -31,16 +31,16 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>> onFailure) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name != InfrastructureMeterName) {
+            if (!string.Equals(instrument.Meter.Name, InfrastructureMeterName, StringComparison.Ordinal)) {
                 return;
             }
 
-            if (instrument.Name == "fooddiary.db.command.failures") {
+            if (string.Equals(instrument.Name, "fooddiary.db.command.failures", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
         listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
-            if (instrument.Name == "fooddiary.db.command.failures") {
+            if (string.Equals(instrument.Name, "fooddiary.db.command.failures", StringComparison.Ordinal)) {
                 onFailure(value, tags);
             }
         });

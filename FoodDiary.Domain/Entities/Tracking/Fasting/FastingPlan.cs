@@ -152,7 +152,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
 
     public void Rename(string? title) {
         var normalizedTitle = NormalizeTitle(title);
-        if (Title == normalizedTitle) {
+        if (string.Equals(Title, normalizedTitle, StringComparison.Ordinal)) {
             return;
         }
 

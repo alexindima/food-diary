@@ -67,7 +67,7 @@ public sealed class CycleDay : Entity<CycleDayId> {
                 changed = true;
             }
         } else if (notes is not null) {
-            if (Notes != normalizedNotes) {
+            if (!string.Equals(Notes, normalizedNotes, StringComparison.Ordinal)) {
                 Notes = normalizedNotes;
                 changed = true;
             }

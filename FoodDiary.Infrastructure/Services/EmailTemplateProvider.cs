@@ -28,7 +28,7 @@ public sealed class EmailTemplateProvider(
             .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (template is null && normalizedLocale != "en") {
+        if (template is null && !string.Equals(normalizedLocale, "en", StringComparison.Ordinal)) {
             template = await db.EmailTemplates
                 .AsNoTracking()
                 .Where(t => t.Key == normalizedKey && t.Locale == "en" && t.IsActive)

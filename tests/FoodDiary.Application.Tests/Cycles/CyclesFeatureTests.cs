@@ -55,7 +55,7 @@ public class CyclesFeatureTests {
         var result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.ErrorMessage == "Notes cannot be provided when ClearNotes is true.");
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Notes cannot be provided when ClearNotes is true.", StringComparison.Ordinal));
     }
 
     [Fact]

@@ -87,13 +87,13 @@ public sealed class NotificationTestSchedulerTests {
         public Task UpdateAsync(Notification notification, CancellationToken ct = default) => Task.CompletedTask;
 
         public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken ct = default) =>
-            Task.FromResult(Notifications.Any(x => x.UserId == userId && x.Type == type && x.ReferenceId == referenceId));
+            Task.FromResult(Notifications.Any(x => x.UserId == userId && string.Equals(x.Type, type, StringComparison.Ordinal) && string.Equals(x.ReferenceId, referenceId, StringComparison.Ordinal)));
 
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead));
 
         public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken ct = default) =>
-            Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead && x.Type == type));
+            Task.FromResult(Notifications.Count(x => x.UserId == userId && !x.IsRead && string.Equals(x.Type, type, StringComparison.Ordinal)));
 
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) => Task.CompletedTask;
 

@@ -38,9 +38,9 @@ public sealed class EmailSender(
             toEmail: message.ToEmail,
             buildLink: () => BuildLink(_options.VerificationPath, message.UserId, message.Token, message.ClientOrigin),
             createFallbackContent: link => (
-                Subject: locale == "ru" ? EmailVerificationSubjectRu : "Confirm your email",
-                Html: locale == "ru"
-                    ? BuildTemplate(
+                Subject: string.Equals(locale, "ru", StringComparison.Ordinal) ? EmailVerificationSubjectRu : "Confirm your email",
+                Html: string.Equals(locale, "ru"
+, StringComparison.Ordinal) ? BuildTemplate(
                         title: EmailVerificationSubjectRu,
                         intro: EmailVerificationIntroRu,
                         ctaLabel: EmailVerificationCtaRu,
@@ -52,8 +52,8 @@ public sealed class EmailSender(
                         ctaLabel: "Confirm email",
                         ctaLink: link,
                         footer: "If you did not request this, you can ignore this email."),
-                Text: locale == "ru"
-                    ? $$"""
+                Text: string.Equals(locale, "ru"
+, StringComparison.Ordinal) ? $$"""
                       {{EmailVerificationIntroRu}}
                       {{EmailVerificationSubjectRu}}: {{link}}
                       {{IgnoreEmailFooterRu}}
@@ -74,9 +74,9 @@ public sealed class EmailSender(
             toEmail: message.ToEmail,
             buildLink: () => BuildLink(_options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin),
             createFallbackContent: link => (
-                Subject: locale == "ru" ? PasswordResetSubjectRu : "Reset your password",
-                Html: locale == "ru"
-                    ? BuildTemplate(
+                Subject: string.Equals(locale, "ru", StringComparison.Ordinal) ? PasswordResetSubjectRu : "Reset your password",
+                Html: string.Equals(locale, "ru"
+, StringComparison.Ordinal) ? BuildTemplate(
                         title: PasswordResetSubjectRu,
                         intro: PasswordResetIntroRu,
                         ctaLabel: PasswordResetCtaRu,
@@ -88,8 +88,8 @@ public sealed class EmailSender(
                         ctaLabel: "Reset password",
                         ctaLink: link,
                         footer: "If you did not request this, you can ignore this email."),
-                Text: locale == "ru"
-                    ? $$"""
+                Text: string.Equals(locale, "ru"
+, StringComparison.Ordinal) ? $$"""
                       {{PasswordResetIntroRu}}
                       {{PasswordResetCtaRu}}: {{link}}
                       {{IgnoreEmailFooterRu}}
@@ -104,14 +104,14 @@ public sealed class EmailSender(
 
     public async Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {
         var locale = NormalizeLanguage(message.Language);
-        var subject = locale == "ru"
-            ? "\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e FoodDiary"
+        var subject = string.Equals(locale, "ru"
+, StringComparison.Ordinal) ? "\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e FoodDiary"
             : "FoodDiary test email";
-        var intro = locale == "ru"
-            ? "\u042d\u0442\u043e \u0442\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0432\u0430\u0448\u0435\u0433\u043e \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e FoodDiary \u0447\u0435\u0440\u0435\u0437 MailRelay."
+        var intro = string.Equals(locale, "ru"
+, StringComparison.Ordinal) ? "\u042d\u0442\u043e \u0442\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0432\u0430\u0448\u0435\u0433\u043e \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e FoodDiary \u0447\u0435\u0440\u0435\u0437 MailRelay."
             : "This test email was sent from your local FoodDiary through MailRelay.";
-        var footer = locale == "ru"
-            ? "\u0415\u0441\u043b\u0438 \u043f\u0438\u0441\u044c\u043c\u043e \u0434\u043e\u0448\u043b\u043e, \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0443\u0442\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442."
+        var footer = string.Equals(locale, "ru"
+, StringComparison.Ordinal) ? "\u0415\u0441\u043b\u0438 \u043f\u0438\u0441\u044c\u043c\u043e \u0434\u043e\u0448\u043b\u043e, \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0443\u0442\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442."
             : "If this message arrived, the main email dispatch path is working.";
 
         try {
@@ -146,7 +146,7 @@ public sealed class EmailSender(
         }
 
         foreach (var allowedBaseUrl in GetAllowedFrontendBaseUrls()) {
-            if (NormalizeOrigin(allowedBaseUrl) == requestedOrigin) {
+            if (string.Equals(NormalizeOrigin(allowedBaseUrl), requestedOrigin, StringComparison.Ordinal)) {
                 return allowedBaseUrl.TrimEnd('/');
             }
         }
@@ -169,7 +169,7 @@ public sealed class EmailSender(
     private static string? NormalizeOrigin(string? value) {
         if (string.IsNullOrWhiteSpace(value) ||
             !Uri.TryCreate(value.Trim(), UriKind.Absolute, out var uri) ||
-            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)) {
+            (!string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.Ordinal) && !string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal))) {
             return null;
         }
 

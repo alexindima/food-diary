@@ -108,8 +108,8 @@ public sealed class YooKassaBillingGateway(
         var status = payment.Paid && string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase)
             ? "active"
             : "past_due";
-        var periodStart = status == "active"
-            ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
+        var periodStart = string.Equals(status, "active"
+, StringComparison.Ordinal) ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
             : null;
         var periodEnd = ResolvePeriodEnd(periodStart, request.Plan);
 
@@ -120,7 +120,7 @@ public sealed class YooKassaBillingGateway(
             request.Plan,
             status,
             periodStart,
-            status == "active" ? periodEnd : request.CurrentPeriodEndUtc,
+string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : request.CurrentPeriodEndUtc,
             $"yookassa-renewal:{payment.Id}:{payment.Status}",
             ParseAmount(payment.Amount?.Value),
             payment.Amount?.Currency ?? _options.Currency,
@@ -183,7 +183,7 @@ public sealed class YooKassaBillingGateway(
             plan,
             status,
             periodStart,
-            status == "active" ? periodEnd : null,
+string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
             false,
             null,
             null,

@@ -278,7 +278,7 @@ public sealed class DependencyInjectionTests {
 
         var foreignKey = entityType
             .GetForeignKeys()
-            .SingleOrDefault(fk => fk.Properties.Any(property => property.Name == "UserId"));
+            .SingleOrDefault(fk => fk.Properties.Any(property => string.Equals(property.Name, "UserId", StringComparison.Ordinal)));
 
         if (foreignKey is null) {
             return $"{clrType.FullName}: missing FK for UserId.";

@@ -83,7 +83,7 @@ public sealed class BaseApiControllerTests {
 
         _ = await controller.HandleObservedOkPublic(request, static value => value.ToUpperInvariant(), NullLogger.Instance, "test.operation", Guid.Parse("33333333-3333-3333-3333-333333333333"));
 
-        var activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => item.OperationName == "test.operation");
+        var activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.operation", StringComparison.Ordinal));
         Assert.Equal("test.operation", activity.OperationName);
         Assert.Equal("TestController", activity.GetTagItem("fooddiary.presentation.controller"));
         Assert.Equal("Unknown", activity.GetTagItem("fooddiary.presentation.feature"));

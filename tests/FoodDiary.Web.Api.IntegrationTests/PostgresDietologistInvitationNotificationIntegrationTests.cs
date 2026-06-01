@@ -24,7 +24,7 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
         await InviteDietologistAsync(secondClient.Client, dietologistUser.Email);
 
         var initialNotifications = await GetNotificationsAsync(dietologistUser.Client);
-        var invitationNotifications = initialNotifications.Where(x => x.Type == "DietologistInvitationReceived").ToList();
+        var invitationNotifications = initialNotifications.Where(x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal)).ToList();
 
         Assert.Equal(2, invitationNotifications.Count);
         Assert.All(invitationNotifications, notification => Assert.False(notification.IsRead));
@@ -33,7 +33,7 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, readAllResponse);
 
         var afterReadAll = await GetNotificationsAsync(dietologistUser.Client);
-        var invitationNotificationsAfterReadAll = afterReadAll.Where(x => x.Type == "DietologistInvitationReceived").ToList();
+        var invitationNotificationsAfterReadAll = afterReadAll.Where(x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal)).ToList();
 
         Assert.Equal(2, invitationNotificationsAfterReadAll.Count);
         Assert.All(invitationNotificationsAfterReadAll, notification => Assert.True(notification.IsRead));

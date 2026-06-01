@@ -197,7 +197,7 @@ public sealed class OpenAiFoodServiceTests {
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onFallback) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name != IntegrationsMeterName) {
+            if (!string.Equals(instrument.Meter.Name, IntegrationsMeterName, StringComparison.Ordinal)) {
                 return;
             }
 

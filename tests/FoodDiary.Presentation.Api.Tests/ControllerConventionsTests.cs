@@ -83,7 +83,7 @@ public sealed class ControllerConventionsTests {
         };
 
         var authControllers = GetFeatureControllerTypes()
-            .Where(type => type.Namespace == "FoodDiary.Presentation.Api.Features.Auth")
+            .Where(type => string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
             .OrderBy(type => type.Name, StringComparer.Ordinal)
             .ToArray();
 
@@ -138,7 +138,7 @@ public sealed class ControllerConventionsTests {
     [Fact]
     public void NonAuthFeatureControllers_RequireAuthorizationAtControllerLevel() {
         var violations = GetFeatureControllerTypes()
-            .Where(type => type.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
+            .Where(type => !string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
             .Where(type => !IsAnonymousInfrastructureController(type))
             .Where(type => type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)) is false)
             .Where(type => type.GetCustomAttribute<AuthorizeAttribute>() is null)
@@ -152,7 +152,7 @@ public sealed class ControllerConventionsTests {
     public void NonAuthFeatureActions_DoNotDocumentUnauthorizedOrForbiddenResponses_Manually() {
         var violations = GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
-            .Where(method => method.DeclaringType?.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
+            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
             .Where(DeclaresProtectedResponses)
             .Select(FormatMethodName)
             .ToArray();
@@ -166,7 +166,7 @@ public sealed class ControllerConventionsTests {
             .SelectMany(GetActionMethods)
             .Where(method => !IsAnonymousInfrastructureController(method.DeclaringType))
             .Where(method => method.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
-            .Where(method => method.DeclaringType?.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
+            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
             .Select(FormatMethodName)
             .ToArray();
 

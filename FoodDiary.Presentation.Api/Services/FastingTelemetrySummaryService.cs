@@ -46,11 +46,11 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
         var windowStartUtc = DateTime.UtcNow.AddHours(-normalizedWindowHours);
         var events = await repository.GetSinceAsync(windowStartUtc, cancellationToken);
 
-        var startedEvents = events.Where(x => x.Name == "fasting.session.started").ToArray();
-        var completedEvents = events.Where(x => x.Name == "fasting.session.completed").ToArray();
-        var checkInEvents = events.Where(x => x.Name == "fasting.check-in.saved").ToArray();
-        var reminderPresetSelections = events.Where(x => x.Name == "fasting.reminder-preset.selected").ToArray();
-        var reminderTimingSaves = events.Where(x => x.Name == "fasting.reminder-timing.saved").ToArray();
+        var startedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.started", StringComparison.Ordinal)).ToArray();
+        var completedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.completed", StringComparison.Ordinal)).ToArray();
+        var checkInEvents = events.Where(x => string.Equals(x.Name, "fasting.check-in.saved", StringComparison.Ordinal)).ToArray();
+        var reminderPresetSelections = events.Where(x => string.Equals(x.Name, "fasting.reminder-preset.selected", StringComparison.Ordinal)).ToArray();
+        var reminderTimingSaves = events.Where(x => string.Equals(x.Name, "fasting.reminder-timing.saved", StringComparison.Ordinal)).ToArray();
         var completedDurations = completedEvents
             .Where(x => x.ActualDurationHours.HasValue)
             .Select(x => x.ActualDurationHours!.Value)

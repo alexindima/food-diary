@@ -62,7 +62,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
 
     public void UpdateNotes(string? notes) {
         var normalized = NormalizeNotes(notes);
-        if (Notes == normalized) {
+        if (string.Equals(Notes, normalized, StringComparison.Ordinal)) {
             return;
         }
 

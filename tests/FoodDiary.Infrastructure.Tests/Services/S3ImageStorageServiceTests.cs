@@ -141,16 +141,16 @@ public sealed class S3ImageStorageServiceTests {
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>> onOperation) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
-            if (instrument.Meter.Name != IntegrationsMeterName) {
+            if (!string.Equals(instrument.Meter.Name, IntegrationsMeterName, StringComparison.Ordinal)) {
                 return;
             }
 
-            if (instrument.Name == "fooddiary.storage.operations") {
+            if (string.Equals(instrument.Name, "fooddiary.storage.operations", StringComparison.Ordinal)) {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
         listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
-            if (instrument.Name == "fooddiary.storage.operations") {
+            if (string.Equals(instrument.Name, "fooddiary.storage.operations", StringComparison.Ordinal)) {
                 onOperation(value, tags);
             }
         });

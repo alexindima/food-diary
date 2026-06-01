@@ -450,8 +450,8 @@ public sealed class MailRelayQueueStore(
 
         var inboxId = reader.GetGuid(0);
         var status = reader.GetString(1);
-        MailRelayTelemetry.RecordInboxEvent(status == "processing" ? "claimed" : "duplicate");
-        return new MailRelayInboxClaimResult(status == "processing", inboxId);
+        MailRelayTelemetry.RecordInboxEvent(string.Equals(status, "processing", StringComparison.Ordinal) ? "claimed" : "duplicate");
+        return new MailRelayInboxClaimResult(string.Equals(status, "processing", StringComparison.Ordinal), inboxId);
     }
 
     public async Task MarkInboxProcessedAsync(Guid id, CancellationToken cancellationToken) {

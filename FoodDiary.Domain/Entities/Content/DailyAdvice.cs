@@ -54,7 +54,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
                 "Advice value cannot be empty.",
                 ValueMaxLength);
 
-            if (Value != normalizedValue) {
+            if (!string.Equals(Value, normalizedValue, StringComparison.Ordinal)) {
                 Value = normalizedValue;
                 changed = true;
             }
@@ -62,7 +62,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
 
         if (locale is not null) {
             var normalizedLocale = NormalizeLocale(locale);
-            if (Locale != normalizedLocale) {
+            if (!string.Equals(Locale, normalizedLocale, StringComparison.Ordinal)) {
                 Locale = normalizedLocale;
                 changed = true;
             }
@@ -82,7 +82,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
                 changed = true;
             }
         } else if (tag is not null) {
-            if (Tag != normalizedTag) {
+            if (!string.Equals(Tag, normalizedTag, StringComparison.Ordinal)) {
                 Tag = normalizedTag;
                 changed = true;
             }

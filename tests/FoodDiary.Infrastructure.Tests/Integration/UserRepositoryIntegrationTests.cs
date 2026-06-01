@@ -26,8 +26,8 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         Assert.NotNull(loaded);
         Assert.Equal(activeUser.Id, loaded.Id);
         Assert.Equal(2, loaded.UserRoles.Count);
-        Assert.Contains(loaded.UserRoles, role => role.Role.Name == RoleNames.Premium);
-        Assert.Contains(loaded.UserRoles, role => role.Role.Name == RoleNames.Support);
+        Assert.Contains(loaded.UserRoles, role => string.Equals(role.Role.Name, RoleNames.Premium, StringComparison.Ordinal));
+        Assert.Contains(loaded.UserRoles, role => string.Equals(role.Role.Name, RoleNames.Support, StringComparison.Ordinal));
     }
 
     [RequiresDockerFact]

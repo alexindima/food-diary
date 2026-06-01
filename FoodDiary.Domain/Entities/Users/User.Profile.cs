@@ -149,17 +149,17 @@ public sealed partial class User {
         var state = GetPersonalProfileState();
         var changed = false;
 
-        if (username is not null && state.Username != normalizedUsername) {
+        if (username is not null && !string.Equals(state.Username, normalizedUsername, StringComparison.Ordinal)) {
             state = state with { Username = normalizedUsername };
             changed = true;
         }
 
-        if (firstName is not null && state.FirstName != normalizedFirstName) {
+        if (firstName is not null && !string.Equals(state.FirstName, normalizedFirstName, StringComparison.Ordinal)) {
             state = state with { FirstName = normalizedFirstName };
             changed = true;
         }
 
-        if (lastName is not null && state.LastName != normalizedLastName) {
+        if (lastName is not null && !string.Equals(state.LastName, normalizedLastName, StringComparison.Ordinal)) {
             state = state with { LastName = normalizedLastName };
             changed = true;
         }
@@ -171,7 +171,7 @@ public sealed partial class User {
 
         if (gender is not null) {
             var normalizedGender = NormalizeRequiredGender(gender, nameof(gender));
-            if (state.Gender != normalizedGender) {
+            if (!string.Equals(state.Gender, normalizedGender, StringComparison.Ordinal)) {
                 state = state with { Gender = normalizedGender };
                 changed = true;
             }
@@ -227,7 +227,7 @@ public sealed partial class User {
         var state = GetProfileMediaState();
         var changed = false;
 
-        if (profileImage is not null && state.ProfileImage != normalizedProfileImage) {
+        if (profileImage is not null && !string.Equals(state.ProfileImage, normalizedProfileImage, StringComparison.Ordinal)) {
             state = state with { ProfileImage = normalizedProfileImage };
             changed = true;
         }
@@ -268,22 +268,22 @@ public sealed partial class User {
 
         var changed = false;
 
-        if (dashboardLayoutJson is not null && state.DashboardLayoutJson != normalizedDashboardLayoutJson) {
+        if (dashboardLayoutJson is not null && !string.Equals(state.DashboardLayoutJson, normalizedDashboardLayoutJson, StringComparison.Ordinal)) {
             state = state with { DashboardLayoutJson = normalizedDashboardLayoutJson };
             changed = true;
         }
 
-        if (language is not null && state.Language != normalizedLanguage) {
+        if (language is not null && !string.Equals(state.Language, normalizedLanguage, StringComparison.Ordinal)) {
             state = state with { Language = normalizedLanguage };
             changed = true;
         }
 
-        if (theme is not null && state.Theme != normalizedTheme) {
+        if (theme is not null && !string.Equals(state.Theme, normalizedTheme, StringComparison.Ordinal)) {
             state = state with { Theme = normalizedTheme };
             changed = true;
         }
 
-        if (uiStyle is not null && state.UiStyle != normalizedUiStyle) {
+        if (uiStyle is not null && !string.Equals(state.UiStyle, normalizedUiStyle, StringComparison.Ordinal)) {
             state = state with { UiStyle = normalizedUiStyle };
             changed = true;
         }

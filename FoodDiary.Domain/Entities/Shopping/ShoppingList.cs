@@ -34,7 +34,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
 
     public void UpdateName(string name) {
         var normalizedName = NormalizeRequiredName(name);
-        if (Name == normalizedName) {
+        if (string.Equals(Name, normalizedName, StringComparison.Ordinal)) {
             return;
         }
 

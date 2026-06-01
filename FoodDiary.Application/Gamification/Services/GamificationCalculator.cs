@@ -59,7 +59,7 @@ public static class GamificationCalculator {
             b.Key,
             b.Category,
             b.Threshold,
-            b.Category == "streak" ? longestStreak >= b.Threshold : totalMeals >= b.Threshold
+string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >= b.Threshold : totalMeals >= b.Threshold
         )).ToList();
     }
 

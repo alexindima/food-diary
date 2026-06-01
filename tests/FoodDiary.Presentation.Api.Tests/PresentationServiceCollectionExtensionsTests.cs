@@ -82,8 +82,8 @@ public sealed class PresentationServiceCollectionExtensionsTests {
             .OfType<RouteEndpoint>()
             .ToArray();
 
-        Assert.Contains(endpoints, endpoint => endpoint.RoutePattern.RawText == "/hubs/email-verification");
-        Assert.Contains(endpoints, endpoint => endpoint.RoutePattern.RawText == "/hubs/email-verification/negotiate");
+        Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification", StringComparison.Ordinal));
+        Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification/negotiate", StringComparison.Ordinal));
     }
 
     private sealed class StubFastingTelemetryEventRepository : IFastingTelemetryEventRepository {

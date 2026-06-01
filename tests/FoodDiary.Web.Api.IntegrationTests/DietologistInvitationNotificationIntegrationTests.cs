@@ -37,7 +37,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         var notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions);
 
         Assert.NotNull(notifications);
-        var invitationNotification = Assert.Single(notifications, x => x.Type == "DietologistInvitationReceived");
+        var invitationNotification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal));
         Assert.Equal("DietologistInvitationReceived", invitationNotification.Type);
         Assert.NotNull(invitationNotification.ReferenceId);
         Assert.Equal($"/dietologist-invitations/{invitationNotification.ReferenceId}", invitationNotification.TargetUrl);
@@ -53,7 +53,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         await InviteDietologistAsync(firstClient.Client, dietologistUser.Email);
 
         var initialNotifications = await GetNotificationsAsync(dietologistUser.Client);
-        var firstNotification = Assert.Single(initialNotifications, x => x.Type == "DietologistInvitationReceived");
+        var firstNotification = Assert.Single(initialNotifications, x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal));
         Assert.False(firstNotification.IsRead);
 
         var markReadResponse = await dietologistUser.Client.PutAsJsonAsync(
@@ -81,7 +81,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
 
         var notifications = await GetNotificationsAsync(clientUser.Client);
-        var notification = Assert.Single(notifications, x => x.Type == "DietologistInvitationAccepted");
+        var notification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationAccepted", StringComparison.Ordinal));
         Assert.Equal("DietologistInvitationAccepted", notification.Type);
         Assert.Equal(relationship.InvitationId.ToString(), notification.ReferenceId);
         Assert.Equal("/profile", notification.TargetUrl);
@@ -103,7 +103,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, declineResponse);
 
         var notifications = await GetNotificationsAsync(clientUser.Client);
-        var notification = Assert.Single(notifications, x => x.Type == "DietologistInvitationDeclined");
+        var notification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationDeclined", StringComparison.Ordinal));
         Assert.Equal("DietologistInvitationDeclined", notification.Type);
         Assert.Equal(relationship.InvitationId.ToString(), notification.ReferenceId);
         Assert.Equal("/profile", notification.TargetUrl);
@@ -133,7 +133,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         Assert.NotNull(recommendation);
 
         var notifications = await GetNotificationsAsync(clientUser.Client);
-        var notification = Assert.Single(notifications, x => x.Type == "NewRecommendation");
+        var notification = Assert.Single(notifications, x => string.Equals(x.Type, "NewRecommendation", StringComparison.Ordinal));
         Assert.Equal(recommendation.Id.ToString(), notification.ReferenceId);
         Assert.Equal($"/recommendations?recommendationId={recommendation.Id}", notification.TargetUrl);
         Assert.False(notification.IsRead);

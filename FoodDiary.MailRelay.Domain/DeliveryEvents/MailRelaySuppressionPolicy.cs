@@ -9,17 +9,17 @@ public static class MailRelaySuppressionPolicy {
             return false;
         }
 
-        if (normalizedEventType == MailRelayDeliveryEventType.Complaint) {
+        if (string.Equals(normalizedEventType, MailRelayDeliveryEventType.Complaint, StringComparison.Ordinal)) {
             return true;
         }
 
-        return normalizedEventType == MailRelayDeliveryEventType.Bounce &&
+        return string.Equals(normalizedEventType, MailRelayDeliveryEventType.Bounce, StringComparison.Ordinal) &&
                string.Equals(classification, MailRelayBounceClassification.Hard, StringComparison.OrdinalIgnoreCase);
     }
 
     public static string GetDefaultReason(string eventType) =>
         MailRelayDeliveryEventType.TryNormalize(eventType, out var normalizedEventType) &&
-        normalizedEventType == MailRelayDeliveryEventType.Complaint
+        string.Equals(normalizedEventType, MailRelayDeliveryEventType.Complaint, StringComparison.Ordinal)
             ? ComplaintReason
             : HardBounceReason;
 }

@@ -96,8 +96,8 @@ public sealed class MailInboxApplicationTests {
             new ReceiveInboundMailRequest(null, null, [], null, null, null, "", DateTimeOffset.UtcNow)));
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Request.ToRecipients");
-        Assert.Contains(result.Errors, e => e.PropertyName == "Request.RawMime");
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Request.ToRecipients", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Request.RawMime", StringComparison.Ordinal));
     }
 
     [Fact]

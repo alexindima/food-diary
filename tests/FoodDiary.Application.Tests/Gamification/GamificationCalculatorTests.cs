@@ -90,12 +90,12 @@ public class GamificationCalculatorTests {
     public void CalculateBadges_WithStreakAndMeals_ReturnCorrectEarnedStatus() {
         var badges = GamificationCalculator.CalculateBadges(longestStreak: 10, totalMeals: 75);
 
-        var streak3 = badges.First(b => b.Key == "streak_3");
-        var streak7 = badges.First(b => b.Key == "streak_7");
-        var streak14 = badges.First(b => b.Key == "streak_14");
-        var meals10 = badges.First(b => b.Key == "meals_10");
-        var meals50 = badges.First(b => b.Key == "meals_50");
-        var meals100 = badges.First(b => b.Key == "meals_100");
+        var streak3 = badges.First(b => string.Equals(b.Key, "streak_3", StringComparison.Ordinal));
+        var streak7 = badges.First(b => string.Equals(b.Key, "streak_7", StringComparison.Ordinal));
+        var streak14 = badges.First(b => string.Equals(b.Key, "streak_14", StringComparison.Ordinal));
+        var meals10 = badges.First(b => string.Equals(b.Key, "meals_10", StringComparison.Ordinal));
+        var meals50 = badges.First(b => string.Equals(b.Key, "meals_50", StringComparison.Ordinal));
+        var meals100 = badges.First(b => string.Equals(b.Key, "meals_100", StringComparison.Ordinal));
 
         Assert.True(streak3.IsEarned);
         Assert.True(streak7.IsEarned);

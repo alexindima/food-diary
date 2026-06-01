@@ -533,7 +533,7 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
-        Assert.Contains(notificationRepo.Added, x => x.Type == NotificationTypes.DietologistInvitationAccepted && x.UserId == clientId);
+        Assert.Contains(notificationRepo.Added, x => string.Equals(x.Type, NotificationTypes.DietologistInvitationAccepted, StringComparison.Ordinal) && x.UserId == clientId);
         Assert.True(notificationPusher.PushCalled);
         Assert.True(webPushSender.SendCalled);
     }
@@ -652,7 +652,7 @@ public class DietologistFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DietologistInvitationStatus.Declined, invitation.Status);
-        Assert.Contains(notificationRepo.Added, x => x.Type == NotificationTypes.DietologistInvitationDeclined && x.UserId == clientId);
+        Assert.Contains(notificationRepo.Added, x => string.Equals(x.Type, NotificationTypes.DietologistInvitationDeclined, StringComparison.Ordinal) && x.UserId == clientId);
         Assert.True(notificationPusher.PushCalled);
         Assert.True(webPushSender.SendCalled);
     }
@@ -1716,10 +1716,10 @@ public class DietologistFeatureTests {
             Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead));
 
         public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken ct = default) =>
-            Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead && n.Type == type));
+            Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead && string.Equals(n.Type, type, StringComparison.Ordinal)));
 
         public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken ct = default) =>
-            Task.FromResult(_notifications.Any(n => n.UserId == userId && n.Type == type && n.ReferenceId == referenceId));
+            Task.FromResult(_notifications.Any(n => n.UserId == userId && string.Equals(n.Type, type, StringComparison.Ordinal) && string.Equals(n.ReferenceId, referenceId, StringComparison.Ordinal)));
 
         public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken ct = default) =>
             throw new NotSupportedException();
