@@ -104,9 +104,18 @@ public sealed class MailRelayQueueStore(
     }
 
     public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.FromAddress);
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.Subject);
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.HtmlBody);
+        if (string.IsNullOrWhiteSpace(request.FromAddress)) {
+            throw new ArgumentException("Email relay request must contain a sender address.", nameof(request));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Subject)) {
+            throw new ArgumentException("Email relay request must contain a subject.", nameof(request));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.HtmlBody)) {
+            throw new ArgumentException("Email relay request must contain an HTML body.", nameof(request));
+        }
+
         if (request.To.Count == 0) {
             throw new InvalidOperationException("Email relay request must contain at least one recipient.");
         }
