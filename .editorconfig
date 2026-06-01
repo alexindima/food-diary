@@ -75,7 +75,7 @@ dotnet_diagnostic.MA0051.severity = suggestion
 dotnet_diagnostic.MA0061.severity = suggestion
 dotnet_diagnostic.MA0074.severity = suggestion
 dotnet_diagnostic.MA0132.severity = suggestion
-dotnet_diagnostic.MA0144.severity = suggestion
+dotnet_diagnostic.MA0144.severity = warning
 dotnet_diagnostic.MA0150.severity = suggestion
 dotnet_diagnostic.IDE0005.severity = warning
 

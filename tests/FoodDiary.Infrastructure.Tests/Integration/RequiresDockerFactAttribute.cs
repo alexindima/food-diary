@@ -1,5 +1,4 @@
 using System.IO.Pipes;
-using System.Runtime.InteropServices;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -23,7 +22,7 @@ internal static class DockerAvailability {
 
     private static DockerAvailabilityResult CheckAvailability() {
         try {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            if (OperatingSystem.IsWindows()) {
                 using var pipe = new NamedPipeClientStream(".", "docker_engine", PipeDirection.InOut, PipeOptions.None);
                 pipe.Connect(200);
                 return new DockerAvailabilityResult(true, null);
