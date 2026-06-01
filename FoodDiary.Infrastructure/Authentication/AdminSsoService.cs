@@ -18,7 +18,7 @@ public sealed class AdminSsoService(IDistributedCache cache, IDateTimeProvider d
         await cache.SetStringAsync(
             key,
             userId.Value.ToString(),
-            new DistributedCacheEntryOptions { AbsoluteExpiration = expiresAt },
+            new DistributedCacheEntryOptions { AbsoluteExpiration = new DateTimeOffset(expiresAt, TimeSpan.Zero) },
             cancellationToken);
 
         return new AdminSsoCode(code, expiresAt);
