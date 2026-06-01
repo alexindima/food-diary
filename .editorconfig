@@ -95,6 +95,8 @@ dotnet_diagnostic.MA0049.severity = suggestion
 
 [FoodDiary.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
+# Domain value objects are not interop contracts; keep layout attributes out of business code.
+dotnet_diagnostic.MA0008.severity = suggestion
 
 [FoodDiary.MailInbox.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning

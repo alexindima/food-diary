@@ -1,9 +1,7 @@
-using System.Runtime.InteropServices;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Domain.ValueObjects;
 
-[StructLayout(LayoutKind.Auto)]
 public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade) {
     public static FoodQualityScore Calculate(
         double caloriesPerBase,
