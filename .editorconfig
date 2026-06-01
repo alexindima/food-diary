@@ -85,3 +85,6 @@ dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA1716.severity = none
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1859.severity = none
+
+[FoodDiary.Domain/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning

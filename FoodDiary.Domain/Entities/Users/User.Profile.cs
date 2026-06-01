@@ -254,10 +254,6 @@ public sealed partial class User {
         bool? socialPushNotificationsEnabled,
         int? fastingCheckInReminderHours,
         int? fastingCheckInFollowUpReminderHours) {
-        var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
-        var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
-        var normalizedTheme = NormalizeOptionalTheme(theme, nameof(theme));
-        var normalizedUiStyle = NormalizeOptionalUiStyle(uiStyle, nameof(uiStyle));
         var state = GetPreferenceState();
 
         EnsureLanguage(language, nameof(language));
@@ -266,65 +262,76 @@ public sealed partial class User {
         EnsureReminderHours(fastingCheckInReminderHours, nameof(fastingCheckInReminderHours));
         EnsureReminderHours(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
 
-        var changed = false;
+        var nextState = ApplyPreferenceTextChanges(state, dashboardLayoutJson, language, theme, uiStyle);
+        nextState = ApplyNotificationPreferenceChanges(
+            nextState,
+            pushNotificationsEnabled,
+            fastingPushNotificationsEnabled,
+            socialPushNotificationsEnabled);
+        nextState = ApplyReminderPreferenceChanges(nextState, fastingCheckInReminderHours, fastingCheckInFollowUpReminderHours);
 
-        if (dashboardLayoutJson is not null && !string.Equals(state.DashboardLayoutJson, normalizedDashboardLayoutJson, StringComparison.Ordinal)) {
-            state = state with { DashboardLayoutJson = normalizedDashboardLayoutJson };
-            changed = true;
-        }
-
-        if (language is not null && !string.Equals(state.Language, normalizedLanguage, StringComparison.Ordinal)) {
-            state = state with { Language = normalizedLanguage };
-            changed = true;
-        }
-
-        if (theme is not null && !string.Equals(state.Theme, normalizedTheme, StringComparison.Ordinal)) {
-            state = state with { Theme = normalizedTheme };
-            changed = true;
-        }
-
-        if (uiStyle is not null && !string.Equals(state.UiStyle, normalizedUiStyle, StringComparison.Ordinal)) {
-            state = state with { UiStyle = normalizedUiStyle };
-            changed = true;
-        }
-
-        if (pushNotificationsEnabled.HasValue && state.PushNotificationsEnabled != pushNotificationsEnabled.Value) {
-            state = state with { PushNotificationsEnabled = pushNotificationsEnabled.Value };
-            changed = true;
-        }
-
-        if (fastingPushNotificationsEnabled.HasValue && state.FastingPushNotificationsEnabled != fastingPushNotificationsEnabled.Value) {
-            state = state with { FastingPushNotificationsEnabled = fastingPushNotificationsEnabled.Value };
-            changed = true;
-        }
-
-        if (socialPushNotificationsEnabled.HasValue && state.SocialPushNotificationsEnabled != socialPushNotificationsEnabled.Value) {
-            state = state with { SocialPushNotificationsEnabled = socialPushNotificationsEnabled.Value };
-            changed = true;
-        }
-
-        if (fastingCheckInReminderHours.HasValue && state.FastingCheckInReminderHours != fastingCheckInReminderHours.Value) {
-            state = state with { FastingCheckInReminderHours = fastingCheckInReminderHours.Value };
-            changed = true;
-        }
-
-        if (fastingCheckInFollowUpReminderHours.HasValue &&
-            state.FastingCheckInFollowUpReminderHours != fastingCheckInFollowUpReminderHours.Value) {
-            state = state with { FastingCheckInFollowUpReminderHours = fastingCheckInFollowUpReminderHours.Value };
-            changed = true;
-        }
-
-        if (state.FastingCheckInFollowUpReminderHours <= state.FastingCheckInReminderHours) {
+        if (nextState.FastingCheckInFollowUpReminderHours <= nextState.FastingCheckInReminderHours) {
             throw new ArgumentOutOfRangeException(
                 nameof(fastingCheckInFollowUpReminderHours),
                 "Follow-up reminder hour must be greater than the first reminder hour.");
         }
 
-        if (changed) {
-            ApplyPreferenceState(state);
+        if (nextState != state) {
+            ApplyPreferenceState(nextState);
+            return true;
         }
 
-        return changed;
+        return false;
+    }
+
+    private static UserPreferenceState ApplyPreferenceTextChanges(
+        UserPreferenceState state,
+        string? dashboardLayoutJson,
+        string? language,
+        string? theme,
+        string? uiStyle) {
+        state = ApplyStringPreference(state, dashboardLayoutJson, NormalizeOptionalProfileText, static (current, value) => current with { DashboardLayoutJson = value });
+        state = ApplyStringPreference(state, language, value => NormalizeOptionalLanguage(value, nameof(language)), static (current, value) => current with { Language = value });
+        state = ApplyStringPreference(state, theme, value => NormalizeOptionalTheme(value, nameof(theme)), static (current, value) => current with { Theme = value });
+        return ApplyStringPreference(state, uiStyle, value => NormalizeOptionalUiStyle(value, nameof(uiStyle)), static (current, value) => current with { UiStyle = value });
+    }
+
+    private static UserPreferenceState ApplyNotificationPreferenceChanges(
+        UserPreferenceState state,
+        bool? pushNotificationsEnabled,
+        bool? fastingPushNotificationsEnabled,
+        bool? socialPushNotificationsEnabled) {
+        state = pushNotificationsEnabled.HasValue
+            ? state with { PushNotificationsEnabled = pushNotificationsEnabled.Value }
+            : state;
+        state = fastingPushNotificationsEnabled.HasValue
+            ? state with { FastingPushNotificationsEnabled = fastingPushNotificationsEnabled.Value }
+            : state;
+        return socialPushNotificationsEnabled.HasValue
+            ? state with { SocialPushNotificationsEnabled = socialPushNotificationsEnabled.Value }
+            : state;
+    }
+
+    private static UserPreferenceState ApplyReminderPreferenceChanges(
+        UserPreferenceState state,
+        int? fastingCheckInReminderHours,
+        int? fastingCheckInFollowUpReminderHours) {
+        state = fastingCheckInReminderHours.HasValue
+            ? state with { FastingCheckInReminderHours = fastingCheckInReminderHours.Value }
+            : state;
+        return fastingCheckInFollowUpReminderHours.HasValue
+            ? state with { FastingCheckInFollowUpReminderHours = fastingCheckInFollowUpReminderHours.Value }
+            : state;
+    }
+
+    private static UserPreferenceState ApplyStringPreference(
+        UserPreferenceState state,
+        string? value,
+        Func<string?, string?> normalize,
+        Func<UserPreferenceState, string?, UserPreferenceState> apply) {
+        return value is null
+            ? state
+            : apply(state, normalize(value));
     }
 
     private static void EnsureReminderHours(int? value, string paramName) {

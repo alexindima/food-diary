@@ -190,83 +190,13 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void ApplyNutrition(MealNutritionUpdate update) {
-        var normalizedTotalCalories = RequireNonNegative(update.TotalCalories, nameof(update.TotalCalories));
-        var normalizedTotalProteins = RequireNonNegative(update.TotalProteins, nameof(update.TotalProteins));
-        var normalizedTotalFats = RequireNonNegative(update.TotalFats, nameof(update.TotalFats));
-        var normalizedTotalCarbs = RequireNonNegative(update.TotalCarbs, nameof(update.TotalCarbs));
-        var normalizedTotalFiber = RequireNonNegative(update.TotalFiber, nameof(update.TotalFiber));
-        var normalizedTotalAlcohol = RequireNonNegative(update.TotalAlcohol, nameof(update.TotalAlcohol));
-
-        var nextTotalCalories = Math.Round(normalizedTotalCalories, 2);
-        var nextTotalProteins = Math.Round(normalizedTotalProteins, 2);
-        var nextTotalFats = Math.Round(normalizedTotalFats, 2);
-        var nextTotalCarbs = Math.Round(normalizedTotalCarbs, 2);
-        var nextTotalFiber = Math.Round(normalizedTotalFiber, 2);
-        var nextTotalAlcohol = Math.Round(normalizedTotalAlcohol, 2);
-
-        var nextManualCalories = update.IsAutoCalculated
-            ? (double?)null
-            : update.ManualCalories.HasValue
-                ? Math.Round(RequireNonNegative(update.ManualCalories.Value, nameof(update.ManualCalories)), 2)
-                : nextTotalCalories;
-        var nextManualProteins = update.IsAutoCalculated
-            ? (double?)null
-            : update.ManualProteins.HasValue
-                ? Math.Round(RequireNonNegative(update.ManualProteins.Value, nameof(update.ManualProteins)), 2)
-                : nextTotalProteins;
-        var nextManualFats = update.IsAutoCalculated
-            ? (double?)null
-            : update.ManualFats.HasValue
-                ? Math.Round(RequireNonNegative(update.ManualFats.Value, nameof(update.ManualFats)), 2)
-                : nextTotalFats;
-        var nextManualCarbs = update.IsAutoCalculated
-            ? (double?)null
-            : update.ManualCarbs.HasValue
-                ? Math.Round(RequireNonNegative(update.ManualCarbs.Value, nameof(update.ManualCarbs)), 2)
-                : nextTotalCarbs;
-        var nextManualFiber = update.IsAutoCalculated
-            ? (double?)null
-            : update.ManualFiber.HasValue
-                ? Math.Round(RequireNonNegative(update.ManualFiber.Value, nameof(update.ManualFiber)), 2)
-                : nextTotalFiber;
-        var nextManualAlcohol = update.IsAutoCalculated
-            ? (double?)null
-            : update.ManualAlcohol.HasValue
-                ? Math.Round(RequireNonNegative(update.ManualAlcohol.Value, nameof(update.ManualAlcohol)), 2)
-                : nextTotalAlcohol;
-
+        var nextState = CreateNutritionState(update);
         var currentState = GetNutritionState();
-        if (AreClose(currentState.TotalCalories, nextTotalCalories)
-            && AreClose(currentState.TotalProteins, nextTotalProteins)
-            && AreClose(currentState.TotalFats, nextTotalFats)
-            && AreClose(currentState.TotalCarbs, nextTotalCarbs)
-            && AreClose(currentState.TotalFiber, nextTotalFiber)
-            && AreClose(currentState.TotalAlcohol, nextTotalAlcohol)
-            && currentState.IsNutritionAutoCalculated == update.IsAutoCalculated
-            && NullableAreClose(currentState.ManualCalories, nextManualCalories)
-            && NullableAreClose(currentState.ManualProteins, nextManualProteins)
-            && NullableAreClose(currentState.ManualFats, nextManualFats)
-            && NullableAreClose(currentState.ManualCarbs, nextManualCarbs)
-            && NullableAreClose(currentState.ManualFiber, nextManualFiber)
-            && NullableAreClose(currentState.ManualAlcohol, nextManualAlcohol)) {
+        if (NutritionStatesAreClose(currentState, nextState)) {
             return;
         }
 
-        ApplyNutritionState(currentState with {
-            TotalCalories = nextTotalCalories,
-            TotalProteins = nextTotalProteins,
-            TotalFats = nextTotalFats,
-            TotalCarbs = nextTotalCarbs,
-            TotalFiber = nextTotalFiber,
-            TotalAlcohol = nextTotalAlcohol,
-            IsNutritionAutoCalculated = update.IsAutoCalculated,
-            ManualCalories = nextManualCalories,
-            ManualProteins = nextManualProteins,
-            ManualFats = nextManualFats,
-            ManualCarbs = nextManualCarbs,
-            ManualFiber = nextManualFiber,
-            ManualAlcohol = nextManualAlcohol
-        });
+        ApplyNutritionState(nextState);
 
         RaiseDomainEvent(new MealNutritionAppliedDomainEvent(
             Id,
@@ -279,6 +209,30 @@ public sealed class Meal : AggregateRoot<MealId> {
             TotalAlcohol));
 
         SetModified();
+    }
+
+    private static MealNutritionState CreateNutritionState(MealNutritionUpdate update) {
+        var nextTotalCalories = RoundNonNegative(update.TotalCalories, nameof(update.TotalCalories));
+        var nextTotalProteins = RoundNonNegative(update.TotalProteins, nameof(update.TotalProteins));
+        var nextTotalFats = RoundNonNegative(update.TotalFats, nameof(update.TotalFats));
+        var nextTotalCarbs = RoundNonNegative(update.TotalCarbs, nameof(update.TotalCarbs));
+        var nextTotalFiber = RoundNonNegative(update.TotalFiber, nameof(update.TotalFiber));
+        var nextTotalAlcohol = RoundNonNegative(update.TotalAlcohol, nameof(update.TotalAlcohol));
+
+        return new MealNutritionState(
+            nextTotalCalories,
+            nextTotalProteins,
+            nextTotalFats,
+            nextTotalCarbs,
+            nextTotalFiber,
+            nextTotalAlcohol,
+            update.IsAutoCalculated,
+            NormalizeManualNutrition(update.IsAutoCalculated, update.ManualCalories, nextTotalCalories, nameof(update.ManualCalories)),
+            NormalizeManualNutrition(update.IsAutoCalculated, update.ManualProteins, nextTotalProteins, nameof(update.ManualProteins)),
+            NormalizeManualNutrition(update.IsAutoCalculated, update.ManualFats, nextTotalFats, nameof(update.ManualFats)),
+            NormalizeManualNutrition(update.IsAutoCalculated, update.ManualCarbs, nextTotalCarbs, nameof(update.ManualCarbs)),
+            NormalizeManualNutrition(update.IsAutoCalculated, update.ManualFiber, nextTotalFiber, nameof(update.ManualFiber)),
+            NormalizeManualNutrition(update.IsAutoCalculated, update.ManualAlcohol, nextTotalAlcohol, nameof(update.ManualAlcohol)));
     }
 
     public void UpdateSatietyLevels(int? preMealLevel, int? postMealLevel) {
@@ -377,6 +331,24 @@ public sealed class Meal : AggregateRoot<MealId> {
         return value;
     }
 
+    private static double RoundNonNegative(double value, string paramName) {
+        return Math.Round(RequireNonNegative(value, paramName), 2);
+    }
+
+    private static double? NormalizeManualNutrition(
+        bool isAutoCalculated,
+        double? manualValue,
+        double totalValue,
+        string paramName) {
+        if (isAutoCalculated) {
+            return null;
+        }
+
+        return manualValue.HasValue
+            ? RoundNonNegative(manualValue.Value, paramName)
+            : totalValue;
+    }
+
     private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
@@ -408,5 +380,21 @@ public sealed class Meal : AggregateRoot<MealId> {
         }
 
         return AreClose(left.Value, right.Value);
+    }
+
+    private static bool NutritionStatesAreClose(MealNutritionState currentState, MealNutritionState nextState) {
+        return AreClose(currentState.TotalCalories, nextState.TotalCalories)
+            && AreClose(currentState.TotalProteins, nextState.TotalProteins)
+            && AreClose(currentState.TotalFats, nextState.TotalFats)
+            && AreClose(currentState.TotalCarbs, nextState.TotalCarbs)
+            && AreClose(currentState.TotalFiber, nextState.TotalFiber)
+            && AreClose(currentState.TotalAlcohol, nextState.TotalAlcohol)
+            && currentState.IsNutritionAutoCalculated == nextState.IsNutritionAutoCalculated
+            && NullableAreClose(currentState.ManualCalories, nextState.ManualCalories)
+            && NullableAreClose(currentState.ManualProteins, nextState.ManualProteins)
+            && NullableAreClose(currentState.ManualFats, nextState.ManualFats)
+            && NullableAreClose(currentState.ManualCarbs, nextState.ManualCarbs)
+            && NullableAreClose(currentState.ManualFiber, nextState.ManualFiber)
+            && NullableAreClose(currentState.ManualAlcohol, nextState.ManualAlcohol);
     }
 }
