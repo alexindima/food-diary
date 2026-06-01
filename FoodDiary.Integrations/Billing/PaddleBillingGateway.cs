@@ -140,41 +140,48 @@ public sealed class PaddleBillingGateway(
                 return Task.FromResult(Result.Success<BillingWebhookEventModel?>(null));
             }
 
-            var externalPriceId = GetFirstItemPriceId(data);
-            var customData = data.TryGetProperty("custom_data", out var customDataElement) ? customDataElement : default;
-            var currentBillingPeriod = data.TryGetProperty("current_billing_period", out var billingPeriodElement)
-                ? billingPeriodElement
-                : default;
-            var trialDates = GetFirstTrialDates(data);
-            var scheduledChange = data.TryGetProperty("scheduled_change", out var scheduledChangeElement)
-                ? scheduledChangeElement
-                : default;
-
-            var model = new BillingWebhookEventModel(
-                root.GetProperty("event_id").GetString() ?? string.Empty,
-                eventType,
-                customerId,
-                subscriptionId,
-                null,
-                externalPriceId,
-                ResolvePlan(externalPriceId) ?? GetString(customData, "plan"),
-                GetString(data, "status") ?? string.Empty,
-                ParseDateTime(currentBillingPeriod, "starts_at"),
-                ParseDateTime(currentBillingPeriod, "ends_at"),
-                string.Equals(GetString(scheduledChange, "action"), "cancel", StringComparison.OrdinalIgnoreCase),
-                ParseDateTime(data, "canceled_at"),
-                ParseDateTime(trialDates, "starts_at"),
-                ParseDateTime(trialDates, "ends_at") ?? ParseDateTime(data, "next_billed_at"),
-                null,
-                null,
-                null,
-                ParseUserId(customData));
-
-            return Task.FromResult(Result.Success<BillingWebhookEventModel?>(model));
+            return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(root, data, eventType, customerId, subscriptionId)));
         } catch (Exception ex) when (ex is JsonException or InvalidOperationException or FormatException) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed(ex.Message)));
         }
+    }
+
+    private BillingWebhookEventModel CreateWebhookEvent(
+        JsonElement root,
+        JsonElement data,
+        string eventType,
+        string customerId,
+        string subscriptionId) {
+        var externalPriceId = GetFirstItemPriceId(data);
+        var customData = data.TryGetProperty("custom_data", out var customDataElement) ? customDataElement : default;
+        var currentBillingPeriod = data.TryGetProperty("current_billing_period", out var billingPeriodElement)
+            ? billingPeriodElement
+            : default;
+        var trialDates = GetFirstTrialDates(data);
+        var scheduledChange = data.TryGetProperty("scheduled_change", out var scheduledChangeElement)
+            ? scheduledChangeElement
+            : default;
+
+        return new BillingWebhookEventModel(
+            root.GetProperty("event_id").GetString() ?? string.Empty,
+            eventType,
+            customerId,
+            subscriptionId,
+            null,
+            externalPriceId,
+            ResolvePlan(externalPriceId) ?? GetString(customData, "plan"),
+            GetString(data, "status") ?? string.Empty,
+            ParseDateTime(currentBillingPeriod, "starts_at"),
+            ParseDateTime(currentBillingPeriod, "ends_at"),
+            string.Equals(GetString(scheduledChange, "action"), "cancel", StringComparison.OrdinalIgnoreCase),
+            ParseDateTime(data, "canceled_at"),
+            ParseDateTime(trialDates, "starts_at"),
+            ParseDateTime(trialDates, "ends_at") ?? ParseDateTime(data, "next_billed_at"),
+            null,
+            null,
+            null,
+            ParseUserId(customData));
     }
 
     private async Task<Result<string>> CreateCustomerAsync(

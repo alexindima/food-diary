@@ -119,46 +119,70 @@ internal sealed class GoogleFitClient(
 
             response.EnsureSuccessStatusCode();
             var data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken).ConfigureAwait(false);
-
-            if (data.TryGetProperty("bucket", out var buckets) && buckets.GetArrayLength() > 0) {
-                var bucket = buckets[0];
-                if (bucket.TryGetProperty("dataset", out var datasets)) {
-                    foreach (var dataset in datasets.EnumerateArray()) {
-                        if (!dataset.TryGetProperty("point", out var points) || points.GetArrayLength() == 0) {
-                            continue;
-                        }
-
-                        var dataSourceId = dataset.TryGetProperty("dataSourceId", out var dsId) ? dsId.GetString() : "";
-                        var point = points[0];
-                        if (!point.TryGetProperty("value", out var values) || values.GetArrayLength() == 0) {
-                            continue;
-                        }
-
-                        var value = values[0];
-                        double numericValue = 0;
-                        if (value.TryGetProperty("intVal", out var intVal)) {
-                            numericValue = intVal.GetDouble();
-                        } else if (value.TryGetProperty("fpVal", out var fpVal)) {
-                            numericValue = fpVal.GetDouble();
-                        }
-
-                        if (dataSourceId?.Contains("step_count") == true) {
-                            results.Add(new WearableDataPoint(WearableDataType.Steps, numericValue));
-                        } else if (dataSourceId?.Contains("calories.expended") == true) {
-                            results.Add(new WearableDataPoint(WearableDataType.CaloriesBurned, numericValue));
-                        } else if (dataSourceId?.Contains("active_minutes") == true) {
-                            results.Add(new WearableDataPoint(WearableDataType.ActiveMinutes, numericValue));
-                        } else if (dataSourceId?.Contains("heart_rate") == true) {
-                            results.Add(new WearableDataPoint(WearableDataType.HeartRate, numericValue));
-                        }
-                    }
-                }
-            }
+            results.AddRange(ParseDailyData(data));
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "Google Fit data fetch failed for {Date}", date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
 
         return results;
+    }
+
+    private static IReadOnlyList<WearableDataPoint> ParseDailyData(JsonElement data) {
+        if (!data.TryGetProperty("bucket", out var buckets) || buckets.GetArrayLength() == 0) {
+            return [];
+        }
+
+        var bucket = buckets[0];
+        if (!bucket.TryGetProperty("dataset", out var datasets)) {
+            return [];
+        }
+
+        var results = new List<WearableDataPoint>();
+        foreach (var dataset in datasets.EnumerateArray()) {
+            var dataPoint = TryCreateDataPoint(dataset);
+            if (dataPoint is not null) {
+                results.Add(dataPoint);
+            }
+        }
+
+        return results;
+    }
+
+    private static WearableDataPoint? TryCreateDataPoint(JsonElement dataset) {
+        if (!dataset.TryGetProperty("point", out var points) || points.GetArrayLength() == 0) {
+            return null;
+        }
+
+        var dataSourceId = dataset.TryGetProperty("dataSourceId", out var dsId) ? dsId.GetString() : string.Empty;
+        var point = points[0];
+        if (!point.TryGetProperty("value", out var values) || values.GetArrayLength() == 0) {
+            return null;
+        }
+
+        var numericValue = ReadNumericValue(values[0]);
+        if (dataSourceId?.Contains("step_count") == true) {
+            return new WearableDataPoint(WearableDataType.Steps, numericValue);
+        }
+
+        if (dataSourceId?.Contains("calories.expended") == true) {
+            return new WearableDataPoint(WearableDataType.CaloriesBurned, numericValue);
+        }
+
+        if (dataSourceId?.Contains("active_minutes") == true) {
+            return new WearableDataPoint(WearableDataType.ActiveMinutes, numericValue);
+        }
+
+        return dataSourceId?.Contains("heart_rate") == true
+            ? new WearableDataPoint(WearableDataType.HeartRate, numericValue)
+            : null;
+    }
+
+    private static double ReadNumericValue(JsonElement value) {
+        if (value.TryGetProperty("intVal", out var intVal)) {
+            return intVal.GetDouble();
+        }
+
+        return value.TryGetProperty("fpVal", out var fpVal) ? fpVal.GetDouble() : 0;
     }
 
     private sealed class GoogleTokenResponse {

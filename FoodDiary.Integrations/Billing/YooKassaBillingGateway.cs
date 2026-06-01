@@ -108,8 +108,7 @@ public sealed class YooKassaBillingGateway(
         var status = payment.Paid && string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase)
             ? "active"
             : "past_due";
-        var periodStart = string.Equals(status, "active"
-, StringComparison.Ordinal) ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
+        var periodStart = string.Equals(status, "active", StringComparison.Ordinal) ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
             : null;
         var periodEnd = ResolvePeriodEnd(periodStart, request.Plan);
 
@@ -120,7 +119,7 @@ public sealed class YooKassaBillingGateway(
             request.Plan,
             status,
             periodStart,
-string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : request.CurrentPeriodEndUtc,
+            string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : request.CurrentPeriodEndUtc,
             $"yookassa-renewal:{payment.Id}:{payment.Status}",
             ParseAmount(payment.Amount?.Value),
             payment.Amount?.Currency ?? _options.Currency,
@@ -164,6 +163,10 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : request.
                 Errors.Billing.WebhookValidationFailed("YooKassa payment verification returned a different payment."));
         }
 
+        return Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(payment));
+    }
+
+    private static BillingWebhookEventModel CreateWebhookEvent(YooKassaPayment payment) {
         var metadata = payment.Metadata;
         var userId = ParseUserId(ReadMetadata(metadata, "user_id"));
         var plan = ReadMetadata(metadata, "plan");
@@ -173,7 +176,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : request.
         var status = MapStatus(payment);
         var paymentMethodId = payment.PaymentMethod?.Id;
 
-        return Result.Success<BillingWebhookEventModel?>(new BillingWebhookEventModel(
+        return new BillingWebhookEventModel(
             $"{verifiedEventType}:{payment.Id}:{payment.Status}",
             verifiedEventType,
             userId?.ToString() ?? ReadMetadata(metadata, "user_id") ?? payment.Id,
@@ -191,7 +194,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
             ParseAmount(payment.Amount?.Value),
             payment.Amount?.Currency,
             JsonSerializer.Serialize(payment, JsonOptions),
-            userId));
+            userId);
     }
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {

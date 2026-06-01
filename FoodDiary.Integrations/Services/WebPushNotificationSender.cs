@@ -23,20 +23,52 @@ public sealed class WebPushNotificationSender(
     }
 
     public async Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
-        if (!options.Enabled || !IsConfigured()) {
-            logger.LogDebug(
-                "Skipping web push notification {NotificationId} because web push is disabled or not configured.",
-                notification.Id.Value);
+        if (ShouldSkipForConfiguration(notification)) {
             return;
         }
 
+        if (!await ShouldSendForUserAsync(notification, cancellationToken).ConfigureAwait(false)) {
+            return;
+        }
+
+        var subscriptions = await GetActiveSubscriptionsAsync(notification, cancellationToken).ConfigureAwait(false);
+        if (subscriptions.Count == 0) {
+            return;
+        }
+
+        var (deliveredCount, invalidSubscriptions) = await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
+        if (invalidSubscriptions.Count > 0) {
+            await subscriptionRepository.DeleteRangeAsync(invalidSubscriptions, cancellationToken).ConfigureAwait(false);
+        }
+
+        logger.LogDebug(
+            "Processed web push notification {NotificationId} for user {UserId}. Delivered={DeliveredCount}, Expired={ExpiredCount}, Attempted={AttemptedCount}.",
+            notification.Id.Value,
+            notification.UserId.Value,
+            deliveredCount,
+            invalidSubscriptions.Count,
+            subscriptions.Count);
+    }
+
+    private bool ShouldSkipForConfiguration(Notification notification) {
+        if (options.Enabled && IsConfigured()) {
+            return false;
+        }
+
+        logger.LogDebug(
+            "Skipping web push notification {NotificationId} because web push is disabled or not configured.",
+            notification.Id.Value);
+        return true;
+    }
+
+    private async Task<bool> ShouldSendForUserAsync(Notification notification, CancellationToken cancellationToken) {
         var user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} because user {UserId} was not found.",
                 notification.Id.Value,
                 notification.UserId.Value);
-            return;
+            return false;
         }
 
         if (!user.PushNotificationsEnabled) {
@@ -44,7 +76,7 @@ public sealed class WebPushNotificationSender(
                 "Skipping web push notification {NotificationId} for user {UserId} because account push notifications are disabled.",
                 notification.Id.Value,
                 notification.UserId.Value);
-            return;
+            return false;
         }
 
         if (!IsCategoryEnabled(user, notification.Type)) {
@@ -53,42 +85,60 @@ public sealed class WebPushNotificationSender(
                 notification.Id.Value,
                 notification.UserId.Value,
                 notification.Type);
-            return;
+            return false;
         }
 
+        return true;
+    }
+
+    private async Task<List<WebPushSubscription>> GetActiveSubscriptionsAsync(Notification notification, CancellationToken cancellationToken) {
         var subscriptions = await subscriptionRepository.GetByUserAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         if (subscriptions.Count == 0) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} for user {UserId} because there are no subscriptions.",
                 notification.Id.Value,
                 notification.UserId.Value);
-            return;
+            return [];
         }
 
+        var activeSubscriptions = await PruneExpiredSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
+        if (activeSubscriptions.Count == 0) {
+            logger.LogDebug(
+                "Skipping web push notification {NotificationId} for user {UserId} because there are no active subscriptions.",
+                notification.Id.Value,
+                notification.UserId.Value);
+        }
+
+        return activeSubscriptions;
+    }
+
+    private async Task<List<WebPushSubscription>> PruneExpiredSubscriptionsAsync(
+        Notification notification,
+        IReadOnlyCollection<WebPushSubscription> subscriptions,
+        CancellationToken cancellationToken) {
         var utcNow = DateTime.UtcNow;
         var expiredSubscriptions = subscriptions
             .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= utcNow)
             .ToList();
 
-        if (expiredSubscriptions.Count > 0) {
-            await subscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
-            logger.LogInformation(
-                "Pruned {SubscriptionCount} expired web push subscriptions for user {UserId} before sending notification {NotificationId}.",
-                expiredSubscriptions.Count,
-                notification.UserId.Value,
-                notification.Id.Value);
-
-            subscriptions = subscriptions.Except(expiredSubscriptions).ToList();
+        if (expiredSubscriptions.Count == 0) {
+            return subscriptions.ToList();
         }
 
-        if (subscriptions.Count == 0) {
-            logger.LogDebug(
-                "Skipping web push notification {NotificationId} for user {UserId} because there are no active subscriptions.",
-                notification.Id.Value,
-                notification.UserId.Value);
-            return;
-        }
+        await subscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
+        logger.LogInformation(
+            "Pruned {SubscriptionCount} expired web push subscriptions for user {UserId} before sending notification {NotificationId}.",
+            expiredSubscriptions.Count,
+            notification.UserId.Value,
+            notification.Id.Value);
 
+        return subscriptions.Except(expiredSubscriptions).ToList();
+    }
+
+    private async Task<(int DeliveredCount, List<WebPushSubscription> InvalidSubscriptions)> SendToSubscriptionsAsync(
+        Notification notification,
+        IReadOnlyCollection<WebPushSubscription> subscriptions,
+        CancellationToken cancellationToken) {
         var client = new WebPushClient();
         var vapidDetails = new VapidDetails(options.Subject, options.PublicKey, options.PrivateKey);
         var invalidSubscriptions = new List<WebPushSubscription>();
@@ -118,17 +168,7 @@ public sealed class WebPushNotificationSender(
             }
         }
 
-        if (invalidSubscriptions.Count > 0) {
-            await subscriptionRepository.DeleteRangeAsync(invalidSubscriptions, cancellationToken).ConfigureAwait(false);
-        }
-
-        logger.LogDebug(
-            "Processed web push notification {NotificationId} for user {UserId}. Delivered={DeliveredCount}, Expired={ExpiredCount}, Attempted={AttemptedCount}.",
-            notification.Id.Value,
-            notification.UserId.Value,
-            deliveredCount,
-            invalidSubscriptions.Count,
-            subscriptions.Count);
+        return (deliveredCount, invalidSubscriptions);
     }
 
     private bool IsConfigured() {

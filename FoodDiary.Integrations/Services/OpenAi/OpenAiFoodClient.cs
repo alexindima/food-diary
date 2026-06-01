@@ -161,30 +161,12 @@ public sealed class OpenAiFoodClient(
             var responseBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode) {
-                var statusCode = (int)response.StatusCode;
-                var requestId = response.Headers.TryGetValues("x-request-id", out var values)
-                    ? string.Join(",", values)
-                    : null;
-
-                if (attempt < MaxTransientRetries && IsTransientStatusCode(response.StatusCode)) {
-                    _logger.LogWarning(
-                        "OpenAI transient failure on attempt {Attempt}. Status={Status} RequestId={RequestId} Summary={Summary}. Retrying.",
-                        attempt + 1,
-                        statusCode,
-                        requestId ?? "n/a",
-                        SummarizeErrorBody(responseBody));
-                    await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
+                var failedResponse = await HandleFailedResponseAsync(response, responseBody, attempt, operation, model, cancellationToken).ConfigureAwait(false);
+                if (failedResponse.ShouldRetry) {
                     continue;
                 }
 
-                _logger.LogWarning(
-                    "OpenAI request failed. Status={Status} RequestId={RequestId} Summary={Summary}",
-                    statusCode,
-                    requestId ?? "n/a",
-                    SummarizeErrorBody(responseBody));
-
-                RecordAiRequest(operation, model, $"http_{statusCode}");
-                return (false, null, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {SummarizeErrorBody(responseBody)}"));
+                return (false, null, failedResponse.Error);
             }
 
             try {
@@ -199,6 +181,40 @@ public sealed class OpenAiFoodClient(
 
         RecordAiRequest(operation, model, "retry_exhausted");
         return (false, null, Errors.Ai.OpenAiFailed("OpenAI request failed after retries."));
+    }
+
+    private async Task<(bool ShouldRetry, Error Error)> HandleFailedResponseAsync(
+        HttpResponseMessage response,
+        string responseBody,
+        int attempt,
+        string operation,
+        string model,
+        CancellationToken cancellationToken) {
+        var statusCode = (int)response.StatusCode;
+        var requestId = response.Headers.TryGetValues("x-request-id", out var values)
+            ? string.Join(",", values)
+            : null;
+        var summary = SummarizeErrorBody(responseBody);
+
+        if (attempt < MaxTransientRetries && IsTransientStatusCode(response.StatusCode)) {
+            _logger.LogWarning(
+                "OpenAI transient failure on attempt {Attempt}. Status={Status} RequestId={RequestId} Summary={Summary}. Retrying.",
+                attempt + 1,
+                statusCode,
+                requestId ?? "n/a",
+                summary);
+            await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
+            return (true, Error.None);
+        }
+
+        _logger.LogWarning(
+            "OpenAI request failed. Status={Status} RequestId={RequestId} Summary={Summary}",
+            statusCode,
+            requestId ?? "n/a",
+            summary);
+
+        RecordAiRequest(operation, model, $"http_{statusCode}");
+        return (false, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {summary}"));
     }
 
     private static object BuildVisionRequest(
@@ -238,35 +254,7 @@ public sealed class OpenAiFoodClient(
                     }
                 }
             },
-            text = new {
-                format = new {
-                    type = "json_schema",
-                    name = "food_vision",
-                    schema = new {
-                        type = "object",
-                        properties = new {
-                            items = new {
-                                type = "array",
-                                items = new {
-                                    type = "object",
-                                    properties = new {
-                                        nameEn = new { type = "string" },
-                                        nameLocal = new { type = new[] { "string", "null" } },
-                                        amount = new { type = "number" },
-                                        unit = new { type = "string" },
-                                        confidence = new { type = "number" }
-                                    },
-                                    required = new[] { "nameEn", "nameLocal", "amount", "unit", "confidence" },
-                                    additionalProperties = false
-                                }
-                            },
-                        },
-                        required = new[] { "items" },
-                        additionalProperties = false
-                    },
-                    strict = true
-                }
-            }
+            text = BuildFoodVisionTextFormat()
         };
     }
 
@@ -294,34 +282,38 @@ public sealed class OpenAiFoodClient(
                     }
                 }
             },
-            text = new {
-                format = new {
-                    type = "json_schema",
-                    name = "food_vision",
-                    schema = new {
-                        type = "object",
-                        properties = new {
+            text = BuildFoodVisionTextFormat()
+        };
+    }
+
+    private static object BuildFoodVisionTextFormat() {
+        return new {
+            format = new {
+                type = "json_schema",
+                name = "food_vision",
+                schema = new {
+                    type = "object",
+                    properties = new {
+                        items = new {
+                            type = "array",
                             items = new {
-                                type = "array",
-                                items = new {
-                                    type = "object",
-                                    properties = new {
-                                        nameEn = new { type = "string" },
-                                        nameLocal = new { type = new[] { "string", "null" } },
-                                        amount = new { type = "number" },
-                                        unit = new { type = "string" },
-                                        confidence = new { type = "number" }
-                                    },
-                                    required = new[] { "nameEn", "nameLocal", "amount", "unit", "confidence" },
-                                    additionalProperties = false
-                                }
-                            },
+                                type = "object",
+                                properties = new {
+                                    nameEn = new { type = "string" },
+                                    nameLocal = new { type = new[] { "string", "null" } },
+                                    amount = new { type = "number" },
+                                    unit = new { type = "string" },
+                                    confidence = new { type = "number" }
+                                },
+                                required = new[] { "nameEn", "nameLocal", "amount", "unit", "confidence" },
+                                additionalProperties = false
+                            }
                         },
-                        required = new[] { "items" },
-                        additionalProperties = false
                     },
-                    strict = true
-                }
+                    required = new[] { "items" },
+                    additionalProperties = false
+                },
+                strict = true
             }
         };
     }
@@ -354,49 +346,53 @@ public sealed class OpenAiFoodClient(
                     }
                 }
             },
-            text = new {
-                format = new {
-                    type = "json_schema",
-                    name = "food_nutrition",
-                    schema = new {
-                        type = "object",
-                        properties = new {
-                            calories = new { type = "number" },
-                            protein = new { type = "number" },
-                            fat = new { type = "number" },
-                            carbs = new { type = "number" },
-                            fiber = new { type = "number" },
-                            alcohol = new { type = "number" },
+            text = BuildFoodNutritionTextFormat()
+        };
+    }
+
+    private static object BuildFoodNutritionTextFormat() {
+        return new {
+            format = new {
+                type = "json_schema",
+                name = "food_nutrition",
+                schema = new {
+                    type = "object",
+                    properties = new {
+                        calories = new { type = "number" },
+                        protein = new { type = "number" },
+                        fat = new { type = "number" },
+                        carbs = new { type = "number" },
+                        fiber = new { type = "number" },
+                        alcohol = new { type = "number" },
+                        items = new {
+                            type = "array",
                             items = new {
-                                type = "array",
-                                items = new {
-                                    type = "object",
-                                    properties = new {
-                                        name = new { type = "string" },
-                                        amount = new { type = "number" },
-                                        unit = new { type = "string" },
-                                        calories = new { type = "number" },
-                                        protein = new { type = "number" },
-                                        fat = new { type = "number" },
-                                        carbs = new { type = "number" },
-                                        fiber = new { type = "number" },
-                                        alcohol = new { type = "number" }
-                                    },
-                                    required = new[] {
-                                        "name", "amount", "unit",
-                                        "calories", "protein", "fat", "carbs", "fiber", "alcohol"
-                                    },
-                                    additionalProperties = false
-                                }
-                            },
+                                type = "object",
+                                properties = new {
+                                    name = new { type = "string" },
+                                    amount = new { type = "number" },
+                                    unit = new { type = "string" },
+                                    calories = new { type = "number" },
+                                    protein = new { type = "number" },
+                                    fat = new { type = "number" },
+                                    carbs = new { type = "number" },
+                                    fiber = new { type = "number" },
+                                    alcohol = new { type = "number" }
+                                },
+                                required = new[] {
+                                    "name", "amount", "unit",
+                                    "calories", "protein", "fat", "carbs", "fiber", "alcohol"
+                                },
+                                additionalProperties = false
+                            }
                         },
-                        required = new[] {
-                            "calories", "protein", "fat", "carbs", "fiber", "alcohol", "items"
-                        },
-                        additionalProperties = false
                     },
-                    strict = true
-                }
+                    required = new[] {
+                        "calories", "protein", "fat", "carbs", "fiber", "alcohol", "items"
+                    },
+                    additionalProperties = false
+                },
+                strict = true
             }
         };
     }

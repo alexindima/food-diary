@@ -119,6 +119,9 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.JobManager/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[FoodDiary.Integrations/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [FoodDiary.MailInbox.Application/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
