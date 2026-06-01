@@ -14,7 +14,6 @@
 *.md
 LICENSE
 *.sln
-.editorconfig
 .gitignore
 .dockerignore
 

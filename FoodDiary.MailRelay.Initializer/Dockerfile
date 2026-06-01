@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
 WORKDIR /src
 
-COPY Directory.Build.props Directory.Packages.props FoodDiary.slnx ./
+COPY .editorconfig Directory.Build.props Directory.Packages.props FoodDiary.slnx ./
 COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
 COPY FoodDiary.MailRelay.Domain/*.csproj FoodDiary.MailRelay.Domain/
 COPY FoodDiary.MailRelay.Application/*.csproj FoodDiary.MailRelay.Application/
