@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
@@ -29,4 +30,5 @@ public sealed record OpenAiFoodClientResponse<T>(
     string Model,
     AiUsageTokens? Usage);
 
+[StructLayout(LayoutKind.Auto)]
 public readonly record struct AiUsageTokens(int InputTokens, int OutputTokens, int TotalTokens);

@@ -1,5 +1,8 @@
+using System.Runtime.InteropServices;
+
 namespace FoodDiary.Domain.ValueObjects;
 
+[StructLayout(LayoutKind.Auto)]
 public readonly record struct HealthAreaScores(
     HealthAreaScore Heart,
     HealthAreaScore Bone,
@@ -81,6 +84,7 @@ public readonly record struct HealthAreaScores(
     }
 }
 
+[StructLayout(LayoutKind.Auto)]
 public readonly record struct HealthAreaScore(int Score, HealthAreaGrade Grade);
 
 public enum HealthAreaGrade {

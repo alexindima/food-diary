@@ -1,5 +1,8 @@
+using System.Runtime.InteropServices;
+
 namespace FoodDiary.Domain.ValueObjects;
 
+[StructLayout(LayoutKind.Auto)]
 public readonly record struct UserAiQuotaState(
     long AiInputTokenLimit,
     long AiOutputTokenLimit) {

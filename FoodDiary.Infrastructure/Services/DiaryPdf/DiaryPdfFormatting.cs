@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.InteropServices;
 using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
@@ -228,6 +229,7 @@ internal sealed partial class DiaryPdfGenerator {
         double Carbs,
         double Fiber);
 
+    [StructLayout(LayoutKind.Auto)]
     private readonly record struct MealCompositionNutrition(
         double Calories,
         double Proteins,

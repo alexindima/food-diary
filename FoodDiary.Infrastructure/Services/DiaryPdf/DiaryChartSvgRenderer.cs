@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
@@ -227,6 +228,7 @@ internal sealed partial class DiaryPdfGenerator {
 
         private static string Escape(string value) => WebUtility.HtmlEncode(value);
 
+        [StructLayout(LayoutKind.Auto)]
         private readonly record struct Point(double X, double Y);
     }
 }

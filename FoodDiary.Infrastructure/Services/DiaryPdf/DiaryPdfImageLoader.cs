@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using SkiaSharp;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
@@ -137,6 +138,7 @@ internal sealed partial class DiaryPdfGenerator {
         }
     }
 
+    [StructLayout(LayoutKind.Auto)]
     private readonly record struct MealImageEntry(MealId MealId, byte[]? Image);
 
     private static IReadOnlyList<string> GetCompositionImageUrls(Meal meal) =>
@@ -315,5 +317,6 @@ internal sealed partial class DiaryPdfGenerator {
         return encoded.ToArray();
     }
 
+    [StructLayout(LayoutKind.Auto)]
     private readonly record struct CollageSlot(int X, int Y, int Width, int Height);
 }
