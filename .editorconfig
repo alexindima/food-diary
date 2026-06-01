@@ -122,6 +122,9 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.Web.Api/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[FoodDiary.Initializer/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [FoodDiary.JobManager/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
@@ -174,6 +177,12 @@ dotnet_diagnostic.MA0051.severity = warning
 dotnet_diagnostic.MA0051.severity = warning
 
 [tests/FoodDiary.Infrastructure.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.Presentation.Api.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.Web.Api.IntegrationTests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [tests/FoodDiary.JobManager.Tests/**/*.cs]
