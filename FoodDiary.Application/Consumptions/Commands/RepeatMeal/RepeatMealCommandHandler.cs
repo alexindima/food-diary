@@ -19,44 +19,76 @@ public class RepeatMealCommandHandler(
     IMealNutritionService mealNutritionService,
     IUserRepository userRepository)
     : ICommandHandler<RepeatMealCommand, Result<ConsumptionModel>> {
+    private sealed record RepeatMealValues(
+        UserId UserId,
+        Meal SourceMeal,
+        MealType? MealType);
+
     public async Task<Result<ConsumptionModel>> Handle(
-        RepeatMealCommand command, CancellationToken cancellationToken) {
+        RepeatMealCommand command,
+        CancellationToken cancellationToken) {
+        var valuesResult = await PrepareRepeatValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        if (valuesResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(valuesResult.Error);
+        }
+
+        var values = valuesResult.Value;
+        var newMeal = CreateRepeatedMeal(command, values);
+        CopyItems(values.SourceMeal, newMeal);
+        CopyAiSessions(values.SourceMeal, newMeal, command.TargetDate);
+        await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken).ConfigureAwait(false);
+
+        await mealRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
+        return Result.Success(newMeal.ToModel());
+    }
+
+    private async Task<Result<RepeatMealValues>> PrepareRepeatValuesAsync(
+        RepeatMealCommand command,
+        CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<RepeatMealValues>(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
         var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
-            return Result.Failure<ConsumptionModel>(accessError);
+            return Result.Failure<RepeatMealValues>(accessError);
         }
 
         var sourceMealId = new MealId(command.MealId);
-        var sourceMeal = await mealRepository.GetByIdAsync(sourceMealId, userId, includeItems: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-
+        var sourceMeal = await mealRepository.GetByIdAsync(
+            sourceMealId,
+            userId,
+            includeItems: true,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (sourceMeal is null) {
-            return Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(command.MealId));
+            return Result.Failure<RepeatMealValues>(Errors.Consumption.NotFound(command.MealId));
         }
 
         var mealTypeResult = EnumValueParser.ParseOptional<MealType>(
             command.MealType ?? sourceMeal.MealType?.ToString(),
             "MealType",
             "Unknown meal type value.");
-        if (mealTypeResult.IsFailure) {
-            return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
-        }
+        return mealTypeResult.IsFailure
+            ? Result.Failure<RepeatMealValues>(mealTypeResult.Error)
+            : Result.Success(new RepeatMealValues(userId, sourceMeal, mealTypeResult.Value));
+    }
 
+    private static Meal CreateRepeatedMeal(RepeatMealCommand command, RepeatMealValues values) {
+        var sourceMeal = values.SourceMeal;
         var shouldCopyMealImage = !sourceMeal.AiSessions.Any(session => session.ImageAssetId.HasValue);
-        var newMeal = Meal.Create(
-            userId,
+        return Meal.Create(
+            values.UserId,
             command.TargetDate,
-            mealTypeResult.Value,
+            values.MealType,
             sourceMeal.Comment,
             shouldCopyMealImage ? sourceMeal.ImageUrl : null,
             shouldCopyMealImage ? sourceMeal.ImageAssetId : null,
             sourceMeal.PreMealSatietyLevel,
             sourceMeal.PostMealSatietyLevel);
+    }
 
+    private static void CopyItems(Meal sourceMeal, Meal newMeal) {
         foreach (var item in sourceMeal.Items) {
             if (item.ProductId.HasValue) {
                 newMeal.AddProduct(item.ProductId.Value, item.Amount);
@@ -64,10 +96,12 @@ public class RepeatMealCommandHandler(
                 newMeal.AddRecipe(item.RecipeId.Value, item.Amount);
             }
         }
+    }
 
-        var targetRecognizedAtUtc = command.TargetDate.Kind == DateTimeKind.Unspecified
-            ? DateTime.SpecifyKind(command.TargetDate, DateTimeKind.Utc)
-            : command.TargetDate.ToUniversalTime();
+    private static void CopyAiSessions(Meal sourceMeal, Meal newMeal, DateTime targetDate) {
+        var targetRecognizedAtUtc = targetDate.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(targetDate, DateTimeKind.Utc)
+            : targetDate.ToUniversalTime();
 
         foreach (var session in sourceMeal.AiSessions) {
             var items = session.Items
@@ -86,7 +120,13 @@ public class RepeatMealCommandHandler(
 
             newMeal.AddAiSession(session.ImageAssetId, session.Source, targetRecognizedAtUtc, session.Notes, items);
         }
+    }
 
+    private async Task ApplyNutritionAsync(
+        Meal sourceMeal,
+        Meal newMeal,
+        UserId userId,
+        CancellationToken cancellationToken) {
         if (sourceMeal.IsNutritionAutoCalculated) {
             var nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsSuccess) {
@@ -99,25 +139,23 @@ public class RepeatMealCommandHandler(
                     nutritionResult.Value.Alcohol,
                     IsAutoCalculated: true));
             }
-        } else {
-            newMeal.ApplyNutrition(new MealNutritionUpdate(
-                TotalCalories: sourceMeal.TotalCalories,
-                TotalProteins: sourceMeal.TotalProteins,
-                TotalFats: sourceMeal.TotalFats,
-                TotalCarbs: sourceMeal.TotalCarbs,
-                TotalFiber: sourceMeal.TotalFiber,
-                TotalAlcohol: sourceMeal.TotalAlcohol,
-                IsAutoCalculated: false,
-                ManualCalories: sourceMeal.ManualCalories,
-                ManualProteins: sourceMeal.ManualProteins,
-                ManualFats: sourceMeal.ManualFats,
-                ManualCarbs: sourceMeal.ManualCarbs,
-                ManualFiber: sourceMeal.ManualFiber,
-                ManualAlcohol: sourceMeal.ManualAlcohol));
+
+            return;
         }
 
-        await mealRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(newMeal.ToModel());
+        newMeal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: sourceMeal.TotalCalories,
+            TotalProteins: sourceMeal.TotalProteins,
+            TotalFats: sourceMeal.TotalFats,
+            TotalCarbs: sourceMeal.TotalCarbs,
+            TotalFiber: sourceMeal.TotalFiber,
+            TotalAlcohol: sourceMeal.TotalAlcohol,
+            IsAutoCalculated: false,
+            ManualCalories: sourceMeal.ManualCalories,
+            ManualProteins: sourceMeal.ManualProteins,
+            ManualFats: sourceMeal.ManualFats,
+            ManualCarbs: sourceMeal.ManualCarbs,
+            ManualFiber: sourceMeal.ManualFiber,
+            ManualAlcohol: sourceMeal.ManualAlcohol));
     }
 }

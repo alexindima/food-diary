@@ -101,43 +101,7 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.Application.Abstractions/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[FoodDiary.Application/Products/**/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/**/*Validator.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/**/*Mappings.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Admin/Commands/StartAdminImpersonation/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Admin/Commands/UpdateAdminUser/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Billing/**/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Dashboard/**/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Dietologist/Commands/InviteDietologist/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/ShoppingLists/**/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Usda/Queries/**/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Users/**/*.cs]
-dotnet_diagnostic.MA0051.severity = warning
-
-[FoodDiary.Application/Recipes/Commands/DuplicateRecipe/*.cs]
+[FoodDiary.Application/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [FoodDiary.MailInbox.Client/**/*.cs]

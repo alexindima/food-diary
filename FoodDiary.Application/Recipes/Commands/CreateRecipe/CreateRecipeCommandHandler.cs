@@ -10,6 +10,7 @@ using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -23,20 +24,48 @@ public class CreateRecipeCommandHandler(
     IProductLookupService productLookupService,
     IRecipeLookupService recipeLookupService)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
+    private sealed record CreateRecipeValues(
+        UserId UserId,
+        Visibility Visibility,
+        ImageAssetId? ImageAssetId,
+        ImageAsset? ImageAsset);
+
     public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
+        var valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        if (valuesResult.IsFailure) {
+            return Result.Failure<RecipeModel>(valuesResult.Error);
+        }
+
+        var values = valuesResult.Value;
+        var recipe = CreateRecipe(command, values);
+        var stepsResult = await AddStepsAsync(recipe, command, values.UserId, cancellationToken).ConfigureAwait(false);
+        if (stepsResult.IsFailure) return Result.Failure<RecipeModel>(stepsResult.Error);
+
+        var ingredientsResult = await EnsureIngredientsAccessibleAsync(command.Steps, recipe.Id, values.UserId, cancellationToken).ConfigureAwait(false);
+        if (ingredientsResult.IsFailure) return Result.Failure<RecipeModel>(ingredientsResult.Error);
+
+        var nutritionResult = ApplyNutrition(recipe, command);
+        if (nutritionResult.IsFailure) return Result.Failure<RecipeModel>(nutritionResult.Error);
+
+        return await SaveAndLoadAsync(recipe, values.UserId, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result<CreateRecipeValues>> PrepareCreateValuesAsync(
+        CreateRecipeCommand command,
+        CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<CreateRecipeValues>(Errors.Authentication.InvalidToken);
         }
 
         var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<RecipeModel>(imageAssetIdResult.Error);
+            return Result.Failure<CreateRecipeValues>(imageAssetIdResult.Error);
         }
 
         var userId = new UserId(command.UserId!.Value);
         var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
-            return Result.Failure<RecipeModel>(accessError);
+            return Result.Failure<CreateRecipeValues>(accessError);
         }
 
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
@@ -44,73 +73,70 @@ public class CreateRecipeCommandHandler(
             userId,
             cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
-            return Result.Failure<RecipeModel>(imageAssetResult.Error);
+            return Result.Failure<CreateRecipeValues>(imageAssetResult.Error);
         }
-
-        var imageUrl = imageAssetResult.Value?.Url ?? command.ImageUrl;
 
         var visibilityResult = EnumValueParser.ParseRequired<Visibility>(
             command.Visibility,
             nameof(command.Visibility),
             "Unknown visibility value.");
         if (visibilityResult.IsFailure) {
-            return Result.Failure<RecipeModel>(visibilityResult.Error);
+            return Result.Failure<CreateRecipeValues>(visibilityResult.Error);
         }
 
-        var recipe = Recipe.Create(
+        return Result.Success(new CreateRecipeValues(
             userId,
+            visibilityResult.Value,
+            imageAssetIdResult.Value,
+            imageAssetResult.Value));
+    }
+
+    private static Recipe CreateRecipe(CreateRecipeCommand command, CreateRecipeValues values) =>
+        Recipe.Create(
+            values.UserId,
             command.Name,
             command.Servings,
             command.Description,
             command.Comment,
             command.Category,
-            imageUrl,
-            imageAssetIdResult.Value,
+            values.ImageAsset?.Url ?? command.ImageUrl,
+            values.ImageAssetId,
             command.PrepTime ?? 0,
             command.CookTime,
-            visibilityResult.Value);
+            values.Visibility);
 
-        var addStepsResult = await AddStepsAsync(recipe, command, userId, cancellationToken).ConfigureAwait(false);
-        if (addStepsResult.IsFailure) {
-            return Result.Failure<RecipeModel>(addStepsResult.Error);
-        }
-
-        var ingredientAccessResult = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
-            command.Steps,
-            recipe.Id,
-            userId,
-            productLookupService,
-            recipeLookupService,
-            cancellationToken).ConfigureAwait(false);
-        if (ingredientAccessResult.IsFailure) {
-            return Result.Failure<RecipeModel>(ingredientAccessResult.Error);
-        }
-
+    private static Result ApplyNutrition(Recipe recipe, CreateRecipeCommand command) {
         if (command.CalculateNutritionAutomatically) {
             recipe.EnableAutoNutrition();
-        } else {
-            var manualNutritionResult = ValidateManualNutrition(
-                command.ManualCalories,
-                command.ManualProteins,
-                command.ManualFats,
-                command.ManualCarbs,
-                command.ManualFiber,
-                command.ManualAlcohol);
-
-            if (manualNutritionResult.IsFailure) {
-                return Result.Failure<RecipeModel>(manualNutritionResult.Error);
-            }
-
-            var manual = manualNutritionResult.Value;
-            recipe.SetManualNutrition(
-                manual.Calories,
-                manual.Proteins,
-                manual.Fats,
-                manual.Carbs,
-                manual.Fiber,
-                manual.Alcohol);
+            return Result.Success();
         }
 
+        var manualNutritionResult = ValidateManualNutrition(
+            command.ManualCalories,
+            command.ManualProteins,
+            command.ManualFats,
+            command.ManualCarbs,
+            command.ManualFiber,
+            command.ManualAlcohol);
+        if (manualNutritionResult.IsFailure) {
+            return manualNutritionResult;
+        }
+
+        var manual = manualNutritionResult.Value;
+        recipe.SetManualNutrition(
+            manual.Calories,
+            manual.Proteins,
+            manual.Fats,
+            manual.Carbs,
+            manual.Fiber,
+            manual.Alcohol);
+        return Result.Success();
+    }
+
+    private async Task<Result<RecipeModel>> SaveAndLoadAsync(
+        Recipe recipe,
+        UserId userId,
+        CancellationToken cancellationToken) {
         await recipeRepository.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
         await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeRepository, cancellationToken).ConfigureAwait(false);
 
@@ -126,6 +152,19 @@ public class CreateRecipeCommandHandler(
             ? Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load created recipe."))
             : Result.Success(created.ToModel(0, true));
     }
+
+    private Task<Result> EnsureIngredientsAccessibleAsync(
+        IReadOnlyList<RecipeStepInput> steps,
+        RecipeId recipeId,
+        UserId userId,
+        CancellationToken cancellationToken) =>
+        RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            steps,
+            recipeId,
+            userId,
+            productLookupService,
+            recipeLookupService,
+            cancellationToken);
 
     private async Task<Result> AddStepsAsync(
         Recipe recipe,

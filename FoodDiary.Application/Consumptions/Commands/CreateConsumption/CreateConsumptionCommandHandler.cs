@@ -11,6 +11,7 @@ using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -26,20 +27,56 @@ public class CreateConsumptionCommandHandler(
     IDateTimeProvider dateTimeProvider,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
+    private sealed record CreateConsumptionValues(
+        UserId UserId,
+        MealType? MealType,
+        ImageAssetId? ImageAssetId,
+        ImageAsset? ImageAsset);
+
     public async Task<Result<ConsumptionModel>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
+        var valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        if (valuesResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(valuesResult.Error);
+        }
+
+        var values = valuesResult.Value;
+        var meal = Meal.Create(
+            values.UserId,
+            command.Date,
+            values.MealType,
+            command.Comment,
+            values.ImageAsset?.Url ?? command.ImageUrl,
+            values.ImageAssetId);
+        meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
+
+        var itemsResult = AddManualItems(meal, command.Items);
+        if (itemsResult.IsFailure) return Result.Failure<ConsumptionModel>(itemsResult.Error);
+
+        var aiSessionsResult = await AddAiSessionsAsync(meal, command.AiSessions, values.UserId, cancellationToken).ConfigureAwait(false);
+        if (aiSessionsResult.IsFailure) return Result.Failure<ConsumptionModel>(aiSessionsResult.Error);
+
+        var nutritionResult = await ApplyNutritionAsync(meal, command, values.UserId, cancellationToken).ConfigureAwait(false);
+        if (nutritionResult.IsFailure) return Result.Failure<ConsumptionModel>(nutritionResult.Error);
+
+        return await SaveAndLoadAsync(meal, values.UserId, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result<CreateConsumptionValues>> PrepareCreateValuesAsync(
+        CreateConsumptionCommand command,
+        CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<CreateConsumptionValues>(Errors.Authentication.InvalidToken);
         }
 
         var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<ConsumptionModel>(imageAssetIdResult.Error);
+            return Result.Failure<CreateConsumptionValues>(imageAssetIdResult.Error);
         }
 
         var userId = new UserId(command.UserId!.Value);
         var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
-            return Result.Failure<ConsumptionModel>(accessError);
+            return Result.Failure<CreateConsumptionValues>(accessError);
         }
 
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
@@ -47,7 +84,7 @@ public class CreateConsumptionCommandHandler(
             userId,
             cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
-            return Result.Failure<ConsumptionModel>(imageAssetResult.Error);
+            return Result.Failure<CreateConsumptionValues>(imageAssetResult.Error);
         }
 
         var mealTypeResult = EnumValueParser.ParseOptional<MealType>(
@@ -55,23 +92,26 @@ public class CreateConsumptionCommandHandler(
             nameof(command.MealType),
             "Unknown meal type value.");
         if (mealTypeResult.IsFailure) {
-            return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
+            return Result.Failure<CreateConsumptionValues>(mealTypeResult.Error);
         }
 
-        var meal = Meal.Create(userId, command.Date, mealTypeResult.Value, command.Comment, imageAssetResult.Value?.Url ?? command.ImageUrl,
-            imageAssetIdResult.Value);
+        return Result.Success(new CreateConsumptionValues(
+            userId,
+            mealTypeResult.Value,
+            imageAssetIdResult.Value,
+            imageAssetResult.Value));
+    }
 
-        meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
-
-        foreach (var item in command.Items) {
+    private static Result AddManualItems(Meal meal, IEnumerable<ConsumptionItemInput> items) {
+        foreach (var item in items) {
             var validation = ConsumptionItemValidator.Validate(item);
             if (validation.IsFailure) {
-                return Result.Failure<ConsumptionModel>(validation.Error);
+                return validation;
             }
 
             var itemIdValidation = ValidateItemIdentifiers(item);
             if (itemIdValidation.IsFailure) {
-                return Result.Failure<ConsumptionModel>(itemIdValidation.Error);
+                return itemIdValidation;
             }
 
             if (item.ProductId.HasValue) {
@@ -81,53 +121,82 @@ public class CreateConsumptionCommandHandler(
             }
         }
 
-        foreach (var session in command.AiSessions) {
-            var sessionImageAssetIdResult = ImageAssetIdParser.ParseOptional(session.ImageAssetId, nameof(session.ImageAssetId));
-            if (sessionImageAssetIdResult.IsFailure) {
-                return Result.Failure<ConsumptionModel>(sessionImageAssetIdResult.Error);
-            }
+        return Result.Success();
+    }
 
-            var sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
-                sessionImageAssetIdResult.Value,
-                userId,
-                cancellationToken).ConfigureAwait(false);
-            if (sessionImageAssetResult.IsFailure) {
-                return Result.Failure<ConsumptionModel>(sessionImageAssetResult.Error);
+    private async Task<Result> AddAiSessionsAsync(
+        Meal meal,
+        IEnumerable<ConsumptionAiSessionInput> sessions,
+        UserId userId,
+        CancellationToken cancellationToken) {
+        foreach (var session in sessions) {
+            var sessionResult = await AddAiSessionAsync(meal, session, userId, cancellationToken).ConfigureAwait(false);
+            if (sessionResult.IsFailure) {
+                return sessionResult;
             }
-
-            var sessionItemsResult = CreateAiSessionItems(session);
-            if (sessionItemsResult.IsFailure) {
-                return Result.Failure<ConsumptionModel>(sessionItemsResult.Error);
-            }
-
-            if (!TryParseAiRecognitionSource(session.Source, out var sessionSource)) {
-                return Result.Failure<ConsumptionModel>(
-                    Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
-            }
-
-            var recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.UtcNow;
-            if (recognizedAtUtc.Kind == DateTimeKind.Unspecified) {
-                return Result.Failure<ConsumptionModel>(
-                    Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));
-            }
-
-            if (session.Notes is { Length: > 2048 }) {
-                return Result.Failure<ConsumptionModel>(
-                    Errors.Validation.Invalid(nameof(session.Notes), "Notes must be at most 2048 characters."));
-            }
-
-            meal.AddAiSession(
-                sessionImageAssetIdResult.Value,
-                sessionSource,
-                recognizedAtUtc,
-                session.Notes,
-                sessionItemsResult.Value);
         }
 
+        return Result.Success();
+    }
+
+    private async Task<Result> AddAiSessionAsync(
+        Meal meal,
+        ConsumptionAiSessionInput session,
+        UserId userId,
+        CancellationToken cancellationToken) {
+        var sessionImageAssetIdResult = ImageAssetIdParser.ParseOptional(session.ImageAssetId, nameof(session.ImageAssetId));
+        if (sessionImageAssetIdResult.IsFailure) {
+            return sessionImageAssetIdResult;
+        }
+
+        var sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            sessionImageAssetIdResult.Value,
+            userId,
+            cancellationToken).ConfigureAwait(false);
+        if (sessionImageAssetResult.IsFailure) {
+            return sessionImageAssetResult;
+        }
+
+        var sessionItemsResult = CreateAiSessionItems(session);
+        if (sessionItemsResult.IsFailure) {
+            return sessionItemsResult;
+        }
+
+        if (!TryParseAiRecognitionSource(session.Source, out var sessionSource)) {
+            return Result.Failure(
+                    Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
+        }
+
+        var recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.UtcNow;
+        if (recognizedAtUtc.Kind == DateTimeKind.Unspecified) {
+            return Result.Failure(
+                    Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));
+        }
+
+        if (session.Notes is { Length: > 2048 }) {
+            return Result.Failure(
+                    Errors.Validation.Invalid(nameof(session.Notes), "Notes must be at most 2048 characters."));
+        }
+
+        meal.AddAiSession(
+            sessionImageAssetIdResult.Value,
+            sessionSource,
+            recognizedAtUtc,
+            session.Notes,
+            sessionItemsResult.Value);
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ApplyNutritionAsync(
+        Meal meal,
+        CreateConsumptionCommand command,
+        UserId userId,
+        CancellationToken cancellationToken) {
         if (command.IsNutritionAutoCalculated) {
             var nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsFailure) {
-                return Result.Failure<ConsumptionModel>(nutritionResult.Error);
+                return nutritionResult;
             }
 
             meal.ApplyNutrition(new MealNutritionUpdate(
@@ -138,36 +207,46 @@ public class CreateConsumptionCommandHandler(
                 nutritionResult.Value.Fiber,
                 nutritionResult.Value.Alcohol,
                 IsAutoCalculated: true));
-        } else {
-            var manualNutritionResult = ManualNutritionValidator.Validate(
-                command.ManualCalories,
-                command.ManualProteins,
-                command.ManualFats,
-                command.ManualCarbs,
-                command.ManualFiber,
-                command.ManualAlcohol);
-
-            if (manualNutritionResult.IsFailure) {
-                return Result.Failure<ConsumptionModel>(manualNutritionResult.Error);
-            }
-
-            var manual = manualNutritionResult.Value;
-            meal.ApplyNutrition(new MealNutritionUpdate(
-                manual.Calories,
-                manual.Proteins,
-                manual.Fats,
-                manual.Carbs,
-                manual.Fiber,
-                manual.Alcohol,
-                IsAutoCalculated: false,
-                ManualCalories: manual.Calories,
-                ManualProteins: manual.Proteins,
-                ManualFats: manual.Fats,
-                ManualCarbs: manual.Carbs,
-                ManualFiber: manual.Fiber,
-                ManualAlcohol: manual.Alcohol));
+            return Result.Success();
         }
 
+        return ApplyManualNutrition(meal, command);
+    }
+
+    private static Result ApplyManualNutrition(Meal meal, CreateConsumptionCommand command) {
+        var manualNutritionResult = ManualNutritionValidator.Validate(
+            command.ManualCalories,
+            command.ManualProteins,
+            command.ManualFats,
+            command.ManualCarbs,
+            command.ManualFiber,
+            command.ManualAlcohol);
+        if (manualNutritionResult.IsFailure) {
+            return manualNutritionResult;
+        }
+
+        var manual = manualNutritionResult.Value;
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            manual.Calories,
+            manual.Proteins,
+            manual.Fats,
+            manual.Carbs,
+            manual.Fiber,
+            manual.Alcohol,
+            IsAutoCalculated: false,
+            ManualCalories: manual.Calories,
+            ManualProteins: manual.Proteins,
+            ManualFats: manual.Fats,
+            ManualCarbs: manual.Carbs,
+            ManualFiber: manual.Fiber,
+            ManualAlcohol: manual.Alcohol));
+        return Result.Success();
+    }
+
+    private async Task<Result<ConsumptionModel>> SaveAndLoadAsync(
+        Meal meal,
+        UserId userId,
+        CancellationToken cancellationToken) {
         await mealRepository.AddAsync(meal, cancellationToken).ConfigureAwait(false);
         await recentItemRepository.RegisterUsageAsync(
             userId,
@@ -185,6 +264,7 @@ public class CreateConsumptionCommandHandler(
             ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load created consumption."))
             : Result.Success(created.ToModel());
     }
+
     private static Result ValidateItemIdentifiers(ConsumptionItemInput item) {
         var productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.ProductId, nameof(item.ProductId), "Product id");
         if (productIdResult.IsFailure) {
