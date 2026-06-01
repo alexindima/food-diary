@@ -181,60 +181,62 @@ Examples:
 """);
 }
 
-internal sealed record InitializerCommand(string Name, string? TargetMigration, string? ConnectionString, bool Force = false) {
-    public static InitializerCommand? Parse(string[] args) {
-        if (args.Length == 0) {
-            return null;
-        }
+namespace FoodDiary.Initializer {
+    internal sealed record InitializerCommand(string Name, string? TargetMigration, string? ConnectionString, bool Force = false) {
+        public static InitializerCommand? Parse(string[] args) {
+            if (args.Length == 0) {
+                return null;
+            }
 
-        string? name = null;
-        string? targetMigration = null;
-        string? connectionString = null;
-        var force = false;
+            string? name = null;
+            string? targetMigration = null;
+            string? connectionString = null;
+            var force = false;
 
-        for (var index = 0; index < args.Length; index++) {
-            var argument = args[index];
+            for (var index = 0; index < args.Length; index++) {
+                var argument = args[index];
 
-            if (argument is "--connection-string" or "-c") {
-                index++;
-                if (index >= args.Length) {
-                    throw new InvalidOperationException("Missing value for --connection-string.");
+                if (argument is "--connection-string" or "-c") {
+                    index++;
+                    if (index >= args.Length) {
+                        throw new InvalidOperationException("Missing value for --connection-string.");
+                    }
+
+                    connectionString = args[index];
+                    continue;
                 }
 
-                connectionString = args[index];
-                continue;
+                if (argument is "--force" or "-f") {
+                    force = true;
+                    continue;
+                }
+
+                if (name is null) {
+                    name = argument;
+                    continue;
+                }
+
+                if (targetMigration is null) {
+                    targetMigration = argument;
+                    continue;
+                }
+
+                throw new InvalidOperationException($"Unexpected argument '{argument}'.");
             }
 
-            if (argument is "--force" or "-f") {
-                force = true;
-                continue;
-            }
-
-            if (name is null) {
-                name = argument;
-                continue;
-            }
-
-            if (targetMigration is null) {
-                targetMigration = argument;
-                continue;
-            }
-
-            throw new InvalidOperationException($"Unexpected argument '{argument}'.");
+            return name is null ? null : new InitializerCommand(name, targetMigration, connectionString, force);
         }
-
-        return name is null ? null : new InitializerCommand(name, targetMigration, connectionString, force);
     }
-}
 
-internal sealed class NoOpEmailVerificationNotifier : IEmailVerificationNotifier {
-    public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) =>
-        Task.CompletedTask;
-}
+    internal sealed class NoOpEmailVerificationNotifier : IEmailVerificationNotifier {
+        public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
 
-internal sealed class NoOpNotificationPusher : INotificationPusher {
-    public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) =>
-        Task.CompletedTask;
-    public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) =>
-        Task.CompletedTask;
+    internal sealed class NoOpNotificationPusher : INotificationPusher {
+        public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
 }
