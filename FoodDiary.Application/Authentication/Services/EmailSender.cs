@@ -183,7 +183,7 @@ public sealed class EmailSender(
         }
 
         var lower = value.Trim().ToLowerInvariant();
-        return lower.StartsWith("ru") ? "ru" : "en";
+        return lower.StartsWith("ru", StringComparison.Ordinal) ? "ru" : "en";
     }
 
     private async Task SendEmailCoreAsync(

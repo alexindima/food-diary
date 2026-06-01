@@ -59,7 +59,7 @@ public sealed class DietologistEmailSender(
         }
 
         var lower = value.Trim().ToLowerInvariant();
-        return lower.StartsWith("ru") ? "ru" : "en";
+        return lower.StartsWith("ru", StringComparison.Ordinal) ? "ru" : "en";
     }
 
     private static (string Subject, string Html, string Text) CreateFallbackContent(
