@@ -17,65 +17,115 @@ public class CreateProductCommandHandler(
     IUserRepository userRepository,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateProductCommand, Result<ProductModel>> {
+    private sealed record CreateProductValues(
+        UserId UserId,
+        MeasurementUnit BaseUnit,
+        Visibility Visibility,
+        ProductType ProductType,
+        ImageAssetId? ImageAssetId,
+        string? ImageUrl);
+
     public async Task<Result<ProductModel>>
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
+        var valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        if (valuesResult.IsFailure) {
+            return Result.Failure<ProductModel>(valuesResult.Error);
+        }
+
+        var product = CreateProduct(command, valuesResult.Value);
+        product = await productRepository.AddAsync(product, cancellationToken).ConfigureAwait(false);
+
+        return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
+    }
+
+    private async Task<Result<CreateProductValues>> PrepareCreateValuesAsync(
+        CreateProductCommand command,
+        CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<CreateProductValues>(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
         var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
-            return Result.Failure<ProductModel>(accessError);
+            return Result.Failure<CreateProductValues>(accessError);
         }
 
-        var baseUnitResult = EnumValueParser.ParseRequired<MeasurementUnit>(
+        var baseUnitResult = ParseRequiredEnum<MeasurementUnit>(
             command.BaseUnit,
             nameof(command.BaseUnit),
             "Unknown measurement unit value.");
         if (baseUnitResult.IsFailure) {
-            return Result.Failure<ProductModel>(baseUnitResult.Error);
+            return Result.Failure<CreateProductValues>(baseUnitResult.Error);
         }
 
-        var visibilityResult = EnumValueParser.ParseRequired<Visibility>(
+        var visibilityResult = ParseRequiredEnum<Visibility>(
             command.Visibility,
             nameof(command.Visibility),
             "Unknown visibility value.");
         if (visibilityResult.IsFailure) {
-            return Result.Failure<ProductModel>(visibilityResult.Error);
+            return Result.Failure<CreateProductValues>(visibilityResult.Error);
         }
 
-        var productTypeResult = EnumValueParser.ParseRequired<ProductType>(
+        var productTypeResult = ParseRequiredEnum<ProductType>(
             command.ProductType,
             nameof(command.ProductType),
             "Unknown product type value.");
         if (productTypeResult.IsFailure) {
-            return Result.Failure<ProductModel>(productTypeResult.Error);
+            return Result.Failure<CreateProductValues>(productTypeResult.Error);
         }
 
         if (!Enum.IsDefined(productTypeResult.Value)) {
-            return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductType), "Unknown product type value."));
+            return Result.Failure<CreateProductValues>(
+                Errors.Validation.Invalid(nameof(command.ProductType), "Unknown product type value."));
         }
 
+        var imageAssetResult = await ResolveImageAssetAsync(command, userId, cancellationToken).ConfigureAwait(false);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<CreateProductValues>(imageAssetResult.Error);
+        }
+
+        return Result.Success(new CreateProductValues(
+            userId,
+            baseUnitResult.Value,
+            visibilityResult.Value,
+            productTypeResult.Value,
+            imageAssetResult.Value.ImageAssetId,
+            imageAssetResult.Value.ImageUrl));
+    }
+
+    private static Result<TEnum> ParseRequiredEnum<TEnum>(
+        string value,
+        string propertyName,
+        string errorMessage)
+        where TEnum : struct, Enum =>
+        EnumValueParser.ParseRequired<TEnum>(value, propertyName, errorMessage);
+
+    private async Task<Result<(ImageAssetId? ImageAssetId, string? ImageUrl)>> ResolveImageAssetAsync(
+        CreateProductCommand command,
+        UserId userId,
+        CancellationToken cancellationToken) {
         var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<ProductModel>(imageAssetIdResult.Error);
+            return Result.Failure<(ImageAssetId? ImageAssetId, string? ImageUrl)>(imageAssetIdResult.Error);
         }
 
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);
-        if (imageAssetResult.IsFailure) {
-            return Result.Failure<ProductModel>(imageAssetResult.Error);
-        }
+        return imageAssetResult.IsFailure
+            ? Result.Failure<(ImageAssetId? ImageAssetId, string? ImageUrl)>(imageAssetResult.Error)
+            : Result.Success((imageAssetIdResult.Value, imageAssetResult.Value?.Url ?? command.ImageUrl));
+    }
 
-        var imageUrl = imageAssetResult.Value?.Url ?? command.ImageUrl;
-
-        var product = Product.Create(
-            userId: userId,
+    private static Product CreateProduct(
+        CreateProductCommand command,
+        CreateProductValues values) =>
+        Product.Create(
+            userId: values.UserId,
             name: command.Name,
-            baseUnit: baseUnitResult.Value,
+            baseUnit: values.BaseUnit,
             baseAmount: command.BaseAmount,
             defaultPortionAmount: command.DefaultPortionAmount,
             caloriesPerBase: command.CaloriesPerBase,
@@ -86,17 +136,12 @@ public class CreateProductCommandHandler(
             alcoholPerBase: command.AlcoholPerBase,
             barcode: command.Barcode,
             brand: command.Brand,
-            productType: productTypeResult.Value,
+            productType: values.ProductType,
             category: command.Category,
             description: command.Description,
             comment: command.Comment,
-            imageUrl: imageUrl,
-            imageAssetId: imageAssetIdResult.Value,
-            visibility: visibilityResult.Value
+            imageUrl: values.ImageUrl,
+            imageAssetId: values.ImageAssetId,
+            visibility: values.Visibility
         );
-
-        product = await productRepository.AddAsync(product, cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
-    }
 }

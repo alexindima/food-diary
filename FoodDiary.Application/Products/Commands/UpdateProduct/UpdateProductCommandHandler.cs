@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -17,107 +18,189 @@ public class UpdateProductCommandHandler(
     IUserRepository userRepository,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
+    private sealed record UpdateProductValues(
+        UserId UserId,
+        ProductId ProductId,
+        MeasurementUnit? Unit,
+        Visibility? Visibility,
+        ProductType? ProductType,
+        ImageAssetId? ImageAssetId,
+        string? ImageUrl,
+        bool HasResolvedImageAsset);
+
     public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
+        var valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        if (valuesResult.IsFailure) {
+            return Result.Failure<ProductModel>(valuesResult.Error);
         }
 
-        if (command.ProductId == Guid.Empty) {
-            return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
-        }
-
-        var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<ProductModel>(accessError);
-        }
-
-        var productId = new ProductId(command.ProductId);
-
+        var values = valuesResult.Value;
         var product = await productRepository.GetByIdForUpdateAsync(
-            productId,
-            userId,
+            values.ProductId,
+            values.UserId,
             includePublic: false,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
             return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
         }
 
+        var oldAssetId = product.ImageAssetId;
         var modifiedOnBefore = product.ModifiedOnUtc;
+        ApplyProductUpdates(product, command, values);
 
-        MeasurementUnit? newUnit = null;
-        if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
-            var parsedUnitResult = EnumValueParser.ParseOptional<MeasurementUnit>(
-                command.BaseUnit,
-                nameof(command.BaseUnit),
-                "Unknown measurement unit value.");
-            if (parsedUnitResult.IsFailure) {
-                return Result.Failure<ProductModel>(parsedUnitResult.Error);
-            }
-
-            newUnit = parsedUnitResult.Value;
+        var hasChanges = product.ModifiedOnUtc != modifiedOnBefore;
+        if (hasChanges) {
+            await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
         }
 
-        Visibility? newVisibility = null;
-        if (!string.IsNullOrWhiteSpace(command.Visibility)) {
-            var parsedVisibilityResult = EnumValueParser.ParseOptional<Visibility>(
-                command.Visibility,
-                nameof(command.Visibility),
-                "Unknown visibility value.");
-            if (parsedVisibilityResult.IsFailure) {
-                return Result.Failure<ProductModel>(parsedVisibilityResult.Error);
-            }
+        await CleanupOldImageAssetAsync(
+            oldAssetId,
+            command,
+            hasChanges,
+            cancellationToken).ConfigureAwait(false);
 
-            newVisibility = parsedVisibilityResult.Value;
+        var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
+        return Result.Success(product.ToModel(usageCount, true));
+    }
+
+    private async Task<Result<UpdateProductValues>> PrepareUpdateValuesAsync(
+        UpdateProductCommand command,
+        CancellationToken cancellationToken) {
+        var userIdResult = await ResolveUserIdAsync(command, cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<UpdateProductValues>(userIdResult.Error);
         }
 
-        ProductType? newProductType = null;
-        if (!string.IsNullOrWhiteSpace(command.ProductType)) {
-            var parsedProductTypeResult = EnumValueParser.ParseOptional<ProductType>(
-                command.ProductType,
-                nameof(command.ProductType),
-                "Unknown product type value.");
-            if (parsedProductTypeResult.IsFailure) {
-                return Result.Failure<ProductModel>(parsedProductTypeResult.Error);
-            }
-
-            if (parsedProductTypeResult.Value.HasValue && !Enum.IsDefined(parsedProductTypeResult.Value.Value)) {
-                return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductType), "Unknown product type value."));
-            }
-
-            newProductType = parsedProductTypeResult.Value;
+        var userId = userIdResult.Value;
+        var productId = new ProductId(command.ProductId);
+        var unitResult = ParseOptionalEnum<MeasurementUnit>(
+            command.BaseUnit,
+            nameof(command.BaseUnit),
+            "Unknown measurement unit value.");
+        if (unitResult.IsFailure) {
+            return Result.Failure<UpdateProductValues>(unitResult.Error);
         }
 
+        var visibilityResult = ParseOptionalEnum<Visibility>(
+            command.Visibility,
+            nameof(command.Visibility),
+            "Unknown visibility value.");
+        if (visibilityResult.IsFailure) {
+            return Result.Failure<UpdateProductValues>(visibilityResult.Error);
+        }
+
+        var productTypeResult = ParseProductType(command);
+        if (productTypeResult.IsFailure) {
+            return Result.Failure<UpdateProductValues>(productTypeResult.Error);
+        }
+
+        var imageAssetResult = await ResolveImageAssetAsync(command, userId, cancellationToken).ConfigureAwait(false);
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<UpdateProductValues>(imageAssetResult.Error);
+        }
+
+        return Result.Success(new UpdateProductValues(
+            userId,
+            productId,
+            unitResult.Value,
+            visibilityResult.Value,
+            productTypeResult.Value,
+            imageAssetResult.Value.ImageAssetId,
+            imageAssetResult.Value.ImageUrl,
+            imageAssetResult.Value.HasResolvedImageAsset));
+    }
+
+    private async Task<Result<UserId>> ResolveUserIdAsync(
+        UpdateProductCommand command,
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
+            return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
+        }
+
+        if (command.ProductId == Guid.Empty) {
+            return Result.Failure<UserId>(
+                Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
+        }
+
+        var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        return accessError is null
+            ? Result.Success(userId)
+            : Result.Failure<UserId>(accessError);
+    }
+
+    private async Task<Result<(ImageAssetId? ImageAssetId, string? ImageUrl, bool HasResolvedImageAsset)>> ResolveImageAssetAsync(
+        UpdateProductCommand command,
+        UserId userId,
+        CancellationToken cancellationToken) {
         var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
-            return Result.Failure<ProductModel>(imageAssetIdResult.Error);
+            return Result.Failure<(ImageAssetId? ImageAssetId, string? ImageUrl, bool HasResolvedImageAsset)>(imageAssetIdResult.Error);
         }
 
-        var oldAssetId = product.ImageAssetId;
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);
-        if (imageAssetResult.IsFailure) {
-            return Result.Failure<ProductModel>(imageAssetResult.Error);
+        return imageAssetResult.IsFailure
+            ? Result.Failure<(ImageAssetId? ImageAssetId, string? ImageUrl, bool HasResolvedImageAsset)>(imageAssetResult.Error)
+            : Result.Success((imageAssetIdResult.Value, imageAssetResult.Value?.Url ?? command.ImageUrl, imageAssetResult.Value is not null));
+    }
+
+    private static Result<TEnum?> ParseOptionalEnum<TEnum>(
+        string? value,
+        string propertyName,
+        string errorMessage)
+        where TEnum : struct, Enum {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return Result.Success<TEnum?>(null);
         }
 
-        var imageUrl = imageAssetResult.Value?.Url ?? command.ImageUrl;
+        return EnumValueParser.ParseOptional<TEnum>(value, propertyName, errorMessage);
+    }
 
+    private static Result<ProductType?> ParseProductType(UpdateProductCommand command) {
+        var parsedProductTypeResult = ParseOptionalEnum<ProductType>(
+            command.ProductType,
+            nameof(command.ProductType),
+            "Unknown product type value.");
+        if (parsedProductTypeResult.IsFailure) {
+            return parsedProductTypeResult;
+        }
+
+        return parsedProductTypeResult.Value.HasValue && !Enum.IsDefined(parsedProductTypeResult.Value.Value)
+            ? Result.Failure<ProductType?>(
+                Errors.Validation.Invalid(nameof(command.ProductType), "Unknown product type value."))
+            : parsedProductTypeResult;
+    }
+
+    private static void ApplyProductUpdates(
+        Product product,
+        UpdateProductCommand command,
+        UpdateProductValues values) {
+        ApplyIdentityUpdates(product, command, values);
+        ApplyMeasurementAndNutritionUpdates(product, command, values);
+        ApplyMediaAndVisibilityUpdates(product, command, values);
+    }
+
+    private static void ApplyIdentityUpdates(
+        Product product,
+        UpdateProductCommand command,
+        UpdateProductValues values) {
         if (command.Name is not null ||
             command.Barcode is not null ||
             command.ClearBarcode ||
             command.Brand is not null ||
             command.ClearBrand ||
-            newProductType.HasValue) {
+            values.ProductType.HasValue) {
             product.UpdateCoreIdentity(
                 name: command.Name,
                 barcode: command.Barcode,
                 clearBarcode: command.ClearBarcode,
                 brand: command.Brand,
                 clearBrand: command.ClearBrand,
-                productType: newProductType);
+                productType: values.ProductType);
         }
 
         if (command.Category is not null ||
@@ -134,10 +217,15 @@ public class UpdateProductCommandHandler(
                 comment: command.Comment,
                 clearComment: command.ClearComment);
         }
+    }
 
-        if (newUnit.HasValue || command.BaseAmount.HasValue || command.DefaultPortionAmount.HasValue) {
+    private static void ApplyMeasurementAndNutritionUpdates(
+        Product product,
+        UpdateProductCommand command,
+        UpdateProductValues values) {
+        if (values.Unit.HasValue || command.BaseAmount.HasValue || command.DefaultPortionAmount.HasValue) {
             product.UpdateMeasurement(
-                baseUnit: newUnit,
+                baseUnit: values.Unit,
                 baseAmount: command.BaseAmount,
                 defaultPortionAmount: command.DefaultPortionAmount);
         }
@@ -156,32 +244,35 @@ public class UpdateProductCommandHandler(
                 fiberPerBase: command.FiberPerBase,
                 alcoholPerBase: command.AlcoholPerBase);
         }
+    }
 
+    private static void ApplyMediaAndVisibilityUpdates(
+        Product product,
+        UpdateProductCommand command,
+        UpdateProductValues values) {
         if (command.ImageUrl is not null || command.ClearImageUrl || command.ImageAssetId.HasValue || command.ClearImageAssetId) {
             product.UpdateMedia(
-                imageUrl: imageUrl,
-                clearImageUrl: imageAssetResult.Value is null && command.ClearImageUrl,
-                imageAssetId: imageAssetIdResult.Value,
+                imageUrl: values.ImageUrl,
+                clearImageUrl: !values.HasResolvedImageAsset && command.ClearImageUrl,
+                imageAssetId: values.ImageAssetId,
                 clearImageAssetId: command.ClearImageAssetId);
         }
 
-        if (newVisibility.HasValue) {
-            product.ChangeVisibility(newVisibility.Value);
+        if (values.Visibility.HasValue) {
+            product.ChangeVisibility(values.Visibility.Value);
         }
+    }
 
-        var hasChanges = product.ModifiedOnUtc != modifiedOnBefore;
-        if (hasChanges) {
-            await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
-        }
-
+    private async Task CleanupOldImageAssetAsync(
+        ImageAssetId? oldAssetId,
+        UpdateProductCommand command,
+        bool hasChanges,
+        CancellationToken cancellationToken) {
         var imageAssetChanged = command.ClearImageAssetId ||
                                 (command.ImageAssetId.HasValue && (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value));
 
         if (hasChanges && oldAssetId.HasValue && imageAssetChanged) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
-
-        var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
-        return Result.Success(product.ToModel(usageCount, true));
     }
 }
