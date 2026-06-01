@@ -43,7 +43,7 @@
     <PackageVersion Include="AWSSDK.S3" Version="4.0.23.4" />
     <PackageVersion Include="DnsClient" Version="1.8.0" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.8" />
-    <PackageVersion Include="MailKit" Version="4.16.0" />
+    <PackageVersion Include="MailKit" Version="4.17.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="QuestPDF" Version="2026.5.0" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
