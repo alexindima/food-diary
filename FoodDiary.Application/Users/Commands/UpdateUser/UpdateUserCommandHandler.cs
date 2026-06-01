@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -18,26 +19,95 @@ public class UpdateUserCommandHandler(
     IImageAssetCleanupService imageAssetCleanupService,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateUserCommand, Result<UserModel>> {
+    private sealed record UpdateUserValues(
+        User User,
+        UserId UserId,
+        ActivityLevel? ActivityLevel,
+        string? Language,
+        string? Theme,
+        string? UiStyle,
+        string? Gender,
+        ImageAssetId? ProfileImageAssetId,
+        string? ProfileImage,
+        string? DashboardLayoutJson);
+
+    private sealed record ParsedUserPreferences(
+        ActivityLevel? ActivityLevel,
+        string? Language,
+        string? Theme,
+        string? UiStyle,
+        string? Gender);
+
+    private sealed record ProfileImageValues(
+        ImageAssetId? AssetId,
+        string? Image);
+
     public async Task<Result<UserModel>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
+        var valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        if (valuesResult.IsFailure) {
+            return Result.Failure<UserModel>(valuesResult.Error);
+        }
+
+        var values = valuesResult.Value;
+        var oldAssetId = values.User.ProfileImageAssetId;
+        ApplyUpdates(values.User, command, values);
+
+        await userRepository.UpdateAsync(values.User, cancellationToken).ConfigureAwait(false);
+        await CleanupOldProfileImageAssetAsync(oldAssetId, values.ProfileImageAssetId, cancellationToken).ConfigureAwait(false);
+
+        return Result.Success(values.User.ToModel());
+    }
+
+    private async Task<Result<UpdateUserValues>> PrepareUpdateValuesAsync(
+        UpdateUserCommand command,
+        CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<UserModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<UpdateUserValues>(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
-            return Result.Failure<UserModel>(accessError);
+            return Result.Failure<UpdateUserValues>(accessError);
         }
 
         var currentUser = user!;
+        var preferencesResult = ParsePreferences(command);
+        if (preferencesResult.IsFailure) {
+            return Result.Failure<UpdateUserValues>(preferencesResult.Error);
+        }
 
+        var profileImageResult = await ResolveProfileImageAsync(command, userId, cancellationToken).ConfigureAwait(false);
+        if (profileImageResult.IsFailure) {
+            return Result.Failure<UpdateUserValues>(profileImageResult.Error);
+        }
+
+        var dashboardLayoutJson = command.DashboardLayout is null
+            ? null
+            : JsonSerializer.Serialize(command.DashboardLayout);
+
+        var preferences = preferencesResult.Value;
+        return Result.Success(new UpdateUserValues(
+            currentUser,
+            userId,
+            preferences.ActivityLevel,
+            preferences.Language,
+            preferences.Theme,
+            preferences.UiStyle,
+            preferences.Gender,
+            profileImageResult.Value.AssetId,
+            profileImageResult.Value.Image,
+            dashboardLayoutJson));
+    }
+
+    private static Result<ParsedUserPreferences> ParsePreferences(UpdateUserCommand command) {
         var activityLevelResult = EnumValueParser.ParseOptional<ActivityLevel>(
             command.ActivityLevel,
             nameof(UpdateUserCommand.ActivityLevel),
             "Invalid activity level value.");
         if (activityLevelResult.IsFailure) {
-            return Result.Failure<UserModel>(activityLevelResult.Error);
+            return Result.Failure<ParsedUserPreferences>(activityLevelResult.Error);
         }
 
         var languageResult = StringCodeParser.ParseOptionalLanguage(
@@ -45,7 +115,7 @@ public class UpdateUserCommandHandler(
             nameof(UpdateUserCommand.Language),
             "Invalid language value.");
         if (languageResult.IsFailure) {
-            return Result.Failure<UserModel>(languageResult.Error);
+            return Result.Failure<ParsedUserPreferences>(languageResult.Error);
         }
 
         var themeResult = StringCodeParser.ParseOptionalTheme(
@@ -53,7 +123,7 @@ public class UpdateUserCommandHandler(
             nameof(UpdateUserCommand.Theme),
             "Invalid theme value.");
         if (themeResult.IsFailure) {
-            return Result.Failure<UserModel>(themeResult.Error);
+            return Result.Failure<ParsedUserPreferences>(themeResult.Error);
         }
 
         var uiStyleResult = StringCodeParser.ParseOptionalUiStyle(
@@ -61,12 +131,7 @@ public class UpdateUserCommandHandler(
             nameof(UpdateUserCommand.UiStyle),
             "Invalid UI style value.");
         if (uiStyleResult.IsFailure) {
-            return Result.Failure<UserModel>(uiStyleResult.Error);
-        }
-
-        var profileImageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
-        if (profileImageAssetIdResult.IsFailure) {
-            return Result.Failure<UserModel>(profileImageAssetIdResult.Error);
+            return Result.Failure<ParsedUserPreferences>(uiStyleResult.Error);
         }
 
         var genderResult = StringCodeParser.ParseOptionalGender(
@@ -74,64 +139,81 @@ public class UpdateUserCommandHandler(
             nameof(UpdateUserCommand.Gender),
             "Invalid gender value.");
         if (genderResult.IsFailure) {
-            return Result.Failure<UserModel>(genderResult.Error);
+            return Result.Failure<ParsedUserPreferences>(genderResult.Error);
         }
 
-        var oldAssetId = currentUser.ProfileImageAssetId;
+        return Result.Success(new ParsedUserPreferences(
+            activityLevelResult.Value,
+            languageResult.Value,
+            themeResult.Value,
+            uiStyleResult.Value,
+            genderResult.Value));
+    }
+
+    private async Task<Result<ProfileImageValues>> ResolveProfileImageAsync(
+        UpdateUserCommand command,
+        UserId userId,
+        CancellationToken cancellationToken) {
+        var profileImageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
+        if (profileImageAssetIdResult.IsFailure) {
+            return Result.Failure<ProfileImageValues>(profileImageAssetIdResult.Error);
+        }
+
         var newAssetId = profileImageAssetIdResult.Value;
         var profileImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             newAssetId,
             userId,
             cancellationToken).ConfigureAwait(false);
         if (profileImageAssetResult.IsFailure) {
-            return Result.Failure<UserModel>(profileImageAssetResult.Error);
+            return Result.Failure<ProfileImageValues>(profileImageAssetResult.Error);
         }
 
-        var profileImage = profileImageAssetResult.Value?.Url ?? Normalize(command.ProfileImage);
+        return Result.Success(new ProfileImageValues(
+            newAssetId,
+            profileImageAssetResult.Value?.Url ?? Normalize(command.ProfileImage)));
+    }
 
-        var dashboardLayoutJson = command.DashboardLayout is null
-            ? null
-            : JsonSerializer.Serialize(command.DashboardLayout);
-
-        currentUser.UpdatePersonalInfo(new UserPersonalInfoUpdate(
+    private static void ApplyUpdates(User user, UpdateUserCommand command, UpdateUserValues values) {
+        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             Username: Normalize(command.Username),
             FirstName: Normalize(command.FirstName),
             LastName: Normalize(command.LastName),
             BirthDate: command.BirthDate,
-            Gender: genderResult.Value,
+            Gender: values.Gender,
             Weight: command.Weight,
             Height: command.Height));
-        currentUser.UpdateActivity(new UserActivityUpdate(
-            ActivityLevel: activityLevelResult.Value,
+        user.UpdateActivity(new UserActivityUpdate(
+            ActivityLevel: values.ActivityLevel,
             StepGoal: command.StepGoal,
             HydrationGoal: command.HydrationGoal));
-        currentUser.UpdatePreferences(new UserPreferenceUpdate(
-            DashboardLayoutJson: dashboardLayoutJson,
-            Language: languageResult.Value,
-            Theme: themeResult.Value,
-            UiStyle: uiStyleResult.Value,
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            DashboardLayoutJson: values.DashboardLayoutJson,
+            Language: values.Language,
+            Theme: values.Theme,
+            UiStyle: values.UiStyle,
             PushNotificationsEnabled: command.PushNotificationsEnabled,
             FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled));
-        currentUser.UpdateProfileMedia(new UserProfileMediaUpdate(
-            ProfileImage: profileImage,
-            ProfileImageAssetId: newAssetId));
+        user.UpdateProfileMedia(new UserProfileMediaUpdate(
+            ProfileImage: values.ProfileImage,
+            ProfileImageAssetId: values.ProfileImageAssetId));
 
         if (command.IsActive.HasValue) {
             if (command.IsActive.Value) {
-                currentUser.Activate();
+                user.Activate();
             } else {
-                currentUser.Deactivate();
+                user.Deactivate();
             }
         }
+    }
 
-        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
-
+    private async Task CleanupOldProfileImageAssetAsync(
+        ImageAssetId? oldAssetId,
+        ImageAssetId? newAssetId,
+        CancellationToken cancellationToken) {
         if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
-
-        return Result.Success(currentUser.ToModel());
     }
 
     private static string? Normalize(string? value) =>

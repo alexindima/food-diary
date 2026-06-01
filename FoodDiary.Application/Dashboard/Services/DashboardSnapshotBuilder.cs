@@ -9,10 +9,13 @@ using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
@@ -21,9 +24,11 @@ using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
+using User = FoodDiary.Domain.Entities.Users.User;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
@@ -84,140 +89,248 @@ public class DashboardSnapshotBuilder(
     private const int DefaultTrendDays = 7;
     private const int MaxTrendDays = 31;
 
+    private sealed record DashboardBuildContext(
+        UserId UserId,
+        DateTime DayStart,
+        DateTime DayEndStart,
+        DateTime DayEnd,
+        int PeriodDays,
+        string Locale,
+        int Page,
+        int PageSize,
+        int TrendDays,
+        DateTime TrendStart,
+        DashboardSnapshotSections Sections,
+        User CurrentUser);
+
+    private sealed record DashboardStatisticsSection(
+        DashboardStatisticsModel Statistics,
+        IReadOnlyList<DailyCaloriesModel> WeeklyCalories);
+
+    private sealed record DashboardBodySection(
+        DashboardWeightModel Weight,
+        DashboardWaistModel Waist,
+        IReadOnlyList<WeightEntrySummaryModel> WeightTrend,
+        IReadOnlyList<WaistEntrySummaryModel> WaistTrend);
+
     public async Task<Result<DashboardSnapshotModel>> BuildAsync(
         DashboardSnapshotRequest request,
         CancellationToken cancellationToken = default) {
-        if (request.UserId == Guid.Empty) {
-            return Result.Failure<DashboardSnapshotModel>(
-                Errors.Validation.Invalid(nameof(request.UserId), "User id must not be empty."));
+        var contextResult = await CreateBuildContextAsync(request, cancellationToken).ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return Result.Failure<DashboardSnapshotModel>(contextResult.Error);
         }
 
-        var dayStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date);
-        var requestedEnd = request.DateTo ?? request.Date;
-        var dayEndStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(requestedEnd);
-        if (dayEndStart < dayStart) {
-            return Result.Failure<DashboardSnapshotModel>(
-                Errors.Validation.Invalid(nameof(request.DateTo), "DateTo must be later than or equal to Date."));
-        }
+        var context = contextResult.Value;
+        var statisticsResult = await BuildStatisticsSectionAsync(request, context, cancellationToken).ConfigureAwait(false);
+        if (statisticsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(statisticsResult.Error);
 
-        var dayEnd = dayEndStart.AddDays(1).AddTicks(-1);
-        var periodDays = Math.Max(1, (dayEndStart.Date - dayStart.Date).Days + 1);
-        var sections = request.Sections ?? DashboardSnapshotSections.All;
-        var userId = new UserId(request.UserId);
-        var locale = string.IsNullOrWhiteSpace(request.Locale) ? "en" : request.Locale;
-        var page = request.Page <= 0 ? DefaultPage : request.Page;
-        var pageSize = request.PageSize <= 0 ? DefaultPageSize : Math.Min(request.PageSize, MaxPageSize);
-        var trendDays = Math.Clamp(request.TrendDays <= 0 ? DefaultTrendDays : request.TrendDays, 1, MaxTrendDays);
-        var trendStart = dayStart.AddDays(-(trendDays - 1));
+        var mealsResult = await BuildMealsSectionAsync(request, context, cancellationToken).ConfigureAwait(false);
+        if (mealsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<DashboardSnapshotModel>(accessError);
-        }
-
-        var currentUser = user!;
-
-        var statistics = new DashboardStatisticsModel(0, 0, 0, 0, 0, null, null, null, null);
-        IReadOnlyList<DailyCaloriesModel> weeklyCalories = [];
-        if (sections.IncludeStatistics) {
-            var statsResult = await sender.Send(new GetStatisticsQuery(
-                request.UserId, dayStart, dayEnd, periodDays), cancellationToken).ConfigureAwait(false);
-            if (statsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(statsResult.Error);
-
-            var weeklyFrom = periodDays == 1 ? dayStart.AddDays(-6) : dayStart;
-            var weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
-                request.UserId, weeklyFrom, dayEnd, 1), cancellationToken).ConfigureAwait(false);
-            if (weeklyStatsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(weeklyStatsResult.Error);
-
-            statistics = DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), currentUser);
-            weeklyCalories = DashboardMapping.ToWeeklyCalories(weeklyStatsResult.Value);
-        }
-
-        var meals = new DashboardMealsModel([], 0);
-        if (sections.IncludeMeals) {
-            var mealsResult = await sender.Send(new GetConsumptionsQuery(
-                request.UserId, page, pageSize, dayStart, dayEnd), cancellationToken).ConfigureAwait(false);
-            if (mealsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
-
-            meals = new DashboardMealsModel(mealsResult.Value.Data, mealsResult.Value.TotalItems);
-        }
-
-        var weight = new DashboardWeightModel(null, null, null);
-        IReadOnlyList<WeightEntrySummaryModel> weightTrend = [];
-        if (sections.IncludeWeight) {
-            var weightEntries = await weightEntryRepository.GetEntriesAsync(
-                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-            weight = DashboardMapping.ToWeightModel(weightEntries, currentUser.DesiredWeight);
-
-            var weightTrendResult = await sender.Send(
-                new GetWeightSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken).ConfigureAwait(false);
-            weightTrend = weightTrendResult.IsSuccess ? weightTrendResult.Value : [];
-        }
-
-        var waist = new DashboardWaistModel(null, null, null);
-        IReadOnlyList<WaistEntrySummaryModel> waistTrend = [];
-        if (sections.IncludeWaist) {
-            var waistEntries = await waistEntryRepository.GetEntriesAsync(
-                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-            waist = DashboardMapping.ToWaistModel(waistEntries, currentUser.DesiredWaist);
-
-            var waistTrendResult = await sender.Send(
-                new GetWaistSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken).ConfigureAwait(false);
-            waistTrend = waistTrendResult.IsSuccess ? waistTrendResult.Value : [];
-        }
-
-        HydrationDailyModel? hydration = null;
-        if (sections.IncludeHydration) {
-            var hydrationTotals = await hydrationEntryRepository.GetDailyTotalsAsync(userId, dayStart, dayEndStart, cancellationToken).ConfigureAwait(false);
-            var totalMl = hydrationTotals.Sum(x => x.TotalMl);
-            var dailyGoal = currentUser.HydrationGoal ?? currentUser.WaterGoal;
-            hydration = new HydrationDailyModel(
-                dayStart,
-                totalMl,
-                dailyGoal is null ? null : dailyGoal * periodDays);
-        }
-
-        var adviceResult = sections.IncludeAdvice
-            ? await sender.Send(new GetDailyAdviceQuery(userId, dayStart, locale), cancellationToken)
-.ConfigureAwait(false) : null;
-
-        var currentFastingSession = sections.IncludeFasting
-            ? await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken)
-.ConfigureAwait(false) : null;
-
-        var layout = sections.IncludeLayout ? ParseDashboardLayout(currentUser.DashboardLayoutJson, userId) : null;
-
-        var caloriesBurned = sections.IncludeExercise
-            ? await exerciseEntryRepository.GetTotalCaloriesBurnedAsync(userId, dayStart, cancellationToken)
-.ConfigureAwait(false) : 0;
-
-        var tdeeInsightResult = sections.IncludeTdee
-            ? await sender.Send(new GetTdeeInsightQuery(request.UserId), cancellationToken)
-.ConfigureAwait(false) : null;
-        var currentCycleResult = sections.IncludeCycle
-            ? await sender.Send(new GetCurrentCycleQuery(request.UserId), cancellationToken)
-.ConfigureAwait(false) : null;
+        var body = await BuildBodySectionAsync(context, cancellationToken).ConfigureAwait(false);
+        var hydration = await BuildHydrationSectionAsync(context, cancellationToken).ConfigureAwait(false);
+        var adviceResult = await BuildAdviceSectionAsync(context, cancellationToken).ConfigureAwait(false);
+        var fastingSession = await BuildFastingSectionAsync(context, cancellationToken).ConfigureAwait(false);
+        var layout = context.Sections.IncludeLayout
+            ? ParseDashboardLayout(context.CurrentUser.DashboardLayoutJson, context.UserId)
+            : null;
+        var caloriesBurned = await BuildExerciseSectionAsync(context, cancellationToken).ConfigureAwait(false);
+        var tdeeInsightResult = await BuildTdeeSectionAsync(request, context, cancellationToken).ConfigureAwait(false);
+        var currentCycleResult = await BuildCycleSectionAsync(request, context, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new DashboardSnapshotModel(
-            dayStart,
-            dayEndStart,
-            currentUser.GetCalorieTargetForDate(request.Date) ?? 0,
-            currentUser.GetWeeklyCalorieTarget(),
-            statistics,
-            weeklyCalories,
-            weight,
-            waist,
-            meals,
+            context.DayStart,
+            context.DayEndStart,
+            context.CurrentUser.GetCalorieTargetForDate(request.Date) ?? 0,
+            context.CurrentUser.GetWeeklyCalorieTarget(),
+            statisticsResult.Value.Statistics,
+            statisticsResult.Value.WeeklyCalories,
+            body.Weight,
+            body.Waist,
+            mealsResult.Value,
             hydration,
             adviceResult?.IsSuccess == true ? adviceResult.Value : null,
-            currentFastingSession?.ToModel(),
-            weightTrend,
-            waistTrend,
+            fastingSession?.ToModel(),
+            body.WeightTrend,
+            body.WaistTrend,
             layout,
             Math.Round(caloriesBurned, 1),
             tdeeInsightResult?.IsSuccess == true ? tdeeInsightResult.Value : null,
             currentCycleResult?.IsSuccess == true ? currentCycleResult.Value : null));
+    }
+
+    private async Task<Result<DashboardBuildContext>> CreateBuildContextAsync(
+        DashboardSnapshotRequest request,
+        CancellationToken cancellationToken) {
+        if (request.UserId == Guid.Empty) {
+            return Result.Failure<DashboardBuildContext>(
+                Errors.Validation.Invalid(nameof(request.UserId), "User id must not be empty."));
+        }
+
+        var dayStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date);
+        var dayEndStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo ?? request.Date);
+        if (dayEndStart < dayStart) {
+            return Result.Failure<DashboardBuildContext>(
+                Errors.Validation.Invalid(nameof(request.DateTo), "DateTo must be later than or equal to Date."));
+        }
+
+        var userId = new UserId(request.UserId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<DashboardBuildContext>(accessError);
+        }
+
+        var trendDays = Math.Clamp(request.TrendDays <= 0 ? DefaultTrendDays : request.TrendDays, 1, MaxTrendDays);
+        return Result.Success(new DashboardBuildContext(
+            userId,
+            dayStart,
+            dayEndStart,
+            dayEndStart.AddDays(1).AddTicks(-1),
+            Math.Max(1, (dayEndStart.Date - dayStart.Date).Days + 1),
+            string.IsNullOrWhiteSpace(request.Locale) ? "en" : request.Locale,
+            request.Page <= 0 ? DefaultPage : request.Page,
+            request.PageSize <= 0 ? DefaultPageSize : Math.Min(request.PageSize, MaxPageSize),
+            trendDays,
+            dayStart.AddDays(-(trendDays - 1)),
+            request.Sections ?? DashboardSnapshotSections.All,
+            user!));
+    }
+
+    private async Task<Result<DashboardStatisticsSection>> BuildStatisticsSectionAsync(
+        DashboardSnapshotRequest request,
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        if (!context.Sections.IncludeStatistics) {
+            return Result.Success(new DashboardStatisticsSection(
+                new DashboardStatisticsModel(0, 0, 0, 0, 0, null, null, null, null),
+                []));
+        }
+
+        var statsResult = await sender.Send(new GetStatisticsQuery(
+            request.UserId, context.DayStart, context.DayEnd, context.PeriodDays), cancellationToken).ConfigureAwait(false);
+        if (statsResult.IsFailure) return Result.Failure<DashboardStatisticsSection>(statsResult.Error);
+
+        var weeklyFrom = context.PeriodDays == 1 ? context.DayStart.AddDays(-6) : context.DayStart;
+        var weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
+            request.UserId, weeklyFrom, context.DayEnd, 1), cancellationToken).ConfigureAwait(false);
+        if (weeklyStatsResult.IsFailure) return Result.Failure<DashboardStatisticsSection>(weeklyStatsResult.Error);
+
+        return Result.Success(new DashboardStatisticsSection(
+            DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), context.CurrentUser),
+            DashboardMapping.ToWeeklyCalories(weeklyStatsResult.Value)));
+    }
+
+    private async Task<Result<DashboardMealsModel>> BuildMealsSectionAsync(
+        DashboardSnapshotRequest request,
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        if (!context.Sections.IncludeMeals) {
+            return Result.Success(new DashboardMealsModel([], 0));
+        }
+
+        var mealsResult = await sender.Send(new GetConsumptionsQuery(
+            request.UserId, context.Page, context.PageSize, context.DayStart, context.DayEnd), cancellationToken).ConfigureAwait(false);
+        return mealsResult.IsFailure
+            ? Result.Failure<DashboardMealsModel>(mealsResult.Error)
+            : Result.Success(new DashboardMealsModel(mealsResult.Value.Data, mealsResult.Value.TotalItems));
+    }
+
+    private async Task<DashboardBodySection> BuildBodySectionAsync(
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        var weight = await BuildWeightSectionAsync(context, cancellationToken).ConfigureAwait(false);
+        var waist = await BuildWaistSectionAsync(context, cancellationToken).ConfigureAwait(false);
+        return new DashboardBodySection(weight.Model, waist.Model, weight.Trend, waist.Trend);
+    }
+
+    private async Task<(DashboardWeightModel Model, IReadOnlyList<WeightEntrySummaryModel> Trend)> BuildWeightSectionAsync(
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        if (!context.Sections.IncludeWeight) {
+            return (new DashboardWeightModel(null, null, null), []);
+        }
+
+        var weightEntries = await weightEntryRepository.GetEntriesAsync(
+            context.UserId, null, context.DayEndStart, 2, true, cancellationToken).ConfigureAwait(false);
+        var weightTrendResult = await sender.Send(
+            new GetWeightSummariesQuery(context.UserId, context.TrendStart, context.DayStart, 1), cancellationToken).ConfigureAwait(false);
+        return (
+            DashboardMapping.ToWeightModel(weightEntries, context.CurrentUser.DesiredWeight),
+            weightTrendResult.IsSuccess ? weightTrendResult.Value : []);
+    }
+
+    private async Task<(DashboardWaistModel Model, IReadOnlyList<WaistEntrySummaryModel> Trend)> BuildWaistSectionAsync(
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        if (!context.Sections.IncludeWaist) {
+            return (new DashboardWaistModel(null, null, null), []);
+        }
+
+        var waistEntries = await waistEntryRepository.GetEntriesAsync(
+            context.UserId, null, context.DayEndStart, 2, true, cancellationToken).ConfigureAwait(false);
+        var waistTrendResult = await sender.Send(
+            new GetWaistSummariesQuery(context.UserId, context.TrendStart, context.DayStart, 1), cancellationToken).ConfigureAwait(false);
+        return (
+            DashboardMapping.ToWaistModel(waistEntries, context.CurrentUser.DesiredWaist),
+            waistTrendResult.IsSuccess ? waistTrendResult.Value : []);
+    }
+
+    private async Task<HydrationDailyModel?> BuildHydrationSectionAsync(
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        if (!context.Sections.IncludeHydration) {
+            return null;
+        }
+
+        var hydrationTotals = await hydrationEntryRepository.GetDailyTotalsAsync(
+            context.UserId, context.DayStart, context.DayEndStart, cancellationToken).ConfigureAwait(false);
+        var dailyGoal = context.CurrentUser.HydrationGoal ?? context.CurrentUser.WaterGoal;
+        return new HydrationDailyModel(
+            context.DayStart,
+            hydrationTotals.Sum(x => x.TotalMl),
+            dailyGoal is null ? null : dailyGoal * context.PeriodDays);
+    }
+
+    private async Task<Result<DailyAdviceModel>?> BuildAdviceSectionAsync(
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        return context.Sections.IncludeAdvice
+            ? await sender.Send(new GetDailyAdviceQuery(context.UserId, context.DayStart, context.Locale), cancellationToken).ConfigureAwait(false)
+            : null;
+    }
+
+    private Task<FastingOccurrence?> BuildFastingSectionAsync(
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) =>
+        context.Sections.IncludeFasting
+            ? fastingOccurrenceRepository.GetCurrentAsync(context.UserId, cancellationToken: cancellationToken)
+            : Task.FromResult<FastingOccurrence?>(null);
+
+    private Task<double> BuildExerciseSectionAsync(
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) =>
+        context.Sections.IncludeExercise
+            ? exerciseEntryRepository.GetTotalCaloriesBurnedAsync(context.UserId, context.DayStart, cancellationToken)
+            : Task.FromResult(0d);
+
+    private async Task<Result<TdeeInsightModel>?> BuildTdeeSectionAsync(
+        DashboardSnapshotRequest request,
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        return context.Sections.IncludeTdee
+            ? await sender.Send(new GetTdeeInsightQuery(request.UserId), cancellationToken).ConfigureAwait(false)
+            : null;
+    }
+
+    private async Task<Result<CycleModel?>?> BuildCycleSectionAsync(
+        DashboardSnapshotRequest request,
+        DashboardBuildContext context,
+        CancellationToken cancellationToken) {
+        return context.Sections.IncludeCycle
+            ? await sender.Send(new GetCurrentCycleQuery(request.UserId), cancellationToken).ConfigureAwait(false)
+            : null;
     }
 
     private DashboardLayoutModel? ParseDashboardLayout(string? json, UserId userId) {
