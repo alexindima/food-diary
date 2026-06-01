@@ -8,7 +8,7 @@ namespace FoodDiary.Infrastructure.Services;
 internal sealed class StructuredAuditLogger(
     ILogger<StructuredAuditLogger> logger,
     IDateTimeProvider dateTimeProvider) : IAuditLogger {
-    public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) {
+    public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) {
         logger.LogInformation(
             "AUDIT action={Action} actor={ActorId} targetType={TargetType} targetId={TargetId} details={Details} timestamp={Timestamp}",
             action,

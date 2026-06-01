@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.MealPlans;
 
 internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlanRepository {
-    public async Task<MealPlan> AddAsync(MealPlan plan, CancellationToken cancellationToken) {
+    public async Task<MealPlan> AddAsync(MealPlan plan, CancellationToken cancellationToken = default) {
         context.Set<MealPlan>().Add(plan);
         await context.SaveChangesAsync(cancellationToken);
         return plan;

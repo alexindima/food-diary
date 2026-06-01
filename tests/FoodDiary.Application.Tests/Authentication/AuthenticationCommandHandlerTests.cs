@@ -185,7 +185,7 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     private sealed class NullAuditLogger : IAuditLogger {
-        public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
+        public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) { }
     }
 
     private sealed class StubAdminSsoService : IAdminSsoService {
@@ -297,7 +297,7 @@ public sealed class AuthenticationCommandHandlerTests {
     private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload) : IGoogleTokenValidator {
         public Task<FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
             string credential,
-            CancellationToken cancellationToken = default) =>
+            CancellationToken cancellationToken) =>
             Task.FromResult(FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(payload));
     }
 }

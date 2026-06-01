@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Ai;
 
 internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : IAiPromptTemplateRepository {
-    public async Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken) {
+    public async Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default) {
         return await context.Set<AiPromptTemplate>()
             .AsNoTracking()
             .OrderBy(t => t.Key)
@@ -17,7 +17,7 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
     public async Task<AiPromptTemplate?> GetByKeyAsync(
         string key,
         string locale,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken = default) {
         return await context.Set<AiPromptTemplate>()
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken);
@@ -34,13 +34,13 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
         return await query.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
-    public async Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken) {
+    public async Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
         context.Set<AiPromptTemplate>().Add(template);
         await context.SaveChangesAsync(cancellationToken);
         return template;
     }
 
-    public async Task UpdateAsync(AiPromptTemplate template, CancellationToken cancellationToken) {
+    public async Task UpdateAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
         await context.SaveChangesAsync(cancellationToken);
     }
 }

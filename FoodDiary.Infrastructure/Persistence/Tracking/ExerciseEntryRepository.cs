@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExerciseEntryRepository {
-    public async Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken) {
+    public async Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
         context.Set<ExerciseEntry>().Add(entry);
         await context.SaveChangesAsync(cancellationToken);
         return entry;
     }
 
-    public async Task UpdateAsync(ExerciseEntry entry, CancellationToken cancellationToken) {
+    public async Task UpdateAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(ExerciseEntry entry, CancellationToken cancellationToken) {
+    public async Task DeleteAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
         context.Set<ExerciseEntry>().Remove(entry);
         await context.SaveChangesAsync(cancellationToken);
     }
