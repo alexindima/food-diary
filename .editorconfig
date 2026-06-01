@@ -88,3 +88,9 @@ dotnet_diagnostic.CA1859.severity = none
 
 [FoodDiary.Domain/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailInbox.Domain/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailRelay.Domain/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
