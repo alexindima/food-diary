@@ -11,6 +11,7 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 public sealed class SmtpRelayDeliveryTransport(
     IOptions<MailRelaySmtpOptions> options,
     DkimSigningService dkimSigningService) : IRelayDeliveryTransport {
+    private static readonly TimeSpan HtmlToTextRegexTimeout = TimeSpan.FromSeconds(1);
     private readonly MailRelaySmtpOptions _options = options.Value;
 
     public async Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
@@ -61,7 +62,7 @@ public sealed class SmtpRelayDeliveryTransport(
             return string.Empty;
         }
 
-        var withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ");
+        var withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ", RegexOptions.None, HtmlToTextRegexTimeout);
         return WebUtility.HtmlDecode(withoutTags);
     }
 }

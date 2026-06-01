@@ -10,6 +10,8 @@ using System.Reflection;
 namespace FoodDiary.Application.Tests.Common;
 
 public class CommonAbstractionsTests {
+    private static readonly TimeSpan ErrorCodeRegexTimeout = TimeSpan.FromSeconds(1);
+
     [Fact]
     public void ApplicationLayer_UsesCentralErrorCatalog_ExceptValidationBehavior() {
         var applicationRoot = Path.GetFullPath(Path.Combine(
@@ -180,7 +182,8 @@ public class CommonAbstractionsTests {
         var matches = System.Text.RegularExpressions.Regex.Matches(
             content,
             @"(?:WithErrorCode\(|ErrorCode\s*=\s*)""(?<code>[A-Za-z]+\.[A-Za-z]+)""",
-            System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+            System.Text.RegularExpressions.RegexOptions.CultureInvariant,
+            ErrorCodeRegexTimeout);
 
         return matches
             .Select(match => match.Groups["code"].Value)

@@ -14,6 +14,7 @@ public sealed class DirectMxRelayDeliveryTransport(
     IMxResolver mxResolver,
     DkimSigningService dkimSigningService,
     ILogger<DirectMxRelayDeliveryTransport> logger) : IRelayDeliveryTransport {
+    private static readonly TimeSpan HtmlToTextRegexTimeout = TimeSpan.FromSeconds(1);
     private readonly DirectMxOptions _options = options.Value;
 
     public async Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
@@ -167,7 +168,7 @@ public sealed class DirectMxRelayDeliveryTransport(
             return string.Empty;
         }
 
-        var withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ");
+        var withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ", RegexOptions.None, HtmlToTextRegexTimeout);
         return WebUtility.HtmlDecode(withoutTags);
     }
 }
