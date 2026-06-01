@@ -36,54 +36,63 @@ public static class AwsSesSnsWebhookHttpMappings {
             return false;
         }
 
-        var source = "aws-ses-sns";
         if (string.Equals(notification.NotificationType, "Bounce", StringComparison.OrdinalIgnoreCase)) {
-            var classification = string.Equals(notification.Bounce?.BounceType, "Permanent", StringComparison.OrdinalIgnoreCase)
-                ? "hard"
-                : "soft";
-
-            events = notification.Bounce?.BouncedRecipients
-                         .Where(static recipient => !string.IsNullOrWhiteSpace(recipient.EmailAddress))
-                         .Select(recipient => new IngestMailEventRequest(
-                             "bounce",
-                             recipient.EmailAddress,
-                             source,
-                             classification,
-                             notification.Mail.MessageId,
-                             recipient.DiagnosticCode))
-                         .ToArray()
-                     ?? [];
-
-            if (events.Count == 0) {
-                error = "Bounce notification does not contain recipients.";
-                return false;
-            }
-
-            return true;
+            return TryMapBounce(notification, out events, out error);
         }
 
         if (string.Equals(notification.NotificationType, "Complaint", StringComparison.OrdinalIgnoreCase)) {
-            events = notification.Complaint?.ComplainedRecipients
-                         .Where(static recipient => !string.IsNullOrWhiteSpace(recipient.EmailAddress))
-                         .Select(recipient => new IngestMailEventRequest(
-                             "complaint",
-                             recipient.EmailAddress,
-                             source,
-                             null,
-                             notification.Mail.MessageId,
-                             "complaint"))
-                         .ToArray()
-                     ?? [];
-
-            if (events.Count == 0) {
-                error = "Complaint notification does not contain recipients.";
-                return false;
-            }
-
-            return true;
+            return TryMapComplaint(notification, out events, out error);
         }
 
         error = $"Unsupported SES notification type '{notification.NotificationType}'.";
         return false;
+    }
+
+    private static bool TryMapBounce(
+        AwsSesNotificationHttpModel notification,
+        out IReadOnlyList<IngestMailEventRequest> events,
+        out string? error) {
+        var classification = string.Equals(notification.Bounce?.BounceType, "Permanent", StringComparison.OrdinalIgnoreCase)
+            ? "hard"
+            : "soft";
+
+        events = notification.Bounce?.BouncedRecipients
+                     .Where(static recipient => !string.IsNullOrWhiteSpace(recipient.EmailAddress))
+                     .Select(recipient => new IngestMailEventRequest(
+                         "bounce",
+                         recipient.EmailAddress,
+                         "aws-ses-sns",
+                         classification,
+                         notification.Mail.MessageId,
+                         recipient.DiagnosticCode))
+                     .ToArray()
+                 ?? [];
+
+        error = events.Count == 0
+            ? "Bounce notification does not contain recipients."
+            : null;
+        return error is null;
+    }
+
+    private static bool TryMapComplaint(
+        AwsSesNotificationHttpModel notification,
+        out IReadOnlyList<IngestMailEventRequest> events,
+        out string? error) {
+        events = notification.Complaint?.ComplainedRecipients
+                     .Where(static recipient => !string.IsNullOrWhiteSpace(recipient.EmailAddress))
+                     .Select(recipient => new IngestMailEventRequest(
+                         "complaint",
+                         recipient.EmailAddress,
+                         "aws-ses-sns",
+                         null,
+                         notification.Mail.MessageId,
+                         "complaint"))
+                     .ToArray()
+                 ?? [];
+
+        error = events.Count == 0
+            ? "Complaint notification does not contain recipients."
+            : null;
+        return error is null;
     }
 }

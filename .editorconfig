@@ -137,5 +137,8 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.MailRelay.Initializer/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[FoodDiary.MailRelay.Presentation/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [FoodDiary.MailRelay.WebApi/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
