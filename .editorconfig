@@ -86,6 +86,9 @@ dotnet_diagnostic.CA1716.severity = none
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1859.severity = none
 
+[**/Migrations/**/*.cs]
+dotnet_diagnostic.MA0051.severity = suggestion
+
 [FoodDiary.Domain/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
@@ -132,6 +135,9 @@ dotnet_diagnostic.MA0051.severity = warning
 dotnet_diagnostic.MA0051.severity = warning
 
 [FoodDiary.MailRelay.Application/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailRelay.Infrastructure/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [FoodDiary.MailRelay.Initializer/**/*.cs]

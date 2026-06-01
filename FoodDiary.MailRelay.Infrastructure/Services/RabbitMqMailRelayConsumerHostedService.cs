@@ -20,92 +20,124 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
             return;
         }
 
-        var factory = new ConnectionFactory {
+        var connection = await CreateConnectionFactory().CreateConnectionAsync(stoppingToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
+            await using (channel.ConfigureAwait(false)) {
+                await RunConsumerAsync(channel, stoppingToken).ConfigureAwait(false);
+            }
+        }
+    }
+
+    private ConnectionFactory CreateConnectionFactory() {
+        return new ConnectionFactory {
             HostName = _brokerOptions.HostName,
             Port = _brokerOptions.Port,
             UserName = _brokerOptions.UserName,
             Password = _brokerOptions.Password,
             VirtualHost = _brokerOptions.VirtualHost
         };
+    }
 
-        var connection = await factory.CreateConnectionAsync(stoppingToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
-            await using (channel.ConfigureAwait(false)) {
-                await broker.DeclareTopologyAsync(stoppingToken).ConfigureAwait(false);
-                await channel.BasicQosAsync(0, _brokerOptions.PrefetchCount, global: false, cancellationToken: stoppingToken).ConfigureAwait(false);
+    private async Task RunConsumerAsync(IChannel channel, CancellationToken stoppingToken) {
+        await broker.DeclareTopologyAsync(stoppingToken).ConfigureAwait(false);
+        await channel.BasicQosAsync(0, _brokerOptions.PrefetchCount, global: false, cancellationToken: stoppingToken).ConfigureAwait(false);
 
-                var consumer = new AsyncEventingBasicConsumer(channel);
-                consumer.ReceivedAsync += async (_, eventArgs) => {
-                    var deliveryTag = eventArgs.DeliveryTag;
-                    try {
-                        var bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-                        if (!Guid.TryParse(bodyText, out var queuedEmailId)) {
-                            logger.LogWarning("RabbitMQ relay message payload is not a valid email id: {Payload}", bodyText);
-                            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: stoppingToken).ConfigureAwait(false);
-                            return;
-                        }
+        var consumer = CreateConsumer(channel, stoppingToken);
+        var consumerTag = await channel.BasicConsumeAsync(
+            queue: _brokerOptions.QueueName,
+            autoAck: false,
+            consumer: consumer,
+            cancellationToken: stoppingToken).ConfigureAwait(false);
 
-                        var inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), stoppingToken).ConfigureAwait(false);
-                        if (!inboxClaim.Claimed) {
-                            logger.LogDebug("Queued email {QueuedEmailId} was already processed via inbox dedup.", queuedEmailId);
-                            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: stoppingToken).ConfigureAwait(false);
-                            return;
-                        }
+        logger.LogInformation("RabbitMQ relay consumer started. Queue={QueueName}, ConsumerTag={ConsumerTag}", _brokerOptions.QueueName, consumerTag);
 
-                        var claimedMessage = await queueStore.TryClaimMessageByIdAsync(queuedEmailId, stoppingToken).ConfigureAwait(false);
-                        if (claimedMessage is null) {
-                            logger.LogDebug("Queued email {QueuedEmailId} was not claimable when RabbitMQ delivered it.", queuedEmailId);
-                            await queueStore.MarkInboxProcessedAsync(inboxClaim.InboxId, stoppingToken).ConfigureAwait(false);
-                            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: stoppingToken).ConfigureAwait(false);
-                            return;
-                        }
+        try {
+            await Task.Delay(Timeout.InfiniteTimeSpan, stoppingToken).ConfigureAwait(false);
+        } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
+        }
 
-                        var result = await messageProcessor.ProcessAsync(claimedMessage, stoppingToken).ConfigureAwait(false);
-                        if (!result.Succeeded) {
-                            if (result.IsTerminalFailure) {
-                                await broker.PublishDeadLetterAsync(queuedEmailId, stoppingToken).ConfigureAwait(false);
-                            } else {
-                                await broker.PublishRetryAsync(queuedEmailId, stoppingToken).ConfigureAwait(false);
-                            }
-                        }
+        if (channel.IsOpen) {
+            await channel.BasicCancelAsync(consumerTag, noWait: false, cancellationToken: CancellationToken.None).ConfigureAwait(false);
+        }
+    }
 
-                        await queueStore.MarkInboxProcessedAsync(inboxClaim.InboxId, stoppingToken).ConfigureAwait(false);
-                        await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: stoppingToken).ConfigureAwait(false);
-                    } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
-                        if (channel.IsOpen) {
-                            await channel.BasicNackAsync(deliveryTag, multiple: false, requeue: true, cancellationToken: CancellationToken.None).ConfigureAwait(false);
-                        }
-                    } catch (Exception ex) {
-                        logger.LogError(ex, "RabbitMQ relay consumer failed to process a delivery.");
-                        if (Guid.TryParse(Encoding.UTF8.GetString(eventArgs.Body.ToArray()), out var queuedEmailId)) {
-                            var inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), CancellationToken.None).ConfigureAwait(false);
-                            await queueStore.MarkInboxFailedAsync(inboxClaim.InboxId, ex.ToString(), CancellationToken.None).ConfigureAwait(false);
-                        }
+    private AsyncEventingBasicConsumer CreateConsumer(IChannel channel, CancellationToken stoppingToken) {
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += (_, eventArgs) => HandleDeliveryAsync(channel, eventArgs, stoppingToken);
+        return consumer;
+    }
 
-                        if (channel.IsOpen) {
-                            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: stoppingToken).ConfigureAwait(false);
-                        }
-                    }
-                };
+    private async Task HandleDeliveryAsync(IChannel channel, BasicDeliverEventArgs eventArgs, CancellationToken stoppingToken) {
+        var deliveryTag = eventArgs.DeliveryTag;
 
-                var consumerTag = await channel.BasicConsumeAsync(
-                    queue: _brokerOptions.QueueName,
-                    autoAck: false,
-                    consumer: consumer,
-                    cancellationToken: stoppingToken).ConfigureAwait(false);
-
-                logger.LogInformation("RabbitMQ relay consumer started. Queue={QueueName}, ConsumerTag={ConsumerTag}", _brokerOptions.QueueName, consumerTag);
-
-                try {
-                    await Task.Delay(Timeout.InfiniteTimeSpan, stoppingToken).ConfigureAwait(false);
-                } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
-                }
-
-                if (channel.IsOpen) {
-                    await channel.BasicCancelAsync(consumerTag, noWait: false, cancellationToken: CancellationToken.None).ConfigureAwait(false);
-                }
+        try {
+            await ProcessDeliveryAsync(channel, eventArgs, stoppingToken).ConfigureAwait(false);
+        } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
+            if (channel.IsOpen) {
+                await channel.BasicNackAsync(deliveryTag, multiple: false, requeue: true, cancellationToken: CancellationToken.None).ConfigureAwait(false);
             }
+        } catch (Exception ex) {
+            await HandleDeliveryFailureAsync(channel, eventArgs, ex, stoppingToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ProcessDeliveryAsync(IChannel channel, BasicDeliverEventArgs eventArgs, CancellationToken cancellationToken) {
+        var deliveryTag = eventArgs.DeliveryTag;
+        var bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
+        if (!Guid.TryParse(bodyText, out var queuedEmailId)) {
+            logger.LogWarning("RabbitMQ relay message payload is not a valid email id: {Payload}", bodyText);
+            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        var inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), cancellationToken).ConfigureAwait(false);
+        if (!inboxClaim.Claimed) {
+            logger.LogDebug("Queued email {QueuedEmailId} was already processed via inbox dedup.", queuedEmailId);
+            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        var claimedMessage = await queueStore.TryClaimMessageByIdAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
+        if (claimedMessage is null) {
+            logger.LogDebug("Queued email {QueuedEmailId} was not claimable when RabbitMQ delivered it.", queuedEmailId);
+            await queueStore.MarkInboxProcessedAsync(inboxClaim.InboxId, cancellationToken).ConfigureAwait(false);
+            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        await ProcessClaimedMessageAsync(queuedEmailId, claimedMessage, cancellationToken).ConfigureAwait(false);
+        await queueStore.MarkInboxProcessedAsync(inboxClaim.InboxId, cancellationToken).ConfigureAwait(false);
+        await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task ProcessClaimedMessageAsync(Guid queuedEmailId, QueuedEmailMessage claimedMessage, CancellationToken cancellationToken) {
+        var result = await messageProcessor.ProcessAsync(claimedMessage, cancellationToken).ConfigureAwait(false);
+        if (result.Succeeded) {
+            return;
+        }
+
+        if (result.IsTerminalFailure) {
+            await broker.PublishDeadLetterAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
+        } else {
+            await broker.PublishRetryAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task HandleDeliveryFailureAsync(
+        IChannel channel,
+        BasicDeliverEventArgs eventArgs,
+        Exception exception,
+        CancellationToken cancellationToken) {
+        logger.LogError(exception, "RabbitMQ relay consumer failed to process a delivery.");
+        var bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
+        if (Guid.TryParse(bodyText, out var queuedEmailId)) {
+            var inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), CancellationToken.None).ConfigureAwait(false);
+            await queueStore.MarkInboxFailedAsync(inboxClaim.InboxId, exception.ToString(), CancellationToken.None).ConfigureAwait(false);
+        }
+
+        if (channel.IsOpen) {
+            await channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

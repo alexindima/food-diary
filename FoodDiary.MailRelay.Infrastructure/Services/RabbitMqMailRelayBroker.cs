@@ -23,54 +23,10 @@ public sealed class RabbitMqMailRelayBroker(
         await using (connection.ConfigureAwait(false)) {
             var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             await using (channel.ConfigureAwait(false)) {
-
-                await channel.ExchangeDeclareAsync(_brokerOptions.OutboundExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await channel.ExchangeDeclareAsync(_brokerOptions.RetryExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await channel.ExchangeDeclareAsync(_brokerOptions.DeadLetterExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                await channel.QueueDeclareAsync(
-                    queue: _brokerOptions.QueueName,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-                await channel.QueueBindAsync(
-                    queue: _brokerOptions.QueueName,
-                    exchange: _brokerOptions.OutboundExchangeName,
-                    routingKey: _brokerOptions.OutboundRoutingKey,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                var retryArguments = new Dictionary<string, object?>(StringComparer.Ordinal) {
-                    ["x-message-ttl"] = _brokerOptions.RetryDelayMilliseconds,
-                    ["x-dead-letter-exchange"] = _brokerOptions.OutboundExchangeName,
-                    ["x-dead-letter-routing-key"] = _brokerOptions.OutboundRoutingKey
-                };
-                await channel.QueueDeclareAsync(
-                    queue: _brokerOptions.RetryQueueName,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: retryArguments,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-                await channel.QueueBindAsync(
-                    queue: _brokerOptions.RetryQueueName,
-                    exchange: _brokerOptions.RetryExchangeName,
-                    routingKey: _brokerOptions.RetryRoutingKey,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                await channel.QueueDeclareAsync(
-                    queue: _brokerOptions.DeadLetterQueueName,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-                await channel.QueueBindAsync(
-                    queue: _brokerOptions.DeadLetterQueueName,
-                    exchange: _brokerOptions.DeadLetterExchangeName,
-                    routingKey: _brokerOptions.DeadLetterRoutingKey,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
+                await DeclareExchangesAsync(channel, cancellationToken).ConfigureAwait(false);
+                await DeclareOutboundQueueAsync(channel, cancellationToken).ConfigureAwait(false);
+                await DeclareRetryQueueAsync(channel, cancellationToken).ConfigureAwait(false);
+                await DeclareDeadLetterQueueAsync(channel, cancellationToken).ConfigureAwait(false);
 
                 _logger.LogInformation(
                     "RabbitMQ MailRelay topology is ready. MainQueue={MainQueue}, RetryQueue={RetryQueue}, DeadLetterQueue={DeadLetterQueue}",
@@ -79,6 +35,63 @@ public sealed class RabbitMqMailRelayBroker(
                     _brokerOptions.DeadLetterQueueName);
             }
         }
+    }
+
+    private async Task DeclareExchangesAsync(IChannel channel, CancellationToken cancellationToken) {
+        await channel.ExchangeDeclareAsync(_brokerOptions.OutboundExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await channel.ExchangeDeclareAsync(_brokerOptions.RetryExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await channel.ExchangeDeclareAsync(_brokerOptions.DeadLetterExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task DeclareOutboundQueueAsync(IChannel channel, CancellationToken cancellationToken) {
+        await channel.QueueDeclareAsync(
+            queue: _brokerOptions.QueueName,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        await channel.QueueBindAsync(
+            queue: _brokerOptions.QueueName,
+            exchange: _brokerOptions.OutboundExchangeName,
+            routingKey: _brokerOptions.OutboundRoutingKey,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task DeclareRetryQueueAsync(IChannel channel, CancellationToken cancellationToken) {
+        var retryArguments = new Dictionary<string, object?>(StringComparer.Ordinal) {
+            ["x-message-ttl"] = _brokerOptions.RetryDelayMilliseconds,
+            ["x-dead-letter-exchange"] = _brokerOptions.OutboundExchangeName,
+            ["x-dead-letter-routing-key"] = _brokerOptions.OutboundRoutingKey
+        };
+
+        await channel.QueueDeclareAsync(
+            queue: _brokerOptions.RetryQueueName,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: retryArguments,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        await channel.QueueBindAsync(
+            queue: _brokerOptions.RetryQueueName,
+            exchange: _brokerOptions.RetryExchangeName,
+            routingKey: _brokerOptions.RetryRoutingKey,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task DeclareDeadLetterQueueAsync(IChannel channel, CancellationToken cancellationToken) {
+        await channel.QueueDeclareAsync(
+            queue: _brokerOptions.DeadLetterQueueName,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        await channel.QueueBindAsync(
+            queue: _brokerOptions.DeadLetterQueueName,
+            exchange: _brokerOptions.DeadLetterExchangeName,
+            routingKey: _brokerOptions.DeadLetterRoutingKey,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public Task PublishOutboundAsync(Guid emailId, CancellationToken cancellationToken) {

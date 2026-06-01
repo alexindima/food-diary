@@ -8,99 +8,184 @@ public sealed class MailRelayQueueStore(
     NpgsqlDataSource dataSource,
     IOptions<MailRelayQueueOptions> queueOptions) : IMailRelayQueueStore, IMailRelaySchemaInitializer {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private const string EnsureSchemaSql = """
+                                           create table if not exists mailrelay_outbound_emails (
+                                               id uuid primary key,
+                                               status text not null,
+                                               from_address text not null,
+                                               from_name text not null,
+                                               to_recipients_json jsonb not null,
+                                               subject text not null,
+                                               html_body text not null,
+                                               text_body text null,
+                                               correlation_id text null,
+                                               idempotency_key text null,
+                                               attempt_count integer not null default 0,
+                                               max_attempts integer not null,
+                                               available_at_utc timestamptz not null,
+                                               created_at_utc timestamptz not null,
+                                               locked_at_utc timestamptz null,
+                                               sent_at_utc timestamptz null,
+                                               last_error text null
+                                           );
+
+                                           create unique index if not exists ux_mailrelay_outbound_emails_idempotency_key
+                                               on mailrelay_outbound_emails (idempotency_key)
+                                               where idempotency_key is not null;
+
+                                           create index if not exists ix_mailrelay_outbound_emails_due
+                                               on mailrelay_outbound_emails (status, available_at_utc, created_at_utc);
+
+                                           create index if not exists ix_mailrelay_outbound_emails_processing
+                                               on mailrelay_outbound_emails (status, locked_at_utc);
+
+                                           create table if not exists mailrelay_outbox_messages (
+                                               id uuid primary key,
+                                               email_id uuid not null,
+                                               status text not null,
+                                               attempt_count integer not null default 0,
+                                               available_at_utc timestamptz not null,
+                                               locked_at_utc timestamptz null,
+                                               published_at_utc timestamptz null,
+                                               created_at_utc timestamptz not null,
+                                               last_error text null
+                                           );
+
+                                           create index if not exists ix_mailrelay_outbox_messages_due
+                                               on mailrelay_outbox_messages (status, available_at_utc, created_at_utc);
+
+                                           create table if not exists mailrelay_inbox_messages (
+                                               id uuid primary key,
+                                               consumer_name text not null,
+                                               message_key text not null,
+                                               status text not null,
+                                               locked_at_utc timestamptz not null,
+                                               processed_at_utc timestamptz null,
+                                               created_at_utc timestamptz not null,
+                                               updated_at_utc timestamptz not null,
+                                               last_error text null
+                                           );
+
+                                           create unique index if not exists ux_mailrelay_inbox_messages_consumer_message_key
+                                               on mailrelay_inbox_messages (consumer_name, message_key);
+
+                                           create table if not exists mailrelay_suppressions (
+                                               email text primary key,
+                                               reason text not null,
+                                               source text not null,
+                                               created_at_utc timestamptz not null,
+                                               updated_at_utc timestamptz not null,
+                                               expires_at_utc timestamptz null
+                                           );
+
+                                           create table if not exists mailrelay_delivery_events (
+                                               id uuid primary key,
+                                               event_type text not null,
+                                               email text not null,
+                                               source text not null,
+                                               classification text null,
+                                               provider_message_id text null,
+                                               reason text null,
+                                               occurred_at_utc timestamptz not null,
+                                               created_at_utc timestamptz not null
+                                           );
+
+                                           create index if not exists ix_mailrelay_delivery_events_email_created
+                                               on mailrelay_delivery_events (email, created_at_utc desc);
+                                           """;
+    private const string InsertEmailSql = """
+                                          insert into mailrelay_outbound_emails (
+                                              id,
+                                              status,
+                                              from_address,
+                                              from_name,
+                                              to_recipients_json,
+                                              subject,
+                                              html_body,
+                                              text_body,
+                                              correlation_id,
+                                              idempotency_key,
+                                              attempt_count,
+                                              max_attempts,
+                                              available_at_utc,
+                                              created_at_utc
+                                          )
+                                          values (
+                                              @id,
+                                              'pending',
+                                              @fromAddress,
+                                              @fromName,
+                                              cast(@toRecipientsJson as jsonb),
+                                              @subject,
+                                              @htmlBody,
+                                              @textBody,
+                                              @correlationId,
+                                              @idempotencyKey,
+                                              0,
+                                              @maxAttempts,
+                                              @availableAtUtc,
+                                              @createdAtUtc
+                                          )
+                                          on conflict (idempotency_key) where idempotency_key is not null
+                                          do update set idempotency_key = excluded.idempotency_key
+                                          returning id;
+                                          """;
+    private const string InsertOutboxSql = """
+                                           insert into mailrelay_outbox_messages (
+                                               id,
+                                               email_id,
+                                               status,
+                                               attempt_count,
+                                               available_at_utc,
+                                               created_at_utc
+                                           )
+                                           values (
+                                               @id,
+                                               @emailId,
+                                               'pending',
+                                               0,
+                                               @availableAtUtc,
+                                               @createdAtUtc
+                                           );
+                                           """;
+    private const string ClaimDueBatchSql = """
+                                            with next_batch as (
+                                                select id
+                                                from mailrelay_outbound_emails
+                                                where (
+                                                    status in ('pending', 'retry') and available_at_utc <= now()
+                                                ) or (
+                                                    status = 'processing' and locked_at_utc is not null and locked_at_utc <= now() - make_interval(secs => @lockTimeoutSeconds)
+                                                )
+                                                order by available_at_utc asc, created_at_utc asc
+                                                limit @batchSize
+                                                for update skip locked
+                                            )
+                                            update mailrelay_outbound_emails queue
+                                            set status = 'processing',
+                                                locked_at_utc = now(),
+                                                attempt_count = queue.attempt_count + 1
+                                            from next_batch
+                                            where queue.id = next_batch.id
+                                            returning
+                                                queue.id,
+                                                queue.from_address,
+                                                queue.from_name,
+                                                queue.to_recipients_json::text,
+                                                queue.subject,
+                                                queue.html_body,
+                                                queue.text_body,
+                                                queue.correlation_id,
+                                                queue.attempt_count,
+                                                queue.max_attempts;
+                                            """;
     private readonly NpgsqlDataSource _dataSource = dataSource;
     private readonly MailRelayQueueOptions _queueOptions = queueOptions.Value;
 
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
-        const string sql = """
-                           create table if not exists mailrelay_outbound_emails (
-                               id uuid primary key,
-                               status text not null,
-                               from_address text not null,
-                               from_name text not null,
-                               to_recipients_json jsonb not null,
-                               subject text not null,
-                               html_body text not null,
-                               text_body text null,
-                               correlation_id text null,
-                               idempotency_key text null,
-                               attempt_count integer not null default 0,
-                               max_attempts integer not null,
-                               available_at_utc timestamptz not null,
-                               created_at_utc timestamptz not null,
-                               locked_at_utc timestamptz null,
-                               sent_at_utc timestamptz null,
-                               last_error text null
-                           );
-
-                           create unique index if not exists ux_mailrelay_outbound_emails_idempotency_key
-                               on mailrelay_outbound_emails (idempotency_key)
-                               where idempotency_key is not null;
-
-                           create index if not exists ix_mailrelay_outbound_emails_due
-                               on mailrelay_outbound_emails (status, available_at_utc, created_at_utc);
-
-                           create index if not exists ix_mailrelay_outbound_emails_processing
-                               on mailrelay_outbound_emails (status, locked_at_utc);
-
-                           create table if not exists mailrelay_outbox_messages (
-                               id uuid primary key,
-                               email_id uuid not null,
-                               status text not null,
-                               attempt_count integer not null default 0,
-                               available_at_utc timestamptz not null,
-                               locked_at_utc timestamptz null,
-                               published_at_utc timestamptz null,
-                               created_at_utc timestamptz not null,
-                               last_error text null
-                           );
-
-                           create index if not exists ix_mailrelay_outbox_messages_due
-                               on mailrelay_outbox_messages (status, available_at_utc, created_at_utc);
-
-                           create table if not exists mailrelay_inbox_messages (
-                               id uuid primary key,
-                               consumer_name text not null,
-                               message_key text not null,
-                               status text not null,
-                               locked_at_utc timestamptz not null,
-                               processed_at_utc timestamptz null,
-                               created_at_utc timestamptz not null,
-                               updated_at_utc timestamptz not null,
-                               last_error text null
-                           );
-
-                           create unique index if not exists ux_mailrelay_inbox_messages_consumer_message_key
-                               on mailrelay_inbox_messages (consumer_name, message_key);
-
-                           create table if not exists mailrelay_suppressions (
-                               email text primary key,
-                               reason text not null,
-                               source text not null,
-                               created_at_utc timestamptz not null,
-                               updated_at_utc timestamptz not null,
-                               expires_at_utc timestamptz null
-                           );
-
-                           create table if not exists mailrelay_delivery_events (
-                               id uuid primary key,
-                               event_type text not null,
-                               email text not null,
-                               source text not null,
-                               classification text null,
-                               provider_message_id text null,
-                               reason text null,
-                               occurred_at_utc timestamptz not null,
-                               created_at_utc timestamptz not null
-                           );
-
-                           create index if not exists ix_mailrelay_delivery_events_email_created
-                               on mailrelay_delivery_events (email, created_at_utc desc);
-                           """;
-
         var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
-            var command = new NpgsqlCommand(sql, connection);
+            var command = new NpgsqlCommand(EnsureSchemaSql, connection);
             await using (command.ConfigureAwait(false)) {
                 await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -108,6 +193,26 @@ public sealed class MailRelayQueueStore(
     }
 
     public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+        ValidateRequest(request);
+
+        var emailId = Guid.NewGuid();
+        var outboxId = Guid.NewGuid();
+        var now = DateTimeOffset.UtcNow;
+
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await using (transaction.ConfigureAwait(false)) {
+                var queuedEmailId = await InsertQueuedEmailAsync(connection, transaction, request, emailId, now, cancellationToken).ConfigureAwait(false);
+                await InsertOutboxMessageAsync(connection, transaction, outboxId, queuedEmailId, now, cancellationToken).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                MailRelayTelemetry.RecordQueueEvent("queued");
+                return queuedEmailId;
+            }
+        }
+    }
+
+    private static void ValidateRequest(RelayEmailMessageRequest request) {
         if (string.IsNullOrWhiteSpace(request.FromAddress)) {
             throw new ArgumentException("Email relay request must contain a sender address.", nameof(request));
         }
@@ -123,168 +228,66 @@ public sealed class MailRelayQueueStore(
         if (request.To.Count == 0) {
             throw new InvalidOperationException("Email relay request must contain at least one recipient.");
         }
+    }
 
-        var id = Guid.NewGuid();
-        var outboxId = Guid.NewGuid();
-        var now = DateTimeOffset.UtcNow;
+    private async Task<Guid> InsertQueuedEmailAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        RelayEmailMessageRequest request,
+        Guid id,
+        DateTimeOffset now,
+        CancellationToken cancellationToken) {
+        var command = new NpgsqlCommand(InsertEmailSql, connection, transaction);
+        await using (command.ConfigureAwait(false)) {
+            command.Parameters.AddWithValue("id", id);
+            command.Parameters.AddWithValue("fromAddress", request.FromAddress);
+            command.Parameters.AddWithValue("fromName", request.FromName);
+            command.Parameters.AddWithValue("toRecipientsJson", JsonSerializer.Serialize(request.To, JsonOptions));
+            command.Parameters.AddWithValue("subject", request.Subject);
+            command.Parameters.AddWithValue("htmlBody", request.HtmlBody);
+            command.Parameters.AddWithValue("textBody", (object?)request.TextBody ?? DBNull.Value);
+            command.Parameters.AddWithValue("correlationId", (object?)request.CorrelationId ?? DBNull.Value);
+            command.Parameters.AddWithValue("idempotencyKey", (object?)request.IdempotencyKey ?? DBNull.Value);
+            command.Parameters.AddWithValue("maxAttempts", _queueOptions.MaxAttempts);
+            command.Parameters.AddWithValue("availableAtUtc", now);
+            command.Parameters.AddWithValue("createdAtUtc", now);
 
-        const string emailSql = """
-                                insert into mailrelay_outbound_emails (
-                                    id,
-                                    status,
-                                    from_address,
-                                    from_name,
-                                    to_recipients_json,
-                                    subject,
-                                    html_body,
-                                    text_body,
-                                    correlation_id,
-                                    idempotency_key,
-                                    attempt_count,
-                                    max_attempts,
-                                    available_at_utc,
-                                    created_at_utc
-                                )
-                                values (
-                                    @id,
-                                    'pending',
-                                    @fromAddress,
-                                    @fromName,
-                                    cast(@toRecipientsJson as jsonb),
-                                    @subject,
-                                    @htmlBody,
-                                    @textBody,
-                                    @correlationId,
-                                    @idempotencyKey,
-                                    0,
-                                    @maxAttempts,
-                                    @availableAtUtc,
-                                    @createdAtUtc
-                                )
-                                on conflict (idempotency_key) where idempotency_key is not null
-                                do update set idempotency_key = excluded.idempotency_key
-                                returning id;
-                                """;
+            var result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            return result is Guid existingId
+                ? existingId
+                : throw new InvalidOperationException("Mail relay queue insert did not return an id.");
+        }
+    }
 
-        const string outboxSql = """
-                                 insert into mailrelay_outbox_messages (
-                                     id,
-                                     email_id,
-                                     status,
-                                     attempt_count,
-                                     available_at_utc,
-                                     created_at_utc
-                                 )
-                                 values (
-                                     @id,
-                                     @emailId,
-                                     'pending',
-                                     0,
-                                     @availableAtUtc,
-                                     @createdAtUtc
-                                 );
-                                 """;
-
-        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
-                Guid emailId;
-                var emailCommand = new NpgsqlCommand(emailSql, connection, transaction);
-                await using (emailCommand.ConfigureAwait(false)) {
-                    emailCommand.Parameters.AddWithValue("id", id);
-                    emailCommand.Parameters.AddWithValue("fromAddress", request.FromAddress);
-                    emailCommand.Parameters.AddWithValue("fromName", request.FromName);
-                    emailCommand.Parameters.AddWithValue("toRecipientsJson", JsonSerializer.Serialize(request.To, JsonOptions));
-                    emailCommand.Parameters.AddWithValue("subject", request.Subject);
-                    emailCommand.Parameters.AddWithValue("htmlBody", request.HtmlBody);
-                    emailCommand.Parameters.AddWithValue("textBody", (object?)request.TextBody ?? DBNull.Value);
-                    emailCommand.Parameters.AddWithValue("correlationId", (object?)request.CorrelationId ?? DBNull.Value);
-                    emailCommand.Parameters.AddWithValue("idempotencyKey", (object?)request.IdempotencyKey ?? DBNull.Value);
-                    emailCommand.Parameters.AddWithValue("maxAttempts", _queueOptions.MaxAttempts);
-                    emailCommand.Parameters.AddWithValue("availableAtUtc", now);
-                    emailCommand.Parameters.AddWithValue("createdAtUtc", now);
-
-                    var result = await emailCommand.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
-                    emailId = result is Guid existingId
-                        ? existingId
-                        : throw new InvalidOperationException("Mail relay queue insert did not return an id.");
-                }
-
-                var outboxCommand = new NpgsqlCommand(outboxSql, connection, transaction);
-                await using (outboxCommand.ConfigureAwait(false)) {
-                    outboxCommand.Parameters.AddWithValue("id", outboxId);
-                    outboxCommand.Parameters.AddWithValue("emailId", emailId);
-                    outboxCommand.Parameters.AddWithValue("availableAtUtc", now);
-                    outboxCommand.Parameters.AddWithValue("createdAtUtc", now);
-                    await outboxCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
-                }
-
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                MailRelayTelemetry.RecordQueueEvent("queued");
-                return emailId;
-            }
+    private static async Task InsertOutboxMessageAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        Guid outboxId,
+        Guid emailId,
+        DateTimeOffset now,
+        CancellationToken cancellationToken) {
+        var command = new NpgsqlCommand(InsertOutboxSql, connection, transaction);
+        await using (command.ConfigureAwait(false)) {
+            command.Parameters.AddWithValue("id", outboxId);
+            command.Parameters.AddWithValue("emailId", emailId);
+            command.Parameters.AddWithValue("availableAtUtc", now);
+            command.Parameters.AddWithValue("createdAtUtc", now);
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
     public async Task<IReadOnlyList<QueuedEmailMessage>> ClaimDueBatchAsync(CancellationToken cancellationToken) {
-        const string sql = """
-                           with next_batch as (
-                               select id
-                               from mailrelay_outbound_emails
-                               where (
-                                   status in ('pending', 'retry') and available_at_utc <= now()
-                               ) or (
-                                   status = 'processing' and locked_at_utc is not null and locked_at_utc <= now() - make_interval(secs => @lockTimeoutSeconds)
-                               )
-                               order by available_at_utc asc, created_at_utc asc
-                               limit @batchSize
-                               for update skip locked
-                           )
-                           update mailrelay_outbound_emails queue
-                           set status = 'processing',
-                               locked_at_utc = now(),
-                               attempt_count = queue.attempt_count + 1
-                           from next_batch
-                           where queue.id = next_batch.id
-                           returning
-                               queue.id,
-                               queue.from_address,
-                               queue.from_name,
-                               queue.to_recipients_json::text,
-                               queue.subject,
-                               queue.html_body,
-                               queue.text_body,
-                               queue.correlation_id,
-                               queue.attempt_count,
-                               queue.max_attempts;
-                           """;
-
         var result = new List<QueuedEmailMessage>();
         var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
-            var command = new NpgsqlCommand(sql, connection);
+            var command = new NpgsqlCommand(ClaimDueBatchSql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
 
                 using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
                 while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    var toRecipientsJson = reader.GetString(3);
-                    var recipients = JsonSerializer.Deserialize<string[]>(toRecipientsJson, JsonOptions)
-                                     ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
-
-                    result.Add(new QueuedEmailMessage(
-                        reader.GetGuid(0),
-                        reader.GetString(1),
-                        reader.GetString(2),
-                        recipients,
-                        reader.GetString(4),
-                        reader.GetString(5),
-                        reader.IsDBNull(6) ? null : reader.GetString(6),
-                        reader.IsDBNull(7) ? null : reader.GetString(7),
-                        reader.GetInt32(8),
-                        reader.GetInt32(9)));
+                    result.Add(ReadQueuedEmailMessage(reader));
                 }
 
                 return result;
@@ -328,23 +331,27 @@ public sealed class MailRelayQueueStore(
                     return null;
                 }
 
-                var toRecipientsJson = reader.GetString(3);
-                var recipients = JsonSerializer.Deserialize<string[]>(toRecipientsJson, JsonOptions)
-                                 ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
-
-                return new QueuedEmailMessage(
-                    reader.GetGuid(0),
-                    reader.GetString(1),
-                    reader.GetString(2),
-                    recipients,
-                    reader.GetString(4),
-                    reader.GetString(5),
-                    reader.IsDBNull(6) ? null : reader.GetString(6),
-                    reader.IsDBNull(7) ? null : reader.GetString(7),
-                    reader.GetInt32(8),
-                    reader.GetInt32(9));
+                return ReadQueuedEmailMessage(reader);
             }
         }
+    }
+
+    private static QueuedEmailMessage ReadQueuedEmailMessage(NpgsqlDataReader reader) {
+        var toRecipientsJson = reader.GetString(3);
+        var recipients = JsonSerializer.Deserialize<string[]>(toRecipientsJson, JsonOptions)
+                         ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
+
+        return new QueuedEmailMessage(
+            reader.GetGuid(0),
+            reader.GetString(1),
+            reader.GetString(2),
+            recipients,
+            reader.GetString(4),
+            reader.GetString(5),
+            reader.IsDBNull(6) ? null : reader.GetString(6),
+            reader.IsDBNull(7) ? null : reader.GetString(7),
+            reader.GetInt32(8),
+            reader.GetInt32(9));
     }
 
     public async Task<IReadOnlyList<MailRelayOutboxMessage>> ClaimOutboxBatchAsync(CancellationToken cancellationToken) {
