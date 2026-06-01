@@ -52,7 +52,7 @@ public sealed class PaddleBillingGateway(
                 ],
                 customerId,
                 "automatic",
-                new Dictionary<string, string> {
+                new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                 },
@@ -186,7 +186,7 @@ public sealed class PaddleBillingGateway(
             new CreateCustomerRequest(
                 request.Email,
                 null,
-                new Dictionary<string, string> {
+                new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                 }),
             cancellationToken);

@@ -11,7 +11,7 @@ public sealed class ApiHostOptionsConfigurationTests {
     public void AddApiServices_BindsHostOptionsFromConfiguration() {
         var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> {
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
                 ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
                 ["Jwt:Issuer"] = "FoodDiaryApi",

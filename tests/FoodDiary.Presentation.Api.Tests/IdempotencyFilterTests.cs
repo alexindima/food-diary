@@ -140,7 +140,7 @@ public sealed class IdempotencyFilterTests {
         return new ActionExecutingContext(
             actionContext,
             filters,
-            new Dictionary<string, object?>(),
+            new Dictionary<string, object?>(StringComparer.Ordinal),
             controller: new object());
     }
 

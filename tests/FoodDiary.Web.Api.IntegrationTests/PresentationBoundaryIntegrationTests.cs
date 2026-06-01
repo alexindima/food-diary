@@ -82,7 +82,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     public async Task Login_WhenRateLimitExceeded_ReturnsTooManyRequestsContract() {
         using var limitedFactory = apiFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
-                configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                     ["RateLimiting:Auth:PermitLimit"] = "5",
                     ["RateLimiting:Auth:WindowSeconds"] = "60",
                 });
@@ -394,7 +394,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     public async Task ApiVersion_ReturnsConfiguredBuildMetadata() {
         using var versionedFactory = apiFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
-                configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                     ["BuildInfo:CommitSha"] = "abc123def456",
                     ["BuildInfo:ImageTag"] = "sha-abc123def456",
                 });

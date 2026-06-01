@@ -39,7 +39,7 @@ public class UserInvariantTests {
         user.ReplaceRoles([adminRole, supportRole]);
 
         Assert.Collection(
-            user.UserRoles.OrderBy(role => role.Role.Name),
+            user.UserRoles.OrderBy(role => role.Role.Name, StringComparer.Ordinal),
             role => {
                 Assert.Equal(user.Id, role.UserId);
                 Assert.Equal("Admin", role.Role.Name);
@@ -58,7 +58,7 @@ public class UserInvariantTests {
 
         user.ReplaceRoles([adminRole, supportRole]);
 
-        Assert.Equal(["Admin", "Support"], user.GetRoleNames().OrderBy(name => name).ToArray());
+        Assert.Equal(["Admin", "Support"], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
         Assert.True(user.HasRole("Admin"));
         Assert.True(user.HasRole(" Support "));
         Assert.False(user.HasRole("Premium"));
@@ -635,7 +635,7 @@ public class UserInvariantTests {
         Assert.Equal("ru", user.Language);
         Assert.Equal(123, user.AiInputTokenLimit);
         Assert.Equal(456, user.AiOutputTokenLimit);
-        Assert.Equal(["Admin", "Support"], user.UserRoles.Select(role => role.Role.Name).OrderBy(name => name).ToArray());
+        Assert.Equal(["Admin", "Support"], user.UserRoles.Select(role => role.Role.Name).OrderBy(name => name, StringComparer.Ordinal).ToArray());
     }
 
     [Fact]

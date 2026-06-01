@@ -123,6 +123,6 @@ public sealed class MailRelayPresentationTests {
                     AttributeRouteInfo = new AttributeRouteInfo { Template = "api/email/queue" }
                 }),
             [],
-            new Dictionary<string, object?>(),
+            new Dictionary<string, object?>(StringComparer.Ordinal),
             controller);
 }

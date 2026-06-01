@@ -108,7 +108,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
             .Concat(byBrowser)
             .Concat(byOperatingSystem)
             .OrderByDescending(item => item.Count)
-            .ThenBy(item => item.Key)
+            .ThenBy(item => item.Key, StringComparer.Ordinal)
             .ToArray();
     }
 

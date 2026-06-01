@@ -21,7 +21,7 @@ public sealed class TestAuthApiWebApplicationFactory : WebApplicationFactory<Pro
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseEnvironment("Development");
         builder.ConfigureAppConfiguration((_, configBuilder) => {
-            configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
+            configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
                 ["Jwt:Issuer"] = "fooddiary-tests",
                 ["Jwt:Audience"] = "fooddiary-tests",

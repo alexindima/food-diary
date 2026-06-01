@@ -93,7 +93,7 @@ public sealed class MailInboxPresentationTests {
     [InlineData(ErrorKind.Internal, StatusCodes.Status500InternalServerError)]
     public void MailInboxResultExtensions_ErrorResult_MapsErrorKindToStatusCode(ErrorKind kind, int expectedStatusCode) {
         var result = MailInboxResultExtensions.ErrorResult(
-            new MailInboxError("code", "message", kind, new Dictionary<string, string[]> {
+            new MailInboxError("code", "message", kind, new Dictionary<string, string[]>(StringComparer.Ordinal) {
                 ["Request.RawMime"] = ["Required"],
             }),
             "trace-123");

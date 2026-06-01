@@ -19,7 +19,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_WithInvalidEmailBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -39,7 +39,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_WithInvalidAllowedEmailBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -60,7 +60,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddIntegrations_WithInvalidMailRelayClientBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -80,7 +80,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddIntegrations_WithInvalidS3ServiceUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -100,7 +100,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_RegistersDatabaseCommandTelemetryInterceptor() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -120,7 +120,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_CanResolveDiaryPdfGeneratorTypedClient() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -141,7 +141,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_WithInvalidDatabaseRetryCount_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -162,7 +162,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_WithRetriesEnabled_ConfiguresRetryingExecutionStrategy() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",

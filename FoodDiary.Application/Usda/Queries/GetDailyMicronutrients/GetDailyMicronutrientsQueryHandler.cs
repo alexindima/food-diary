@@ -82,7 +82,7 @@ public class GetDailyMicronutrientsQueryHandler(
                     dv,
                     percentDv);
             })
-            .OrderBy(n => n.Name)
+            .OrderBy(n => n.Name, StringComparer.Ordinal)
             .ToList();
 
         var nutrientAmounts = aggregated.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Total);

@@ -33,7 +33,7 @@ builder.Configuration.AddEnvironmentVariables("FOODDIARY_");
 builder.Configuration.AddEnvironmentVariables("MAILINBOX_");
 
 if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
-    builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?> {
+    builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
         ["ConnectionStrings:DefaultConnection"] = command.ConnectionString
     });
 }

@@ -41,7 +41,7 @@ public sealed class YooKassaBillingGateway(
                 new ConfirmationRequest("redirect", _options.ReturnUrl),
                 true,
                 BuildDescription(request.Plan),
-                new Dictionary<string, string> {
+                new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                 }),
@@ -93,7 +93,7 @@ public sealed class YooKassaBillingGateway(
                 true,
                 request.PaymentMethodId,
                 BuildDescription(request.Plan),
-                new Dictionary<string, string> {
+                new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                     ["renewal"] = "true",

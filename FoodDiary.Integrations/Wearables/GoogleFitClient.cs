@@ -34,7 +34,7 @@ internal sealed class GoogleFitClient(
 
         try {
             var response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
-                new FormUrlEncodedContent(new Dictionary<string, string> {
+                new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "authorization_code",
                     ["code"] = code,
                     ["client_id"] = config.ClientId,
@@ -68,7 +68,7 @@ internal sealed class GoogleFitClient(
         var config = options.Value;
         try {
             var response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
-                new FormUrlEncodedContent(new Dictionary<string, string> {
+                new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "refresh_token",
                     ["refresh_token"] = refreshToken,
                     ["client_id"] = config.ClientId,

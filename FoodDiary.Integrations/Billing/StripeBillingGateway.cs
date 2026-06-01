@@ -34,7 +34,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             var customer = await customerService.CreateAsync(
                 new CustomerCreateOptions {
                     Email = request.Email,
-                    Metadata = new Dictionary<string, string> {
+                    Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
                         ["user_id"] = request.UserId.ToString(),
                     },
                 },
@@ -56,12 +56,12 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                         Quantity = 1,
                     },
                 ],
-                Metadata = new Dictionary<string, string> {
+                Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                 },
                 SubscriptionData = new CheckoutSessionSubscriptionDataOptions {
-                    Metadata = new Dictionary<string, string> {
+                    Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
                         ["user_id"] = request.UserId.ToString(),
                         ["plan"] = request.Plan,
                     },

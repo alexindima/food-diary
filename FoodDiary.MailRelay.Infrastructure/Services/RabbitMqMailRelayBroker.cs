@@ -39,7 +39,7 @@ public sealed class RabbitMqMailRelayBroker(
             routingKey: _brokerOptions.OutboundRoutingKey,
             cancellationToken: cancellationToken);
 
-        var retryArguments = new Dictionary<string, object?> {
+        var retryArguments = new Dictionary<string, object?>(StringComparer.Ordinal) {
             ["x-message-ttl"] = _brokerOptions.RetryDelayMilliseconds,
             ["x-dead-letter-exchange"] = _brokerOptions.OutboundExchangeName,
             ["x-dead-letter-routing-key"] = _brokerOptions.OutboundRoutingKey

@@ -209,7 +209,7 @@ public class AdminFeatureTests {
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
         var handler = CreateUpdateAdminUserHandler(userRepository);
-        var beforeRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x).ToArray();
+        var beforeRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -222,7 +222,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        var afterRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x).ToArray();
+        var afterRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
 
         Assert.True(result.IsSuccess);
         Assert.Equal(beforeRoles, afterRoles);
@@ -273,7 +273,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin], user.GetRoleNames().OrderBy(name => name).ToArray());
+        Assert.Equal([RoleNames.Admin], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
     }
 
     [Fact]
@@ -298,7 +298,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name).ToArray());
+        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
     }
 
     [Fact]
@@ -323,7 +323,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name).ToArray());
+        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
     }
 
     [Fact]
@@ -348,7 +348,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(
             [RoleNames.Admin, RoleNames.Owner, RoleNames.Support],
-            user.GetRoleNames().OrderBy(name => name).ToArray());
+            user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
     }
 
     [Fact]
@@ -399,7 +399,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("own Admin role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin, RoleNames.Premium], user.GetRoleNames().OrderBy(name => name).ToArray());
+        Assert.Equal([RoleNames.Admin, RoleNames.Premium], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
     }
 
     [Fact]
@@ -479,7 +479,7 @@ public class AdminFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Collection(
-            userRepository.RoleAuditEvents.OrderBy(auditEvent => auditEvent.RoleName),
+            userRepository.RoleAuditEvents.OrderBy(auditEvent => auditEvent.RoleName, StringComparer.Ordinal),
             auditEvent => {
                 Assert.Equal(UserRoleAuditAction.Removed, auditEvent.Action);
                 Assert.Equal(RoleNames.Premium, auditEvent.RoleName);

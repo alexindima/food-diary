@@ -71,7 +71,7 @@ public sealed class AdminSsoServiceTests {
     }
 
     private sealed class InMemoryDistributedCache : IDistributedCache {
-        private readonly Dictionary<string, byte[]> _store = new();
+        private readonly Dictionary<string, byte[]> _store = new(StringComparer.Ordinal);
 
         public byte[]? Get(string key) => _store.GetValueOrDefault(key);
 

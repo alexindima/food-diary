@@ -30,7 +30,7 @@ public sealed class LogsController(
             _ => LogLevel.Information,
         };
 
-        using var scope = _logger.BeginScope(new Dictionary<string, object?> {
+        using var scope = _logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
             ["ClientTelemetryCategory"] = request.Category,
             ["ClientTelemetryName"] = request.Name,
             ["ClientTelemetryRoute"] = request.Route,

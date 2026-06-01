@@ -1644,7 +1644,7 @@ public class DietologistFeatureTests {
             Task.FromResult(_users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase)));
 
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<Role>>(_roles.Where(r => names.Contains(r.Name)).ToList());
+            Task.FromResult<IReadOnlyList<Role>>(_roles.Where(r => names.Contains(r.Name, StringComparer.Ordinal)).ToList());
 
         public Task<User> AddAsync(User user, CancellationToken ct = default) {
             _users.Add(user);

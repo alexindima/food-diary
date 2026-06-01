@@ -21,7 +21,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
             activity?.SetTag("enduser.id", userId);
         }
 
-        using var scope = logger.BeginScope(new Dictionary<string, object?> {
+        using var scope = logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
             ["TraceId"] = context.TraceIdentifier,
             ["RequestPath"] = pathLabel,
             ["RequestSensitivity"] = sensitivity.ScopeLabel,

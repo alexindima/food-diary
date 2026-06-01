@@ -15,7 +15,7 @@ public sealed class MailRelayWebApplicationFactory(
 
         builder.UseEnvironment("Development");
         builder.ConfigureAppConfiguration((_, configBuilder) => {
-            configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
+            configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = databaseConnectionString,
                 ["MailRelay:RequireApiKey"] = "true",
                 ["MailRelay:ApiKey"] = "integration-relay-api-key",

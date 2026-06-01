@@ -38,7 +38,7 @@ internal sealed class FitbitClient(
 
         try {
             var request = new HttpRequestMessage(HttpMethod.Post, "https://api.fitbit.com/oauth2/token") {
-                Content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                Content = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "authorization_code",
                     ["code"] = code,
                     ["redirect_uri"] = config.RedirectUri,
@@ -70,7 +70,7 @@ internal sealed class FitbitClient(
         var config = options.Value;
         try {
             var request = new HttpRequestMessage(HttpMethod.Post, "https://api.fitbit.com/oauth2/token") {
-                Content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                Content = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "refresh_token",
                     ["refresh_token"] = refreshToken,
                 }),

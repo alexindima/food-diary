@@ -289,7 +289,7 @@ public sealed class FastingAnalyticsService(
             "FASTING.INSIGHTS.RECURRING_SYMPTOM_TITLE",
             "FASTING.INSIGHTS.RECURRING_SYMPTOM_BODY",
             RiskySymptoms.Contains(recurring) ? "warning" : "neutral",
-            new Dictionary<string, string> {
+            new Dictionary<string, string>(StringComparer.Ordinal) {
                 ["symptom"] = $"FASTING.CHECK_IN.SYMPTOMS.{recurring.ToUpperInvariant()}",
             });
     }
