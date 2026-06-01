@@ -7,9 +7,10 @@ namespace FoodDiary.Application.Tests;
 
 public sealed class RecordingImageAssetAccessService : IImageAssetAccessService {
     private readonly Dictionary<ImageAssetId, string> _urls = [];
+    private readonly List<ImageAssetId?> _requestedAssetIds = [];
     private Error? _failure;
 
-    public List<ImageAssetId?> RequestedAssetIds { get; } = [];
+    public IReadOnlyList<ImageAssetId?> RequestedAssetIds => _requestedAssetIds;
 
     public RecordingImageAssetAccessService WithAsset(ImageAssetId assetId, string url) {
         _urls[assetId] = url;
@@ -25,7 +26,7 @@ public sealed class RecordingImageAssetAccessService : IImageAssetAccessService 
         ImageAssetId? assetId,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        RequestedAssetIds.Add(assetId);
+        _requestedAssetIds.Add(assetId);
         if (_failure is not null) {
             return Task.FromResult(Result.Failure<ImageAsset?>(_failure));
         }
