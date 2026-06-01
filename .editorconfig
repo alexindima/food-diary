@@ -93,6 +93,27 @@ dotnet_diagnostic.MA0049.severity = suggestion
 [Shared/FoodDiary.Mediator/Mediator.cs]
 dotnet_diagnostic.MA0049.severity = suggestion
 
+[FoodDiary.Domain/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailInbox.Domain/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailRelay.Domain/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.Application.Abstractions/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailInbox.Application/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailRelay.Initializer/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[Shared/FoodDiary.Mediator/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
 # Keep this enum beside IUserRepository; architecture tests intentionally limit the folder surface.
 [FoodDiary.Application.Abstractions/Common/Interfaces/Persistence/IUserRepository.cs]
 dotnet_diagnostic.MA0048.severity = suggestion
