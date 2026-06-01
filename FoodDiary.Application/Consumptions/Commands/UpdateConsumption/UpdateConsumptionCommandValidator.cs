@@ -6,6 +6,13 @@ namespace FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 
 public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsumptionCommand> {
     public UpdateConsumptionCommandValidator() {
+        ConfigureUserRules();
+        ConfigureMealRules();
+        ConfigureItemRules();
+        ConfigureManualNutritionRules();
+    }
+
+    private void ConfigureUserRules() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -19,7 +26,9 @@ public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsump
             .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Consumption id must not be empty.");
+    }
 
+    private void ConfigureMealRules() {
         RuleFor(c => c.MealType)
             .Must(mealType => string.IsNullOrWhiteSpace(mealType) || Enum.TryParse<MealType>(mealType, true, out _))
             .WithErrorCode("Validation.Invalid")
@@ -40,7 +49,9 @@ public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsump
             .Must(level => level == 0 || level is >= 1 and <= 5)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Satiety level must be between 1 and 5.");
+    }
 
+    private void ConfigureItemRules() {
         RuleForEach(c => c.Items).ChildRules(item => {
             item.RuleFor(i => i)
                 .Must(i => i.ProductId.HasValue || i.RecipeId.HasValue)
@@ -60,7 +71,9 @@ public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsump
 
         RuleForEach(c => c.AiSessions)
             .SetValidator(new ConsumptionAiSessionInputValidator());
+    }
 
+    private void ConfigureManualNutritionRules() {
         When(c => !c.IsNutritionAutoCalculated, () => {
             RuleFor(c => c.ManualCalories)
                 .NotNull().WithErrorCode("Validation.Required").WithMessage("ManualCalories is required.")

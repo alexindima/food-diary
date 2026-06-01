@@ -7,6 +7,13 @@ namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
 public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand> {
     public CreateRecipeCommandValidator() {
+        ConfigureIdentityRules();
+        ConfigureBaseRecipeRules();
+        ConfigureStepRules();
+        ConfigureNutritionRules();
+    }
+
+    private void ConfigureIdentityRules() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -20,7 +27,9 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("Name is required");
+    }
 
+    private void ConfigureBaseRecipeRules() {
         RuleFor(x => x.Servings)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
@@ -43,7 +52,9 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
             .Must(BeValidVisibility)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid visibility level");
+    }
 
+    private void ConfigureStepRules() {
         RuleFor(x => x.Steps)
             .NotNull()
             .WithErrorCode("Validation.Required")
@@ -60,7 +71,9 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
 
         RuleForEach(x => x.Steps)
             .SetValidator(new RecipeStepInputValidator());
+    }
 
+    private void ConfigureNutritionRules() {
         RuleFor(x => x)
             .Must(cmd => cmd.CalculateNutritionAutomatically || HasManualNutrition(cmd))
             .WithErrorCode("Validation.Invalid")

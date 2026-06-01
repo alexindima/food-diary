@@ -101,6 +101,12 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.Application.Abstractions/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[FoodDiary.Application/**/*Validator.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Application/**/*Mappings.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [FoodDiary.MailInbox.Client/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 

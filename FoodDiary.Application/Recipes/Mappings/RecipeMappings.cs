@@ -14,37 +14,7 @@ public static class RecipeMappings {
         Guid? favoriteRecipeId = null) {
         var steps = recipe.Steps
             .OrderBy(s => s.StepNumber)
-            .Select(step => new RecipeStepModel(
-                step.Id.Value,
-                step.StepNumber,
-                step.Title,
-                step.Instruction,
-                step.ImageUrl,
-                step.ImageAssetId?.Value,
-                step.Ingredients
-                    .Select(ingredient => new RecipeIngredientModel(
-                        ingredient.Id.Value,
-                        ingredient.Amount,
-                        ingredient.ProductId?.Value,
-                        ingredient.Product?.Name,
-                        ingredient.Product?.BaseUnit.ToString(),
-                        ingredient.Product?.BaseAmount,
-                        ingredient.Product?.CaloriesPerBase,
-                        ingredient.Product?.ProteinsPerBase,
-                        ingredient.Product?.FatsPerBase,
-                        ingredient.Product?.CarbsPerBase,
-                        ingredient.Product?.FiberPerBase,
-                        ingredient.Product?.AlcoholPerBase,
-                        ingredient.NestedRecipeId?.Value,
-                        ingredient.NestedRecipe?.Name,
-                        ingredient.NestedRecipe?.Servings,
-                        ingredient.NestedRecipe?.TotalCalories,
-                        ingredient.NestedRecipe?.TotalProteins,
-                        ingredient.NestedRecipe?.TotalFats,
-                        ingredient.NestedRecipe?.TotalCarbs,
-                        ingredient.NestedRecipe?.TotalFiber,
-                        ingredient.NestedRecipe?.TotalAlcohol))
-                    .ToList()))
+            .Select(ToStepModel)
             .ToList();
 
         var nutrition = BuildNutrition(recipe);
@@ -89,6 +59,42 @@ public static class RecipeMappings {
             steps,
             isFavorite,
             favoriteRecipeId);
+    }
+
+    private static RecipeStepModel ToStepModel(RecipeStep step) {
+        return new RecipeStepModel(
+            step.Id.Value,
+            step.StepNumber,
+            step.Title,
+            step.Instruction,
+            step.ImageUrl,
+            step.ImageAssetId?.Value,
+            step.Ingredients.Select(ToIngredientModel).ToList());
+    }
+
+    private static RecipeIngredientModel ToIngredientModel(RecipeIngredient ingredient) {
+        return new RecipeIngredientModel(
+            ingredient.Id.Value,
+            ingredient.Amount,
+            ingredient.ProductId?.Value,
+            ingredient.Product?.Name,
+            ingredient.Product?.BaseUnit.ToString(),
+            ingredient.Product?.BaseAmount,
+            ingredient.Product?.CaloriesPerBase,
+            ingredient.Product?.ProteinsPerBase,
+            ingredient.Product?.FatsPerBase,
+            ingredient.Product?.CarbsPerBase,
+            ingredient.Product?.FiberPerBase,
+            ingredient.Product?.AlcoholPerBase,
+            ingredient.NestedRecipeId?.Value,
+            ingredient.NestedRecipe?.Name,
+            ingredient.NestedRecipe?.Servings,
+            ingredient.NestedRecipe?.TotalCalories,
+            ingredient.NestedRecipe?.TotalProteins,
+            ingredient.NestedRecipe?.TotalFats,
+            ingredient.NestedRecipe?.TotalCarbs,
+            ingredient.NestedRecipe?.TotalFiber,
+            ingredient.NestedRecipe?.TotalAlcohol);
     }
 
     private static RecipeNutritionSummary BuildNutrition(Recipe recipe) {

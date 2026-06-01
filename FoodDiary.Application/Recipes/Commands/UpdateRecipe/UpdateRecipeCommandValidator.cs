@@ -15,7 +15,17 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
     public UpdateRecipeCommandValidator(IRecipeRepository recipeRepository) {
         _recipeRepository = recipeRepository;
+        ConfigureIdentityRules();
+        ConfigureBaseRecipeRules();
+        ConfigureClearRules();
+        ConfigureStepRules();
+        ConfigureNutritionRules();
 
+        RuleFor(x => x)
+            .CustomAsync(EnsureRecipeEditableAsync);
+    }
+
+    private void ConfigureIdentityRules() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -29,7 +39,9 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("RecipeId is required");
+    }
 
+    private void ConfigureBaseRecipeRules() {
         RuleFor(x => x.Servings)
             .GreaterThan(0)
             .When(x => x.Servings.HasValue)
@@ -53,7 +65,9 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .When(x => !string.IsNullOrWhiteSpace(x.Visibility))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid visibility level");
+    }
 
+    private void ConfigureClearRules() {
         RuleFor(x => x)
             .Must(x => !(x.ClearDescription && !string.IsNullOrWhiteSpace(x.Description)))
             .WithErrorCode("Validation.Invalid")
@@ -78,7 +92,9 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .Must(x => !(x.ClearImageAssetId && x.ImageAssetId.HasValue))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("ImageAssetId cannot be provided when ClearImageAssetId is true");
+    }
 
+    private void ConfigureStepRules() {
         RuleFor(x => x.Steps)
             .NotNull()
             .WithErrorCode("Validation.Required")
@@ -95,10 +111,9 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
         RuleForEach(x => x.Steps!)
             .SetValidator(new RecipeStepInputValidator());
+    }
 
-        RuleFor(x => x)
-            .CustomAsync(EnsureRecipeEditableAsync);
-
+    private void ConfigureNutritionRules() {
         RuleFor(x => x)
             .Must(cmd => cmd.CalculateNutritionAutomatically || HasManualNutrition(cmd))
             .WithErrorCode("Validation.Invalid")

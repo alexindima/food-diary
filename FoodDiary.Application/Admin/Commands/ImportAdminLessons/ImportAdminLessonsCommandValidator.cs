@@ -4,6 +4,11 @@ namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 
 public sealed class ImportAdminLessonsCommandValidator : AbstractValidator<ImportAdminLessonsCommand> {
     public ImportAdminLessonsCommandValidator() {
+        ConfigureImportRules();
+        ConfigureLessonRules();
+    }
+
+    private void ConfigureImportRules() {
         RuleFor(x => x.Version)
             .Equal(1)
             .WithErrorCode("Validation.Invalid")
@@ -16,7 +21,9 @@ public sealed class ImportAdminLessonsCommandValidator : AbstractValidator<Impor
             .Must(lessons => lessons.Count <= 100)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("A lesson import file can contain at most 100 lessons.");
+    }
 
+    private void ConfigureLessonRules() {
         RuleForEach(x => x.Lessons).ChildRules(lesson => {
             lesson.RuleFor(x => x.Title)
                 .NotEmpty()

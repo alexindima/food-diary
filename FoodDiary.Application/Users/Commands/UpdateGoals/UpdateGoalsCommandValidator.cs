@@ -6,6 +6,13 @@ namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
 public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand> {
     public UpdateGoalsCommandValidator() {
+        ConfigureUserRules();
+        ConfigureMacroTargets();
+        ConfigureBodyTargets();
+        ConfigureDailyCalories();
+    }
+
+    private void ConfigureUserRules() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -14,7 +21,9 @@ public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand>
             .Must(userId => userId.HasValue && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
+    }
 
+    private void ConfigureMacroTargets() {
         When(x => x.DailyCalorieTarget.HasValue, () => {
             RuleFor(x => x.DailyCalorieTarget)
                 .Must(BeFinite)
@@ -74,7 +83,9 @@ public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand>
                 .WithErrorCode("Validation.Invalid")
                 .WithMessage("WaterGoal must be greater than or equal to 0");
         });
+    }
 
+    private void ConfigureBodyTargets() {
         When(x => x.DesiredWeight.HasValue, () => {
             RuleFor(x => x.DesiredWeight)
                 .GreaterThan(0)
@@ -90,7 +101,9 @@ public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand>
                 .WithErrorCode("Validation.Invalid")
                 .WithMessage($"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]");
         });
+    }
 
+    private void ConfigureDailyCalories() {
         When(x => x.MondayCalories.HasValue, () => {
             RuleFor(x => x.MondayCalories).Must(BeFinite)
                 .WithErrorCode("Validation.Invalid").WithMessage("MondayCalories must be finite")

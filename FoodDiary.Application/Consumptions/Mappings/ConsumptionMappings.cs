@@ -13,64 +13,12 @@ public static class ConsumptionMappings {
         Guid? favoriteMealId = null) {
         var items = meal.Items
             .OrderBy(i => i.Id.Value)
-            .Select(item => {
-                var quality = item.Product?.GetQualityScore();
-                return new ConsumptionItemModel(
-                    item.Id.Value,
-                    item.MealId.Value,
-                    item.Amount,
-                    item.ProductId?.Value,
-                    item.Product?.Name,
-                    item.Product?.ImageUrl,
-                    item.Product?.BaseUnit.ToString(),
-                    item.Product?.BaseAmount,
-                    item.Product?.CaloriesPerBase,
-                    item.Product?.ProteinsPerBase,
-                    item.Product?.FatsPerBase,
-                    item.Product?.CarbsPerBase,
-                    item.Product?.FiberPerBase,
-                    item.Product?.AlcoholPerBase,
-                    item.RecipeId?.Value,
-                    item.Recipe?.Name,
-                    item.Recipe?.ImageUrl,
-                    item.Recipe?.Servings,
-                    item.Recipe?.TotalCalories,
-                    item.Recipe?.TotalProteins,
-                    item.Recipe?.TotalFats,
-                    item.Recipe?.TotalCarbs,
-                    item.Recipe?.TotalFiber,
-                    item.Recipe?.TotalAlcohol,
-                    quality?.Score,
-                    quality?.Grade.ToString().ToLowerInvariant());
-            })
+            .Select(ToItemModel)
             .ToList();
 
         var aiSessions = meal.AiSessions
             .OrderBy(s => s.RecognizedAtUtc)
-            .Select(session => new ConsumptionAiSessionModel(
-                session.Id.Value,
-                session.MealId.Value,
-                session.ImageAssetId?.Value,
-                session.ImageAsset?.Url,
-                session.Source.ToString(),
-                session.RecognizedAtUtc,
-                session.Notes,
-                session.Items
-                    .OrderBy(i => i.Id.Value)
-                    .Select(aiItem => new ConsumptionAiItemModel(
-                        aiItem.Id.Value,
-                        aiItem.MealAiSessionId.Value,
-                        aiItem.NameEn,
-                        aiItem.NameLocal,
-                        aiItem.Amount,
-                        aiItem.Unit,
-                        aiItem.Calories,
-                        aiItem.Proteins,
-                        aiItem.Fats,
-                        aiItem.Carbs,
-                        aiItem.Fiber,
-                        aiItem.Alcohol))
-                    .ToList()))
+            .Select(ToAiSessionModel)
             .ToList();
 
         var effectiveCalories = meal.IsNutritionAutoCalculated ? meal.TotalCalories : meal.ManualCalories ?? meal.TotalCalories;
@@ -115,6 +63,65 @@ public static class ConsumptionMappings {
             favoriteMealId,
             items,
             aiSessions);
+    }
+
+    private static ConsumptionItemModel ToItemModel(MealItem item) {
+        var quality = item.Product?.GetQualityScore();
+        return new ConsumptionItemModel(
+            item.Id.Value,
+            item.MealId.Value,
+            item.Amount,
+            item.ProductId?.Value,
+            item.Product?.Name,
+            item.Product?.ImageUrl,
+            item.Product?.BaseUnit.ToString(),
+            item.Product?.BaseAmount,
+            item.Product?.CaloriesPerBase,
+            item.Product?.ProteinsPerBase,
+            item.Product?.FatsPerBase,
+            item.Product?.CarbsPerBase,
+            item.Product?.FiberPerBase,
+            item.Product?.AlcoholPerBase,
+            item.RecipeId?.Value,
+            item.Recipe?.Name,
+            item.Recipe?.ImageUrl,
+            item.Recipe?.Servings,
+            item.Recipe?.TotalCalories,
+            item.Recipe?.TotalProteins,
+            item.Recipe?.TotalFats,
+            item.Recipe?.TotalCarbs,
+            item.Recipe?.TotalFiber,
+            item.Recipe?.TotalAlcohol,
+            quality?.Score,
+            quality?.Grade.ToString().ToLowerInvariant());
+    }
+
+    private static ConsumptionAiSessionModel ToAiSessionModel(MealAiSession session) {
+        return new ConsumptionAiSessionModel(
+            session.Id.Value,
+            session.MealId.Value,
+            session.ImageAssetId?.Value,
+            session.ImageAsset?.Url,
+            session.Source.ToString(),
+            session.RecognizedAtUtc,
+            session.Notes,
+            session.Items.OrderBy(i => i.Id.Value).Select(ToAiItemModel).ToList());
+    }
+
+    private static ConsumptionAiItemModel ToAiItemModel(MealAiItem aiItem) {
+        return new ConsumptionAiItemModel(
+            aiItem.Id.Value,
+            aiItem.MealAiSessionId.Value,
+            aiItem.NameEn,
+            aiItem.NameLocal,
+            aiItem.Amount,
+            aiItem.Unit,
+            aiItem.Calories,
+            aiItem.Proteins,
+            aiItem.Fats,
+            aiItem.Carbs,
+            aiItem.Fiber,
+            aiItem.Alcohol);
     }
 
     public static PagedResponse<ConsumptionModel> ToPagedResponse(

@@ -13,7 +13,16 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
     public UpdateProductCommandValidator(IProductRepository productRepository) {
         _productRepository = productRepository;
+        ConfigureIdentityRules();
+        ConfigureNutritionRules();
+        ConfigureEnumRules();
+        ConfigureClearRules();
 
+        RuleFor(x => x)
+            .CustomAsync(EnsureProductEditableAsync);
+    }
+
+    private void ConfigureIdentityRules() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -27,7 +36,9 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("ProductId is required");
+    }
 
+    private void ConfigureNutritionRules() {
         RuleFor(x => x.BaseAmount)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
@@ -75,7 +86,9 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .WithErrorCode("Validation.Invalid")
             .WithMessage("AlcoholPerBase must be non-negative")
             .When(x => x.AlcoholPerBase.HasValue);
+    }
 
+    private void ConfigureEnumRules() {
         RuleFor(x => x.BaseUnit)
             .Must(BeValidUnit)
             .WithErrorCode("Validation.Invalid")
@@ -93,7 +106,9 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid product type")
             .When(x => !string.IsNullOrWhiteSpace(x.ProductType));
+    }
 
+    private void ConfigureClearRules() {
         RuleFor(x => x)
             .Must(x => !(x.ClearBarcode && !string.IsNullOrWhiteSpace(x.Barcode)))
             .WithErrorCode("Validation.Invalid")
@@ -128,9 +143,6 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .Must(x => !(x.ClearImageAssetId && x.ImageAssetId.HasValue))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("ImageAssetId cannot be provided when ClearImageAssetId is true");
-
-        RuleFor(x => x)
-            .CustomAsync(EnsureProductEditableAsync);
     }
 
     private bool BeValidUnit(string? unit) =>

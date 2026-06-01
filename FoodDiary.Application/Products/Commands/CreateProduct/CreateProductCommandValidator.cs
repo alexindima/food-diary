@@ -5,6 +5,12 @@ namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand> {
     public CreateProductCommandValidator() {
+        ConfigureIdentityRules();
+        ConfigureEnumRules();
+        ConfigureNutritionRules();
+    }
+
+    private void ConfigureIdentityRules() {
         RuleFor(x => x.UserId)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
@@ -17,7 +23,9 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("Name is required");
+    }
 
+    private void ConfigureEnumRules() {
         RuleFor(x => x.BaseUnit)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
@@ -41,7 +49,9 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .Must(BeValidProductType)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid product type");
+    }
 
+    private void ConfigureNutritionRules() {
         RuleFor(x => x.BaseAmount)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
