@@ -109,3 +109,33 @@ dotnet_diagnostic.MA0051.severity = warning
 
 [Shared/FoodDiary.Mediator/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Telegram.Bot/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.JobManager/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailInbox.Application/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailInbox.Infrastructure/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailInbox.Initializer/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailInbox.Presentation/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailInbox.WebApi/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailRelay.Application/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailRelay.Initializer/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.MailRelay.WebApi/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
