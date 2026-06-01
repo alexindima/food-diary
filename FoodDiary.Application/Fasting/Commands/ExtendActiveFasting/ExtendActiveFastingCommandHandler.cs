@@ -24,17 +24,17 @@ public class ExtendActiveFastingCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken);
+        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        var plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken);
+        var plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
@@ -53,8 +53,8 @@ public class ExtendActiveFastingCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return Result.Success(current.ToModel(plan));
     }
 }

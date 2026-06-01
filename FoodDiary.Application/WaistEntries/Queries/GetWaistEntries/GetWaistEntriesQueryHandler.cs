@@ -23,7 +23,7 @@ public class GetWaistEntriesQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WaistEntryModel>>(accessError);
         }
@@ -41,7 +41,7 @@ public class GetWaistEntriesQueryHandler(
             normalizedTo,
             query.Limit,
             query.Descending,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var response = entries.Select(entry => entry.ToModel()).ToList();
         return Result.Success<IReadOnlyList<WaistEntryModel>>(response);

@@ -19,7 +19,7 @@ public sealed class RemoveWebPushSubscriptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -31,12 +31,12 @@ public sealed class RemoveWebPushSubscriptionCommandHandler(
         var existing = await webPushSubscriptionRepository.GetByEndpointAsync(
             command.Endpoint,
             asTracking: true,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (existing is null || existing.UserId != userId) {
             return Result.Success();
         }
 
-        await webPushSubscriptionRepository.DeleteAsync(existing, cancellationToken);
+        await webPushSubscriptionRepository.DeleteAsync(existing, cancellationToken).ConfigureAwait(false);
         auditLogger.Log(
             "notifications.push-subscription.disconnected",
             userId,

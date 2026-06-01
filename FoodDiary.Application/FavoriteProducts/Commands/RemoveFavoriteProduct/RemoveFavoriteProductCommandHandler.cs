@@ -21,20 +21,20 @@ public class RemoveFavoriteProductCommandHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var favoriteProductId = new FavoriteProductId(command.FavoriteProductId);
         var favorite = await favoriteProductRepository.GetByIdAsync(
-            favoriteProductId, userId, asTracking: true, cancellationToken: cancellationToken);
+            favoriteProductId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {
             return Result.Failure(Errors.FavoriteProduct.NotFound(command.FavoriteProductId));
         }
 
-        await favoriteProductRepository.DeleteAsync(favorite, cancellationToken);
+        await favoriteProductRepository.DeleteAsync(favorite, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

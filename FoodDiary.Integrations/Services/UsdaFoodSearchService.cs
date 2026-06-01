@@ -38,10 +38,10 @@ internal sealed class UsdaFoodSearchService(
                 Content = JsonContent.Create(requestBody, options: JsonOptions),
             };
 
-            var response = await httpClient.SendAsync(request, cancellationToken);
+            var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<UsdaSearchResponse>(JsonOptions, cancellationToken);
+            var result = await response.Content.ReadFromJsonAsync<UsdaSearchResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
             if (result?.Foods is null) {
                 return [];
             }
@@ -65,14 +65,14 @@ internal sealed class UsdaFoodSearchService(
         }
 
         try {
-            var response = await httpClient.GetAsync($"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}", cancellationToken);
+            var response = await httpClient.GetAsync($"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}", cancellationToken).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) {
                 return null;
             }
 
             response.EnsureSuccessStatusCode();
 
-            var food = await response.Content.ReadFromJsonAsync<UsdaFoodDetailResponse>(JsonOptions, cancellationToken);
+            var food = await response.Content.ReadFromJsonAsync<UsdaFoodDetailResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
             if (food is null) {
                 return null;
             }

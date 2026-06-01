@@ -18,7 +18,7 @@ public class UpdateRecipeCommentCommandHandler(IRecipeCommentRepository commentR
         }
 
         var commentId = (RecipeCommentId)command.CommentId;
-        var comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken);
+        var comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (comment is null) {
             return Result.Failure<RecipeCommentModel>(Errors.RecipeComment.NotFound(command.CommentId));
@@ -29,7 +29,7 @@ public class UpdateRecipeCommentCommandHandler(IRecipeCommentRepository commentR
         }
 
         comment.UpdateText(command.Text);
-        await commentRepository.UpdateAsync(comment, cancellationToken);
+        await commentRepository.UpdateAsync(comment, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new RecipeCommentModel(
             comment.Id.Value,

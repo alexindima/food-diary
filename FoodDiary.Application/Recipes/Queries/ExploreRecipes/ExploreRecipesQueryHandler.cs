@@ -18,7 +18,7 @@ public class ExploreRecipesQueryHandler(IRecipeRepository recipeRepository)
 
         var (items, totalItems) = await recipeRepository.GetExplorePagedAsync(
             pageNumber, pageSize, query.Search, query.Category,
-            query.MaxPrepTime, query.SortBy, cancellationToken);
+            query.MaxPrepTime, query.SortBy, cancellationToken).ConfigureAwait(false);
 
         var currentUserId = query.UserId.HasValue ? new UserId(query.UserId.Value) : UserId.Empty;
 

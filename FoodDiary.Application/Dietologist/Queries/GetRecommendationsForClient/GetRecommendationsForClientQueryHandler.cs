@@ -23,7 +23,7 @@ public class GetRecommendationsForClientQueryHandler(
 
         var dietologistUserId = new UserId(query.UserId!.Value);
         var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, dietologistUserId, cancellationToken);
+            userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(currentUserAccessError);
         }
@@ -31,14 +31,14 @@ public class GetRecommendationsForClientQueryHandler(
         var clientUserId = new UserId(query.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
-            invitationRepository, dietologistUserId, clientUserId, cancellationToken);
+            invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(accessResult.Error);
         }
 
         var recommendations = await recommendationRepository.GetByDietologistAndClientAsync(
-            dietologistUserId, clientUserId, cancellationToken: cancellationToken);
+            dietologistUserId, clientUserId, cancellationToken: cancellationToken).ConfigureAwait(false);
         var models = recommendations.Select(r => r.ToModel()).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);
     }

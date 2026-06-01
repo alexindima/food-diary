@@ -10,7 +10,7 @@ public sealed class GetAdminLessonsQueryHandler(INutritionLessonRepository repos
     public async Task<Result<IReadOnlyList<AdminLessonModel>>> Handle(
         GetAdminLessonsQuery query,
         CancellationToken cancellationToken) {
-        var lessons = await repository.GetAllAsync(cancellationToken);
+        var lessons = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
 
         var models = lessons.Select(l => new AdminLessonModel(
             l.Id.Value,

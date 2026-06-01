@@ -207,10 +207,10 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         var email = $"api-recipe-tests-{Guid.NewGuid():N}@example.com";
         var registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         registerResponse.EnsureSuccessStatusCode();
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
         return client;
@@ -238,10 +238,10 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                 20,
                 3,
                 0,
-                "Private"));
+                "Private")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
+        var payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         return payload.Id;
     }
@@ -274,10 +274,10 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                         [new RecipeIngredientHttpRequest(ingredientId, null, 200)],
                         null,
                         null)
-                ]));
+                ])).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
+        var payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         return payload.Id;
     }

@@ -38,6 +38,6 @@ public sealed class MailInboxSmtpHostedService(
             _options.Port,
             _options.MaxMessageSizeBytes);
 
-        await server.StartAsync(stoppingToken);
+        await server.StartAsync(stoppingToken).ConfigureAwait(false);
     }
 }

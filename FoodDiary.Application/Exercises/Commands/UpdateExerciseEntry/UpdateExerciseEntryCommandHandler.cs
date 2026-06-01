@@ -20,7 +20,7 @@ public class UpdateExerciseEntryCommandHandler(IExerciseEntryRepository reposito
         }
 
         var entryId = new ExerciseEntryId(command.EntryId);
-        var entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken);
+        var entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
             return Result.Failure<ExerciseEntryModel>(Errors.Exercise.NotFound(command.EntryId));
         }
@@ -40,7 +40,7 @@ public class UpdateExerciseEntryCommandHandler(IExerciseEntryRepository reposito
             command.ClearNotes,
             command.Date);
 
-        await repository.UpdateAsync(entry, cancellationToken);
+        await repository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }
 }

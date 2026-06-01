@@ -11,7 +11,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
 
     public async Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) {
         context.UserLoginEvents.Add(loginEvent);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(
@@ -44,7 +44,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 EF.Functions.ILike(item.loginEvent.DeviceType ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var items = await query
             .OrderByDescending(item => item.loginEvent.LoggedInAtUtc)
             .Skip((pageNumber - 1) * pageSize)
@@ -61,7 +61,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 item.loginEvent.OperatingSystem,
                 item.loginEvent.DeviceType,
                 item.loginEvent.LoggedInAtUtc))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
     }
@@ -86,7 +86,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 $"device:{group.Key}",
                 group.Count(),
                 group.Max(item => item.LoggedInAtUtc)))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var byBrowser = await query
             .GroupBy(item => item.BrowserName ?? "Unknown")
@@ -94,7 +94,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 $"browser:{group.Key}",
                 group.Count(),
                 group.Max(item => item.LoggedInAtUtc)))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var byOperatingSystem = await query
             .GroupBy(item => item.OperatingSystem ?? "Unknown")
@@ -102,7 +102,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 $"os:{group.Key}",
                 group.Count(),
                 group.Max(item => item.LoggedInAtUtc)))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return byDeviceType
             .Concat(byBrowser)
@@ -122,7 +122,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
             .OrderBy(item => item.LoggedInAtUtc)
             .Select(item => item.Id)
             .Take(Math.Max(batchSize, 1))
-            .ToArrayAsync(cancellationToken);
+            .ToArrayAsync(cancellationToken).ConfigureAwait(false);
 
         if (ids.Length == 0) {
             return 0;
@@ -130,7 +130,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
 
         return await context.UserLoginEvents
             .Where(item => ids.Contains(item.Id))
-            .ExecuteDeleteAsync(cancellationToken);
+            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private static string EscapeLikePattern(string value) {

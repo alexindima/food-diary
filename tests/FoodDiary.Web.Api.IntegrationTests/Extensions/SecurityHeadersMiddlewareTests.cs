@@ -63,7 +63,7 @@ public sealed class SecurityHeadersMiddlewareTests {
         var context = new DefaultHttpContext();
         var middleware = new SecurityHeadersMiddleware(_ => Task.CompletedTask);
 
-        await middleware.InvokeAsync(context);
+        await middleware.InvokeAsync(context).ConfigureAwait(false);
 
         return (context, context.Response.Headers);
     }

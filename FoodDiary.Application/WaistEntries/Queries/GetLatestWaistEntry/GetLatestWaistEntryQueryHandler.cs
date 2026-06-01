@@ -21,7 +21,7 @@ public class GetLatestWaistEntryQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WaistEntryModel?>(accessError);
         }
@@ -32,7 +32,7 @@ public class GetLatestWaistEntryQueryHandler(
             dateTo: null,
             limit: 1,
             descending: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var latest = entries.FirstOrDefault();
         return Result.Success(latest?.ToModel());

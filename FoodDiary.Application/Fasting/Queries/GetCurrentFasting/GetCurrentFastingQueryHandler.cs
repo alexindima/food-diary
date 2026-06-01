@@ -21,17 +21,17 @@ public class GetCurrentFastingQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel?>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
+        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Success<FastingSessionModel?>(null);
         }
 
-        var checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync([current.Id], cancellationToken);
+        var checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync([current.Id], cancellationToken).ConfigureAwait(false);
         return Result.Success<FastingSessionModel?>(current.ToModel(current.Plan, checkIns));
     }
 }

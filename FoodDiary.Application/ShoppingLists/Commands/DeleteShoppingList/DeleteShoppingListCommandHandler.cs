@@ -23,7 +23,7 @@ public class DeleteShoppingListCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -34,13 +34,13 @@ public class DeleteShoppingListCommandHandler(
             userId,
             includeItems: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (list is null) {
             return Result.Failure(Errors.ShoppingList.NotFound(command.ShoppingListId));
         }
 
-        await shoppingListRepository.DeleteAsync(list, cancellationToken);
+        await shoppingListRepository.DeleteAsync(list, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

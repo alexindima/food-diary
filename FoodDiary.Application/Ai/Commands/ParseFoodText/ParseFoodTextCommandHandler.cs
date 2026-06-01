@@ -21,7 +21,7 @@ public class ParseFoodTextCommandHandler(
         }
 
         var userId = userIdResult.Value;
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<FoodVisionModel>(accessError);
@@ -31,6 +31,6 @@ public class ParseFoodTextCommandHandler(
             command.Text,
             user!.Language,
             userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 }

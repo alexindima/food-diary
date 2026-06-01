@@ -116,9 +116,9 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         var email = $"flow-tests-{Guid.NewGuid():N}@example.com";
         var response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", payload.AccessToken);
         return client;
@@ -126,7 +126,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
         if (response.StatusCode == expected) return;
-        var body = await response.Content.ReadAsStringAsync();
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 

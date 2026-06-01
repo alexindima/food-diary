@@ -38,13 +38,13 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
             ReadInt(details, "symptomsCount"),
             ReadBool(details, "hadNotes"));
 
-        await repository.AddAsync(record, cancellationToken);
+        await repository.AddAsync(record, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FastingTelemetrySummarySnapshot> GetSummaryAsync(int windowHours, CancellationToken cancellationToken) {
         var normalizedWindowHours = Math.Clamp(windowHours, 1, 168);
         var windowStartUtc = DateTime.UtcNow.AddHours(-normalizedWindowHours);
-        var events = await repository.GetSinceAsync(windowStartUtc, cancellationToken);
+        var events = await repository.GetSinceAsync(windowStartUtc, cancellationToken).ConfigureAwait(false);
 
         var startedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.started", StringComparison.Ordinal)).ToArray();
         var completedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.completed", StringComparison.Ordinal)).ToArray();

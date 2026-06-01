@@ -23,7 +23,7 @@ public class GenerateShoppingListCommandHandler(
         }
 
         var planId = new MealPlanId(command.PlanId);
-        var plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken);
+        var plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
         }
@@ -85,7 +85,7 @@ public class GenerateShoppingListCommandHandler(
                 item.SortOrder);
         }
 
-        await shoppingListRepository.AddAsync(shoppingList, cancellationToken);
+        await shoppingListRepository.AddAsync(shoppingList, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(shoppingList.ToModel());
     }

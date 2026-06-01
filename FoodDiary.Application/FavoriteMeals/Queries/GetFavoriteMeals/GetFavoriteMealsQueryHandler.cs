@@ -22,12 +22,12 @@ public class GetFavoriteMealsQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<FavoriteMealModel>>(accessError);
         }
 
-        var favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken);
+        var favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
         var models = favorites.Select(f => f.ToModel()).ToList();
         return Result.Success<IReadOnlyList<FavoriteMealModel>>(models);
     }

@@ -25,7 +25,7 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(
         var fromUtc = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var toUtc = to.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 
-        var summary = await aiUsageRepository.GetSummaryAsync(fromUtc, toUtc, cancellationToken);
+        var summary = await aiUsageRepository.GetSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
 
         var response = new AdminAiUsageSummaryModel(
             summary.TotalTokens,

@@ -18,14 +18,14 @@ public class MarkAllNotificationsReadCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        await notificationRepository.MarkAllReadAsync(userId, cancellationToken);
-        await notificationPusher.PushUnreadCountAsync(userId.Value, 0, cancellationToken);
-        await notificationPusher.PushNotificationsChangedAsync(userId.Value, cancellationToken);
+        await notificationRepository.MarkAllReadAsync(userId, cancellationToken).ConfigureAwait(false);
+        await notificationPusher.PushUnreadCountAsync(userId.Value, 0, cancellationToken).ConfigureAwait(false);
+        await notificationPusher.PushNotificationsChangedAsync(userId.Value, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

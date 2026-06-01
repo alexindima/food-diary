@@ -30,28 +30,28 @@ public class GetWeeklyCheckInQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeeklyCheckInModel>(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var today = dateTimeProvider.UtcNow.Date;
         var thisWeekStart = today.AddDays(-6);
         var lastWeekStart = thisWeekStart.AddDays(-7);
         var lastWeekEnd = thisWeekStart.AddDays(-1);
 
-        var thisWeekMeals = await mealRepository.GetByPeriodAsync(userId, thisWeekStart, today, cancellationToken);
-        var lastWeekMeals = await mealRepository.GetByPeriodAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken);
+        var thisWeekMeals = await mealRepository.GetByPeriodAsync(userId, thisWeekStart, today, cancellationToken).ConfigureAwait(false);
+        var lastWeekMeals = await mealRepository.GetByPeriodAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken).ConfigureAwait(false);
 
-        var thisWeekWeights = await weightEntryRepository.GetByPeriodAsync(userId, thisWeekStart, today, cancellationToken);
-        var lastWeekWeights = await weightEntryRepository.GetByPeriodAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken);
+        var thisWeekWeights = await weightEntryRepository.GetByPeriodAsync(userId, thisWeekStart, today, cancellationToken).ConfigureAwait(false);
+        var lastWeekWeights = await weightEntryRepository.GetByPeriodAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken).ConfigureAwait(false);
 
-        var thisWeekWaists = await waistEntryRepository.GetByPeriodAsync(userId, thisWeekStart, today, cancellationToken);
-        var lastWeekWaists = await waistEntryRepository.GetByPeriodAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken);
+        var thisWeekWaists = await waistEntryRepository.GetByPeriodAsync(userId, thisWeekStart, today, cancellationToken).ConfigureAwait(false);
+        var lastWeekWaists = await waistEntryRepository.GetByPeriodAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken).ConfigureAwait(false);
 
-        var thisWeekHydration = await hydrationEntryRepository.GetDailyTotalsAsync(userId, thisWeekStart, today, cancellationToken);
-        var lastWeekHydration = await hydrationEntryRepository.GetDailyTotalsAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken);
+        var thisWeekHydration = await hydrationEntryRepository.GetDailyTotalsAsync(userId, thisWeekStart, today, cancellationToken).ConfigureAwait(false);
+        var lastWeekHydration = await hydrationEntryRepository.GetDailyTotalsAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken).ConfigureAwait(false);
 
         var thisWeekSummary = WeeklyCheckInCalculator.BuildSummary(thisWeekMeals, thisWeekWeights, thisWeekWaists, thisWeekHydration, 7);
         var lastWeekSummary = WeeklyCheckInCalculator.BuildSummary(lastWeekMeals, lastWeekWeights, lastWeekWaists, lastWeekHydration, 7);

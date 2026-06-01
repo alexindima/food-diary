@@ -21,7 +21,7 @@ public sealed class BillingWebhookEventRepository(FoodDiaryDbContext context) : 
         CancellationToken cancellationToken = default) {
         context.BillingWebhookEvents.Add(webhookEvent);
         try {
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
             context.Entry(webhookEvent).State = EntityState.Detached;
             throw new BillingWebhookEventAlreadyProcessedException(webhookEvent.Provider, webhookEvent.EventId);

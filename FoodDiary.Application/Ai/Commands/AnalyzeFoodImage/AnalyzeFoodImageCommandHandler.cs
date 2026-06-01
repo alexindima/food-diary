@@ -30,7 +30,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
 
         var userId = new UserId(query.UserId);
         var imageAssetId = new ImageAssetId(query.ImageAssetId);
-        var asset = await imageAssetRepository.GetByIdAsync(imageAssetId, cancellationToken);
+        var asset = await imageAssetRepository.GetByIdAsync(imageAssetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return Result.Failure<FoodVisionModel>(Errors.Ai.ImageNotFound(query.ImageAssetId));
         }
@@ -39,13 +39,13 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return Result.Failure<FoodVisionModel>(Errors.Ai.Forbidden());
         }
 
-        var imageValidation = await imageStorageService.ValidateUploadedObjectAsync(asset.ObjectKey, cancellationToken);
+        var imageValidation = await imageStorageService.ValidateUploadedObjectAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
         if (!imageValidation.IsValid) {
             return Result.Failure<FoodVisionModel>(Errors.Image.InvalidData(
                 imageValidation.Message ?? "Image upload has not completed or is invalid."));
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<FoodVisionModel>(accessError);
@@ -57,6 +57,6 @@ public sealed class AnalyzeFoodImageCommandHandler(
             currentUser.Language,
             userId,
             query.Description,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 }

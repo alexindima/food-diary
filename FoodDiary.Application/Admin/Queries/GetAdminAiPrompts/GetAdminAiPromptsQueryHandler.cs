@@ -10,7 +10,7 @@ public class GetAdminAiPromptsQueryHandler(IAiPromptTemplateRepository repositor
     public async Task<Result<IReadOnlyList<AdminAiPromptModel>>> Handle(
         GetAdminAiPromptsQuery query,
         CancellationToken cancellationToken) {
-        var templates = await repository.GetAllAsync(cancellationToken);
+        var templates = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
         var models = templates
             .Select(t => new AdminAiPromptModel(
                 t.Id.Value, t.Key, t.Locale, t.PromptText,

@@ -22,7 +22,7 @@ public static class RecipeIngredientAccessValidator {
             .ToList();
 
         if (productIds.Count > 0) {
-            var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
+            var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
             if (products.Count != productIds.Count) {
                 return Result.Failure(Errors.Validation.Invalid(
                     nameof(RecipeIngredientInput.ProductId),
@@ -47,7 +47,7 @@ public static class RecipeIngredientAccessValidator {
             return Result.Success();
         }
 
-        var recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken);
+        var recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken).ConfigureAwait(false);
         return recipes.Count == nestedRecipeIds.Count
             ? Result.Success()
             : Result.Failure(Errors.Validation.Invalid(

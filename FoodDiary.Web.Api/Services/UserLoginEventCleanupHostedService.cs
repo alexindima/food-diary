@@ -20,13 +20,13 @@ public sealed class UserLoginEventCleanupHostedService(
 
         do {
             try {
-                await DeleteExpiredLoginEventsAsync(settings, stoppingToken);
+                await DeleteExpiredLoginEventsAsync(settings, stoppingToken).ConfigureAwait(false);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 break;
             } catch (Exception ex) {
                 logger.LogError(ex, "Failed to delete expired user login events.");
             }
-        } while (await timer.WaitForNextTickAsync(stoppingToken));
+        } while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false));
     }
 
     private async Task DeleteExpiredLoginEventsAsync(
@@ -42,7 +42,7 @@ public sealed class UserLoginEventCleanupHostedService(
             deletedCount = await repository.DeleteOlderThanAsync(
                 cutoffUtc,
                 settings.BatchSize,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             totalDeletedCount += deletedCount;
         } while (deletedCount == settings.BatchSize);
 

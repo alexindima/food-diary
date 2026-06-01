@@ -40,17 +40,17 @@ internal sealed class GoogleFitClient(
                     ["client_id"] = config.ClientId,
                     ["client_secret"] = config.ClientSecret,
                     ["redirect_uri"] = config.RedirectUri,
-                }), cancellationToken);
+                }), cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            var token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken);
+            var token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
 
             // Get user ID from token info
             var userInfo = await httpClient.GetFromJsonAsync<JsonElement>(
-                $"https://www.googleapis.com/oauth2/v1/userinfo?access_token={token.AccessToken}", cancellationToken);
+                $"https://www.googleapis.com/oauth2/v1/userinfo?access_token={token.AccessToken}", cancellationToken).ConfigureAwait(false);
             var userId = userInfo.TryGetProperty("id", out var id) ? id.GetString() ?? "unknown" : "unknown";
 
             return new WearableTokenResult(
@@ -73,10 +73,10 @@ internal sealed class GoogleFitClient(
                     ["refresh_token"] = refreshToken,
                     ["client_id"] = config.ClientId,
                     ["client_secret"] = config.ClientSecret,
-                }), cancellationToken);
+                }), cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            var token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken);
+            var token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
@@ -115,10 +115,10 @@ internal sealed class GoogleFitClient(
 
             var response = await httpClient.PostAsJsonAsync(
                 "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate",
-                aggregateRequest, cancellationToken);
+                aggregateRequest, cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            var data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken);
+            var data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (data.TryGetProperty("bucket", out var buckets) && buckets.GetArrayLength() > 0) {
                 var bucket = buckets[0];

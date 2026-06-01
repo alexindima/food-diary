@@ -32,13 +32,13 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
             .WithPassword("postgres")
             .Build();
 
-        await _container.StartAsync();
+        await _container.StartAsync().ConfigureAwait(false);
 
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(_container.GetConnectionString()) {
             Database = $"fooddiary_api_test_{Guid.NewGuid():N}"
         };
 
-        await CreateDatabaseAsync(connectionStringBuilder.Database);
+        await CreateDatabaseAsync(connectionStringBuilder.Database).ConfigureAwait(false);
         _connectionString = connectionStringBuilder.ConnectionString;
     }
 
@@ -46,7 +46,7 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
         _testEmailSender.Clear();
         base.Dispose();
         if (_container is not null) {
-            await _container.DisposeAsync().AsTask();
+            await _container.DisposeAsync().AsTask().ConfigureAwait(false);
         }
     }
 
@@ -101,12 +101,16 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
     }
 
     private async Task CreateDatabaseAsync(string databaseName) {
-        await using var connection = new NpgsqlConnection(_container!.GetConnectionString());
-        await connection.OpenAsync();
+        var connection = new NpgsqlConnection(_container!.GetConnectionString());
+        await using (connection.ConfigureAwait(false)) {
+            await connection.OpenAsync().ConfigureAwait(false);
 
-        await using var command = connection.CreateCommand();
-        command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
-        await command.ExecuteNonQueryAsync();
+            var command = connection.CreateCommand();
+            await using (command.ConfigureAwait(false)) {
+                command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
+                await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+            }
+        }
     }
 
     private string GetRequiredConnectionString() =>

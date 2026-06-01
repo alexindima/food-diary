@@ -23,7 +23,7 @@ public sealed class DirectMxRelayDeliveryTransport(
             .GroupBy(static recipient => recipient.Domain, StringComparer.OrdinalIgnoreCase);
 
         foreach (var recipientGroup in recipientsByDomain) {
-            await SendToDomainAsync(request, recipientGroup.Key, recipientGroup.ToArray(), cancellationToken);
+            await SendToDomainAsync(request, recipientGroup.Key, recipientGroup.ToArray(), cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -32,12 +32,12 @@ public sealed class DirectMxRelayDeliveryTransport(
         string domain,
         IReadOnlyList<MailboxAddress> recipients,
         CancellationToken cancellationToken) {
-        var mxRecords = await mxResolver.ResolveAsync(domain, cancellationToken);
+        var mxRecords = await mxResolver.ResolveAsync(domain, cancellationToken).ConfigureAwait(false);
         Exception? lastError = null;
 
         foreach (var mxRecord in mxRecords) {
             try {
-                await SendToMxAsync(request, recipients, mxRecord.Host, cancellationToken);
+                await SendToMxAsync(request, recipients, mxRecord.Host, cancellationToken).ConfigureAwait(false);
                 return;
             } catch (Exception ex) when (ex is not OperationCanceledException) {
                 lastError = ex;
@@ -69,16 +69,16 @@ public sealed class DirectMxRelayDeliveryTransport(
             client.LocalDomain = _options.LocalDomain;
         }
 
-        var socket = await ConnectToAllowedMxEndpointAsync(mxHost, linkedToken.Token);
-        await client.ConnectAsync(socket, mxHost, _options.Port, secureSocketOptions, linkedToken.Token);
-        await client.SendAsync(CreateMessage(request, recipients), linkedToken.Token);
-        await client.DisconnectAsync(true, linkedToken.Token);
+        var socket = await ConnectToAllowedMxEndpointAsync(mxHost, linkedToken.Token).ConfigureAwait(false);
+        await client.ConnectAsync(socket, mxHost, _options.Port, secureSocketOptions, linkedToken.Token).ConfigureAwait(false);
+        await client.SendAsync(CreateMessage(request, recipients), linkedToken.Token).ConfigureAwait(false);
+        await client.DisconnectAsync(true, linkedToken.Token).ConfigureAwait(false);
     }
 
     private async Task<Socket> ConnectToAllowedMxEndpointAsync(string mxHost, CancellationToken cancellationToken) {
         var addresses = IPAddress.TryParse(mxHost, out var literalAddress)
             ? [literalAddress]
-            : await Dns.GetHostAddressesAsync(mxHost, cancellationToken);
+            : await Dns.GetHostAddressesAsync(mxHost, cancellationToken).ConfigureAwait(false);
         var publicAddress = addresses.FirstOrDefault(IsPublicAddress);
         if (publicAddress is null) {
             throw new InvalidOperationException($"Direct MX host '{mxHost}' resolves only to private or loopback addresses.");
@@ -89,7 +89,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         };
 
         try {
-            await socket.ConnectAsync(new IPEndPoint(publicAddress, _options.Port), cancellationToken);
+            await socket.ConnectAsync(new IPEndPoint(publicAddress, _options.Port), cancellationToken).ConfigureAwait(false);
             return socket;
         } catch {
             socket.Dispose();

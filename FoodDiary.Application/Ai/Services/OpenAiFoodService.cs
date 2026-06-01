@@ -23,23 +23,23 @@ public sealed class OpenAiFoodService(
         string? description,
         CancellationToken cancellationToken) {
         const string operation = "vision";
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken);
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodVisionModel>(quotaCheck.Error);
         }
 
-        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken);
+        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
         var response = await openAiFoodClient.AnalyzeFoodImageAsync(
             imageUrl,
             userLanguage,
             description,
             promptTemplate,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (response.IsFailure) {
             return Result.Failure<FoodVisionModel>(response.Error);
         }
 
-        await SaveUsageAsync(response.Value, userId, cancellationToken);
+        await SaveUsageAsync(response.Value, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(response.Value.Value);
     }
 
@@ -49,22 +49,22 @@ public sealed class OpenAiFoodService(
         UserId userId,
         CancellationToken cancellationToken) {
         const string operation = "text-parse";
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken);
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodVisionModel>(quotaCheck.Error);
         }
 
-        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken);
+        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
         var response = await openAiFoodClient.ParseFoodTextAsync(
             text,
             userLanguage,
             promptTemplate,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (response.IsFailure) {
             return Result.Failure<FoodVisionModel>(response.Error);
         }
 
-        await SaveUsageAsync(response.Value, userId, cancellationToken);
+        await SaveUsageAsync(response.Value, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(response.Value.Value);
     }
 
@@ -73,23 +73,23 @@ public sealed class OpenAiFoodService(
         UserId userId,
         CancellationToken cancellationToken) {
         const string operation = "nutrition";
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken);
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodNutritionModel>(quotaCheck.Error);
         }
 
-        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken);
-        var response = await openAiFoodClient.CalculateNutritionAsync(items, promptTemplate, cancellationToken);
+        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
+        var response = await openAiFoodClient.CalculateNutritionAsync(items, promptTemplate, cancellationToken).ConfigureAwait(false);
         if (response.IsFailure) {
             return Result.Failure<FoodNutritionModel>(response.Error);
         }
 
-        await SaveUsageAsync(response.Value, userId, cancellationToken);
+        await SaveUsageAsync(response.Value, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(response.Value.Value);
     }
 
     private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, string operation, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId.Value));
         }
@@ -102,7 +102,7 @@ public sealed class OpenAiFoodService(
         var nowUtc = dateTimeProvider.UtcNow;
         var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var monthEndUtc = monthStartUtc.AddMonths(1);
-        var totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken);
+        var totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken).ConfigureAwait(false);
 
         if (totals.InputTokens >= user.AiInputTokenLimit || totals.OutputTokens >= user.AiOutputTokenLimit) {
             ApplicationAiTelemetry.RecordQuotaRejection(operation);
@@ -128,6 +128,6 @@ public sealed class OpenAiFoodService(
             response.Usage.Value.OutputTokens,
             response.Usage.Value.TotalTokens);
 
-        await aiUsageRepository.AddAsync(entity, cancellationToken);
+        await aiUsageRepository.AddAsync(entity, cancellationToken).ConfigureAwait(false);
     }
 }

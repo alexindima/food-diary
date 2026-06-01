@@ -17,7 +17,7 @@ public sealed class GetAdminUserQueryHandler(IUserRepository userRepository)
                 Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
         }
 
-        var user = await userRepository.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken);
+        var user = await userRepository.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
         return user is null
             ? Result.Failure<AdminUserModel>(Errors.User.NotFound(query.UserId))
             : Result.Success(user.ToAdminModel());

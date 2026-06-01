@@ -24,13 +24,13 @@ public sealed class GetFastingInsightsQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingInsightsModel>(accessError);
         }
 
         var now = dateTimeProvider.UtcNow;
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
-        return Result.Success(await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken));
+        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        return Result.Success(await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken).ConfigureAwait(false));
     }
 }

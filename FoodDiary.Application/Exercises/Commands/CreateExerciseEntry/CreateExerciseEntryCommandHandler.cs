@@ -32,7 +32,7 @@ public class CreateExerciseEntryCommandHandler(IExerciseEntryRepository reposito
             command.Name,
             command.Notes);
 
-        await repository.AddAsync(entry, cancellationToken);
+        await repository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }
 }

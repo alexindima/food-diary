@@ -22,8 +22,8 @@ public sealed class FastingAnalyticsService(
     }
 
     public async Task<FastingStatsModel> GetStatsAsync(UserId userId, DateTime nowUtc, CancellationToken cancellationToken) {
-        var allOccurrences = await fastingOccurrenceRepository.GetByUserAsync(userId, cancellationToken: cancellationToken);
-        var allAnalyses = await BuildAnalysesAsync(allOccurrences, cancellationToken);
+        var allOccurrences = await fastingOccurrenceRepository.GetByUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var allAnalyses = await BuildAnalysesAsync(allOccurrences, cancellationToken).ConfigureAwait(false);
         var completedOccurrences = allOccurrences
             .Where(static occurrence => occurrence.Status == FastingOccurrenceStatus.Completed && occurrence.EndedAtUtc.HasValue)
             .ToList();
@@ -32,8 +32,8 @@ public sealed class FastingAnalyticsService(
             userId,
             from: nowUtc.AddDays(-30),
             to: nowUtc,
-            cancellationToken: cancellationToken);
-        var last30Analyses = await BuildAnalysesAsync(last30Occurrences, cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        var last30Analyses = await BuildAnalysesAsync(last30Occurrences, cancellationToken).ConfigureAwait(false);
         var completedLast30Days = last30Occurrences
             .Where(static occurrence => occurrence.Status == FastingOccurrenceStatus.Completed && occurrence.EndedAtUtc.HasValue)
             .ToList();
@@ -71,11 +71,11 @@ public sealed class FastingAnalyticsService(
             userId,
             from: nowUtc.AddDays(-AnalysisDays),
             to: nowUtc,
-            cancellationToken: cancellationToken);
-        var analyses = await BuildAnalysesAsync(history, cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        var analyses = await BuildAnalysesAsync(history, cancellationToken).ConfigureAwait(false);
         var currentLatestCheckIn = current is null
             ? null
-            : (await BuildAnalysesAsync([current], cancellationToken)).FirstOrDefault()?.LatestCheckIn;
+            : (await BuildAnalysesAsync([current], cancellationToken).ConfigureAwait(false)).FirstOrDefault()?.LatestCheckIn;
 
         return new FastingInsightsModel(
             BuildAlerts(current, currentLatestCheckIn, nowUtc),
@@ -95,8 +95,8 @@ public sealed class FastingAnalyticsService(
             to: toUtc,
             page: page,
             limit: limit,
-            cancellationToken: cancellationToken);
-        var checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        var checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
         var models = occurrences
             .Select(occurrence => occurrence.ToModel(
                 occurrence.Plan,
@@ -114,7 +114,7 @@ public sealed class FastingAnalyticsService(
             return [];
         }
 
-        var checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken);
+        var checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
         return occurrences
             .Select(occurrence => {
                 var timeline = BuildTimeline(occurrence, checkInsByOccurrence.GetValueOrDefault(occurrence.Id));
@@ -130,7 +130,7 @@ public sealed class FastingAnalyticsService(
             return new Dictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>>();
         }
 
-        return (await fastingCheckInRepository.GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken))
+        return (await fastingCheckInRepository.GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken).ConfigureAwait(false))
             .GroupBy(static checkIn => checkIn.OccurrenceId)
             .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)group.ToList());
     }

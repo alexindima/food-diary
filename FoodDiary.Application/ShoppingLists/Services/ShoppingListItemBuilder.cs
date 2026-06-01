@@ -31,7 +31,7 @@ public static class ShoppingListItemBuilder {
             .Distinct()
             .ToList();
 
-        var products = await productLookupService.GetAccessibleByIdsAsync(normalizedProductIds, userId, cancellationToken);
+        var products = await productLookupService.GetAccessibleByIdsAsync(normalizedProductIds, userId, cancellationToken).ConfigureAwait(false);
         if (products.Count != normalizedProductIds.Count) {
             var missing = normalizedProductIds.First(id => !products.ContainsKey(id));
             return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));

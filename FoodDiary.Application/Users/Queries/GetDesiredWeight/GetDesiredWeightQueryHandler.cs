@@ -18,7 +18,7 @@ public class GetDesiredWeightQueryHandler(IUserRepository userRepository)
         }
 
         var userId = userIdResult.Value;
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return accessError is not null
             ? Result.Failure<UserDesiredWeightModel>(accessError)

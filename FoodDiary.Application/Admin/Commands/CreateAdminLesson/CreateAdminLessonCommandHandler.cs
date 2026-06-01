@@ -32,7 +32,7 @@ public sealed class CreateAdminLessonCommandHandler(INutritionLessonRepository r
             command.EstimatedReadMinutes,
             command.SortOrder);
 
-        await repository.AddAsync(lesson, cancellationToken);
+        await repository.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new AdminLessonModel(
             lesson.Id.Value,

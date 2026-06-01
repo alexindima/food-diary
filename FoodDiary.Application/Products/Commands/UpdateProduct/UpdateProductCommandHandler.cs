@@ -28,7 +28,7 @@ public class UpdateProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ProductModel>(accessError);
         }
@@ -39,7 +39,7 @@ public class UpdateProductCommandHandler(
             productId,
             userId,
             includePublic: false,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
             return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
         }
@@ -98,7 +98,7 @@ public class UpdateProductCommandHandler(
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<ProductModel>(imageAssetResult.Error);
         }
@@ -171,14 +171,14 @@ public class UpdateProductCommandHandler(
 
         var hasChanges = product.ModifiedOnUtc != modifiedOnBefore;
         if (hasChanges) {
-            await productRepository.UpdateAsync(product, cancellationToken);
+            await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
         }
 
         var imageAssetChanged = command.ClearImageAssetId ||
                                 (command.ImageAssetId.HasValue && (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value));
 
         if (hasChanges && oldAssetId.HasValue && imageAssetChanged) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;

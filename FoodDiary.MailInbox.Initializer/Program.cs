@@ -56,7 +56,7 @@ var dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
 var schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
 
 try {
-    await ExecuteAsync(command, dataSource, schemaInitializer);
+    await ExecuteAsync(command, dataSource, schemaInitializer).ConfigureAwait(false);
     return 0;
 } catch (Exception exception) {
     Console.Error.WriteLine($"MailInbox initializer failed: {exception}");
@@ -69,11 +69,11 @@ static async Task ExecuteAsync(
     IMailInboxSchemaInitializer schemaInitializer) {
     switch (command.Name) {
         case "status":
-            await PrintStatusAsync(dataSource);
+            await PrintStatusAsync(dataSource).ConfigureAwait(false);
             break;
         case "update":
             Console.WriteLine("Updating MailInbox schema...");
-            await schemaInitializer.EnsureSchemaAsync(CancellationToken.None);
+            await schemaInitializer.EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
             Console.WriteLine("MailInbox schema update completed.");
             break;
         default:
@@ -82,33 +82,37 @@ static async Task ExecuteAsync(
 }
 
 static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
-    await using var connection = await dataSource.OpenConnectionAsync();
-    var requiredTables = new[] {
+    var connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
+    await using (connection.ConfigureAwait(false)) {
+        var requiredTables = new[] {
         "mailinbox_messages"
     };
-    var existingTables = new HashSet<string>(StringComparer.Ordinal);
+        var existingTables = new HashSet<string>(StringComparer.Ordinal);
 
-    const string sql = """
+        const string sql = """
                        select table_name
                        from information_schema.tables
                        where table_schema = 'public'
                          and table_name = any(@tableNames);
                        """;
 
-    await using var command = new NpgsqlCommand(sql, connection);
-    command.Parameters.AddWithValue("tableNames", requiredTables);
-    await using var reader = await command.ExecuteReaderAsync();
-    while (await reader.ReadAsync()) {
-        existingTables.Add(reader.GetString(0));
-    }
+        var command = new NpgsqlCommand(sql, connection);
+        await using (command.ConfigureAwait(false)) {
+            command.Parameters.AddWithValue("tableNames", requiredTables);
+            using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            while (await reader.ReadAsync().ConfigureAwait(false)) {
+                existingTables.Add(reader.GetString(0));
+            }
 
-    Console.WriteLine("Can connect:       True");
-    Console.WriteLine($"Required tables:   {requiredTables.Length}");
-    Console.WriteLine($"Existing tables:   {existingTables.Count}");
+            Console.WriteLine("Can connect:       True");
+            Console.WriteLine($"Required tables:   {requiredTables.Length}");
+            Console.WriteLine($"Existing tables:   {existingTables.Count}");
 
-    foreach (var table in requiredTables) {
-        var state = existingTables.Contains(table) ? "present" : "missing";
-        Console.WriteLine($"{state,-8} {table}");
+            foreach (var table in requiredTables) {
+                var state = existingTables.Contains(table) ? "present" : "missing";
+                Console.WriteLine($"{state,-8} {table}");
+            }
+        }
     }
 }
 

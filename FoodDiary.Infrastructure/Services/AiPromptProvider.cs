@@ -30,7 +30,7 @@ internal sealed class AiPromptProvider(
                 .AsNoTracking()
                 .Where(t => t.Key == key && t.IsActive)
                 .OrderByDescending(t => t.Version)
-                .FirstOrDefaultAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
             promptText = template?.PromptText;
         }

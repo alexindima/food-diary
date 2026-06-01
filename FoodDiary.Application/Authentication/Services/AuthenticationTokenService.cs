@@ -31,7 +31,7 @@ public sealed class AuthenticationTokenService(
         user.UpdateRefreshToken(new UserRefreshTokenUpdate(
             RefreshToken: hashedRefreshToken,
             ChangedAtUtc: nowUtc));
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         if (clientContext is not null) {
             var userAgent = UserAgentParser.Parse(clientContext.UserAgent);
@@ -45,7 +45,7 @@ public sealed class AuthenticationTokenService(
                 userAgent.OperatingSystem,
                 userAgent.DeviceType,
                 nowUtc);
-            await userLoginEventRepository.AddAsync(loginEvent, cancellationToken);
+            await userLoginEventRepository.AddAsync(loginEvent, cancellationToken).ConfigureAwait(false);
         }
 
         return new IssuedAuthenticationTokens(accessToken, refreshToken);

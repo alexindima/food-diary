@@ -9,14 +9,14 @@ public sealed class ReviewContentReportCommandHandler(IContentReportRepository r
     : ICommandHandler<ReviewContentReportCommand, Result> {
     public async Task<Result> Handle(ReviewContentReportCommand command, CancellationToken cancellationToken) {
         var reportId = (ContentReportId)command.ReportId;
-        var report = await reportRepository.GetByIdAsync(reportId, asTracking: true, cancellationToken);
+        var report = await reportRepository.GetByIdAsync(reportId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (report is null) {
             return Result.Failure(Errors.ContentReport.NotFound(command.ReportId));
         }
 
         report.MarkReviewed(command.AdminNote);
-        await reportRepository.UpdateAsync(report, cancellationToken);
+        await reportRepository.UpdateAsync(report, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

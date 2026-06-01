@@ -19,13 +19,13 @@ public sealed class GetAdminUserRoleAuditQueryHandler(
                 Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
         }
 
-        var user = await userRepository.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken);
+        var user = await userRepository.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(Errors.User.NotFound(query.UserId));
         }
 
         var limit = Math.Clamp(query.Limit, 1, 50);
-        var events = await roleAuditRepository.GetRecentForUserAsync(query.UserId, limit, cancellationToken);
+        var events = await roleAuditRepository.GetRecentForUserAsync(query.UserId, limit, cancellationToken).ConfigureAwait(false);
         return Result.Success(events);
     }
 }

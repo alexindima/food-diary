@@ -22,7 +22,7 @@ public sealed class GetRecentProductsQueryHandler(
         var userId = new UserId(query.UserId!.Value);
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
-        var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);
+        var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
         if (recents.Count == 0) {
             return Result.Success<IReadOnlyList<ProductModel>>(Array.Empty<ProductModel>());
         }
@@ -32,7 +32,7 @@ public sealed class GetRecentProductsQueryHandler(
             idsInOrder,
             userId,
             query.IncludePublic,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var response = idsInOrder
             .Where(productsById.ContainsKey)

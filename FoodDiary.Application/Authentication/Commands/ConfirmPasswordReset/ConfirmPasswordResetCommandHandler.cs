@@ -25,7 +25,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound(userId));
         }
@@ -44,7 +44,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
         var hashedPassword = passwordHasher.Hash(command.NewPassword);
         user.CompletePasswordReset(hashedPassword);
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log("auth.password-reset.confirm", userId, "User", userId.Value.ToString());
 

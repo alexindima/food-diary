@@ -21,13 +21,13 @@ public class IsMealFavoriteQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<bool>(accessError);
         }
 
         var mealId = new MealId(query.MealId);
-        var favorite = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken);
+        var favorite = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(favorite is not null);
     }
 }

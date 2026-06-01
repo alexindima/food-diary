@@ -11,7 +11,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
 
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Add(recipe);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return recipe;
     }
 
@@ -39,7 +39,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
                 EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
         }
 
-        var totalItems = await query.CountAsync(cancellationToken);
+        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var orderedQuery = query.OrderByDescending(r => r.CreatedOnUtc);
         var skip = (pageNumber - 1) * pageSize;
 
@@ -50,7 +50,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
                 Recipe = r,
                 UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count
             })
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items.Select(i => (i.Recipe, i.UsageCount)).ToList(), totalItems);
     }
@@ -88,19 +88,19 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             r => r.Id == id && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Update(recipe);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
-        var tracked = await context.Recipes.FindAsync([recipe.Id], cancellationToken);
+        var tracked = await context.Recipes.FindAsync([recipe.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Recipes.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -118,7 +118,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         entry.Property(r => r.TotalFiber).IsModified = true;
         entry.Property(r => r.TotalAlcohol).IsModified = true;
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
@@ -136,7 +136,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             ? r.UserId == userId || r.Visibility == Visibility.Public
             : r.UserId == userId));
 
-        var recipes = await query.ToListAsync(cancellationToken);
+        var recipes = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
         return recipes.ToDictionary(r => r.Id);
     }
 
@@ -159,7 +159,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
                 Recipe = r,
                 UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count
             })
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return items.ToDictionary(x => x.Recipe.Id, x => (x.Recipe, x.UsageCount));
     }
@@ -195,7 +195,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             query = query.Where(r => r.PrepTime.HasValue && r.PrepTime.Value <= maxPrepTime.Value);
         }
 
-        var totalItems = await query.CountAsync(cancellationToken);
+        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
 
         var orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
             ? query.OrderByDescending(r => r.MealItems.Count + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
@@ -205,7 +205,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(r => new { Recipe = r, UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count })
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items.Select(x => (x.Recipe, x.UsageCount)).ToList(), totalItems);
     }

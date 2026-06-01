@@ -22,7 +22,7 @@ public class GetShoppingListsQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<ShoppingListSummaryModel>>(accessError);
         }
@@ -30,7 +30,7 @@ public class GetShoppingListsQueryHandler(
         var lists = await shoppingListRepository.GetAllAsync(
             userId,
             includeItems: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var response = lists
             .Select(list => list.ToSummaryModel())

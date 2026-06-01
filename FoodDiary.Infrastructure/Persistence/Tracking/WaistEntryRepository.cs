@@ -7,19 +7,19 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepository {
     public async Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
-        await context.WaistEntries.AddAsync(entry, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.WaistEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public async Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
         context.WaistEntries.Update(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
         context.WaistEntries.Remove(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WaistEntry?> GetByIdAsync(
@@ -33,7 +33,7 @@ public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepos
 
         return await query.FirstOrDefaultAsync(
             entry => entry.Id == id && entry.UserId == userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WaistEntry?> GetByDateAsync(
@@ -45,7 +45,7 @@ public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepos
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 entry => entry.UserId == userId && entry.Date == normalizedDate,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<WaistEntry>> GetEntriesAsync(
@@ -77,7 +77,7 @@ public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepos
             query = query.Take(limit.Value);
         }
 
-        return await query.ToListAsync(cancellationToken);
+        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(
@@ -93,6 +93,6 @@ public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepos
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

@@ -20,7 +20,7 @@ public class GetFastingHistoryQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<PagedResponse<FastingSessionModel>>(accessError);
         }
@@ -31,7 +31,7 @@ public class GetFastingHistoryQueryHandler(
             query.Limit,
             NormalizeUtc(query.From),
             NormalizeUtc(query.To),
-            cancellationToken));
+            cancellationToken).ConfigureAwait(false));
     }
 
     private static DateTime NormalizeUtc(DateTime value) =>

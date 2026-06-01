@@ -29,7 +29,7 @@ public class CreateRecommendationCommandHandler(
 
         var dietologistUserId = new UserId(command.UserId!.Value);
         var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, dietologistUserId, cancellationToken);
+            userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<RecommendationModel>(currentUserAccessError);
         }
@@ -37,7 +37,7 @@ public class CreateRecommendationCommandHandler(
         var clientUserId = new UserId(command.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
-            invitationRepository, dietologistUserId, clientUserId, cancellationToken);
+            invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<RecommendationModel>(accessResult.Error);
@@ -49,23 +49,23 @@ public class CreateRecommendationCommandHandler(
         }
 
         var recommendation = Recommendation.Create(dietologistUserId, clientUserId, command.Text);
-        await recommendationRepository.AddAsync(recommendation, cancellationToken);
-        await NotifyClientAsync(recommendation, cancellationToken);
+        await recommendationRepository.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
+        await NotifyClientAsync(recommendation, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(recommendation.ToModel());
     }
 
     private async Task NotifyClientAsync(Recommendation recommendation, CancellationToken cancellationToken) {
-        var dietologist = await userRepository.GetByIdAsync(recommendation.DietologistUserId, cancellationToken);
+        var dietologist = await userRepository.GetByIdAsync(recommendation.DietologistUserId, cancellationToken).ConfigureAwait(false);
         var notification = NotificationFactory.CreateNewRecommendation(
             recommendation.ClientUserId,
             ResolveDietologistLabel(dietologist),
             recommendation.Id.Value.ToString());
 
-        await notificationRepository.AddAsync(notification, cancellationToken);
+        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
 
-        var unreadCount = await notificationRepository.GetUnreadCountAsync(recommendation.ClientUserId, cancellationToken);
-        await notificationPusher.PushUnreadCountAsync(recommendation.ClientUserId.Value, unreadCount, cancellationToken);
+        var unreadCount = await notificationRepository.GetUnreadCountAsync(recommendation.ClientUserId, cancellationToken).ConfigureAwait(false);
+        await notificationPusher.PushUnreadCountAsync(recommendation.ClientUserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
     }
 
     private static string ResolveDietologistLabel(User? dietologist) {

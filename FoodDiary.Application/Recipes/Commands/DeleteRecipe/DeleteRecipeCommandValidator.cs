@@ -42,7 +42,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
             new UserId(command.UserId.Value),
             includePublic: false,
             includeSteps: false,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),

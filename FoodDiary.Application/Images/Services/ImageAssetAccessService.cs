@@ -16,7 +16,7 @@ public sealed class ImageAssetAccessService(
             return Result.Success<ImageAsset?>(null);
         }
 
-        var asset = await imageAssetRepository.GetByIdAsync(assetId.Value, cancellationToken);
+        var asset = await imageAssetRepository.GetByIdAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return Result.Failure<ImageAsset?>(Errors.Image.NotFound(assetId.Value.Value));
         }
@@ -25,7 +25,7 @@ public sealed class ImageAssetAccessService(
             return Result.Failure<ImageAsset?>(Errors.Image.Forbidden());
         }
 
-        var validation = await imageStorageService.ValidateUploadedObjectAsync(asset.ObjectKey, cancellationToken);
+        var validation = await imageStorageService.ValidateUploadedObjectAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
         if (!validation.IsValid) {
             return Result.Failure<ImageAsset?>(Errors.Image.InvalidData(
                 validation.Message ?? "Image upload has not completed or is invalid."));

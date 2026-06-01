@@ -120,7 +120,7 @@ public sealed class EmailSender(
                 subject,
                 BuildTemplate(subject, intro, "FoodDiary", _options.FrontendBaseUrl, footer),
                 $"{intro}{Environment.NewLine}{footer}",
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             ApplicationEmailTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "failure", ex.GetType().Name);
@@ -195,7 +195,7 @@ public sealed class EmailSender(
         CancellationToken cancellationToken) {
         try {
             var link = buildLink();
-            var template = await _templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken);
+            var template = await _templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
             var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
             var fallback = createFallbackContent(link);
 
@@ -209,7 +209,7 @@ public sealed class EmailSender(
                 ? fallback.Text
                 : ApplyTemplateTokens(template.TextBody, link, brand);
 
-            await SendAsync(toEmail, subject, htmlBody, textBody, cancellationToken);
+            await SendAsync(toEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
@@ -291,6 +291,6 @@ public sealed class EmailSender(
 
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
 
-        await _emailTransport.SendAsync(message, cancellationToken);
+        await _emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -28,7 +28,7 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
                     return;
                 }
 
-                var product = await productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
+                var product = await productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (product is null) {
                     context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it") {
                         ErrorCode = "Product.NotFound"

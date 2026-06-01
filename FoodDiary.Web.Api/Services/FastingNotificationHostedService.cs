@@ -22,12 +22,12 @@ public sealed class FastingNotificationHostedService(
             try {
                 using var scope = serviceScopeFactory.CreateScope();
                 var scheduler = scope.ServiceProvider.GetRequiredService<IFastingNotificationScheduler>();
-                await scheduler.ProcessDueNotificationsAsync(stoppingToken);
+                await scheduler.ProcessDueNotificationsAsync(stoppingToken).ConfigureAwait(false);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 break;
             } catch (Exception ex) {
                 logger.LogError(ex, "Failed to process due fasting notifications.");
             }
-        } while (await timer.WaitForNextTickAsync(stoppingToken));
+        } while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false));
     }
 }

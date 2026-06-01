@@ -19,7 +19,7 @@ public sealed class ApiExceptionHandler(
                 "Authentication is required.",
                 httpContext.TraceIdentifier);
 
-            await httpContext.Response.WriteAsJsonAsync(unauthorizedResponse, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(unauthorizedResponse, cancellationToken).ConfigureAwait(false);
             return true;
         }
 
@@ -35,7 +35,7 @@ public sealed class ApiExceptionHandler(
                 "The resource was modified by another request. Please retry.",
                 httpContext.TraceIdentifier);
 
-            await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken).ConfigureAwait(false);
             return true;
         }
 
@@ -50,7 +50,7 @@ public sealed class ApiExceptionHandler(
             "An unexpected error occurred.",
             httpContext.TraceIdentifier);
 
-        await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);
+        await httpContext.Response.WriteAsJsonAsync(response, cancellationToken).ConfigureAwait(false);
         return true;
     }
 }

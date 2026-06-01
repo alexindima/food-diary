@@ -26,13 +26,13 @@ public class MealNutritionService(
             .Distinct()
             .ToList();
 
-        var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
+        var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
         if (products.Count != productIds.Count) {
             var missingProduct = productIds.First(id => !products.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Product.NotAccessible(missingProduct.Value));
         }
 
-        var recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken);
+        var recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken).ConfigureAwait(false);
         if (recipes.Count != recipeIds.Count) {
             var missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Recipe.NotAccessible(missingRecipe.Value));

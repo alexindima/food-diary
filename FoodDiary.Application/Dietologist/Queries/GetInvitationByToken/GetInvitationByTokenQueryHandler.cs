@@ -21,13 +21,13 @@ public class GetInvitationByTokenQueryHandler(
         }
 
         var invitationId = new DietologistInvitationId(query.InvitationId);
-        var invitation = await invitationRepository.GetByIdAsync(invitationId, cancellationToken: cancellationToken);
+        var invitation = await invitationRepository.GetByIdAsync(invitationId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
         }
 
-        var user = await userRepository.GetByIdAsync(userIdResult.Value, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
         if (user is null ||
             !string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);

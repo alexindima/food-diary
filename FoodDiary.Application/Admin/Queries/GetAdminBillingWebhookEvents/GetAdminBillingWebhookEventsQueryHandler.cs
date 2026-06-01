@@ -20,7 +20,7 @@ public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReposi
             query.Search,
             query.FromUtc,
             query.ToUtc);
-        var pageData = await billingRepository.GetWebhookEventsAsync(filter, cancellationToken);
+        var pageData = await billingRepository.GetWebhookEventsAsync(filter, cancellationToken).ConfigureAwait(false);
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)filter.Limit);
         return Result.Success(new PagedResponse<AdminBillingWebhookEventReadModel>(
             pageData.Items,

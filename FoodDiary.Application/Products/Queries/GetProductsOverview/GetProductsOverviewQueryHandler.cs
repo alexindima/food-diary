@@ -43,14 +43,14 @@ public sealed class GetProductsOverviewQueryHandler(
             pageSize,
             query.Search,
             productTypes is { Length: > 0 } ? productTypes : null,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var allProducts = items.Select(item => new {
             item.Product,
             item.UsageCount,
             IsOwner = item.Product.UserId == userId
         }).ToList();
-        var allFavorites = await favoriteProductRepository.GetAllAsync(userId, cancellationToken);
+        var allFavorites = await favoriteProductRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = allFavorites
             .Take(favoriteLimit)
             .Select(favorite => favorite.ToModel())
@@ -63,14 +63,14 @@ public sealed class GetProductsOverviewQueryHandler(
 
         var recentResponses = Array.Empty<ProductModel>();
         if (string.IsNullOrWhiteSpace(query.Search)) {
-            var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);
+            var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
             if (recents.Count > 0) {
                 var recentIds = recents.Select(x => x.ProductId).ToList();
                 var productsById = await productRepository.GetByIdsWithUsageAsync(
                     recentIds,
                     userId,
                     query.IncludePublic,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
 
                 recentItems = recentIds
                     .Where(productsById.ContainsKey)

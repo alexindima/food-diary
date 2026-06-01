@@ -43,7 +43,7 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository 
             }
         }
 
-        await repository.AddRangeAsync(lessons, cancellationToken);
+        await repository.AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
 
         var models = lessons
             .Select(static lesson => new AdminLessonModel(

@@ -22,7 +22,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
                 .WithPassword("postgres")
                 .Build();
 
-            await _container.StartAsync();
+            await _container.StartAsync().ConfigureAwait(false);
         } catch (Exception ex) {
             _skipReason = $"Docker/PostgreSQL test container is unavailable: {ex.Message}";
         }
@@ -30,13 +30,13 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
 
     public async Task DisposeAsync() {
         if (_container is not null) {
-            await _container.DisposeAsync().AsTask();
+            await _container.DisposeAsync().AsTask().ConfigureAwait(false);
         }
     }
 
     public async Task<FoodDiaryDbContext> CreateDbContextAsync() {
-        var context = CreateDbContext(await CreateIsolatedDatabaseAsync());
-        await context.Database.MigrateAsync();
+        var context = CreateDbContext(await CreateIsolatedDatabaseAsync().ConfigureAwait(false));
+        await context.Database.MigrateAsync().ConfigureAwait(false);
         return context;
     }
 
@@ -44,7 +44,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
         EnsureAvailable();
 
         var databaseName = $"fooddiary_test_{Guid.NewGuid():N}";
-        await CreateDatabaseAsync(databaseName);
+        await CreateDatabaseAsync(databaseName).ConfigureAwait(false);
 
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(_container!.GetConnectionString()) {
             Database = databaseName
@@ -62,12 +62,16 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     }
 
     private async Task CreateDatabaseAsync(string databaseName) {
-        await using var connection = new NpgsqlConnection(_container!.GetConnectionString());
-        await connection.OpenAsync();
+        var connection = new NpgsqlConnection(_container!.GetConnectionString());
+        await using (connection.ConfigureAwait(false)) {
+            await connection.OpenAsync().ConfigureAwait(false);
 
-        await using var command = connection.CreateCommand();
-        command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
-        await command.ExecuteNonQueryAsync();
+            var command = connection.CreateCommand();
+            await using (command.ConfigureAwait(false)) {
+                command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
+                await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+            }
+        }
     }
 
     private void EnsureAvailable() {

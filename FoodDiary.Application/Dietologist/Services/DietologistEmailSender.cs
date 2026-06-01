@@ -23,7 +23,7 @@ public sealed class DietologistEmailSender(
         var isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
         var clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
         var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
-        var template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken);
+        var template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken).ConfigureAwait(false);
         var fallback = CreateFallbackContent(isRu, clientName, link, brand);
 
         var subject = template is null
@@ -36,7 +36,7 @@ public sealed class DietologistEmailSender(
             ? fallback.Text
             : ApplyTemplateTokens(template.TextBody, link, brand, clientName);
 
-        await SendAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken);
+        await SendAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
     }
 
     private string BuildInvitationLink(Guid invitationId, string token) {
@@ -159,6 +159,6 @@ public sealed class DietologistEmailSender(
 
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
 
-        await emailTransport.SendAsync(message, cancellationToken);
+        await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
     }
 }

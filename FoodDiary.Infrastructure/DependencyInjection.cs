@@ -205,7 +205,7 @@ public static class DependencyInjection {
     private static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(
         SocketsHttpConnectionContext context,
         CancellationToken cancellationToken) {
-        var addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken);
+        var addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken).ConfigureAwait(false);
         var publicAddress = addresses.FirstOrDefault(IsPublicAddress);
         if (publicAddress is null) {
             throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
@@ -216,7 +216,7 @@ public static class DependencyInjection {
         };
 
         try {
-            await socket.ConnectAsync(new IPEndPoint(publicAddress, context.DnsEndPoint.Port), cancellationToken);
+            await socket.ConnectAsync(new IPEndPoint(publicAddress, context.DnsEndPoint.Port), cancellationToken).ConfigureAwait(false);
             return new NetworkStream(socket, ownsSocket: true);
         } catch {
             socket.Dispose();

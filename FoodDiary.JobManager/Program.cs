@@ -53,4 +53,4 @@ builder.Services.AddHostedService<RecurringJobsHostedService>();
 
 var app = builder.Build();
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

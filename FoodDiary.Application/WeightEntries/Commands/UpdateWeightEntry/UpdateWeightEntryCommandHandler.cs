@@ -27,7 +27,7 @@ public class UpdateWeightEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeightEntryModel>(accessError);
         }
@@ -37,7 +37,7 @@ public class UpdateWeightEntryCommandHandler(
             weightEntryId,
             userId,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (existingEntry is null) {
             return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotFound(command.WeightEntryId));
@@ -47,7 +47,7 @@ public class UpdateWeightEntryCommandHandler(
         var duplicate = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (duplicate is not null && duplicate.Id != existingEntry.Id) {
             return Result.Failure<WeightEntryModel>(
@@ -55,7 +55,7 @@ public class UpdateWeightEntryCommandHandler(
         }
 
         existingEntry.Update(command.Weight, normalizedDate);
-        await weightEntryRepository.UpdateAsync(existingEntry, cancellationToken);
+        await weightEntryRepository.UpdateAsync(existingEntry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(existingEntry.ToModel());
     }

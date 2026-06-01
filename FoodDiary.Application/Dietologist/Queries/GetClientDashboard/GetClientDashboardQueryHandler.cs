@@ -24,7 +24,7 @@ public class GetClientDashboardQueryHandler(
 
         var dietologistUserId = new UserId(query.UserId!.Value);
         var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, dietologistUserId, cancellationToken);
+            userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<DashboardSnapshotModel>(currentUserAccessError);
         }
@@ -32,7 +32,7 @@ public class GetClientDashboardQueryHandler(
         var clientUserId = new UserId(query.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
-            invitationRepository, dietologistUserId, clientUserId, cancellationToken);
+            invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<DashboardSnapshotModel>(accessResult.Error);
@@ -64,7 +64,7 @@ public class GetClientDashboardQueryHandler(
                     IncludeExercise: false,
                     IncludeTdee: false,
                     IncludeCycle: false)),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (dashboardResult.IsFailure) {
             return dashboardResult;
         }

@@ -8,18 +8,18 @@ namespace FoodDiary.Infrastructure.Persistence.Images;
 public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepository {
     public async Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Add(asset);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return asset;
     }
 
     public async Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) {
-        return await context.ImageAssets.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+        return await context.ImageAssets.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Attach(asset);
         context.ImageAssets.Remove(asset);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
@@ -32,7 +32,7 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
                 context.Meals.Any(m => m.ImageAssetId == assetId) ||
                 context.MealAiSessions.Any(s => s.ImageAssetId == assetId) ||
                 context.Users.Any(u => u.ProfileImageAssetId == assetId))
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
@@ -51,6 +51,6 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
                 !context.Users.Any(u => u.ProfileImageAssetId == asset.Id))
             .OrderBy(asset => asset.CreatedOnUtc)
             .Take(batchSize)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

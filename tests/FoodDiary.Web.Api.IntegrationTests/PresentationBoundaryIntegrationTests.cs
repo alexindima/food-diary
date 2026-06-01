@@ -530,10 +530,10 @@ public sealed class PresentationBoundaryIntegrationTests(
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
         return payload.AccessToken;
@@ -652,7 +652,7 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static async Task AssertErrorContractSnapshotAsync(string scenario, ErrorPayload payload) {
         var snapshotPath = SnapshotPathResolver.GetPath("error-contract-snapshots.json");
-        var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath))!.AsObject();
+        var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath).ConfigureAwait(false))!.AsObject();
         var serializerOptions = new JsonSerializerOptions {
             WriteIndented = true,
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
@@ -671,10 +671,10 @@ public sealed class PresentationBoundaryIntegrationTests(
     private static async Task AssertSnapshotAsync(string snapshotFileName, string actual) {
         var snapshotPath = SnapshotPathResolver.GetPath(snapshotFileName);
         if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
-            await File.WriteAllTextAsync(snapshotPath, actual.ReplaceLineEndings("\n"));
+            await File.WriteAllTextAsync(snapshotPath, actual.ReplaceLineEndings("\n")).ConfigureAwait(false);
         }
 
-        var expected = await File.ReadAllTextAsync(snapshotPath);
+        var expected = await File.ReadAllTextAsync(snapshotPath).ConfigureAwait(false);
         Assert.Equal(
             expected.ReplaceLineEndings("\n").TrimEnd(),
             actual.ReplaceLineEndings("\n").TrimEnd());

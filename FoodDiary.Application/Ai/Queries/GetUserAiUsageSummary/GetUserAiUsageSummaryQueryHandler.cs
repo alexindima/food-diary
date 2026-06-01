@@ -23,7 +23,7 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
         }
 
         var userId = new UserId(query.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<UserAiUsageModel>(accessError);
@@ -35,7 +35,7 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
             userId,
             monthStartUtc,
             monthEndUtc,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new UserAiUsageModel(
             currentUser.AiInputTokenLimit,

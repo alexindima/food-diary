@@ -30,7 +30,7 @@ public sealed class WebPushNotificationSender(
             return;
         }
 
-        var user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} because user {UserId} was not found.",
@@ -56,7 +56,7 @@ public sealed class WebPushNotificationSender(
             return;
         }
 
-        var subscriptions = await subscriptionRepository.GetByUserAsync(notification.UserId, cancellationToken);
+        var subscriptions = await subscriptionRepository.GetByUserAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         if (subscriptions.Count == 0) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} for user {UserId} because there are no subscriptions.",
@@ -71,7 +71,7 @@ public sealed class WebPushNotificationSender(
             .ToList();
 
         if (expiredSubscriptions.Count > 0) {
-            await subscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken);
+            await subscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
             logger.LogInformation(
                 "Pruned {SubscriptionCount} expired web push subscriptions for user {UserId} before sending notification {NotificationId}.",
                 expiredSubscriptions.Count,
@@ -101,7 +101,7 @@ public sealed class WebPushNotificationSender(
 
             try {
                 cancellationToken.ThrowIfCancellationRequested();
-                await client.SendNotificationAsync(pushSubscription, payload, vapidDetails, cancellationToken);
+                await client.SendNotificationAsync(pushSubscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
                 deliveredCount++;
             } catch (WebPushException ex) when (IsExpiredSubscription(ex)) {
                 invalidSubscriptions.Add(subscription);
@@ -119,7 +119,7 @@ public sealed class WebPushNotificationSender(
         }
 
         if (invalidSubscriptions.Count > 0) {
-            await subscriptionRepository.DeleteRangeAsync(invalidSubscriptions, cancellationToken);
+            await subscriptionRepository.DeleteRangeAsync(invalidSubscriptions, cancellationToken).ConfigureAwait(false);
         }
 
         logger.LogDebug(

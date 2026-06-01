@@ -22,7 +22,7 @@ public class GetDailyMicronutrientsQueryHandler(
         }
 
         var meals = await mealRepository.GetWithItemsAndProductsAsync(
-            userIdResult.Value, query.Date, cancellationToken);
+            userIdResult.Value, query.Date, cancellationToken).ConfigureAwait(false);
 
         var allItems = meals.SelectMany(m => m.Items).ToList();
         var productItems = allItems.Where(i => i.IsProduct && i.Product is not null).ToList();
@@ -41,8 +41,8 @@ public class GetDailyMicronutrientsQueryHandler(
             .Distinct()
             .ToList();
 
-        var nutrientsByFdcId = await usdaFoodRepository.GetNutrientsByFdcIdsAsync(fdcIds, cancellationToken);
-        var dailyValues = await usdaFoodRepository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken);
+        var nutrientsByFdcId = await usdaFoodRepository.GetNutrientsByFdcIdsAsync(fdcIds, cancellationToken).ConfigureAwait(false);
+        var dailyValues = await usdaFoodRepository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         // Aggregate nutrients across all meal items
         // USDA data is per 100g; scale by (mealItem.Amount / product.BaseAmount)

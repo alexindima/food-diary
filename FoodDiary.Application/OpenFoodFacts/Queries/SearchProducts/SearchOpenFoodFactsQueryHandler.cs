@@ -12,14 +12,14 @@ public class SearchOpenFoodFactsQueryHandler(
     public async Task<Result<IReadOnlyList<OpenFoodFactsProductModel>>> Handle(
         SearchOpenFoodFactsQuery query,
         CancellationToken cancellationToken) {
-        var cachedProducts = await productCacheRepository.SearchAsync(query.Search, query.Limit, cancellationToken);
+        var cachedProducts = await productCacheRepository.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
         if (cachedProducts.Count >= query.Limit) {
             return Result.Success(cachedProducts);
         }
 
-        var externalProducts = await openFoodFactsService.SearchAsync(query.Search, query.Limit, cancellationToken);
+        var externalProducts = await openFoodFactsService.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
         if (externalProducts.Count > 0) {
-            await productCacheRepository.UpsertAsync(externalProducts, cancellationToken);
+            await productCacheRepository.UpsertAsync(externalProducts, cancellationToken).ConfigureAwait(false);
         }
 
         var products = externalProducts

@@ -8,18 +8,18 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEntryRepository {
     public async Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Add(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public async Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Update(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Remove(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<HydrationEntry?> GetByIdAsync(
@@ -31,7 +31,7 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
             query = query.AsNoTracking();
         }
 
-        return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(
@@ -45,7 +45,7 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp < dayEnd)
             .OrderBy(x => x.Timestamp)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
@@ -55,7 +55,7 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
         return await context.HydrationEntries
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp < dayEnd)
-            .SumAsync(x => x.AmountMl, cancellationToken);
+            .SumAsync(x => x.AmountMl, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
@@ -72,7 +72,7 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
             .GroupBy(x => x.Timestamp.Date)
             .Select(g => new { Date = g.Key, TotalMl = g.Sum(x => x.AmountMl) })
             .OrderBy(x => x.Date)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return results.Select(r => (r.Date, r.TotalMl)).ToList();
     }

@@ -14,7 +14,7 @@ public class RecommendationRepository(FoodDiaryDbContext context) : IRecommendat
             .Where(r => r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<Recommendation>> GetByDietologistAndClientAsync(
@@ -25,7 +25,7 @@ public class RecommendationRepository(FoodDiaryDbContext context) : IRecommendat
             .Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Recommendation?> GetByIdAsync(
@@ -38,22 +38,22 @@ public class RecommendationRepository(FoodDiaryDbContext context) : IRecommendat
 
         return await query
             .Include(r => r.DietologistUser)
-            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Recommendation> AddAsync(Recommendation recommendation, CancellationToken cancellationToken = default) {
         context.Recommendations.Add(recommendation);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return recommendation;
     }
 
     public async Task UpdateAsync(Recommendation recommendation, CancellationToken cancellationToken = default) {
         context.Recommendations.Update(recommendation);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<int> GetUnreadCountAsync(UserId clientUserId, CancellationToken cancellationToken = default) {
         return await context.Recommendations
-            .CountAsync(r => r.ClientUserId == clientUserId && !r.IsRead, cancellationToken);
+            .CountAsync(r => r.ClientUserId == clientUserId && !r.IsRead, cancellationToken).ConfigureAwait(false);
     }
 }

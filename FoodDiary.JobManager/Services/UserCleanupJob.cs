@@ -36,7 +36,7 @@ public sealed class UserCleanupJob(
                     olderThanUtc,
                     batchSize,
                     reassignUserId,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
 
                 totalDeleted += deleted;
 

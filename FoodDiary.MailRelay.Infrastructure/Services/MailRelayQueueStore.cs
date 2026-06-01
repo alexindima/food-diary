@@ -98,9 +98,13 @@ public sealed class MailRelayQueueStore(
                                on mailrelay_delivery_events (email, created_at_utc desc);
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
@@ -181,41 +185,46 @@ public sealed class MailRelayQueueStore(
                                  );
                                  """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await using (transaction.ConfigureAwait(false)) {
+                Guid emailId;
+                var emailCommand = new NpgsqlCommand(emailSql, connection, transaction);
+                await using (emailCommand.ConfigureAwait(false)) {
+                    emailCommand.Parameters.AddWithValue("id", id);
+                    emailCommand.Parameters.AddWithValue("fromAddress", request.FromAddress);
+                    emailCommand.Parameters.AddWithValue("fromName", request.FromName);
+                    emailCommand.Parameters.AddWithValue("toRecipientsJson", JsonSerializer.Serialize(request.To, JsonOptions));
+                    emailCommand.Parameters.AddWithValue("subject", request.Subject);
+                    emailCommand.Parameters.AddWithValue("htmlBody", request.HtmlBody);
+                    emailCommand.Parameters.AddWithValue("textBody", (object?)request.TextBody ?? DBNull.Value);
+                    emailCommand.Parameters.AddWithValue("correlationId", (object?)request.CorrelationId ?? DBNull.Value);
+                    emailCommand.Parameters.AddWithValue("idempotencyKey", (object?)request.IdempotencyKey ?? DBNull.Value);
+                    emailCommand.Parameters.AddWithValue("maxAttempts", _queueOptions.MaxAttempts);
+                    emailCommand.Parameters.AddWithValue("availableAtUtc", now);
+                    emailCommand.Parameters.AddWithValue("createdAtUtc", now);
 
-        Guid emailId;
-        await using (var emailCommand = new NpgsqlCommand(emailSql, connection, transaction)) {
-            emailCommand.Parameters.AddWithValue("id", id);
-            emailCommand.Parameters.AddWithValue("fromAddress", request.FromAddress);
-            emailCommand.Parameters.AddWithValue("fromName", request.FromName);
-            emailCommand.Parameters.AddWithValue("toRecipientsJson", JsonSerializer.Serialize(request.To, JsonOptions));
-            emailCommand.Parameters.AddWithValue("subject", request.Subject);
-            emailCommand.Parameters.AddWithValue("htmlBody", request.HtmlBody);
-            emailCommand.Parameters.AddWithValue("textBody", (object?)request.TextBody ?? DBNull.Value);
-            emailCommand.Parameters.AddWithValue("correlationId", (object?)request.CorrelationId ?? DBNull.Value);
-            emailCommand.Parameters.AddWithValue("idempotencyKey", (object?)request.IdempotencyKey ?? DBNull.Value);
-            emailCommand.Parameters.AddWithValue("maxAttempts", _queueOptions.MaxAttempts);
-            emailCommand.Parameters.AddWithValue("availableAtUtc", now);
-            emailCommand.Parameters.AddWithValue("createdAtUtc", now);
+                    var result = await emailCommand.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+                    emailId = result is Guid existingId
+                        ? existingId
+                        : throw new InvalidOperationException("Mail relay queue insert did not return an id.");
+                }
 
-            var result = await emailCommand.ExecuteScalarAsync(cancellationToken);
-            emailId = result is Guid existingId
-                ? existingId
-                : throw new InvalidOperationException("Mail relay queue insert did not return an id.");
+                var outboxCommand = new NpgsqlCommand(outboxSql, connection, transaction);
+                await using (outboxCommand.ConfigureAwait(false)) {
+                    outboxCommand.Parameters.AddWithValue("id", outboxId);
+                    outboxCommand.Parameters.AddWithValue("emailId", emailId);
+                    outboxCommand.Parameters.AddWithValue("availableAtUtc", now);
+                    outboxCommand.Parameters.AddWithValue("createdAtUtc", now);
+                    await outboxCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                }
+
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                MailRelayTelemetry.RecordQueueEvent("queued");
+                return emailId;
+            }
         }
-
-        await using (var outboxCommand = new NpgsqlCommand(outboxSql, connection, transaction)) {
-            outboxCommand.Parameters.AddWithValue("id", outboxId);
-            outboxCommand.Parameters.AddWithValue("emailId", emailId);
-            outboxCommand.Parameters.AddWithValue("availableAtUtc", now);
-            outboxCommand.Parameters.AddWithValue("createdAtUtc", now);
-            await outboxCommand.ExecuteNonQueryAsync(cancellationToken);
-        }
-
-        await transaction.CommitAsync(cancellationToken);
-        MailRelayTelemetry.RecordQueueEvent("queued");
-        return emailId;
     }
 
     public async Task<IReadOnlyList<QueuedEmailMessage>> ClaimDueBatchAsync(CancellationToken cancellationToken) {
@@ -252,31 +261,35 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var result = new List<QueuedEmailMessage>();
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
-        command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
+                command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        while (await reader.ReadAsync(cancellationToken)) {
-            var toRecipientsJson = reader.GetString(3);
-            var recipients = JsonSerializer.Deserialize<string[]>(toRecipientsJson, JsonOptions)
-                             ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    var toRecipientsJson = reader.GetString(3);
+                    var recipients = JsonSerializer.Deserialize<string[]>(toRecipientsJson, JsonOptions)
+                                     ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
 
-            result.Add(new QueuedEmailMessage(
-                reader.GetGuid(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                recipients,
-                reader.GetString(4),
-                reader.GetString(5),
-                reader.IsDBNull(6) ? null : reader.GetString(6),
-                reader.IsDBNull(7) ? null : reader.GetString(7),
-                reader.GetInt32(8),
-                reader.GetInt32(9)));
+                    result.Add(new QueuedEmailMessage(
+                        reader.GetGuid(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        recipients,
+                        reader.GetString(4),
+                        reader.GetString(5),
+                        reader.IsDBNull(6) ? null : reader.GetString(6),
+                        reader.IsDBNull(7) ? null : reader.GetString(7),
+                        reader.GetInt32(8),
+                        reader.GetInt32(9)));
+                }
+
+                return result;
+            }
         }
-
-        return result;
     }
 
     public async Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken) {
@@ -303,31 +316,35 @@ public sealed class MailRelayQueueStore(
                                max_attempts;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (!await reader.ReadAsync(cancellationToken)) {
-            return null;
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    return null;
+                }
+
+                var toRecipientsJson = reader.GetString(3);
+                var recipients = JsonSerializer.Deserialize<string[]>(toRecipientsJson, JsonOptions)
+                                 ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
+
+                return new QueuedEmailMessage(
+                    reader.GetGuid(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    recipients,
+                    reader.GetString(4),
+                    reader.GetString(5),
+                    reader.IsDBNull(6) ? null : reader.GetString(6),
+                    reader.IsDBNull(7) ? null : reader.GetString(7),
+                    reader.GetInt32(8),
+                    reader.GetInt32(9));
+            }
         }
-
-        var toRecipientsJson = reader.GetString(3);
-        var recipients = JsonSerializer.Deserialize<string[]>(toRecipientsJson, JsonOptions)
-                         ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
-
-        return new QueuedEmailMessage(
-            reader.GetGuid(0),
-            reader.GetString(1),
-            reader.GetString(2),
-            recipients,
-            reader.GetString(4),
-            reader.GetString(5),
-            reader.IsDBNull(6) ? null : reader.GetString(6),
-            reader.IsDBNull(7) ? null : reader.GetString(7),
-            reader.GetInt32(8),
-            reader.GetInt32(9));
     }
 
     public async Task<IReadOnlyList<MailRelayOutboxMessage>> ClaimOutboxBatchAsync(CancellationToken cancellationToken) {
@@ -350,19 +367,23 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var result = new List<MailRelayOutboxMessage>();
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        while (await reader.ReadAsync(cancellationToken)) {
-            result.Add(new MailRelayOutboxMessage(
-                reader.GetGuid(0),
-                reader.GetGuid(1),
-                reader.GetInt32(2)));
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    result.Add(new MailRelayOutboxMessage(
+                        reader.GetGuid(0),
+                        reader.GetGuid(1),
+                        reader.GetInt32(2)));
+                }
+
+                return result;
+            }
         }
-
-        return result;
     }
 
     public async Task MarkOutboxPublishedAsync(Guid id, CancellationToken cancellationToken) {
@@ -375,7 +396,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await ExecuteStatusCommandAsync(sql, id, cancellationToken);
+        await ExecuteStatusCommandAsync(sql, id, cancellationToken).ConfigureAwait(false);
         MailRelayTelemetry.RecordOutboxEvent("published");
     }
 
@@ -391,13 +412,17 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("availableAtUtc", nextAvailableAt);
-        command.Parameters.AddWithValue("lastError", Truncate(error, 4000));
-        await command.ExecuteNonQueryAsync(cancellationToken);
-        MailRelayTelemetry.RecordOutboxEvent("retry");
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("availableAtUtc", nextAvailableAt);
+                command.Parameters.AddWithValue("lastError", Truncate(error, 4000));
+                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                MailRelayTelemetry.RecordOutboxEvent("retry");
+            }
+        }
     }
 
     public async Task<MailRelayInboxClaimResult> TryClaimInboxMessageAsync(
@@ -437,21 +462,25 @@ public sealed class MailRelayQueueStore(
                            returning id, status;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", Guid.NewGuid());
-        command.Parameters.AddWithValue("consumerName", consumerName);
-        command.Parameters.AddWithValue("messageKey", messageKey);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", Guid.NewGuid());
+                command.Parameters.AddWithValue("consumerName", consumerName);
+                command.Parameters.AddWithValue("messageKey", messageKey);
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (!await reader.ReadAsync(cancellationToken)) {
-            throw new InvalidOperationException("Inbox claim did not return a row.");
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    throw new InvalidOperationException("Inbox claim did not return a row.");
+                }
+
+                var inboxId = reader.GetGuid(0);
+                var status = reader.GetString(1);
+                MailRelayTelemetry.RecordInboxEvent(string.Equals(status, "processing", StringComparison.Ordinal) ? "claimed" : "duplicate");
+                return new MailRelayInboxClaimResult(string.Equals(status, "processing", StringComparison.Ordinal), inboxId);
+            }
         }
-
-        var inboxId = reader.GetGuid(0);
-        var status = reader.GetString(1);
-        MailRelayTelemetry.RecordInboxEvent(string.Equals(status, "processing", StringComparison.Ordinal) ? "claimed" : "duplicate");
-        return new MailRelayInboxClaimResult(string.Equals(status, "processing", StringComparison.Ordinal), inboxId);
     }
 
     public async Task MarkInboxProcessedAsync(Guid id, CancellationToken cancellationToken) {
@@ -464,7 +493,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await ExecuteStatusCommandAsync(sql, id, cancellationToken);
+        await ExecuteStatusCommandAsync(sql, id, cancellationToken).ConfigureAwait(false);
         MailRelayTelemetry.RecordInboxEvent("processed");
     }
 
@@ -477,12 +506,16 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("lastError", Truncate(error, 4000));
-        await command.ExecuteNonQueryAsync(cancellationToken);
-        MailRelayTelemetry.RecordInboxEvent("failed");
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("lastError", Truncate(error, 4000));
+                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                MailRelayTelemetry.RecordInboxEvent("failed");
+            }
+        }
     }
 
     public async Task MarkSentAsync(Guid id, CancellationToken cancellationToken) {
@@ -495,7 +528,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await ExecuteStatusCommandAsync(sql, id, cancellationToken);
+        await ExecuteStatusCommandAsync(sql, id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task MarkSuppressedAsync(
@@ -510,11 +543,15 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("lastError", Truncate($"Suppressed recipient(s): {string.Join(", ", recipients)}", 4000));
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("lastError", Truncate($"Suppressed recipient(s): {string.Join(", ", recipients)}", 4000));
+                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     public async Task<IReadOnlyList<MailRelaySuppressionEntry>> GetSuppressionsAsync(
@@ -534,21 +571,25 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var entries = new List<MailRelaySuppressionEntry>();
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("email", (object?)NormalizeEmail(email) ?? DBNull.Value);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        while (await reader.ReadAsync(cancellationToken)) {
-            entries.Add(new MailRelaySuppressionEntry(
-                reader.GetString(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                GetDateTimeOffset(reader, 3),
-                GetDateTimeOffset(reader, 4),
-                reader.IsDBNull(5) ? null : GetDateTimeOffset(reader, 5)));
-        }
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("email", (object?)NormalizeEmail(email) ?? DBNull.Value);
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    entries.Add(new MailRelaySuppressionEntry(
+                        reader.GetString(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        GetDateTimeOffset(reader, 3),
+                        GetDateTimeOffset(reader, 4),
+                        reader.IsDBNull(5) ? null : GetDateTimeOffset(reader, 5)));
+                }
 
-        return entries;
+                return entries;
+            }
+        }
     }
 
     public async Task UpsertSuppressionAsync(CreateSuppressionRequest request, CancellationToken cancellationToken) {
@@ -580,13 +621,17 @@ public sealed class MailRelayQueueStore(
                                expires_at_utc = excluded.expires_at_utc;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("email", normalizedEmail);
-        command.Parameters.AddWithValue("reason", request.Reason);
-        command.Parameters.AddWithValue("source", request.Source);
-        command.Parameters.AddWithValue("expiresAtUtc", (object?)request.ExpiresAtUtc ?? DBNull.Value);
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("email", normalizedEmail);
+                command.Parameters.AddWithValue("reason", request.Reason);
+                command.Parameters.AddWithValue("source", request.Source);
+                command.Parameters.AddWithValue("expiresAtUtc", (object?)request.ExpiresAtUtc ?? DBNull.Value);
+                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     public async Task<MailRelayDeliveryEventEntry> RecordDeliveryEventAsync(
@@ -623,29 +668,33 @@ public sealed class MailRelayQueueStore(
                            returning created_at_utc;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("eventType", request.EventType);
-        command.Parameters.AddWithValue("email", normalizedEmail);
-        command.Parameters.AddWithValue("source", request.Source);
-        command.Parameters.AddWithValue("classification", (object?)request.Classification ?? DBNull.Value);
-        command.Parameters.AddWithValue("providerMessageId", (object?)request.ProviderMessageId ?? DBNull.Value);
-        command.Parameters.AddWithValue("reason", (object?)request.Reason ?? DBNull.Value);
-        command.Parameters.AddWithValue("occurredAtUtc", occurredAtUtc);
-        var createdAtUtc = ToDateTimeOffset(await command.ExecuteScalarAsync(cancellationToken)
-                                            ?? throw new InvalidOperationException("Delivery event insert did not return created_at_utc."));
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("eventType", request.EventType);
+                command.Parameters.AddWithValue("email", normalizedEmail);
+                command.Parameters.AddWithValue("source", request.Source);
+                command.Parameters.AddWithValue("classification", (object?)request.Classification ?? DBNull.Value);
+                command.Parameters.AddWithValue("providerMessageId", (object?)request.ProviderMessageId ?? DBNull.Value);
+                command.Parameters.AddWithValue("reason", (object?)request.Reason ?? DBNull.Value);
+                command.Parameters.AddWithValue("occurredAtUtc", occurredAtUtc);
+                var createdAtUtc = ToDateTimeOffset(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)
+                                                    ?? throw new InvalidOperationException("Delivery event insert did not return created_at_utc."));
 
-        return new MailRelayDeliveryEventEntry(
-            id,
-            request.EventType,
-            normalizedEmail,
-            request.Source,
-            request.Classification,
-            request.ProviderMessageId,
-            request.Reason,
-            occurredAtUtc,
-            createdAtUtc);
+                return new MailRelayDeliveryEventEntry(
+                    id,
+                    request.EventType,
+                    normalizedEmail,
+                    request.Source,
+                    request.Classification,
+                    request.ProviderMessageId,
+                    request.Reason,
+                    occurredAtUtc,
+                    createdAtUtc);
+            }
+        }
     }
 
     public async Task<IReadOnlyList<MailRelayDeliveryEventEntry>> GetDeliveryEventsAsync(
@@ -668,24 +717,28 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var result = new List<MailRelayDeliveryEventEntry>();
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("email", (object?)NormalizeEmail(email) ?? DBNull.Value);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        while (await reader.ReadAsync(cancellationToken)) {
-            result.Add(new MailRelayDeliveryEventEntry(
-                reader.GetGuid(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                reader.GetString(3),
-                reader.IsDBNull(4) ? null : reader.GetString(4),
-                reader.IsDBNull(5) ? null : reader.GetString(5),
-                reader.IsDBNull(6) ? null : reader.GetString(6),
-                GetDateTimeOffset(reader, 7),
-                GetDateTimeOffset(reader, 8)));
-        }
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("email", (object?)NormalizeEmail(email) ?? DBNull.Value);
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    result.Add(new MailRelayDeliveryEventEntry(
+                        reader.GetGuid(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetString(3),
+                        reader.IsDBNull(4) ? null : reader.GetString(4),
+                        reader.IsDBNull(5) ? null : reader.GetString(5),
+                        reader.IsDBNull(6) ? null : reader.GetString(6),
+                        GetDateTimeOffset(reader, 7),
+                        GetDateTimeOffset(reader, 8)));
+                }
 
-        return result;
+                return result;
+            }
+        }
     }
 
     public async Task<bool> RemoveSuppressionAsync(string email, CancellationToken cancellationToken) {
@@ -694,10 +747,14 @@ public sealed class MailRelayQueueStore(
         var normalizedEmail = NormalizeEmail(email)
                               ?? throw new InvalidOperationException("Suppression email must be provided.");
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("email", normalizedEmail);
-        return await command.ExecuteNonQueryAsync(cancellationToken) > 0;
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("email", normalizedEmail);
+                return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) > 0;
+            }
+        }
     }
 
     public async Task<IReadOnlyList<string>> GetSuppressedRecipientsAsync(
@@ -722,15 +779,19 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var emails = new List<string>();
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("emails", normalizedRecipients);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        while (await reader.ReadAsync(cancellationToken)) {
-            emails.Add(reader.GetString(0));
-        }
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("emails", normalizedRecipients);
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    emails.Add(reader.GetString(0));
+                }
 
-        return emails;
+                return emails;
+            }
+        }
     }
 
     public async Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken) {
@@ -745,20 +806,24 @@ public sealed class MailRelayQueueStore(
                            from mailrelay_outbound_emails;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (!await reader.ReadAsync(cancellationToken)) {
-            return new MailRelayQueueStats(0, 0, 0, 0, 0, 0);
-        }
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    return new MailRelayQueueStats(0, 0, 0, 0, 0, 0);
+                }
 
-        return new MailRelayQueueStats(
-            reader.GetInt64(0),
-            reader.GetInt64(1),
-            reader.GetInt64(2),
-            reader.GetInt64(3),
-            reader.GetInt64(4),
-            reader.GetInt64(5));
+                return new MailRelayQueueStats(
+                    reader.GetInt64(0),
+                    reader.GetInt64(1),
+                    reader.GetInt64(2),
+                    reader.GetInt64(3),
+                    reader.GetInt64(4),
+                    reader.GetInt64(5));
+            }
+        }
     }
 
     public async Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) {
@@ -780,30 +845,34 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (!await reader.ReadAsync(cancellationToken)) {
-            return null;
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    return null;
+                }
+
+                var recipients = JsonSerializer.Deserialize<string[]>(reader.GetString(11), JsonOptions) ?? [];
+                var suppressedRecipients = await GetSuppressedRecipientsAsync(recipients, cancellationToken).ConfigureAwait(false);
+
+                return new MailRelayMessageDetails(
+                    reader.GetGuid(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.IsDBNull(3) ? null : reader.GetString(3),
+                    reader.GetInt32(4),
+                    reader.GetInt32(5),
+                    GetDateTimeOffset(reader, 6),
+                    GetDateTimeOffset(reader, 7),
+                    reader.IsDBNull(8) ? null : GetDateTimeOffset(reader, 8),
+                    reader.IsDBNull(9) ? null : GetDateTimeOffset(reader, 9),
+                    reader.IsDBNull(10) ? null : reader.GetString(10),
+                    suppressedRecipients);
+            }
         }
-
-        var recipients = JsonSerializer.Deserialize<string[]>(reader.GetString(11), JsonOptions) ?? [];
-        var suppressedRecipients = await GetSuppressedRecipientsAsync(recipients, cancellationToken);
-
-        return new MailRelayMessageDetails(
-            reader.GetGuid(0),
-            reader.GetString(1),
-            reader.GetString(2),
-            reader.IsDBNull(3) ? null : reader.GetString(3),
-            reader.GetInt32(4),
-            reader.GetInt32(5),
-            GetDateTimeOffset(reader, 6),
-            GetDateTimeOffset(reader, 7),
-            reader.IsDBNull(8) ? null : GetDateTimeOffset(reader, 8),
-            reader.IsDBNull(9) ? null : GetDateTimeOffset(reader, 9),
-            reader.IsDBNull(10) ? null : reader.GetString(10),
-            suppressedRecipients);
     }
 
     public async Task MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) {
@@ -820,20 +889,28 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", decision.Id.Value);
-        command.Parameters.AddWithValue("status", decision.Status);
-        command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
-        command.Parameters.AddWithValue("lastError", Truncate(decision.Error, 4000));
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", decision.Id.Value);
+                command.Parameters.AddWithValue("status", decision.Status);
+                command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
+                command.Parameters.AddWithValue("lastError", Truncate(decision.Error, 4000));
+                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     private async Task ExecuteStatusCommandAsync(string sql, Guid id, CancellationToken cancellationToken) {
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("id", id);
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        var connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     private TimeSpan ComputeBackoff(int attemptCount) {

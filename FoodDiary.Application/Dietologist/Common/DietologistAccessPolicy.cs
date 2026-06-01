@@ -12,7 +12,7 @@ public static class DietologistAccessPolicy {
         UserId clientUserId,
         CancellationToken cancellationToken) {
         var invitation = await repository.GetActiveByClientAndDietologistAsync(
-            clientUserId, dietologistUserId, cancellationToken);
+            clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {
             return Result.Failure<DietologistPermissionsModel>(Errors.Dietologist.AccessDenied);

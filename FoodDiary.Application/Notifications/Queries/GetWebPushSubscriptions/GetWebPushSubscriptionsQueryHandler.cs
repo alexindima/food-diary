@@ -23,18 +23,18 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WebPushSubscriptionModel>>(accessError);
         }
 
-        var subscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken);
+        var subscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
         var expiredSubscriptions = subscriptions
             .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= dateTimeProvider.UtcNow)
             .ToList();
 
         if (expiredSubscriptions.Count > 0) {
-            await webPushSubscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken);
+            await webPushSubscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
             subscriptions = subscriptions.Except(expiredSubscriptions).ToList();
         }
 

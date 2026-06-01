@@ -22,7 +22,7 @@ public class GetRecipeByIdQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<RecipeModel>(accessError);
         }
@@ -33,7 +33,7 @@ public class GetRecipeByIdQueryHandler(
             userId,
             includePublic: query.IncludePublic,
             includeSteps: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
             return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(query.RecipeId));

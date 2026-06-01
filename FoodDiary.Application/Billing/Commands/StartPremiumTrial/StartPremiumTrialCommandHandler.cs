@@ -27,13 +27,13 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingOverviewModel>(accessError);
         }
 
-        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
+        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(subscription)) {
             return Result.Failure<BillingOverviewModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
@@ -44,7 +44,7 @@ public sealed class StartPremiumTrialCommandHandler(
 
         var nowUtc = dateTimeProvider.UtcNow;
         user.StartPremiumTrial(nowUtc, TrialDuration);
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         var publicConfig = billingPublicConfigProvider.GetPublicConfig();
         return Result.Success(new BillingOverviewModel(

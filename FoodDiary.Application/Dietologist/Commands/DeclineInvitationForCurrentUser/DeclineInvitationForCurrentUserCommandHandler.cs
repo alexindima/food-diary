@@ -23,12 +23,12 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
@@ -36,7 +36,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
         var invitation = await invitationRepository.GetByIdAsync(
             new DietologistInvitationId(command.InvitationId),
             asTracking: true,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure(Errors.Dietologist.InvitationNotFound);
         }
@@ -50,7 +50,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
         }
 
         invitation.Decline();
-        await invitationRepository.UpdateAsync(invitation, cancellationToken);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         await DietologistInvitationClientNotifier.NotifyDeclinedAsync(
             notificationRepository,
             notificationPusher,
@@ -58,7 +58,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
             invitation.Id.Value.ToString(),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 

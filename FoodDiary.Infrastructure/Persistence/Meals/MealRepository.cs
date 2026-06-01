@@ -27,21 +27,21 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
     }
 
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
-        await context.Meals.AddAsync(meal, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.Meals.AddAsync(meal, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return meal;
     }
 
     public async Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
         context.Meals.Update(meal);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
-        var tracked = await context.Meals.FindAsync([meal.Id], cancellationToken);
+        var tracked = await context.Meals.FindAsync([meal.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Meals.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -72,7 +72,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
 
         return await query.FirstOrDefaultAsync(
             m => m.Id == id && m.UserId == userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
@@ -99,7 +99,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             filteredQuery = filteredQuery.Where(m => m.Date <= to);
         }
 
-        var totalItems = await filteredQuery.CountAsync(cancellationToken);
+        var totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         var skip = (pageNumber - 1) * pageSize;
 
         var itemsQuery = filteredQuery
@@ -118,7 +118,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         var items = await itemsQuery
             .Skip(skip)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, totalItems);
     }
@@ -145,7 +145,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
@@ -162,7 +162,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .Select(m => m.Date.Date)
             .Distinct()
             .OrderByDescending(d => d)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<int> GetTotalMealCountAsync(
@@ -170,7 +170,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         CancellationToken cancellationToken = default) {
         return await context.Meals
             .AsNoTracking()
-            .CountAsync(m => m.UserId == userId, cancellationToken);
+            .CountAsync(m => m.UserId == userId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
@@ -186,6 +186,6 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
             .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

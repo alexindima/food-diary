@@ -25,7 +25,7 @@ public class AddFavoriteRecipeCommandHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FavoriteRecipeModel>(accessError);
         }
@@ -36,20 +36,20 @@ public class AddFavoriteRecipeCommandHandler(
             userId,
             includePublic: true,
             includeSteps: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (recipe is null) {
             return Result.Failure<FavoriteRecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
         }
 
-        var existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken);
+        var existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Failure<FavoriteRecipeModel>(Errors.FavoriteRecipe.AlreadyExists);
         }
 
         var favorite = FavoriteRecipe.Create(userId, recipeId, command.Name);
-        await favoriteRecipeRepository.AddAsync(favorite, cancellationToken);
+        await favoriteRecipeRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        var saved = await favoriteRecipeRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken);
+        var saved = await favoriteRecipeRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return Result.Success(saved!.ToModel());
     }
 }

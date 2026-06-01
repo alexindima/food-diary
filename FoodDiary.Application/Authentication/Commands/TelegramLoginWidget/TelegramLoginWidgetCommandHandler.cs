@@ -38,7 +38,7 @@ public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<Telegram
             return Result.Failure<AuthenticationModel>(validationResult.Error);
         }
 
-        var user = await _userRepository.GetByTelegramUserIdAsync(validationResult.Value.UserId, cancellationToken);
+        var user = await _userRepository.GetByTelegramUserIdAsync(validationResult.Value.UserId, cancellationToken).ConfigureAwait(false);
         var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
@@ -47,7 +47,7 @@ public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<Telegram
             return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
         }
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

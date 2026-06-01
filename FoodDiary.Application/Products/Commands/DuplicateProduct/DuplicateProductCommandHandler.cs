@@ -26,7 +26,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             productId,
             userId,
             includePublic: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (original is null) {
             return Result.Failure<ProductModel>(Errors.Product.NotFound(command.ProductId));
@@ -54,7 +54,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             null,
             original.Visibility);
 
-        await productRepository.AddAsync(duplicate, cancellationToken);
+        await productRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(duplicate.ToModel(0, true));
     }

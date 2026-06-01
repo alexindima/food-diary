@@ -574,7 +574,7 @@ public sealed class BillingGatewayTests {
             LastRequest = request;
             LastRequestBody = request.Content is null
                 ? string.Empty
-                : await request.Content.ReadAsStringAsync(cancellationToken);
+                : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return _response;
         }
     }

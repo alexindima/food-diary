@@ -25,25 +25,27 @@ public sealed class InitialAdminHostedService(
             return;
         }
 
-        await using var scope = serviceProvider.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-        var normalizedEmail = settings.Email.Trim();
+        var scope = serviceProvider.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+            var normalizedEmail = settings.Email.Trim();
 
-        if (await dbContext.Users.AnyAsync(user => user.Email == normalizedEmail, cancellationToken)) {
-            logger.LogInformation("Initial admin bootstrap skipped because user {Email} already exists.", normalizedEmail);
-            return;
+            if (await dbContext.Users.AnyAsync(user => user.Email == normalizedEmail, cancellationToken).ConfigureAwait(false)) {
+                logger.LogInformation("Initial admin bootstrap skipped because user {Email} already exists.", normalizedEmail);
+                return;
+            }
+
+            var roles = await EnsureBootstrapRolesAsync(dbContext, cancellationToken).ConfigureAwait(false);
+            var admin = User.Create(normalizedEmail, passwordHasher.Hash(settings.Password));
+            admin.SetEmailConfirmed(true);
+            admin.ReplaceRoles(roles);
+
+            await dbContext.Users.AddAsync(admin, cancellationToken).ConfigureAwait(false);
+            await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+            logger.LogInformation("Initial admin user {Email} was created.", normalizedEmail);
         }
-
-        var roles = await EnsureBootstrapRolesAsync(dbContext, cancellationToken);
-        var admin = User.Create(normalizedEmail, passwordHasher.Hash(settings.Password));
-        admin.SetEmailConfirmed(true);
-        admin.ReplaceRoles(roles);
-
-        await dbContext.Users.AddAsync(admin, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        logger.LogInformation("Initial admin user {Email} was created.", normalizedEmail);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
@@ -53,13 +55,13 @@ public sealed class InitialAdminHostedService(
         CancellationToken cancellationToken) {
         var roles = await dbContext.Roles
             .Where(role => BootstrapRoles.Contains(role.Name))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var existingNames = roles.Select(role => role.Name).ToHashSet(StringComparer.Ordinal);
         foreach (var roleName in BootstrapRoles.Where(roleName => !existingNames.Contains(roleName))) {
             var role = Role.Create(roleName);
             roles.Add(role);
-            await dbContext.Roles.AddAsync(role, cancellationToken);
+            await dbContext.Roles.AddAsync(role, cancellationToken).ConfigureAwait(false);
         }
 
         return roles;

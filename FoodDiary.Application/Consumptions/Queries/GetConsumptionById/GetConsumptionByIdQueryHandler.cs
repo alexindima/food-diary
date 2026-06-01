@@ -26,7 +26,7 @@ public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
             consumptionId,
             userId,
             includeItems: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return meal is null
             ? Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(request.ConsumptionId))

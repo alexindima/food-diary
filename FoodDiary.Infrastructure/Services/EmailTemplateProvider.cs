@@ -19,25 +19,27 @@ public sealed class EmailTemplateProvider(
             return cached;
         }
 
-        await using var scope = scopeFactory.CreateAsyncScope();
-        var db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        var scope = scopeFactory.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
-        var template = await db.EmailTemplates
-            .AsNoTracking()
-            .Where(t => t.Key == normalizedKey && t.Locale == normalizedLocale && t.IsActive)
-            .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (template is null && !string.Equals(normalizedLocale, "en", StringComparison.Ordinal)) {
-            template = await db.EmailTemplates
+            var template = await db.EmailTemplates
                 .AsNoTracking()
-                .Where(t => t.Key == normalizedKey && t.Locale == "en" && t.IsActive)
+                .Where(t => t.Key == normalizedKey && t.Locale == normalizedLocale && t.IsActive)
                 .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
-                .FirstOrDefaultAsync(cancellationToken);
-        }
+                .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
-        cache.Set(cacheKey, template, CacheDuration);
-        return template;
+            if (template is null && !string.Equals(normalizedLocale, "en", StringComparison.Ordinal)) {
+                template = await db.EmailTemplates
+                    .AsNoTracking()
+                    .Where(t => t.Key == normalizedKey && t.Locale == "en" && t.IsActive)
+                    .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
+                    .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            cache.Set(cacheKey, template, CacheDuration);
+            return template;
+        }
     }
 
     private static string NormalizeLocale(string locale) {

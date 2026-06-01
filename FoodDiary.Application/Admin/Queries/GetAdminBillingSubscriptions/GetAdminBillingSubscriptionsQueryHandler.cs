@@ -20,7 +20,7 @@ public sealed class GetAdminBillingSubscriptionsQueryHandler(IAdminBillingReposi
             query.Search,
             query.FromUtc,
             query.ToUtc);
-        var pageData = await billingRepository.GetSubscriptionsAsync(filter, cancellationToken);
+        var pageData = await billingRepository.GetSubscriptionsAsync(filter, cancellationToken).ConfigureAwait(false);
         return Result.Success(ToPagedResponse(pageData.Items, filter.Page, filter.Limit, pageData.TotalItems));
     }
 

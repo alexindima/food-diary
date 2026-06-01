@@ -13,7 +13,7 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedOnUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Notification?> GetByIdAsync(
@@ -24,18 +24,18 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
             query = query.AsNoTracking();
         }
 
-        return await query.FirstOrDefaultAsync(n => n.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(n => n.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
         context.Notifications.Add(notification);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return notification;
     }
 
     public async Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) {
         context.Notifications.Update(notification);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<bool> ExistsAsync(
@@ -49,17 +49,17 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
                 n => n.UserId == userId &&
                     n.Type == type &&
                     n.ReferenceId == referenceId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await context.Notifications
-            .CountAsync(n => n.UserId == userId && !n.IsRead, cancellationToken);
+            .CountAsync(n => n.UserId == userId && !n.IsRead, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) {
         return await context.Notifications
-            .CountAsync(n => n.UserId == userId && !n.IsRead && n.Type == type, cancellationToken);
+            .CountAsync(n => n.UserId == userId && !n.IsRead && n.Type == type, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) {
@@ -69,7 +69,7 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
                 .SetProperty(n => n.IsRead, true)
                 .SetProperty(n => n.ReadAtUtc, DateTime.UtcNow)
                 .SetProperty(n => n.ModifiedOnUtc, DateTime.UtcNow),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<int> DeleteExpiredBatchAsync(
@@ -99,14 +99,14 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
                   (!n.IsRead && n.CreatedOnUtc < standardUnreadOlderThanUtc))))
             .OrderBy(n => n.CreatedOnUtc)
             .Take(batchSize)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         if (candidates.Count == 0) {
             return 0;
         }
 
         context.Notifications.RemoveRange(candidates);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return candidates.Count;
     }
 }

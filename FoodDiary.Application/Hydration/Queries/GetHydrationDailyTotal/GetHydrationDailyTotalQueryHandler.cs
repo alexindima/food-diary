@@ -23,7 +23,7 @@ public class GetHydrationDailyTotalQueryHandler(
 
         var userId = userIdResult.Value;
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<HydrationDailyModel>(accessError);
@@ -31,7 +31,7 @@ public class GetHydrationDailyTotalQueryHandler(
 
         var currentUser = user!;
         var dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
-        var total = await repository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
+        var total = await repository.GetDailyTotalAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
         var goal = currentUser.HydrationGoal ?? currentUser.WaterGoal;
 
         var response = new HydrationDailyModel(dateUtc, total, goal);

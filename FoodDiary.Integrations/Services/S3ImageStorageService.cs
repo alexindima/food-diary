@@ -67,7 +67,7 @@ public sealed class S3ImageStorageService(
         }
 
         try {
-            await storageClient.DeleteObjectAsync(_options.Bucket, objectKey, cancellationToken);
+            await storageClient.DeleteObjectAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
             IntegrationsTelemetry.RecordStorageOperation("delete", "success");
         } catch (Exception ex) {
             IntegrationsTelemetry.RecordStorageOperation("delete", "failure", ex.GetType().Name);
@@ -83,7 +83,7 @@ public sealed class S3ImageStorageService(
         }
 
         try {
-            var info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken);
+            var info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
             if (info is null) {
                 return new ImageObjectValidationResult(false, "not_found", "Image upload has not completed.");
             }

@@ -18,7 +18,7 @@ public class GetExerciseEntriesQueryHandler(IExerciseEntryRepository repository)
         }
 
         var entries = await repository.GetByDateRangeAsync(
-            userIdResult.Value, query.DateFrom, query.DateTo, cancellationToken);
+            userIdResult.Value, query.DateFrom, query.DateTo, cancellationToken).ConfigureAwait(false);
 
         var models = entries.Select(e => e.ToModel()).ToList();
         return Result.Success<IReadOnlyList<ExerciseEntryModel>>(models);

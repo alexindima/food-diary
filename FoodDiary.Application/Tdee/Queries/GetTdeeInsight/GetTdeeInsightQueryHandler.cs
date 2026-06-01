@@ -30,12 +30,12 @@ public class GetTdeeInsightQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<TdeeInsightModel>(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<TdeeInsightModel>(Errors.User.NotFound());
         }
@@ -43,9 +43,9 @@ public class GetTdeeInsightQueryHandler(
         var today = dateTimeProvider.UtcNow.Date;
         var periodStart = today.AddDays(-AnalysisPeriodDays);
 
-        var weights = await weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
-        var meals = await mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
-        var exercises = await exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken);
+        var weights = await weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
+        var meals = await mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
+        var exercises = await exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
 
         var bmr = user.CalculateBmr();
         var estimatedTdee = user.CalculateEstimatedTdee();

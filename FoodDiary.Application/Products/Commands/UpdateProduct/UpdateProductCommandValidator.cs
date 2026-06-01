@@ -156,7 +156,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
                 return;
             }
 
-            product = await _productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
+            product = await _productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
             if (product is not null) {
                 context.RootContextData[ProductContextKey] = product;
             }

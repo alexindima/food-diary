@@ -39,7 +39,7 @@ public sealed class OpenAiFoodClient(
 
         var requestModel = _options.VisionModel;
         var request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
-        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
+        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccess) {
             IntegrationsTelemetry.AiFallbackCounter.Add(
                 1,
@@ -48,7 +48,7 @@ public sealed class OpenAiFoodClient(
                 new KeyValuePair<string, object?>("fooddiary.ai.to_model", _options.VisionFallbackModel));
             requestModel = _options.VisionFallbackModel;
             var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
-            response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken);
+            response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken).ConfigureAwait(false);
         }
 
         if (!response.IsSuccess) {
@@ -79,7 +79,7 @@ public sealed class OpenAiFoodClient(
 
         var requestModel = _options.TextModel;
         var request = BuildTextParseRequest(requestModel, text, userLanguage, promptTemplate);
-        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
+        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccess) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
         }
@@ -107,7 +107,7 @@ public sealed class OpenAiFoodClient(
 
         var requestModel = _options.TextModel;
         var request = BuildNutritionRequest(requestModel, items, promptTemplate);
-        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
+        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccess) {
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(response.Error);
         }
@@ -138,10 +138,10 @@ public sealed class OpenAiFoodClient(
 
             HttpResponseMessage response;
             try {
-                response = await httpClient.SendAsync(request, cancellationToken);
+                response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             } catch (HttpRequestException ex) when (attempt < MaxTransientRetries) {
                 _logger.LogWarning(ex, "OpenAI transport error on attempt {Attempt}. Retrying.", attempt + 1);
-                await Task.Delay(RetryDelays[attempt], cancellationToken);
+                await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
                 continue;
             } catch (HttpRequestException ex) {
                 _logger.LogWarning(ex, "OpenAI request failed due to transport error.");
@@ -149,7 +149,7 @@ public sealed class OpenAiFoodClient(
                 return (false, null, Errors.Ai.OpenAiFailed($"OpenAI transport error: {ex.Message}"));
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested && attempt < MaxTransientRetries) {
                 _logger.LogWarning(ex, "OpenAI request timed out on attempt {Attempt}. Retrying.", attempt + 1);
-                await Task.Delay(RetryDelays[attempt], cancellationToken);
+                await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
                 continue;
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
                 _logger.LogWarning(ex, "OpenAI request timed out.");
@@ -158,7 +158,7 @@ public sealed class OpenAiFoodClient(
             }
 
             using var _ = response;
-            var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
+            var responseBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode) {
                 var statusCode = (int)response.StatusCode;
@@ -173,7 +173,7 @@ public sealed class OpenAiFoodClient(
                         statusCode,
                         requestId ?? "n/a",
                         SummarizeErrorBody(responseBody));
-                    await Task.Delay(RetryDelays[attempt], cancellationToken);
+                    await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
                     continue;
                 }
 

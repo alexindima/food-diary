@@ -22,7 +22,7 @@ public class DeleteProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -33,16 +33,16 @@ public class DeleteProductCommandHandler(
             productId,
             userId,
             includePublic: false,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
 
         var assetId = product.ImageAssetId;
-        await productRepository.DeleteAsync(product, cancellationToken);
+        await productRepository.DeleteAsync(product, cancellationToken).ConfigureAwait(false);
 
         if (assetId.HasValue) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
         return Result.Success();

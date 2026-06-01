@@ -24,23 +24,23 @@ public class GetGamificationQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<GamificationModel>(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
 
         var today = dateTimeProvider.UtcNow.Date;
         var streakFrom = today.AddDays(-365);
 
-        var mealDates = await mealRepository.GetDistinctMealDatesAsync(userId, streakFrom, today, cancellationToken);
+        var mealDates = await mealRepository.GetDistinctMealDatesAsync(userId, streakFrom, today, cancellationToken).ConfigureAwait(false);
         var (currentStreak, longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
 
-        var totalMeals = await mealRepository.GetTotalMealCountAsync(userId, cancellationToken);
+        var totalMeals = await mealRepository.GetTotalMealCountAsync(userId, cancellationToken).ConfigureAwait(false);
 
         var weekStart = today.AddDays(-6);
-        var weekMeals = await mealRepository.GetByPeriodAsync(userId, weekStart, today, cancellationToken);
+        var weekMeals = await mealRepository.GetByPeriodAsync(userId, weekStart, today, cancellationToken).ConfigureAwait(false);
         var weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(
             weekMeals, date => user?.GetCalorieTargetForDate(date), today);
 

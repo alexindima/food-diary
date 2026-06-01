@@ -17,7 +17,7 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<GoalsModel>(accessError);
@@ -47,7 +47,7 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
                 Errors.Validation.Invalid(ex.ParamName ?? nameof(UpdateGoalsCommand), ex.Message));
         }
 
-        await userRepository.UpdateAsync(currentUser, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(currentUser.ToGoalsModel());
     }

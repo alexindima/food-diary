@@ -46,7 +46,7 @@ public sealed class YooKassaBillingGateway(
                     ["plan"] = request.Plan,
                 }),
             null,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(paymentResponse.Error);
         }
@@ -99,7 +99,7 @@ public sealed class YooKassaBillingGateway(
                     ["renewal"] = "true",
                 }),
             request.IdempotenceKey,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingRecurringPaymentModel>(paymentResponse.Error);
         }
@@ -153,7 +153,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : request.
             return Result.Success<BillingWebhookEventModel?>(null);
         }
 
-        var paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken);
+        var paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken).ConfigureAwait(false);
         if (paymentResult.IsFailure) {
             return Result.Failure<BillingWebhookEventModel?>(paymentResult.Error);
         }
@@ -196,7 +196,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {
         ConfigureClient();
-        return await SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", null, null, cancellationToken);
+        return await SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", null, null, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<Result<TResponse>> SendAsync<TResponse>(
@@ -214,15 +214,15 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
             request.Content = JsonContent.Create(body, options: JsonOptions);
         }
 
-        using var response = await httpClient.SendAsync(request, cancellationToken);
+        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode) {
-            var error = await response.Content.ReadAsStringAsync(cancellationToken);
+            var error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                 Provider,
                 $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}".Trim()));
         }
 
-        var result = await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions, cancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
         if (result is null) {
             return Result.Failure<TResponse>(
                 Errors.Billing.ProviderOperationFailed(Provider, "YooKassa returned an empty response."));

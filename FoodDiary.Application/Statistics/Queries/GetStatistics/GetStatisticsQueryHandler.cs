@@ -28,7 +28,7 @@ public class GetStatisticsQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(accessError);
         }
@@ -42,7 +42,7 @@ public class GetStatisticsQueryHandler(
             userId,
             normalizedFrom,
             normalizedTo,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var buckets = BuildBuckets(normalizedFrom, normalizedTo, quantizationDays);
         var responses = new List<AggregatedStatisticsModel>(buckets.Count);

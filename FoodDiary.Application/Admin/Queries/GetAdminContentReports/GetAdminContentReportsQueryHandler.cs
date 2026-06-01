@@ -19,7 +19,7 @@ public sealed class GetAdminContentReportsQueryHandler(IContentReportRepository 
             ? parsed
             : null;
 
-        var (items, total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken);
+        var (items, total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
 
         var models = items.Select(r => new AdminContentReportModel(
             r.Id.Value,

@@ -8,8 +8,8 @@ namespace FoodDiary.Infrastructure.Persistence.Ai;
 
 public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepository {
     public async Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default) {
-        await context.AiUsages.AddAsync(usage, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.AiUsages.AddAsync(usage, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<AiUsageSummary> GetSummaryAsync(
@@ -27,7 +27,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 InputTokens = group.Sum(x => x.InputTokens),
                 OutputTokens = group.Sum(x => x.OutputTokens)
             })
-            .SingleOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
         var byDay = await query
             .GroupBy(x => x.CreatedOnUtc.Date)
@@ -38,7 +38,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 Output = group.Sum(x => x.OutputTokens)
             })
             .OrderBy(x => x.Date)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var byOperationRaw = await query
             .GroupBy(x => x.Operation)
@@ -49,7 +49,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 Output = group.Sum(x => x.OutputTokens)
             })
             .OrderByDescending(x => x.Total)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var byModelRaw = await query
             .GroupBy(x => x.Model)
@@ -60,7 +60,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 Output = group.Sum(x => x.OutputTokens)
             })
             .OrderByDescending(x => x.Total)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var byUserRaw = await query
             .Join(
@@ -77,7 +77,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 Output = group.Sum(x => x.usage.OutputTokens)
             })
             .OrderByDescending(x => x.Total)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var daily = byDay
             .Select(x => new AiUsageDailySummary(
@@ -121,7 +121,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .Select(group => new AiUsageTotals(
                 group.Sum(x => (long)x.InputTokens),
                 group.Sum(x => (long)x.OutputTokens)))
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
         return totals ?? new AiUsageTotals(0, 0);
     }

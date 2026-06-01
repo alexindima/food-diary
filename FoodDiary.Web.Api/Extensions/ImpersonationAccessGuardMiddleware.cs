@@ -13,7 +13,7 @@ public sealed class ImpersonationAccessGuardMiddleware(
         var endpoint = context.GetEndpoint();
         if (endpoint?.Metadata.GetMetadata<BlockImpersonatedAccessAttribute>() is null ||
             !IsImpersonated(context.User)) {
-            await next(context);
+            await next(context).ConfigureAwait(false);
             return;
         }
 
@@ -28,7 +28,7 @@ public sealed class ImpersonationAccessGuardMiddleware(
         context.Response.StatusCode = StatusCodes.Status403Forbidden;
         await context.Response.WriteAsJsonAsync(
             new ApiErrorHttpResponse(error.Code, error.Message, context.TraceIdentifier),
-            context.RequestAborted);
+            context.RequestAborted).ConfigureAwait(false);
     }
 
     private static bool IsImpersonated(ClaimsPrincipal user) =>

@@ -24,13 +24,13 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
             userId,
             includeItems: false,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (meal is null) {
             return Result.Failure(Errors.Consumption.NotFound(command.ConsumptionId));
         }
 
-        await mealRepository.DeleteAsync(meal, cancellationToken);
+        await mealRepository.DeleteAsync(meal, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

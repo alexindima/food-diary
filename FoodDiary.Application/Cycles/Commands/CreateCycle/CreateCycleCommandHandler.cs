@@ -23,7 +23,7 @@ public class CreateCycleCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CycleModel>(accessError);
         }
@@ -35,7 +35,7 @@ public class CreateCycleCommandHandler(
             command.LutealLength,
             command.Notes);
 
-        cycle = await cycleRepository.AddAsync(cycle, cancellationToken);
+        cycle = await cycleRepository.AddAsync(cycle, cancellationToken).ConfigureAwait(false);
 
         var predictions = CyclePredictionService.CalculatePredictions(cycle);
         return Result.Success(cycle.ToModel(predictions));

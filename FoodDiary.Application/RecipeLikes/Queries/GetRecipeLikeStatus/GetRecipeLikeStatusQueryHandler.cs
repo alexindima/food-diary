@@ -19,9 +19,9 @@ public class GetRecipeLikeStatusQueryHandler(IRecipeLikeRepository likeRepositor
 
         var recipeId = (RecipeId)query.RecipeId;
         var existingLike = await likeRepository.GetByUserAndRecipeAsync(
-            userIdResult.Value, recipeId, cancellationToken);
+            userIdResult.Value, recipeId, cancellationToken).ConfigureAwait(false);
 
-        var totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken);
+        var totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
         return Result.Success(new RecipeLikeStatusModel(existingLike is not null, totalLikes));
     }
 }

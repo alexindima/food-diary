@@ -16,7 +16,7 @@ public class GetUserGoalsQueryHandler(IUserRepository userRepository) : IQueryHa
         }
 
         var userId = userIdResult.Value;
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return accessError is not null
             ? Result.Failure<GoalsModel>(accessError)

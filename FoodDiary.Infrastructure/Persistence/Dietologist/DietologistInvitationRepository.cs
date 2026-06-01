@@ -20,7 +20,7 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
         return await query
             .Include(i => i.ClientUser)
             .Include(i => i.DietologistUser)
-            .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(i => i.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<DietologistInvitation?> GetByClientAndStatusAsync(
@@ -36,14 +36,14 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
 
         return await query
             .Include(i => i.DietologistUser)
-            .FirstOrDefaultAsync(i => i.ClientUserId == clientUserId && i.Status == status, cancellationToken);
+            .FirstOrDefaultAsync(i => i.ClientUserId == clientUserId && i.Status == status, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<DietologistInvitation?> GetActiveByClientAsync(
         UserId clientUserId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        return await GetByClientAndStatusAsync(clientUserId, DietologistInvitationStatus.Accepted, asTracking, cancellationToken);
+        return await GetByClientAndStatusAsync(clientUserId, DietologistInvitationStatus.Accepted, asTracking, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<DietologistInvitation?> GetActiveByClientAndDietologistAsync(
@@ -58,7 +58,7 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
                 i.ClientUserId == clientUserId
                 && i.DietologistUserId == dietologistUserId
                 && i.Status == DietologistInvitationStatus.Accepted,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<DietologistInvitation>> GetActiveByDietologistAsync(
@@ -69,7 +69,7 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
             .Include(i => i.ClientUser)
             .Where(i => i.DietologistUserId == dietologistUserId && i.Status == DietologistInvitationStatus.Accepted)
             .OrderByDescending(i => i.AcceptedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<bool> HasActiveRelationshipAsync(
@@ -81,13 +81,13 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
                 i.ClientUserId == clientUserId
                 && i.DietologistUserId == dietologistUserId
                 && i.Status == DietologistInvitationStatus.Accepted,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<DietologistInvitation> AddAsync(
         DietologistInvitation invitation, CancellationToken cancellationToken = default) {
         context.DietologistInvitations.Add(invitation);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return invitation;
     }
 
@@ -107,6 +107,6 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
             }
         }
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

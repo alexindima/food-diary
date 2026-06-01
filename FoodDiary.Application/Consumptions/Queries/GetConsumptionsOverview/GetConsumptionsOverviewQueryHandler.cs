@@ -26,7 +26,7 @@ public sealed class GetConsumptionsOverviewQueryHandler(
         }
 
         var userId = new UserId(request.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ConsumptionOverviewModel>(accessError);
         }
@@ -47,9 +47,9 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             sanitizedLimit,
             normalizedFrom,
             normalizedTo,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
-        var favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken);
+        var favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = favorites
             .Take(favoriteLimit)
             .Select(favorite => favorite.ToModel())
@@ -59,7 +59,7 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             .Select(meal => meal.Id)
             .Distinct()
             .ToArray();
-        var favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken);
+        var favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
 
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)sanitizedLimit);
         var allConsumptions = new PagedResponse<ConsumptionModel>(

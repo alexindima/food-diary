@@ -20,7 +20,7 @@ internal sealed partial class DiaryPdfGenerator {
             .Select(meal => LoadMealImageEntryAsync(meal, cache, gate, cancellationToken))
             .ToArray();
 
-        var entries = await Task.WhenAll(tasks);
+        var entries = await Task.WhenAll(tasks).ConfigureAwait(false);
 
         return entries
             .Where(entry => entry.Image is not null)
@@ -32,7 +32,7 @@ internal sealed partial class DiaryPdfGenerator {
         Dictionary<string, Lazy<Task<byte[]?>>> cache,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
-        var image = await LoadMealImageForReportAsync(meal, cache, gate, cancellationToken);
+        var image = await LoadMealImageForReportAsync(meal, cache, gate, cancellationToken).ConfigureAwait(false);
         return new MealImageEntry(meal.Id, image);
     }
 
@@ -63,13 +63,13 @@ internal sealed partial class DiaryPdfGenerator {
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
         if (!string.IsNullOrWhiteSpace(meal.ImageUrl)) {
-            return await LoadCachedMealImageAsync(meal.ImageUrl, cache, gate, cancellationToken);
+            return await LoadCachedMealImageAsync(meal.ImageUrl, cache, gate, cancellationToken).ConfigureAwait(false);
         }
 
         var compositionImages = await Task.WhenAll(
             GetCompositionImageUrls(meal)
                 .Take(MaxIngredientImagesPerCollage)
-                .Select(imageUrl => LoadCachedMealImageAsync(imageUrl, cache, gate, cancellationToken)));
+                .Select(imageUrl => LoadCachedMealImageAsync(imageUrl, cache, gate, cancellationToken))).ConfigureAwait(false);
 
         return CreateMealImageCollage(compositionImages.Where(image => image is not null).Cast<byte[]>().ToArray());
     }
@@ -89,16 +89,16 @@ internal sealed partial class DiaryPdfGenerator {
             }
         }
 
-        return await cached.Value;
+        return await cached.Value.ConfigureAwait(false);
     }
 
     private async Task<byte[]?> LoadMealImageWithGateAsync(
         string imageUrl,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
-        await gate.WaitAsync(cancellationToken);
+        await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try {
-            return await LoadMealImageAsync(imageUrl, cancellationToken);
+            return await LoadMealImageAsync(imageUrl, cancellationToken).ConfigureAwait(false);
         } finally {
             gate.Release();
         }
@@ -111,28 +111,30 @@ internal sealed partial class DiaryPdfGenerator {
             }
 
             if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out var uri) ||
-                !await IsAllowedRemoteImageUriAsync(uri, cancellationToken)) {
+                !await IsAllowedRemoteImageUriAsync(uri, cancellationToken).ConfigureAwait(false)) {
                 return null;
             }
 
-            using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxMealImageBytes) {
                 return null;
             }
 
-            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-            using var memory = new MemoryStream();
-            var buffer = new byte[81920];
-            int read;
+            var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            await using (stream.ConfigureAwait(false)) {
+                using var memory = new MemoryStream();
+                var buffer = new byte[81920];
+                int read;
 
-            while ((read = await stream.ReadAsync(buffer, cancellationToken)) > 0) {
-                memory.Write(buffer, 0, read);
-                if (memory.Length > MaxMealImageBytes) {
-                    return null;
+                while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {
+                    memory.Write(buffer, 0, read);
+                    if (memory.Length > MaxMealImageBytes) {
+                        return null;
+                    }
                 }
-            }
 
-            return memory.Length == 0 ? null : PrepareMealImage(memory.ToArray());
+                return memory.Length == 0 ? null : PrepareMealImage(memory.ToArray());
+            }
         } catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or TaskCanceledException or FormatException or IOException or SocketException) {
             return null;
         }
@@ -185,7 +187,7 @@ internal sealed partial class DiaryPdfGenerator {
             return IsPublicAddress(literalAddress);
         }
 
-        var addresses = await Dns.GetHostAddressesAsync(host, cancellationToken);
+        var addresses = await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
         return addresses.Length > 0 && addresses.All(IsPublicAddress);
     }
 

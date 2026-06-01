@@ -231,7 +231,7 @@ public sealed class MediatorTests {
             RequestHandlerDelegate<TResponse> next,
             CancellationToken cancellationToken) {
             BehaviorLog.Entries.Add("outer-before");
-            var response = await next(cancellationToken);
+            var response = await next(cancellationToken).ConfigureAwait(false);
             BehaviorLog.Entries.Add("outer-after");
             return response;
         }
@@ -244,7 +244,7 @@ public sealed class MediatorTests {
             RequestHandlerDelegate<TResponse> next,
             CancellationToken cancellationToken) {
             BehaviorLog.Entries.Add("inner-before");
-            var response = await next(cancellationToken);
+            var response = await next(cancellationToken).ConfigureAwait(false);
             BehaviorLog.Entries.Add("inner-after");
             return response;
         }
@@ -270,7 +270,7 @@ public sealed class MediatorTests {
             RequestHandlerDelegate<TResponse> next,
             CancellationToken cancellationToken) {
             BehaviorLog.Entries.Add("command-behavior-before");
-            var response = await next(cancellationToken);
+            var response = await next(cancellationToken).ConfigureAwait(false);
             BehaviorLog.Entries.Add("command-behavior-after");
             return response;
         }

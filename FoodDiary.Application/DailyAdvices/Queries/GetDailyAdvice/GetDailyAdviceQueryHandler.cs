@@ -20,18 +20,18 @@ public class GetDailyAdviceQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<DailyAdviceModel>(accessError);
         }
 
         var locale = DailyAdviceSelector.NormalizeLocale(query.Locale);
-        var advices = await adviceRepository.GetByLocaleAsync(locale, cancellationToken);
+        var advices = await adviceRepository.GetByLocaleAsync(locale, cancellationToken).ConfigureAwait(false);
 
         if (advices.Count == 0 && !string.Equals(locale, "en", StringComparison.OrdinalIgnoreCase)) {
             locale = "en";
-            advices = await adviceRepository.GetByLocaleAsync(locale, cancellationToken);
+            advices = await adviceRepository.GetByLocaleAsync(locale, cancellationToken).ConfigureAwait(false);
         }
 
         if (advices.Count == 0) {

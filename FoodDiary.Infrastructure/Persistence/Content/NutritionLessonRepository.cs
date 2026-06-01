@@ -22,7 +22,7 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         return await query
             .OrderBy(l => l.Category)
             .ThenBy(l => l.SortOrder)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<NutritionLesson>> GetAllAsync(
@@ -33,7 +33,7 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
             .ThenBy(l => l.Category)
             .ThenBy(l => l.SortOrder)
             .ThenBy(l => l.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<NutritionLesson?> GetByIdAsync(
@@ -41,14 +41,14 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         CancellationToken cancellationToken = default) {
         return await context.Set<NutritionLesson>()
             .AsNoTracking()
-            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<NutritionLesson?> GetByIdTrackingAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {
         return await context.Set<NutritionLesson>()
-            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(
@@ -57,7 +57,7 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         return await context.Set<UserLessonProgress>()
             .AsNoTracking()
             .Where(p => p.UserId == userId)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<UserLessonProgress?> GetUserProgressForLessonAsync(
@@ -66,14 +66,14 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         CancellationToken cancellationToken = default) {
         return await context.Set<UserLessonProgress>()
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken);
+            .FirstOrDefaultAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<UserLessonProgress> AddProgressAsync(
         UserLessonProgress progress,
         CancellationToken cancellationToken = default) {
         context.Set<UserLessonProgress>().Add(progress);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return progress;
     }
 
@@ -81,26 +81,26 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
         context.Set<NutritionLesson>().Add(lesson);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task AddRangeAsync(
         IReadOnlyCollection<NutritionLesson> lessons,
         CancellationToken cancellationToken = default) {
         context.Set<NutritionLesson>().AddRange(lessons);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
         context.Set<NutritionLesson>().Remove(lesson);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

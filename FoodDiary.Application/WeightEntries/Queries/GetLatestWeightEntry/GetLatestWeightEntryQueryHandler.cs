@@ -22,7 +22,7 @@ public class GetLatestWeightEntryQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeightEntryModel?>(accessError);
         }
@@ -33,7 +33,7 @@ public class GetLatestWeightEntryQueryHandler(
             dateTo: null,
             limit: 1,
             descending: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var latest = entries.FirstOrDefault();
         return Result.Success(latest?.ToModel());

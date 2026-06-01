@@ -9,14 +9,14 @@ public sealed class DismissContentReportCommandHandler(IContentReportRepository 
     : ICommandHandler<DismissContentReportCommand, Result> {
     public async Task<Result> Handle(DismissContentReportCommand command, CancellationToken cancellationToken) {
         var reportId = (ContentReportId)command.ReportId;
-        var report = await reportRepository.GetByIdAsync(reportId, asTracking: true, cancellationToken);
+        var report = await reportRepository.GetByIdAsync(reportId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (report is null) {
             return Result.Failure(Errors.ContentReport.NotFound(command.ReportId));
         }
 
         report.MarkDismissed(command.AdminNote);
-        await reportRepository.UpdateAsync(report, cancellationToken);
+        await reportRepository.UpdateAsync(report, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

@@ -7,14 +7,14 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
     public async Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) {
-        await context.Cycles.AddAsync(cycle, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.Cycles.AddAsync(cycle, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return cycle;
     }
 
     public async Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default) {
         context.Cycles.Update(cycle);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Cycle?> GetByIdAsync(
@@ -26,7 +26,7 @@ public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
         var query = BuildQuery(includeDays, asTracking)
             .Where(cycle => cycle.Id == id && cycle.UserId == userId);
 
-        return await query.FirstOrDefaultAsync(cancellationToken);
+        return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Cycle?> GetLatestAsync(
@@ -38,7 +38,7 @@ public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
             .OrderByDescending(cycle => cycle.StartDate)
             .ThenByDescending(cycle => cycle.CreatedOnUtc);
 
-        return await query.FirstOrDefaultAsync(cancellationToken);
+        return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<Cycle>> GetByUserAsync(
@@ -49,7 +49,7 @@ public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
             .Where(cycle => cycle.UserId == userId)
             .OrderByDescending(cycle => cycle.StartDate);
 
-        return await query.ToListAsync(cancellationToken);
+        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private IQueryable<Cycle> BuildQuery(bool includeDays, bool asTracking) {

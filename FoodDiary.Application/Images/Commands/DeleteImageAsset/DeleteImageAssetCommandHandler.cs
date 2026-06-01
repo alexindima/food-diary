@@ -20,7 +20,7 @@ public sealed class DeleteImageAssetCommandHandler(
         var userId = new UserId(request.UserId);
         var assetId = new ImageAssetId(request.AssetId);
 
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
+        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return Result.Failure(Errors.Image.NotFound(request.AssetId));
         }
@@ -29,7 +29,7 @@ public sealed class DeleteImageAssetCommandHandler(
             return Result.Failure(Errors.Image.Forbidden());
         }
 
-        var cleanupResult = await cleanupService.DeleteIfUnusedAsync(assetId, cancellationToken);
+        var cleanupResult = await cleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (cleanupResult.Deleted) {
             return Result.Success();
         }

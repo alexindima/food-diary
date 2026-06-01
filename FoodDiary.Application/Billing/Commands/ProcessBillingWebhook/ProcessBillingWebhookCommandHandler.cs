@@ -31,7 +31,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         var webhookResult = await billingProvider.ParseWebhookEventAsync(
             command.Payload,
             command.SignatureHeader,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (webhookResult.IsFailure) {
             return Result.Failure(webhookResult.Error);
         }
@@ -46,20 +46,20 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return Result.Failure(webhookEventValidationError);
         }
 
-        if (await billingWebhookEventRepository.ExistsAsync(billingProvider.Provider, webhookEvent.EventId, cancellationToken)) {
+        if (await billingWebhookEventRepository.ExistsAsync(billingProvider.Provider, webhookEvent.EventId, cancellationToken).ConfigureAwait(false)) {
             return Result.Success();
         }
 
         var subscription = await ResolveSubscriptionAsync(
             billingProvider.Provider,
             webhookEvent,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (subscription is not null &&
             string.Equals(subscription.LastWebhookEventId, webhookEvent.EventId, StringComparison.Ordinal)) {
             return Result.Success();
         }
 
-        var user = await ResolveUserAsync(subscription, webhookEvent.UserId, cancellationToken);
+        var user = await ResolveUserAsync(subscription, webhookEvent.UserId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.Billing.WebhookValidationFailed("Webhook user could not be resolved."));
         }
@@ -73,7 +73,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
                     webhookEvent.ExternalSubscriptionId ?? webhookEvent.ExternalPaymentMethodId,
                     dateTimeProvider.UtcNow,
                 command.Payload);
-                await billingWebhookEventRepository.AddAsync(processedWebhookEvent, ct);
+                await billingWebhookEventRepository.AddAsync(processedWebhookEvent, ct).ConfigureAwait(false);
 
                 if (subscription is null) {
                     subscription = BillingSubscription.CreatePending(
@@ -98,7 +98,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
                         webhookEvent.EventId,
                         dateTimeProvider.UtcNow,
                         webhookEvent.ProviderMetadataJson);
-                    await billingSubscriptionRepository.AddAsync(subscription, ct);
+                    await billingSubscriptionRepository.AddAsync(subscription, ct).ConfigureAwait(false);
                 } else {
                     subscription.ApplyProviderSnapshot(
                         billingProvider.Provider,
@@ -116,16 +116,16 @@ public sealed class ProcessBillingWebhookCommandHandler(
                         webhookEvent.EventId,
                         dateTimeProvider.UtcNow,
                         webhookEvent.ProviderMetadataJson);
-                    await billingSubscriptionRepository.UpdateAsync(subscription, ct);
+                    await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
                 }
 
-                await AddWebhookPaymentIfPresentAsync(subscription, billingProvider.Provider, webhookEvent, ct);
+                await AddWebhookPaymentIfPresentAsync(subscription, billingProvider.Provider, webhookEvent, ct).ConfigureAwait(false);
 
                 var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
                     webhookEvent.Status,
                     webhookEvent.CurrentPeriodEndUtc);
-                await SyncPremiumRoleAsync(user, subscription, shouldHavePremium, ct);
-            }, cancellationToken);
+                await SyncPremiumRoleAsync(user, subscription, shouldHavePremium, ct).ConfigureAwait(false);
+            }, cancellationToken).ConfigureAwait(false);
         } catch (BillingWebhookEventAlreadyProcessedException) {
             return Result.Success();
         } catch (BillingPaymentAlreadyExistsException) {
@@ -170,7 +170,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         var existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
             provider,
             externalPaymentId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (existingPayment is not null) {
             return;
         }
@@ -193,7 +193,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             webhookEvent.CurrentPeriodEndUtc,
             webhookEvent.EventId,
             webhookEvent.ProviderMetadataJson);
-        await billingPaymentRepository.AddAsync(payment, cancellationToken);
+        await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<BillingSubscription?> ResolveSubscriptionAsync(
@@ -204,7 +204,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             var bySubscription = await billingSubscriptionRepository.GetByExternalSubscriptionIdAsync(
                 provider,
                 webhookEvent.ExternalSubscriptionId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             if (bySubscription is not null) {
                 return bySubscription;
             }
@@ -214,7 +214,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             var byPaymentMethod = await billingSubscriptionRepository.GetByExternalPaymentMethodIdAsync(
                 provider,
                 webhookEvent.ExternalPaymentMethodId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             if (byPaymentMethod is not null) {
                 return byPaymentMethod;
             }
@@ -224,7 +224,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
                 provider,
                 webhookEvent.ExternalCustomerId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         return null;
@@ -235,14 +235,14 @@ public sealed class ProcessBillingWebhookCommandHandler(
         Guid? webhookUserId,
         CancellationToken cancellationToken) {
         if (subscription is not null) {
-            return await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken);
+            return await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
         }
 
         if (!webhookUserId.HasValue || webhookUserId == Guid.Empty) {
             return null;
         }
 
-        return await userRepository.GetByIdIncludingDeletedAsync(new UserId(webhookUserId.Value), cancellationToken);
+        return await userRepository.GetByIdIncludingDeletedAsync(new UserId(webhookUserId.Value), cancellationToken).ConfigureAwait(false);
     }
 
     private async Task SyncPremiumRoleAsync(
@@ -252,13 +252,13 @@ public sealed class ProcessBillingWebhookCommandHandler(
         CancellationToken cancellationToken) {
         var canAccess = CurrentUserAccessPolicy.EnsureCanAccess(user) is null;
         if (canAccess) {
-            await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken);
+            await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken).ConfigureAwait(false);
             return;
         }
 
         if (subscription.PremiumRoleManagedByBilling) {
             subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.UtcNow);
-            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
+            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -13,24 +13,24 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(false, "invalid");
         }
 
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
+        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return new DeleteImageAssetResult(false, "not_found");
         }
 
-        var inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken);
+        var inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (inUse) {
             return new DeleteImageAssetResult(false, "in_use");
         }
 
         try {
-            await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken);
+            await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
         } catch (Exception ex) {
             logger.LogError(ex, "Failed to delete image object {ObjectKey}", asset.ObjectKey);
             return new DeleteImageAssetResult(false, "storage_error");
         }
 
-        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
+        await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
         return new DeleteImageAssetResult(true);
     }
 
@@ -44,13 +44,13 @@ public sealed class ImageAssetCleanupService(
             _ => olderThanUtc.ToUniversalTime()
         };
 
-        var candidates = await imageAssetRepository.GetUnusedOlderThanAsync(normalizedOlderThanUtc, batchSize, cancellationToken);
+        var candidates = await imageAssetRepository.GetUnusedOlderThanAsync(normalizedOlderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
         var removed = 0;
 
         foreach (var asset in candidates) {
             try {
-                await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken);
-                await imageAssetRepository.DeleteAsync(asset, cancellationToken);
+                await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
+                await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
                 removed++;
             } catch (Exception ex) {
                 logger.LogWarning(ex, "Failed to remove orphan image asset {AssetId}", asset.Id);

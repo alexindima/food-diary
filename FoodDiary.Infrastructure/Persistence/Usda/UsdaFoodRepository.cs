@@ -15,7 +15,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             .OrderBy(f => f.Description.Length)
             .ThenBy(f => f.Description)
             .Take(limit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<UsdaFood?> GetByFdcIdAsync(
@@ -23,7 +23,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
         CancellationToken cancellationToken = default) {
         return await dbContext.UsdaFoods
             .AsNoTracking()
-            .FirstOrDefaultAsync(f => f.FdcId == fdcId, cancellationToken);
+            .FirstOrDefaultAsync(f => f.FdcId == fdcId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<UsdaFoodNutrient>> GetNutrientsAsync(
@@ -34,7 +34,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             .Include(n => n.Nutrient)
             .Where(n => n.FdcId == fdcId)
             .OrderBy(n => n.Nutrient.Name)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<UsdaFoodPortion>> GetPortionsAsync(
@@ -44,7 +44,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             .AsNoTracking()
             .Where(p => p.FdcId == fdcId)
             .OrderBy(p => p.PortionDescription)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>> GetNutrientsByFdcIdsAsync(
@@ -59,7 +59,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             .AsNoTracking()
             .Include(n => n.Nutrient)
             .Where(n => fdcIdList.Contains(n.FdcId))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return nutrients
             .GroupBy(n => n.FdcId)
@@ -75,6 +75,6 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
         return await dbContext.DailyReferenceValues
             .AsNoTracking()
             .Where(d => d.AgeGroup == ageGroup && d.Gender == gender)
-            .ToDictionaryAsync(d => d.NutrientId, cancellationToken);
+            .ToDictionaryAsync(d => d.NutrientId, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -7,25 +7,25 @@ namespace FoodDiary.Infrastructure.Persistence.RecipeComments;
 
 internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRecipeCommentRepository {
     public async Task<RecipeComment> AddAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
-        await context.RecipeComments.AddAsync(comment, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.RecipeComments.AddAsync(comment, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return comment;
     }
 
     public async Task<RecipeComment?> GetByIdAsync(
         RecipeCommentId id, bool asTracking = false, CancellationToken cancellationToken = default) {
         var query = asTracking ? context.RecipeComments.AsTracking() : context.RecipeComments.AsNoTracking();
-        return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
         context.RecipeComments.Update(comment);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
         context.RecipeComments.Remove(comment);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<RecipeComment> Items, int Total)> GetPagedByRecipeAsync(
@@ -35,13 +35,13 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
             .Include(c => c.User)
             .Where(c => c.RecipeId == recipeId);
 
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
 
         var items = await query
             .OrderByDescending(c => c.CreatedOnUtc)
             .Skip((page - 1) * limit)
             .Take(limit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
     }

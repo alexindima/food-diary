@@ -35,14 +35,14 @@ public sealed class GetRecipesOverviewQueryHandler(
             pageNumber,
             pageSize,
             query.Search,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var allRecipes = items.Select(item => new {
             item.Recipe,
             item.UsageCount,
             IsOwner = item.Recipe.UserId == userId
         }).ToList();
-        var allFavorites = await favoriteRecipeRepository.GetAllAsync(userId, cancellationToken);
+        var allFavorites = await favoriteRecipeRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = allFavorites
             .Take(favoriteLimit)
             .Select(favorite => favorite.ToModel())
@@ -54,14 +54,14 @@ public sealed class GetRecipesOverviewQueryHandler(
 
         var recentResponses = Array.Empty<RecipeModel>();
         if (string.IsNullOrWhiteSpace(query.Search)) {
-            var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken);
+            var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
             if (recents.Count > 0) {
                 var recentIds = recents.Select(x => x.RecipeId).ToList();
                 var recipesById = await recipeRepository.GetByIdsWithUsageAsync(
                     recentIds,
                     userId,
                     query.IncludePublic,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
 
                 recentItems = recentIds
                     .Where(recipesById.ContainsKey)

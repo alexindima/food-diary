@@ -38,8 +38,8 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
                 .WithPassword("guest")
                 .Build();
 
-            await _postgres.StartAsync();
-            await _rabbitMq.StartAsync();
+            await _postgres.StartAsync().ConfigureAwait(false);
+            await _rabbitMq.StartAsync().ConfigureAwait(false);
         } catch (Exception ex) {
             _skipReason = $"Docker test containers are unavailable: {ex.Message}";
         }
@@ -47,11 +47,11 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
 
     public async Task DisposeAsync() {
         if (_rabbitMq is not null) {
-            await _rabbitMq.DisposeAsync().AsTask();
+            await _rabbitMq.DisposeAsync().AsTask().ConfigureAwait(false);
         }
 
         if (_postgres is not null) {
-            await _postgres.DisposeAsync().AsTask();
+            await _postgres.DisposeAsync().AsTask().ConfigureAwait(false);
         }
     }
 
@@ -69,17 +69,21 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
         EnsureAvailable();
 
         var databaseName = $"mailrelay_test_{Guid.NewGuid():N}";
-        await using var connection = new NpgsqlConnection(PostgresConnectionString);
-        await connection.OpenAsync();
-        await using var command = connection.CreateCommand();
-        command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
-        await command.ExecuteNonQueryAsync();
+        var connection = new NpgsqlConnection(PostgresConnectionString);
+        await using (connection.ConfigureAwait(false)) {
+            await connection.OpenAsync().ConfigureAwait(false);
+            var command = connection.CreateCommand();
+            await using (command.ConfigureAwait(false)) {
+                command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
+                await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
-        var builder = new NpgsqlConnectionStringBuilder(PostgresConnectionString) {
-            Database = databaseName
-        };
+                var builder = new NpgsqlConnectionStringBuilder(PostgresConnectionString) {
+                    Database = databaseName
+                };
 
-        return builder.ConnectionString;
+                return builder.ConnectionString;
+            }
+        }
     }
 }
 

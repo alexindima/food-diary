@@ -425,7 +425,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
             return;
         }
 
-        var body = await response.Content.ReadAsStringAsync();
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail(
             $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
@@ -434,11 +434,11 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var email = $"postgres-api-tests-{Guid.NewGuid():N}@example.com";
         var response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
         return payload.AccessToken;
@@ -447,11 +447,11 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     private static async Task<ImageUploadPayload> CreateImageAssetAsync(HttpClient client, string fileName) {
         var response = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
-            new GetImageUploadUrlHttpRequest(fileName, "image/jpeg", 4096));
+            new GetImageUploadUrlHttpRequest(fileName, "image/jpeg", 4096)).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<ImageUploadPayload>(JsonOptions);
+        var payload = await response.Content.ReadFromJsonAsync<ImageUploadPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         Assert.NotEqual(Guid.Empty, payload.AssetId);
         return payload;

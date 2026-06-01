@@ -21,19 +21,19 @@ public class DeleteHydrationEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
 
-        var entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken);
+        var entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (entry is null || entry.UserId != userId) {
             return Result.Failure(Errors.HydrationEntry.NotFound(command.HydrationEntryId));
         }
 
-        await repository.DeleteAsync(entry, cancellationToken);
+        await repository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

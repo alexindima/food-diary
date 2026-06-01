@@ -28,7 +28,7 @@ public class DeleteRecipeCommandHandler(
             includePublic: false,
             includeSteps: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
             return Result.Failure(Errors.Recipe.NotAccessible(command.RecipeId));
@@ -46,14 +46,14 @@ public class DeleteRecipeCommandHandler(
             .Select(id => id!.Value)
             .Distinct()
             .ToList();
-        await recipeRepository.DeleteAsync(recipe, cancellationToken);
+        await recipeRepository.DeleteAsync(recipe, cancellationToken).ConfigureAwait(false);
 
         if (assetId.HasValue) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
         foreach (var stepAssetId in stepAssetIds) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(stepAssetId, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(stepAssetId, cancellationToken).ConfigureAwait(false);
         }
 
         return Result.Success();

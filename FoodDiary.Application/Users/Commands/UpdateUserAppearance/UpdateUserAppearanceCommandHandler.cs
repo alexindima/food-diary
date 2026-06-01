@@ -17,7 +17,7 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserRepository userRepos
             return Result.Failure<UserModel>(Errors.Authentication.InvalidToken);
         }
 
-        var user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken);
+        var user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<UserModel>(accessError);
@@ -43,7 +43,7 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserRepository userRepos
             Theme: themeResult.Value,
             UiStyle: uiStyleResult.Value));
 
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(user.ToModel());
     }

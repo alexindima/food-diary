@@ -109,7 +109,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(_completion.Task, Task.Delay(TimeSpan.FromSeconds(3)));
+            var finished = await Task.WhenAny(_completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(_completion.Task, finished);
         }
     }

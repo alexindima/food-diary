@@ -137,7 +137,7 @@ public sealed class NotificationTestSchedulerTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3)));
+            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }
@@ -151,9 +151,9 @@ public sealed class NotificationTestSchedulerTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3)));
+            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
-            await Task.Delay(50);
+            await Task.Delay(50).ConfigureAwait(false);
         }
     }
 

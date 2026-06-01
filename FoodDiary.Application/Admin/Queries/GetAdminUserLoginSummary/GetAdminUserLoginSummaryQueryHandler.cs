@@ -10,7 +10,7 @@ public sealed class GetAdminUserLoginSummaryQueryHandler(IUserLoginEventReposito
     public async Task<Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> Handle(
         GetAdminUserLoginSummaryQuery query,
         CancellationToken cancellationToken) {
-        var summary = await repository.GetDeviceSummaryAsync(query.FromUtc, query.ToUtc, cancellationToken);
+        var summary = await repository.GetDeviceSummaryAsync(query.FromUtc, query.ToUtc, cancellationToken).ConfigureAwait(false);
         return Result.Success<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>(summary
             .Select(item => new AdminUserLoginDeviceSummaryModel(item.Key, item.Count, item.LastSeenAtUtc))
             .ToArray());

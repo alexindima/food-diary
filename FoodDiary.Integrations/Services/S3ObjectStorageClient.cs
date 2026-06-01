@@ -38,7 +38,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             var response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
                 BucketName = bucketName,
                 Key = key
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
 
             return new StoredObjectInfo(response.ContentLength, response.Headers.ContentType);
         } catch (AmazonS3Exception ex) when (ex.StatusCode == HttpStatusCode.NotFound) {

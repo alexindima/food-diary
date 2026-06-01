@@ -14,7 +14,7 @@ public sealed class GetAdminUserLoginEventsQueryHandler(IUserLoginEventRepositor
         CancellationToken cancellationToken) {
         var page = query.Page <= 0 ? 1 : query.Page;
         var limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
-        var pageData = await repository.GetPagedAsync(page, limit, query.UserId, query.Search, cancellationToken);
+        var pageData = await repository.GetPagedAsync(page, limit, query.UserId, query.Search, cancellationToken).ConfigureAwait(false);
         var items = pageData.Items.Select(ToModel).ToArray();
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
         return Result.Success(new PagedResponse<AdminUserLoginEventModel>(items, page, limit, totalPages, pageData.TotalItems));

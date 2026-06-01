@@ -154,7 +154,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             new UserId(command.UserId.Value),
             includePublic: false,
             includeSteps: false,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (existing is null) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),

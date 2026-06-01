@@ -32,7 +32,7 @@ public sealed class LinkTelegramCommandHandler : ICommandHandler<LinkTelegramCom
         }
 
         var initData = initDataResult.Value;
-        var currentUser = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
+        var currentUser = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(currentUser);
         if (accessError is not null) {
             return Result.Failure<UserModel>(accessError);
@@ -44,13 +44,13 @@ public sealed class LinkTelegramCommandHandler : ICommandHandler<LinkTelegramCom
             return Result.Success(currentAccessibleUser.ToModel());
         }
 
-        var existingUser = await _userRepository.GetByTelegramUserIdIncludingDeletedAsync(initData.UserId, cancellationToken);
+        var existingUser = await _userRepository.GetByTelegramUserIdIncludingDeletedAsync(initData.UserId, cancellationToken).ConfigureAwait(false);
         if (existingUser != null && existingUser.Id != currentAccessibleUser.Id) {
             return Result.Failure<UserModel>(Errors.Authentication.TelegramAlreadyLinked);
         }
 
         currentAccessibleUser.LinkTelegram(initData.UserId);
-        await _userRepository.UpdateAsync(currentAccessibleUser, cancellationToken);
+        await _userRepository.UpdateAsync(currentAccessibleUser, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(currentAccessibleUser.ToModel());
     }

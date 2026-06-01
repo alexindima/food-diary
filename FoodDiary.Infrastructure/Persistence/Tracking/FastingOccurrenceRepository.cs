@@ -14,7 +14,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
             .Include(occurrence => occurrence.User)
             .Where(occurrence => occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderBy(occurrence => occurrence.StartedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {
@@ -26,7 +26,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         return await query
             .Where(occurrence => occurrence.UserId == userId && occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FastingOccurrence?> GetByIdAsync(
@@ -36,7 +36,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
             : context.FastingOccurrences.AsNoTracking())
             .Include(occurrence => occurrence.Plan);
 
-        return await query.FirstOrDefaultAsync(occurrence => occurrence.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(occurrence => occurrence.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(
@@ -58,7 +58,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         return await query
             .OrderBy(occurrence => occurrence.SequenceNumber)
             .ThenBy(occurrence => occurrence.StartedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(
@@ -71,7 +71,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
 
         return await query
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
@@ -85,12 +85,12 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         var normalizedPage = Math.Max(page, 1);
         var normalizedLimit = Math.Max(limit, 1);
         var query = BuildByUserQuery(userId, from, to, status);
-        var totalItems = await query.CountAsync(cancellationToken);
+        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var items = await query
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Skip((normalizedPage - 1) * normalizedLimit)
             .Take(normalizedLimit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, totalItems);
     }
@@ -121,11 +121,11 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
     }
 
     public async Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) {
-        await context.FastingOccurrences.AddAsync(occurrence, cancellationToken);
+        await context.FastingOccurrences.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) {
         context.FastingOccurrences.Update(occurrence);
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 }

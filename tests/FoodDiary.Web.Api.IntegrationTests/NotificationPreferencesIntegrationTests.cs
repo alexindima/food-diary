@@ -89,26 +89,30 @@ public sealed class NotificationPreferencesIntegrationTests(TestAuthApiWebApplic
     }
 
     private async Task<User> SeedUserAsync() {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        var user = User.Create($"notifications-{Guid.NewGuid():N}@example.com", "hash");
-        dbContext.Users.Add(user);
-        await dbContext.SaveChangesAsync();
-        return user;
+        var scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            var user = User.Create($"notifications-{Guid.NewGuid():N}@example.com", "hash");
+            dbContext.Users.Add(user);
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            return user;
+        }
     }
 
     private async Task SeedSubscriptionAsync(User user, string endpoint, DateTime? expirationTimeUtc) {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        dbContext.WebPushSubscriptions.Add(WebPushSubscription.Create(
-            user.Id,
-            endpoint,
-            "p256",
-            "auth",
-            expirationTimeUtc,
-            "en",
-            "Chrome"));
-        await dbContext.SaveChangesAsync();
+        var scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            dbContext.WebPushSubscriptions.Add(WebPushSubscription.Create(
+                user.Id,
+                endpoint,
+                "p256",
+                "auth",
+                expirationTimeUtc,
+                "en",
+                "Chrome"));
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 
     private sealed record NotificationPreferencesPayload(

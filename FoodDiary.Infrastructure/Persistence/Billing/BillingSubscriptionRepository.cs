@@ -58,19 +58,19 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
                     subscription.Status == "past_due"))
             .OrderBy(subscription => subscription.NextBillingAttemptUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<BillingSubscription> AddAsync(
         BillingSubscription subscription,
         CancellationToken cancellationToken = default) {
         context.BillingSubscriptions.Add(subscription);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return subscription;
     }
 
     public async Task UpdateAsync(BillingSubscription subscription, CancellationToken cancellationToken = default) {
         context.BillingSubscriptions.Update(subscription);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

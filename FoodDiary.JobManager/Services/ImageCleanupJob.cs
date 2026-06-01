@@ -26,7 +26,7 @@ public sealed class ImageCleanupJob(
 
         try {
             while (!cancellationToken.IsCancellationRequested) {
-                var deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken);
+                var deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
                 totalDeleted += deleted;
 
                 if (deleted < batchSize) {

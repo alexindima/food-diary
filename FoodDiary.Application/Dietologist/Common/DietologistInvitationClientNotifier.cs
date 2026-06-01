@@ -48,11 +48,11 @@ internal static class DietologistInvitationClientNotifier {
         IWebPushNotificationSender webPushNotificationSender,
         Notification notification,
         CancellationToken cancellationToken) {
-        await notificationRepository.AddAsync(notification, cancellationToken);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken);
+        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
 
-        var unreadCount = await notificationRepository.GetUnreadCountAsync(notification.UserId, cancellationToken);
-        await notificationPusher.PushUnreadCountAsync(notification.UserId.Value, unreadCount, cancellationToken);
-        await notificationPusher.PushNotificationsChangedAsync(notification.UserId.Value, cancellationToken);
+        var unreadCount = await notificationRepository.GetUnreadCountAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
+        await notificationPusher.PushUnreadCountAsync(notification.UserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
+        await notificationPusher.PushNotificationsChangedAsync(notification.UserId.Value, cancellationToken).ConfigureAwait(false);
     }
 }

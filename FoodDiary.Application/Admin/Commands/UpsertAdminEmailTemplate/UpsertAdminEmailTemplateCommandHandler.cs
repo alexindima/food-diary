@@ -28,7 +28,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
             command.HtmlBody,
             command.TextBody,
             command.IsActive,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var response = new AdminEmailTemplateModel(
             template.Id,

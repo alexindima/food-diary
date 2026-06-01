@@ -42,7 +42,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
                 product.FatsPer100G,
                 product.CarbsPer100G,
                 product.FiberPer100G))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpsertAsync(
@@ -59,7 +59,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
         var barcodes = candidates.Select(product => product.Barcode.Trim()).ToList();
         var existingProducts = await context.OpenFoodFactsProducts
             .Where(product => barcodes.Contains(product.Barcode))
-            .ToDictionaryAsync(product => product.Barcode, cancellationToken);
+            .ToDictionaryAsync(product => product.Barcode, cancellationToken).ConfigureAwait(false);
         var now = DateTime.UtcNow;
 
         foreach (var product in candidates) {
@@ -93,7 +93,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
                 now));
         }
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private static string EscapeLikePattern(string value) {

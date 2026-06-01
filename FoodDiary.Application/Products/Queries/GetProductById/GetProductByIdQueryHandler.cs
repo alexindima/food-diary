@@ -24,7 +24,7 @@ public class GetProductByIdQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ProductModel>(accessError);
         }
@@ -33,7 +33,7 @@ public class GetProductByIdQueryHandler(
             productId,
             userId,
             includePublic: false,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
             return Result.Failure<ProductModel>(Errors.Product.NotAccessible(query.ProductId));
         }

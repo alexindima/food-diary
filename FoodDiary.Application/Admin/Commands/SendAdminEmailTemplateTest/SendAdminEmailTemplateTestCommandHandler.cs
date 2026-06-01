@@ -34,7 +34,7 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(textBody, Encoding.UTF8, MediaTypeNames.Text.Plain));
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
 
-        await emailTransport.SendAsync(message, cancellationToken);
+        await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
         ApplicationEmailTelemetry.RecordEmailDispatch($"admin_template_test:{NormalizeKey(command.Key)}", "test", "success");
 
         return Result.Success();

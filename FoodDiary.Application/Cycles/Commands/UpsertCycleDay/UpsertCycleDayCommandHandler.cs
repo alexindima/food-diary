@@ -26,7 +26,7 @@ public class UpsertCycleDayCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CycleDayModel>(accessError);
         }
@@ -38,7 +38,7 @@ public class UpsertCycleDayCommandHandler(
             userId,
             includeDays: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (cycle is null) {
             return Result.Failure<CycleDayModel>(Errors.Cycle.NotFound(command.CycleId));
@@ -47,7 +47,7 @@ public class UpsertCycleDayCommandHandler(
         var symptoms = command.Symptoms.ToValueObject();
         var day = cycle.AddOrUpdateDay(command.Date, command.IsPeriod, symptoms, command.Notes, command.ClearNotes);
 
-        await cycleRepository.UpdateAsync(cycle, cancellationToken);
+        await cycleRepository.UpdateAsync(cycle, cancellationToken).ConfigureAwait(false);
         return Result.Success(day.ToModel());
     }
 }

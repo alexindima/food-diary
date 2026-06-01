@@ -75,9 +75,9 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     private async Task<NpgsqlDataSource> CreateDataSourceAsync() {
-        var connectionString = await fixture.CreateIsolatedDatabaseAsync();
+        var connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
         var dataSource = NpgsqlDataSource.Create(connectionString);
-        await CreateStore(dataSource).EnsureSchemaAsync(CancellationToken.None);
+        await CreateStore(dataSource).EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
         return dataSource;
     }
 

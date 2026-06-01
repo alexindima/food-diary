@@ -44,7 +44,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         Assert.NotNull(payload);
 
         await WaitForAsync(async () => {
-            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
+            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
             return string.Equals(message?.Status, "sent", StringComparison.Ordinal);
         });
 
@@ -74,7 +74,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         Assert.NotNull(payload);
 
         await WaitForAsync(async () => {
-            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
+            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
             return string.Equals(message?.Status, "failed", StringComparison.Ordinal);
         }, timeout: TimeSpan.FromSeconds(20));
 
@@ -110,7 +110,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         Assert.NotNull(payload);
 
         await WaitForAsync(async () => {
-            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
+            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
             return string.Equals(message?.Status, "suppressed", StringComparison.Ordinal);
         });
 
@@ -224,11 +224,11 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
     private static async Task WaitForAsync(Func<Task<bool>> condition, TimeSpan? timeout = null) {
         var deadline = DateTime.UtcNow + (timeout ?? TimeSpan.FromSeconds(10));
         while (DateTime.UtcNow < deadline) {
-            if (await condition()) {
+            if (await condition().ConfigureAwait(false)) {
                 return;
             }
 
-            await Task.Delay(250);
+            await Task.Delay(250).ConfigureAwait(false);
         }
 
         throw new TimeoutException("Condition was not satisfied in time.");

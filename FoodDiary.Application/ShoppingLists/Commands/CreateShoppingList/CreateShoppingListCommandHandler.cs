@@ -25,7 +25,7 @@ public class CreateShoppingListCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ShoppingListModel>(accessError);
         }
@@ -39,7 +39,7 @@ public class CreateShoppingListCommandHandler(
             command.Items,
             userId,
             productLookupService,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (itemsResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(itemsResult.Error);
@@ -57,7 +57,7 @@ public class CreateShoppingListCommandHandler(
                 item.SortOrder);
         }
 
-        await shoppingListRepository.AddAsync(list, cancellationToken);
+        await shoppingListRepository.AddAsync(list, cancellationToken).ConfigureAwait(false);
         return Result.Success(list.ToModel());
     }
 }

@@ -23,7 +23,7 @@ public sealed class UpdateAdminLessonCommandHandler(INutritionLessonRepository r
         }
 
         var lessonId = new NutritionLessonId(command.Id);
-        var lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken);
+        var lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
 
         if (lesson is null) {
             return Result.Failure<AdminLessonModel>(Errors.Lesson.NotFound(command.Id));
@@ -39,7 +39,7 @@ public sealed class UpdateAdminLessonCommandHandler(INutritionLessonRepository r
             command.EstimatedReadMinutes,
             command.SortOrder);
 
-        await repository.UpdateAsync(lesson, cancellationToken);
+        await repository.UpdateAsync(lesson, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new AdminLessonModel(
             lesson.Id.Value,

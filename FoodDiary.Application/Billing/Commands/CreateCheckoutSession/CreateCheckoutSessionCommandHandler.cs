@@ -26,13 +26,13 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingCheckoutSessionModel>(accessError);
         }
 
-        var existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
+        var existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.UtcNow)) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
@@ -50,7 +50,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
                 user.Email,
                 plan,
                 existingSubscription?.ExternalCustomerId),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (sessionResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(sessionResult.Error);
         }
@@ -64,16 +64,16 @@ public sealed class CreateCheckoutSessionCommandHandler(
                 session.CustomerId,
                 session.PriceId,
                 session.Plan);
-            await billingSubscriptionRepository.AddAsync(pendingSubscription, cancellationToken);
-            await AddCheckoutPaymentAsync(pendingSubscription, billingProvider.Provider, session, cancellationToken);
+            await billingSubscriptionRepository.AddAsync(pendingSubscription, cancellationToken).ConfigureAwait(false);
+            await AddCheckoutPaymentAsync(pendingSubscription, billingProvider.Provider, session, cancellationToken).ConfigureAwait(false);
         } else {
             existingSubscription.UpdateCheckoutContext(
                 billingProvider.Provider,
                 session.CustomerId,
                 session.PriceId,
                 session.Plan);
-            await billingSubscriptionRepository.UpdateAsync(existingSubscription, cancellationToken);
-            await AddCheckoutPaymentAsync(existingSubscription, billingProvider.Provider, session, cancellationToken);
+            await billingSubscriptionRepository.UpdateAsync(existingSubscription, cancellationToken).ConfigureAwait(false);
+            await AddCheckoutPaymentAsync(existingSubscription, billingProvider.Provider, session, cancellationToken).ConfigureAwait(false);
         }
 
         return Result.Success(session);
@@ -122,6 +122,6 @@ public sealed class CreateCheckoutSessionCommandHandler(
             null,
             null,
             null);
-        await billingPaymentRepository.AddAsync(payment, cancellationToken);
+        await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
 }

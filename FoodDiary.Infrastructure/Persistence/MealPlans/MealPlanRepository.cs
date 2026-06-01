@@ -9,7 +9,7 @@ namespace FoodDiary.Infrastructure.Persistence.MealPlans;
 internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlanRepository {
     public async Task<MealPlan> AddAsync(MealPlan plan, CancellationToken cancellationToken = default) {
         context.Set<MealPlan>().Add(plan);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return plan;
     }
 
@@ -30,7 +30,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
                 .AsSplitQuery();
         }
 
-        return await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<MealPlan>> GetCuratedAsync(
@@ -47,7 +47,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
             query = query.Where(p => p.DietType == dietType.Value);
         }
 
-        return await query.OrderBy(p => p.DietType).ThenBy(p => p.Name).ToListAsync(cancellationToken);
+        return await query.OrderBy(p => p.DietType).ThenBy(p => p.Name).ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<MealPlan>> GetByUserAsync(
@@ -60,6 +60,6 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
             .Where(p => p.UserId == userId)
             .OrderByDescending(p => p.CreatedOnUtc)
             .AsSplitQuery()
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

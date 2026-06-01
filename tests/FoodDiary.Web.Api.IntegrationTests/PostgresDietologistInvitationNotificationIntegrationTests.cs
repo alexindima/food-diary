@@ -44,10 +44,10 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
         var email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
         var registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         registerResponse.EnsureSuccessStatusCode();
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
@@ -59,14 +59,14 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
             "/api/v1/dietologist/invite",
             new InviteDietologistHttpRequest(
                 dietologistEmail,
-                new DietologistPermissionsHttpRequest()));
-        await AssertStatusCodeAsync(HttpStatusCode.NoContent, inviteResponse);
+                new DietologistPermissionsHttpRequest())).ConfigureAwait(false);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, inviteResponse).ConfigureAwait(false);
     }
 
     private async Task<List<NotificationPayload>> GetNotificationsAsync(HttpClient client) {
-        var notificationsResponse = await client.GetAsync("/api/v1/notifications");
-        await AssertStatusCodeAsync(HttpStatusCode.OK, notificationsResponse);
-        var notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions);
+        var notificationsResponse = await client.GetAsync("/api/v1/notifications").ConfigureAwait(false);
+        await AssertStatusCodeAsync(HttpStatusCode.OK, notificationsResponse).ConfigureAwait(false);
+        var notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(notifications);
         return notifications;
     }
@@ -76,7 +76,7 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
             return;
         }
 
-        var body = await response.Content.ReadAsStringAsync();
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 

@@ -17,7 +17,7 @@ public class GetWearableDailySummaryQueryHandler(IWearableSyncRepository syncRep
             return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
         }
 
-        var entries = await syncRepository.GetDailySummaryAsync(userIdResult.Value, query.Date, cancellationToken);
+        var entries = await syncRepository.GetDailySummaryAsync(userIdResult.Value, query.Date, cancellationToken).ConfigureAwait(false);
         var summary = SyncWearableDataCommandHandler.MapToSummary(query.Date, entries);
 
         return Result.Success(summary);

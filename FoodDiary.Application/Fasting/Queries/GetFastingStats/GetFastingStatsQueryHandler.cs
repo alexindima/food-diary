@@ -21,11 +21,11 @@ public class GetFastingStatsQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingStatsModel>(accessError);
         }
 
-        return Result.Success(await fastingAnalyticsService.GetStatsAsync(userId, dateTimeProvider.UtcNow, cancellationToken));
+        return Result.Success(await fastingAnalyticsService.GetStatsAsync(userId, dateTimeProvider.UtcNow, cancellationToken).ConfigureAwait(false));
     }
 }

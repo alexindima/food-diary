@@ -24,7 +24,7 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<Authenti
     }
 
     public async Task<Result<AuthenticationModel>> Handle(LoginCommand command, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
+        var user = await _userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
         if (user == null || !_passwordHasher.Verify(command.Password, user.Password)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }
@@ -34,7 +34,7 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<Authenti
             return Result.Failure<AuthenticationModel>(accessError);
         }
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

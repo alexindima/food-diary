@@ -18,24 +18,24 @@ public class RevokeInvitationCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var pending = await invitationRepository.GetByClientAndStatusAsync(
-            userId, DietologistInvitationStatus.Pending, asTracking: true, cancellationToken: cancellationToken);
+            userId, DietologistInvitationStatus.Pending, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (pending is not null) {
             pending.Revoke();
-            await invitationRepository.UpdateAsync(pending, cancellationToken);
+            await invitationRepository.UpdateAsync(pending, cancellationToken).ConfigureAwait(false);
             return Result.Success();
         }
 
-        var active = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken);
+        var active = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (active is not null) {
             active.Revoke();
-            await invitationRepository.UpdateAsync(active, cancellationToken);
+            await invitationRepository.UpdateAsync(active, cancellationToken).ConfigureAwait(false);
             return Result.Success();
         }
 

@@ -18,7 +18,7 @@ public class MarkRecommendationReadCommandHandler(
 
         var userId = new UserId(command.UserId!.Value);
         var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, userId, cancellationToken);
+            userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure(currentUserAccessError);
         }
@@ -26,14 +26,14 @@ public class MarkRecommendationReadCommandHandler(
         var recommendationId = new RecommendationId(command.RecommendationId);
 
         var recommendation = await recommendationRepository.GetByIdAsync(
-            recommendationId, asTracking: true, cancellationToken: cancellationToken);
+            recommendationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recommendation is null || recommendation.ClientUserId != userId) {
             return Result.Failure(Errors.Dietologist.InvitationNotFound);
         }
 
         recommendation.MarkAsRead();
-        await recommendationRepository.UpdateAsync(recommendation, cancellationToken);
+        await recommendationRepository.UpdateAsync(recommendation, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

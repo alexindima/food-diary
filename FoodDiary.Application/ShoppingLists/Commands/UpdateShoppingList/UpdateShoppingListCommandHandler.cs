@@ -29,7 +29,7 @@ public class UpdateShoppingListCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ShoppingListModel>(accessError);
         }
@@ -46,7 +46,7 @@ public class UpdateShoppingListCommandHandler(
             userId,
             includeItems: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (list is null) {
             return Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(command.ShoppingListId));
@@ -61,7 +61,7 @@ public class UpdateShoppingListCommandHandler(
                 command.Items,
                 userId,
                 productLookupService,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             if (itemsResult.IsFailure) {
                 return Result.Failure<ShoppingListModel>(itemsResult.Error);
@@ -80,7 +80,7 @@ public class UpdateShoppingListCommandHandler(
             }
         }
 
-        await shoppingListRepository.UpdateAsync(list, cancellationToken);
+        await shoppingListRepository.UpdateAsync(list, cancellationToken).ConfigureAwait(false);
         return Result.Success(list.ToModel());
     }
 }

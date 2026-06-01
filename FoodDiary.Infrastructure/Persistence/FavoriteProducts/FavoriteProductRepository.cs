@@ -8,13 +8,13 @@ namespace FoodDiary.Infrastructure.Persistence.FavoriteProducts;
 public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoriteProductRepository {
     public async Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
         context.FavoriteProducts.Add(favorite);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return favorite;
     }
 
     public async Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
         context.FavoriteProducts.Remove(favorite);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteProduct?> GetByIdAsync(
@@ -32,7 +32,7 @@ public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoritePr
 
         return await query.FirstOrDefaultAsync(
             f => f.Id == id && f.UserId == userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteProduct?> GetByProductIdAsync(
@@ -43,7 +43,7 @@ public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoritePr
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 f => f.ProductId == productId && f.UserId == userId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(
@@ -54,7 +54,7 @@ public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoritePr
             .Include(f => f.Product)
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyDictionary<ProductId, FavoriteProduct>> GetByProductIdsAsync(
@@ -68,7 +68,7 @@ public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoritePr
         var favorites = await context.FavoriteProducts
             .AsNoTracking()
             .Where(f => f.UserId == userId && productIds.Contains(f.ProductId))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return favorites.ToDictionary(f => f.ProductId);
     }

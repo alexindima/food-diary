@@ -33,7 +33,7 @@ public sealed class UpdateAdminUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
@@ -79,7 +79,7 @@ public sealed class UpdateAdminUserCommandHandler(
                     Errors.Validation.Invalid("roles", "Owner users must keep Owner and Admin roles."));
             }
 
-            roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken);
+            roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken).ConfigureAwait(false);
             if (roleEntities.Count != requestedRoles.Length) {
                 return Result.Failure<AdminUserModel>(
                     Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
@@ -127,7 +127,7 @@ public sealed class UpdateAdminUserCommandHandler(
             user.ReplaceRoles(roleEntities);
         }
 
-        await userRepository.UpdateAsync(user, roleAuditEvents, cancellationToken);
+        await userRepository.UpdateAsync(user, roleAuditEvents, cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log(
             "admin.user.update",

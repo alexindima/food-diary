@@ -20,7 +20,7 @@ public sealed class RequestPasswordResetCommandHandler(
     private static readonly TimeSpan TokenLifetime = TimeSpan.FromHours(1);
 
     public async Task<Result> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
+        var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
         if (!AuthenticationUserAccessPolicy.CanRequestPasswordReset(user)) {
             return Result.Success();
         }
@@ -43,12 +43,12 @@ public sealed class RequestPasswordResetCommandHandler(
             TokenHash: tokenHash,
             ExpiresAtUtc: expiresAtUtc,
             IssuedAtUtc: nowUtc));
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         try {
             await emailSender.SendPasswordResetAsync(
                 new PasswordResetMessage(user.Email, user.Id.Value.ToString(), token, user.Language, command.ClientOrigin),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             logger.LogInformation("Password reset email dispatch completed.");
         } catch (Exception ex) {
             logger.LogWarning(ex, "Password reset email dispatch failed.");

@@ -13,14 +13,14 @@ public sealed class SendDashboardTestEmailCommandHandler(
     IEmailSender emailSender,
     ILogger<SendDashboardTestEmailCommandHandler> logger) : ICommandHandler<SendDashboardTestEmailCommand, Result> {
     public async Task<Result> Handle(SendDashboardTestEmailCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
+        var user = await userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         try {
-            await emailSender.SendTestEmailAsync(new TestEmailMessage(user!.Email, user.Language), cancellationToken);
+            await emailSender.SendTestEmailAsync(new TestEmailMessage(user!.Email, user.Language), cancellationToken).ConfigureAwait(false);
             return Result.Success();
         } catch (Exception ex) {
             logger.LogWarning(ex, "Dashboard test email dispatch failed for user {UserId}.", command.UserId);

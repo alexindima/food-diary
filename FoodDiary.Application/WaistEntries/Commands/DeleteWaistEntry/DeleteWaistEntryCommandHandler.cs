@@ -21,7 +21,7 @@ public class DeleteWaistEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -31,13 +31,13 @@ public class DeleteWaistEntryCommandHandler(
             waistEntryId,
             userId,
             asTracking: true,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
             return Result.Failure(Errors.WaistEntry.NotFound(command.WaistEntryId));
         }
 
-        await waistEntryRepository.DeleteAsync(entry, cancellationToken);
+        await waistEntryRepository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

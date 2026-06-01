@@ -20,7 +20,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             return Result.Failure<NotificationPreferencesModel>(Errors.Authentication.InvalidToken);
         }
 
-        var user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken);
+        var user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<NotificationPreferencesModel>(accessError);
@@ -43,7 +43,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             FastingCheckInReminderHours: command.FastingCheckInReminderHours,
             FastingCheckInFollowUpReminderHours: command.FastingCheckInFollowUpReminderHours));
 
-        await userRepository.UpdateAsync(currentUser, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
         auditLogger.Log(
             "notifications.preferences.updated",
             currentUser.Id,

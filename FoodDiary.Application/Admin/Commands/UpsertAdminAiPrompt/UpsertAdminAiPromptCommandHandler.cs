@@ -14,17 +14,17 @@ public class UpsertAdminAiPromptCommandHandler(IAiPromptTemplateRepository repos
         var key = command.Key.Trim().ToLowerInvariant();
         var locale = command.Locale.Trim().ToLowerInvariant();
 
-        var existing = await repository.GetByKeyAsync(key, locale, cancellationToken);
+        var existing = await repository.GetByKeyAsync(key, locale, cancellationToken).ConfigureAwait(false);
         AiPromptTemplate template;
 
         if (existing is not null) {
-            var tracked = await repository.GetByIdAsync(existing.Id, asTracking: true, cancellationToken);
+            var tracked = await repository.GetByIdAsync(existing.Id, asTracking: true, cancellationToken).ConfigureAwait(false);
             tracked!.Update(command.PromptText, command.IsActive);
-            await repository.UpdateAsync(tracked, cancellationToken);
+            await repository.UpdateAsync(tracked, cancellationToken).ConfigureAwait(false);
             template = tracked;
         } else {
             template = AiPromptTemplate.Create(key, locale, command.PromptText, command.IsActive);
-            await repository.AddAsync(template, cancellationToken);
+            await repository.AddAsync(template, cancellationToken).ConfigureAwait(false);
         }
 
         return Result.Success(new AdminAiPromptModel(

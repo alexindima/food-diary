@@ -11,13 +11,13 @@ public sealed class DeleteAdminLessonCommandHandler(INutritionLessonRepository r
         DeleteAdminLessonCommand command,
         CancellationToken cancellationToken) {
         var lessonId = new NutritionLessonId(command.Id);
-        var lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken);
+        var lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
 
         if (lesson is null) {
             return Result.Failure(Errors.Lesson.NotFound(command.Id));
         }
 
-        await repository.DeleteAsync(lesson, cancellationToken);
+        await repository.DeleteAsync(lesson, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

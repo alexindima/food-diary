@@ -10,10 +10,10 @@ public sealed class MailRelayMessageProcessor(
         var queuedEmail = QueuedEmail.FromPersistence(message);
 
         try {
-            var suppressedRecipients = await queueStore.GetSuppressedRecipientsAsync(queuedEmail.To, cancellationToken);
+            var suppressedRecipients = await queueStore.GetSuppressedRecipientsAsync(queuedEmail.To, cancellationToken).ConfigureAwait(false);
             if (suppressedRecipients.Count > 0) {
                 queuedEmail.MarkSuppressed();
-                await queueStore.MarkSuppressedAsync(queuedEmail.Id, suppressedRecipients, cancellationToken);
+                await queueStore.MarkSuppressedAsync(queuedEmail.Id, suppressedRecipients, cancellationToken).ConfigureAwait(false);
                 logger.LogInformation(
                     "Relay email {QueuedEmailId} suppressed because recipient(s) are on suppression list: {Recipients}. CorrelationId={CorrelationId}",
                     queuedEmail.Id,
@@ -23,9 +23,9 @@ public sealed class MailRelayMessageProcessor(
                 return new MailRelayProcessResult(false, true);
             }
 
-            await smtpSubmissionService.SendAsync(queuedEmail, cancellationToken);
+            await smtpSubmissionService.SendAsync(queuedEmail, cancellationToken).ConfigureAwait(false);
             queuedEmail.MarkSent();
-            await queueStore.MarkSentAsync(queuedEmail.Id, cancellationToken);
+            await queueStore.MarkSentAsync(queuedEmail.Id, cancellationToken).ConfigureAwait(false);
             logger.LogInformation(
                 "Relay email {QueuedEmailId} sent successfully on attempt {AttemptCount}. CorrelationId={CorrelationId}",
                 queuedEmail.Id,
@@ -37,7 +37,7 @@ public sealed class MailRelayMessageProcessor(
             throw;
         } catch (Exception ex) {
             var failureDecision = queuedEmail.MarkFailedAttempt(ex.ToString());
-            await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken);
+            await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken).ConfigureAwait(false);
 
             logger.LogWarning(
                 ex,

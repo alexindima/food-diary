@@ -354,10 +354,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
         return payload.AccessToken;
@@ -527,12 +527,12 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     private static async Task AssertPayloadSnapshotAsync(string scenario, string actual) {
         var snapshotPath = SnapshotPathResolver.GetPath("payload-contract-snapshots.json");
-        var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath))!.AsObject();
+        var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath).ConfigureAwait(false))!.AsObject();
         if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
             snapshotRoot[scenario] = JsonNode.Parse(actual);
             await File.WriteAllTextAsync(
                 snapshotPath,
-                snapshotRoot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }).ReplaceLineEndings("\n"));
+                snapshotRoot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }).ReplaceLineEndings("\n")).ConfigureAwait(false);
         }
 
         var expected = snapshotRoot[scenario]?.ToJsonString(new JsonSerializerOptions { WriteIndented = true });

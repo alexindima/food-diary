@@ -27,12 +27,12 @@ public class StartFastingCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken);
+        var currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (currentPlan is not null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.AlreadyActive);
         }
@@ -51,9 +51,9 @@ public class StartFastingCommandHandler(
 
         var (plan, occurrence) = creation.Value;
 
-        await fastingPlanRepository.AddAsync(plan, cancellationToken);
-        await fastingOccurrenceRepository.AddAsync(occurrence, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await fastingPlanRepository.AddAsync(plan, cancellationToken).ConfigureAwait(false);
+        await fastingOccurrenceRepository.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return Result.Success(occurrence.ToModel(plan));
     }

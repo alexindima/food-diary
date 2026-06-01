@@ -33,7 +33,7 @@ public class GetWeightSummariesQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(accessError);
         }
@@ -45,7 +45,7 @@ public class GetWeightSummariesQueryHandler(
             userId,
             normalizedFrom,
             normalizedTo,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var buckets = BuildBuckets(normalizedFrom, normalizedTo, query.QuantizationDays);
         var response = buckets

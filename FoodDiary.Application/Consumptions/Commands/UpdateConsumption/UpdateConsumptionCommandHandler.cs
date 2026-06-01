@@ -43,7 +43,7 @@ public class UpdateConsumptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ConsumptionModel>(accessError);
         }
@@ -55,7 +55,7 @@ public class UpdateConsumptionCommandHandler(
             userId,
             includeItems: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (meal is null) {
             return Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(command.ConsumptionId));
@@ -79,7 +79,7 @@ public class UpdateConsumptionCommandHandler(
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(imageAssetResult.Error);
         }
@@ -128,7 +128,7 @@ public class UpdateConsumptionCommandHandler(
             var sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
                 sessionImageAssetIdResult.Value,
                 userId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             if (sessionImageAssetResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(sessionImageAssetResult.Error);
             }
@@ -163,7 +163,7 @@ public class UpdateConsumptionCommandHandler(
         }
 
         if (command.IsNutritionAutoCalculated) {
-            var nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken);
+            var nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
@@ -206,25 +206,25 @@ public class UpdateConsumptionCommandHandler(
                 ManualAlcohol: manual.Alcohol));
         }
 
-        await mealRepository.UpdateAsync(meal, cancellationToken);
+        await mealRepository.UpdateAsync(meal, cancellationToken).ConfigureAwait(false);
         await recentItemRepository.RegisterUsageAsync(
             userId,
             meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
             meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var imageAssetChanged = command.ImageAssetId.HasValue &&
                                 (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value);
 
         if (oldAssetId.HasValue && imageAssetChanged) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
         var updated = await mealRepository.GetByIdAsync(
             meal.Id,
             userId,
             includeItems: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return updated is null
             ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load updated consumption."))

@@ -165,8 +165,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     private static async Task<AuthPayload> RegisterAsync(HttpClient client, string email) {
         var response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+            new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
+        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -178,8 +178,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     private static async Task<AuthPayload> RefreshAsync(HttpClient client, string refreshToken) {
         var response = await client.PostAsJsonAsync(
             "/api/v1/auth/refresh",
-            new RefreshTokenHttpRequest(refreshToken));
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+            new RefreshTokenHttpRequest(refreshToken)).ConfigureAwait(false);
+        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -188,46 +188,50 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     private async Task SeedProductsAsync(string email, int count) {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        var user = await dbContext.Users.SingleAsync(x => x.Email == email);
+        var scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            var user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
 
-        var products = Enumerable.Range(0, count)
-            .Select(index => Product.Create(
-                user.Id,
-                $"Perf Product {index:D4}",
-                MeasurementUnit.G,
-                100,
-                25,
-                100,
-                10,
-                5,
-                20,
-                3,
-                0,
-                visibility: Visibility.Private))
-            .ToArray();
+            var products = Enumerable.Range(0, count)
+                .Select(index => Product.Create(
+                    user.Id,
+                    $"Perf Product {index:D4}",
+                    MeasurementUnit.G,
+                    100,
+                    25,
+                    100,
+                    10,
+                    5,
+                    20,
+                    3,
+                    0,
+                    visibility: Visibility.Private))
+                .ToArray();
 
-        dbContext.Products.AddRange(products);
-        await dbContext.SaveChangesAsync();
+            dbContext.Products.AddRange(products);
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 
     private async Task SeedRecipesAsync(string email, int count) {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        var user = await dbContext.Users.SingleAsync(x => x.Email == email);
+        var scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            var user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
 
-        var recipes = Enumerable.Range(0, count)
-            .Select(index => Recipe.Create(
-                user.Id,
-                $"Perf Recipe {index:D4}",
-                servings: 2,
-                description: $"Description {index:D4}",
-                visibility: Visibility.Private))
-            .ToArray();
+            var recipes = Enumerable.Range(0, count)
+                .Select(index => Recipe.Create(
+                    user.Id,
+                    $"Perf Recipe {index:D4}",
+                    servings: 2,
+                    description: $"Description {index:D4}",
+                    visibility: Visibility.Private))
+                .ToArray();
 
-        dbContext.Recipes.AddRange(recipes);
-        await dbContext.SaveChangesAsync();
+            dbContext.Recipes.AddRange(recipes);
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 
     private static async Task SeedConsumptionsAsync(HttpClient client, int count) {
@@ -252,9 +256,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
                 20,
                 3,
                 0,
-                "Private"));
-        await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse);
-        var product = await createProductResponse.Content.ReadFromJsonAsync<ItemPayload>(JsonOptions);
+                "Private")).ConfigureAwait(false);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse).ConfigureAwait(false);
+        var product = await createProductResponse.Content.ReadFromJsonAsync<ItemPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(product);
 
         var startDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -270,8 +274,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
                     null,
                     null,
                     [new ConsumptionItemHttpRequest(product.Id, null, 100)],
-                    IsNutritionAutoCalculated: true));
-            await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse);
+                    IsNutritionAutoCalculated: true)).ConfigureAwait(false);
+            await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse).ConfigureAwait(false);
         }
     }
 
@@ -280,7 +284,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             return;
         }
 
-        var body = await response.Content.ReadAsStringAsync();
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail(
             $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }

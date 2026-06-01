@@ -24,7 +24,7 @@ public class UpdateUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<UserModel>(accessError);
@@ -82,7 +82,7 @@ public class UpdateUserCommandHandler(
         var profileImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             newAssetId,
             userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (profileImageAssetResult.IsFailure) {
             return Result.Failure<UserModel>(profileImageAssetResult.Error);
         }
@@ -125,10 +125,10 @@ public class UpdateUserCommandHandler(
             }
         }
 
-        await userRepository.UpdateAsync(currentUser, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
         return Result.Success(currentUser.ToModel());

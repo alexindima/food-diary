@@ -23,8 +23,8 @@ public class GetMealPlansQueryHandler(IMealPlanRepository mealPlanRepository)
             dietTypeFilter = parsed;
         }
 
-        var curatedPlans = await mealPlanRepository.GetCuratedAsync(dietTypeFilter, cancellationToken);
-        var userPlans = await mealPlanRepository.GetByUserAsync(userIdResult.Value, cancellationToken);
+        var curatedPlans = await mealPlanRepository.GetCuratedAsync(dietTypeFilter, cancellationToken).ConfigureAwait(false);
+        var userPlans = await mealPlanRepository.GetByUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         var all = curatedPlans.Concat(userPlans)
             .Select(p => p.ToSummaryModel())

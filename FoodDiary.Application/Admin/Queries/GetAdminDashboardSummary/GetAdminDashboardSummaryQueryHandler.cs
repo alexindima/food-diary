@@ -16,10 +16,10 @@ public sealed class GetAdminDashboardSummaryQueryHandler(
         GetAdminDashboardSummaryQuery query,
         CancellationToken cancellationToken) {
         var (totalUsers, activeUsers, premiumUsers, deletedUsers, recentUsers) =
-            await userRepository.GetAdminDashboardSummaryAsync(query.RecentLimit, cancellationToken);
+            await userRepository.GetAdminDashboardSummaryAsync(query.RecentLimit, cancellationToken).ConfigureAwait(false);
 
         var pendingReportsCount = await contentReportRepository.CountByStatusAsync(
-            ReportStatus.Pending, cancellationToken);
+            ReportStatus.Pending, cancellationToken).ConfigureAwait(false);
 
         var response = new AdminDashboardSummaryModel(
             totalUsers,

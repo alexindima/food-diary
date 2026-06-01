@@ -15,7 +15,7 @@ public class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRep
         return await query
             .Where(plan => plan.UserId == userId && plan.Status == FastingPlanStatus.Active)
             .OrderByDescending(plan => plan.StartedAtUtc)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FastingPlan?> GetByIdAsync(
@@ -24,7 +24,7 @@ public class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRep
             ? context.FastingPlans
             : context.FastingPlans.AsNoTracking();
 
-        return await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FastingPlan>> GetByUserAsync(
@@ -46,15 +46,15 @@ public class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRep
 
         return await query
             .OrderByDescending(plan => plan.StartedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task AddAsync(FastingPlan plan, CancellationToken cancellationToken = default) {
-        await context.FastingPlans.AddAsync(plan, cancellationToken);
+        await context.FastingPlans.AddAsync(plan, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(FastingPlan plan, CancellationToken cancellationToken = default) {
         context.FastingPlans.Update(plan);
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 }

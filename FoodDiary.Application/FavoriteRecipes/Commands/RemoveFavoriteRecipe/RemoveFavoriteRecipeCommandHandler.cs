@@ -21,20 +21,20 @@ public class RemoveFavoriteRecipeCommandHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var favoriteRecipeId = new FavoriteRecipeId(command.FavoriteRecipeId);
         var favorite = await favoriteRecipeRepository.GetByIdAsync(
-            favoriteRecipeId, userId, asTracking: true, cancellationToken: cancellationToken);
+            favoriteRecipeId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {
             return Result.Failure(Errors.FavoriteRecipe.NotFound(command.FavoriteRecipeId));
         }
 
-        await favoriteRecipeRepository.DeleteAsync(favorite, cancellationToken);
+        await favoriteRecipeRepository.DeleteAsync(favorite, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

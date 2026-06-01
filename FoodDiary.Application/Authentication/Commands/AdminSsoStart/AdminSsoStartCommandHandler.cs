@@ -22,7 +22,7 @@ public sealed class AdminSsoStartCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AdminSsoStartModel>(accessError);
@@ -32,7 +32,7 @@ public sealed class AdminSsoStartCommandHandler(
             return Result.Failure<AdminSsoStartModel>(Errors.Authentication.AdminSsoForbidden);
         }
 
-        var code = await adminSsoService.CreateCodeAsync(userId, cancellationToken);
+        var code = await adminSsoService.CreateCodeAsync(userId, cancellationToken).ConfigureAwait(false);
         var response = new AdminSsoStartModel(code.Code, code.ExpiresAtUtc);
         return Result.Success(response);
     }

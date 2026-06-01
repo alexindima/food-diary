@@ -9,7 +9,7 @@ namespace FoodDiary.Integrations.Services;
 
 internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IEmailTransport {
     public async Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
-        await mailRelayClient.EnqueueAsync(CreatePayload(message), cancellationToken);
+        await mailRelayClient.EnqueueAsync(CreatePayload(message), cancellationToken).ConfigureAwait(false);
     }
 
     private static EnqueueMailRelayEmailRequest CreatePayload(MailMessage message) {

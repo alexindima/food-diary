@@ -24,7 +24,7 @@ public class GetProductsQueryHandler(
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<PagedResponse<ProductModel>>(accessError);
         }
@@ -41,7 +41,7 @@ public class GetProductsQueryHandler(
             pageSize,
             query.Search,
             productTypes is { Length: > 0 } ? productTypes : null,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var productsWithUsage = items.Select(item => new {
             item.Product,

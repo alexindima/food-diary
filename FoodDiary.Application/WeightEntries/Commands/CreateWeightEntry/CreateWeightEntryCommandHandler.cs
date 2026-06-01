@@ -23,7 +23,7 @@ public class CreateWeightEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeightEntryModel>(accessError);
         }
@@ -32,14 +32,14 @@ public class CreateWeightEntryCommandHandler(
         var existing = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Failure<WeightEntryModel>(
                 Errors.WeightEntry.AlreadyExists(normalizedDate));
         }
 
         var entry = WeightEntry.Create(userId, normalizedDate, command.Weight);
-        entry = await weightEntryRepository.AddAsync(entry, cancellationToken);
+        entry = await weightEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(entry.ToModel());
     }

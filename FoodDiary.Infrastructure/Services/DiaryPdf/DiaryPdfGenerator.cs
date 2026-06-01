@@ -32,7 +32,7 @@ internal sealed partial class DiaryPdfGenerator(
         var useCompactMealsMode = ShouldUseCompactMealsMode(dateFrom, dateTo);
         var mealImages = useCompactMealsMode
             ? new Dictionary<MealId, byte[]>()
-            : await LoadMealImagesAsync(meals, cancellationToken);
+            : await LoadMealImagesAsync(meals, cancellationToken).ConfigureAwait(false);
         var report = DiaryReportData.Create(
             meals,
             dateFrom,

@@ -8,27 +8,27 @@ namespace FoodDiary.Infrastructure.Persistence.ContentReports;
 
 internal sealed class ContentReportRepository(FoodDiaryDbContext context) : IContentReportRepository {
     public async Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default) {
-        await context.ContentReports.AddAsync(report, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.ContentReports.AddAsync(report, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return report;
     }
 
     public async Task<ContentReport?> GetByIdAsync(
         ContentReportId id, bool asTracking = false, CancellationToken cancellationToken = default) {
         var query = asTracking ? context.ContentReports.AsTracking() : context.ContentReports.AsNoTracking();
-        return await query.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(r => r.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(ContentReport report, CancellationToken cancellationToken = default) {
         context.ContentReports.Update(report);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<bool> HasUserReportedAsync(
         UserId userId, ReportTargetType targetType, Guid targetId, CancellationToken cancellationToken = default) {
         return await context.ContentReports
             .AsNoTracking()
-            .AnyAsync(r => r.UserId == userId && r.TargetType == targetType && r.TargetId == targetId, cancellationToken);
+            .AnyAsync(r => r.UserId == userId && r.TargetType == targetType && r.TargetId == targetId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<ContentReport> Items, int Total)> GetPagedAsync(
@@ -39,13 +39,13 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context) : ICon
             query = query.Where(r => r.Status == status.Value);
         }
 
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
 
         var items = await query
             .OrderByDescending(r => r.CreatedOnUtc)
             .Skip((page - 1) * limit)
             .Take(limit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
     }
@@ -53,6 +53,6 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context) : ICon
     public async Task<int> CountByStatusAsync(ReportStatus status, CancellationToken cancellationToken = default) {
         return await context.ContentReports
             .AsNoTracking()
-            .CountAsync(r => r.Status == status, cancellationToken);
+            .CountAsync(r => r.Status == status, cancellationToken).ConfigureAwait(false);
     }
 }

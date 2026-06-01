@@ -860,7 +860,7 @@ public class AdminFeatureTests {
 
             foreach (var view in message.AlternateViews) {
                 using var reader = new StreamReader(view.ContentStream);
-                AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken));
+                AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false));
             }
         }
     }

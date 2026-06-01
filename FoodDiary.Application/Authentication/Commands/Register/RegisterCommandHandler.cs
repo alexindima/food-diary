@@ -35,7 +35,7 @@ public class RegisterCommandHandler(
             WaterGoal: 2000));
         user.SetLanguage(normalizedLanguage);
 
-        user = await userRepository.AddAsync(user, cancellationToken);
+        user = await userRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = passwordHasher.Hash(emailToken);
@@ -44,12 +44,12 @@ public class RegisterCommandHandler(
             ExpiresAtUtc: dateTimeProvider.UtcNow.AddHours(24),
             IssuedAtUtc: dateTimeProvider.UtcNow));
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext);
+        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
 
         try {
             await emailSender.SendEmailVerificationAsync(
                 new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language, command.ClientOrigin),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         } catch (Exception ex) {
             logger.LogWarning(ex, "Email verification dispatch failed during registration for {Email}", command.Email);
         }

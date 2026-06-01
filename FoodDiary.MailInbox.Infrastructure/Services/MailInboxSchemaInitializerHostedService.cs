@@ -8,7 +8,7 @@ public sealed class MailInboxSchemaInitializerHostedService(
     IMailInboxSchemaInitializer schemaInitializer,
     ILogger<MailInboxSchemaInitializerHostedService> logger) : IHostedService {
     public async Task StartAsync(CancellationToken cancellationToken) {
-        await schemaInitializer.EnsureSchemaAsync(cancellationToken);
+        await schemaInitializer.EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
         logger.LogInformation("Mail inbox schema is ready.");
     }
 

@@ -13,7 +13,7 @@ public class SearchUsdaFoodsQueryHandler(
         SearchUsdaFoodsQuery query,
         CancellationToken cancellationToken) {
         // Search local SR Legacy database first
-        var localFoods = await repository.SearchAsync(query.Search, query.Limit, cancellationToken);
+        var localFoods = await repository.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
 
         var models = localFoods
             .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.FoodCategory))
@@ -23,7 +23,7 @@ public class SearchUsdaFoodsQueryHandler(
         if (models.Count < query.Limit) {
             var remaining = query.Limit - models.Count;
             var brandedFoods = await brandedSearchService.SearchBrandedAsync(
-                query.Search, remaining, cancellationToken);
+                query.Search, remaining, cancellationToken).ConfigureAwait(false);
 
             var existingIds = models.Select(m => m.FdcId).ToHashSet();
             var newBranded = brandedFoods.Where(f => !existingIds.Contains(f.FdcId));

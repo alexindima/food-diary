@@ -26,26 +26,26 @@ public class AddFavoriteMealCommandHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FavoriteMealModel>(accessError);
         }
 
         var mealId = new MealId(command.MealId);
-        var meal = await mealRepository.GetByIdAsync(mealId, userId, includeItems: true, cancellationToken: cancellationToken);
+        var meal = await mealRepository.GetByIdAsync(mealId, userId, includeItems: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (meal is null) {
             return Result.Failure<FavoriteMealModel>(Errors.Consumption.NotFound(command.MealId));
         }
 
-        var existing = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken);
+        var existing = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Failure<FavoriteMealModel>(Errors.FavoriteMeal.AlreadyExists);
         }
 
         var favorite = FavoriteMeal.Create(userId, mealId, command.Name);
-        await favoriteMealRepository.AddAsync(favorite, cancellationToken);
+        await favoriteMealRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        var saved = await favoriteMealRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken);
+        var saved = await favoriteMealRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return Result.Success(saved!.ToModel());
     }
 }

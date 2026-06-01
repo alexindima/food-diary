@@ -17,12 +17,12 @@ public class DeleteExerciseEntryCommandHandler(IExerciseEntryRepository reposito
         }
 
         var entryId = new ExerciseEntryId(command.EntryId);
-        var entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken);
+        var entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
             return Result.Failure(Errors.Exercise.NotFound(command.EntryId));
         }
 
-        await repository.DeleteAsync(entry, cancellationToken);
+        await repository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

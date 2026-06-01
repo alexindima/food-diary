@@ -21,7 +21,7 @@ public class GetRecipesQueryHandler(
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<PagedResponse<RecipeModel>>(accessError);
         }
@@ -32,7 +32,7 @@ public class GetRecipesQueryHandler(
             pageNumber,
             pageSize,
             query.Search,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var recipes = items.Select(item => new {
             item.Recipe,

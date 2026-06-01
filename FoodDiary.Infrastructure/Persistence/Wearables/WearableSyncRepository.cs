@@ -14,7 +14,7 @@ internal sealed class WearableSyncRepository(FoodDiaryDbContext context) : IWear
             .FirstOrDefaultAsync(e =>
                 e.UserId == userId && e.Provider == provider &&
                 e.DataType == dataType && e.Date == date.Date,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<WearableSyncEntry>> GetDailySummaryAsync(
@@ -22,19 +22,19 @@ internal sealed class WearableSyncRepository(FoodDiaryDbContext context) : IWear
         return await context.WearableSyncEntries
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WearableSyncEntry> AddAsync(
         WearableSyncEntry entry, CancellationToken cancellationToken = default) {
-        await context.WearableSyncEntries.AddAsync(entry, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.WearableSyncEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public async Task UpdateAsync(
         WearableSyncEntry entry, CancellationToken cancellationToken = default) {
         context.WearableSyncEntries.Update(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

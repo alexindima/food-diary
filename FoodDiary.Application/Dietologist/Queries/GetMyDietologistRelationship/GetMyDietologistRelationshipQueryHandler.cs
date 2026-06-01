@@ -22,12 +22,12 @@ public class GetMyDietologistRelationshipQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<DietologistRelationshipModel?>(accessError);
         }
 
-        var accepted = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken);
+        var accepted = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (accepted is not null) {
             return Result.Success<DietologistRelationshipModel?>(accepted.ToRelationshipModel());
         }
@@ -35,7 +35,7 @@ public class GetMyDietologistRelationshipQueryHandler(
         var pending = await invitationRepository.GetByClientAndStatusAsync(
             userId,
             DietologistInvitationStatus.Pending,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return Result.Success<DietologistRelationshipModel?>(pending?.ToRelationshipModel());
     }

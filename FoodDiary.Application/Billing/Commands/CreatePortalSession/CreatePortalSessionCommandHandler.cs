@@ -21,13 +21,13 @@ public sealed class CreatePortalSessionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingPortalSessionModel>(accessError);
         }
 
-        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
+        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.ExternalCustomerId)) {
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.CustomerPortalUnavailable);
         }
@@ -39,7 +39,7 @@ public sealed class CreatePortalSessionCommandHandler(
 
         var sessionResult = await billingProvider.CreatePortalSessionAsync(
             new BillingPortalSessionRequestModel(subscription.ExternalCustomerId),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (sessionResult.IsFailure) {
             return Result.Failure<BillingPortalSessionModel>(sessionResult.Error);
         }

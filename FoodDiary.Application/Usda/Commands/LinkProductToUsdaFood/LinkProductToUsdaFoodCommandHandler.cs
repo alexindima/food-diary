@@ -21,19 +21,19 @@ public class LinkProductToUsdaFoodCommandHandler(
 
         var productId = (ProductId)command.ProductId;
         var product = await productRepository.GetByIdForUpdateAsync(
-            productId, userIdResult.Value, includePublic: false, cancellationToken);
+            productId, userIdResult.Value, includePublic: false, cancellationToken).ConfigureAwait(false);
 
         if (product is null) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
 
-        var usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken);
+        var usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken).ConfigureAwait(false);
         if (usdaFood is null) {
             return Result.Failure(Errors.Usda.FoodNotFound(command.FdcId));
         }
 
         product.LinkToUsdaFood(command.FdcId);
-        await productRepository.UpdateAsync(product, cancellationToken);
+        await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

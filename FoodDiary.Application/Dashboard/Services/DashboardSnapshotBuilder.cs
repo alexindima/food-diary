@@ -110,7 +110,7 @@ public class DashboardSnapshotBuilder(
         var trendDays = Math.Clamp(request.TrendDays <= 0 ? DefaultTrendDays : request.TrendDays, 1, MaxTrendDays);
         var trendStart = dayStart.AddDays(-(trendDays - 1));
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<DashboardSnapshotModel>(accessError);
@@ -122,12 +122,12 @@ public class DashboardSnapshotBuilder(
         IReadOnlyList<DailyCaloriesModel> weeklyCalories = [];
         if (sections.IncludeStatistics) {
             var statsResult = await sender.Send(new GetStatisticsQuery(
-                request.UserId, dayStart, dayEnd, periodDays), cancellationToken);
+                request.UserId, dayStart, dayEnd, periodDays), cancellationToken).ConfigureAwait(false);
             if (statsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(statsResult.Error);
 
             var weeklyFrom = periodDays == 1 ? dayStart.AddDays(-6) : dayStart;
             var weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
-                request.UserId, weeklyFrom, dayEnd, 1), cancellationToken);
+                request.UserId, weeklyFrom, dayEnd, 1), cancellationToken).ConfigureAwait(false);
             if (weeklyStatsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(weeklyStatsResult.Error);
 
             statistics = DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), currentUser);
@@ -137,7 +137,7 @@ public class DashboardSnapshotBuilder(
         var meals = new DashboardMealsModel([], 0);
         if (sections.IncludeMeals) {
             var mealsResult = await sender.Send(new GetConsumptionsQuery(
-                request.UserId, page, pageSize, dayStart, dayEnd), cancellationToken);
+                request.UserId, page, pageSize, dayStart, dayEnd), cancellationToken).ConfigureAwait(false);
             if (mealsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
 
             meals = new DashboardMealsModel(mealsResult.Value.Data, mealsResult.Value.TotalItems);
@@ -147,11 +147,11 @@ public class DashboardSnapshotBuilder(
         IReadOnlyList<WeightEntrySummaryModel> weightTrend = [];
         if (sections.IncludeWeight) {
             var weightEntries = await weightEntryRepository.GetEntriesAsync(
-                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken);
+                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken).ConfigureAwait(false);
             weight = DashboardMapping.ToWeightModel(weightEntries, currentUser.DesiredWeight);
 
             var weightTrendResult = await sender.Send(
-                new GetWeightSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken);
+                new GetWeightSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken).ConfigureAwait(false);
             weightTrend = weightTrendResult.IsSuccess ? weightTrendResult.Value : [];
         }
 
@@ -159,17 +159,17 @@ public class DashboardSnapshotBuilder(
         IReadOnlyList<WaistEntrySummaryModel> waistTrend = [];
         if (sections.IncludeWaist) {
             var waistEntries = await waistEntryRepository.GetEntriesAsync(
-                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken);
+                userId, dateFrom: null, dateTo: dayEndStart, limit: 2, descending: true, cancellationToken: cancellationToken).ConfigureAwait(false);
             waist = DashboardMapping.ToWaistModel(waistEntries, currentUser.DesiredWaist);
 
             var waistTrendResult = await sender.Send(
-                new GetWaistSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken);
+                new GetWaistSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken).ConfigureAwait(false);
             waistTrend = waistTrendResult.IsSuccess ? waistTrendResult.Value : [];
         }
 
         HydrationDailyModel? hydration = null;
         if (sections.IncludeHydration) {
-            var hydrationTotals = await hydrationEntryRepository.GetDailyTotalsAsync(userId, dayStart, dayEndStart, cancellationToken);
+            var hydrationTotals = await hydrationEntryRepository.GetDailyTotalsAsync(userId, dayStart, dayEndStart, cancellationToken).ConfigureAwait(false);
             var totalMl = hydrationTotals.Sum(x => x.TotalMl);
             var dailyGoal = currentUser.HydrationGoal ?? currentUser.WaterGoal;
             hydration = new HydrationDailyModel(
@@ -180,24 +180,24 @@ public class DashboardSnapshotBuilder(
 
         var adviceResult = sections.IncludeAdvice
             ? await sender.Send(new GetDailyAdviceQuery(userId, dayStart, locale), cancellationToken)
-            : null;
+.ConfigureAwait(false) : null;
 
         var currentFastingSession = sections.IncludeFasting
             ? await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken)
-            : null;
+.ConfigureAwait(false) : null;
 
         var layout = sections.IncludeLayout ? ParseDashboardLayout(currentUser.DashboardLayoutJson, userId) : null;
 
         var caloriesBurned = sections.IncludeExercise
             ? await exerciseEntryRepository.GetTotalCaloriesBurnedAsync(userId, dayStart, cancellationToken)
-            : 0;
+.ConfigureAwait(false) : 0;
 
         var tdeeInsightResult = sections.IncludeTdee
             ? await sender.Send(new GetTdeeInsightQuery(request.UserId), cancellationToken)
-            : null;
+.ConfigureAwait(false) : null;
         var currentCycleResult = sections.IncludeCycle
             ? await sender.Send(new GetCurrentCycleQuery(request.UserId), cancellationToken)
-            : null;
+.ConfigureAwait(false) : null;
 
         return Result.Success(new DashboardSnapshotModel(
             dayStart,

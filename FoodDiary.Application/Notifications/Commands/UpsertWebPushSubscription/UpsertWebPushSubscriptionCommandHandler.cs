@@ -20,7 +20,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -28,7 +28,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         var existing = await webPushSubscriptionRepository.GetByEndpointAsync(
             command.Endpoint,
             asTracking: true,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (existing is null) {
             var subscription = WebPushSubscription.Create(
@@ -40,7 +40,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
                 command.Locale,
                 command.UserAgent);
 
-            await webPushSubscriptionRepository.AddAsync(subscription, cancellationToken);
+            await webPushSubscriptionRepository.AddAsync(subscription, cancellationToken).ConfigureAwait(false);
             auditLogger.Log(
                 "notifications.push-subscription.connected",
                 userId,
@@ -58,7 +58,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
             command.Locale,
             command.UserAgent);
 
-        await webPushSubscriptionRepository.UpdateAsync(existing, cancellationToken);
+        await webPushSubscriptionRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
         auditLogger.Log(
             "notifications.push-subscription.refreshed",
             userId,

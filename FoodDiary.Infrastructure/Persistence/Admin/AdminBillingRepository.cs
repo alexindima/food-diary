@@ -40,7 +40,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 EF.Functions.ILike(item.subscription.ExternalPaymentMethodId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var items = await query
             .OrderByDescending(item => item.subscription.CreatedOnUtc)
             .Skip((filter.Page - 1) * filter.Limit)
@@ -64,7 +64,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 item.subscription.LastSyncedAtUtc,
                 item.subscription.CreatedOnUtc,
                 item.subscription.ModifiedOnUtc))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
     }
@@ -106,7 +106,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 EF.Functions.ILike(item.payment.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var items = await query
             .OrderByDescending(item => item.payment.CreatedOnUtc)
             .Skip((filter.Page - 1) * filter.Limit)
@@ -133,7 +133,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 item.payment.ProviderMetadataJson,
                 item.payment.CreatedOnUtc,
                 item.payment.ModifiedOnUtc))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
     }
@@ -167,7 +167,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 EF.Functions.ILike(webhookEvent.ExternalObjectId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var items = await query
             .OrderByDescending(webhookEvent => webhookEvent.ProcessedAtUtc)
             .Skip((filter.Page - 1) * filter.Limit)
@@ -184,7 +184,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 webhookEvent.ErrorMessage,
                 webhookEvent.CreatedOnUtc,
                 webhookEvent.ModifiedOnUtc))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
     }

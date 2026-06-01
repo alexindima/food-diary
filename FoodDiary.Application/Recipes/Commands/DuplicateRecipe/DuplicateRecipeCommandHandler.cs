@@ -28,7 +28,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             userId,
             includePublic: true,
             includeSteps: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (original is null) {
             return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
@@ -61,7 +61,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
                 original.ManualAlcohol ?? original.TotalAlcohol);
         }
 
-        await recipeRepository.AddAsync(duplicate, cancellationToken);
+        await recipeRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
         var created = await recipeRepository.GetByIdAsync(
             duplicate.Id,
@@ -69,13 +69,13 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             includePublic: false,
             includeSteps: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (created is null) {
             return Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load duplicated recipe."));
         }
 
-        await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(created.ToModel(0, true));
     }

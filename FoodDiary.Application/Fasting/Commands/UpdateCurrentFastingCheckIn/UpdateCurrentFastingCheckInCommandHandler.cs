@@ -26,12 +26,12 @@ public class UpdateCurrentFastingCheckInCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken);
+        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
@@ -59,9 +59,9 @@ public class UpdateCurrentFastingCheckInCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Validation.Invalid("CheckIn", ex.Message));
         }
 
-        await fastingCheckInRepository.AddAsync(checkIn, cancellationToken);
-        await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await fastingCheckInRepository.AddAsync(checkIn, cancellationToken).ConfigureAwait(false);
+        await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return Result.Success(current.ToModel(current.Plan, [checkIn]));
     }

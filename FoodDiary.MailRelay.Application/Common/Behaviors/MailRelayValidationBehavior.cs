@@ -14,19 +14,19 @@ public sealed class MailRelayValidationBehavior<TRequest, TResponse>(IEnumerable
         CancellationToken cancellationToken) {
         var validatorList = validators.ToArray();
         if (validatorList.Length == 0) {
-            return await next(cancellationToken);
+            return await next(cancellationToken).ConfigureAwait(false);
         }
 
         var context = new ValidationContext<TRequest>(request);
         var validationResults = await Task.WhenAll(
-            validatorList.Select(validator => validator.ValidateAsync(context, cancellationToken)));
+            validatorList.Select(validator => validator.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
         var errors = validationResults
             .Where(static result => !result.IsValid)
             .SelectMany(static result => result.Errors)
             .ToArray();
 
         if (errors.Length == 0) {
-            return await next(cancellationToken);
+            return await next(cancellationToken).ConfigureAwait(false);
         }
 
         var details = errors

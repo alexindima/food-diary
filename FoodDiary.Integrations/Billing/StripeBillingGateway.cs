@@ -38,7 +38,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                         ["user_id"] = request.UserId.ToString(),
                     },
                 },
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
             customerId = customer.Id;
         }
 
@@ -67,7 +67,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                     },
                 },
             },
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new BillingCheckoutSessionModel(
             session.Id,
@@ -92,7 +92,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                 Customer = request.CustomerId,
                 ReturnUrl = _options.PortalReturnUrl,
             },
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new BillingPortalSessionModel(portalSession.Url));
     }
@@ -122,7 +122,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                 "customer.subscription.updated" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
                 "customer.subscription.deleted" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
                 "checkout.session.completed" => Result.Success<BillingWebhookEventModel?>(
-                    await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken)),
+                    await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken).ConfigureAwait(false)),
                 _ => Result.Success<BillingWebhookEventModel?>(null),
             };
         } catch (Exception ex) when (ex is StripeException or InvalidCastException or InvalidOperationException or NullReferenceException) {
@@ -141,7 +141,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         }
 
         var subscriptionService = new SubscriptionService();
-        var subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken);
+        var subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return MapSubscriptionEvent(subscription, stripeEvent, session.Metadata);
     }
 

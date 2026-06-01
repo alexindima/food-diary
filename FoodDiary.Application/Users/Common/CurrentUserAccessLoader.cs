@@ -9,7 +9,7 @@ public static class CurrentUserAccessLoader {
         IUserRepository userRepository,
         UserId userId,
         CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         return CurrentUserAccessPolicy.EnsureCanAccess(user);
     }
 }

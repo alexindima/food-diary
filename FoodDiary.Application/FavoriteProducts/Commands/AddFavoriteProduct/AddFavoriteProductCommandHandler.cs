@@ -25,7 +25,7 @@ public class AddFavoriteProductCommandHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FavoriteProductModel>(accessError);
         }
@@ -35,20 +35,20 @@ public class AddFavoriteProductCommandHandler(
             productId,
             userId,
             includePublic: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
             return Result.Failure<FavoriteProductModel>(Errors.Product.NotFound(command.ProductId));
         }
 
-        var existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken);
+        var existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Failure<FavoriteProductModel>(Errors.FavoriteProduct.AlreadyExists);
         }
 
         var favorite = FavoriteProduct.Create(userId, productId, command.Name);
-        await favoriteProductRepository.AddAsync(favorite, cancellationToken);
+        await favoriteProductRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        var saved = await favoriteProductRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken);
+        var saved = await favoriteProductRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return Result.Success(saved!.ToModel());
     }
 }

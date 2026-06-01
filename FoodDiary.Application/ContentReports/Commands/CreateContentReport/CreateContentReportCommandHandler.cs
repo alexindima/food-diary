@@ -21,14 +21,14 @@ public class CreateContentReportCommandHandler(IContentReportRepository reportRe
         var targetType = Enum.Parse<ReportTargetType>(command.TargetType);
 
         var alreadyReported = await reportRepository.HasUserReportedAsync(
-            userIdResult.Value, targetType, command.TargetId, cancellationToken);
+            userIdResult.Value, targetType, command.TargetId, cancellationToken).ConfigureAwait(false);
 
         if (alreadyReported) {
             return Result.Failure<ContentReportModel>(Errors.ContentReport.AlreadyReported);
         }
 
         var report = ContentReport.Create(userIdResult.Value, targetType, command.TargetId, command.Reason);
-        await reportRepository.AddAsync(report, cancellationToken);
+        await reportRepository.AddAsync(report, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new ContentReportModel(
             report.Id.Value,

@@ -22,7 +22,7 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId));
         }
@@ -43,10 +43,10 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         user.CompleteEmailVerification();
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         try {
-            await _emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, cancellationToken);
+            await _emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, cancellationToken).ConfigureAwait(false);
         } catch {
             // Notification failures shouldn't block verification.
         }

@@ -24,7 +24,7 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             await httpContext.Response.WriteAsJsonAsync(new ApiErrorHttpResponse(
                 "RateLimit.Exceeded",
                 "Too many requests. Try again later.",
-                httpContext.TraceIdentifier), cancellationToken);
+                httpContext.TraceIdentifier), cancellationToken).ConfigureAwait(false);
         };
 
         options.AddPolicy<string>(PresentationPolicyNames.AuthRateLimitPolicyName, context =>

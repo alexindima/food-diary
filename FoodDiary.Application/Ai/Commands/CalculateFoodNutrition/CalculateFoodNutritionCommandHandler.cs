@@ -25,12 +25,12 @@ public sealed class CalculateFoodNutritionCommandHandler(
         }
 
         var userId = new UserId(query.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<FoodNutritionModel>(accessError);
         }
 
-        return await openAiFoodService.CalculateNutritionAsync(query.Items, userId, cancellationToken);
+        return await openAiFoodService.CalculateNutritionAsync(query.Items, userId, cancellationToken).ConfigureAwait(false);
     }
 }

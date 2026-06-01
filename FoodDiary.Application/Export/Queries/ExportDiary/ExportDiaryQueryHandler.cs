@@ -28,7 +28,7 @@ public class ExportDiaryQueryHandler(
         }
 
         var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FileExportResult>(accessError);
         }
@@ -46,7 +46,7 @@ public class ExportDiaryQueryHandler(
         }
 
         var meals = await mealRepository.GetByPeriodAsync(
-            userId, normalizedFrom, normalizedTo, cancellationToken);
+            userId, normalizedFrom, normalizedTo, cancellationToken).ConfigureAwait(false);
         var filteredMeals = meals
             .Where(meal => meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
             .ToList();
@@ -64,7 +64,7 @@ public class ExportDiaryQueryHandler(
                     query.Locale,
                     query.TimeZoneOffsetMinutes,
                     NormalizeReportOrigin(query.ReportOrigin),
-                    cancellationToken),
+                    cancellationToken).ConfigureAwait(false),
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
             _ => Result.Success(new FileExportResult(

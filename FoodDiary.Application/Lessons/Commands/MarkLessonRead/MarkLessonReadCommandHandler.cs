@@ -21,20 +21,20 @@ public class MarkLessonReadCommandHandler(
         }
 
         var lessonId = new NutritionLessonId(command.LessonId);
-        var lesson = await repository.GetByIdAsync(lessonId, cancellationToken);
+        var lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure(Errors.Lesson.NotFound(command.LessonId));
         }
 
         var existing = await repository.GetUserProgressForLessonAsync(
-            userIdResult.Value, lessonId, cancellationToken);
+            userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Success();
         }
 
         var progress = UserLessonProgress.Create(
             userIdResult.Value, lessonId, dateTimeProvider.UtcNow);
-        await repository.AddProgressAsync(progress, cancellationToken);
+        await repository.AddProgressAsync(progress, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

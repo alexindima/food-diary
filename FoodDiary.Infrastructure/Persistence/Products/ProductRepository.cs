@@ -11,7 +11,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
 
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Add(product);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return product;
     }
 
@@ -45,7 +45,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
             query = query.Where(p => productTypes.Contains(p.ProductType));
         }
 
-        var totalItems = await query.CountAsync(cancellationToken);
+        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var orderedQuery = query.OrderByDescending(p => p.CreatedOnUtc);
         var skip = (pageNumber - 1) * pageSize;
         var items = await orderedQuery
@@ -55,7 +55,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 Product = p,
                 UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
             })
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items
             .Select(x => (x.Product, x.UsageCount))
@@ -76,7 +76,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 p => p.Id == id && (includePublic
                     ? p.UserId == userId || p.Visibility == Visibility.Public
                     : p.UserId == userId),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
     public async Task<Product?> GetByIdForUpdateAsync(
         ProductId id,
@@ -92,7 +92,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 p => p.Id == id && (includePublic
                     ? p.UserId == userId || p.Visibility == Visibility.Public
                     : p.UserId == userId),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
     public async Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
         IEnumerable<ProductId> ids,
@@ -109,7 +109,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
             ? p.UserId == userId || p.Visibility == Visibility.Public
             : p.UserId == userId));
 
-        var products = await query.ToListAsync(cancellationToken);
+        var products = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
         return products.ToDictionary(p => p.Id);
     }
 
@@ -132,21 +132,21 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 Product = p,
                 UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
             })
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return items.ToDictionary(x => x.Product.Id, x => (x.Product, x.UsageCount));
     }
 
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Update(product);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
-        var tracked = await context.Products.FindAsync([product.Id], cancellationToken);
+        var tracked = await context.Products.FindAsync([product.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Products.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 

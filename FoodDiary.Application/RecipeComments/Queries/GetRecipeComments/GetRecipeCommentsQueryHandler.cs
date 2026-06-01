@@ -23,7 +23,7 @@ public class GetRecipeCommentsQueryHandler(IRecipeCommentRepository commentRepos
         var recipeId = (RecipeId)query.RecipeId;
 
         var (items, total) = await commentRepository.GetPagedByRecipeAsync(
-            recipeId, pageNumber, pageSize, cancellationToken);
+            recipeId, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
 
         var models = items.Select(c => new RecipeCommentModel(
             c.Id.Value,

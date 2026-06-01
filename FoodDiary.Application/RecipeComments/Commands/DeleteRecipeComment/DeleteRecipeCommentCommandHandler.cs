@@ -21,7 +21,7 @@ public class DeleteRecipeCommentCommandHandler(
 
         var recipeId = (RecipeId)command.RecipeId;
         var commentId = (RecipeCommentId)command.CommentId;
-        var comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken);
+        var comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (comment is null || comment.RecipeId != recipeId) {
             return Result.Failure(Errors.RecipeComment.NotFound(command.CommentId));
@@ -31,14 +31,14 @@ public class DeleteRecipeCommentCommandHandler(
         var isAuthor = comment.UserId == userIdResult.Value;
         if (!isAuthor) {
             var recipe = await recipeRepository.GetByIdAsync(
-                recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken);
+                recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (recipe is null) {
                 return Result.Failure(Errors.RecipeComment.NotAuthor);
             }
         }
 
-        await commentRepository.DeleteAsync(comment, cancellationToken);
+        await commentRepository.DeleteAsync(comment, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

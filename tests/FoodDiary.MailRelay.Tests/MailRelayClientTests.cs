@@ -74,7 +74,7 @@ public sealed class MailRelayClientTests {
             Request = request;
             RequestBody = request.Content is null
                 ? null
-                : await request.Content.ReadAsStringAsync(cancellationToken);
+                : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return response;
         }
     }

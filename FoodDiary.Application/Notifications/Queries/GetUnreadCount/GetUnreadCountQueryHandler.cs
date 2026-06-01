@@ -17,15 +17,15 @@ public class GetUnreadCountQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<int>(accessError);
         }
 
-        var count = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var count = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user?.HasPassword == true) {
-            count -= await notificationRepository.GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken);
+            count -= await notificationRepository.GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken).ConfigureAwait(false);
         }
 
         return Result.Success(count);

@@ -37,7 +37,7 @@ public class CreateConsumptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ConsumptionModel>(accessError);
         }
@@ -45,7 +45,7 @@ public class CreateConsumptionCommandHandler(
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(imageAssetResult.Error);
         }
@@ -90,7 +90,7 @@ public class CreateConsumptionCommandHandler(
             var sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
                 sessionImageAssetIdResult.Value,
                 userId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             if (sessionImageAssetResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(sessionImageAssetResult.Error);
             }
@@ -125,7 +125,7 @@ public class CreateConsumptionCommandHandler(
         }
 
         if (command.IsNutritionAutoCalculated) {
-            var nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken);
+            var nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
@@ -168,18 +168,18 @@ public class CreateConsumptionCommandHandler(
                 ManualAlcohol: manual.Alcohol));
         }
 
-        await mealRepository.AddAsync(meal, cancellationToken);
+        await mealRepository.AddAsync(meal, cancellationToken).ConfigureAwait(false);
         await recentItemRepository.RegisterUsageAsync(
             userId,
             meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
             meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var created = await mealRepository.GetByIdAsync(
             meal.Id,
             userId,
             includeItems: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return created is null
             ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load created consumption."))

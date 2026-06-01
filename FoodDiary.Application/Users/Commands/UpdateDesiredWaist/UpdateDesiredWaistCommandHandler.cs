@@ -17,7 +17,7 @@ public class UpdateDesiredWaistCommandHandler(IUserRepository userRepository)
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<UserDesiredWaistModel>(accessError);
@@ -25,7 +25,7 @@ public class UpdateDesiredWaistCommandHandler(IUserRepository userRepository)
 
         var currentUser = user!;
         currentUser.UpdateDesiredWaist(command.DesiredWaist);
-        await userRepository.UpdateAsync(currentUser, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaist));
     }

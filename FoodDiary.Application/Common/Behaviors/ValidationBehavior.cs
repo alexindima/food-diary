@@ -18,13 +18,13 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
         if (!_validators.Any()) {
-            return await next(cancellationToken);
+            return await next(cancellationToken).ConfigureAwait(false);
         }
 
         var context = new ValidationContext<TRequest>(request);
 
         var validationResults = await Task.WhenAll(
-            _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+            _validators.Select(v => v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
 
         var errors = validationResults
             .Where(r => !r.IsValid)
@@ -32,7 +32,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             .ToArray();
 
         if (errors.Length == 0) {
-            return await next(cancellationToken);
+            return await next(cancellationToken).ConfigureAwait(false);
         }
 
         var groupedDetails = errors

@@ -19,7 +19,7 @@ public class DeleteUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
@@ -28,7 +28,7 @@ public class DeleteUserCommandHandler(
         var currentUser = user!;
 
         currentUser.DeleteAccount(dateTimeProvider.UtcNow);
-        await userRepository.UpdateAsync(currentUser, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log("user.delete", userId, "User", userId.Value.ToString());
 

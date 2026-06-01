@@ -23,7 +23,7 @@ public class CreateWaistEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WaistEntryModel>(accessError);
         }
@@ -32,14 +32,14 @@ public class CreateWaistEntryCommandHandler(
         var existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Failure<WaistEntryModel>(
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }
 
         var entry = WaistEntry.Create(userId, normalizedDate, command.Circumference);
-        entry = await waistEntryRepository.AddAsync(entry, cancellationToken);
+        entry = await waistEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }
 }

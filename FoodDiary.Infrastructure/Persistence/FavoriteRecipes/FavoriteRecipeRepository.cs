@@ -8,13 +8,13 @@ namespace FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRecipeRepository {
     public async Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
         context.FavoriteRecipes.Add(favorite);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return favorite;
     }
 
     public async Task DeleteAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
         context.FavoriteRecipes.Remove(favorite);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteRecipe?> GetByIdAsync(
@@ -34,7 +34,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
 
         return await query.FirstOrDefaultAsync(
             f => f.Id == id && f.UserId == userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteRecipe?> GetByRecipeIdAsync(
@@ -45,7 +45,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 f => f.RecipeId == recipeId && f.UserId == userId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FavoriteRecipe>> GetAllAsync(
@@ -58,7 +58,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
             .ThenInclude(s => s.Ingredients)
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyDictionary<RecipeId, FavoriteRecipe>> GetByRecipeIdsAsync(
@@ -72,7 +72,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
         var favorites = await context.FavoriteRecipes
             .AsNoTracking()
             .Where(f => f.UserId == userId && recipeIds.Contains(f.RecipeId))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return favorites.ToDictionary(f => f.RecipeId);
     }

@@ -7,7 +7,7 @@ public sealed class GetMailRelayDeliveryEventsQueryHandler(MailRelayEmailUseCase
     public async Task<Result<IReadOnlyList<MailRelayDeliveryEventEntry>>> Handle(
         GetMailRelayDeliveryEventsQuery query,
         CancellationToken cancellationToken) {
-        var events = await useCases.GetDeliveryEventsAsync(query.Email, cancellationToken);
+        var events = await useCases.GetDeliveryEventsAsync(query.Email, cancellationToken).ConfigureAwait(false);
         return Result<IReadOnlyList<MailRelayDeliveryEventEntry>>.Success(events);
     }
 }

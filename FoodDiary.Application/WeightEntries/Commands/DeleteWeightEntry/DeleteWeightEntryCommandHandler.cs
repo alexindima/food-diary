@@ -21,7 +21,7 @@ public class DeleteWeightEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -31,13 +31,13 @@ public class DeleteWeightEntryCommandHandler(
             weightEntryId,
             userId,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
             return Result.Failure(Errors.WeightEntry.NotFound(command.WeightEntryId));
         }
 
-        await weightEntryRepository.DeleteAsync(entry, cancellationToken);
+        await weightEntryRepository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

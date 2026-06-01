@@ -34,7 +34,7 @@ public sealed class PaddleBillingGateway(
 
         var customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
-            var customerResult = await CreateCustomerAsync(request, cancellationToken);
+            var customerResult = await CreateCustomerAsync(request, cancellationToken).ConfigureAwait(false);
             if (customerResult.IsFailure) {
                 return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
             }
@@ -57,7 +57,7 @@ public sealed class PaddleBillingGateway(
                     ["plan"] = request.Plan,
                 },
                 new TransactionCheckoutRequest(_options.CheckoutUrl)),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (transactionResponse.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(transactionResponse.Error);
         }
@@ -89,7 +89,7 @@ public sealed class PaddleBillingGateway(
             HttpMethod.Post,
             $"customers/{request.CustomerId}/portal-sessions",
             new { },
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (sessionResponse.IsFailure) {
             return Result.Failure<BillingPortalSessionModel>(sessionResponse.Error);
         }
@@ -189,7 +189,7 @@ public sealed class PaddleBillingGateway(
                 new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                 }),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (customerResponse.IsFailure) {
             return Result.Failure<string>(customerResponse.Error);
         }
@@ -208,15 +208,15 @@ public sealed class PaddleBillingGateway(
             request.Content = JsonContent.Create(body, options: JsonOptions);
         }
 
-        using var response = await httpClient.SendAsync(request, cancellationToken);
+        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode) {
-            var error = await response.Content.ReadAsStringAsync(cancellationToken);
+            var error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                 Provider,
                 $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}".Trim()));
         }
 
-        var envelope = await response.Content.ReadFromJsonAsync<PaddleEnvelope<TResponse>>(JsonOptions, cancellationToken);
+        var envelope = await response.Content.ReadFromJsonAsync<PaddleEnvelope<TResponse>>(JsonOptions, cancellationToken).ConfigureAwait(false);
         if (envelope?.Data is null) {
             return Result.Failure<TResponse>(
                 Errors.Billing.ProviderOperationFailed(Provider, "Paddle returned an empty response."));

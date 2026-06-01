@@ -7,7 +7,7 @@ public sealed class RabbitMqMailRelayBootstrapHostedService(
         if (!broker.IsEnabled) {
             return;
         }
-        await broker.DeclareTopologyAsync(cancellationToken);
+        await broker.DeclareTopologyAsync(cancellationToken).ConfigureAwait(false);
         logger.LogInformation("RabbitMQ topology bootstrap completed for MailRelay.");
     }
 

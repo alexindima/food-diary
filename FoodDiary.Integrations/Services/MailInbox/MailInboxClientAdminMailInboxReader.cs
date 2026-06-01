@@ -9,14 +9,14 @@ internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailI
     public async Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(
         int limit,
         CancellationToken cancellationToken) {
-        var messages = await mailInboxClient.GetMessagesAsync(limit, cancellationToken);
+        var messages = await mailInboxClient.GetMessagesAsync(limit, cancellationToken).ConfigureAwait(false);
         return messages.Select(static message => message.ToModel()).ToList();
     }
 
     public async Task<AdminMailInboxMessageDetailsModel?> GetMessageAsync(
         Guid id,
         CancellationToken cancellationToken) {
-        var message = await mailInboxClient.GetMessageAsync(id, cancellationToken);
+        var message = await mailInboxClient.GetMessageAsync(id, cancellationToken).ConfigureAwait(false);
         return message?.ToModel();
     }
 }

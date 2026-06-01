@@ -21,13 +21,13 @@ public class GetNotificationsQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<NotificationModel>>(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        var notifications = await notificationRepository.GetByUserAsync(userId, cancellationToken: cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        var notifications = await notificationRepository.GetByUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         var visibleNotifications = user?.HasPassword == true
             ? notifications.Where(notification => !string.Equals(notification.Type, NotificationTypes.PasswordSetupSuggested, StringComparison.Ordinal))
             : notifications;

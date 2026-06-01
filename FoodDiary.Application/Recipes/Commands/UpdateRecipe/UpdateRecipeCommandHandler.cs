@@ -38,7 +38,7 @@ public class UpdateRecipeCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<RecipeModel>(accessError);
         }
@@ -51,7 +51,7 @@ public class UpdateRecipeCommandHandler(
             includePublic: false,
             includeSteps: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
             return Result.Failure<RecipeModel>(Errors.Recipe.NotAccessible(command.RecipeId));
@@ -83,7 +83,7 @@ public class UpdateRecipeCommandHandler(
             userId,
             productLookupService,
             recipeLookupService,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (ingredientAccessResult.IsFailure) {
             return Result.Failure<RecipeModel>(ingredientAccessResult.Error);
         }
@@ -98,7 +98,7 @@ public class UpdateRecipeCommandHandler(
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<RecipeModel>(imageAssetResult.Error);
         }
@@ -142,7 +142,7 @@ public class UpdateRecipeCommandHandler(
             var stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
                 stepImageAssetIdResult.Value,
                 userId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             if (stepImageAssetResult.IsFailure) {
                 return Result.Failure<RecipeModel>(stepImageAssetResult.Error);
             }
@@ -192,7 +192,7 @@ public class UpdateRecipeCommandHandler(
                 manual.Alcohol);
         }
 
-        await recipeRepository.UpdateAsync(recipe, cancellationToken);
+        await recipeRepository.UpdateAsync(recipe, cancellationToken).ConfigureAwait(false);
 
         var updated = await recipeRepository.GetByIdAsync(
             recipe.Id,
@@ -200,19 +200,19 @@ public class UpdateRecipeCommandHandler(
             includePublic: false,
             includeSteps: true,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (updated is null) {
             return Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
         }
 
-        await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken).ConfigureAwait(false);
 
         var imageAssetChanged = command.ClearImageAssetId ||
                                 (command.ImageAssetId.HasValue && (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value));
 
         if (oldAssetId.HasValue && imageAssetChanged) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
         if (oldStepAssetIds.Count > 0) {
@@ -224,7 +224,7 @@ public class UpdateRecipeCommandHandler(
 
             foreach (var assetId in oldStepAssetIds) {
                 if (!newStepAssetIds.Contains(assetId)) {
-                    await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken);
+                    await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
                 }
             }
         }

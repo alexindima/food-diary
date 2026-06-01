@@ -27,7 +27,7 @@ public class UpdateWaistEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WaistEntryModel>(accessError);
         }
@@ -37,7 +37,7 @@ public class UpdateWaistEntryCommandHandler(
             waistEntryId,
             userId,
             asTracking: true,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
             return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId));
@@ -47,7 +47,7 @@ public class UpdateWaistEntryCommandHandler(
         var existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (existing is not null && existing.Id != entry.Id) {
             return Result.Failure<WaistEntryModel>(
@@ -55,7 +55,7 @@ public class UpdateWaistEntryCommandHandler(
         }
 
         entry.Update(command.Circumference, normalizedDate);
-        await waistEntryRepository.UpdateAsync(entry, cancellationToken);
+        await waistEntryRepository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }
 }

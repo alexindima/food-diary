@@ -14,14 +14,14 @@ public class GetMicronutrientsQueryHandler(
     public async Task<Result<UsdaFoodDetailModel>> Handle(
         GetMicronutrientsQuery query,
         CancellationToken cancellationToken) {
-        var food = await repository.GetByFdcIdAsync(query.FdcId, cancellationToken);
+        var food = await repository.GetByFdcIdAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
         if (food is null) {
-            var brandedDetail = await brandedSearchService.GetFoodDetailAsync(query.FdcId, cancellationToken);
+            var brandedDetail = await brandedSearchService.GetFoodDetailAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
             if (brandedDetail is null) {
                 return Result.Failure<UsdaFoodDetailModel>(Errors.Usda.FoodNotFound(query.FdcId));
             }
 
-            var brandedDailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken);
+            var brandedDailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             var brandedNutrientModels = ApplyDailyValues(brandedDetail.Nutrients, brandedDailyValues);
             var brandedNutrientAmounts = brandedNutrientModels.ToDictionary(n => n.NutrientId, n => n.AmountPer100g);
             var brandedDvAmounts = brandedDailyValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value);
@@ -33,9 +33,9 @@ public class GetMicronutrientsQueryHandler(
             });
         }
 
-        var nutrients = await repository.GetNutrientsAsync(query.FdcId, cancellationToken);
-        var portions = await repository.GetPortionsAsync(query.FdcId, cancellationToken);
-        var dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken);
+        var nutrients = await repository.GetNutrientsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
+        var portions = await repository.GetPortionsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
+        var dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var nutrientModels = nutrients
             .Select(n => {

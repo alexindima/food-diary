@@ -26,13 +26,13 @@ public class RepeatMealCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ConsumptionModel>(accessError);
         }
 
         var sourceMealId = new MealId(command.MealId);
-        var sourceMeal = await mealRepository.GetByIdAsync(sourceMealId, userId, includeItems: true, cancellationToken: cancellationToken);
+        var sourceMeal = await mealRepository.GetByIdAsync(sourceMealId, userId, includeItems: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (sourceMeal is null) {
             return Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(command.MealId));
@@ -88,7 +88,7 @@ public class RepeatMealCommandHandler(
         }
 
         if (sourceMeal.IsNutritionAutoCalculated) {
-            var nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken);
+            var nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsSuccess) {
                 newMeal.ApplyNutrition(new MealNutritionUpdate(
                     nutritionResult.Value.Calories,
@@ -116,7 +116,7 @@ public class RepeatMealCommandHandler(
                 ManualAlcohol: sourceMeal.ManualAlcohol));
         }
 
-        await mealRepository.AddAsync(newMeal, cancellationToken);
+        await mealRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(newMeal.ToModel());
     }

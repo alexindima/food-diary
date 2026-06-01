@@ -38,7 +38,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
                 Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
         }
 
-        var user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
+        var user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
@@ -65,12 +65,12 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
             TokenHash: emailTokenHash,
             ExpiresAtUtc: _dateTimeProvider.UtcNow.AddHours(24),
             IssuedAtUtc: _dateTimeProvider.UtcNow));
-        await _userRepository.UpdateAsync(currentUser, cancellationToken);
+        await _userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         try {
             await _emailSender.SendEmailVerificationAsync(
                 new EmailVerificationMessage(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language, command.ClientOrigin),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         } catch (Exception ex) {
             _logger.LogError(ex, "Email verification dispatch failed.");
             return Result.Failure(

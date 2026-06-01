@@ -7,19 +7,19 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRepository {
     public async Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
-        await context.WeightEntries.AddAsync(entry, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.WeightEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public async Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         context.WeightEntries.Update(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         context.WeightEntries.Remove(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WeightEntry?> GetByIdAsync(
@@ -33,7 +33,7 @@ public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRep
 
         return await query.FirstOrDefaultAsync(
             entry => entry.Id == id && entry.UserId == userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WeightEntry?> GetByDateAsync(
@@ -45,7 +45,7 @@ public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRep
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 entry => entry.UserId == userId && entry.Date == normalizedDate,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(
@@ -77,7 +77,7 @@ public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRep
             query = query.Take(limit.Value);
         }
 
-        return await query.ToListAsync(cancellationToken);
+        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
@@ -93,6 +93,6 @@ public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRep
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

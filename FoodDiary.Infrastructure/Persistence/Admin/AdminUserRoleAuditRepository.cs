@@ -29,6 +29,6 @@ public sealed class AdminUserRoleAuditRepository(FoodDiaryDbContext context) : I
                     auditEvent.Source,
                     auditEvent.OccurredAtUtc))
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

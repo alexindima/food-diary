@@ -11,7 +11,7 @@ public sealed class GetAdminEmailTemplatesQueryHandler(
     public async Task<Result<IReadOnlyList<AdminEmailTemplateModel>>> Handle(
         GetAdminEmailTemplatesQuery query,
         CancellationToken cancellationToken) {
-        var templates = await repository.GetAllAsync(cancellationToken);
+        var templates = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
         var response = templates
             .Select(t => new AdminEmailTemplateModel(
                 t.Id,

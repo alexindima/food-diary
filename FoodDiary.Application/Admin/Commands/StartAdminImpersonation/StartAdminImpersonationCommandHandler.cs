@@ -42,14 +42,14 @@ public sealed class StartAdminImpersonationCommandHandler(
         var actorUserId = new UserId(command.ActorUserId);
         var targetUserId = new UserId(command.TargetUserId);
 
-        var actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken);
+        var actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(actor) is not null
             || actor is null
             || !actor.HasRole(RoleNames.Admin)) {
             return Result.Failure<AdminImpersonationStartModel>(Errors.Authentication.ImpersonationForbidden);
         }
 
-        var target = await userRepository.GetByIdAsync(targetUserId, cancellationToken);
+        var target = await userRepository.GetByIdAsync(targetUserId, cancellationToken).ConfigureAwait(false);
         if (target is null) {
             return Result.Failure<AdminImpersonationStartModel>(Errors.User.NotFound(command.TargetUserId));
         }
@@ -73,7 +73,7 @@ public sealed class StartAdminImpersonationCommandHandler(
             command.ActorIpAddress,
             command.ActorUserAgent,
             dateTimeProvider.UtcNow);
-        await sessionRepository.AddAsync(session, cancellationToken);
+        await sessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log(
             "admin.user.impersonation.start",

@@ -229,7 +229,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         FoodDiaryDbContext context,
         string sql,
         params NpgsqlParameter[] parameters) {
-        return await ExplainAnalyzeAsync(context, sql, disableSequentialScan: false, parameters);
+        return await ExplainAnalyzeAsync(context, sql, disableSequentialScan: false, parameters).ConfigureAwait(false);
     }
 
     private static async Task<JsonDocument> ExplainAnalyzeAsync(
@@ -239,20 +239,22 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         params NpgsqlParameter[] parameters) {
         var connection = (NpgsqlConnection)context.Database.GetDbConnection();
         if (connection.State != System.Data.ConnectionState.Open) {
-            await connection.OpenAsync();
+            await connection.OpenAsync().ConfigureAwait(false);
         }
 
-        await using var command = connection.CreateCommand();
-        command.CommandText = $"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {sql}";
-        if (disableSequentialScan) {
-            command.CommandText = $"SET LOCAL enable_seqscan = off; {command.CommandText}";
+        var command = connection.CreateCommand();
+        await using (command.ConfigureAwait(false)) {
+            command.CommandText = $"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {sql}";
+            if (disableSequentialScan) {
+                command.CommandText = $"SET LOCAL enable_seqscan = off; {command.CommandText}";
+            }
+
+            command.Parameters.AddRange(parameters);
+
+            var raw = Convert.ToString(await command.ExecuteScalarAsync().ConfigureAwait(false));
+            Assert.False(string.IsNullOrWhiteSpace(raw));
+            return JsonDocument.Parse(raw!);
         }
-
-        command.Parameters.AddRange(parameters);
-
-        var raw = Convert.ToString(await command.ExecuteScalarAsync());
-        Assert.False(string.IsNullOrWhiteSpace(raw));
-        return JsonDocument.Parse(raw!);
     }
 
     private static async Task AnalyzeTableAsync(FoodDiaryDbContext context, QueryPlanTable table) {
@@ -263,7 +265,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             _ => throw new ArgumentOutOfRangeException(nameof(table), table, "Unsupported table for query-plan analysis.")
         };
 
-        await context.Database.ExecuteSqlRawAsync(sql);
+        await context.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
     }
 
     private static bool ContainsIndexName(JsonDocument plan, string indexName) {

@@ -58,7 +58,7 @@ public sealed class FastingNotificationHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3)));
+            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }

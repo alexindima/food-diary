@@ -7,7 +7,7 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public sealed class FastingCheckInRepository(FoodDiaryDbContext context) : IFastingCheckInRepository {
     public async Task AddAsync(FastingCheckIn checkIn, CancellationToken cancellationToken = default) {
-        await context.FastingCheckIns.AddAsync(checkIn, cancellationToken);
+        await context.FastingCheckIns.AddAsync(checkIn, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FastingCheckIn>> GetByOccurrenceIdsAsync(
@@ -21,6 +21,6 @@ public sealed class FastingCheckInRepository(FoodDiaryDbContext context) : IFast
             .AsNoTracking()
             .Where(x => occurrenceIds.Contains(x.OccurrenceId))
             .OrderByDescending(x => x.CheckedInAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

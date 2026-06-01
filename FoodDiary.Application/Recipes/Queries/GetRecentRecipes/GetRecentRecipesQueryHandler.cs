@@ -22,7 +22,7 @@ public sealed class GetRecentRecipesQueryHandler(
         var userId = new UserId(query.UserId!.Value);
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
-        var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken);
+        var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
         if (recents.Count == 0) {
             return Result.Success<IReadOnlyList<RecipeModel>>(Array.Empty<RecipeModel>());
         }
@@ -32,7 +32,7 @@ public sealed class GetRecentRecipesQueryHandler(
             idsInOrder,
             userId,
             query.IncludePublic,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         var response = idsInOrder
             .Where(recipesById.ContainsKey)

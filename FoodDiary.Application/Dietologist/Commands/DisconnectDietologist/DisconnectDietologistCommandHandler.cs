@@ -17,21 +17,21 @@ public class DisconnectDietologistCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var clientUserId = new UserId(command.ClientUserId);
         var invitation = await invitationRepository.GetActiveByClientAndDietologistAsync(
-            clientUserId, dietologistUserId, cancellationToken);
+            clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {
             return Result.Failure(Errors.Dietologist.NoActiveRelationship);
         }
 
         invitation.Revoke();
-        await invitationRepository.UpdateAsync(invitation, cancellationToken);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

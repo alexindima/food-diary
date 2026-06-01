@@ -10,7 +10,7 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
 
     public async Task AddAsync(AdminImpersonationSession session, CancellationToken cancellationToken = default) {
         context.AdminImpersonationSessions.Add(session);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems)> GetPagedAsync(
@@ -36,7 +36,7 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
                 EF.Functions.ILike(item.session.ActorIpAddress ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var items = await query
             .OrderByDescending(item => item.session.StartedAtUtc)
             .Skip((pageNumber - 1) * pageSize)
@@ -51,7 +51,7 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
                 item.session.ActorIpAddress,
                 item.session.ActorUserAgent,
                 item.session.StartedAtUtc))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
     }

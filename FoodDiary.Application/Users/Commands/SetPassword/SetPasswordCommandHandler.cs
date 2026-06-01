@@ -18,7 +18,7 @@ public sealed class SetPasswordCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
@@ -32,7 +32,7 @@ public sealed class SetPasswordCommandHandler(
         var hashedPassword = passwordHasher.Hash(command.NewPassword);
         currentUser.UpdatePassword(hashedPassword);
 
-        await userRepository.UpdateAsync(currentUser, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

@@ -18,14 +18,14 @@ public class UnlinkProductFromUsdaFoodCommandHandler(IProductRepository productR
 
         var productId = (ProductId)command.ProductId;
         var product = await productRepository.GetByIdForUpdateAsync(
-            productId, userIdResult.Value, includePublic: false, cancellationToken);
+            productId, userIdResult.Value, includePublic: false, cancellationToken).ConfigureAwait(false);
 
         if (product is null) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
 
         product.UnlinkUsdaFood();
-        await productRepository.UpdateAsync(product, cancellationToken);
+        await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

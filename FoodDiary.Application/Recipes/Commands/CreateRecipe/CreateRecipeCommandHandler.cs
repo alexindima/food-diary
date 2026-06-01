@@ -34,7 +34,7 @@ public class CreateRecipeCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<RecipeModel>(accessError);
         }
@@ -42,7 +42,7 @@ public class CreateRecipeCommandHandler(
         var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<RecipeModel>(imageAssetResult.Error);
         }
@@ -70,7 +70,7 @@ public class CreateRecipeCommandHandler(
             command.CookTime,
             visibilityResult.Value);
 
-        var addStepsResult = await AddStepsAsync(recipe, command, userId, cancellationToken);
+        var addStepsResult = await AddStepsAsync(recipe, command, userId, cancellationToken).ConfigureAwait(false);
         if (addStepsResult.IsFailure) {
             return Result.Failure<RecipeModel>(addStepsResult.Error);
         }
@@ -81,7 +81,7 @@ public class CreateRecipeCommandHandler(
             userId,
             productLookupService,
             recipeLookupService,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
         if (ingredientAccessResult.IsFailure) {
             return Result.Failure<RecipeModel>(ingredientAccessResult.Error);
         }
@@ -111,8 +111,8 @@ public class CreateRecipeCommandHandler(
                 manual.Alcohol);
         }
 
-        await recipeRepository.AddAsync(recipe, cancellationToken);
-        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeRepository, cancellationToken);
+        await recipeRepository.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeRepository, cancellationToken).ConfigureAwait(false);
 
         var created = await recipeRepository.GetByIdAsync(
             recipe.Id,
@@ -120,7 +120,7 @@ public class CreateRecipeCommandHandler(
             includePublic: false,
             includeSteps: true,
             asTracking: false,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return created is null
             ? Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load created recipe."))
@@ -145,7 +145,7 @@ public class CreateRecipeCommandHandler(
             var stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
                 stepImageAssetIdResult.Value,
                 userId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             if (stepImageAssetResult.IsFailure) {
                 return stepImageAssetResult;
             }

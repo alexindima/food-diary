@@ -21,6 +21,6 @@ public class GetDashboardSnapshotQueryHandler(IDashboardSnapshotBuilder snapshot
                 query.TrendDays,
                 query.Page,
                 query.PageSize),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 }

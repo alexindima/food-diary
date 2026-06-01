@@ -27,7 +27,7 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
             record.HadNotes);
 
         context.FastingTelemetryEvents.Add(entity);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FastingTelemetryEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
@@ -54,6 +54,6 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
                 x.MoodLevel,
                 x.SymptomsCount,
                 x.HadNotes))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

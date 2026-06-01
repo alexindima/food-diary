@@ -19,7 +19,7 @@ public sealed class MailInboxLoggingBehavior<TRequest, TResponse>(
 
         var stopwatch = Stopwatch.StartNew();
         try {
-            var response = await next(cancellationToken);
+            var response = await next(cancellationToken).ConfigureAwait(false);
             stopwatch.Stop();
 
             if (response.IsFailure) {

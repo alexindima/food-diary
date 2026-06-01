@@ -27,10 +27,10 @@ internal sealed class OpenFoodFactsService(
 
             var response = await httpClient.SendAsync(
                 new HttpRequestMessage(HttpMethod.Get, url),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<OffApiResponse>(cancellationToken: cancellationToken);
+            var result = await response.Content.ReadFromJsonAsync<OffApiResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (result?.Status != 1 || result.Product is null) {
                 return null;
             }
@@ -75,10 +75,10 @@ internal sealed class OpenFoodFactsService(
 
             var response = await httpClient.SendAsync(
                 new HttpRequestMessage(HttpMethod.Get, url),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<OffSearchResponse>(cancellationToken: cancellationToken);
+            var result = await response.Content.ReadFromJsonAsync<OffSearchResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (result?.Products is null) {
                 return [];
             }

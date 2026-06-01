@@ -11,7 +11,7 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
             .AsNoTracking()
             .OrderBy(t => t.Key)
             .ThenBy(t => t.Locale)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<AiPromptTemplate?> GetByKeyAsync(
@@ -20,7 +20,7 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
         CancellationToken cancellationToken = default) {
         return await context.Set<AiPromptTemplate>()
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken);
+            .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<AiPromptTemplate?> GetByIdAsync(
@@ -31,16 +31,16 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
             ? context.Set<AiPromptTemplate>().AsTracking()
             : context.Set<AiPromptTemplate>().AsNoTracking();
 
-        return await query.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+        return await query.FirstOrDefaultAsync(t => t.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
         context.Set<AiPromptTemplate>().Add(template);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return template;
     }
 
     public async Task UpdateAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

@@ -15,30 +15,30 @@ public sealed class WebPushSubscriptionRepository(FoodDiaryDbContext context) : 
             query = query.AsNoTracking();
         }
 
-        return await query.FirstOrDefaultAsync(x => x.Endpoint == endpoint, cancellationToken);
+        return await query.FirstOrDefaultAsync(x => x.Endpoint == endpoint, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await context.WebPushSubscriptions
             .Where(x => x.UserId == userId)
             .OrderByDescending(x => x.ModifiedOnUtc ?? x.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WebPushSubscription> AddAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
         context.WebPushSubscriptions.Add(subscription);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return subscription;
     }
 
     public async Task UpdateAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
         context.WebPushSubscriptions.Update(subscription);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
         context.WebPushSubscriptions.Remove(subscription);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteRangeAsync(IReadOnlyCollection<WebPushSubscription> subscriptions, CancellationToken cancellationToken = default) {
@@ -47,6 +47,6 @@ public sealed class WebPushSubscriptionRepository(FoodDiaryDbContext context) : 
         }
 
         context.WebPushSubscriptions.RemoveRange(subscriptions);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

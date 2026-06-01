@@ -19,13 +19,13 @@ public class GetLessonByIdQueryHandler(INutritionLessonRepository repository)
         }
 
         var lessonId = new NutritionLessonId(query.LessonId);
-        var lesson = await repository.GetByIdAsync(lessonId, cancellationToken);
+        var lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure<LessonDetailModel>(Errors.Lesson.NotFound(query.LessonId));
         }
 
         var progress = await repository.GetUserProgressForLessonAsync(
-            userIdResult.Value, lessonId, cancellationToken);
+            userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(lesson.ToDetailModel(progress is not null));
     }

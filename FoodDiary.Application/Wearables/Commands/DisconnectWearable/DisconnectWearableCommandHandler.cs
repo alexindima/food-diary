@@ -20,13 +20,13 @@ public class DisconnectWearableCommandHandler(IWearableConnectionRepository conn
             return Result.Failure(Errors.Wearable.InvalidProvider(command.Provider));
         }
 
-        var connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken);
+        var connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (connection is null) {
             return Result.Failure(Errors.Wearable.NotConnected(command.Provider));
         }
 
         connection.Deactivate();
-        await connectionRepository.UpdateAsync(connection, cancellationToken);
+        await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

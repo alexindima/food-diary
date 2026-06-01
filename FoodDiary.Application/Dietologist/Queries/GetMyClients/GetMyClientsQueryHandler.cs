@@ -19,12 +19,12 @@ public class GetMyClientsQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<ClientSummaryModel>>(accessError);
         }
 
-        var invitations = await invitationRepository.GetActiveByDietologistAsync(userId, cancellationToken);
+        var invitations = await invitationRepository.GetActiveByDietologistAsync(userId, cancellationToken).ConfigureAwait(false);
         var clients = invitations.Select(i => i.ToClientSummaryModel()).ToList();
         return Result.Success<IReadOnlyList<ClientSummaryModel>>(clients);
     }

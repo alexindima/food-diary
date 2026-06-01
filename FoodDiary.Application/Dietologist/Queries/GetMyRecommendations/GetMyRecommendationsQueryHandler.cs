@@ -20,12 +20,12 @@ public class GetMyRecommendationsQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(accessError);
         }
 
-        var recommendations = await recommendationRepository.GetByClientAsync(userId, cancellationToken: cancellationToken);
+        var recommendations = await recommendationRepository.GetByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         var models = recommendations.Select(r => r.ToModel()).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);
     }

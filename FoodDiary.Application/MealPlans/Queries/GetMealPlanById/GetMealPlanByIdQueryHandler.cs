@@ -19,7 +19,7 @@ public class GetMealPlanByIdQueryHandler(IMealPlanRepository mealPlanRepository)
         }
 
         var planId = new MealPlanId(query.PlanId);
-        var plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken);
+        var plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(query.PlanId));
         }

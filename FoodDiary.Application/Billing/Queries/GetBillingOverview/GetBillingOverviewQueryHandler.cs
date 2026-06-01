@@ -25,13 +25,13 @@ public sealed class GetBillingOverviewQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingOverviewModel>(accessError);
         }
 
-        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
+        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var nowUtc = dateTimeProvider.UtcNow;
         var isTrialActive = user!.HasActivePremiumTrial(nowUtc);
         var hasPaidPremium = user.HasRole(RoleNames.Premium);

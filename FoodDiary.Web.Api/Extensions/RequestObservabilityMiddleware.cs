@@ -29,7 +29,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         });
 
         try {
-            await next(context);
+            await next(context).ConfigureAwait(false);
         } catch (Exception exception) {
             activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
             activity?.SetTag("error.type", exception.GetType().FullName);

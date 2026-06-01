@@ -32,7 +32,7 @@ public sealed class NotificationTestScheduler(
 
     private async Task RunScheduledAsync(Guid userId, int delaySeconds, string type, CancellationToken cancellationToken) {
         try {
-            await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken).ConfigureAwait(false);
 
             using var scope = serviceScopeFactory.CreateScope();
             var notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
@@ -67,11 +67,11 @@ public sealed class NotificationTestScheduler(
                     referenceId)
             };
 
-            await notificationRepository.AddAsync(notification, cancellationToken);
-            await webPushNotificationSender.SendAsync(notification, cancellationToken);
-            var unreadCount = await notificationRepository.GetUnreadCountAsync(domainUserId, cancellationToken);
-            await notificationPusher.PushUnreadCountAsync(userId, unreadCount, cancellationToken);
-            await notificationPusher.PushNotificationsChangedAsync(userId, cancellationToken);
+            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+            await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+            var unreadCount = await notificationRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
+            await notificationPusher.PushUnreadCountAsync(userId, unreadCount, cancellationToken).ConfigureAwait(false);
+            await notificationPusher.PushNotificationsChangedAsync(userId, cancellationToken).ConfigureAwait(false);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
         } catch (Exception ex) {
             logger.LogError(ex, "Failed to deliver scheduled test notification for user {UserId}.", userId);

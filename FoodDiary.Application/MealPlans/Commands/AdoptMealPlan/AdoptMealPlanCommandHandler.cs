@@ -19,7 +19,7 @@ public class AdoptMealPlanCommandHandler(IMealPlanRepository mealPlanRepository)
         }
 
         var planId = new MealPlanId(command.PlanId);
-        var sourcePlan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken);
+        var sourcePlan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (sourcePlan is null) {
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(command.PlanId));
         }
@@ -29,10 +29,10 @@ public class AdoptMealPlanCommandHandler(IMealPlanRepository mealPlanRepository)
         }
 
         var adoptedPlan = sourcePlan.Adopt(userIdResult.Value);
-        await mealPlanRepository.AddAsync(adoptedPlan, cancellationToken);
+        await mealPlanRepository.AddAsync(adoptedPlan, cancellationToken).ConfigureAwait(false);
 
         // Re-fetch with includes for full model
-        var saved = await mealPlanRepository.GetByIdAsync(adoptedPlan.Id, includeDays: true, cancellationToken);
+        var saved = await mealPlanRepository.GetByIdAsync(adoptedPlan.Id, includeDays: true, cancellationToken).ConfigureAwait(false);
         return Result.Success(saved!.ToModel());
     }
 }

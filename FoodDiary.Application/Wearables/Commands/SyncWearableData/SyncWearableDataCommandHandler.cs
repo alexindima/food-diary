@@ -25,7 +25,7 @@ public class SyncWearableDataCommandHandler(
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.InvalidProvider(command.Provider));
         }
 
-        var connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken);
+        var connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (connection is null || !connection.IsActive) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.NotConnected(command.Provider));
         }
@@ -37,36 +37,36 @@ public class SyncWearableDataCommandHandler(
 
         // Refresh token if expired
         if (connection.IsTokenExpired() && connection.RefreshToken is not null) {
-            var refreshResult = await client.RefreshTokenAsync(connection.RefreshToken, cancellationToken);
+            var refreshResult = await client.RefreshTokenAsync(connection.RefreshToken, cancellationToken).ConfigureAwait(false);
             if (refreshResult is null) {
                 connection.Deactivate();
-                await connectionRepository.UpdateAsync(connection, cancellationToken);
+                await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
                 return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.AuthFailed(command.Provider));
             }
             connection.UpdateTokens(refreshResult.AccessToken, refreshResult.RefreshToken, refreshResult.ExpiresAtUtc);
-            await connectionRepository.UpdateAsync(connection, cancellationToken);
+            await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
         }
 
-        var dataPoints = await client.FetchDailyDataAsync(connection.AccessToken, command.Date, cancellationToken);
+        var dataPoints = await client.FetchDailyDataAsync(connection.AccessToken, command.Date, cancellationToken).ConfigureAwait(false);
 
         foreach (var point in dataPoints) {
             var existing = await syncRepository.GetAsync(
-                userIdResult.Value, provider, point.DataType, command.Date, cancellationToken);
+                userIdResult.Value, provider, point.DataType, command.Date, cancellationToken).ConfigureAwait(false);
 
             if (existing is not null) {
                 existing.UpdateValue(point.Value);
-                await syncRepository.UpdateAsync(existing, cancellationToken);
+                await syncRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
             } else {
                 var entry = WearableSyncEntry.Create(
                     userIdResult.Value, provider, point.DataType, command.Date, point.Value);
-                await syncRepository.AddAsync(entry, cancellationToken);
+                await syncRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
             }
         }
 
         connection.MarkSynced();
-        await connectionRepository.UpdateAsync(connection, cancellationToken);
+        await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
 
-        var summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken);
+        var summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken).ConfigureAwait(false);
         return Result.Success(summary);
     }
 
@@ -74,7 +74,7 @@ public class SyncWearableDataCommandHandler(
         Domain.ValueObjects.Ids.UserId userId,
         DateTime date,
         CancellationToken cancellationToken) {
-        var entries = await syncRepository.GetDailySummaryAsync(userId, date, cancellationToken);
+        var entries = await syncRepository.GetDailySummaryAsync(userId, date, cancellationToken).ConfigureAwait(false);
         return MapToSummary(date, entries);
     }
 

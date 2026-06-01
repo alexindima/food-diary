@@ -14,7 +14,7 @@ public class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRep
             .AsNoTracking()
             .Where(advice => advice.Locale == normalizedLocale)
             .OrderBy(advice => advice.Id)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private static string NormalizeLocale(string locale) {

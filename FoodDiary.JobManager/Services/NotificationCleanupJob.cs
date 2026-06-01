@@ -31,7 +31,7 @@ public sealed class NotificationCleanupJob(
 
         try {
             while (!cancellationToken.IsCancellationRequested) {
-                var deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken);
+                var deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken).ConfigureAwait(false);
                 totalDeleted += deleted;
 
                 if (deleted < settings.BatchSize) {

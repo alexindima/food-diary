@@ -34,7 +34,7 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
         }
 
         var (userId, _) = validationResult.Value;
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
@@ -55,7 +55,7 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken).ConfigureAwait(false);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

@@ -22,7 +22,7 @@ public class GetClientGoalsQueryHandler(
 
         var dietologistUserId = new UserId(query.UserId!.Value);
         var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, dietologistUserId, cancellationToken);
+            userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<UserModel>(currentUserAccessError);
         }
@@ -30,7 +30,7 @@ public class GetClientGoalsQueryHandler(
         var clientUserId = new UserId(query.ClientUserId);
 
         var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
-            invitationRepository, dietologistUserId, clientUserId, cancellationToken);
+            invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<UserModel>(accessResult.Error);
@@ -41,7 +41,7 @@ public class GetClientGoalsQueryHandler(
             return Result.Failure<UserModel>(permissionError);
         }
 
-        var user = await userRepository.GetByIdAsync(clientUserId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(clientUserId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<UserModel>(Errors.Dietologist.AccessDenied);
         }

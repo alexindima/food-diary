@@ -29,7 +29,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand> {
     }
 
     private async Task ValidateEmailAsync(string email, ValidationContext<RegisterCommand> context, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+        var user = await _userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return;
         }

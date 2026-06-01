@@ -25,20 +25,20 @@ public sealed class GetProfileOverviewQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<ProfileOverviewModel>(accessError);
         }
 
-        var webPushSubscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken);
-        var acceptedRelationship = await dietologistInvitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken);
+        var webPushSubscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        var acceptedRelationship = await dietologistInvitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         var pendingRelationship = acceptedRelationship is null
             ? await dietologistInvitationRepository.GetByClientAndStatusAsync(
                 userId,
                 DietologistInvitationStatus.Pending,
                 cancellationToken: cancellationToken)
-            : null;
+.ConfigureAwait(false) : null;
 
         var notificationPreferences = new NotificationPreferencesModel(
             user!.PushNotificationsEnabled,

@@ -26,7 +26,7 @@ public sealed class BillingAccessService(
             var wasManagedByBilling = subscription.PremiumRoleManagedByBilling;
             subscription.MarkPremiumRoleManagedByBilling(shouldHavePremium, dateTimeProvider.UtcNow);
             if (subscription.PremiumRoleManagedByBilling != wasManagedByBilling) {
-                await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
+                await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
             }
 
             return;
@@ -44,9 +44,9 @@ public sealed class BillingAccessService(
             subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.UtcNow);
         }
 
-        var roleEntities = await userRepository.GetRolesByNamesAsync(currentRoles, cancellationToken);
+        var roleEntities = await userRepository.GetRolesByNamesAsync(currentRoles, cancellationToken).ConfigureAwait(false);
         user.ReplaceRoles(roleEntities);
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
     }
 
     public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc) {

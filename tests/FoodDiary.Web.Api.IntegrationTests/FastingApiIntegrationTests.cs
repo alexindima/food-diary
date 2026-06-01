@@ -129,27 +129,33 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     }
 
     private async Task<User> SeedUserAsync() {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        var user = User.Create($"fasting-api-{Guid.NewGuid():N}@example.com", "hash");
-        dbContext.Users.Add(user);
-        await dbContext.SaveChangesAsync();
-        return user;
+        var scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            var user = User.Create($"fasting-api-{Guid.NewGuid():N}@example.com", "hash");
+            dbContext.Users.Add(user);
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            return user;
+        }
     }
 
     private async Task SeedFastingDataAsync(FastingPlan plan, params FastingOccurrence[] occurrences) {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        dbContext.FastingPlans.Add(plan);
-        dbContext.FastingOccurrences.AddRange(occurrences);
-        await dbContext.SaveChangesAsync();
+        var scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            dbContext.FastingPlans.Add(plan);
+            dbContext.FastingOccurrences.AddRange(occurrences);
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 
     private async Task SeedCheckInsAsync(params FastingCheckIn[] checkIns) {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        dbContext.FastingCheckIns.AddRange(checkIns);
-        await dbContext.SaveChangesAsync();
+        var scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            dbContext.FastingCheckIns.AddRange(checkIns);
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 
     private sealed record FastingOverviewPayload(

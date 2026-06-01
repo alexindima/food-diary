@@ -24,13 +24,13 @@ public class GetLessonsQueryHandler(INutritionLessonRepository repository)
         }
 
         var locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale.Trim().ToLowerInvariant();
-        var lessons = await repository.GetByLocaleAsync(locale, categoryFilter, cancellationToken);
+        var lessons = await repository.GetByLocaleAsync(locale, categoryFilter, cancellationToken).ConfigureAwait(false);
 
         if (lessons.Count == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
-            lessons = await repository.GetByLocaleAsync("en", categoryFilter, cancellationToken);
+            lessons = await repository.GetByLocaleAsync("en", categoryFilter, cancellationToken).ConfigureAwait(false);
         }
 
-        var progress = await repository.GetUserProgressAsync(userIdResult.Value, cancellationToken);
+        var progress = await repository.GetUserProgressAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
         var readIds = progress.Select(p => p.LessonId).ToHashSet();
 
         var models = lessons

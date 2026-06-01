@@ -47,10 +47,10 @@ internal sealed class FitbitClient(
             request.Headers.Authorization = new AuthenticationHeaderValue(
                 "Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{config.ClientId}:{config.ClientSecret}")));
 
-            var response = await httpClient.SendAsync(request, cancellationToken);
+            var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            var token = await response.Content.ReadFromJsonAsync<FitbitTokenResponse>(JsonOptions, cancellationToken);
+            var token = await response.Content.ReadFromJsonAsync<FitbitTokenResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
@@ -78,10 +78,10 @@ internal sealed class FitbitClient(
             request.Headers.Authorization = new AuthenticationHeaderValue(
                 "Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{config.ClientId}:{config.ClientSecret}")));
 
-            var response = await httpClient.SendAsync(request, cancellationToken);
+            var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            var token = await response.Content.ReadFromJsonAsync<FitbitTokenResponse>(JsonOptions, cancellationToken);
+            var token = await response.Content.ReadFromJsonAsync<FitbitTokenResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
@@ -107,7 +107,7 @@ internal sealed class FitbitClient(
 
             // Fetch activity summary (steps, calories, active minutes)
             var activityUrl = $"https://api.fitbit.com/1/user/-/activities/date/{dateStr}.json";
-            var activityResponse = await httpClient.GetFromJsonAsync<JsonElement>(activityUrl, cancellationToken);
+            var activityResponse = await httpClient.GetFromJsonAsync<JsonElement>(activityUrl, cancellationToken).ConfigureAwait(false);
 
             if (activityResponse.TryGetProperty("summary", out var summary)) {
                 if (summary.TryGetProperty("steps", out var steps)) {
@@ -125,7 +125,7 @@ internal sealed class FitbitClient(
 
             // Fetch resting heart rate
             var heartUrl = $"https://api.fitbit.com/1/user/-/activities/heart/date/{dateStr}/1d.json";
-            var heartResponse = await httpClient.GetFromJsonAsync<JsonElement>(heartUrl, cancellationToken);
+            var heartResponse = await httpClient.GetFromJsonAsync<JsonElement>(heartUrl, cancellationToken).ConfigureAwait(false);
 
             if (heartResponse.TryGetProperty("activities-heart", out var heartArray) &&
                 heartArray.GetArrayLength() > 0) {
@@ -138,7 +138,7 @@ internal sealed class FitbitClient(
 
             // Fetch sleep
             var sleepUrl = $"https://api.fitbit.com/1.2/user/-/sleep/date/{dateStr}.json";
-            var sleepResponse = await httpClient.GetFromJsonAsync<JsonElement>(sleepUrl, cancellationToken);
+            var sleepResponse = await httpClient.GetFromJsonAsync<JsonElement>(sleepUrl, cancellationToken).ConfigureAwait(false);
 
             if (sleepResponse.TryGetProperty("summary", out var sleepSummary) &&
                 sleepSummary.TryGetProperty("totalMinutesAsleep", out var sleepMinutes)) {

@@ -14,10 +14,10 @@ internal sealed class DomainEventDispatchInterceptor(
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default) {
         if (eventData.Context is not null) {
-            await DispatchDomainEventsAsync(eventData.Context, cancellationToken);
+            await DispatchDomainEventsAsync(eventData.Context, cancellationToken).ConfigureAwait(false);
         }
 
-        return await base.SavingChangesAsync(eventData, result, cancellationToken);
+        return await base.SavingChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task DispatchDomainEventsAsync(DbContext context, CancellationToken cancellationToken) {
@@ -41,7 +41,7 @@ internal sealed class DomainEventDispatchInterceptor(
                 domainEvent.GetType().Name,
                 domainEvent.OccurredOnUtc.ToString("O"));
 
-            await publisher.PublishAsync(domainEvent, cancellationToken);
+            await publisher.PublishAsync(domainEvent, cancellationToken).ConfigureAwait(false);
         }
     }
 }

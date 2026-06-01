@@ -8,13 +8,13 @@ namespace FoodDiary.Infrastructure.Persistence.FavoriteMeals;
 public class FavoriteMealRepository(FoodDiaryDbContext context) : IFavoriteMealRepository {
     public async Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) {
         context.FavoriteMeals.Add(favorite);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return favorite;
     }
 
     public async Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) {
         context.FavoriteMeals.Remove(favorite);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteMeal?> GetByIdAsync(
@@ -33,7 +33,7 @@ public class FavoriteMealRepository(FoodDiaryDbContext context) : IFavoriteMealR
 
         return await query.FirstOrDefaultAsync(
             f => f.Id == id && f.UserId == userId,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteMeal?> GetByMealIdAsync(
@@ -44,7 +44,7 @@ public class FavoriteMealRepository(FoodDiaryDbContext context) : IFavoriteMealR
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 f => f.MealId == mealId && f.UserId == userId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
@@ -58,7 +58,7 @@ public class FavoriteMealRepository(FoodDiaryDbContext context) : IFavoriteMealR
         var favorites = await context.FavoriteMeals
             .AsNoTracking()
             .Where(f => f.UserId == userId && mealIds.Contains(f.MealId))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return favorites.ToDictionary(favorite => favorite.MealId);
     }
@@ -72,6 +72,6 @@ public class FavoriteMealRepository(FoodDiaryDbContext context) : IFavoriteMealR
             .ThenInclude(m => m.Items)
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

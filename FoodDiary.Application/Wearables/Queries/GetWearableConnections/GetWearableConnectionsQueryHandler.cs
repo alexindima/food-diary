@@ -16,7 +16,7 @@ public class GetWearableConnectionsQueryHandler(IWearableConnectionRepository re
             return Result.Failure<IReadOnlyList<WearableConnectionModel>>(userIdResult.Error);
         }
 
-        var connections = await repository.GetAllForUserAsync(userIdResult.Value, cancellationToken);
+        var connections = await repository.GetAllForUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         var models = connections
             .Select(c => new WearableConnectionModel(

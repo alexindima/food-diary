@@ -16,24 +16,24 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
-            u.Email == email && u.IsActive && u.DeletedAt == null, cancellationToken);
+            u.Email == email && u.IsActive && u.DeletedAt == null, cancellationToken).ConfigureAwait(false);
 
     public async Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-        await UsersWithRoles().FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.Email == email, cancellationToken).ConfigureAwait(false);
 
     public async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
-            u.Id == id && u.IsActive && u.DeletedAt == null, cancellationToken);
+            u.Id == id && u.IsActive && u.DeletedAt == null, cancellationToken).ConfigureAwait(false);
 
     public async Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
-        await UsersWithRoles().FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.Id == id, cancellationToken).ConfigureAwait(false);
 
     public async Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
-            u.TelegramUserId == telegramUserId && u.IsActive && u.DeletedAt == null, cancellationToken);
+            u.TelegramUserId == telegramUserId && u.IsActive && u.DeletedAt == null, cancellationToken).ConfigureAwait(false);
 
     public async Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
-        await UsersWithRoles().FirstOrDefaultAsync(u => u.TelegramUserId == telegramUserId, cancellationToken);
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.TelegramUserId == telegramUserId, cancellationToken).ConfigureAwait(false);
 
     public async Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
         string? search,
@@ -42,7 +42,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         bool includeDeleted,
         CancellationToken cancellationToken = default) {
         var status = includeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
-        return await GetPagedAsync(search, page, limit, status, cancellationToken);
+        return await GetPagedAsync(search, page, limit, status, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
@@ -71,13 +71,13 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
                 EF.Functions.ILike(u.LastName ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await filteredQuery.CountAsync(cancellationToken);
+        var total = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         var pageIds = await filteredQuery
             .OrderByDescending(u => u.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(u => u.Id)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         if (pageIds.Count == 0) {
             return ([], total);
@@ -85,7 +85,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
 
         var usersById = await UsersWithRoles()
             .Where(u => pageIds.Contains(u.Id))
-            .ToDictionaryAsync(u => u.Id, cancellationToken);
+            .ToDictionaryAsync(u => u.Id, cancellationToken).ConfigureAwait(false);
 
         var items = pageIds
             .Select(id => usersById[id])
@@ -103,19 +103,19 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
                 ActiveUsers = group.Count(u => u.IsActive && u.DeletedAt == null),
                 DeletedUsers = group.Count(u => u.DeletedAt != null)
             })
-            .SingleOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
         var premiumUsers = await context.UserRoles
             .Where(ur => ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
             .Distinct()
-            .CountAsync(cancellationToken);
+            .CountAsync(cancellationToken).ConfigureAwait(false);
 
         var recentUsers = await UsersWithRoles()
             .Where(u => u.DeletedAt == null)
             .OrderByDescending(u => u.CreatedOnUtc)
             .Take(recentLimit)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (
             userCounts?.TotalUsers ?? 0,
@@ -128,18 +128,18 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
     public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
         return await context.Roles
             .Where(role => names.Contains(role.Name))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Add(user);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return user;
     }
 
     public async Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Update(user);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(
@@ -148,10 +148,10 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         CancellationToken cancellationToken = default) {
         context.Users.Update(user);
         if (roleAuditEvents.Count > 0) {
-            await context.UserRoleAuditEvents.AddRangeAsync(roleAuditEvents, cancellationToken);
+            await context.UserRoleAuditEvents.AddRangeAsync(roleAuditEvents, cancellationToken).ConfigureAwait(false);
         }
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private static string EscapeLikePattern(string value) {

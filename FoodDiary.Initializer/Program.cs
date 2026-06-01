@@ -57,7 +57,7 @@ using var scope = host.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
 try {
-    await ExecuteAsync(command, dbContext);
+    await ExecuteAsync(command, dbContext).ConfigureAwait(false);
     return 0;
 } catch (Exception exception) {
     Console.Error.WriteLine($"Initializer failed: {exception}");
@@ -67,28 +67,28 @@ try {
 static async Task ExecuteAsync(InitializerCommand command, FoodDiaryDbContext dbContext) {
     switch (command.Name) {
         case "list":
-            await ListMigrationsAsync(dbContext);
+            await ListMigrationsAsync(dbContext).ConfigureAwait(false);
             break;
         case "status":
-            await PrintStatusAsync(dbContext);
+            await PrintStatusAsync(dbContext).ConfigureAwait(false);
             break;
         case "update":
-            await UpdateDatabaseAsync(dbContext, command.TargetMigration);
+            await UpdateDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
             break;
         case "rollback":
-            await RollbackDatabaseAsync(dbContext, command.TargetMigration);
+            await RollbackDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
             break;
         case "rollback-last":
-            await RollbackLastMigrationAsync(dbContext);
+            await RollbackLastMigrationAsync(dbContext).ConfigureAwait(false);
             break;
         case "seed-usda":
             if (string.IsNullOrWhiteSpace(command.TargetMigration)) {
                 throw new InvalidOperationException("seed-usda requires a path to the USDA CSV directory.");
             }
             if (command.Force) {
-                await UsdaDataSeeder.ForceSeedAsync(dbContext, command.TargetMigration);
+                await UsdaDataSeeder.ForceSeedAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
             } else {
-                await UsdaDataSeeder.SeedAsync(dbContext, command.TargetMigration);
+                await UsdaDataSeeder.SeedAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
             }
             break;
         default:
@@ -99,7 +99,7 @@ static async Task ExecuteAsync(InitializerCommand command, FoodDiaryDbContext db
 static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
     var migrationsAssembly = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrationsAssembly>();
     var allMigrations = migrationsAssembly.Migrations.Keys;
-    var appliedMigrations = new HashSet<string>(await dbContext.Database.GetAppliedMigrationsAsync(), StringComparer.OrdinalIgnoreCase);
+    var appliedMigrations = new HashSet<string>(await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false), StringComparer.OrdinalIgnoreCase);
 
     foreach (var migration in allMigrations) {
         var state = appliedMigrations.Contains(migration) ? "applied" : "pending";
@@ -108,9 +108,9 @@ static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
 }
 
 static async Task PrintStatusAsync(FoodDiaryDbContext dbContext) {
-    var canConnect = await dbContext.Database.CanConnectAsync();
-    var appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync()).ToArray();
-    var pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync()).ToArray();
+    var canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
+    var appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
+    var pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false)).ToArray();
 
     Console.WriteLine($"Can connect:       {canConnect}");
     Console.WriteLine($"Applied count:     {appliedMigrations.Length}");
@@ -130,7 +130,7 @@ static async Task UpdateDatabaseAsync(FoodDiaryDbContext dbContext, string? targ
     var destination = string.IsNullOrWhiteSpace(targetMigration) ? "<latest>" : targetMigration;
 
     Console.WriteLine($"Updating database to {destination}...");
-    await migrator.MigrateAsync(targetMigration);
+    await migrator.MigrateAsync(targetMigration).ConfigureAwait(false);
     Console.WriteLine("Database update completed.");
 }
 
@@ -142,19 +142,19 @@ static async Task RollbackDatabaseAsync(FoodDiaryDbContext dbContext, string? ta
     var migrator = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrator>();
 
     Console.WriteLine($"Rolling database back to {targetMigration}...");
-    await migrator.MigrateAsync(targetMigration);
+    await migrator.MigrateAsync(targetMigration).ConfigureAwait(false);
     Console.WriteLine("Database rollback completed.");
 }
 
 static async Task RollbackLastMigrationAsync(FoodDiaryDbContext dbContext) {
-    var appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync()).ToArray();
+    var appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
     if (appliedMigrations.Length == 0) {
         Console.WriteLine("Database has no applied migrations.");
         return;
     }
 
     var targetMigration = appliedMigrations.Length == 1 ? "0" : appliedMigrations[^2];
-    await RollbackDatabaseAsync(dbContext, targetMigration);
+    await RollbackDatabaseAsync(dbContext, targetMigration).ConfigureAwait(false);
 }
 
 static void PrintUsage() {

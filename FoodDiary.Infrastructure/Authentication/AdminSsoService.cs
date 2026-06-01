@@ -19,7 +19,7 @@ public sealed class AdminSsoService(IDistributedCache cache, IDateTimeProvider d
             key,
             userId.Value.ToString(),
             new DistributedCacheEntryOptions { AbsoluteExpiration = new DateTimeOffset(expiresAt, TimeSpan.Zero) },
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         return new AdminSsoCode(code, expiresAt);
     }
@@ -30,12 +30,12 @@ public sealed class AdminSsoService(IDistributedCache cache, IDateTimeProvider d
         }
 
         var key = CachePrefix + code;
-        var value = await cache.GetStringAsync(key, cancellationToken);
+        var value = await cache.GetStringAsync(key, cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
-        await cache.RemoveAsync(key, cancellationToken);
+        await cache.RemoveAsync(key, cancellationToken).ConfigureAwait(false);
 
         return Guid.TryParse(value, out var id) ? new UserId(id) : null;
     }

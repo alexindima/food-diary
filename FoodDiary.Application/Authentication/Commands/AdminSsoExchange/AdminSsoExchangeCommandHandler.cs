@@ -19,12 +19,12 @@ public sealed class AdminSsoExchangeCommandHandler(
     public async Task<Result<AuthenticationModel>> Handle(
         AdminSsoExchangeCommand command,
         CancellationToken cancellationToken) {
-        var userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken);
+        var userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
         if (userId is null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoInvalidCode);
         }
 
-        var user = await userRepository.GetByIdAsync(userId.Value, cancellationToken);
+        var user = await userRepository.GetByIdAsync(userId.Value, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound());
         }
@@ -41,7 +41,7 @@ public sealed class AdminSsoExchangeCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoForbidden);
         }
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext);
+        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 

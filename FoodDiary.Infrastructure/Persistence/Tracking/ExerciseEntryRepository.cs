@@ -8,17 +8,17 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExerciseEntryRepository {
     public async Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
         context.Set<ExerciseEntry>().Add(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public async Task UpdateAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
         context.Set<ExerciseEntry>().Remove(entry);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<ExerciseEntry?> GetByIdAsync(
@@ -31,7 +31,7 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
             : context.Set<ExerciseEntry>().AsNoTracking();
 
         return await query.FirstOrDefaultAsync(
-            e => e.Id == id && e.UserId == userId, cancellationToken);
+            e => e.Id == id && e.UserId == userId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(
@@ -44,7 +44,7 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
             .Where(e => e.UserId == userId && e.Date >= dateFrom.Date && e.Date <= dateTo.Date)
             .OrderByDescending(e => e.Date)
             .ThenByDescending(e => e.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<double> GetTotalCaloriesBurnedAsync(
@@ -54,6 +54,6 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
         return await context.Set<ExerciseEntry>()
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
-            .SumAsync(e => e.CaloriesBurned, cancellationToken);
+            .SumAsync(e => e.CaloriesBurned, cancellationToken).ConfigureAwait(false);
     }
 }

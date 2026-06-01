@@ -21,11 +21,11 @@ public sealed class FastingNotificationScheduler(
 
     public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
         var now = dateTimeProvider.UtcNow;
-        var activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken);
+        var activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
         var activeOccurrenceIds = activeOccurrences.Select(static x => x.Id).ToArray();
         var checkIns = activeOccurrenceIds.Length == 0
             ? []
-            : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken);
+            : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken).ConfigureAwait(false);
         var checkInLookup = checkIns
             .GroupBy(static x => x.OccurrenceId)
             .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)group.ToList());
@@ -39,18 +39,19 @@ public sealed class FastingNotificationScheduler(
             }
 
             checkInLookup.TryGetValue(occurrence.Id, out var occurrenceCheckIns);
-            createdCount += await ProcessCheckInReminderNotificationsAsync(occurrence, occurrenceCheckIns, now, usersToPush, cancellationToken);
+            createdCount += await ProcessCheckInReminderNotificationsAsync(occurrence, occurrenceCheckIns, now, usersToPush, cancellationToken).ConfigureAwait(false);
             createdCount += plan.Type switch {
-                FastingPlanType.Intermittent => await ProcessIntermittentNotificationsAsync(occurrence, plan, now, usersToPush, cancellationToken),
+                FastingPlanType.Intermittent => await ProcessIntermittentNotificationsAsync(occurrence, plan, now, usersToPush, cancellationToken).ConfigureAwait(false),
                 _ => await ProcessCompletionNotificationAsync(occurrence, plan, now, usersToPush, cancellationToken)
+.ConfigureAwait(false)
             };
         }
 
         foreach (var userGuid in usersToPush) {
             var userId = new UserId(userGuid);
-            var unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken);
-            await notificationPusher.PushUnreadCountAsync(userGuid, unreadCount, cancellationToken);
-            await notificationPusher.PushNotificationsChangedAsync(userGuid, cancellationToken);
+            var unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+            await notificationPusher.PushUnreadCountAsync(userGuid, unreadCount, cancellationToken).ConfigureAwait(false);
+            await notificationPusher.PushNotificationsChangedAsync(userGuid, cancellationToken).ConfigureAwait(false);
         }
 
         if (createdCount > 0) {
@@ -96,7 +97,7 @@ public sealed class FastingNotificationScheduler(
                 occurrence,
                 $"fasting-check-in-reminder:{occurrence.Id.Value}:{hour}",
                 usersToPush,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         return createdCount;
@@ -126,7 +127,7 @@ public sealed class FastingNotificationScheduler(
         }
 
         var referenceId = $"fasting-completed:{occurrence.Id.Value}";
-        if (await notificationRepository.ExistsAsync(occurrence.UserId, NotificationTypes.FastingCompleted, referenceId, cancellationToken)) {
+        if (await notificationRepository.ExistsAsync(occurrence.UserId, NotificationTypes.FastingCompleted, referenceId, cancellationToken).ConfigureAwait(false)) {
             return 0;
         }
 
@@ -136,8 +137,8 @@ public sealed class FastingNotificationScheduler(
             occurrence.Kind.ToString(),
             referenceId);
 
-        await notificationRepository.AddAsync(notification, cancellationToken);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken);
+        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
         usersToPush.Add(occurrence.UserId.Value);
         return 1;
     }
@@ -151,14 +152,14 @@ public sealed class FastingNotificationScheduler(
                 occurrence.UserId,
                 NotificationTypes.FastingCheckInReminder,
                 referenceId,
-                cancellationToken)) {
+                cancellationToken).ConfigureAwait(false)) {
             return 0;
         }
 
         var notification = NotificationFactory.CreateFastingCheckInReminder(occurrence.UserId, referenceId);
 
-        await notificationRepository.AddAsync(notification, cancellationToken);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken);
+        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
         usersToPush.Add(occurrence.UserId.Value);
         return 1;
     }
@@ -192,7 +193,7 @@ public sealed class FastingNotificationScheduler(
                     NotificationTypes.EatingWindowStarted,
                     $"eating-window-started:{occurrence.Id.Value}:{cycleIndex + 1}",
                     usersToPush,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
             }
 
             var fastingWindowStartUtc = occurrence.StartedAtUtc.AddHours((cycleIndex + 1) * cycleLengthHours);
@@ -203,7 +204,7 @@ public sealed class FastingNotificationScheduler(
                     NotificationTypes.FastingWindowStarted,
                     $"fasting-window-started:{occurrence.Id.Value}:{cycleIndex + 2}",
                     usersToPush,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -217,7 +218,7 @@ public sealed class FastingNotificationScheduler(
         string referenceId,
         ISet<Guid> usersToPush,
         CancellationToken cancellationToken) {
-        if (await notificationRepository.ExistsAsync(occurrence.UserId, notificationType, referenceId, cancellationToken)) {
+        if (await notificationRepository.ExistsAsync(occurrence.UserId, notificationType, referenceId, cancellationToken).ConfigureAwait(false)) {
             return 0;
         }
 
@@ -235,8 +236,8 @@ public sealed class FastingNotificationScheduler(
             _ => throw new InvalidOperationException($"Unsupported fasting notification type '{notificationType}'.")
         };
 
-        await notificationRepository.AddAsync(notification, cancellationToken);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken);
+        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
         usersToPush.Add(occurrence.UserId.Value);
         return 1;
     }

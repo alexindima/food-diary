@@ -19,7 +19,7 @@ public class UpdateDietologistPermissionsCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -28,19 +28,19 @@ public class UpdateDietologistPermissionsCommandHandler(
             userId,
             DietologistInvitationStatus.Pending,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         invitation ??= await invitationRepository.GetActiveByClientAsync(
             userId,
             asTracking: true,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {
             return Result.Failure(Errors.Dietologist.NoActiveRelationship);
         }
 
         invitation.UpdatePermissions(command.Permissions.ToPermissions());
-        await invitationRepository.UpdateAsync(invitation, cancellationToken);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }
