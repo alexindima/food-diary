@@ -110,13 +110,25 @@ dotnet_diagnostic.MA0048.severity = warning
 [FoodDiary.Application/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 
+[FoodDiary.Integrations/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
 [FoodDiary.MailInbox.Application/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailInbox.Initializer/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailInbox.Presentation/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 
 [FoodDiary.MailRelay.Initializer/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 
 [Shared/FoodDiary.Mediator/**/*.cs]
+dotnet_diagnostic.MA0048.severity = warning
+
+[tests/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 
 # Keep this enum beside IUserRepository; architecture tests intentionally limit the folder surface.

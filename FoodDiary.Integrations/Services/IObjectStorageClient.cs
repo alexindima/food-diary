@@ -11,5 +11,3 @@ public interface IObjectStorageClient {
 
     Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken);
 }
-
-public sealed record StoredObjectInfo(long SizeBytes, string? ContentType);

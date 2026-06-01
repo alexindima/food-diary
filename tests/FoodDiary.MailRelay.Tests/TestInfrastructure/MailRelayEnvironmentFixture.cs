@@ -86,6 +86,3 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
         }
     }
 }
-
-[CollectionDefinition("mailrelay-environment")]
-public sealed class MailRelayEnvironmentCollection : ICollectionFixture<MailRelayEnvironmentFixture>;
