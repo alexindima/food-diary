@@ -16,19 +16,43 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         DateTime fromUtc,
         DateTime toUtc,
         CancellationToken cancellationToken = default) {
-        var query = context.AiUsages
+        var query = CreateSummaryQuery(fromUtc, toUtc);
+
+        var totals = await GetSummaryTotalsAsync(query, cancellationToken).ConfigureAwait(false);
+        var daily = await GetDailySummaryAsync(query, cancellationToken).ConfigureAwait(false);
+        var byOperation = await GetBreakdownByOperationAsync(query, cancellationToken).ConfigureAwait(false);
+        var byModel = await GetBreakdownByModelAsync(query, cancellationToken).ConfigureAwait(false);
+        var byUser = await GetBreakdownByUserAsync(query, cancellationToken).ConfigureAwait(false);
+
+        return new AiUsageSummary(
+            totals?.TotalTokens ?? 0,
+            totals?.InputTokens ?? 0,
+            totals?.OutputTokens ?? 0,
+            daily,
+            byOperation,
+            byModel,
+            byUser);
+    }
+
+    private IQueryable<AiUsage> CreateSummaryQuery(DateTime fromUtc, DateTime toUtc) {
+        return context.AiUsages
             .AsNoTracking()
             .Where(x => x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc);
+    }
 
-        var totals = await query
+    private static async Task<AiUsageTotalsRow?> GetSummaryTotalsAsync(IQueryable<AiUsage> query, CancellationToken cancellationToken) {
+        return await query
             .GroupBy(_ => 1)
-            .Select(group => new {
-                TotalTokens = group.Sum(x => x.TotalTokens),
-                InputTokens = group.Sum(x => x.InputTokens),
-                OutputTokens = group.Sum(x => x.OutputTokens)
-            })
+            .Select(group => new AiUsageTotalsRow(
+                group.Sum(x => x.TotalTokens),
+                group.Sum(x => x.InputTokens),
+                group.Sum(x => x.OutputTokens)))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
 
+    private static async Task<IReadOnlyList<AiUsageDailySummary>> GetDailySummaryAsync(
+        IQueryable<AiUsage> query,
+        CancellationToken cancellationToken) {
         var byDay = await query
             .GroupBy(x => x.CreatedOnUtc.Date)
             .Select(group => new {
@@ -40,6 +64,18 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .OrderBy(x => x.Date)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
+        return byDay
+            .Select(x => new AiUsageDailySummary(
+                DateOnly.FromDateTime(x.Date),
+                x.Total,
+                x.Input,
+                x.Output))
+            .ToList();
+    }
+
+    private static async Task<IReadOnlyList<AiUsageBreakdown>> GetBreakdownByOperationAsync(
+        IQueryable<AiUsage> query,
+        CancellationToken cancellationToken) {
         var byOperationRaw = await query
             .GroupBy(x => x.Operation)
             .Select(group => new {
@@ -51,6 +87,14 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .OrderByDescending(x => x.Total)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
+        return byOperationRaw
+            .Select(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output))
+            .ToList();
+    }
+
+    private static async Task<IReadOnlyList<AiUsageBreakdown>> GetBreakdownByModelAsync(
+        IQueryable<AiUsage> query,
+        CancellationToken cancellationToken) {
         var byModelRaw = await query
             .GroupBy(x => x.Model)
             .Select(group => new {
@@ -62,6 +106,14 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .OrderByDescending(x => x.Total)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
+        return byModelRaw
+            .Select(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output))
+            .ToList();
+    }
+
+    private async Task<IReadOnlyList<AiUsageUserSummary>> GetBreakdownByUserAsync(
+        IQueryable<AiUsage> query,
+        CancellationToken cancellationToken) {
         var byUserRaw = await query
             .Join(
                 context.Users.AsNoTracking(),
@@ -79,34 +131,9 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .OrderByDescending(x => x.Total)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        var daily = byDay
-            .Select(x => new AiUsageDailySummary(
-                DateOnly.FromDateTime(x.Date),
-                x.Total,
-                x.Input,
-                x.Output))
-            .ToList();
-
-        var byOperation = byOperationRaw
-            .Select(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output))
-            .ToList();
-
-        var byModel = byModelRaw
-            .Select(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output))
-            .ToList();
-
-        var byUser = byUserRaw
+        return byUserRaw
             .Select(x => new AiUsageUserSummary(new UserId(x.Id), x.Email, x.Total, x.Input, x.Output))
             .ToList();
-
-        return new AiUsageSummary(
-            totals?.TotalTokens ?? 0,
-            totals?.InputTokens ?? 0,
-            totals?.OutputTokens ?? 0,
-            daily,
-            byOperation,
-            byModel,
-            byUser);
     }
 
     public async Task<AiUsageTotals> GetUserTotalsAsync(
@@ -125,4 +152,6 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
 
         return totals ?? new AiUsageTotals(0, 0);
     }
+
+    private sealed record AiUsageTotalsRow(int TotalTokens, int InputTokens, int OutputTokens);
 }

@@ -11,6 +11,17 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
 
         entity.HasKey(e => e.Id);
 
+        ConfigureIdentifiers(entity);
+        ConfigureStatusAndPeriods(entity);
+        ConfigureIndexes(entity);
+
+        entity.HasOne<Domain.Entities.Users.User>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private static void ConfigureIdentifiers(EntityTypeBuilder<BillingSubscription> entity) {
         entity.Property(e => e.UserId).HasConversion(
             id => id.Value,
             value => new UserId(value));
@@ -38,7 +49,9 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
         entity.Property(e => e.Status)
             .IsRequired()
             .HasMaxLength(64);
+    }
 
+    private static void ConfigureStatusAndPeriods(EntityTypeBuilder<BillingSubscription> entity) {
         entity.Property(e => e.CurrentPeriodStartUtc)
             .HasColumnType("timestamp with time zone");
 
@@ -68,7 +81,9 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
 
         entity.Property(e => e.PremiumRoleManagedByBilling)
             .HasDefaultValue(false);
+    }
 
+    private static void ConfigureIndexes(EntityTypeBuilder<BillingSubscription> entity) {
         entity.HasIndex(e => e.UserId)
             .IsUnique();
 
@@ -79,11 +94,6 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
             .IsUnique();
 
         entity.HasIndex(e => new { e.Provider, e.ExternalPaymentMethodId });
-
-        entity.HasOne<Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 
@@ -93,6 +103,22 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
 
         entity.HasKey(e => e.Id);
 
+        ConfigureIdentifiers(entity);
+        ConfigurePaymentDetails(entity);
+        ConfigureIndexes(entity);
+
+        entity.HasOne<Domain.Entities.Users.User>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne<BillingSubscription>()
+            .WithMany()
+            .HasForeignKey(e => e.BillingSubscriptionId)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
+
+    private static void ConfigureIdentifiers(EntityTypeBuilder<BillingPayment> entity) {
         entity.Property(e => e.UserId).HasConversion(
             id => id.Value,
             value => new UserId(value));
@@ -123,7 +149,9 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
         entity.Property(e => e.Status)
             .IsRequired()
             .HasMaxLength(64);
+    }
 
+    private static void ConfigurePaymentDetails(EntityTypeBuilder<BillingPayment> entity) {
         entity.Property(e => e.Kind)
             .IsRequired()
             .HasMaxLength(32);
@@ -145,7 +173,9 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
 
         entity.Property(e => e.ProviderMetadataJson)
             .HasColumnType("jsonb");
+    }
 
+    private static void ConfigureIndexes(EntityTypeBuilder<BillingPayment> entity) {
         entity.HasIndex(e => new { e.Provider, e.ExternalPaymentId })
             .IsUnique();
 
@@ -156,16 +186,6 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
         entity.HasIndex(e => new { e.Provider, e.ExternalPaymentMethodId });
 
         entity.HasIndex(e => e.UserId);
-
-        entity.HasOne<Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        entity.HasOne<BillingSubscription>()
-            .WithMany()
-            .HasForeignKey(e => e.BillingSubscriptionId)
-            .OnDelete(DeleteBehavior.SetNull);
     }
 }
 

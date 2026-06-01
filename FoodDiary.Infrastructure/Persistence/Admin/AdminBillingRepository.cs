@@ -76,27 +76,21 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             from payment in context.BillingPayments.AsNoTracking()
             join user in context.Users.AsNoTracking() on payment.UserId equals user.Id
             select new { payment, user };
-
         if (!string.IsNullOrWhiteSpace(filter.Provider)) {
             query = query.Where(item => item.payment.Provider == filter.Provider);
         }
-
         if (!string.IsNullOrWhiteSpace(filter.Status)) {
             query = query.Where(item => item.payment.Status == filter.Status);
         }
-
         if (!string.IsNullOrWhiteSpace(filter.Kind)) {
             query = query.Where(item => item.payment.Kind == filter.Kind);
         }
-
         if (filter.FromUtc.HasValue) {
             query = query.Where(item => item.payment.CreatedOnUtc >= filter.FromUtc.Value);
         }
-
         if (filter.ToUtc.HasValue) {
             query = query.Where(item => item.payment.CreatedOnUtc <= filter.ToUtc.Value);
         }
-
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
             var term = $"%{EscapeLikePattern(filter.Search)}%";
             query = query.Where(item =>
@@ -105,7 +99,6 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 EF.Functions.ILike(item.payment.ExternalCustomerId ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter));
         }
-
         var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         var items = await query
             .OrderByDescending(item => item.payment.CreatedOnUtc)
@@ -134,7 +127,6 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 item.payment.CreatedOnUtc,
                 item.payment.ModifiedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
-
         return (items, total);
     }
 

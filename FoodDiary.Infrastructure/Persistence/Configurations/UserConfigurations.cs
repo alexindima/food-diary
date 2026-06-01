@@ -10,6 +10,14 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
     public void Configure(EntityTypeBuilder<User> entity) {
         entity.Property<uint>("xmin").IsRowVersion();
 
+        ConfigureIdentity(entity);
+        ConfigurePreferences(entity);
+        ConfigureUsageLimits(entity);
+        ConfigureRelationships(entity);
+        ConfigureNavigationAccess(entity);
+    }
+
+    private static void ConfigureIdentity(EntityTypeBuilder<User> entity) {
         entity.Property(e => e.Id).HasConversion(
             id => id.Value,
             value => new UserId(value));
@@ -36,6 +44,13 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasColumnType("timestamp with time zone");
         entity.Property(e => e.ActivityLevel)
             .HasConversion<string>();
+        entity.Property(e => e.TelegramUserId)
+            .HasColumnType("bigint");
+        entity.HasIndex(e => e.TelegramUserId)
+            .IsUnique();
+    }
+
+    private static void ConfigurePreferences(EntityTypeBuilder<User> entity) {
         entity.Property(e => e.Language)
             .HasDefaultValue("en");
         entity.Property(e => e.Theme)
@@ -52,11 +67,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasDefaultValue(12);
         entity.Property(e => e.FastingCheckInFollowUpReminderHours)
             .HasDefaultValue(20);
-        entity.Property(e => e.TelegramUserId)
-            .HasColumnType("bigint");
         entity.Property(e => e.DashboardLayoutJson)
             .HasColumnType("jsonb")
             .HasColumnName("DashboardLayout");
+    }
+
+    private static void ConfigureUsageLimits(EntityTypeBuilder<User> entity) {
         entity.Property(e => e.AiInputTokenLimit)
             .HasDefaultValue(5_000_000L);
         entity.Property(e => e.AiOutputTokenLimit)
@@ -66,7 +82,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasColumnType("timestamp with time zone");
         entity.Property(e => e.PremiumTrialEndsAtUtc)
             .HasColumnType("timestamp with time zone");
+    }
 
+    private static void ConfigureRelationships(EntityTypeBuilder<User> entity) {
         entity.HasMany(e => e.WeightEntries)
             .WithOne(w => w.User)
             .HasForeignKey(w => w.UserId)
@@ -87,10 +105,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasForeignKey(e => e.ProfileImageAssetId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
+    }
 
-        entity.HasIndex(e => e.TelegramUserId)
-            .IsUnique();
-
+    private static void ConfigureNavigationAccess(EntityTypeBuilder<User> entity) {
         entity.Metadata.FindNavigation(nameof(User.Meals))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         entity.Metadata.FindNavigation(nameof(User.Products))!

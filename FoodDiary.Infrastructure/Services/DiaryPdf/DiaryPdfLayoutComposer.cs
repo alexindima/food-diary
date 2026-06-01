@@ -239,33 +239,45 @@ internal sealed partial class DiaryPdfGenerator {
                 });
 
                 table.Header(header => {
-                    HeaderCell(header.Cell(), report.Texts.DateColumn);
-                    HeaderCell(header.Cell(), report.Texts.TypeColumn);
-                    HeaderCell(header.Cell(), report.Texts.ItemsColumn);
-                    HeaderCell(header.Cell(), report.Texts.KcalColumn);
-                    HeaderCell(header.Cell(), report.Texts.ProteinsColumnShort);
-                    HeaderCell(header.Cell(), report.Texts.FatsTitle);
-                    HeaderCell(header.Cell(), report.Texts.CarbsTitle);
-                    HeaderCell(header.Cell(), report.Texts.FiberTitle);
-                    HeaderCell(header.Cell(), report.Texts.SatietyColumn);
-                    HeaderCell(header.Cell(), report.Texts.CommentColumn);
+                    foreach (var headerText in GetMealTableHeaders(report)) {
+                        HeaderCell(header.Cell(), headerText);
+                    }
                 });
 
                 foreach (var meal in meals) {
-                    DataCell(table.Cell(), report.FormatMealDate(meal.Date));
-                    DataCell(table.Cell(), report.FormatMealType(meal.MealType));
-                    DataCell(table.Cell(), FormatMealItemsList(meal, report));
-                    DataCell(table.Cell(), FormatNumber(EffectiveCalories(meal), 0, report.Culture));
-                    DataCell(table.Cell(), FormatNumber(EffectiveProteins(meal), 1, report.Culture));
-                    DataCell(table.Cell(), FormatNumber(EffectiveFats(meal), 1, report.Culture));
-                    DataCell(table.Cell(), FormatNumber(EffectiveCarbs(meal), 1, report.Culture));
-                    DataCell(table.Cell(), FormatNumber(EffectiveFiber(meal), 1, report.Culture));
-                    DataCell(table.Cell(), $"{meal.PreMealSatietyLevel}/{meal.PostMealSatietyLevel}");
-                    DataCell(table.Cell(), string.IsNullOrWhiteSpace(meal.Comment) ? "" : Truncate(meal.Comment, 90));
+                    foreach (var value in GetMealTableValues(meal, report)) {
+                        DataCell(table.Cell(), value);
+                    }
                 }
             });
         });
     }
+
+    private static string[] GetMealTableHeaders(DiaryReportData report) => [
+        report.Texts.DateColumn,
+        report.Texts.TypeColumn,
+        report.Texts.ItemsColumn,
+        report.Texts.KcalColumn,
+        report.Texts.ProteinsColumnShort,
+        report.Texts.FatsTitle,
+        report.Texts.CarbsTitle,
+        report.Texts.FiberTitle,
+        report.Texts.SatietyColumn,
+        report.Texts.CommentColumn
+    ];
+
+    private static string[] GetMealTableValues(Meal meal, DiaryReportData report) => [
+        report.FormatMealDate(meal.Date),
+        report.FormatMealType(meal.MealType),
+        FormatMealItemsList(meal, report),
+        FormatNumber(EffectiveCalories(meal), 0, report.Culture),
+        FormatNumber(EffectiveProteins(meal), 1, report.Culture),
+        FormatNumber(EffectiveFats(meal), 1, report.Culture),
+        FormatNumber(EffectiveCarbs(meal), 1, report.Culture),
+        FormatNumber(EffectiveFiber(meal), 1, report.Culture),
+        $"{meal.PreMealSatietyLevel}/{meal.PostMealSatietyLevel}",
+        string.IsNullOrWhiteSpace(meal.Comment) ? "" : Truncate(meal.Comment, 90)
+    ];
 
     private static void ComposeMealItemsList(IContainer container, DiaryReportData report, Meal meal) {
         var compositionItems = GetMealCompositionItems(meal, report);
