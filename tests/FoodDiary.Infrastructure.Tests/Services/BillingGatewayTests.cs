@@ -447,43 +447,7 @@ public sealed class BillingGatewayTests {
         var userId = Guid.NewGuid();
         var currentPeriodStart = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero);
         var currentPeriodEnd = new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero);
-        var payload = JsonSerializer.Serialize(new {
-            id = "evt_123",
-            @object = "event",
-            api_version = "2026-04-22.dahlia",
-            type = "customer.subscription.updated",
-            data = new {
-                @object = new {
-                    id = "sub_123",
-                    @object = "subscription",
-                    customer = "cus_123",
-                    status = "active",
-                    cancel_at_period_end = true,
-                    canceled_at = (long?)null,
-                    trial_start = (long?)null,
-                    trial_end = (long?)null,
-                    metadata = new {
-                        user_id = userId.ToString(),
-                        plan = "monthly",
-                    },
-                    items = new {
-                        @object = "list",
-                        data = new[] {
-                            new {
-                                id = "si_123",
-                                @object = "subscription_item",
-                                current_period_start = currentPeriodStart.ToUnixTimeSeconds(),
-                                current_period_end = currentPeriodEnd.ToUnixTimeSeconds(),
-                                price = new {
-                                    id = "price_monthly",
-                                    @object = "price",
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        });
+        var payload = CreateStripeSubscriptionUpdatedPayload(userId, currentPeriodStart, currentPeriodEnd);
         var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
             SecretKey = "sk_test",
             WebhookSecret = "whsec_test",
@@ -551,6 +515,48 @@ public sealed class BillingGatewayTests {
         var hash = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes($"{timestamp}.{payload}"))).ToLowerInvariant();
         return $"t={timestamp},v1={hash}";
     }
+
+    private static string CreateStripeSubscriptionUpdatedPayload(
+        Guid userId,
+        DateTimeOffset currentPeriodStart,
+        DateTimeOffset currentPeriodEnd) =>
+        JsonSerializer.Serialize(new {
+            id = "evt_123",
+            @object = "event",
+            api_version = "2026-04-22.dahlia",
+            type = "customer.subscription.updated",
+            data = new {
+                @object = new {
+                    id = "sub_123",
+                    @object = "subscription",
+                    customer = "cus_123",
+                    status = "active",
+                    cancel_at_period_end = true,
+                    canceled_at = (long?)null,
+                    trial_start = (long?)null,
+                    trial_end = (long?)null,
+                    metadata = new {
+                        user_id = userId.ToString(),
+                        plan = "monthly",
+                    },
+                    items = new {
+                        @object = "list",
+                        data = new[] {
+                            new {
+                                id = "si_123",
+                                @object = "subscription_item",
+                                current_period_start = currentPeriodStart.ToUnixTimeSeconds(),
+                                current_period_end = currentPeriodEnd.ToUnixTimeSeconds(),
+                                price = new {
+                                    id = "price_monthly",
+                                    @object = "price",
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
 
     private static StringContent JsonContent(string json) =>
         new(json, Encoding.UTF8, "application/json");

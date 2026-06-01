@@ -273,28 +273,16 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task ProcessBillingWebhook_ForManualPremiumUser_DoesNotRemovePremiumRoleOnCanceledSubscription() {
-        var premiumRole = Role.Create(RoleNames.Premium);
-        var user = User.Create("manual-premium@example.com", "hash");
-        user.ReplaceRoles([premiumRole]);
-        var subscription = BillingSubscription.CreatePending(
-            user.Id,
+        var user = CreatePremiumUser("manual-premium@example.com");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
             BillingProviderNames.Paddle,
             "customer_manual",
-            "price_monthly",
-            "monthly");
-        subscription.ApplyProviderSnapshot(
-            BillingProviderNames.Paddle,
             "sub_manual",
             null,
-            "price_monthly",
-            "monthly",
             "active",
             Now.AddDays(-1),
             Now.AddMonths(1),
-            false,
-            null,
-            null,
-            null,
             "evt_initial",
             Now.AddDays(-1));
         var userRepository = new FakeUserRepository(user);
@@ -342,25 +330,15 @@ public sealed class BillingFeatureTests {
     public async Task ProcessBillingWebhook_ForDeletedUserSubscription_StoresEventWithoutGrantingPremiumRole() {
         var user = User.Create("deleted-premium@example.com", "hash");
         user.DeleteAccount(Now.AddDays(-1));
-        var subscription = BillingSubscription.CreatePending(
-            user.Id,
+        var subscription = CreateSubscriptionSnapshot(
+            user,
             BillingProviderNames.YooKassa,
             "customer_deleted",
-            "price_monthly",
-            "monthly");
-        subscription.ApplyProviderSnapshot(
-            BillingProviderNames.YooKassa,
             "pay_deleted_initial",
             "pm_deleted",
-            "price_monthly",
-            "monthly",
             "past_due",
             Now.AddMonths(-1),
             Now.AddMinutes(-1),
-            false,
-            null,
-            null,
-            null,
             "evt_deleted_initial",
             Now.AddMonths(-1));
         var userRepository = new FakeUserRepository(user);
@@ -410,28 +388,16 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task BillingRenewalService_ForDueSubscription_UpdatesSubscriptionAddsPaymentAndKeepsPremiumRole() {
-        var premiumRole = Role.Create(RoleNames.Premium);
-        var user = User.Create("premium@example.com", "hash");
-        user.ReplaceRoles([premiumRole]);
-        var subscription = BillingSubscription.CreatePending(
-            user.Id,
+        var user = CreatePremiumUser("premium@example.com");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
             BillingProviderNames.YooKassa,
             "customer_renewal",
-            "price_monthly",
-            "monthly");
-        subscription.ApplyProviderSnapshot(
-            BillingProviderNames.YooKassa,
             "pay_initial",
             "pm_renewal",
-            "price_monthly",
-            "monthly",
             "active",
             Now.AddMonths(-1),
             Now.AddMinutes(-1),
-            false,
-            null,
-            null,
-            null,
             "evt_initial",
             Now.AddMonths(-1),
             "{\"initial\":true}");
@@ -440,26 +406,16 @@ public sealed class BillingFeatureTests {
         var paymentRepository = new RecordingBillingPaymentRepository();
         var renewalGateway = new FakeRecurringBillingGateway(
             BillingProviderNames.YooKassa,
-            new BillingRecurringPaymentModel(
+            CreateRenewalPayment(
                 "pay_renewed",
                 "pm_renewal",
-                "price_monthly",
-                "monthly",
-                "active",
-                Now,
-                Now.AddMonths(1),
                 "evt_renewed",
-                7.99m,
-                "USD",
                 "{\"renewed\":true}"));
-        var service = new BillingRenewalService(
+        var service = CreateRenewalService(
             subscriptionRepository,
             paymentRepository,
             userRepository,
-            new NoOpBillingTransactionRunner(),
-            [renewalGateway],
-            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
-            new FixedDateTimeProvider(Now));
+            renewalGateway);
 
         var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
@@ -550,28 +506,16 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task BillingRenewalService_WhenBillingDetailsMissing_MarksPastDueWithoutCallingProvider() {
-        var premiumRole = Role.Create(RoleNames.Premium);
-        var user = User.Create("missing-renewal-details@example.com", "hash");
-        user.ReplaceRoles([premiumRole]);
-        var subscription = BillingSubscription.CreatePending(
-            user.Id,
+        var user = CreatePremiumUser("missing-renewal-details@example.com");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
             BillingProviderNames.YooKassa,
             "customer_missing_details",
-            "price_monthly",
-            "monthly");
-        subscription.ApplyProviderSnapshot(
-            BillingProviderNames.YooKassa,
             "pay_initial",
             null,
-            "price_monthly",
-            "monthly",
             "active",
             Now.AddMonths(-1),
             Now.AddMinutes(-1),
-            false,
-            null,
-            null,
-            null,
             "evt_initial",
             Now.AddMonths(-1));
         subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
@@ -579,26 +523,15 @@ public sealed class BillingFeatureTests {
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         var renewalGateway = new FakeRecurringBillingGateway(
             BillingProviderNames.YooKassa,
-            new BillingRecurringPaymentModel(
+            CreateRenewalPayment(
                 "pay_should_not_be_used",
                 "pm_should_not_be_used",
-                "price_monthly",
-                "monthly",
-                "active",
-                Now,
-                Now.AddMonths(1),
-                "evt_should_not_be_used",
-                7.99m,
-                "USD",
-                null));
-        var service = new BillingRenewalService(
+                "evt_should_not_be_used"));
+        var service = CreateRenewalService(
             subscriptionRepository,
             new RecordingBillingPaymentRepository(),
             userRepository,
-            new NoOpBillingTransactionRunner(),
-            [renewalGateway],
-            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
-            new FixedDateTimeProvider(Now));
+            renewalGateway);
 
         var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
@@ -617,25 +550,15 @@ public sealed class BillingFeatureTests {
     public async Task BillingRenewalService_ForDeletedUserSubscription_SkipsProviderAndDisablesRenewal() {
         var user = User.Create("deleted-renewal@example.com", "hash");
         user.DeleteAccount(Now.AddDays(-1));
-        var subscription = BillingSubscription.CreatePending(
-            user.Id,
+        var subscription = CreateSubscriptionSnapshot(
+            user,
             BillingProviderNames.YooKassa,
             "customer_deleted_renewal",
-            "price_monthly",
-            "monthly");
-        subscription.ApplyProviderSnapshot(
-            BillingProviderNames.YooKassa,
             "pay_deleted_initial",
             "pm_deleted_renewal",
-            "price_monthly",
-            "monthly",
             "active",
             Now.AddMonths(-1),
             Now.AddMinutes(-1),
-            false,
-            null,
-            null,
-            null,
             "evt_deleted_initial",
             Now.AddMonths(-1));
         subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
@@ -644,26 +567,15 @@ public sealed class BillingFeatureTests {
         var paymentRepository = new RecordingBillingPaymentRepository();
         var renewalGateway = new FakeRecurringBillingGateway(
             BillingProviderNames.YooKassa,
-            new BillingRecurringPaymentModel(
+            CreateRenewalPayment(
                 "pay_should_not_be_used",
                 "pm_deleted_renewal",
-                "price_monthly",
-                "monthly",
-                "active",
-                Now,
-                Now.AddMonths(1),
-                "evt_should_not_be_used",
-                7.99m,
-                "USD",
-                null));
-        var service = new BillingRenewalService(
+                "evt_should_not_be_used"));
+        var service = CreateRenewalService(
             subscriptionRepository,
             paymentRepository,
             userRepository,
-            new NoOpBillingTransactionRunner(),
-            [renewalGateway],
-            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
-            new FixedDateTimeProvider(Now));
+            renewalGateway);
 
         var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
@@ -872,6 +784,81 @@ public sealed class BillingFeatureTests {
             new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
             dateTimeProvider);
     }
+
+    private static User CreatePremiumUser(string email) {
+        var user = User.Create(email, "hash");
+        user.ReplaceRoles([Role.Create(RoleNames.Premium)]);
+        return user;
+    }
+
+    private static BillingSubscription CreateSubscriptionSnapshot(
+        User user,
+        string provider,
+        string externalCustomerId,
+        string? externalSubscriptionId,
+        string? externalPaymentMethodId,
+        string status,
+        DateTime periodStartUtc,
+        DateTime periodEndUtc,
+        string eventId,
+        DateTime eventCreatedAtUtc,
+        string? metadataJson = null) {
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            provider,
+            externalCustomerId,
+            "price_monthly",
+            "monthly");
+        subscription.ApplyProviderSnapshot(
+            provider,
+            externalSubscriptionId,
+            externalPaymentMethodId,
+            "price_monthly",
+            "monthly",
+            status,
+            periodStartUtc,
+            periodEndUtc,
+            false,
+            null,
+            null,
+            null,
+            eventId,
+            eventCreatedAtUtc,
+            metadataJson);
+        return subscription;
+    }
+
+    private static BillingRecurringPaymentModel CreateRenewalPayment(
+        string externalPaymentId,
+        string externalPaymentMethodId,
+        string eventId,
+        string? metadataJson = null) =>
+        new(
+            externalPaymentId,
+            externalPaymentMethodId,
+            "price_monthly",
+            "monthly",
+            "active",
+            Now,
+            Now.AddMonths(1),
+            eventId,
+            7.99m,
+            "USD",
+            metadataJson);
+
+    private static BillingRenewalService CreateRenewalService(
+        InMemoryBillingSubscriptionRepository subscriptionRepository,
+        RecordingBillingPaymentRepository paymentRepository,
+        FakeUserRepository userRepository,
+        IBillingRecurringProviderGateway renewalGateway) =>
+        new(
+            subscriptionRepository,
+            paymentRepository,
+            userRepository,
+            new NoOpBillingTransactionRunner(),
+            [renewalGateway],
+            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
+            new FixedDateTimeProvider(Now));
 
     private sealed class FakeUserRepository(params User[] users) : IUserRepository {
         private readonly List<User> _users = users.ToList();

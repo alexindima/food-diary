@@ -170,6 +170,12 @@ dotnet_diagnostic.MA0051.severity = warning
 [tests/FoodDiary.ArchitectureTests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[tests/FoodDiary.Application.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.Infrastructure.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [tests/FoodDiary.JobManager.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 

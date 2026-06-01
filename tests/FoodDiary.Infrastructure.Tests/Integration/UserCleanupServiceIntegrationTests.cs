@@ -82,56 +82,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     [RequiresDockerFact]
     public async Task CleanupDeletedUsersAsync_WithReassign_ReassignsContentAssetsAndDeletesUser() {
         await using var context = await databaseFixture.CreateDbContextAsync();
-        var deletedUser = User.Create("deleted@example.com", "hash");
-        var survivorUser = User.Create("survivor@example.com", "hash");
-        survivorUser.UpdateProfileMedia(profileImageAssetId: null);
-
-        context.Users.AddRange(deletedUser, survivorUser);
-        await context.SaveChangesAsync();
-
-        var productAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/product.webp", "https://cdn.example.com/product.webp");
-        var recipeAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/recipe.webp", "https://cdn.example.com/recipe.webp");
-        var stepAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/step.webp", "https://cdn.example.com/step.webp");
-        var profileAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/profile.webp", "https://cdn.example.com/profile.webp");
-        var mealAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/meal.webp", "https://cdn.example.com/meal.webp");
-
-        var product = Product.Create(
-            deletedUser.Id,
-            "Bread",
-            MeasurementUnit.G,
-            100,
-            100,
-            265,
-            9,
-            3.2,
-            49,
-            2.7,
-            0,
-            imageAssetId: productAsset.Id);
-        var recipe = Recipe.Create(
-            deletedUser.Id,
-            "Toast",
-            servings: 1,
-            imageAssetId: recipeAsset.Id);
-        recipe.AddStep(1, "Toast bread", imageAssetId: stepAsset.Id);
-        var meal = FoodDiary.Domain.Entities.Meals.Meal.Create(deletedUser.Id, new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc), imageAssetId: mealAsset.Id);
-        var shoppingList = ShoppingList.Create(deletedUser.Id, "Temporary");
-        shoppingList.AddItem("Bread", product.Id, 2, MeasurementUnit.Pcs, "Bakery", false, 0);
-        var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Recipe, recipe.Id.Value);
-        var aiUsage = AiUsage.Create(deletedUser.Id, "nutrition", "gpt-4.1-mini", 15, 25, 40);
-
-        context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset, profileAsset, mealAsset);
-        context.Products.Add(product);
-        context.Recipes.Add(recipe);
-        context.Meals.Add(meal);
-        context.ShoppingLists.Add(shoppingList);
-        context.RecentItems.Add(recentItem);
-        context.AiUsages.Add(aiUsage);
-        await context.SaveChangesAsync();
-
-        deletedUser.UpdateProfileMedia(profileImageAssetId: profileAsset.Id);
-        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
-        await context.SaveChangesAsync();
+        var (deletedUser, survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
 
         var storage = new RecordingImageStorageService();
         var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
@@ -139,27 +90,12 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
             batchSize: 10,
-            reassignUserId: survivorUser.Id.Value);
+            reassignUserId: survivorUser.Id.Value).ConfigureAwait(false);
 
-        await using var verificationContext = CreateVerificationContext(context);
+        using var verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(1, removed);
-        Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
-        Assert.True(await verificationContext.Users.AnyAsync(user => user.Id == survivorUser.Id));
-
-        var reassignedProduct = await verificationContext.Products.SingleAsync();
-        var reassignedRecipe = await verificationContext.Recipes.SingleAsync();
-        var reassignedAssets = await verificationContext.ImageAssets.OrderBy(asset => asset.ObjectKey).ToListAsync();
-
-        Assert.Equal(survivorUser.Id, reassignedProduct.UserId);
-        Assert.Equal(survivorUser.Id, reassignedRecipe.UserId);
-        Assert.All(reassignedAssets, asset => Assert.Equal(survivorUser.Id, asset.UserId));
-        Assert.Single(await verificationContext.RecipeSteps.ToListAsync());
-        Assert.False(await verificationContext.Meals.AnyAsync());
-        Assert.False(await verificationContext.ShoppingLists.AnyAsync());
-        Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
-        Assert.False(await verificationContext.RecentItems.AnyAsync());
-        Assert.False(await verificationContext.AiUsages.AnyAsync());
+        await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
         Assert.Equal(
             ["users/deleted/meal.webp", "users/deleted/profile.webp"],
             storage.DeletedObjectKeys.OrderBy(static key => key, StringComparer.Ordinal).ToArray());
@@ -220,6 +156,90 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             .Options;
 
         return new FoodDiaryDbContext(options);
+    }
+
+    private static async Task<(User DeletedUser, User SurvivorUser)> SeedReassignScenarioAsync(
+        FoodDiaryDbContext context,
+        CancellationToken cancellationToken = default) {
+        var deletedUser = User.Create("deleted@example.com", "hash");
+        var survivorUser = User.Create("survivor@example.com", "hash");
+        survivorUser.UpdateProfileMedia(profileImageAssetId: null);
+
+        context.Users.AddRange(deletedUser, survivorUser);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        var productAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/product.webp", "https://cdn.example.com/product.webp");
+        var recipeAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/recipe.webp", "https://cdn.example.com/recipe.webp");
+        var stepAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/step.webp", "https://cdn.example.com/step.webp");
+        var profileAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/profile.webp", "https://cdn.example.com/profile.webp");
+        var mealAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/meal.webp", "https://cdn.example.com/meal.webp");
+
+        var product = Product.Create(
+            deletedUser.Id,
+            "Bread",
+            MeasurementUnit.G,
+            100,
+            100,
+            265,
+            9,
+            3.2,
+            49,
+            2.7,
+            0,
+            imageAssetId: productAsset.Id);
+        var recipe = Recipe.Create(deletedUser.Id, "Toast", servings: 1, imageAssetId: recipeAsset.Id);
+        recipe.AddStep(1, "Toast bread", imageAssetId: stepAsset.Id);
+        var meal = FoodDiary.Domain.Entities.Meals.Meal.Create(
+            deletedUser.Id,
+            new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc),
+            imageAssetId: mealAsset.Id);
+        var shoppingList = ShoppingList.Create(deletedUser.Id, "Temporary");
+        shoppingList.AddItem("Bread", product.Id, 2, MeasurementUnit.Pcs, "Bakery", false, 0);
+
+        context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset, profileAsset, mealAsset);
+        context.Products.Add(product);
+        context.Recipes.Add(recipe);
+        context.Meals.Add(meal);
+        context.ShoppingLists.Add(shoppingList);
+        context.RecentItems.Add(RecentItem.Create(deletedUser.Id, RecentItemType.Recipe, recipe.Id.Value));
+        context.AiUsages.Add(AiUsage.Create(deletedUser.Id, "nutrition", "gpt-4.1-mini", 15, 25, 40));
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        deletedUser.UpdateProfileMedia(profileImageAssetId: profileAsset.Id);
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return (deletedUser, survivorUser);
+    }
+
+    private static async Task AssertReassignedContentAsync(
+        FoodDiaryDbContext verificationContext,
+        User deletedUser,
+        User survivorUser,
+        CancellationToken cancellationToken = default) {
+        Assert.False(await verificationContext.Users
+            .AnyAsync(user => user.Id == deletedUser.Id, cancellationToken)
+            .ConfigureAwait(false));
+        Assert.True(await verificationContext.Users
+            .AnyAsync(user => user.Id == survivorUser.Id, cancellationToken)
+            .ConfigureAwait(false));
+
+        var reassignedProduct = await verificationContext.Products.SingleAsync(cancellationToken).ConfigureAwait(false);
+        var reassignedRecipe = await verificationContext.Recipes.SingleAsync(cancellationToken).ConfigureAwait(false);
+        var reassignedAssets = await verificationContext.ImageAssets
+            .OrderBy(asset => asset.ObjectKey)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        Assert.Equal(survivorUser.Id, reassignedProduct.UserId);
+        Assert.Equal(survivorUser.Id, reassignedRecipe.UserId);
+        Assert.All(reassignedAssets, asset => Assert.Equal(survivorUser.Id, asset.UserId));
+        Assert.Single(await verificationContext.RecipeSteps.ToListAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.Meals.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.ShoppingLists.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.ShoppingListItems.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.RecentItems.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.AiUsages.AnyAsync(cancellationToken).ConfigureAwait(false));
     }
 
     private sealed class RecordingImageStorageService : IImageStorageService {
