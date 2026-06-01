@@ -142,3 +142,27 @@ dotnet_diagnostic.MA0051.severity = warning
 
 [FoodDiary.MailRelay.WebApi/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Presentation.Api/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.ArchitectureTests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.JobManager.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.MailInbox.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.MailRelay.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.Mediator.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.Resources.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[tests/FoodDiary.Telegram.Bot.Tests/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
