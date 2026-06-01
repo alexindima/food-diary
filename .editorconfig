@@ -93,6 +93,10 @@ dotnet_diagnostic.MA0049.severity = suggestion
 [Shared/FoodDiary.Mediator/Mediator.cs]
 dotnet_diagnostic.MA0049.severity = suggestion
 
+# Keep this enum beside IUserRepository; architecture tests intentionally limit the folder surface.
+[FoodDiary.Application.Abstractions/Common/Interfaces/Persistence/IUserRepository.cs]
+dotnet_diagnostic.MA0048.severity = suggestion
+
 [**/Migrations/**/*.cs]
 dotnet_diagnostic.MA0051.severity = suggestion
 

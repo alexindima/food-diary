@@ -1,5 +1,3 @@
-using FoodDiary.Domain.ValueObjects.Ids;
-
 namespace FoodDiary.Application.Abstractions.Admin.Models;
 
 public sealed record AiUsageSummary(
@@ -10,22 +8,3 @@ public sealed record AiUsageSummary(
     IReadOnlyList<AiUsageBreakdown> ByOperation,
     IReadOnlyList<AiUsageBreakdown> ByModel,
     IReadOnlyList<AiUsageUserSummary> ByUser);
-
-public sealed record AiUsageDailySummary(
-    DateOnly Date,
-    int TotalTokens,
-    int InputTokens,
-    int OutputTokens);
-
-public sealed record AiUsageBreakdown(
-    string Key,
-    int TotalTokens,
-    int InputTokens,
-    int OutputTokens);
-
-public sealed record AiUsageUserSummary(
-    UserId UserId,
-    string Email,
-    int TotalTokens,
-    int InputTokens,
-    int OutputTokens);

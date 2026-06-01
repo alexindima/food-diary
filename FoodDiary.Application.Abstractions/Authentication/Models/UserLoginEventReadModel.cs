@@ -12,8 +12,3 @@ public sealed record UserLoginEventReadModel(
     string? OperatingSystem,
     string? DeviceType,
     DateTime LoggedInAtUtc);
-
-public sealed record UserLoginDeviceSummaryModel(
-    string Key,
-    int Count,
-    DateTime LastSeenAtUtc);

@@ -19,7 +19,3 @@ public interface IRecentItemRepository {
         int limit,
         CancellationToken cancellationToken = default);
 }
-
-public sealed record RecentProductUsage(ProductId ProductId, int UsageCount, DateTime LastUsedAtUtc);
-
-public sealed record RecentRecipeUsage(RecipeId RecipeId, int UsageCount, DateTime LastUsedAtUtc);

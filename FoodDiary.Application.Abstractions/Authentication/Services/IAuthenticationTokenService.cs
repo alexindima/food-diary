@@ -10,5 +10,3 @@ public interface IAuthenticationTokenService {
         AuthenticationClientContext? clientContext = null);
     string IssueAccessToken(User user);
 }
-
-public sealed record IssuedAuthenticationTokens(string AccessToken, string RefreshToken);

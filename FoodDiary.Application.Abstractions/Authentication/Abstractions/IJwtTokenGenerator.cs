@@ -17,5 +17,3 @@ public interface IJwtTokenGenerator {
     string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles);
     (UserId userId, string email)? ValidateToken(string token);
 }
-
-public sealed record JwtImpersonationContext(UserId ActorUserId, string Reason);

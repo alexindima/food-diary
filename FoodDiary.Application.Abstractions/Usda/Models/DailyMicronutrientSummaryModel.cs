@@ -6,11 +6,3 @@ public sealed record DailyMicronutrientSummaryModel(
     int TotalProductCount,
     IReadOnlyList<DailyMicronutrientModel> Nutrients,
     HealthAreaScoresModel? HealthScores);
-
-public sealed record DailyMicronutrientModel(
-    int NutrientId,
-    string Name,
-    string Unit,
-    double TotalAmount,
-    double? DailyValue,
-    double? PercentDailyValue);
