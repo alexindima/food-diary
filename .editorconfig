@@ -110,6 +110,12 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.Application/Admin/Commands/StartAdminImpersonation/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
+[FoodDiary.Application/Admin/Commands/UpdateAdminUser/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
+[FoodDiary.Application/Billing/**/*.cs]
+dotnet_diagnostic.MA0051.severity = warning
+
 [FoodDiary.Application/Dietologist/Commands/InviteDietologist/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 

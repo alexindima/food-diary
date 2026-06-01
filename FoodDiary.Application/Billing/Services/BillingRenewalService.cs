@@ -1,11 +1,13 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
+using User = FoodDiary.Domain.Entities.Users.User;
 
 namespace FoodDiary.Application.Billing.Services;
 
@@ -22,12 +24,16 @@ public sealed class BillingRenewalService(
     private readonly Dictionary<string, IBillingRecurringProviderGateway> _recurringGateways = recurringProviderGateways
         .ToDictionary(gateway => gateway.Provider, StringComparer.OrdinalIgnoreCase);
 
+    private enum RenewalOutcome {
+        Renewed,
+        Failed
+    }
+
     public async Task<BillingRenewalRunResult> RenewDueSubscriptionsAsync(
         string provider,
         int batchSize,
         CancellationToken cancellationToken = default) {
-        if (string.IsNullOrWhiteSpace(provider) ||
-            !_recurringGateways.TryGetValue(provider.Trim(), out var recurringGateway)) {
+        if (!TryGetRecurringGateway(provider, out var recurringGateway)) {
             return new BillingRenewalRunResult(0, 0, 0);
         }
 
@@ -43,109 +49,12 @@ public sealed class BillingRenewalService(
         foreach (var subscription in subscriptions) {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrWhiteSpace(subscription.ExternalPaymentMethodId) ||
-                string.IsNullOrWhiteSpace(subscription.Plan)) {
-                await MarkRenewalFailedAsync(
-                    subscription,
-                    "Renewal skipped because subscription billing details are incomplete.",
-                    cancellationToken).ConfigureAwait(false);
-                failed++;
-                continue;
-            }
-
-            var user = await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
-            if (CurrentUserAccessPolicy.EnsureCanAccess(user) is not null) {
-                await billingTransactionRunner.ExecuteAsync(async ct => {
-                    subscription.MarkRenewalSkippedForInaccessibleUser(
-                        BuildRenewalSkippedEventId(subscription, now),
-                        now,
-                        "Renewal skipped because subscription user is not accessible.");
-                    if (subscription.PremiumRoleManagedByBilling) {
-                        subscription.MarkPremiumRoleManagedByBilling(false, now);
-                    }
-
-                    await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
-                }, cancellationToken).ConfigureAwait(false);
-
-                failed++;
-                continue;
-            }
-
-            var renewalResult = await recurringGateway.CreateRecurringPaymentAsync(
-                new BillingRecurringPaymentRequestModel(
-                    subscription.UserId.Value,
-                    subscription.Id,
-                    subscription.ExternalCustomerId,
-                    subscription.ExternalPaymentMethodId,
-                    subscription.Plan,
-                    subscription.CurrentPeriodEndUtc,
-                    BuildRenewalIdempotenceKey(subscription)),
+            var outcome = await ProcessSubscriptionRenewalAsync(
+                subscription,
+                recurringGateway,
+                now,
                 cancellationToken).ConfigureAwait(false);
-
-            if (renewalResult.IsFailure) {
-                await MarkRenewalFailedAsync(subscription, renewalResult.Error.Message, cancellationToken).ConfigureAwait(false);
-                failed++;
-                continue;
-            }
-
-            var renewal = renewalResult.Value;
-            try {
-                await billingTransactionRunner.ExecuteAsync(async ct => {
-                    subscription.ApplyProviderSnapshot(
-                        recurringGateway.Provider,
-                        renewal.PaymentId,
-                        renewal.PaymentMethodId,
-                        renewal.PriceId,
-                        renewal.Plan,
-                        renewal.Status,
-                        renewal.CurrentPeriodStartUtc,
-                        renewal.CurrentPeriodEndUtc,
-                        false,
-                        null,
-                        null,
-                        null,
-                        renewal.EventId,
-                        now,
-                        renewal.ProviderMetadataJson);
-                    await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
-
-                    var existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
-                        recurringGateway.Provider,
-                        renewal.PaymentId,
-                        ct).ConfigureAwait(false);
-                    if (existingPayment is null) {
-                        var payment = BillingPayment.Create(
-                            subscription.UserId,
-                            subscription.Id,
-                            recurringGateway.Provider,
-                            renewal.PaymentId,
-                            subscription.ExternalCustomerId,
-                            subscription.ExternalSubscriptionId,
-                            renewal.PaymentMethodId,
-                            renewal.PriceId,
-                            renewal.Plan,
-                            renewal.Status,
-                            BillingPaymentKinds.Renewal,
-                            renewal.Amount,
-                            renewal.Currency,
-                            renewal.CurrentPeriodStartUtc,
-                            renewal.CurrentPeriodEndUtc,
-                            renewal.EventId,
-                            renewal.ProviderMetadataJson);
-                        await billingPaymentRepository.AddAsync(payment, ct).ConfigureAwait(false);
-                    }
-
-                    var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
-                        renewal.Status,
-                        renewal.CurrentPeriodEndUtc);
-                    await billingAccessService.EnsurePremiumRoleAsync(user!, subscription, shouldHavePremium, ct).ConfigureAwait(false);
-                }, cancellationToken).ConfigureAwait(false);
-            } catch (BillingPaymentAlreadyExistsException) {
-                renewed++;
-                continue;
-            }
-
-            if (string.Equals(renewal.Status, "active", StringComparison.OrdinalIgnoreCase)) {
+            if (outcome == RenewalOutcome.Renewed) {
                 renewed++;
             } else {
                 failed++;
@@ -153,6 +62,165 @@ public sealed class BillingRenewalService(
         }
 
         return new BillingRenewalRunResult(subscriptions.Count, renewed, failed);
+    }
+
+    private bool TryGetRecurringGateway(
+        string provider,
+        out IBillingRecurringProviderGateway recurringGateway) {
+        if (!string.IsNullOrWhiteSpace(provider) &&
+            _recurringGateways.TryGetValue(provider.Trim(), out recurringGateway!)) {
+            return true;
+        }
+
+        recurringGateway = null!;
+        return false;
+    }
+
+    private async Task<RenewalOutcome> ProcessSubscriptionRenewalAsync(
+        BillingSubscription subscription,
+        IBillingRecurringProviderGateway recurringGateway,
+        DateTime now,
+        CancellationToken cancellationToken) {
+        if (HasIncompleteBillingDetails(subscription)) {
+            await MarkRenewalFailedAsync(
+                    subscription,
+                    "Renewal skipped because subscription billing details are incomplete.",
+                    cancellationToken).ConfigureAwait(false);
+            return RenewalOutcome.Failed;
+        }
+
+        var user = await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
+        if (CurrentUserAccessPolicy.EnsureCanAccess(user) is not null) {
+            await SkipRenewalForInaccessibleUserAsync(subscription, now, cancellationToken).ConfigureAwait(false);
+            return RenewalOutcome.Failed;
+        }
+
+        var renewalResult = await CreateRecurringPaymentAsync(subscription, recurringGateway, cancellationToken).ConfigureAwait(false);
+        if (renewalResult.IsFailure) {
+            await MarkRenewalFailedAsync(subscription, renewalResult.Error.Message, cancellationToken).ConfigureAwait(false);
+            return RenewalOutcome.Failed;
+        }
+
+        try {
+            await ApplySuccessfulRenewalAsync(
+                subscription,
+                renewalResult.Value,
+                recurringGateway.Provider,
+                user!,
+                now,
+                cancellationToken).ConfigureAwait(false);
+        } catch (BillingPaymentAlreadyExistsException) {
+            return RenewalOutcome.Renewed;
+        }
+
+        return string.Equals(renewalResult.Value.Status, "active", StringComparison.OrdinalIgnoreCase)
+            ? RenewalOutcome.Renewed
+            : RenewalOutcome.Failed;
+    }
+
+    private static bool HasIncompleteBillingDetails(BillingSubscription subscription) =>
+        string.IsNullOrWhiteSpace(subscription.ExternalPaymentMethodId) ||
+        string.IsNullOrWhiteSpace(subscription.Plan);
+
+    private async Task SkipRenewalForInaccessibleUserAsync(
+        BillingSubscription subscription,
+        DateTime skippedAtUtc,
+        CancellationToken cancellationToken) {
+        await billingTransactionRunner.ExecuteAsync(async ct => {
+            subscription.MarkRenewalSkippedForInaccessibleUser(
+                BuildRenewalSkippedEventId(subscription, skippedAtUtc),
+                skippedAtUtc,
+                "Renewal skipped because subscription user is not accessible.");
+            if (subscription.PremiumRoleManagedByBilling) {
+                subscription.MarkPremiumRoleManagedByBilling(false, skippedAtUtc);
+            }
+
+            await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
+        BillingSubscription subscription,
+        IBillingRecurringProviderGateway recurringGateway,
+        CancellationToken cancellationToken) =>
+        recurringGateway.CreateRecurringPaymentAsync(
+            new BillingRecurringPaymentRequestModel(
+                subscription.UserId.Value,
+                subscription.Id,
+                subscription.ExternalCustomerId,
+                subscription.ExternalPaymentMethodId!,
+                subscription.Plan!,
+                subscription.CurrentPeriodEndUtc,
+                BuildRenewalIdempotenceKey(subscription)),
+            cancellationToken);
+
+    private async Task ApplySuccessfulRenewalAsync(
+        BillingSubscription subscription,
+        BillingRecurringPaymentModel renewal,
+        string provider,
+        User user,
+        DateTime renewedAtUtc,
+        CancellationToken cancellationToken) {
+        await billingTransactionRunner.ExecuteAsync(async ct => {
+            subscription.ApplyProviderSnapshot(
+                provider,
+                renewal.PaymentId,
+                renewal.PaymentMethodId,
+                renewal.PriceId,
+                renewal.Plan,
+                renewal.Status,
+                renewal.CurrentPeriodStartUtc,
+                renewal.CurrentPeriodEndUtc,
+                false,
+                null,
+                null,
+                null,
+                renewal.EventId,
+                renewedAtUtc,
+                renewal.ProviderMetadataJson);
+            await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
+
+            await AddRenewalPaymentIfMissingAsync(subscription, renewal, provider, ct).ConfigureAwait(false);
+
+            var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+                renewal.Status,
+                renewal.CurrentPeriodEndUtc);
+            await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, ct).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task AddRenewalPaymentIfMissingAsync(
+        BillingSubscription subscription,
+        BillingRecurringPaymentModel renewal,
+        string provider,
+        CancellationToken cancellationToken) {
+        var existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
+            provider,
+            renewal.PaymentId,
+            cancellationToken).ConfigureAwait(false);
+        if (existingPayment is not null) {
+            return;
+        }
+
+        var payment = BillingPayment.Create(
+            subscription.UserId,
+            subscription.Id,
+            provider,
+            renewal.PaymentId,
+            subscription.ExternalCustomerId,
+            subscription.ExternalSubscriptionId,
+            renewal.PaymentMethodId,
+            renewal.PriceId,
+            renewal.Plan,
+            renewal.Status,
+            BillingPaymentKinds.Renewal,
+            renewal.Amount,
+            renewal.Currency,
+            renewal.CurrentPeriodStartUtc,
+            renewal.CurrentPeriodEndUtc,
+            renewal.EventId,
+            renewal.ProviderMetadataJson);
+        await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
 
     private static string BuildRenewalIdempotenceKey(BillingSubscription subscription) {

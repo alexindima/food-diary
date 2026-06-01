@@ -65,67 +65,13 @@ public sealed class ProcessBillingWebhookCommandHandler(
         }
 
         try {
-            await billingTransactionRunner.ExecuteAsync(async ct => {
-                var processedWebhookEvent = BillingWebhookEvent.CreateProcessed(
-                    billingProvider.Provider,
-                    webhookEvent.EventId,
-                    webhookEvent.EventType,
-                    webhookEvent.ExternalSubscriptionId ?? webhookEvent.ExternalPaymentMethodId,
-                    dateTimeProvider.UtcNow,
-                command.Payload);
-                await billingWebhookEventRepository.AddAsync(processedWebhookEvent, ct).ConfigureAwait(false);
-
-                if (subscription is null) {
-                    subscription = BillingSubscription.CreatePending(
-                        user.Id,
-                        billingProvider.Provider,
-                        webhookEvent.ExternalCustomerId,
-                        webhookEvent.ExternalPriceId,
-                        webhookEvent.Plan);
-                    subscription.ApplyProviderSnapshot(
-                        billingProvider.Provider,
-                        webhookEvent.ExternalSubscriptionId,
-                        webhookEvent.ExternalPaymentMethodId,
-                        webhookEvent.ExternalPriceId,
-                        webhookEvent.Plan,
-                        webhookEvent.Status,
-                        webhookEvent.CurrentPeriodStartUtc,
-                        webhookEvent.CurrentPeriodEndUtc,
-                        webhookEvent.CancelAtPeriodEnd,
-                        webhookEvent.CanceledAtUtc,
-                        webhookEvent.TrialStartUtc,
-                        webhookEvent.TrialEndUtc,
-                        webhookEvent.EventId,
-                        dateTimeProvider.UtcNow,
-                        webhookEvent.ProviderMetadataJson);
-                    await billingSubscriptionRepository.AddAsync(subscription, ct).ConfigureAwait(false);
-                } else {
-                    subscription.ApplyProviderSnapshot(
-                        billingProvider.Provider,
-                        webhookEvent.ExternalSubscriptionId,
-                        webhookEvent.ExternalPaymentMethodId,
-                        webhookEvent.ExternalPriceId,
-                        webhookEvent.Plan,
-                        webhookEvent.Status,
-                        webhookEvent.CurrentPeriodStartUtc,
-                        webhookEvent.CurrentPeriodEndUtc,
-                        webhookEvent.CancelAtPeriodEnd,
-                        webhookEvent.CanceledAtUtc,
-                        webhookEvent.TrialStartUtc,
-                        webhookEvent.TrialEndUtc,
-                        webhookEvent.EventId,
-                        dateTimeProvider.UtcNow,
-                        webhookEvent.ProviderMetadataJson);
-                    await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
-                }
-
-                await AddWebhookPaymentIfPresentAsync(subscription, billingProvider.Provider, webhookEvent, ct).ConfigureAwait(false);
-
-                var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
-                    webhookEvent.Status,
-                    webhookEvent.CurrentPeriodEndUtc);
-                await SyncPremiumRoleAsync(user, subscription, shouldHavePremium, ct).ConfigureAwait(false);
-            }, cancellationToken).ConfigureAwait(false);
+            await ProcessWebhookEventAsync(
+                command.Payload,
+                billingProvider.Provider,
+                webhookEvent,
+                subscription,
+                user,
+                cancellationToken).ConfigureAwait(false);
         } catch (BillingWebhookEventAlreadyProcessedException) {
             return Result.Success();
         } catch (BillingPaymentAlreadyExistsException) {
@@ -133,6 +79,91 @@ public sealed class ProcessBillingWebhookCommandHandler(
         }
 
         return Result.Success();
+    }
+
+    private async Task ProcessWebhookEventAsync(
+        string payload,
+        string provider,
+        BillingWebhookEventModel webhookEvent,
+        BillingSubscription? subscription,
+        User user,
+        CancellationToken cancellationToken) {
+        await billingTransactionRunner.ExecuteAsync(async ct => {
+            var processedWebhookEvent = CreateProcessedWebhookEvent(provider, webhookEvent, payload);
+            await billingWebhookEventRepository.AddAsync(processedWebhookEvent, ct).ConfigureAwait(false);
+
+            var updatedSubscription = await UpsertSubscriptionAsync(
+                provider,
+                webhookEvent,
+                subscription,
+                user,
+                ct).ConfigureAwait(false);
+
+            await AddWebhookPaymentIfPresentAsync(updatedSubscription, provider, webhookEvent, ct).ConfigureAwait(false);
+
+            var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+                webhookEvent.Status,
+                webhookEvent.CurrentPeriodEndUtc);
+            await SyncPremiumRoleAsync(user, updatedSubscription, shouldHavePremium, ct).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+
+    private BillingWebhookEvent CreateProcessedWebhookEvent(
+        string provider,
+        BillingWebhookEventModel webhookEvent,
+        string payload) =>
+        BillingWebhookEvent.CreateProcessed(
+            provider,
+            webhookEvent.EventId,
+            webhookEvent.EventType,
+            webhookEvent.ExternalSubscriptionId ?? webhookEvent.ExternalPaymentMethodId,
+            dateTimeProvider.UtcNow,
+            payload);
+
+    private async Task<BillingSubscription> UpsertSubscriptionAsync(
+        string provider,
+        BillingWebhookEventModel webhookEvent,
+        BillingSubscription? subscription,
+        User user,
+        CancellationToken cancellationToken) {
+        var currentSubscription = subscription ?? BillingSubscription.CreatePending(
+            user.Id,
+            provider,
+            webhookEvent.ExternalCustomerId,
+            webhookEvent.ExternalPriceId,
+            webhookEvent.Plan);
+
+        ApplyWebhookSnapshot(currentSubscription, provider, webhookEvent);
+
+        if (subscription is null) {
+            await billingSubscriptionRepository.AddAsync(currentSubscription, cancellationToken).ConfigureAwait(false);
+        } else {
+            await billingSubscriptionRepository.UpdateAsync(currentSubscription, cancellationToken).ConfigureAwait(false);
+        }
+
+        return currentSubscription;
+    }
+
+    private void ApplyWebhookSnapshot(
+        BillingSubscription subscription,
+        string provider,
+        BillingWebhookEventModel webhookEvent) {
+        subscription.ApplyProviderSnapshot(
+            provider,
+            webhookEvent.ExternalSubscriptionId,
+            webhookEvent.ExternalPaymentMethodId,
+            webhookEvent.ExternalPriceId,
+            webhookEvent.Plan,
+            webhookEvent.Status,
+            webhookEvent.CurrentPeriodStartUtc,
+            webhookEvent.CurrentPeriodEndUtc,
+            webhookEvent.CancelAtPeriodEnd,
+            webhookEvent.CanceledAtUtc,
+            webhookEvent.TrialStartUtc,
+            webhookEvent.TrialEndUtc,
+            webhookEvent.EventId,
+            dateTimeProvider.UtcNow,
+            webhookEvent.ProviderMetadataJson);
     }
 
     private static Error? ValidateWebhookEvent(BillingWebhookEventModel webhookEvent) {

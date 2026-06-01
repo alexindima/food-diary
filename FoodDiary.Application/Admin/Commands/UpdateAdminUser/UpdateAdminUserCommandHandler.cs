@@ -24,6 +24,10 @@ public sealed class UpdateAdminUserCommandHandler(
         [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support],
         StringComparer.Ordinal);
 
+    private sealed record RoleUpdate(
+        IReadOnlyList<Role> Roles,
+        IReadOnlyList<UserRoleAuditEvent> AuditEvents);
+
     public async Task<Result<AdminUserModel>> Handle(
         UpdateAdminUserCommand command,
         CancellationToken cancellationToken) {
@@ -46,75 +50,14 @@ public sealed class UpdateAdminUserCommandHandler(
             return Result.Failure<AdminUserModel>(languageResult.Error);
         }
 
-        IReadOnlyList<Role>? roleEntities = null;
-        IReadOnlyList<UserRoleAuditEvent> roleAuditEvents = [];
-        if (command.Roles is not null) {
-            var requestedRoles = command.Roles
-                .Where(role => !string.IsNullOrWhiteSpace(role))
-                .Select(role => role.Trim())
-                .Distinct(StringComparer.Ordinal)
-                .ToArray();
-
-            if (requestedRoles.Any(role => !AllowedRoles.Contains(role))) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid("roles", "Unknown role."));
-            }
-
-            var isOwner = user.HasRole(RoleNames.Owner);
-            var requestsOwner = requestedRoles.Contains(RoleNames.Owner, StringComparer.Ordinal);
-            var requestsAdmin = requestedRoles.Contains(RoleNames.Admin, StringComparer.Ordinal);
-
-            if (IsSelfUpdate(command) && user.HasRole(RoleNames.Admin) && !requestsAdmin) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid("roles", "Admin users cannot remove their own Admin role."));
-            }
-
-            if (!isOwner && requestsOwner) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid("roles", "Owner role cannot be assigned from the admin user editor."));
-            }
-
-            if (isOwner && (!requestsOwner || !requestsAdmin)) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid("roles", "Owner users must keep Owner and Admin roles."));
-            }
-
-            roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken).ConfigureAwait(false);
-            if (roleEntities.Count != requestedRoles.Length) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
-            }
-
-            roleAuditEvents = CreateRoleAuditEvents(
-                user,
-                roleEntities,
-                command.ActorUserId.HasValue ? new UserId(command.ActorUserId.Value) : null,
-                dateTimeProvider.UtcNow);
+        var roleUpdateResult = await PrepareRoleUpdateAsync(user, command, cancellationToken).ConfigureAwait(false);
+        if (roleUpdateResult.IsFailure) {
+            return Result.Failure<AdminUserModel>(roleUpdateResult.Error);
         }
 
-        if (command.IsActive.HasValue) {
-            if (user.DeletedAt is not null) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid(
-                        nameof(command.IsActive),
-                        "Deleted user lifecycle cannot be changed via admin active toggle. Use restore flow first."));
-            }
-
-            if (command.IsActive.Value) {
-                user.Activate();
-            } else {
-                if (IsSelfUpdate(command)) {
-                    return Result.Failure<AdminUserModel>(
-                        Errors.Validation.Invalid(nameof(command.IsActive), "Admin users cannot deactivate their own account."));
-                }
-
-                if (user.HasRole(RoleNames.Owner)) {
-                    return Result.Failure<AdminUserModel>(
-                        Errors.Validation.Invalid(nameof(command.IsActive), "Owner user cannot be deactivated."));
-                }
-
-                user.Deactivate();
-            }
+        var lifecycleError = ApplyLifecycleUpdate(user, command);
+        if (lifecycleError is not null) {
+            return Result.Failure<AdminUserModel>(lifecycleError);
         }
 
         user.UpdateAdminSecurity(new UserAdminSecurityUpdate(command.IsEmailConfirmed));
@@ -123,11 +66,14 @@ public sealed class UpdateAdminUserCommandHandler(
             command.AiInputTokenLimit,
             command.AiOutputTokenLimit));
 
-        if (roleEntities is not null) {
-            user.ReplaceRoles(roleEntities);
+        if (roleUpdateResult.Value is not null) {
+            user.ReplaceRoles(roleUpdateResult.Value.Roles);
         }
 
-        await userRepository.UpdateAsync(user, roleAuditEvents, cancellationToken).ConfigureAwait(false);
+        await userRepository.UpdateAsync(
+            user,
+            roleUpdateResult.Value?.AuditEvents ?? [],
+            cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log(
             "admin.user.update",
@@ -141,6 +87,100 @@ public sealed class UpdateAdminUserCommandHandler(
 
     private static bool IsSelfUpdate(UpdateAdminUserCommand command) =>
         command.ActorUserId.HasValue && command.ActorUserId.Value == command.UserId;
+
+    private async Task<Result<RoleUpdate?>> PrepareRoleUpdateAsync(
+        User user,
+        UpdateAdminUserCommand command,
+        CancellationToken cancellationToken) {
+        if (command.Roles is null) {
+            return Result.Success<RoleUpdate?>(null);
+        }
+
+        var requestedRoles = command.Roles
+            .Where(role => !string.IsNullOrWhiteSpace(role))
+            .Select(role => role.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        var rolesError = ValidateRequestedRoles(user, command, requestedRoles);
+        if (rolesError is not null) {
+            return Result.Failure<RoleUpdate?>(rolesError);
+        }
+
+        var roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken).ConfigureAwait(false);
+        if (roleEntities.Count != requestedRoles.Length) {
+            return Result.Failure<RoleUpdate?>(
+                Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
+        }
+
+        var roleAuditEvents = CreateRoleAuditEvents(
+            user,
+            roleEntities,
+            command.ActorUserId.HasValue ? new UserId(command.ActorUserId.Value) : null,
+            dateTimeProvider.UtcNow);
+
+        return Result.Success<RoleUpdate?>(new RoleUpdate(roleEntities, roleAuditEvents));
+    }
+
+    private static Error? ValidateRequestedRoles(
+        User user,
+        UpdateAdminUserCommand command,
+        IReadOnlyCollection<string> requestedRoles) {
+        if (requestedRoles.Any(role => !AllowedRoles.Contains(role))) {
+            return Errors.Validation.Invalid("roles", "Unknown role.");
+        }
+
+        var isOwner = user.HasRole(RoleNames.Owner);
+        var requestsOwner = requestedRoles.Contains(RoleNames.Owner, StringComparer.Ordinal);
+        var requestsAdmin = requestedRoles.Contains(RoleNames.Admin, StringComparer.Ordinal);
+
+        if (IsSelfUpdate(command) && user.HasRole(RoleNames.Admin) && !requestsAdmin) {
+            return Errors.Validation.Invalid("roles", "Admin users cannot remove their own Admin role.");
+        }
+
+        if (!isOwner && requestsOwner) {
+            return Errors.Validation.Invalid("roles", "Owner role cannot be assigned from the admin user editor.");
+        }
+
+        return isOwner && (!requestsOwner || !requestsAdmin)
+            ? Errors.Validation.Invalid("roles", "Owner users must keep Owner and Admin roles.")
+            : null;
+    }
+
+    private static Error? ApplyLifecycleUpdate(User user, UpdateAdminUserCommand command) {
+        if (!command.IsActive.HasValue) {
+            return null;
+        }
+
+        if (user.DeletedAt is not null) {
+            return Errors.Validation.Invalid(
+                nameof(command.IsActive),
+                "Deleted user lifecycle cannot be changed via admin active toggle. Use restore flow first.");
+        }
+
+        if (command.IsActive.Value) {
+            user.Activate();
+            return null;
+        }
+
+        var deactivateError = ValidateDeactivation(user, command);
+        if (deactivateError is not null) {
+            return deactivateError;
+        }
+
+        user.Deactivate();
+        return null;
+    }
+
+    private static Error? ValidateDeactivation(User user, UpdateAdminUserCommand command) {
+        if (IsSelfUpdate(command)) {
+            return Errors.Validation.Invalid(nameof(command.IsActive), "Admin users cannot deactivate their own account.");
+        }
+
+        return user.HasRole(RoleNames.Owner)
+            ? Errors.Validation.Invalid(nameof(command.IsActive), "Owner user cannot be deactivated.")
+            : null;
+    }
 
     private static IReadOnlyList<UserRoleAuditEvent> CreateRoleAuditEvents(
         User user,
