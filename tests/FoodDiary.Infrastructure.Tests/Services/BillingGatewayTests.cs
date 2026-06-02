@@ -150,6 +150,109 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenProviderNotConfigured_ReturnsProviderNotConfigured() {
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(new RecordingHttpMessageHandler()),
+            MsOptions.Create(new PaddleOptions()));
+
+        var result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", "ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderNotConfigured", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WithoutExistingCustomer_CreatesCustomerThenTransaction() {
+        var handler = new RecordingHttpMessageHandler(
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""{ "data": { "id": "ctm_new" } }"""),
+            },
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""
+                    {
+                      "data": {
+                        "id": "txn_new",
+                        "checkout": { "url": "https://checkout.paddle.com/txn_new" }
+                      }
+                    }
+                    """),
+            });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+        var userId = Guid.NewGuid();
+
+        var result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal("ctm_new", result.Value.CustomerId);
+        Assert.Equal("txn_new", result.Value.SessionId);
+        Assert.Equal(2, handler.Requests.Count);
+        Assert.Equal("https://api.paddle.test/customers", handler.Requests[0].RequestUri?.ToString());
+        Assert.Equal("https://api.paddle.test/transactions", handler.Requests[1].RequestUri?.ToString());
+        Assert.Contains("\"email\":\"buyer@example.com\"", handler.RequestBodies[0], StringComparison.Ordinal);
+        Assert.Contains("\"customer_id\":\"ctm_new\"", handler.RequestBodies[1], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenCheckoutUrlMissing_ReturnsProviderOperationFailure() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""{ "data": { "id": "txn_123", "checkout": { "url": "" } } }"""),
+        });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        var result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", "ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Contains("checkout URL is missing", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenPaddleReturnsEmptyEnvelope_ReturnsProviderOperationFailure() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""{ "data": null }"""),
+        });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        var result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", "ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Contains("empty response", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task PaddleCreateCheckoutSession_WhenProviderReturnsError_MapsProviderOperationFailure() {
         var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.BadRequest) {
             ReasonPhrase = "Bad Request",
@@ -173,6 +276,188 @@ public sealed class BillingGatewayTests {
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
         Assert.Contains("400 Bad Request", result.Error.Message, StringComparison.Ordinal);
         Assert.Contains("invalid customer", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task PaddleCreatePortalSession_WhenConfigured_MapsOverviewUrl() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""
+                {
+                  "data": {
+                    "urls": {
+                      "general": { "overview": "https://customers.paddle.com/portal" }
+                    }
+                  }
+                }
+                """),
+        });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+            }));
+
+        var result = await gateway.CreatePortalSessionAsync(
+            new BillingPortalSessionRequestModel("ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal("https://customers.paddle.com/portal", result.Value.Url);
+        Assert.NotNull(handler.LastRequest);
+        Assert.Equal("https://api.paddle.test/customers/ctm_123/portal-sessions", handler.LastRequest.RequestUri?.ToString());
+    }
+
+    [Fact]
+    public async Task PaddleCreatePortalSession_WhenProviderNotConfigured_ReturnsProviderNotConfigured() {
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(new RecordingHttpMessageHandler()),
+            MsOptions.Create(new PaddleOptions()));
+
+        var result = await gateway.CreatePortalSessionAsync(
+            new BillingPortalSessionRequestModel("ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderNotConfigured", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task PaddleCreatePortalSession_WhenOverviewUrlMissing_ReturnsProviderOperationFailure() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""{ "data": { "urls": { "general": { "overview": "" } } } }"""),
+        });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+            }));
+
+        var result = await gateway.CreatePortalSessionAsync(
+            new BillingPortalSessionRequestModel("ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Contains("portal URL is missing", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenPayloadOrSignatureMissing_ReturnsRequiredFailure() {
+        var gateway = CreateConfiguredPaddleWebhookGateway();
+
+        var missingPayload = await gateway.ParseWebhookEventAsync("", "ts=1;h1=signature", CancellationToken.None);
+        var missingSignature = await gateway.ParseWebhookEventAsync("{}", "", CancellationToken.None);
+
+        Assert.True(missingPayload.IsFailure);
+        Assert.Equal("Validation.Required", missingPayload.Error.Code);
+        Assert.True(missingSignature.IsFailure);
+        Assert.Equal("Validation.Required", missingSignature.Error.Code);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenProviderNotConfigured_ReturnsProviderNotConfigured() {
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(new RecordingHttpMessageHandler()),
+            MsOptions.Create(new PaddleOptions()));
+
+        var result = await gateway.ParseWebhookEventAsync("{}", "ts=1;h1=signature", CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderNotConfigured", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenSignatureHeaderMalformed_ReturnsValidationFailure() {
+        var gateway = CreateConfiguredPaddleWebhookGateway();
+
+        var result = await gateway.ParseWebhookEventAsync("{}", "ts=1", CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("malformed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenEventIsNotSubscription_ReturnsNullEvent() {
+        var payload = JsonSerializer.Serialize(new {
+            event_id = "evt_ignored",
+            event_type = "transaction.completed",
+            data = new {
+                id = "txn_123",
+                customer_id = "ctm_123",
+            },
+        });
+        var gateway = CreateConfiguredPaddleWebhookGateway();
+
+        var result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenSubscriptionIdentifiersMissing_ReturnsNullEvent() {
+        var payload = JsonSerializer.Serialize(new {
+            event_id = "evt_missing_ids",
+            event_type = "subscription.updated",
+            data = new {
+                id = "",
+                customer_id = "ctm_123",
+            },
+        });
+        var gateway = CreateConfiguredPaddleWebhookGateway();
+
+        var result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenPayloadMalformed_ReturnsValidationFailure() {
+        var payload = """{ "event_type": "subscription.updated", "data": """;
+        var gateway = CreateConfiguredPaddleWebhookGateway();
+
+        var result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenYearlyPriceAndTrialDatesMissing_MapsYearlyPlanAndFallbackTrialEnd() {
+        var userId = Guid.NewGuid();
+        var payload = JsonSerializer.Serialize(new {
+            event_id = "evt_yearly",
+            event_type = "subscription.created",
+            data = new {
+                id = "sub_yearly",
+                customer_id = "ctm_yearly",
+                status = "trialing",
+                next_billed_at = "2026-07-01T00:00:00Z",
+                custom_data = new {
+                    user_id = userId.ToString(),
+                    plan = "ignored-by-price",
+                },
+                items = new[] {
+                    new {
+                        price = new { id = "pri_yearly" },
+                    },
+                },
+            },
+        });
+        var gateway = CreateConfiguredPaddleWebhookGateway();
+
+        var result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.NotNull(result.Value);
+        Assert.Equal("yearly", result.Value.Plan);
+        Assert.Equal("pri_yearly", result.Value.ExternalPriceId);
+        Assert.Equal(new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc), result.Value.TrialEndUtc);
+        Assert.Equal(userId, result.Value.UserId);
     }
 
     [Fact]
@@ -443,6 +728,30 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task StripeWebhook_WhenProviderNotConfigured_ReturnsProviderNotConfiguredBeforePayloadValidation() {
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions()));
+
+        var result = await gateway.ParseWebhookEventAsync("", "", CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderNotConfigured", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task StripeWebhook_WhenSignatureMissing_ReturnsRequiredFailure() {
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+        }));
+
+        var result = await gateway.ParseWebhookEventAsync("{}", "", CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains("signatureHeader", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task StripeWebhook_WhenSubscriptionUpdated_MapsSubscriptionEvent() {
         var userId = Guid.NewGuid();
         var currentPeriodStart = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero);
@@ -473,6 +782,97 @@ public sealed class BillingGatewayTests {
         Assert.Equal(currentPeriodStart.UtcDateTime, result.Value.CurrentPeriodStartUtc);
         Assert.Equal(currentPeriodEnd.UtcDateTime, result.Value.CurrentPeriodEndUtc);
         Assert.Equal(userId, result.Value.UserId);
+    }
+
+    [Fact]
+    public async Task StripeWebhook_WhenSubscriptionDeletedWithYearlyPrice_MapsYearlySubscriptionEvent() {
+        var userId = Guid.NewGuid();
+        var currentPeriodStart = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero);
+        var currentPeriodEnd = new DateTimeOffset(2027, 5, 1, 0, 0, 0, TimeSpan.Zero);
+        var payload = CreateStripeSubscriptionPayload(
+            "customer.subscription.deleted",
+            userId,
+            currentPeriodStart,
+            currentPeriodEnd,
+            priceId: "price_yearly");
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+            PremiumMonthlyPriceId = "price_monthly",
+            PremiumYearlyPriceId = "price_yearly",
+        }));
+
+        var result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreateStripeSignature(payload, "whsec_test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.NotNull(result.Value);
+        Assert.Equal("customer.subscription.deleted", result.Value.EventType);
+        Assert.Equal("price_yearly", result.Value.ExternalPriceId);
+        Assert.Equal("yearly", result.Value.Plan);
+        Assert.Equal(currentPeriodStart.UtcDateTime, result.Value.CurrentPeriodStartUtc);
+        Assert.Equal(currentPeriodEnd.UtcDateTime, result.Value.CurrentPeriodEndUtc);
+        Assert.Equal(userId, result.Value.UserId);
+    }
+
+    [Fact]
+    public async Task StripeWebhook_WhenUnknownEvent_ReturnsNullEvent() {
+        var payload = JsonSerializer.Serialize(new {
+            id = "evt_ignored",
+            @object = "event",
+            api_version = "2026-04-22.dahlia",
+            type = "invoice.paid",
+            data = new {
+                @object = new {
+                    id = "in_123",
+                    @object = "invoice",
+                },
+            },
+        });
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+        }));
+
+        var result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreateStripeSignature(payload, "whsec_test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value);
+    }
+
+    [Fact]
+    public async Task StripeWebhook_WhenCheckoutSessionIsNotSubscription_ReturnsNullEvent() {
+        var payload = JsonSerializer.Serialize(new {
+            id = "evt_checkout",
+            @object = "event",
+            api_version = "2026-04-22.dahlia",
+            type = "checkout.session.completed",
+            data = new {
+                @object = new {
+                    id = "cs_123",
+                    @object = "checkout.session",
+                    mode = "payment",
+                    customer = "cus_123",
+                },
+            },
+        });
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+        }));
+
+        var result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreateStripeSignature(payload, "whsec_test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value);
     }
 
     [Fact]
@@ -509,6 +909,15 @@ public sealed class BillingGatewayTests {
         return $"ts={timestamp};h1={hash}";
     }
 
+    private static PaddleBillingGateway CreateConfiguredPaddleWebhookGateway() =>
+        new(
+            new HttpClient(new RecordingHttpMessageHandler()),
+            MsOptions.Create(new PaddleOptions {
+                WebhookSecretKey = "secret",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+            }));
+
     private static string CreateStripeSignature(string payload, string secret) {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
         using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
@@ -520,11 +929,24 @@ public sealed class BillingGatewayTests {
         Guid userId,
         DateTimeOffset currentPeriodStart,
         DateTimeOffset currentPeriodEnd) =>
+        CreateStripeSubscriptionPayload(
+            "customer.subscription.updated",
+            userId,
+            currentPeriodStart,
+            currentPeriodEnd,
+            "price_monthly");
+
+    private static string CreateStripeSubscriptionPayload(
+        string eventType,
+        Guid userId,
+        DateTimeOffset currentPeriodStart,
+        DateTimeOffset currentPeriodEnd,
+        string priceId) =>
         JsonSerializer.Serialize(new {
             id = "evt_123",
             @object = "event",
             api_version = "2026-04-22.dahlia",
-            type = "customer.subscription.updated",
+            type = eventType,
             data = new {
                 @object = new {
                     id = "sub_123",
@@ -548,7 +970,7 @@ public sealed class BillingGatewayTests {
                                 current_period_start = currentPeriodStart.ToUnixTimeSeconds(),
                                 current_period_end = currentPeriodEnd.ToUnixTimeSeconds(),
                                 price = new {
-                                    id = "price_monthly",
+                                    id = priceId,
                                     @object = "price",
                                 },
                             },
@@ -568,20 +990,31 @@ public sealed class BillingGatewayTests {
         public Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(string payload, string signatureHeader, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
-    private sealed class RecordingHttpMessageHandler(HttpResponseMessage? response = null) : HttpMessageHandler {
-        private readonly HttpResponseMessage _response = response ?? new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = JsonContent("{}"),
-        };
+    private sealed class RecordingHttpMessageHandler : HttpMessageHandler {
+        private readonly Queue<HttpResponseMessage> _responses;
 
         public HttpRequestMessage? LastRequest { get; private set; }
         public string LastRequestBody { get; private set; } = string.Empty;
+        public List<HttpRequestMessage> Requests { get; } = [];
+        public List<string> RequestBodies { get; } = [];
+
+        public RecordingHttpMessageHandler(params HttpResponseMessage[] responses) {
+            _responses = new Queue<HttpResponseMessage>(
+                responses.Length == 0
+                    ? [new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent("{}") }]
+                    : responses);
+        }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             LastRequest = request;
             LastRequestBody = request.Content is null
                 ? string.Empty
                 : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            return _response;
+            Requests.Add(request);
+            RequestBodies.Add(LastRequestBody);
+            return _responses.Count > 1
+                ? _responses.Dequeue()
+                : _responses.Peek();
         }
     }
 }
