@@ -13,6 +13,42 @@ public class EntityAndAggregateRootBaseTests {
     }
 
     [Fact]
+    public void Entity_Equals_NullEntity_ReturnsFalse() {
+        var entity = TestEntity.WithId(Guid.NewGuid());
+
+        var equals = entity.Equals((Entity<Guid>?)null);
+
+        Assert.False(equals);
+    }
+
+    [Fact]
+    public void Entity_EqualsObject_NullObject_ReturnsFalse() {
+        var entity = TestEntity.WithId(Guid.NewGuid());
+
+        var equals = entity.Equals((object?)null);
+
+        Assert.False(equals);
+    }
+
+    [Fact]
+    public void Entity_EqualsObject_DifferentType_ReturnsFalse() {
+        var entity = TestEntity.WithId(Guid.NewGuid());
+
+        var equals = entity.Equals(new object());
+
+        Assert.False(equals);
+    }
+
+    [Fact]
+    public void Entity_EqualsObject_SameReference_ReturnsTrue() {
+        var entity = TestEntity.Transient();
+
+        var equals = entity.Equals((object)entity);
+
+        Assert.True(equals);
+    }
+
+    [Fact]
     public void Entity_Equals_SameNonDefaultIdSameType_ReturnsTrue() {
         var id = Guid.NewGuid();
         var left = TestEntity.WithId(id);
@@ -71,6 +107,27 @@ public class EntityAndAggregateRootBaseTests {
     }
 
     [Fact]
+    public void Entity_SetCreated_WithLocalTime_StoresUtcTime() {
+        var entity = TestEntity.WithId(Guid.NewGuid());
+        var localTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Local);
+
+        entity.MarkCreated(localTime);
+
+        Assert.Equal(localTime.ToUniversalTime(), entity.CreatedOnUtc);
+        Assert.Equal(DateTimeKind.Utc, entity.CreatedOnUtc.Kind);
+    }
+
+    [Fact]
+    public void Entity_SetCreated_WithUnspecifiedTime_Throws() {
+        var entity = TestEntity.WithId(Guid.NewGuid());
+        var unspecifiedTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Unspecified);
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkCreated(unspecifiedTime));
+
+        Assert.Equal("createdOnUtc", ex.ParamName);
+    }
+
+    [Fact]
     public void Entity_SetModified_SetsModifiedOnUtc() {
         var entity = TestEntity.WithId(Guid.NewGuid());
         entity.MarkCreated();
@@ -79,6 +136,27 @@ public class EntityAndAggregateRootBaseTests {
 
         Assert.NotNull(entity.ModifiedOnUtc);
         Assert.True(entity.ModifiedOnUtc >= entity.CreatedOnUtc);
+    }
+
+    [Fact]
+    public void Entity_SetModified_WithLocalTime_StoresUtcTime() {
+        var entity = TestEntity.WithId(Guid.NewGuid());
+        var localTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Local);
+
+        entity.MarkModified(localTime);
+
+        Assert.Equal(localTime.ToUniversalTime(), entity.ModifiedOnUtc);
+        Assert.Equal(DateTimeKind.Utc, entity.ModifiedOnUtc?.Kind);
+    }
+
+    [Fact]
+    public void Entity_SetModified_WithUnspecifiedTime_Throws() {
+        var entity = TestEntity.WithId(Guid.NewGuid());
+        var unspecifiedTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Unspecified);
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkModified(unspecifiedTime));
+
+        Assert.Equal("modifiedOnUtc", ex.ParamName);
     }
 
     [Fact]
@@ -131,7 +209,11 @@ public class EntityAndAggregateRootBaseTests {
 
         public void MarkCreated() => SetCreated();
 
+        public void MarkCreated(DateTime createdOnUtc) => SetCreated(createdOnUtc);
+
         public void MarkModified() => SetModified();
+
+        public void MarkModified(DateTime modifiedOnUtc) => SetModified(modifiedOnUtc);
     }
 
     private sealed class AnotherTestEntity : Entity<Guid> {
