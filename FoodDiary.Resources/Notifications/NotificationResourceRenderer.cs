@@ -45,11 +45,7 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
             ? "ru"
             : "en";
 
-        try {
-            return CultureInfo.GetCultureInfo(cultureName);
-        } catch (CultureNotFoundException) {
-            return CultureInfo.InvariantCulture;
-        }
+        return CultureInfo.GetCultureInfo(cultureName);
     }
 
     private static string GetRequired(string key, CultureInfo culture) =>

@@ -24,6 +24,36 @@ public sealed class NotificationResourceRendererTests {
     }
 
     [Fact]
+    public void Render_WithNullLocale_UsesEnglishResources() {
+        var renderer = new NotificationResourceRenderer();
+
+        var text = renderer.Render(NotificationTypes.NewRecommendation, null, string.Empty);
+
+        Assert.Equal("New recommendation from your dietologist", text.Title);
+        Assert.Null(text.Body);
+    }
+
+    [Fact]
+    public void Render_WithEnglishLocale_UsesEnglishResources() {
+        var renderer = new NotificationResourceRenderer();
+
+        var text = renderer.Render(NotificationTypes.NewRecommendation, "en", string.Empty);
+
+        Assert.Equal("New recommendation from your dietologist", text.Title);
+        Assert.Null(text.Body);
+    }
+
+    [Fact]
+    public void Render_WithRussianLocale_UsesRussianResources() {
+        var renderer = new NotificationResourceRenderer();
+
+        var text = renderer.Render(NotificationTypes.NewRecommendation, "ru", string.Empty);
+
+        Assert.Equal("\u041d\u043e\u0432\u0430\u044f \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044f \u043e\u0442 \u0432\u0430\u0448\u0435\u0433\u043e \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u0430", text.Title);
+        Assert.Null(text.Body);
+    }
+
+    [Fact]
     public void Render_WithRussianRegionLocale_UsesRussianResources() {
         var renderer = new NotificationResourceRenderer();
 

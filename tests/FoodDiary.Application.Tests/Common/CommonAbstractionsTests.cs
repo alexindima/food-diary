@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
@@ -261,6 +262,89 @@ public class CommonAbstractionsTests {
         Assert.Equal(30, summary.TotalTokens);
         Assert.Equal(10, summary.InputTokens);
         Assert.Equal(20, summary.OutputTokens);
+    }
+
+    [Fact]
+    public void NotificationPayloadSerializer_Deserialize_WithEmptyPayload_ReturnsDefault() {
+        var payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(" ");
+
+        Assert.Null(payload);
+    }
+
+    [Fact]
+    public void NotificationPayloadSerializer_TryDeserialize_WithEmptyPayload_ReturnsFalse() {
+        var success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(" ", out var payload);
+
+        Assert.False(success);
+        Assert.Null(payload);
+    }
+
+    [Fact]
+    public void NotificationPayloadSerializer_TryDeserialize_WithInvalidPayload_ReturnsFalse() {
+        var success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>("{", out var payload);
+
+        Assert.False(success);
+        Assert.Null(payload);
+    }
+
+    [Fact]
+    public void NotificationPayloadSerializer_TryDeserialize_WithValidPayload_ReturnsPayload() {
+        var json = NotificationPayloads.NewRecommendation("Anna");
+
+        var success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(json, out var payload);
+
+        Assert.True(success);
+        Assert.NotNull(payload);
+        Assert.Equal("Anna", payload.DietologistName);
+    }
+
+    [Theory]
+    [InlineData(NotificationTypes.PasswordSetupSuggested, null, "/profile?intent=set-password")]
+    [InlineData(NotificationTypes.FastingCheckInReminder, null, "/fasting?intent=check-in")]
+    [InlineData(NotificationTypes.FastingCompleted, null, "/fasting?intent=session-complete")]
+    [InlineData(NotificationTypes.FastingWindowStarted, null, "/fasting?intent=fasting-window")]
+    [InlineData(NotificationTypes.EatingWindowStarted, null, "/fasting?intent=eating-window")]
+    [InlineData(NotificationTypes.NewRecommendation, null, "/recommendations")]
+    [InlineData(NotificationTypes.NewRecommendation, "recommendation-id", "/recommendations?recommendationId=recommendation-id")]
+    [InlineData(NotificationTypes.DietologistInvitationReceived, "invitation-id", "/dietologist-invitations/invitation-id")]
+    [InlineData(NotificationTypes.DietologistInvitationAccepted, null, "/profile")]
+    [InlineData(NotificationTypes.DietologistInvitationDeclined, null, "/profile")]
+    [InlineData("Unknown", null, null)]
+    public void NotificationTargetUrlResolver_Resolve_ReturnsExpectedUrl(
+        string notificationType,
+        string? referenceId,
+        string? expectedUrl) {
+        var url = NotificationTargetUrlResolver.Resolve(notificationType, referenceId);
+
+        Assert.Equal(expectedUrl, url);
+    }
+
+    [Fact]
+    public void WebPushClientConfiguration_StoresOptions() {
+        var configuration = new WebPushClientConfiguration(Enabled: true, PublicKey: "public-key");
+
+        Assert.True(configuration.Enabled);
+        Assert.Equal("public-key", configuration.PublicKey);
+    }
+
+    [Fact]
+    public void WebPushSubscriptionData_StoresSubscriptionDetails() {
+        var expirationTimeUtc = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Utc);
+
+        var data = new WebPushSubscriptionData(
+            Endpoint: "https://push.example.test/subscription",
+            P256Dh: "p256dh",
+            Auth: "auth",
+            ExpirationTimeUtc: expirationTimeUtc,
+            Locale: "en",
+            UserAgent: "Test Agent");
+
+        Assert.Equal("https://push.example.test/subscription", data.Endpoint);
+        Assert.Equal("p256dh", data.P256Dh);
+        Assert.Equal("auth", data.Auth);
+        Assert.Equal(expirationTimeUtc, data.ExpirationTimeUtc);
+        Assert.Equal("en", data.Locale);
+        Assert.Equal("Test Agent", data.UserAgent);
     }
 
     [Fact]

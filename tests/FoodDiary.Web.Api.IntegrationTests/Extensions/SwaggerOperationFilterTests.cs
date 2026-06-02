@@ -1,6 +1,7 @@
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi;
@@ -49,6 +50,30 @@ public sealed class SwaggerOperationFilterTests {
     }
 
     [Fact]
+    public void Apply_ForPolicyAuthorizedAction_AddsForbiddenResponse() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.PolicyOnly)));
+
+        Assert.True(operation.Responses.ContainsKey("401"));
+        Assert.True(operation.Responses.ContainsKey("403"));
+    }
+
+    [Fact]
+    public void Apply_ForNonControllerAction_AddsOnlyStandard500Response() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+        var context = CreateContext(new ActionDescriptor());
+
+        filter.Apply(operation, context);
+
+        Assert.True(operation.Responses.ContainsKey("500"));
+        Assert.False(operation.Responses.ContainsKey("401"));
+        Assert.False(operation.Responses.ContainsKey("403"));
+    }
+
+    [Fact]
     public void Apply_DoesNotOverwriteExistingResponse() {
         var filter = new StandardErrorResponsesOperationFilter();
         var operation = new OpenApiOperation {
@@ -69,6 +94,19 @@ public sealed class SwaggerOperationFilterTests {
                 MethodInfo = methodInfo,
                 ControllerTypeInfo = System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(TestController)),
             },
+        };
+
+        return CreateContext(apiDescription.ActionDescriptor, methodInfo);
+    }
+
+    private static OperationFilterContext CreateContext(ActionDescriptor actionDescriptor) {
+        var methodInfo = typeof(TestController).GetMethod(nameof(TestController.Authorized))!;
+        return CreateContext(actionDescriptor, methodInfo);
+    }
+
+    private static OperationFilterContext CreateContext(ActionDescriptor actionDescriptor, System.Reflection.MethodInfo methodInfo) {
+        var apiDescription = new ApiDescription {
+            ActionDescriptor = actionDescriptor,
         };
         var schemaGenerator = new SchemaGenerator(
             new SchemaGeneratorOptions(),
@@ -91,5 +129,8 @@ public sealed class SwaggerOperationFilterTests {
 
         [Authorize(Roles = "Admin")]
         public OkResult AdminOnly() => Ok();
+
+        [Authorize(Policy = "OwnerOnly")]
+        public OkResult PolicyOnly() => Ok();
     }
 }
