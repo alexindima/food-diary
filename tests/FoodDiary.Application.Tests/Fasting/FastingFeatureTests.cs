@@ -864,6 +864,55 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenNoActiveOccurrences_ReturnsZeroWithoutPushes() {
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(0, created);
+        Assert.Empty(notificationRepo.Stored);
+        Assert.Empty(webPushSender.Sent);
+        Assert.Empty(notificationPusher.ChangedUsers);
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenPlanIsPaused_SkipsOccurrence() {
+        var user = User.Create("fasting-paused-plan@example.com", "hash");
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
+        plan.Pause();
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-40), 1, 36);
+        AttachNavigation(occurrence, plan, user);
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(occurrence),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(0, created);
+        Assert.Empty(notificationRepo.Stored);
+        Assert.Empty(webPushSender.Sent);
+        Assert.Empty(notificationPusher.ChangedUsers);
+    }
+
+    [Fact]
     public async Task ProcessDueNotificationsAsync_WhenOccurrenceHasRealCheckIn_SuppressesCheckInReminder() {
         var user = User.Create("fasting-notifications@example.com", "hash");
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
@@ -981,6 +1030,67 @@ public class FastingFeatureTests {
         Assert.Equal(2, webPushSender.Sent.Count);
         Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}", StringComparison.Ordinal));
         Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInFollowUpReminderHours}", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenExtendedTargetElapsed_CreatesCompletionNotification() {
+        var user = User.Create("fasting-completion@example.com", "hash");
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-2));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-37), 1, 36);
+        occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
+        AttachNavigation(occurrence, plan, user);
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(occurrence),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(1, created);
+        var notification = Assert.Single(notificationRepo.Stored);
+        Assert.Equal(NotificationTypes.FastingCompleted, notification.Type);
+        Assert.Equal($"fasting-completed:{occurrence.Id.Value}", notification.ReferenceId);
+        Assert.Single(webPushSender.Sent);
+        Assert.Single(notificationPusher.ChangedUsers);
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenIntermittentWindowsAreDue_CreatesWindowNotifications() {
+        var user = User.Create("fasting-intermittent@example.com", "hash");
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-2));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-25), 1, 16);
+        occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow.AddHours(-1));
+        AttachNavigation(occurrence, plan, user);
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(occurrence),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(2, created);
+        Assert.Contains(notificationRepo.Stored, x =>
+            string.Equals(x.Type, NotificationTypes.EatingWindowStarted, StringComparison.Ordinal) &&
+            string.Equals(x.ReferenceId, $"eating-window-started:{occurrence.Id.Value}:1", StringComparison.Ordinal));
+        Assert.Contains(notificationRepo.Stored, x =>
+            string.Equals(x.Type, NotificationTypes.FastingWindowStarted, StringComparison.Ordinal) &&
+            string.Equals(x.ReferenceId, $"fasting-window-started:{occurrence.Id.Value}:2", StringComparison.Ordinal));
+        Assert.Equal(2, webPushSender.Sent.Count);
+        Assert.Single(notificationPusher.ChangedUsers);
     }
 
     private static StubUserRepository CreateUserRepository(UserId userId) =>

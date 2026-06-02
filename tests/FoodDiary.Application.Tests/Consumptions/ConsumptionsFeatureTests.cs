@@ -659,6 +659,212 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenMealTypeInvalid_ReturnsValidationFailure() {
+        var user = User.Create("invalid-update-meal-type@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var handler = new UpdateConsumptionCommandHandler(
+            new SingleMealRepository(meal),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                "Snackish",
+                "Updated",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown meal type value.", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenAiSourceInvalid_ReturnsValidationFailure() {
+        var user = User.Create("invalid-update-ai-source@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var handler = new UpdateConsumptionCommandHandler(
+            new SingleMealRepository(meal),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                null,
+                [],
+                [new ConsumptionAiSessionInput(null, "Scanner", DateTime.UtcNow, null, [
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                ])],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown AI recognition source value.", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenAiRecognizedAtIsUnspecified_ReturnsValidationFailure() {
+        var user = User.Create("invalid-update-ai-time@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var handler = new UpdateConsumptionCommandHandler(
+            new SingleMealRepository(meal),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                null,
+                [],
+                [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), null, [
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                ])],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("RecognizedAtUtc timestamp kind must be specified.", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenAutoNutritionFails_ReturnsServiceErrorWithoutPersisting() {
+        var user = User.Create("update-nutrition-failure@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = new UpdateConsumptionCommandHandler(
+            repository,
+            new FailingMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Consumption.InvalidData", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenUpdatedMealCannotBeReloaded_ReturnsInvalidData() {
+        var user = User.Create("update-reload-missing@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new ReloadMissingMealRepository(meal);
+        var handler = new UpdateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                false,
+                600,
+                30,
+                20,
+                50,
+                5,
+                0,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Consumption.InvalidData", result.Error.Code);
+        Assert.True(repository.UpdateCalled);
+    }
+
+    [Fact]
     public async Task GetConsumptionByIdQueryHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var meal = Meal.Create(
@@ -903,6 +1109,55 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    private sealed class ReloadMissingMealRepository(Meal meal) : IMealRepository {
+        private bool _reloadStarted;
+        public bool UpdateCalled { get; private set; }
+
+        public Task<Meal> AddAsync(Meal addedMeal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Meal updatedMeal, CancellationToken cancellationToken = default) {
+            UpdateCalled = true;
+            _reloadStarted = true;
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteAsync(Meal deletedMeal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Meal?> GetByIdAsync(
+            MealId id,
+            UserId userId,
+            bool includeItems = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<Meal?>(_reloadStarted ? null : meal);
+
+        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int> GetTotalMealCountAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+            UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
     private sealed class CreatingMealRepository : IMealRepository {
         public Meal? StoredMeal { get; private set; }
 
@@ -1031,6 +1286,15 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult(Result.Success(nutritionSummary));
+    }
+
+    private sealed class FailingMealNutritionService : IMealNutritionService {
+        public Task<Result<MealNutritionSummary>> CalculateAsync(
+            Meal meal,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Result.Failure<MealNutritionSummary>(
+                Errors.Consumption.InvalidData("Nutrition calculation failed.")));
     }
 
     private sealed class RecordingRecentItemRepository : IRecentItemRepository {
