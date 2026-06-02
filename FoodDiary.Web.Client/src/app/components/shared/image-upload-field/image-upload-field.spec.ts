@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
@@ -15,10 +15,14 @@ type ImageUploadFieldTestContext = {
         requestUploadUrl: ReturnType<typeof vi.fn>;
         uploadToPresignedUrl: ReturnType<typeof vi.fn>;
     };
+    logger: {
+        warn: ReturnType<typeof vi.fn>;
+    };
     translateService: TranslateService;
 };
 
 const TINY_MAX_SIZE_MB = 0.000001;
+const CROP_SHIFTED_X = 20;
 
 async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext> {
     const imageUploadService = {
@@ -30,19 +34,20 @@ async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext
         uploadToPresignedUrl: vi.fn().mockReturnValue(of(void 0)),
         deleteAsset: vi.fn().mockReturnValue(of(void 0)),
     };
+    const logger = { warn: vi.fn() };
 
     await TestBed.configureTestingModule({
         imports: [ImageUploadFieldComponent, TranslateModule.forRoot()],
         providers: [
             { provide: ImageUploadFacade, useValue: imageUploadService },
-            { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },
+            { provide: FrontendLoggerService, useValue: logger },
         ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ImageUploadFieldComponent);
     const component = fixture.componentInstance;
     const translateService = TestBed.inject(TranslateService);
-    return { component, fixture, imageUploadService, translateService };
+    return { component, fixture, imageUploadService, logger, translateService };
 }
 
 describe('ImageUploadFieldComponent control value', () => {
@@ -97,6 +102,19 @@ describe('ImageUploadFieldComponent upload', () => {
         expect(component['error']).toBe('Too large');
         expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
     });
+
+    it('shows upload error when presigned upload fails', async () => {
+        const { component, fixture, imageUploadService, translateService } = await setupImageUploadFieldAsync();
+        vi.spyOn(translateService, 'instant').mockReturnValue('Upload failed');
+        imageUploadService.uploadToPresignedUrl.mockReturnValueOnce(throwError(() => new Error('upload failed')));
+        fixture.detectChanges();
+
+        component['handleIncomingFile'](new File(['image'], 'photo.png', { type: 'image/png' }));
+        await fixture.whenStable();
+
+        expect(component['error']).toBe('Upload failed');
+        expect(component['isUploading']).toBe(false);
+    });
 });
 
 describe('ImageUploadFieldComponent clearing', () => {
@@ -116,6 +134,19 @@ describe('ImageUploadFieldComponent clearing', () => {
         expect(onChange).toHaveBeenCalledWith({ url: null, assetId: null });
         expect(onTouched).toHaveBeenCalledOnce();
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
+    });
+
+    it('logs delete failures without restoring cleared selection', async () => {
+        const { component, fixture, imageUploadService, logger } = await setupImageUploadFieldAsync();
+        imageUploadService.deleteAsset.mockReturnValueOnce(throwError(() => new Error('delete failed')));
+        fixture.componentRef.setInput('deleteOnClear', true);
+        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        fixture.detectChanges();
+
+        component['clearImage']();
+
+        expect(component['selection']).toEqual({ url: null, assetId: null });
+        expect(logger.warn).toHaveBeenCalledWith('Failed to delete orphan image asset', expect.any(Error));
     });
 });
 
@@ -145,5 +176,39 @@ describe('ImageUploadFieldComponent interactions', () => {
 
         component['onDragLeave']({ preventDefault } as unknown as DragEvent);
         expect(component['isDragging']).toBe(false);
+    });
+
+    it('ignores drop and dragover while disabled', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const preventDefault = vi.fn();
+        const stopPropagation = vi.fn();
+        fixture.detectChanges();
+
+        component['setDisabledState'](true);
+        component['onDragOver']({ preventDefault } as unknown as DragEvent);
+        component['onDrop']({
+            preventDefault,
+            stopPropagation,
+            dataTransfer: { files: [new File(['image'], 'photo.png', { type: 'image/png' })] },
+        } as unknown as DragEvent);
+
+        expect(component['isDragging']).toBe(false);
+        expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
+        expect(preventDefault).toHaveBeenCalled();
+        expect(stopPropagation).toHaveBeenCalled();
+    });
+
+    it('moves crop selection with keyboard arrows and ignores unrelated keys', async () => {
+        const { component, fixture } = await setupImageUploadFieldAsync();
+        const preventDefault = vi.fn();
+        component['cropImageBounds'] = { x: 0, y: 0, width: 100, height: 100 };
+        component['cropSelection'] = { x: 10, y: 10, width: 40, height: 40 };
+        fixture.detectChanges();
+
+        component['onCropKeydown']({ key: 'ArrowRight', shiftKey: true, preventDefault } as unknown as KeyboardEvent);
+        expect(component['cropSelection'].x).toBe(CROP_SHIFTED_X);
+
+        component['onCropKeydown']({ key: 'Enter', shiftKey: false, preventDefault } as unknown as KeyboardEvent);
+        expect(component['cropSelection'].x).toBe(CROP_SHIFTED_X);
     });
 });

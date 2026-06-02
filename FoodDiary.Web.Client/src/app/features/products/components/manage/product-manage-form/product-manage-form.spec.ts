@@ -77,6 +77,9 @@ const SECOND_USDA_SUGGESTION: ProductSearchSuggestion = {
 };
 const USDA_PROTEIN_PER_100G = 12.345;
 const EXPECTED_ROUNDED_USDA_PROTEIN = 12.3;
+const PORTION_AMOUNT = 50;
+const BASE_CALORIES = 100;
+const PORTION_CALORIES = 50;
 
 type ProductManageFacadeMock = {
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
@@ -95,6 +98,9 @@ type ProductExternalFoodFacadeMock = {
 type ProductManageFormSetup = {
     fixture: ComponentFixture<ProductManageFormComponent>;
     component: ProductManageFormComponent;
+    dialogService: {
+        open: ReturnType<typeof vi.fn>;
+    };
     productManageFacade: ProductManageFacadeMock;
     navigationService: {
         navigateToProductListAsync: ReturnType<typeof vi.fn>;
@@ -179,6 +185,16 @@ describe('ProductManageFormComponent prefill behavior', () => {
 
         expect(component['productForm'].controls.name.value).toBe('');
         expect(component['productForm'].controls.brand.value).toBeNull();
+    });
+
+    it('should apply barcode scanner result and look up Open Food Facts', async () => {
+        const { component, dialogService, externalFoodFacade } = await setupComponentAsync();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(OFF_PRODUCT.barcode) });
+
+        component['openBarcodeScanner']();
+
+        expect(component['productForm'].controls.barcode.value).toBe(OFF_PRODUCT.barcode);
+        expect(externalFoodFacade.searchByBarcode).toHaveBeenCalledWith(OFF_PRODUCT.barcode);
     });
 });
 
@@ -287,7 +303,9 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
 
         expect(productManageFacade.submitProductAsync).toHaveBeenCalledWith(null, expect.any(Object), true, expect.any(Function));
     });
+});
 
+describe('ProductManageFormComponent cancel delete and nutrition behavior', () => {
     it('should emit cancel without navigation or discard confirmation in dialog mode', async () => {
         const { component, fixture, productManageFacade, navigationService } = await setupComponentAsync();
         let wasCancelled = false;
@@ -304,6 +322,47 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         expect(productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
         expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
     });
+
+    it('should stay on page when dirty cancel confirmation is rejected', async () => {
+        const { component, productManageFacade, navigationService } = await setupComponentAsync();
+        productManageFacade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+        component['productForm'].markAsDirty();
+
+        await component['onCancelAsync']();
+
+        expect(productManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
+    });
+
+    it('should show delete error when owned product delete fails', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+        productManageFacade.deleteProductAsync.mockResolvedValueOnce('error');
+
+        await component['onDeleteProductAsync']();
+
+        expect(productManageFacade.deleteProductAsync).toHaveBeenCalledOnce();
+        expect(component['globalError']()).toBe('PRODUCT_MANAGE.DELETE_ERROR');
+        expect(component['isDeleting']()).toBe(false);
+    });
+
+    it('should convert nutrition values when switching between base and portion modes', async () => {
+        const { component } = await setupComponentAsync();
+        component['productForm'].patchValue({
+            baseAmount: 100,
+            defaultPortionAmount: PORTION_AMOUNT,
+            caloriesPerBase: BASE_CALORIES,
+        });
+
+        component['onNutritionModeChange']('portion');
+        expect(component['nutritionMode']).toBe('portion');
+        expect(component['productForm'].controls.caloriesPerBase.value).toBe(PORTION_CALORIES);
+
+        component['onNutritionModeChange']('base');
+        expect(component['nutritionMode']).toBe('base');
+        expect(component['productForm'].controls.caloriesPerBase.value).toBe(BASE_CALORIES);
+    });
 });
 
 async function setupComponentAsync(): Promise<ProductManageFormSetup> {
@@ -311,6 +370,9 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const externalFoodFacade = createProductExternalFoodFacadeMock();
     const navigationService = {
         navigateToProductListAsync: vi.fn().mockResolvedValue(void 0),
+    };
+    const dialogService = {
+        open: vi.fn().mockReturnValue({ afterClosed: () => of(null) }),
     };
 
     await TestBed.configureTestingModule({
@@ -325,9 +387,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
             { provide: ProductExternalFoodFacade, useValue: externalFoodFacade },
             {
                 provide: FdUiDialogService,
-                useValue: {
-                    open: vi.fn().mockReturnValue({ afterClosed: () => of(null) }),
-                },
+                useValue: dialogService,
             },
             {
                 provide: NavigationService,
@@ -344,6 +404,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     return {
         fixture,
         component: fixture.componentInstance,
+        dialogService,
         productManageFacade,
         navigationService,
         externalFoodFacade,

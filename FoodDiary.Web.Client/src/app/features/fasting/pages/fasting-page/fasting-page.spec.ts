@@ -21,6 +21,10 @@ const CHECK_IN_ENERGY_LEVEL = 4;
 const CHECK_IN_MOOD_LEVEL = 3;
 const HISTORY_START_HOUR = 10;
 const INITIAL_VISIBLE_CHECK_INS = 5;
+const CYCLIC_FAST_DAYS = 2;
+const CYCLIC_EAT_DAYS = 1;
+const CYCLIC_EAT_FAST_HOURS = 14;
+const CYCLIC_EAT_WINDOW_HOURS = 10;
 
 let component: FastingPageComponent;
 let fixture: ComponentFixture<FastingPageComponent>;
@@ -68,9 +72,13 @@ describe('FastingPageComponent setup and actions', () => {
     it('delegates save and load more actions to facade', () => {
         component['saveCheckIn']();
         component['loadMoreHistory']();
+        component['dismissPrompt']('prompt-1');
+        component['snoozePrompt']('prompt-2');
 
         expect(facade.saveCheckIn).toHaveBeenCalledTimes(1);
         expect(facade.loadMoreHistory).toHaveBeenCalledTimes(1);
+        expect(facade.dismissPrompt).toHaveBeenCalledWith('prompt-1');
+        expect(facade.snoozePrompt).toHaveBeenCalledWith('prompt-2');
     });
 
     it('shows success toast and collapses check-in after saved version changes', () => {
@@ -94,6 +102,50 @@ describe('FastingPageComponent setup and actions', () => {
         component['toggleHistorySession']('session-2');
         expect(component['isHistorySessionExpanded']('session-2')).toBe(false);
         expect(component['getHistoryCheckInToggleKey'](createHistorySession('session-2', 2))).toBe('FASTING.SHOW_HISTORY_CHECK_INS');
+    });
+});
+
+describe('FastingPageComponent history labels', () => {
+    beforeEach(createComponentAsync);
+
+    it('maps history status to badge key and accent color', () => {
+        expect(component['getHistoryBadgeKey']('Completed')).toBe('FASTING.BADGE_COMPLETED');
+        expect(component['getHistoryBadgeKey']('Interrupted')).toBe('FASTING.BADGE_INTERRUPTED');
+        expect(component['getHistoryBadgeKey']('Skipped')).toBe('FASTING.BADGE_SKIPPED');
+        expect(component['getHistoryBadgeKey']('Postponed')).toBe('FASTING.BADGE_POSTPONED');
+        expect(component['getHistoryBadgeKey']('Active')).toBe('FASTING.BADGE_INCOMPLETE');
+
+        expect(component['getHistoryAccentColor']({ ...createSession(), status: 'Completed' })).toBe('var(--fd-color-green-500)');
+        expect(component['getHistoryAccentColor']({ ...createSession(), status: 'Interrupted' })).toBe('var(--fd-color-orange-500)');
+        expect(component['getHistoryAccentColor']({ ...createSession(), status: 'Skipped' })).toBe('var(--fd-color-sky-500)');
+        expect(component['getHistoryAccentColor']({ ...createSession(), status: 'Postponed' })).toBe('var(--fd-color-ai)');
+        expect(component['getHistoryAccentColor']({ ...createSession(), status: 'Active' })).toBe('var(--fd-color-slate-400)');
+    });
+
+    it('builds protocol display for cyclic, custom, and adjusted sessions', () => {
+        expect(
+            component['getHistoryProtocolDisplay']({
+                ...createSession(),
+                planType: 'Cyclic',
+                cyclicFastDays: CYCLIC_FAST_DAYS,
+                cyclicEatDays: CYCLIC_EAT_DAYS,
+                cyclicEatDayFastHours: CYCLIC_EAT_FAST_HOURS,
+                cyclicEatDayEatingWindowHours: CYCLIC_EAT_WINDOW_HOURS,
+            }),
+        ).toBe('2:1 (14:10)');
+        expect(component['getHistoryProtocolDisplay']({ ...createSession(), protocol: 'CustomIntermittent' })).toBe('16:8');
+        expect(component['getHistoryProtocolDisplay']({ ...createSession(), protocol: 'Custom', addedDurationHours: 4 })).toBe(
+            '16 FASTING.HOURS (+4 FASTING.HOURS)',
+        );
+        expect(component['getHistoryProtocolDisplay']({ ...createSession(), protocol: 'Custom', addedDurationHours: -2 })).toBe(
+            '16 FASTING.HOURS (-2 FASTING.HOURS)',
+        );
+    });
+
+    it('returns null for empty or invalid relative timestamps', () => {
+        expect(component['formatRelativeTime'](null)).toBeNull();
+        expect(component['formatRelativeTime']('')).toBeNull();
+        expect(component['formatRelativeTime']('not-a-date')).toBeNull();
     });
 });
 

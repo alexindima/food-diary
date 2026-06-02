@@ -111,6 +111,19 @@ describe('AuthComponent tabs', () => {
 });
 
 describe('AuthComponent login', () => {
+    it('should show invalid credentials error and hide restore action', () => {
+        const { authFlowFacadeSpy, component } = createComponent();
+        authFlowFacadeSpy.login.mockReturnValue(of('invalidCredentials'));
+        component['loginForm'].controls.email.setValue('user@example.com');
+        component['loginForm'].controls.password.setValue('password123');
+
+        component['onLoginSubmit']();
+
+        expect(component['globalError']()).toBe('FORM_ERRORS.INVALID_CREDENTIALS');
+        expect(component['showRestoreAction']()).toBe(false);
+        expect(component['isSubmitting']()).toBe(false);
+    });
+
     it('should show restore action when login returns deleted account', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.login.mockReturnValue(of('accountDeleted'));
@@ -122,6 +135,19 @@ describe('AuthComponent login', () => {
         expect(component['globalError']()).toBe('AUTH.LOGIN.ACCOUNT_DELETED');
         expect(component['showRestoreAction']()).toBe(true);
         expect(component['isSubmitting']()).toBe(false);
+    });
+
+    it('should restore deleted account and complete navigation on success', () => {
+        const { authFlowFacadeSpy, component } = createComponent();
+        authFlowFacadeSpy.restoreAccount.mockReturnValue(of(true));
+        component['loginForm'].controls.email.setValue('deleted@example.com');
+        component['loginForm'].controls.password.setValue('password123');
+
+        component['onRestoreSubmit']();
+
+        expect(authFlowFacadeSpy.restoreAccount).toHaveBeenCalledOnce();
+        expect(component['isRestoring']()).toBe(false);
+        expect(component['globalError']()).toBeNull();
     });
 });
 
@@ -171,6 +197,20 @@ describe('AuthComponent register', () => {
         expect(component['registerForm'].controls.email.hasError('userExists')).toBe(true);
         expect(component['isSubmitting']()).toBe(false);
     });
+
+    it('should show deleted-account error when register returns accountDeleted', () => {
+        const { authFlowFacadeSpy, component } = createComponent('register');
+        authFlowFacadeSpy.register.mockReturnValue(of('accountDeleted'));
+        component['registerForm'].controls.email.setValue('deleted@example.com');
+        component['registerForm'].controls.password.setValue('password123');
+        component['registerForm'].controls.confirmPassword.setValue('password123');
+        component['registerForm'].controls.agreeTerms.setValue(true);
+
+        component['onRegisterSubmit']();
+
+        expect(component['globalError']()).toBe('AUTH.REGISTER.ACCOUNT_DELETED');
+        expect(component['isSubmitting']()).toBe(false);
+    });
 });
 
 describe('AuthComponent password reset', () => {
@@ -182,5 +222,30 @@ describe('AuthComponent password reset', () => {
 
         expect(component['showPasswordReset']()).toBe(true);
         expect(component['passwordResetForm'].controls.email.value).toBe('user@example.com');
+    });
+
+    it('should mark reset as sent and start cooldown after successful request', () => {
+        const { authFlowFacadeSpy, component } = createComponent();
+        authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of(true));
+        component['onPasswordResetOpen']();
+        component['passwordResetForm'].controls.email.setValue('user@example.com');
+
+        component['onPasswordResetSubmit']();
+
+        expect(authFlowFacadeSpy.requestPasswordReset).toHaveBeenCalledOnce();
+        expect(component['passwordResetSent']()).toBe(true);
+        expect(component['passwordResetCooldownSeconds']()).toBe(2);
+        expect(component['isPasswordResetting']()).toBe(false);
+    });
+
+    it('should not submit password reset during cooldown', () => {
+        const { authFlowFacadeSpy, component } = createComponent();
+        component['onPasswordResetOpen']();
+        component['passwordResetForm'].controls.email.setValue('user@example.com');
+        component['passwordResetCooldownSeconds'].set(1);
+
+        component['onPasswordResetSubmit']();
+
+        expect(authFlowFacadeSpy.requestPasswordReset).not.toHaveBeenCalled();
     });
 });

@@ -22,6 +22,7 @@ import type { ConsumptionItemFormData, MealNutritionSummaryState, NutritionTotal
 const PRODUCT_AMOUNT = 150;
 const TOTAL_CALORIES = 300;
 const UPDATED_TOTAL_CALORIES = 450;
+const NORMALIZED_SATIETY_LEVEL = 5;
 const EMPTY_TOTALS: NutritionTotals = {
     calories: 0,
     proteins: 0,
@@ -178,6 +179,57 @@ describe('MealManageFormComponent item and AI behavior', () => {
         component['onDeleteAiSession'](0);
 
         expect(component['aiSessions']()).toEqual([]);
+    });
+
+    it('should skip AI session edit when premium access is rejected', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        mealManageFacade.ensurePremiumAccess.mockReturnValueOnce(false);
+        component['aiSessions'].set([{ notes: 'recognized', items: [] }]);
+
+        component['onEditAiSession'](0);
+        await Promise.resolve();
+
+        expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).not.toHaveBeenCalled();
+        expect(mealManageFacade.replaceAiSession).not.toHaveBeenCalled();
+    });
+
+    it('should replace AI session after successful edit', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        const session: ConsumptionAiSessionManageDto = { notes: 'recognized', items: [] };
+        const updatedSession: ConsumptionAiSessionManageDto = { notes: 'updated', items: [] };
+        component['aiSessions'].set([session]);
+        mealManageFacade.openEditAiPhotoSessionDialogAsync.mockResolvedValueOnce(updatedSession);
+        mealManageFacade.replaceAiSession.mockReturnValueOnce([updatedSession]);
+
+        component['onEditAiSession'](0);
+        await Promise.resolve();
+
+        expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).toHaveBeenCalledWith(session);
+        expect(component['aiSessions']()).toEqual([updatedSession]);
+    });
+});
+
+describe('MealManageFormComponent nutrition and satiety behavior', () => {
+    it('should switch to manual nutrition and populate manual values from current totals', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        mealManageFacade.buildNutritionSummaryState.mockReturnValue(createNutritionSummaryStateWithCalories(TOTAL_CALORIES));
+
+        component['onNutritionModeChange']('manual');
+
+        expect(component['nutritionMode']()).toBe('manual');
+        expect(component['consumptionForm'].controls.isNutritionAutoCalculated.value).toBe(false);
+        expect(mealManageFacade.syncManualNutritionFromTotals).toHaveBeenCalled();
+        expect(mealManageFacade.updateManualNutritionValidators).toHaveBeenLastCalledWith(component['consumptionForm'], false);
+    });
+
+    it('should normalize satiety level changes and mark control dirty', async () => {
+        const { component } = await setupComponentAsync();
+
+        component['onSatietyLevelChange']('preMealSatietyLevel', NORMALIZED_SATIETY_LEVEL);
+
+        expect(component['consumptionForm'].controls.preMealSatietyLevel.value).toBe(NORMALIZED_SATIETY_LEVEL);
+        expect(component['consumptionForm'].controls.preMealSatietyLevel.dirty).toBe(true);
+        expect(component['preMealSatietyLevel']()).toBe(NORMALIZED_SATIETY_LEVEL);
     });
 });
 
