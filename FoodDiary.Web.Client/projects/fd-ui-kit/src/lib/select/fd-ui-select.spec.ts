@@ -305,3 +305,112 @@ describe('FdUiSelectComponent overlay', () => {
         expect(component['activeIndex']()).toBe(0);
     });
 });
+
+describe('FdUiSelectComponent keyboard and wrapper interactions', () => {
+    it('should open from control keyboard shortcuts and close on escape', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const openEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+        const closeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+        const openPreventDefaultSpy = vi.spyOn(openEvent, 'preventDefault');
+        const closePreventDefaultSpy = vi.spyOn(closeEvent, 'preventDefault');
+
+        component['onControlKeydown'](openEvent);
+
+        expect(openPreventDefaultSpy).toHaveBeenCalledOnce();
+        expect(component['isOpen']()).toBe(true);
+
+        component['onControlKeydown'](closeEvent);
+
+        expect(closePreventDefaultSpy).toHaveBeenCalledOnce();
+        expect(component['isOpen']()).toBe(false);
+    });
+
+    it('should wrap listbox navigation and select with space', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const onChangeSpy = vi.fn();
+        component['registerOnChange'](onChangeSpy);
+
+        component['openMenu']();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        expect(component['activeIndex']()).toBe(2);
+
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: ' ' }));
+
+        expect(onChangeSpy).toHaveBeenCalledWith('cherry');
+        expect(component['isOpen']()).toBe(false);
+    });
+
+    it('should close listbox on escape and return focus to the control', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const focus = vi.fn();
+        Object.defineProperty(component, 'controlRef', {
+            value: vi.fn(() => ({
+                nativeElement: { focus },
+            })),
+        });
+
+        component['openMenu']();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Escape' }));
+
+        expect(component['isOpen']()).toBe(false);
+        expect(focus).toHaveBeenCalledOnce();
+    });
+
+    it('should ignore unknown listbox keys without preventing default', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const event = new KeyboardEvent('keydown', { key: 'Tab' });
+        const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
+
+        component['openMenu']();
+        component['onListboxKeydown'](event);
+
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(component['activeIndex']()).toBe(0);
+    });
+});
+
+describe('FdUiSelectComponent control wrapper interactions', () => {
+    it('should toggle menu from control wrapper clicks outside the native button', async () => {
+        const { component, fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control') as HTMLButtonElement;
+        const focusSpy = vi.spyOn(control, 'focus');
+        const wrapper = requireElement('.fd-ui-select__control-wrap');
+        const event = new MouseEvent('click', { bubbles: true });
+
+        Object.defineProperty(event, 'target', { value: wrapper });
+        component['onControlWrapClick'](event);
+
+        expect(focusSpy).toHaveBeenCalledOnce();
+        expect(component['isOpen']()).toBe(true);
+    });
+
+    it('should ignore control wrapper clicks from the native button and when disabled', async () => {
+        const { component, fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control');
+        const buttonEvent = new MouseEvent('click', { bubbles: true });
+        Object.defineProperty(buttonEvent, 'target', { value: control });
+
+        component['onControlWrapClick'](buttonEvent);
+
+        expect(component['isOpen']()).toBe(false);
+
+        component['setDisabledState'](true);
+        const wrapperEvent = new MouseEvent('click', { bubbles: true });
+        Object.defineProperty(wrapperEvent, 'target', { value: requireElement('.fd-ui-select__control-wrap') });
+        component['onControlWrapClick'](wrapperEvent);
+
+        expect(component['isOpen']()).toBe(false);
+    });
+});
