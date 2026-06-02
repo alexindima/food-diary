@@ -57,6 +57,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - `dotnet build FoodDiary.slnx`
 - `cd FoodDiary.Web.Client && npm run build`
 - Focused architecture guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Backend coverage: `dotnet test FoodDiary.slnx --settings coverage.runsettings --collect:"XPlat Code Coverage" --results-directory .\TestResults\coverage-backend`
 - Frontend full verification: `cd FoodDiary.Web.Client && npm run verify`
 
 ## Documentation
