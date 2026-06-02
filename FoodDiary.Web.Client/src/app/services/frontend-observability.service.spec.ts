@@ -9,6 +9,8 @@ import { LoggingApiService } from './logging-api.service';
 
 const REQUEST_DURATION_MS = 123.456;
 const ROUNDED_REQUEST_DURATION_MS = 123.5;
+const ROUTE_DURATION_MS = 42.24;
+const ROUNDED_ROUTE_DURATION_MS = 42.2;
 const WEB_VITAL_LCP_INITIAL = 1000;
 const WEB_VITAL_LCP_DUPLICATE = 1200;
 
@@ -33,6 +35,14 @@ afterEach(() => {
 });
 
 describe('FrontendObservabilityService errors and requests', () => {
+    it('should not send events when client observability is disabled', () => {
+        environment.enableClientObservability = false;
+
+        service.recordClientError({ message: 'Ignored' });
+
+        expect(loggingSpy.logEvent).not.toHaveBeenCalled();
+    });
+
     it('should log client errors with client_error category', () => {
         service.recordClientError({
             message: 'Boom',
@@ -59,6 +69,30 @@ describe('FrontendObservabilityService errors and requests', () => {
         expect(payload['category']).toBe('http_request');
         expect(payload['durationMs']).toBe(ROUNDED_REQUEST_DURATION_MS);
         expect((payload['details'] as Record<string, unknown>)['url']).toBe('/api/v1/products');
+    });
+
+    it('should keep invalid http URLs when normalization fails', () => {
+        service.recordHttpRequest({
+            url: 'http://%',
+            method: 'POST',
+            statusCode: 0,
+            durationMs: REQUEST_DURATION_MS,
+            outcome: 'network_error',
+        });
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+        expect(payload['level']).toBe('error');
+        expect((payload['details'] as Record<string, unknown>)['url']).toBe('http://%');
+    });
+
+    it('should log route timing with rounded duration and error level', () => {
+        service.recordRouteTiming('/meals', ROUTE_DURATION_MS, 'error');
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+        expect(payload['category']).toBe('route_timing');
+        expect(payload['route']).toBe('/meals');
+        expect(payload['durationMs']).toBe(ROUNDED_ROUTE_DURATION_MS);
+        expect(payload['level']).toBe('error');
     });
 });
 
@@ -89,6 +123,14 @@ describe('FrontendObservabilityService notification events', () => {
         expect(payload['category']).toBe('user_action');
         expect(payload['name']).toBe('notifications.subscription.ensure');
         expect(payload['outcome']).toBe('blocked');
+    });
+
+    it('should mark failed notification subscription events as warnings', () => {
+        service.recordNotificationSubscriptionEvent('subscription.remove', 'failed');
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+        expect(payload['name']).toBe('notifications.subscription.remove');
+        expect(payload['level']).toBe('warning');
     });
 });
 
