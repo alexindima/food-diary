@@ -1,4 +1,4 @@
-﻿# Repository Guidelines
+# Repository Guidelines
 
 ## Scope
 This file is the root aggregator. It defines cross-repo defaults and points to project-specific guides.
@@ -68,4 +68,5 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 ## EF Core Migrations
 - Always commit both migration files: `*.cs` and `*.Designer.cs`.
+- Add `[ExcludeFromCodeCoverage]` to migration implementation classes and model snapshots so generated EF code stays out of dotCover/code coverage.
 - After editing or generating a migration, run a whitespace/style pass before commit. Prefer `dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj` or an equivalent fix on the migration files so CI does not fail with `WHITESPACE: Fix whitespace formatting`.

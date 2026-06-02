@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace FoodDiary.Infrastructure.Migrations;
 
+[ExcludeFromCodeCoverage]
 public partial class SetDefaultLanguageForUsers : Migration {
     protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.Sql("UPDATE \"Users\" SET \"Language\" = 'en' WHERE \"Language\" IS NULL;");

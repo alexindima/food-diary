@@ -116,6 +116,15 @@ public sealed class MediatorTests {
     }
 
     [Fact]
+    public void AddOpenBehavior_WithClosedBehaviorType_ThrowsArgumentException() {
+        var configuration = new MediatorServiceConfiguration();
+
+        var ex = Assert.Throws<ArgumentException>(() => configuration.AddOpenBehavior(typeof(ClosedBehavior)));
+
+        Assert.Contains("Behavior type must be an open generic type definition", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Publish_WithTypedNotification_InvokesAllHandlers() {
         using var provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         var publisher = provider.GetRequiredService<IPublisher>();
@@ -274,6 +283,14 @@ public sealed class MediatorTests {
             BehaviorLog.Entries.Add("command-behavior-after");
             return response;
         }
+    }
+
+    private sealed class ClosedBehavior : IPipelineBehavior<EchoQuery, EchoResponse> {
+        public Task<EchoResponse> Handle(
+            EchoQuery request,
+            RequestHandlerDelegate<EchoResponse> next,
+            CancellationToken cancellationToken) =>
+            next(cancellationToken);
     }
 
     private sealed record SampleNotification(string Value) : INotification;

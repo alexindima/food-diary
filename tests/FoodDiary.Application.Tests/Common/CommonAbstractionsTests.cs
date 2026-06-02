@@ -81,6 +81,44 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
+    public void Error_ImplicitStringConversion_ReturnsCode() {
+        var error = new Error("Custom.Code", "Custom message");
+
+        string code = error;
+
+        Assert.Equal("Custom.Code", code);
+    }
+
+    [Fact]
+    public void ErrorKindResolver_ResolvesKnownFallbackPatterns() {
+        Assert.Null(ErrorKindResolver.Resolve(null));
+        Assert.Null(ErrorKindResolver.Resolve(" "));
+        Assert.Equal(ErrorKind.Forbidden, ErrorKindResolver.Resolve("Authentication.AdminSsoForbidden"));
+        Assert.Equal(ErrorKind.Unauthorized, ErrorKindResolver.Resolve("Authentication.Unknown"));
+        Assert.Equal(ErrorKind.Validation, ErrorKindResolver.Resolve("Validation.Invalid"));
+        Assert.Equal(ErrorKind.NotFound, ErrorKindResolver.Resolve("Product.NotAccessible"));
+        Assert.Equal(ErrorKind.NotFound, ErrorKindResolver.Resolve("User.NotFound"));
+        Assert.Equal(ErrorKind.Conflict, ErrorKindResolver.Resolve("Recipe.AlreadyExists"));
+        Assert.Null(ErrorKindResolver.Resolve("Custom.Unknown"));
+    }
+
+    [Fact]
+    public void Result_WithSuccessAndError_ThrowsInvalidOperationException() {
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            new TestResult(isSuccess: true, Errors.Validation.Required("name")));
+
+        Assert.Contains("A successful result cannot contain an error.", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Result_WithFailureAndNoError_ThrowsInvalidOperationException() {
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            new TestResult(isSuccess: false, Error.None));
+
+        Assert.Contains("A failed result must contain an error.", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task ValidationBehavior_ForGenericResult_UsesDefaultValidationCode_WhenErrorCodeIsEmpty() {
         var validator = new GenericCommandValidator();
         var behavior = new ValidationBehavior<GenericCommand, Result<string>>([validator]);
@@ -144,6 +182,8 @@ public class CommonAbstractionsTests {
     }
 
     private sealed record NonGenericCommand(string Value) : ICommand<Result>;
+
+    private sealed class TestResult(bool isSuccess, Error error) : Result(isSuccess, error);
 
     private sealed class NonGenericCommandValidator : AbstractValidator<NonGenericCommand> {
         public NonGenericCommandValidator() {

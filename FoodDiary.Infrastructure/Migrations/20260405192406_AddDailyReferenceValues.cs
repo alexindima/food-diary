@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -5,6 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public partial class AddDailyReferenceValues : Migration {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder) {

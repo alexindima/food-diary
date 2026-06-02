@@ -1,4 +1,4 @@
-﻿# Infrastructure Layer Guidelines
+# Infrastructure Layer Guidelines
 
 ## Scope
 Rules for `FoodDiary.Infrastructure/`.
@@ -26,6 +26,7 @@ Rules for `FoodDiary.Infrastructure/`.
 
 ## EF Core Migrations
 - Always commit both files for each migration: `*.cs` and `*.Designer.cs`.
+- Add `[ExcludeFromCodeCoverage]` to the migration implementation class and model snapshot so generated EF code does not affect dotCover/code coverage.
 - **CRITICAL**: `dotnet ef migrations add` generates Allman-style braces, but the project requires K&R style. After generating, you MUST:
   1. Remove `using System;` (implicit usings are enabled)
   2. Convert ALL `)\n{` and `=>\n{` patterns to `) {` / `=> {` — especially `constraints: table =>\n{`

@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace FoodDiary.Infrastructure.Migrations;
 
+[ExcludeFromCodeCoverage]
 public partial class AddUserRoles : Migration {
     protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(

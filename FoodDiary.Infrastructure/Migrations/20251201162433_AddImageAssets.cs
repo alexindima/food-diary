@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public partial class AddImageAssets : Migration {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder) {

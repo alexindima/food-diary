@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace FoodDiary.Infrastructure.Migrations {
+    [ExcludeFromCodeCoverage]
     public partial class AddAdminUser : Migration {
         protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.Sql("""
