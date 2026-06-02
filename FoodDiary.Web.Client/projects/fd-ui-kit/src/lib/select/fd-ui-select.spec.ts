@@ -166,6 +166,19 @@ describe('FdUiSelectComponent computed state', () => {
 
         expect(component['activeOptionId']()).toBe(`${component['id']()}-option-0`);
     });
+
+    it('should show placeholder only while focused without selected value', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('placeholder', 'Choose fruit');
+        fixture.detectChanges();
+
+        expect(component['selectedLabel']()).toBe('');
+
+        component['onFocus']();
+
+        expect(component['selectedLabel']()).toBe('Choose fruit');
+        expect(component['shouldFloatLabel']()).toBe(true);
+    });
 });
 
 describe('FdUiSelectComponent classes', () => {
@@ -218,5 +231,77 @@ describe('FdUiSelectComponent overlay', () => {
         await Promise.resolve();
 
         expect(focus).toHaveBeenCalled();
+    });
+
+    it('should open and close menu from toggle', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const event = new Event('click');
+        const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
+
+        component['toggleMenu'](event);
+        fixture.detectChanges();
+
+        expect(component['isOpen']()).toBe(true);
+        expect(component['isFocused']()).toBe(true);
+
+        component['toggleMenu'](event);
+
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(component['isOpen']()).toBe(false);
+        expect(component['isFocused']()).toBe(false);
+    });
+
+    it('should keep focus on blur while menu is open and touch when closed', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const onTouchedSpy = vi.fn();
+        component['registerOnTouched'](onTouchedSpy);
+
+        component['openMenu']();
+        component['onBlur']();
+
+        expect(component['isFocused']()).toBe(true);
+        expect(onTouchedSpy).not.toHaveBeenCalled();
+
+        component['closeMenu']();
+        component['onBlur']();
+
+        expect(component['isFocused']()).toBe(false);
+        expect(onTouchedSpy).toHaveBeenCalledOnce();
+    });
+
+    it('should navigate listbox with arrow, home, end and select active option', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const onChangeSpy = vi.fn();
+        component['registerOnChange'](onChangeSpy);
+
+        component['openMenu']();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        expect(component['activeIndex']()).toBe(1);
+
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'End' }));
+        expect(component['activeIndex']()).toBe(2);
+
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Home' }));
+        expect(component['activeIndex']()).toBe(0);
+
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Enter' }));
+
+        expect(onChangeSpy).toHaveBeenCalledWith('apple');
+        expect(component['isOpen']()).toBe(false);
+    });
+
+    it('should ignore listbox keyboard navigation when options are empty', async () => {
+        const { component } = await setupSelectAsync();
+        component['openMenu']();
+
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+
+        expect(component['activeIndex']()).toBe(0);
     });
 });

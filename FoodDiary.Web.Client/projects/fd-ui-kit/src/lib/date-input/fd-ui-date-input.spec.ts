@@ -60,6 +60,7 @@ describe('FdUiDateInputComponent', () => {
     registerLabelTests();
     registerValueAccessorTests();
     registerStateTests();
+    registerInteractionTests();
 });
 
 function registerLabelTests(): void {
@@ -215,6 +216,83 @@ function registerStateTests(): void {
 
             const inputEl = requireInputElement('.fd-ui-date-input__control');
             expect(inputEl.value).toBeTruthy();
+        });
+    });
+}
+
+function registerInteractionTests(): void {
+    describe('interaction', () => {
+        it('should not change value when selected date is null', () => {
+            const onChangeSpy = vi.fn();
+            component['registerOnChange'](onChangeSpy);
+            component['writeValue'](MARCH_DATE_STRING);
+
+            component['onDateSelect'](null);
+
+            expect(component['value']()?.getDate()).toBe(TEST_DAY);
+            expect(onChangeSpy).not.toHaveBeenCalled();
+        });
+
+        it('should open date picker from keyboard and close with escape', () => {
+            const openEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+            const openPreventDefaultSpy = vi.spyOn(openEvent, 'preventDefault');
+
+            component['onInputKeydown'](openEvent);
+
+            expect(openPreventDefaultSpy).toHaveBeenCalled();
+            expect(component['isOpen']()).toBe(true);
+            expect(component['isFocused']()).toBe(true);
+
+            const closeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+            const closePreventDefaultSpy = vi.spyOn(closeEvent, 'preventDefault');
+            component['onInputKeydown'](closeEvent);
+
+            expect(closePreventDefaultSpy).toHaveBeenCalled();
+            expect(component['isOpen']()).toBe(false);
+        });
+
+        it('should close date picker from overlay escape', () => {
+            component['openDatePicker']();
+            const event = new KeyboardEvent('keydown', { key: 'Escape' });
+            const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
+
+            component['onOverlayKeydown'](event);
+
+            expect(preventDefaultSpy).toHaveBeenCalled();
+            expect(component['isOpen']()).toBe(false);
+        });
+
+        it('should ignore unsupported overlay key', () => {
+            component['openDatePicker']();
+
+            component['onOverlayKeydown'](new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+
+            expect(component['isOpen']()).toBe(true);
+        });
+
+        it('should update display month when calendar emits a value', () => {
+            const nextMonth = new Date(TEST_YEAR, JUNE_INDEX, JUNE_DAY);
+
+            component['onDisplayMonthChange'](nextMonth);
+
+            expect(component['displayMonth']()).toBe(nextMonth);
+        });
+
+        it('should ignore null display month changes', () => {
+            const initialMonth = component['displayMonth']();
+
+            component['onDisplayMonthChange'](null);
+
+            expect(component['displayMonth']()).toBe(initialMonth);
+        });
+
+        it('should close date picker when disabled while open', () => {
+            component['openDatePicker']();
+
+            component['setDisabledState'](true);
+
+            expect(component['disabled']()).toBe(true);
+            expect(component['isOpen']()).toBe(false);
         });
     });
 }
