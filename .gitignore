@@ -3,6 +3,7 @@
 /FoodDiary.Web.Client/.angular/
 /FoodDiary.Web.Client/.lighthouseci/
 /FoodDiary.Web.Client/.tmp/
+/FoodDiary.Web.Client/coverage/
 /FoodDiary.Web.Client/dist/
 /FoodDiary.Web.Client/dist-storybook/
 /FoodDiary.Web.Client/reports/lighthouse/
