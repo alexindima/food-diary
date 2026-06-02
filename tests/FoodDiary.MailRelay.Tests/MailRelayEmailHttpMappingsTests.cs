@@ -128,6 +128,99 @@ public sealed class MailRelayEmailHttpMappingsTests {
     }
 
     [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenValidComplaint_MapsComplaintEvents() {
+        var request = new AwsSesSnsWebhookHttpRequest(
+            Type: "Notification",
+            Message: """
+                {
+                  "notificationType": "Complaint",
+                  "mail": { "messageId": "ses-message-2", "destination": ["a@example.com"] },
+                  "complaint": {
+                    "complainedRecipients": [
+                      { "emailAddress": "a@example.com" },
+                      { "emailAddress": " " }
+                    ]
+                  }
+                }
+                """);
+
+        var mapped = request.ToMappedCommand();
+
+        Assert.True(mapped.IsSuccess);
+        var command = Assert.IsType<IngestManyMailRelayDeliveryEventsCommand>(mapped.Request);
+        var deliveryEvent = Assert.Single(command.Requests);
+        Assert.Equal("complaint", deliveryEvent.EventType);
+        Assert.Equal("a@example.com", deliveryEvent.Email);
+        Assert.Equal("aws-ses-sns", deliveryEvent.Source);
+        Assert.Null(deliveryEvent.Classification);
+        Assert.Equal("ses-message-2", deliveryEvent.ProviderMessageId);
+        Assert.Equal("complaint", deliveryEvent.Reason);
+    }
+
+    [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenBounceHasNoRecipients_ReturnsFailure() {
+        var request = new AwsSesSnsWebhookHttpRequest(
+            Type: "Notification",
+            Message: """
+                {
+                  "notificationType": "Bounce",
+                  "mail": { "messageId": "ses-message-1", "destination": [] },
+                  "bounce": { "bounceType": "Transient", "bouncedRecipients": [] }
+                }
+                """);
+
+        var mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("Bounce notification does not contain recipients", mapped.Error, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenComplaintHasNoRecipients_ReturnsFailure() {
+        var request = new AwsSesSnsWebhookHttpRequest(
+            Type: "Notification",
+            Message: """
+                {
+                  "notificationType": "Complaint",
+                  "mail": { "messageId": "ses-message-2", "destination": [] },
+                  "complaint": { "complainedRecipients": [] }
+                }
+                """);
+
+        var mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("Complaint notification does not contain recipients", mapped.Error, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenMessageIsInvalidJson_ReturnsFailure() {
+        var request = new AwsSesSnsWebhookHttpRequest(Type: "Notification", Message: "{invalid-json");
+
+        var mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("Invalid SNS notification payload", mapped.Error, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenNotificationTypeUnsupported_ReturnsFailure() {
+        var request = new AwsSesSnsWebhookHttpRequest(
+            Type: "Notification",
+            Message: """
+                {
+                  "notificationType": "Delivery",
+                  "mail": { "messageId": "ses-message-3", "destination": [] }
+                }
+                """);
+
+        var mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("Unsupported SES notification type", mapped.Error, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AwsSesWebhook_ToMappedCommand_WhenInvalid_ReturnsFailure() {
         var request = new AwsSesSnsWebhookHttpRequest(Type: "SubscriptionConfirmation", Message: "{}");
 

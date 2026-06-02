@@ -2,6 +2,7 @@ using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
+using FoodDiary.Application.MealPlans.Mappings;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -101,6 +102,59 @@ public class MealPlansFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
         Assert.Null(shoppingLists.Added);
+    }
+
+    [Fact]
+    public void MealPlan_ToModel_OrdersDaysAndMealsAndScalesRecipeNutrition() {
+        var userId = UserId.New();
+        var breakfast = Recipe.Create(userId, "Breakfast bowl", servings: 2);
+        breakfast.SetManualNutrition(200, 20, 8, 18, 4, 0);
+        var dinner = Recipe.Create(userId, "Dinner bowl", servings: 4);
+        dinner.SetManualNutrition(800, 40, 20, 100, 10, 0);
+        var plan = MealPlan.CreateCurated("Balanced week", "Plan description", DietType.Balanced, 2, 2200);
+        var day2 = plan.AddDay(2);
+        var day1 = plan.AddDay(1);
+        var dinnerMeal = day1.AddMeal(MealType.Dinner, dinner.Id, servings: 2);
+        var breakfastMeal = day1.AddMeal(MealType.Breakfast, breakfast.Id, servings: 1);
+        SetProperty(dinnerMeal, nameof(dinnerMeal.Recipe), dinner);
+        SetProperty(breakfastMeal, nameof(breakfastMeal.Recipe), breakfast);
+
+        var model = plan.ToModel();
+
+        Assert.Equal(plan.Id.Value, model.Id);
+        Assert.Equal("Balanced week", model.Name);
+        Assert.Equal("Plan description", model.Description);
+        Assert.Equal(nameof(DietType.Balanced), model.DietType);
+        Assert.Equal(2, model.DurationDays);
+        Assert.Equal(2200, model.TargetCaloriesPerDay);
+        Assert.True(model.IsCurated);
+        Assert.Equal([1, 2], model.Days.Select(day => day.DayNumber));
+        var firstDayMeals = model.Days[0].Meals;
+        Assert.Equal([nameof(MealType.Breakfast), nameof(MealType.Dinner)], firstDayMeals.Select(meal => meal.MealType));
+        Assert.Equal(100, firstDayMeals[0].Calories);
+        Assert.Equal(10, firstDayMeals[0].Proteins);
+        Assert.Equal(400, firstDayMeals[1].Calories);
+        Assert.Equal(20, firstDayMeals[1].Proteins);
+        Assert.Empty(model.Days.Single(day => day.DayNumber == 2).Meals);
+    }
+
+    [Fact]
+    public void MealPlan_ToSummaryModel_CountsDistinctRecipesAcrossDays() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var otherRecipeId = RecipeId.New();
+        var plan = MealPlan.CreateForUser(userId, "User plan", null, DietType.LowCarb, 2, null);
+        plan.AddDay(1).AddMeal(MealType.Breakfast, recipeId, servings: 1);
+        plan.AddDay(2).AddMeal(MealType.Dinner, recipeId, servings: 1);
+        plan.Days.Single(day => day.DayNumber == 2).AddMeal(MealType.Lunch, otherRecipeId, servings: 1);
+
+        var model = plan.ToSummaryModel();
+
+        Assert.Equal(plan.Id.Value, model.Id);
+        Assert.Equal("User plan", model.Name);
+        Assert.Equal(nameof(DietType.LowCarb), model.DietType);
+        Assert.False(model.IsCurated);
+        Assert.Equal(2, model.TotalRecipes);
     }
 
     private sealed class StubMealPlanRepository(MealPlan? plan) : IMealPlanRepository {

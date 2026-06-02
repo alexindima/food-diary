@@ -1,5 +1,7 @@
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
@@ -47,6 +49,110 @@ public sealed class AdminHttpMappingsTests {
     }
 
     [Fact]
+    public void AdminEmailTemplateUpsertHttpRequest_ToCommand_MapsAllFields() {
+        var request = new AdminEmailTemplateUpsertHttpRequest(
+            Subject: "Welcome",
+            HtmlBody: "<p>Hello</p>",
+            TextBody: "Hello",
+            IsActive: true);
+
+        var command = request.ToCommand("welcome", "en");
+
+        Assert.Equal("welcome", command.Key);
+        Assert.Equal("en", command.Locale);
+        Assert.Equal("Welcome", command.Subject);
+        Assert.Equal("<p>Hello</p>", command.HtmlBody);
+        Assert.Equal("Hello", command.TextBody);
+        Assert.True(command.IsActive);
+    }
+
+    [Fact]
+    public void AdminEmailTemplateTestHttpRequest_ToCommand_MapsAllFields() {
+        var request = new AdminEmailTemplateTestHttpRequest(
+            ToEmail: "user@example.com",
+            Key: "welcome",
+            Subject: "Welcome",
+            HtmlBody: "<p>Hello</p>",
+            TextBody: "Hello");
+
+        var command = request.ToCommand();
+
+        Assert.Equal(request.ToEmail, command.ToEmail);
+        Assert.Equal(request.Key, command.Key);
+        Assert.Equal(request.Subject, command.Subject);
+        Assert.Equal(request.HtmlBody, command.HtmlBody);
+        Assert.Equal(request.TextBody, command.TextBody);
+    }
+
+    [Fact]
+    public void AdminAiPromptUpsertHttpRequest_ToCommand_MapsAllFields() {
+        var request = new AdminAiPromptUpsertHttpRequest("Prompt text", true);
+
+        var command = request.ToCommand("meal-analysis", "ru");
+
+        Assert.Equal("meal-analysis", command.Key);
+        Assert.Equal("ru", command.Locale);
+        Assert.Equal("Prompt text", command.PromptText);
+        Assert.True(command.IsActive);
+    }
+
+    [Fact]
+    public void AdminImpersonationStartHttpRequest_ToCommand_MapsContext() {
+        var actorUserId = Guid.NewGuid();
+        var targetUserId = Guid.NewGuid();
+        var request = new AdminImpersonationStartHttpRequest("Support case");
+
+        var command = request.ToCommand(actorUserId, targetUserId, "203.0.113.1", "Agent/1.0");
+
+        Assert.Equal(actorUserId, command.ActorUserId);
+        Assert.Equal(targetUserId, command.TargetUserId);
+        Assert.Equal("Support case", command.Reason);
+        Assert.Equal("203.0.113.1", command.ActorIpAddress);
+        Assert.Equal("Agent/1.0", command.ActorUserAgent);
+    }
+
+    [Fact]
+    public void AdminReportActionHttpRequest_ToCommands_MapReportIdAndNote() {
+        var reportId = Guid.NewGuid();
+        var request = new AdminReportActionHttpRequest("Reviewed");
+
+        var review = request.ToReviewCommand(reportId);
+        var dismiss = request.ToDismissCommand(reportId);
+
+        Assert.Equal(reportId, review.ReportId);
+        Assert.Equal("Reviewed", review.AdminNote);
+        Assert.Equal(reportId, dismiss.ReportId);
+        Assert.Equal("Reviewed", dismiss.AdminNote);
+    }
+
+    [Fact]
+    public void AdminLessonRequests_ToCommands_MapAllFields() {
+        var lessonId = Guid.NewGuid();
+        var create = new AdminLessonCreateHttpRequest(
+            "Title", "Content", "Summary", "en", "nutrition", "beginner", 4, 10);
+        var update = new AdminLessonUpdateHttpRequest(
+            "Updated", "Updated content", null, "ru", "fasting", "advanced", 6, 20);
+
+        var createCommand = create.ToCreateCommand();
+        var updateCommand = update.ToUpdateCommand(lessonId);
+        var deleteCommand = lessonId.ToDeleteCommand();
+
+        Assert.Equal("Title", createCommand.Title);
+        Assert.Equal("Content", createCommand.Content);
+        Assert.Equal("Summary", createCommand.Summary);
+        Assert.Equal("en", createCommand.Locale);
+        Assert.Equal("nutrition", createCommand.Category);
+        Assert.Equal("beginner", createCommand.Difficulty);
+        Assert.Equal(4, createCommand.EstimatedReadMinutes);
+        Assert.Equal(10, createCommand.SortOrder);
+        Assert.Equal(lessonId, updateCommand.Id);
+        Assert.Equal("Updated", updateCommand.Title);
+        Assert.Null(updateCommand.Summary);
+        Assert.Equal("ru", updateCommand.Locale);
+        Assert.Equal(lessonId, deleteCommand.Id);
+    }
+
+    [Fact]
     public void GetAdminUsersHttpQuery_ToQuery_ParsesExplicitStatusCaseInsensitive() {
         var httpQuery = new GetAdminUsersHttpQuery(
             Page: 2,
@@ -70,6 +176,71 @@ public sealed class AdminHttpMappingsTests {
 
         Assert.Equal(UserAccountStatusFilter.All, includeDeletedQuery.ToQuery().Status);
         Assert.Equal(UserAccountStatusFilter.Active, activeOnlyQuery.ToQuery().Status);
+    }
+
+    [Fact]
+    public void AdminQueryMappings_MapSimpleQueries() {
+        var userId = Guid.NewGuid();
+        var messageId = Guid.NewGuid();
+        var from = DateTime.UtcNow.AddDays(-1);
+        var to = DateTime.UtcNow;
+        var fromDate = new DateOnly(2026, 4, 1);
+        var toDate = new DateOnly(2026, 4, 30);
+
+        Assert.NotNull(AdminHttpQueryMappings.ToEmailTemplatesQuery());
+        Assert.NotNull(AdminHttpQueryMappings.ToAiPromptsQuery());
+        Assert.NotNull(AdminHttpQueryMappings.ToLessonsQuery());
+        Assert.Equal(userId, userId.ToAdminUserQuery().UserId);
+        Assert.Equal(userId, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).UserId);
+        Assert.Equal(12, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).Limit);
+        Assert.Equal(messageId, messageId.ToMailInboxMessageDetailsQuery().Id);
+
+        var loginEvents = new GetAdminUserLoginEventsHttpQuery(2, 30, userId, "mail").ToQuery();
+        Assert.Equal(2, loginEvents.Page);
+        Assert.Equal(30, loginEvents.Limit);
+        Assert.Equal(userId, loginEvents.UserId);
+        Assert.Equal("mail", loginEvents.Search);
+
+        var loginSummary = new GetAdminUserLoginSummaryHttpQuery(from, to).ToQuery();
+        Assert.Equal(from, loginSummary.FromUtc);
+        Assert.Equal(to, loginSummary.ToUtc);
+
+        var aiUsage = new GetAdminAiUsageSummaryHttpQuery(fromDate, toDate).ToQuery();
+        Assert.Equal(fromDate, aiUsage.From);
+        Assert.Equal(toDate, aiUsage.To);
+
+        Assert.Equal("pending", new GetAdminContentReportsHttpQuery("pending", 3, 40).ToQuery().Status);
+        Assert.Equal(25, new GetAdminMailInboxMessagesHttpQuery(25).ToQuery().Limit);
+    }
+
+    [Fact]
+    public void AdminBillingHttpQuery_ToQueries_MapsFilters() {
+        var from = DateTime.UtcNow.AddDays(-7);
+        var to = DateTime.UtcNow;
+        var httpQuery = new GetAdminBillingHttpQuery(
+            Page: 3,
+            Limit: 50,
+            Provider: "stripe",
+            Status: "active",
+            Kind: "invoice",
+            Search: "user@example.com",
+            FromUtc: from,
+            ToUtc: to);
+
+        var subscriptions = httpQuery.ToSubscriptionsQuery();
+        var payments = httpQuery.ToPaymentsQuery();
+        var webhookEvents = httpQuery.ToWebhookEventsQuery();
+
+        Assert.Equal(3, subscriptions.Page);
+        Assert.Equal(50, subscriptions.Limit);
+        Assert.Equal("stripe", subscriptions.Provider);
+        Assert.Equal("active", subscriptions.Status);
+        Assert.Equal("user@example.com", subscriptions.Search);
+        Assert.Equal(from, subscriptions.FromUtc);
+        Assert.Equal(to, subscriptions.ToUtc);
+        Assert.Equal("invoice", payments.Kind);
+        Assert.Equal("stripe", webhookEvents.Provider);
+        Assert.Equal("active", webhookEvents.Status);
     }
 
     [Theory]
@@ -163,6 +334,83 @@ public sealed class AdminHttpMappingsTests {
         Assert.Equal(userId, user.Id);
         Assert.Equal("user@example.com", user.Email);
         Assert.Equal(150, user.TotalTokens);
+    }
+
+    [Fact]
+    public void AdminSingleModels_ToHttpResponse_MapAllFields() {
+        var now = DateTime.UtcNow;
+        var offsetNow = DateTimeOffset.UtcNow;
+        var prompt = new AdminAiPromptModel(Guid.NewGuid(), "key", "en", "Prompt", 2, true, now, now.AddMinutes(1));
+        var lesson = new AdminLessonModel(Guid.NewGuid(), "Title", "Content", "Summary", "en", "nutrition", "beginner", 4, 10, now, now.AddMinutes(2));
+        var template = new AdminEmailTemplateModel(Guid.NewGuid(), "welcome", "en", "Subject", "<p>Body</p>", "Body", true, now, null);
+        var impersonationStart = new AdminImpersonationStartModel("token", Guid.NewGuid(), "target@example.com", Guid.NewGuid(), "Support");
+        var impersonationSession = new AdminImpersonationSessionReadModel(Guid.NewGuid(), Guid.NewGuid(), "actor@example.com", Guid.NewGuid(), "target@example.com", "Support", "ip", "agent", now);
+        var loginEvent = new AdminUserLoginEventModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", "ip", "agent", "Chrome", "1", "Windows", "Desktop", now);
+        var device = new AdminUserLoginDeviceSummaryModel("Chrome|Windows", 3, now);
+        var audit = new AdminUserRoleAuditEventReadModel(Guid.NewGuid(), Guid.NewGuid(), "Admin", "Added", Guid.NewGuid(), "actor@example.com", "manual", now);
+        var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", null, now, null);
+        var mailSummary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "received", offsetNow);
+        var mailDetails = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "received", offsetNow);
+
+        Assert.Equal("key", prompt.ToAiPromptHttpResponse().Key);
+        Assert.Equal("Title", lesson.ToLessonHttpResponse().Title);
+        Assert.Equal(1, new AdminLessonsImportModel(1, [lesson]).ToLessonsImportHttpResponse().ImportedCount);
+        Assert.Equal("welcome", template.ToHttpResponse().Key);
+        Assert.Equal("token", impersonationStart.ToHttpResponse().AccessToken);
+        Assert.Equal("actor@example.com", impersonationSession.ToHttpResponse().ActorEmail);
+        Assert.Equal("Chrome", loginEvent.ToHttpResponse().BrowserName);
+        Assert.Equal(3, device.ToHttpResponse().Count);
+        Assert.Equal("Admin", audit.ToHttpResponse().RoleName);
+        Assert.Equal("Spam", report.ToHttpResponse().Reason);
+        Assert.Equal("from@example.com", mailSummary.ToHttpResponse().FromAddress);
+        Assert.Equal("raw", mailDetails.ToHttpResponse().RawMime);
+    }
+
+    [Fact]
+    public void AdminBillingModels_ToHttpResponse_MapAllFields() {
+        var now = DateTime.UtcNow;
+        var userId = Guid.NewGuid();
+        var subscriptionId = Guid.NewGuid();
+        var subscription = new AdminBillingSubscriptionReadModel(
+            subscriptionId, userId, "user@example.com", "stripe", "customer", "subscription", "payment-method", "price",
+            "premium", "active", now.AddDays(-1), now.AddDays(30), true, now.AddDays(29), "event-1", now, now, null);
+        var payment = new AdminBillingPaymentReadModel(
+            Guid.NewGuid(), userId, "user@example.com", subscriptionId, "stripe", "payment", "customer", "subscription",
+            "payment-method", "price", "premium", "succeeded", "invoice", 12.5m, "USD", now.AddDays(-1), now.AddDays(30),
+            "event-2", "{}", now, null);
+        var webhook = new AdminBillingWebhookEventReadModel(
+            Guid.NewGuid(), "stripe", "event-3", "invoice.paid", "invoice-1", "processed", now, "{}", null, now, null);
+
+        var subscriptionResponse = subscription.ToHttpResponse();
+        var paymentResponse = payment.ToHttpResponse();
+        var webhookResponse = webhook.ToHttpResponse();
+
+        Assert.Equal(subscriptionId, subscriptionResponse.Id);
+        Assert.Equal("customer", subscriptionResponse.ExternalCustomerId);
+        Assert.True(subscriptionResponse.CancelAtPeriodEnd);
+        Assert.Equal(12.5m, paymentResponse.Amount);
+        Assert.Equal("invoice", paymentResponse.Kind);
+        Assert.Equal("invoice.paid", webhookResponse.EventType);
+        Assert.Equal("processed", webhookResponse.Status);
+    }
+
+    [Fact]
+    public void AdminPagedResponses_ToHttpResponse_MapItemsAndMetadata() {
+        var user = CreateUser(Guid.NewGuid(), DateTime.UtcNow);
+        var session = new AdminImpersonationSessionReadModel(Guid.NewGuid(), Guid.NewGuid(), "actor@example.com", Guid.NewGuid(), "target@example.com", "Support", null, null, DateTime.UtcNow);
+        var loginEvent = new AdminUserLoginEventModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", null, null, null, null, null, null, DateTime.UtcNow);
+        var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", null, DateTime.UtcNow, null);
+        var subscription = new AdminBillingSubscriptionReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "stripe", "customer", null, null, null, null, "active", null, null, false, null, null, null, DateTime.UtcNow, null);
+        var payment = new AdminBillingPaymentReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", null, "stripe", "payment", null, null, null, null, null, "succeeded", "invoice", null, null, null, null, null, null, DateTime.UtcNow, null);
+        var webhook = new AdminBillingWebhookEventReadModel(Guid.NewGuid(), "stripe", "event", "invoice.paid", null, "processed", DateTime.UtcNow, null, null, DateTime.UtcNow, null);
+
+        Assert.Single(new PagedResponse<AdminUserModel>([user], 2, 10, 3, 21).ToHttpResponse().Data);
+        Assert.Single(new PagedResponse<AdminImpersonationSessionReadModel>([session], 1, 10, 1, 1).ToImpersonationSessionsHttpResponse().Data);
+        Assert.Single(new PagedResponse<AdminUserLoginEventModel>([loginEvent], 1, 10, 1, 1).ToLoginEventsHttpResponse().Data);
+        Assert.Single(new PagedResponse<AdminContentReportModel>([report], 1, 10, 1, 1).ToHttpResponse().Data);
+        Assert.Single(new PagedResponse<AdminBillingSubscriptionReadModel>([subscription], 1, 10, 1, 1).ToBillingSubscriptionsHttpResponse().Data);
+        Assert.Single(new PagedResponse<AdminBillingPaymentReadModel>([payment], 1, 10, 1, 1).ToBillingPaymentsHttpResponse().Data);
+        Assert.Single(new PagedResponse<AdminBillingWebhookEventReadModel>([webhook], 1, 10, 1, 1).ToBillingWebhookEventsHttpResponse().Data);
     }
 
     private static AdminUserModel CreateUser(Guid id, DateTime createdOnUtc) {

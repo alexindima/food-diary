@@ -9,6 +9,7 @@ using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
@@ -581,6 +582,63 @@ public class RecipesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetRecipesQueryHandler_WithValidQuery_ReturnsPagedRecipeModels() {
+        var user = User.Create("recipes-list@example.com", "hash");
+        var ownedRecipe = Recipe.Create(user.Id, "Owned soup", servings: 2, comment: "Private note", visibility: Visibility.Private);
+        ownedRecipe.SetManualNutrition(200, 10, 5, 20, 2, 0);
+        var publicOwnerId = UserId.New();
+        var publicRecipe = Recipe.Create(publicOwnerId, "Public salad", servings: 1, visibility: Visibility.Public);
+        var repository = new OverviewRecipeRepository([
+            (ownedRecipe, 3),
+            (publicRecipe, 5)
+        ]);
+        var handler = new GetRecipesQueryHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", IncludePublic: true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value.Page);
+        Assert.Equal(1, result.Value.Limit);
+        Assert.Equal(2, result.Value.TotalPages);
+        Assert.Equal(2, result.Value.TotalItems);
+        Assert.Equal(2, result.Value.Data.Count);
+        var owned = result.Value.Data.Single(recipe => recipe.Id == ownedRecipe.Id.Value);
+        Assert.True(owned.IsOwnedByCurrentUser);
+        Assert.Equal("Private note", owned.Comment);
+        Assert.Equal(3, owned.UsageCount);
+        var publicModel = result.Value.Data.Single(recipe => recipe.Id == publicRecipe.Id.Value);
+        Assert.False(publicModel.IsOwnedByCurrentUser);
+        Assert.Null(publicModel.Comment);
+        Assert.Equal(5, publicModel.UsageCount);
+    }
+
+    [Fact]
+    public async Task GetRecipesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetRecipesQueryHandler(
+            new OverviewRecipeRepository(),
+            new StubUserRepository(User.Create("unused@example.com", "hash")));
+
+        var result = await handler.Handle(new GetRecipesQuery(Guid.Empty, 1, 10, null, true), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetRecipesQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-recipes-list@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetRecipesQueryHandler(new OverviewRecipeRepository(), new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetRecipesQuery(user.Id.Value, 1, 10, null, true), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     private static RecipeStepInput CreateRecipeCreateStep(int order, string description) {
