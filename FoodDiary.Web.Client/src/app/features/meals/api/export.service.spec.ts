@@ -1,4 +1,4 @@
-import { HttpHeaders, provideHttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -88,7 +88,7 @@ describe('ExportService', () => {
         service.exportDiary({ dateFrom: '2026-05-01', dateTo: '2026-05-14' }).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/diary` && r.method === 'GET');
-        req.flush(null);
+        req.event(new HttpResponse<Blob>({ body: null }));
 
         expect(createObjectUrlSpy).not.toHaveBeenCalled();
         expect(clickedDownloadName).toBeNull();
