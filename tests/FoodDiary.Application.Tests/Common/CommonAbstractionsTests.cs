@@ -1,7 +1,9 @@
 using FluentValidation;
 using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -215,6 +217,50 @@ public class CommonAbstractionsTests {
         };
 
         Assert.Equal(expected, EmailOptions.HasPasswordResetPath(options));
+    }
+
+    [Fact]
+    public void BillingPaymentAlreadyExistsException_StoresPaymentIdentityAndMessage() {
+        var exception = new BillingPaymentAlreadyExistsException("stripe", "payment-123");
+
+        Assert.Equal("stripe", exception.Provider);
+        Assert.Equal("payment-123", exception.ExternalPaymentId);
+        Assert.Equal("Billing payment 'payment-123' for provider 'stripe' already exists.", exception.Message);
+    }
+
+    [Fact]
+    public void AiUsageBreakdown_StoresTokenBreakdown() {
+        var breakdown = new AiUsageBreakdown("vision", 30, 10, 20);
+
+        Assert.Equal("vision", breakdown.Key);
+        Assert.Equal(30, breakdown.TotalTokens);
+        Assert.Equal(10, breakdown.InputTokens);
+        Assert.Equal(20, breakdown.OutputTokens);
+    }
+
+    [Fact]
+    public void AiUsageDailySummary_StoresDailyTokenSummary() {
+        var date = new DateOnly(2026, 6, 3);
+
+        var summary = new AiUsageDailySummary(date, 30, 10, 20);
+
+        Assert.Equal(date, summary.Date);
+        Assert.Equal(30, summary.TotalTokens);
+        Assert.Equal(10, summary.InputTokens);
+        Assert.Equal(20, summary.OutputTokens);
+    }
+
+    [Fact]
+    public void AiUsageUserSummary_StoresUserTokenSummary() {
+        var userId = UserId.New();
+
+        var summary = new AiUsageUserSummary(userId, "user@test.com", 30, 10, 20);
+
+        Assert.Equal(userId, summary.UserId);
+        Assert.Equal("user@test.com", summary.Email);
+        Assert.Equal(30, summary.TotalTokens);
+        Assert.Equal(10, summary.InputTokens);
+        Assert.Equal(20, summary.OutputTokens);
     }
 
     [Fact]
