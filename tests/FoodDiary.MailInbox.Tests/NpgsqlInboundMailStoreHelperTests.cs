@@ -9,6 +9,7 @@ namespace FoodDiary.MailInbox.Tests;
 public sealed class NpgsqlInboundMailStoreHelperTests {
     [Theory]
     [InlineData("dmarc@fooddiary.club", "Hello", InboundMailMessageCategories.DmarcReport)]
+    [InlineData("DMARC@FOODDIARY.CLUB", "Hello", InboundMailMessageCategories.DmarcReport)]
     [InlineData("admin@fooddiary.club", "DMARC aggregate report", InboundMailMessageCategories.DmarcReport)]
     [InlineData("admin@fooddiary.club", "Report Domain: fooddiary.club", InboundMailMessageCategories.DmarcReport)]
     [InlineData("admin@fooddiary.club", "Hello", InboundMailMessageCategories.General)]
@@ -24,6 +25,17 @@ public sealed class NpgsqlInboundMailStoreHelperTests {
     }
 
     [Fact]
+    public void GetCategory_WhenAnyRecipientIsDmarc_ReturnsDmarcReport() {
+        var method = typeof(NpgsqlInboundMailStore).GetMethod(
+            "GetCategory",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        var category = (string)method!.Invoke(null, [new[] { "admin@fooddiary.club", "dmarc@fooddiary.club" }, "Hello"])!;
+
+        Assert.Equal(InboundMailMessageCategories.DmarcReport, category);
+    }
+
+    [Fact]
     public void DeserializeRecipients_WhenJsonIsNull_ReturnsEmptyList() {
         var method = typeof(NpgsqlInboundMailStore).GetMethod(
             "DeserializeRecipients",
@@ -33,6 +45,18 @@ public sealed class NpgsqlInboundMailStoreHelperTests {
             method!.Invoke(null, ["null"])!);
 
         Assert.Empty(recipients);
+    }
+
+    [Fact]
+    public void DeserializeRecipients_WhenJsonContainsRecipients_ReturnsRecipients() {
+        var method = typeof(NpgsqlInboundMailStore).GetMethod(
+            "DeserializeRecipients",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        var recipients = Assert.IsAssignableFrom<IReadOnlyList<string>>(
+            method!.Invoke(null, ["""["admin@fooddiary.club","support@fooddiary.club"]"""])!);
+
+        Assert.Equal(["admin@fooddiary.club", "support@fooddiary.club"], recipients);
     }
 
     [Theory]

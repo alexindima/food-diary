@@ -41,6 +41,19 @@ public sealed class DmarcReportParserTests {
     }
 
     [Fact]
+    public void TryParse_WhenZipContentTypeHasNoFileName_ReturnsPreview() {
+        var attachment = CreateZipReportAttachment();
+        attachment.FileName = null;
+        var rawMime = CreateRawMessage(attachment);
+        var parser = new DmarcReportParser();
+
+        var report = parser.TryParse(rawMime);
+
+        Assert.NotNull(report);
+        Assert.Equal("google.com", report.OrganizationName);
+    }
+
+    [Fact]
     public void TryParse_WhenMessageContainsXmlDmarcReport_ReturnsPreview() {
         var rawMime = CreateRawMessage(new MimePart("text", "xml") {
             FileName = "report.xml",
@@ -54,6 +67,40 @@ public sealed class DmarcReportParserTests {
 
         Assert.NotNull(report);
         Assert.Equal("google.com", report.OrganizationName);
+    }
+
+    [Theory]
+    [InlineData("application", "xml")]
+    [InlineData("text", "xml")]
+    public void TryParse_WhenXmlContentTypeHasNoFileName_ReturnsPreview(string mediaType, string mediaSubtype) {
+        var rawMime = CreateRawMessage(new MimePart(mediaType, mediaSubtype) {
+            Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(CreateDmarcXml()))),
+            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+            ContentTransferEncoding = ContentEncoding.Base64
+        });
+        var parser = new DmarcReportParser();
+
+        var report = parser.TryParse(rawMime);
+
+        Assert.NotNull(report);
+        Assert.Equal("fooddiary.club", report.Domain);
+    }
+
+    [Theory]
+    [InlineData("application", "gzip")]
+    [InlineData("application", "x-gzip")]
+    public void TryParse_WhenGzipContentTypeHasNoFileName_ReturnsPreview(string mediaType, string mediaSubtype) {
+        var attachment = CreateGzipReportAttachment();
+        attachment.FileName = null;
+        attachment.ContentType.MediaType = mediaType;
+        attachment.ContentType.MediaSubtype = mediaSubtype;
+        var rawMime = CreateRawMessage(attachment);
+        var parser = new DmarcReportParser();
+
+        var report = parser.TryParse(rawMime);
+
+        Assert.NotNull(report);
+        Assert.Equal("report-1", report.ReportId);
     }
 
     [Fact]

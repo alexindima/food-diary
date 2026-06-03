@@ -1,8 +1,10 @@
+using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Extensions;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -117,6 +119,7 @@ public sealed class MailInboxSmtpOptionsTests {
             })
             .Build();
         services.AddSingleton<IConfiguration>(configuration);
+        services.AddLogging();
         services.AddMailInboxInfrastructure(configuration);
         using var provider = services.BuildServiceProvider();
 
@@ -137,6 +140,7 @@ public sealed class MailInboxSmtpOptionsTests {
             })
             .Build();
         services.AddSingleton<IConfiguration>(configuration);
+        services.AddLogging();
         services.AddMailInboxInfrastructure(configuration);
         using var provider = services.BuildServiceProvider();
 
@@ -144,5 +148,36 @@ public sealed class MailInboxSmtpOptionsTests {
 
         Assert.NotNull(dataSource);
         Assert.IsType<NpgsqlInboundMailStore>(provider.GetRequiredService<NpgsqlInboundMailStore>());
+    }
+
+    [Fact]
+    public void AddMailInboxInfrastructure_RegistersInfrastructureServices() {
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary_mailinbox;Username=postgres;Password=test",
+                ["MailInboxSmtp:Enabled"] = "false",
+                ["MailInboxSmtp:ServerName"] = "mail.fooddiary.club",
+                ["MailInboxSmtp:Port"] = "2526",
+                ["MailInboxSmtp:MaxMessageSizeBytes"] = "4096",
+                ["MailInboxSmtp:AllowedRecipients:0"] = "admin@fooddiary.club",
+            })
+            .Build();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddLogging();
+        services.AddMailInboxInfrastructure(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        var store = provider.GetRequiredService<NpgsqlInboundMailStore>();
+        Assert.Same(store, provider.GetRequiredService<IInboundMailStore>());
+        Assert.Same(store, provider.GetRequiredService<IMailInboxSchemaInitializer>());
+        Assert.IsType<NpgsqlMailInboxReadinessChecker>(provider.GetRequiredService<IMailInboxReadinessChecker>());
+        Assert.IsType<DmarcReportParser>(provider.GetRequiredService<DmarcReportParser>());
+        Assert.IsType<SmtpInboundMessageStore>(provider.GetRequiredService<SmtpInboundMessageStore>());
+        Assert.IsType<MailInboxMailboxFilter>(provider.GetRequiredService<MailInboxMailboxFilter>());
+
+        var hostedServices = provider.GetServices<IHostedService>().ToArray();
+        Assert.Contains(hostedServices, static service => service is MailInboxSchemaInitializerHostedService);
+        Assert.Contains(hostedServices, static service => service is MailInboxSmtpHostedService);
     }
 }
