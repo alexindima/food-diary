@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, maxLength, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
@@ -20,7 +20,7 @@ import { RecipeCommentsListComponent } from './recipe-comments-list/recipe-comme
     templateUrl: './recipe-comments.html',
     styleUrls: ['./recipe-comments.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, RecipeCommentsListComponent],
+    imports: [FormField, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, RecipeCommentsListComponent],
 })
 export class RecipeCommentsComponent {
     private readonly exploreInteractionsFacade = inject(ExploreInteractionsFacade);
@@ -36,7 +36,11 @@ export class RecipeCommentsComponent {
     protected readonly totalItems = signal(0);
     protected readonly currentPage = signal(1);
     protected readonly pageSize = COMMENTS_PAGE_SIZE;
-    protected readonly commentControl = new FormControl('', [Validators.required, Validators.maxLength(COMMENT_MAX_LENGTH)]);
+    protected readonly commentModel = signal({ text: '' });
+    protected readonly commentForm = form(this.commentModel, path => {
+        required(path.text);
+        maxLength(path.text, COMMENT_MAX_LENGTH);
+    });
     protected readonly editingCommentId = signal<string | null>(null);
     protected readonly isSubmitting = signal(false);
     protected readonly hasMore = computed(() => this.comments().length < this.totalItems());
@@ -57,14 +61,15 @@ export class RecipeCommentsComponent {
             this.comments.set([]);
             this.totalItems.set(0);
             this.editingCommentId.set(null);
-            this.commentControl.reset();
+            this.commentModel.set({ text: '' });
             this.loadComments(1);
         });
     }
 
     protected onSubmit(): void {
-        const text = (this.commentControl.value ?? '').trim();
-        if (text.length === 0 || this.commentControl.invalid || this.isSubmitting()) {
+        this.commentForm().markAsTouched();
+        const text = this.commentModel().text.trim();
+        if (text.length === 0 || this.commentForm().invalid() || this.isSubmitting()) {
             return;
         }
 
@@ -84,7 +89,7 @@ export class RecipeCommentsComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
-                this.commentControl.reset();
+                this.commentModel.set({ text: '' });
                 this.editingCommentId.set(null);
                 this.currentPage.set(1);
                 this.loadComments(1);
@@ -93,12 +98,12 @@ export class RecipeCommentsComponent {
 
     protected onEdit(comment: RecipeComment): void {
         this.editingCommentId.set(comment.id);
-        this.commentControl.setValue(comment.text);
+        this.commentForm.text().value.set(comment.text);
     }
 
     protected onCancelEdit(): void {
         this.editingCommentId.set(null);
-        this.commentControl.reset();
+        this.commentModel.set({ text: '' });
     }
 
     protected onDelete(comment: RecipeComment): void {

@@ -8,12 +8,12 @@
     }
 
     <div class="recipe-select__controls fd-grid fd-gap-sm fd-align-center">
-        <form class="recipe-select__search-form" [formGroup]="searchForm">
+        <form class="recipe-select__search-form">
             <fd-ui-input
                 class="recipe-select__search-input"
                 appearance="search"
-                formControlName="search"
                 prefixIcon="search"
+                [formField]="searchForm.search"
                 [label]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
                 [suffixButtonIcon]="searchSuffixIcon()"
                 [suffixButtonAriaLabel]="'RECIPE_SELECT_DIALOG.SEARCH_CLEAR' | translate"

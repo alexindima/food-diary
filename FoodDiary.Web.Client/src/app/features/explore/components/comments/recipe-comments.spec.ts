@@ -48,17 +48,17 @@ describe('RecipeCommentsComponent', () => {
     });
 
     it('creates trimmed comments and reloads the first page', () => {
-        component['commentControl'].setValue('  Created comment  ');
+        component['commentForm'].text().value.set('  Created comment  ');
 
         component['onSubmit']();
 
         expect(commentService.createComment).toHaveBeenCalledWith('recipe-1', { text: 'Created comment' });
         expect(component['editingCommentId']()).toBeNull();
-        expect(component['commentControl'].value).toBeNull();
+        expect(component['commentModel']().text).toBe('');
     });
 
     it('does not submit blank comments', () => {
-        component['commentControl'].setValue('   ');
+        component['commentForm'].text().value.set('   ');
 
         component['onSubmit']();
 
@@ -69,7 +69,7 @@ describe('RecipeCommentsComponent', () => {
         const comment = createComment({ text: 'Old text' });
 
         component['onEdit'](comment);
-        component['commentControl'].setValue('Updated text');
+        component['commentForm'].text().value.set('Updated text');
         component['onSubmit']();
 
         expect(component['editingCommentId']()).toBeNull();

@@ -2,7 +2,7 @@
     <form (submit)="onApply($event)">
         <fd-ui-date-range-input
             class="meal-list-filters-dialog__date-range"
-            [formControl]="dateRangeControl"
+            [formField]="form.dateRange"
             [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
             [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
             [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"

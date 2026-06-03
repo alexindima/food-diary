@@ -10,18 +10,17 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, skip, switchMap, tap } from 'rxjs';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
@@ -40,7 +39,7 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
     styleUrls: ['./recipe-select-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -61,8 +60,13 @@ export class RecipeSelectDialogComponent {
     public readonly excludedRecipeId = input<string | null>(null);
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output();
-    protected readonly searchValue = signal<string | null>(null);
-    protected readonly onlyMineFilter = signal(false);
+    protected readonly searchModel = signal<RecipeSearchFormValues>({
+        search: null,
+        onlyMine: false,
+    });
+    protected readonly searchForm = form(this.searchModel);
+    protected readonly searchValue = computed(() => this.searchModel().search);
+    protected readonly onlyMineFilter = computed(() => this.searchModel().onlyMine);
     protected readonly searchSuffixIcon = computed(() => {
         const search = this.searchValue();
         return search !== null && search.length > 0 ? 'close' : undefined;
@@ -78,11 +82,6 @@ export class RecipeSelectDialogComponent {
             })),
     );
 
-    protected readonly searchForm = new FormGroup<RecipeSearchFormGroup>({
-        search: new FormControl<string | null>(null),
-        onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
-    });
-
     protected recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     protected currentPageIndex = 0;
     protected readonly pageSize = RECIPE_SELECT_DIALOG_PAGE_SIZE;
@@ -92,24 +91,20 @@ export class RecipeSelectDialogComponent {
     public constructor() {
         this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE).subscribe();
 
-        this.searchForm.controls.search.valueChanges
+        toObservable(this.searchValue)
             .pipe(
+                skip(1),
                 takeUntilDestroyed(this.destroyRef),
-                tap(value => {
-                    this.searchValue.set(value);
-                }),
                 debounceTime(this.searchDebounceMs),
                 switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
             )
             .subscribe();
 
-        this.searchForm.controls.onlyMine.valueChanges
+        toObservable(this.onlyMineFilter)
             .pipe(
+                skip(1),
                 takeUntilDestroyed(this.destroyRef),
                 distinctUntilChanged(),
-                tap(value => {
-                    this.onlyMineFilter.set(value);
-                }),
                 switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
             )
             .subscribe();
@@ -117,9 +112,9 @@ export class RecipeSelectDialogComponent {
 
     protected loadRecipes(page: number): Observable<void> {
         this.recipeData.setLoading(true);
-        const includePublic = !this.searchForm.controls.onlyMine.value;
+        const includePublic = !this.onlyMineFilter();
         const filters: RecipeFilters = {
-            search: this.searchForm.controls.search.value ?? undefined,
+            search: this.searchValue() ?? undefined,
         };
 
         return this.recipeSelectFacade.query(page, RECIPE_SELECT_DIALOG_PAGE_SIZE, filters, includePublic).pipe(
@@ -149,11 +144,11 @@ export class RecipeSelectDialogComponent {
     }
 
     protected clearSearch(): void {
-        this.searchForm.controls.search.setValue('');
+        this.searchForm.search().value.set('');
     }
 
     protected toggleOnlyMine(): void {
-        this.searchForm.controls.onlyMine.setValue(!this.onlyMineFilter());
+        this.searchForm.onlyMine().value.set(!this.onlyMineFilter());
     }
 
     private resolveImage(recipe: Recipe): string | undefined {
@@ -181,5 +176,3 @@ type RecipeSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
 };
-
-type RecipeSearchFormGroup = FormGroupControls<RecipeSearchFormValues>;

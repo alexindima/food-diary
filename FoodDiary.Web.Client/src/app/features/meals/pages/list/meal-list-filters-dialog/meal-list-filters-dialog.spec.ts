@@ -16,7 +16,7 @@ describe('MealListFiltersDialogComponent', () => {
     it('should initialize date range from dialog data', async () => {
         const { component } = await setupComponentAsync(dateRange);
 
-        expect(component['dateRangeControl'].value).toEqual(dateRange);
+        expect(component['formModel']().dateRange).toEqual(dateRange);
     });
 
     it('should reset date range', async () => {
@@ -24,13 +24,13 @@ describe('MealListFiltersDialogComponent', () => {
 
         component['onReset']();
 
-        expect(component['dateRangeControl'].value).toBeNull();
+        expect(component['formModel']().dateRange).toBeNull();
     });
 
     it('should close with selected filters and prevent form submit default', async () => {
         const { component, dialogRef } = await setupComponentAsync(null);
         const preventDefault = vi.fn();
-        component['dateRangeControl'].setValue(dateRange);
+        component['form'].dateRange().value.set(dateRange);
 
         component['onApply']({ preventDefault } as unknown as Event);
 

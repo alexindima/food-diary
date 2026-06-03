@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 4 forms.
-- Signal Forms files: 8.
-- Remaining legacy Reactive Forms surface: 158 files.
+- Migrated Signal Forms: 9 forms.
+- Signal Forms files: 18.
+- Remaining legacy Reactive Forms surface: 148 files.
 
 Tracker patterns:
 
@@ -26,11 +26,21 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.html`
 - `FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.ts`
 - `FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.html`
+- `FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.ts`
+- `FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html`
+- `FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-filters-dialog/meal-list-filters-dialog.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-filters-dialog/meal-list-filters-dialog.html`
+- `FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts`
+- `FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html`
+- `FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.html`
+- `FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.ts`
+- `FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.html`
 
 ## Next Candidates
 
-- `FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.ts`
-- `FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-filters-dialog.ts`
+- Small dialogs/pages without `FormArray`.
+- Forms backed by existing `fd-ui-*` CVA components when the submit/reset behavior is simple.
 
 ## Defer Until Patterns Are Proven
 
@@ -38,7 +48,7 @@ Tracker patterns:
 - Forms using `setValidators`, `addValidators`, `removeValidators`, or `clearValidators`.
 - Forms using `enable()` / `disable()`.
 - Forms using `setErrors()` / `markAsPending()`.
-- `fd-ui-kit` ControlValueAccessor components and forms depending on them.
+- Complex `fd-ui-kit` ControlValueAccessor forms until UI-kit-specific patterns are proven.
 
 ## Migration Notes
 

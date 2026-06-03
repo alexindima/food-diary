@@ -1,7 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -13,15 +12,15 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
 import { type AdminLesson, CONTENT_MAX_LENGTH, LESSON_CATEGORIES, LESSON_DIFFICULTIES, LESSON_LOCALES } from '../models/admin-lesson.data';
 
-type LessonForm = {
-    title: FormControl<string>;
-    content: FormControl<string>;
-    summary: FormControl<string>;
-    locale: FormControl<string>;
-    category: FormControl<string>;
-    difficulty: FormControl<string>;
-    estimatedReadMinutes: FormControl<number>;
-    sortOrder: FormControl<number>;
+type LessonFormModel = {
+    title: string;
+    content: string;
+    summary: string;
+    locale: string;
+    category: string;
+    difficulty: string;
+    estimatedReadMinutes: number;
+    sortOrder: number;
 };
 
 const TITLE_MAX_LENGTH = 256;
@@ -34,7 +33,7 @@ const DEFAULT_SORT_ORDER = 0;
 
 @Component({
     selector: 'fd-admin-lesson-edit-dialog',
-    imports: [CommonModule, ReactiveFormsModule, FdUiInputComponent, FdUiTextareaComponent, FdUiButtonComponent, FdUiSelectComponent],
+    imports: [DecimalPipe, FormField, FdUiInputComponent, FdUiTextareaComponent, FdUiButtonComponent, FdUiSelectComponent],
     templateUrl: './admin-lesson-edit-dialog.html',
     styleUrl: './admin-lesson-edit-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,14 +42,13 @@ export class AdminLessonEditDialogComponent {
     protected readonly data = inject<AdminLesson>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminLessonEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly lessonsFacade = inject(AdminLessonsFacade);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
 
     protected readonly isNew = (this.data as AdminLesson & { isNew?: boolean }).isNew === true;
     protected readonly isSaving = signal(false);
     protected readonly showPreview = signal(false);
-    protected readonly previewHtml = signal<SafeHtml>('');
-    protected readonly contentLength = signal(this.data.content.length);
+    protected readonly previewHtml = computed<SafeHtml>(() => this.sanitizer.bypassSecurityTrustHtml(this.formModel().content));
+    protected readonly contentLength = computed(() => this.formModel().content.length);
     protected readonly contentMaxLength = CONTENT_MAX_LENGTH;
     protected readonly contentRemaining = computed(() => this.contentMaxLength - this.contentLength());
 
@@ -58,61 +56,42 @@ export class AdminLessonEditDialogComponent {
     protected readonly difficultyOptions: Array<FdUiSelectOption<string>> = LESSON_DIFFICULTIES.map(d => ({ value: d, label: d }));
     protected readonly localeOptions: Array<FdUiSelectOption<string>> = LESSON_LOCALES.map(l => ({ value: l, label: l }));
 
-    protected readonly form = new FormGroup<LessonForm>({
-        title: new FormControl(this.data.title, {
-            nonNullable: true,
-            validators: [Validators.required, Validators.maxLength(TITLE_MAX_LENGTH)],
-        }),
-        content: new FormControl(this.data.content, {
-            nonNullable: true,
-            validators: [Validators.required, Validators.maxLength(CONTENT_MAX_LENGTH)],
-        }),
-        summary: new FormControl(this.data.summary ?? '', { nonNullable: true, validators: [Validators.maxLength(SUMMARY_MAX_LENGTH)] }),
-        locale: new FormControl(this.resolveStringValue(this.data.locale, DEFAULT_LOCALE), {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
-        category: new FormControl(this.resolveStringValue(this.data.category, DEFAULT_CATEGORY), {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
-        difficulty: new FormControl(this.resolveStringValue(this.data.difficulty, DEFAULT_DIFFICULTY), {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
-        estimatedReadMinutes: new FormControl(
+    protected readonly formModel = signal<LessonFormModel>({
+        title: this.data.title,
+        content: this.data.content,
+        summary: this.data.summary ?? '',
+        locale: this.resolveStringValue(this.data.locale, DEFAULT_LOCALE),
+        category: this.resolveStringValue(this.data.category, DEFAULT_CATEGORY),
+        difficulty: this.resolveStringValue(this.data.difficulty, DEFAULT_DIFFICULTY),
+        estimatedReadMinutes:
             this.data.estimatedReadMinutes > DEFAULT_SORT_ORDER ? this.data.estimatedReadMinutes : DEFAULT_ESTIMATED_READ_MINUTES,
-            {
-                nonNullable: true,
-                validators: [Validators.required, Validators.min(1)],
-            },
-        ),
-        sortOrder: new FormControl(this.data.sortOrder, {
-            nonNullable: true,
-            validators: [Validators.min(DEFAULT_SORT_ORDER)],
-        }),
+        sortOrder: this.data.sortOrder,
     });
-
-    public constructor() {
-        this.form.controls.content.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-            this.contentLength.set(value.length);
-            if (this.showPreview()) {
-                this.updatePreview();
-            }
-        });
-    }
+    protected readonly form = form(this.formModel, path => {
+        required(path.title);
+        maxLength(path.title, TITLE_MAX_LENGTH);
+        required(path.content);
+        maxLength(path.content, CONTENT_MAX_LENGTH);
+        maxLength(path.summary, SUMMARY_MAX_LENGTH);
+        required(path.locale);
+        required(path.category);
+        required(path.difficulty);
+        required(path.estimatedReadMinutes);
+        min(path.estimatedReadMinutes, 1);
+        min(path.sortOrder, DEFAULT_SORT_ORDER);
+    });
 
     protected onCancel(): void {
         this.dialogRef.close(false);
     }
 
     protected onSave(): void {
-        if (this.form.invalid || this.isSaving()) {
+        if (this.form().invalid() || this.isSaving()) {
             return;
         }
 
         this.isSaving.set(true);
-        const value = this.form.getRawValue();
+        const value = this.formModel();
         const request = {
             title: value.title,
             content: value.content,
@@ -126,7 +105,7 @@ export class AdminLessonEditDialogComponent {
 
         const operation = this.isNew ? this.lessonsFacade.create(request) : this.lessonsFacade.update(this.data.id, request);
 
-        operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+        operation.subscribe({
             next: () => {
                 this.isSaving.set(false);
                 this.dialogRef.close(true);
@@ -138,16 +117,7 @@ export class AdminLessonEditDialogComponent {
     }
 
     protected togglePreview(): void {
-        const next = !this.showPreview();
-        this.showPreview.set(next);
-        if (next) {
-            this.updatePreview();
-        }
-    }
-
-    private updatePreview(): void {
-        const html = this.form.controls.content.value;
-        this.previewHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
+        this.showPreview.update(value => !value);
     }
 
     private resolveStringValue(value: string, fallback: string): string {

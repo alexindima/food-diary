@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateRangeInputComponent, type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -21,29 +21,25 @@ export type MealListFiltersDialogResult = {
     templateUrl: './meal-list-filters-dialog.html',
     styleUrls: ['./meal-list-filters-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ReactiveFormsModule,
-        TranslatePipe,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-        FdUiButtonComponent,
-        FdUiDateRangeInputComponent,
-    ],
+    imports: [FormField, TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiDateRangeInputComponent],
 })
 export class MealListFiltersDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<MealListFiltersDialogComponent, MealListFiltersDialogResult | null>);
     private readonly data = inject<MealListFiltersDialogData>(FD_UI_DIALOG_DATA);
 
-    protected readonly dateRangeControl = new FormControl<FdUiDateRangeValue | null>(this.data.dateRange ?? null);
+    protected readonly formModel = signal({
+        dateRange: this.data.dateRange ?? null,
+    });
+    protected readonly form = form(this.formModel);
 
     protected onReset(): void {
-        this.dateRangeControl.setValue(null);
+        this.form.dateRange().value.set(null);
     }
 
     protected onApply(event?: Event): void {
         event?.preventDefault();
         this.dialogRef.close({
-            dateRange: this.dateRangeControl.value,
+            dateRange: this.formModel().dateRange,
         });
     }
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -8,7 +8,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, skip } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -29,7 +29,7 @@ import { EXPLORE_PAGE_SIZE, type ExploreSort, type ExploreSortAction } from './e
     styleUrls: ['./explore-page.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiInputComponent,
@@ -48,7 +48,9 @@ export class ExplorePageComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly searchDebounceMs = inject(EXPLORE_SEARCH_DEBOUNCE_MS);
 
-    protected readonly searchControl = new FormControl('');
+    protected readonly searchModel = signal({ search: '' });
+    protected readonly searchForm = form(this.searchModel);
+    protected readonly searchValue = computed(() => this.searchModel().search);
     protected readonly sortBy = signal<ExploreSort>('newest');
     protected readonly sortActions = computed<ExploreSortAction[]>(() => {
         const selectedSort = this.sortBy();
@@ -67,8 +69,8 @@ export class ExplorePageComponent {
     public constructor() {
         this.loadRecipes();
 
-        this.searchControl.valueChanges
-            .pipe(debounceTime(this.searchDebounceMs), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+        toObservable(this.searchValue)
+            .pipe(skip(1), debounceTime(this.searchDebounceMs), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.currentPageIndex.set(0);
                 this.loadRecipes();
@@ -95,7 +97,7 @@ export class ExplorePageComponent {
 
     private loadRecipes(): void {
         const filters: ExploreFilters = {
-            search: this.searchControl.value ?? undefined,
+            search: this.searchValue(),
             sortBy: this.sortBy(),
         };
 

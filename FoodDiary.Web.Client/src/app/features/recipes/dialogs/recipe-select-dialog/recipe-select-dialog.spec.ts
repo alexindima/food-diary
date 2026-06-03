@@ -75,17 +75,17 @@ describe('RecipeSelectDialogComponent', () => {
 
         component['toggleOnlyMine']();
 
-        expect(component['searchForm'].controls.onlyMine.value).toBe(true);
+        expect(component['searchModel']().onlyMine).toBe(true);
         expect(component['onlyMineFilter']()).toBe(true);
     });
 
     it('clears search through form control', () => {
         const { component } = setupComponent([createRecipe()]);
-        component['searchForm'].controls.search.setValue('salad');
+        component['searchForm'].search().value.set('salad');
 
         component['clearSearch']();
 
-        expect(component['searchForm'].controls.search.value).toBe('');
+        expect(component['searchModel']().search).toBe('');
         expect(component['searchValue']()).toBe('');
     });
 
