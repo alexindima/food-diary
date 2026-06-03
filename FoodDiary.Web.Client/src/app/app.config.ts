@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {
     type ApplicationConfig,
     ErrorHandler,
@@ -9,7 +9,7 @@ import {
     provideBrowserGlobalErrorListeners,
     provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -100,7 +100,7 @@ export const appConfig: ApplicationConfig = {
             }),
             withPreloading(IdleSelectivePreloadingStrategy),
         ),
-        provideHttpClient(withInterceptorsFromDi(), withFetch()),
+        provideHttpClient(withInterceptorsFromDi()),
         importProvidersFrom(TranslateModule.forRoot()),
         FoodDiaryTranslationLoader,
         { provide: TranslateLoader, useExisting: FoodDiaryTranslationLoader },
@@ -117,6 +117,6 @@ export const appConfig: ApplicationConfig = {
         LocalizationService,
         ThemeService,
         LoggingApiService,
-        provideClientHydration(withEventReplay()),
+        provideClientHydration(withEventReplay(), withNoIncrementalHydration()),
     ],
 };

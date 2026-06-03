@@ -99,7 +99,7 @@ export class HeaderActionsOverflowComponent {
     }
 
     private isVisibleAction(target: HTMLElement): boolean {
-        return !target.hidden && target.closest('[hidden]') === null;
+        return target.hidden === false && target.closest('[hidden]') === null;
     }
 
     private isDisabled(target: HTMLElement): boolean {

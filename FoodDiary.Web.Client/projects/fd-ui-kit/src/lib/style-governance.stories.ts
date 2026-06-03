@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 
 type GovernanceSection = {
@@ -10,6 +10,7 @@ type GovernanceSection = {
 
 @Component({
     selector: 'fd-style-governance-docs',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div
             style="

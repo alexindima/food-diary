@@ -1,6 +1,3 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
 /* eslint-disable @typescript-eslint/explicit-function-return-type -- local rule helpers are inferred from ESLint AST shapes */
 import angularPlugin from '@angular-eslint/eslint-plugin';
 import templatePlugin from '@angular-eslint/eslint-plugin-template';
@@ -15,6 +12,7 @@ import rxjsXPlugin from 'eslint-plugin-rxjs-x';
 import securityPlugin from 'eslint-plugin-security';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
+import storybook from 'eslint-plugin-storybook';
 import unicornPlugin from 'eslint-plugin-unicorn';
 
 const securityRecommendedRules = Object.fromEntries(
@@ -1633,7 +1631,15 @@ export default [{
                 ignoreStatic: true,
             },
         ],
-        'no-restricted-syntax': ['error', ...noAnyCastSyntax, ...noRedundantBooleanComparisonSyntax],
+        'no-restricted-syntax': [
+            'error',
+            ...noAnyCastSyntax,
+            ...noRedundantBooleanComparisonSyntax,
+            {
+                selector: 'PropertyAssignment[key.name="changeDetection"][value.property.name="Eager"]',
+                message: 'Use ChangeDetectionStrategy.OnPush instead of Eager.',
+            },
+        ],
         'local/async-function-suffix': 'error',
         'local/injectable-provided-in-root-single-line': 'error',
         'local/no-nested-subscribe': 'error',

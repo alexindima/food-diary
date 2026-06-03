@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -7,15 +7,15 @@ import { FdUiEntityCardComponent } from './fd-ui-entity-card';
 @Component({
     imports: [FdUiEntityCardComponent],
     template: `
-        <fd-ui-entity-card [title]="title" [meta]="meta" [imageUrl]="imageUrl">
+        <fd-ui-entity-card [title]="title()" [meta]="meta()" [imageUrl]="imageUrl()">
             <p class="projected-content">Body content</p>
         </fd-ui-entity-card>
     `,
 })
 class TestHostComponent {
-    public title = 'Test Title';
-    public meta: string | undefined;
-    public imageUrl: string | null = null;
+    public readonly title = signal('Test Title');
+    public readonly meta = signal('');
+    public readonly imageUrl = signal<string | null>(null);
 }
 
 describe('FdUiEntityCardComponent', () => {
@@ -46,8 +46,7 @@ describe('FdUiEntityCardComponent', () => {
     it('should display meta when provided', () => {
         expect(hostEl.querySelector('.fd-ui-entity-card__meta')).toBeNull();
 
-        fixture.componentInstance['meta'] = '100 kcal';
-        fixture.changeDetectorRef.markForCheck();
+        fixture.componentInstance.meta.set('100 kcal');
         fixture.detectChanges();
 
         const metaEl = hostEl.querySelector('.fd-ui-entity-card__meta');
@@ -56,8 +55,9 @@ describe('FdUiEntityCardComponent', () => {
     });
 
     it('should render image when imageUrl provided', () => {
-        fixture.componentInstance['imageUrl'] = 'https://example.com/food.jpg';
-        fixture.changeDetectorRef.markForCheck();
+        fixture = TestBed.createComponent(TestHostComponent);
+        hostEl = fixture.nativeElement as HTMLElement;
+        fixture.componentInstance.imageUrl.set('https://example.com/food.jpg');
         fixture.detectChanges();
 
         const img = hostEl.querySelector('.fd-ui-entity-card__media img') as HTMLImageElement;

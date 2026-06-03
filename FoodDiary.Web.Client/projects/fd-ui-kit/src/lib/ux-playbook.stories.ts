@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 
 type PlaybookSection = {
@@ -9,6 +9,7 @@ type PlaybookSection = {
 
 @Component({
     selector: 'fd-ux-playbook-docs',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div
             style="

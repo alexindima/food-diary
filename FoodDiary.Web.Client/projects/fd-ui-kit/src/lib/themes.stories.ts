@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, DestroyRef, effect, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 
 type ThemeName = 'ocean' | 'leaf' | 'dark';
@@ -12,6 +12,7 @@ type ThemeHighlight = {
 
 @Component({
     selector: 'fd-theme-docs',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div
             style="

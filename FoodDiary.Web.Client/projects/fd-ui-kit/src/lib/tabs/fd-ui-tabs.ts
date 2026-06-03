@@ -7,7 +7,6 @@ import {
     inject,
     input,
     model,
-    output,
     signal,
     viewChildren,
 } from '@angular/core';
@@ -37,7 +36,6 @@ export class FdUiTabsComponent {
 
     public readonly tabs = input<FdUiTab[]>([]);
     public readonly selectedValue = model.required<string>();
-    public readonly selectedValueChange = output<string>();
     public readonly appearance = input<FdUiTabsAppearance>('default');
     protected readonly tabButtons = viewChildren<ElementRef<HTMLButtonElement>>('tabButton');
     protected readonly tabsId = `fd-ui-tabs-${FdUiTabsComponent.nextId++}`;
@@ -68,7 +66,6 @@ export class FdUiTabsComponent {
             return;
         }
         this.selectedValue.set(tab.value);
-        this.selectedValueChange.emit(tab.value);
     }
 
     protected onKeydown(index: number, event: KeyboardEvent): void {

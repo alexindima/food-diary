@@ -13,9 +13,9 @@
                     <span class="fd-ui-entity-card__meta fd-ui-meta-text">{{ meta() }}</span>
                     }
                 </div>
-                @if (headerTemplate()) {
+                @if (headerTemplate(); as header) {
                 <div class="fd-ui-entity-card__header-extra">
-                    <ng-container [ngTemplateOutlet]="headerTemplate()?.templateRef" />
+                    <ng-container [ngTemplateOutlet]="header.templateRef" />
                 </div>
                 }
             </div>

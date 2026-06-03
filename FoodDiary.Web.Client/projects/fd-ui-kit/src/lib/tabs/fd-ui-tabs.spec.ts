@@ -55,7 +55,7 @@ describe('FdUiTabsComponent', () => {
 
     it('should emit selected value when clicking a tab', () => {
         const emitted: string[] = [];
-        component['selectedValueChange'].subscribe(value => emitted.push(value));
+        component['selectedValue'].subscribe(value => emitted.push(value));
 
         const tabButtons = tabs();
         tabButtons[1].click();

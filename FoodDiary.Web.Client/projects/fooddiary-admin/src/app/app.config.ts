@@ -1,4 +1,4 @@
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { adminAuthInterceptor } from './features/admin-auth/lib/admin-auth.inter
 export const appConfig: ApplicationConfig = {
     providers: [
         ...(environment.enableGlobalErrorHandler ? [provideBrowserGlobalErrorListeners()] : []),
-        provideHttpClient(withInterceptors([adminAuthInterceptor]), withFetch()),
+        provideHttpClient(withInterceptors([adminAuthInterceptor])),
         provideRouter(routes),
     ],
 };
