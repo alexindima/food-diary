@@ -1,6 +1,7 @@
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Web.Api.Build;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -32,10 +33,10 @@ public static class ApiApplicationBuilderExtensions {
         app.UseOutputCache();
 
         app.MapHealthChecks("/health/live", new HealthCheckOptions {
-            Predicate = _ => false,
+            Predicate = ExcludeHealthChecks,
         });
         app.MapHealthChecks("/health/ready", new HealthCheckOptions {
-            Predicate = check => check.Tags.Contains("ready"),
+            Predicate = IsReadyHealthCheck,
         });
         static IResult BuildVersionResponse(ApiBuildInfo buildInfo) {
             return Results.Ok(new ApiVersionResponse(
@@ -54,4 +55,8 @@ public static class ApiApplicationBuilderExtensions {
 
         return app;
     }
+
+    private static bool ExcludeHealthChecks(HealthCheckRegistration _) => false;
+
+    private static bool IsReadyHealthCheck(HealthCheckRegistration check) => check.Tags.Contains("ready");
 }

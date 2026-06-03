@@ -22,6 +22,10 @@ public sealed class BillingRenewalJob(
 
         try {
             if (!settings.Enabled) {
+                JobManagerTelemetry.JobExecutionCounter.Add(
+                    1,
+                    new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
+                    new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
                 executionStateTracker.RecordSuccess(jobName, dateTimeProvider.UtcNow);
                 return;
             }

@@ -60,6 +60,48 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         });
     }
 
+    [Fact]
+    public async Task StartAsync_WhenRepositoryThrows_ContinuesUntilStopped() {
+        var repository = new ThrowingUserLoginEventRepository();
+        using var provider = BuildServiceProvider(repository);
+        var service = new UserLoginEventCleanupHostedService(
+            provider.GetRequiredService<IServiceScopeFactory>(),
+            OptionsFactory.Create(new UserLoginEventCleanupOptions {
+                Enabled = true,
+                RetentionDays = 30,
+                BatchSize = 10,
+                PollIntervalHours = 1
+            }),
+            NullLogger<UserLoginEventCleanupHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        await repository.WaitAsync();
+        await service.StopAsync(CancellationToken.None);
+
+        Assert.Equal(1, repository.DeleteCallCount);
+    }
+
+    [Fact]
+    public async Task StartAsync_WhenRepositoryObservesCancellation_StopsCleanly() {
+        var repository = new CancelingUserLoginEventRepository();
+        using var provider = BuildServiceProvider(repository);
+        var service = new UserLoginEventCleanupHostedService(
+            provider.GetRequiredService<IServiceScopeFactory>(),
+            OptionsFactory.Create(new UserLoginEventCleanupOptions {
+                Enabled = true,
+                RetentionDays = 30,
+                BatchSize = 10,
+                PollIntervalHours = 1
+            }),
+            NullLogger<UserLoginEventCleanupHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        await repository.WaitAsync();
+        await service.StopAsync(CancellationToken.None);
+
+        Assert.Equal(1, repository.DeleteCallCount);
+    }
+
     private static ServiceProvider BuildServiceProvider(IUserLoginEventRepository repository) {
         var services = new ServiceCollection();
         services.AddSingleton(repository);
@@ -111,6 +153,81 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         public async Task WaitAsync() {
             var finished = await Task.WhenAny(_completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(_completion.Task, finished);
+        }
+    }
+
+    private sealed class CancelingUserLoginEventRepository : IUserLoginEventRepository {
+        private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public int DeleteCallCount { get; private set; }
+
+        public Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(
+            int page,
+            int limit,
+            Guid? userId,
+            string? search,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(
+            DateTime? fromUtc,
+            DateTime? toUtc,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public async Task<int> DeleteOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) {
+            DeleteCallCount++;
+            completion.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken).ConfigureAwait(false);
+            return 0;
+        }
+
+        public async Task WaitAsync() {
+            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Assert.Same(completion.Task, finished);
+        }
+    }
+
+    private sealed class ThrowingUserLoginEventRepository : IUserLoginEventRepository {
+        private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public int DeleteCallCount { get; private set; }
+
+        public Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(
+            int page,
+            int limit,
+            Guid? userId,
+            string? search,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(
+            DateTime? fromUtc,
+            DateTime? toUtc,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<int> DeleteOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) {
+            DeleteCallCount++;
+            completion.TrySetResult();
+            throw new InvalidOperationException("cleanup failed");
+        }
+
+        public async Task WaitAsync() {
+            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Assert.Same(completion.Task, finished);
         }
     }
 }

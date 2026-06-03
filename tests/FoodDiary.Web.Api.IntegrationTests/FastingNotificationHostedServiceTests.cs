@@ -39,6 +39,38 @@ public sealed class FastingNotificationHostedServiceTests {
         Assert.True(scheduler.CallCount >= 1);
     }
 
+    [Fact]
+    public async Task StartAsync_WhenSchedulerThrows_ContinuesUntilStopped() {
+        var scheduler = new ThrowingFastingNotificationScheduler();
+        using var provider = BuildServiceProvider(scheduler);
+        var service = new FastingNotificationHostedService(
+            provider.GetRequiredService<IServiceScopeFactory>(),
+            Microsoft.Extensions.Options.Options.Create(new FastingNotificationOptions { Enabled = true, PollIntervalSeconds = 1 }),
+            NullLogger<FastingNotificationHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        await scheduler.WaitAsync();
+        await service.StopAsync(CancellationToken.None);
+
+        Assert.Equal(1, scheduler.CallCount);
+    }
+
+    [Fact]
+    public async Task StartAsync_WhenSchedulerObservesCancellation_StopsCleanly() {
+        var scheduler = new CancelingFastingNotificationScheduler();
+        using var provider = BuildServiceProvider(scheduler);
+        var service = new FastingNotificationHostedService(
+            provider.GetRequiredService<IServiceScopeFactory>(),
+            Microsoft.Extensions.Options.Options.Create(new FastingNotificationOptions { Enabled = true, PollIntervalSeconds = 1 }),
+            NullLogger<FastingNotificationHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        await scheduler.WaitAsync();
+        await service.StopAsync(CancellationToken.None);
+
+        Assert.Equal(1, scheduler.CallCount);
+    }
+
     private static ServiceProvider BuildServiceProvider(IFastingNotificationScheduler scheduler) {
         var services = new ServiceCollection();
         services.AddSingleton(scheduler);
@@ -55,6 +87,41 @@ public sealed class FastingNotificationHostedServiceTests {
             CallCount++;
             completion.TrySetResult();
             return Task.FromResult(0);
+        }
+
+        public async Task WaitAsync() {
+            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Assert.Same(completion.Task, finished);
+        }
+    }
+
+    private sealed class CancelingFastingNotificationScheduler : IFastingNotificationScheduler {
+        private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public int CallCount { get; private set; }
+
+        public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
+            CallCount++;
+            completion.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken).ConfigureAwait(false);
+            return 0;
+        }
+
+        public async Task WaitAsync() {
+            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Assert.Same(completion.Task, finished);
+        }
+    }
+
+    private sealed class ThrowingFastingNotificationScheduler : IFastingNotificationScheduler {
+        private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public int CallCount { get; private set; }
+
+        public Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
+            CallCount++;
+            completion.TrySetResult();
+            throw new InvalidOperationException("scheduler failed");
         }
 
         public async Task WaitAsync() {

@@ -1,10 +1,16 @@
 using System.Diagnostics;
+using System.Reflection;
 using System.Security.Claims;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Web.Api.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
@@ -144,6 +150,63 @@ public sealed class ExtensionsTests {
         Assert.Null(userId);
     }
 
+    [Fact]
+    public void ApiPipelineHealthCheckPredicates_SelectExpectedRegistrations() {
+        var excludeHealthChecks = typeof(ApiApplicationBuilderExtensions).GetMethod(
+            "ExcludeHealthChecks",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        var isReadyHealthCheck = typeof(ApiApplicationBuilderExtensions).GetMethod(
+            "IsReadyHealthCheck",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        var readyRegistration = CreateHealthCheckRegistration("postgresql", ["ready"]);
+        var liveOnlyRegistration = CreateHealthCheckRegistration("self", []);
+
+        var liveIncludesReady = (bool)excludeHealthChecks!.Invoke(null, [readyRegistration])!;
+        var readyIncludesReady = (bool)isReadyHealthCheck!.Invoke(null, [readyRegistration])!;
+        var readyIncludesLiveOnly = (bool)isReadyHealthCheck.Invoke(null, [liveOnlyRegistration])!;
+
+        Assert.False(liveIncludesReady);
+        Assert.True(readyIncludesReady);
+        Assert.False(readyIncludesLiveOnly);
+    }
+
+    [Fact]
+    public void UseApiPipeline_InProduction_ConfiguresHostPipeline() {
+        var builder = WebApplication.CreateBuilder(new WebApplicationOptions {
+            EnvironmentName = Environments.Production,
+        });
+        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+            ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+            ["Jwt:Issuer"] = "FoodDiaryApi",
+            ["Jwt:Audience"] = "FoodDiaryClient",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["TelegramBot:ApiSecret"] = "",
+            ["Cors:Origins:0"] = "http://localhost:4200",
+        });
+        builder.Services.AddApiServices(builder.Configuration);
+        using var app = builder.Build();
+
+        var configured = app.UseApiPipeline();
+
+        Assert.Same(app, configured);
+    }
+
     private static Error CreateError(string errorCode, string message) =>
         new(errorCode, message, kind: ErrorKindResolver.Resolve(errorCode));
+
+    private static HealthCheckRegistration CreateHealthCheckRegistration(string name, IReadOnlyCollection<string> tags) =>
+        new(
+            name,
+            new HealthyCheck(),
+            failureStatus: null,
+            tags);
+
+    private sealed class HealthyCheck : IHealthCheck {
+        public Task<HealthCheckResult> CheckHealthAsync(
+            HealthCheckContext context,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(HealthCheckResult.Healthy());
+    }
 }

@@ -1,6 +1,15 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Billing.Services;
+using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.JobManager.Services;
 using Hangfire;
 using Hangfire.Common;
@@ -280,6 +289,194 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task BillingRenewalJob_WhenDisabled_RecordsSuccessWithoutService() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new BillingRenewalJob(
+            null!,
+            Options.Create(new BillingRenewalOptions { Enabled = false }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastSucceededAtUtc);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenProviderHasNoGateway_RecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new BillingRenewalJob(
+            CreateBillingRenewalServiceWithoutGateways(now),
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = "MissingProvider",
+                BatchSize = 10
+            }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastSucceededAtUtc);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenRenewalsAreProcessed_RecordsSuccessMetric() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var user = User.Create("renewal-job@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_renewal_job",
+            "pay_initial",
+            "pm_initial",
+            "active",
+            now.AddMonths(-1),
+            now.AddMinutes(-1),
+            "evt_initial",
+            now.AddMonths(-1));
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var tracker = new JobExecutionStateTracker();
+        var service = new BillingRenewalService(
+            subscriptionRepository,
+            paymentRepository,
+            userRepository,
+            new NoOpBillingTransactionRunner(),
+            [
+                new FakeRecurringBillingGateway(
+                    BillingProviderNames.YooKassa,
+                    new BillingRecurringPaymentModel(
+                        "pay_renewal_job",
+                        "pm_renewal_job",
+                        "price_monthly",
+                        "monthly",
+                        "active",
+                        now,
+                        now.AddMonths(1),
+                        "evt_renewal_job",
+                        7.99m,
+                        "USD",
+                        "{\"renewal\":true}"))
+            ],
+            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(now)),
+            new FixedDateTimeProvider(now));
+        var job = new BillingRenewalJob(
+            service,
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = BillingProviderNames.YooKassa,
+                BatchSize = 10
+            }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastSucceededAtUtc);
+        Assert.Equal("pay_renewal_job", subscription.ExternalSubscriptionId);
+        Assert.Single(paymentRepository.Payments);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenServiceThrows_RecordsFailureMetric_AndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new BillingRenewalJob(
+            null!,
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = "YooKassa",
+                BatchSize = 10
+            }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await Assert.ThrowsAsync<NullReferenceException>(() => job.Execute());
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("failure", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(1, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastFailedAtUtc);
+    }
+
+    [Fact]
     public async Task RecurringJobsHostedService_StartAsync_RegistersExpectedJobs_AndVerifiesThem() {
         var recurringJobManager = new RecordingRecurringJobManager();
         var verifier = new RecordingRecurringJobRegistrationVerifier();
@@ -371,6 +568,23 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
+        var service = new RecurringJobsHostedService(
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!);
+
+        await service.StopAsync(CancellationToken.None);
+    }
+
+    [Fact]
     public void CleanupJobs_DeclareExpectedRetryAndConcurrencyPolicy() {
         var imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
         var billingRenewalMethod = typeof(BillingRenewalJob).GetMethod(nameof(BillingRenewalJob.Execute));
@@ -395,6 +609,16 @@ public sealed class JobsTests {
             new FixedDateTimeProvider(DateTime.UtcNow),
             new JobExecutionStateTracker(),
             NullLogger<BillingRenewalJob>.Instance);
+
+    private static BillingRenewalService CreateBillingRenewalServiceWithoutGateways(DateTime utcNow) =>
+        new(
+            null!,
+            null!,
+            null!,
+            null!,
+            Array.Empty<IBillingRecurringProviderGateway>(),
+            null!,
+            new FixedDateTimeProvider(utcNow));
 
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
@@ -511,6 +735,190 @@ public sealed class JobsTests {
             var value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
+    }
+
+    private static BillingSubscription CreateSubscriptionSnapshot(
+        User user,
+        string provider,
+        string externalCustomerId,
+        string? externalSubscriptionId,
+        string? externalPaymentMethodId,
+        string status,
+        DateTime periodStartUtc,
+        DateTime periodEndUtc,
+        string eventId,
+        DateTime eventCreatedAtUtc) {
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            provider,
+            externalCustomerId,
+            "price_monthly",
+            "monthly");
+        subscription.ApplyProviderSnapshot(
+            provider,
+            externalSubscriptionId,
+            externalPaymentMethodId,
+            "price_monthly",
+            "monthly",
+            status,
+            periodStartUtc,
+            periodEndUtc,
+            false,
+            null,
+            null,
+            null,
+            eventId,
+            eventCreatedAtUtc);
+        return subscription;
+    }
+
+    private sealed class FakeUserRepository(params User[] users) : IUserRepository {
+        private readonly List<User> _users = users.ToList();
+        private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
+
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user =>
+                IsAccessible(user) &&
+                string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)));
+
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user =>
+                string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)));
+
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user => IsAccessible(user) && user.Id == id));
+
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user => user.Id == id));
+
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(null);
+
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(
+            long telegramUserId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(null);
+
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
+            string? search,
+            int page,
+            int limit,
+            bool includeDeleted,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<(IReadOnlyList<User> Items, int TotalItems)>((_users, _users.Count));
+
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
+            GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
+            Task.FromResult((_users.Count, _users.Count, 0, 0, (IReadOnlyList<User>)_users.Take(recentLimit).ToList()));
+
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(
+            IReadOnlyList<string> names,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<Role> roles = names.Contains(RoleNames.Premium, StringComparer.Ordinal)
+                ? [_premiumRole]
+                : [];
+            return Task.FromResult(roles);
+        }
+
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
+            _users.Add(user);
+            return Task.FromResult(user);
+        }
+
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
+    }
+
+    private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
+        : IBillingSubscriptionRepository {
+        public List<BillingSubscription> Subscriptions { get; } = subscriptions.ToList();
+
+        public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription => subscription.UserId == userId));
+
+        public Task<BillingSubscription?> GetByExternalCustomerIdAsync(
+            string provider,
+            string externalCustomerId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription =>
+                string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(subscription.ExternalCustomerId, externalCustomerId, StringComparison.Ordinal)));
+
+        public Task<BillingSubscription?> GetByExternalSubscriptionIdAsync(
+            string provider,
+            string externalSubscriptionId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription =>
+                string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(subscription.ExternalSubscriptionId, externalSubscriptionId, StringComparison.Ordinal)));
+
+        public Task<BillingSubscription?> GetByExternalPaymentMethodIdAsync(
+            string provider,
+            string externalPaymentMethodId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription =>
+                string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(subscription.ExternalPaymentMethodId, externalPaymentMethodId, StringComparison.Ordinal)));
+
+        public Task<IReadOnlyList<BillingSubscription>> GetDueForRenewalAsync(
+            string provider,
+            DateTime dueAtUtc,
+            int limit,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<BillingSubscription> dueSubscriptions = Subscriptions
+                .Where(subscription =>
+                    string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                    subscription.NextBillingAttemptUtc.HasValue &&
+                    subscription.NextBillingAttemptUtc <= dueAtUtc)
+                .Take(limit)
+                .ToList();
+            return Task.FromResult(dueSubscriptions);
+        }
+
+        public Task<BillingSubscription> AddAsync(
+            BillingSubscription subscription,
+            CancellationToken cancellationToken = default) {
+            Subscriptions.Add(subscription);
+            return Task.FromResult(subscription);
+        }
+
+        public Task UpdateAsync(BillingSubscription subscription, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
+
+    private sealed class RecordingBillingPaymentRepository : IBillingPaymentRepository {
+        public List<BillingPayment> Payments { get; } = [];
+
+        public Task<BillingPayment?> GetByExternalPaymentIdAsync(
+            string provider,
+            string externalPaymentId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Payments.FirstOrDefault(payment =>
+                string.Equals(payment.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(payment.ExternalPaymentId, externalPaymentId, StringComparison.Ordinal)));
+
+        public Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
+            Payments.Add(payment);
+            return Task.FromResult(payment);
+        }
+    }
+
+    private sealed class FakeRecurringBillingGateway(
+        string provider,
+        BillingRecurringPaymentModel renewal)
+        : IBillingRecurringProviderGateway {
+        public string Provider { get; } = provider;
+
+        public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
+            BillingRecurringPaymentRequestModel request,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Result.Success(renewal));
+    }
+
+    private sealed class NoOpBillingTransactionRunner : IBillingTransactionRunner {
+        public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
+            operation(cancellationToken);
     }
 
     private sealed class ThrowingUserCleanupService : IUserCleanupService {

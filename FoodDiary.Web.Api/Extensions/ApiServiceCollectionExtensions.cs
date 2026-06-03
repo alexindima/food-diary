@@ -91,6 +91,8 @@ public static class ApiServiceCollectionExtensions {
             .BindConfiguration(ApiOutputCacheOptions.SectionName)
             .Validate(ApiOutputCacheOptions.HasValidAdminAiUsage,
                 "OutputCache:AdminAiUsage:ExpirationSeconds must be greater than zero.")
+            .Validate(ApiOutputCacheOptions.HasValidUserScoped,
+                "OutputCache:UserScoped:ExpirationSeconds must be greater than zero.")
             .ValidateOnStart();
 
         return services;

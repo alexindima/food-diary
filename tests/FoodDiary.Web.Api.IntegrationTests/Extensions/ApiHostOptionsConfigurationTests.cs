@@ -1,5 +1,6 @@
 using FoodDiary.Web.Api.Extensions;
 using FoodDiary.Web.Api.Options;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -61,5 +62,81 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
         Assert.Contains(forwardedHeadersOptions.KnownProxies, ip => string.Equals(ip.ToString(), "10.0.0.10", StringComparison.Ordinal));
         Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "10.0.0.0", StringComparison.Ordinal) && network.PrefixLength == 24);
+    }
+
+    [Theory]
+    [InlineData(5, true)]
+    [InlineData(0, false)]
+    [InlineData(-1, false)]
+    public void ApiOutputCacheOptions_HasValidUserScoped_ReturnsExpectedResult(int expirationSeconds, bool expected) {
+        var options = new ApiOutputCacheOptions {
+            UserScoped = new ApiOutputCacheOptions.UserScopedCacheOptions {
+                ExpirationSeconds = expirationSeconds
+            }
+        };
+
+        var valid = ApiOutputCacheOptions.HasValidUserScoped(options);
+
+        Assert.Equal(expected, valid);
+    }
+
+    [Fact]
+    public void AddApiServices_WithInvalidUserScopedOutputCache_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+                ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+                ["Jwt:Issuer"] = "FoodDiaryApi",
+                ["Jwt:Audience"] = "FoodDiaryClient",
+                ["Jwt:ExpirationMinutes"] = "60",
+                ["Jwt:RefreshTokenExpirationDays"] = "7",
+                ["TelegramBot:ApiSecret"] = "",
+                ["Cors:Origins:0"] = "http://localhost:4200",
+                ["OutputCache:AdminAiUsage:ExpirationSeconds"] = "15",
+                ["OutputCache:UserScoped:ExpirationSeconds"] = "0",
+            })
+            .Build();
+
+        services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddApiServices(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        var exception = Assert.Throws<OptionsValidationException>(
+            () => provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value);
+        Assert.Contains("OutputCache:UserScoped:ExpirationSeconds", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AddApiServices_ConfiguresHttpLoggingOptions() {
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+                ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+                ["Jwt:Issuer"] = "FoodDiaryApi",
+                ["Jwt:Audience"] = "FoodDiaryClient",
+                ["Jwt:ExpirationMinutes"] = "60",
+                ["Jwt:RefreshTokenExpirationDays"] = "7",
+                ["TelegramBot:ApiSecret"] = "",
+                ["Cors:Origins:0"] = "http://localhost:4200",
+            })
+            .Build();
+
+        services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddApiServices(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        var options = provider.GetRequiredService<IOptions<HttpLoggingOptions>>().Value;
+
+        Assert.Equal(
+            HttpLoggingFields.RequestMethod |
+            HttpLoggingFields.RequestPath |
+            HttpLoggingFields.ResponseStatusCode |
+            HttpLoggingFields.Duration,
+            options.LoggingFields);
+        Assert.Contains("X-Correlation-Id", options.RequestHeaders);
     }
 }

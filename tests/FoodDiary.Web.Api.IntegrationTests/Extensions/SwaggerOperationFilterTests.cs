@@ -1,5 +1,6 @@
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -85,6 +86,17 @@ public sealed class SwaggerOperationFilterTests {
         filter.Apply(operation, CreateContext(nameof(TestController.Authorized)));
 
         Assert.Equal("Custom", operation.Responses["500"].Description);
+    }
+
+    [Fact]
+    public void GetDescription_ForUnknownStatusCode_ReturnsGenericErrorDescription() {
+        var method = typeof(StandardErrorResponsesOperationFilter).GetMethod(
+            "GetDescription",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
+        var description = method!.Invoke(null, [StatusCodes.Status418ImATeapot]);
+
+        Assert.Equal("Error", description);
     }
 
     private static OperationFilterContext CreateContext(string methodName) {

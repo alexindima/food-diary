@@ -4,6 +4,7 @@ using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -54,3 +55,6 @@ builder.Services.AddHostedService<RecurringJobsHostedService>();
 var app = builder.Build();
 
 await app.RunAsync().ConfigureAwait(false);
+
+[ExcludeFromCodeCoverage]
+public partial class Program;

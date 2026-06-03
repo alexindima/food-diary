@@ -38,12 +38,10 @@ public sealed class ApiForwardedHeadersOptions {
             return false;
         }
 
-        var maxPrefixLength = address.AddressFamily switch {
-            System.Net.Sockets.AddressFamily.InterNetwork => 32,
-            System.Net.Sockets.AddressFamily.InterNetworkV6 => 128,
-            _ => -1
-        };
+        var maxPrefixLength = address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
+            ? 32
+            : 128;
 
-        return maxPrefixLength >= 0 && prefixLength is >= 0 && prefixLength <= maxPrefixLength;
+        return prefixLength is >= 0 && prefixLength <= maxPrefixLength;
     }
 }

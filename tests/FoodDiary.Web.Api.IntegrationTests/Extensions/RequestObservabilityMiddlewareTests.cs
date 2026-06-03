@@ -114,6 +114,83 @@ string.Equals(instrument.Name, "fooddiary.api.request.duration", StringCompariso
         Assert.Null(capturedActivity.GetTagItem("enduser.id"));
     }
 
+    [Theory]
+    [InlineData("/api/v1/auth/admin-sso/token", "/api/v1/auth/admin-sso/*", "auth-admin-sso")]
+    [InlineData("/api/v1/auth/telegram/login", "/api/v1/auth/telegram/*", "auth-telegram")]
+    [InlineData("/hubs/email-verification", "/hubs/email-verification", "signalr-auth")]
+    public async Task Middleware_RedactsUserTelemetry_ForSensitiveNonDefaultRoutes(
+        string requestPath,
+        string expectedPathLabel,
+        string expectedSensitivity) {
+        Activity? capturedActivity = null;
+
+        using var listener = new ActivityListener {
+            ShouldListenTo = source => string.Equals(source.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal),
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+            SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
+            ActivityStopped = activity => {
+                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), expectedPathLabel, StringComparison.Ordinal)) {
+                    capturedActivity = activity;
+                }
+            },
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        var middleware = new RequestObservabilityMiddleware(
+            next: context => {
+                context.Response.StatusCode = StatusCodes.Status200OK;
+                return Task.CompletedTask;
+            },
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Post;
+        httpContext.Request.Path = requestPath;
+        httpContext.User = new ClaimsPrincipal(new ClaimsIdentity([
+            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+        ], "test"));
+
+        await middleware.InvokeAsync(httpContext);
+
+        Assert.NotNull(capturedActivity);
+        Assert.Equal(expectedSensitivity, capturedActivity!.GetTagItem("fooddiary.request.sensitivity"));
+        Assert.Null(capturedActivity.GetTagItem("enduser.id"));
+    }
+
+    [Fact]
+    public async Task Middleware_UsesAnonymousUserTelemetry_ForStandardRouteWithoutUserIdClaim() {
+        Activity? capturedActivity = null;
+
+        using var listener = new ActivityListener {
+            ShouldListenTo = source => string.Equals(source.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal),
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+            SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
+            ActivityStopped = activity => {
+                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), "/api/v1/dashboard", StringComparison.Ordinal)) {
+                    capturedActivity = activity;
+                }
+            },
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        var middleware = new RequestObservabilityMiddleware(
+            next: context => {
+                context.Response.StatusCode = StatusCodes.Status200OK;
+                return Task.CompletedTask;
+            },
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Get;
+        httpContext.Request.Path = "/api/v1/dashboard";
+
+        await middleware.InvokeAsync(httpContext);
+
+        Assert.NotNull(capturedActivity);
+        Assert.Equal("standard", capturedActivity!.GetTagItem("fooddiary.request.sensitivity"));
+        Assert.Equal("anonymous", capturedActivity.GetTagItem("enduser.id"));
+    }
+
     [Fact]
     public async Task Middleware_RecordsBusinessFlowMetric_ForSuccessfulAuthRegister() {
         long? measurement = null;
@@ -188,6 +265,58 @@ string.Equals(instrument.Name, "fooddiary.api.business_flow.events", StringCompa
         Assert.Equal(1, measurement);
         Assert.Equal("images.upload-url", flow);
         Assert.Equal("client_error", outcome);
+    }
+
+    [Theory]
+    [InlineData("POST", "/api/v1/auth/login", "auth.login", StatusCodes.Status500InternalServerError, "server_error")]
+    [InlineData("POST", "/api/v1/auth/refresh", "auth.refresh", StatusCodes.Status200OK, "success")]
+    [InlineData("POST", "/api/v1/auth/restore", "auth.restore", StatusCodes.Status200OK, "success")]
+    [InlineData("POST", "/api/v1/auth/password-reset/request", "auth.password-reset.request", StatusCodes.Status200OK, "success")]
+    [InlineData("POST", "/api/v1/auth/password-reset/confirm", "auth.password-reset.confirm", StatusCodes.Status200OK, "success")]
+    [InlineData("POST", "/api/v1/auth/verify-email", "auth.verify-email", StatusCodes.Status200OK, "success")]
+    [InlineData("POST", "/api/v1/auth/verify-email/resend", "auth.verify-email.resend", StatusCodes.Status200OK, "success")]
+    [InlineData("DELETE", "/api/v1/images/image-id", "images.delete", StatusCodes.Status204NoContent, "success")]
+    [InlineData("DELETE", "/api/v1/users", "users.delete", StatusCodes.Status204NoContent, "success")]
+    public async Task Middleware_RecordsBusinessFlowMetric_ForKnownFlows(
+        string method,
+        string requestPath,
+        string expectedFlow,
+        int statusCode,
+        string expectedOutcome) {
+        long? measurement = null;
+        string? flow = null;
+        string? outcome = null;
+
+        using var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+string.Equals(instrument.Name, "fooddiary.api.business_flow.events", StringComparison.Ordinal)) {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<long>((_, value, tags, _) => {
+            measurement = value;
+            flow = GetTagValue(tags, "fooddiary.business_flow");
+            outcome = GetTagValue(tags, "fooddiary.business_outcome");
+        });
+        listener.Start();
+
+        var middleware = new RequestObservabilityMiddleware(
+            next: context => {
+                context.Response.StatusCode = statusCode;
+                return Task.CompletedTask;
+            },
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = method;
+        httpContext.Request.Path = requestPath;
+
+        await middleware.InvokeAsync(httpContext);
+
+        Assert.Equal(1, measurement);
+        Assert.Equal(expectedFlow, flow);
+        Assert.Equal(expectedOutcome, outcome);
     }
 
     [Fact]

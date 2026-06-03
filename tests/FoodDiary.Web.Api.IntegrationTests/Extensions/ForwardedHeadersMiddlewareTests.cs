@@ -63,6 +63,48 @@ public sealed class ForwardedHeadersMiddlewareTests {
         Assert.Contains(options.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "2001:db8::", StringComparison.Ordinal) && network.PrefixLength == 32);
     }
 
+    [Theory]
+    [InlineData(1, true)]
+    [InlineData(0, false)]
+    [InlineData(-1, false)]
+    public void HasValidForwardLimit_ReturnsExpectedResult(int forwardLimit, bool expected) {
+        var options = new ApiForwardedHeadersOptions { ForwardLimit = forwardLimit };
+
+        var valid = ApiForwardedHeadersOptions.HasValidForwardLimit(options);
+
+        Assert.Equal(expected, valid);
+    }
+
+    [Theory]
+    [InlineData("10.0.0.10", true)]
+    [InlineData("2001:db8::1", true)]
+    [InlineData("not-an-ip", false)]
+    public void HasValidKnownProxies_ReturnsExpectedResult(string proxy, bool expected) {
+        var options = new ApiForwardedHeadersOptions { KnownProxies = [proxy] };
+
+        var valid = ApiForwardedHeadersOptions.HasValidKnownProxies(options);
+
+        Assert.Equal(expected, valid);
+    }
+
+    [Theory]
+    [InlineData("10.0.0.0/24", true)]
+    [InlineData("2001:db8::/32", true)]
+    [InlineData("", false)]
+    [InlineData("10.0.0.0", false)]
+    [InlineData("not-an-ip/24", false)]
+    [InlineData("10.0.0.0/not-a-prefix", false)]
+    [InlineData("10.0.0.0/-1", false)]
+    [InlineData("10.0.0.0/33", false)]
+    [InlineData("2001:db8::/129", false)]
+    public void HasValidKnownNetworks_ReturnsExpectedResult(string network, bool expected) {
+        var options = new ApiForwardedHeadersOptions { KnownNetworks = [network] };
+
+        var valid = ApiForwardedHeadersOptions.HasValidKnownNetworks(options);
+
+        Assert.Equal(expected, valid);
+    }
+
     private static ForwardedHeadersMiddleware CreateMiddleware(Microsoft.AspNetCore.Builder.ForwardedHeadersOptions options) {
         return new ForwardedHeadersMiddleware(
             static _ => Task.CompletedTask,
