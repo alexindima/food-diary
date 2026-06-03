@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -6,7 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { FavoriteProduct } from '../models/product.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FavoriteProductService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.favoriteProducts;
 

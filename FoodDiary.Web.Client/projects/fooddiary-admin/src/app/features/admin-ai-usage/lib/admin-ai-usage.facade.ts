@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AdminAiUsageService } from '../api/admin-ai-usage.service';
 import type { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminAiUsageFacade {
     private readonly aiUsageService = inject(AdminAiUsageService);
 

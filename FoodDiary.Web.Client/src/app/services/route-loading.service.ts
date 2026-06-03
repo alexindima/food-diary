@@ -1,8 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 
 import { ROUTE_LOADING_TIMING } from '../config/runtime-ui.tokens';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RouteLoadingService {
     private readonly timing = inject(ROUTE_LOADING_TIMING);
 

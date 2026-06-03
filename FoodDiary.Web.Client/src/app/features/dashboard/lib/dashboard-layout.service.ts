@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { DASHBOARD_LAYOUT_CONFIG } from '../../../config/runtime-ui.tokens';
@@ -10,7 +10,7 @@ const DEFAULT_LAYOUT: DashboardLayoutSettings = {
     mobile: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DashboardLayoutService {
     private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);

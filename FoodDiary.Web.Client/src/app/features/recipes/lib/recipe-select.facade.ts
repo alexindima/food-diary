@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { RecipeService } from '../api/recipe.service';
 import type { Recipe, RecipeFilters } from '../models/recipe.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RecipeSelectFacade {
     private readonly recipeService = inject(RecipeService);
 

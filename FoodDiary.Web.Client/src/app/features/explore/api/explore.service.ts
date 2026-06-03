@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -8,7 +8,7 @@ import { addOptionalNumberParam, addOptionalStringParam, type ApiQueryParams } f
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ExploreFilters, ExploreRecipe } from '../models/explore.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ExploreService extends ApiService {
     protected readonly baseUrl = `${environment.apiUrls.recipes}/explore`;
 

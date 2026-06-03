@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, makeStateKey, PLATFORM_ID, type StateKey, TransferState } from '@angular/core';
+import { inject, makeStateKey, PLATFORM_ID, Service, type StateKey, TransferState } from '@angular/core';
 import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
 import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
@@ -14,7 +14,7 @@ function makeTranslationStateKey(lang: string, bundle: TranslationBundle): State
     return makeStateKey<TranslationDictionary>(`fd-i18n:${lang}:${bundle}`);
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly http = inject(HttpClient);
     private readonly document = inject(DOCUMENT);

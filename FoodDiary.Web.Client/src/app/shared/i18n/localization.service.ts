@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LocalizationService {
     private readonly translateService = inject(TranslateService);
     private readonly document = inject(DOCUMENT);

@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -28,7 +28,7 @@ import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
 import { resolveProductImageUrl } from '../product-image.util';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProductListFacade {
     private readonly productService = inject(ProductService);
     public readonly navigationService = inject(NavigationService);

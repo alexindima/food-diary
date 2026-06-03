@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
@@ -12,7 +12,7 @@ import { MealService } from '../../api/meal.service';
 import type { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MealListFacade {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);

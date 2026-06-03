@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { PreloadingStrategy, Route } from '@angular/router';
 import { EMPTY, from, type Observable, switchMap } from 'rxjs';
 
@@ -16,7 +16,7 @@ type IdleCapableGlobal = {
     document?: Document;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
     private readonly authService = inject(AuthService);
     private readonly timingConfig = inject(IDLE_PRELOADING_TIMING_CONFIG);

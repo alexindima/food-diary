@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,7 +27,7 @@ import {
     normalizeStartOfDay,
 } from './weight-history-range.utils';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WeightHistoryFacade {
     private readonly weightEntriesService = inject(WeightEntriesService);
     private readonly userService = inject(UserService);

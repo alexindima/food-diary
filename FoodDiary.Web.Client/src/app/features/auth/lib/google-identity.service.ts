@@ -1,5 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, PLATFORM_ID, RendererFactory2, signal } from '@angular/core';
+import { inject, PLATFORM_ID, RendererFactory2, Service, signal } from '@angular/core';
 
 type GoogleInitOptions = {
     clientId: string;
@@ -27,7 +27,7 @@ declare global {
     }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GoogleIdentityService {
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);

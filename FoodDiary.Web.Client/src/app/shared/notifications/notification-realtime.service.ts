@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { effect, inject, Service, signal, untracked } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
 
 import { environment } from '../../../environments/environment';
@@ -11,7 +11,7 @@ function toNotificationHubUrl(authBaseUrl: string): string {
     return buildRealtimeHubUrl(authBaseUrl, '/hubs/notifications');
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class NotificationRealtimeService {
     private readonly authService = inject(AuthService);
     private readonly notificationService = inject(NotificationService);

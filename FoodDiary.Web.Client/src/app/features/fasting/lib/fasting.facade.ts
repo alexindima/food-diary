@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal, type WritableSignal } from '@angular/core';
+import { computed, DestroyRef, inject, Service, signal, type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
 
@@ -48,7 +48,7 @@ type FastingPromptState = {
     snoozedUntilUtc?: string;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FastingFacade {
     private readonly fastingService = inject(FastingService);
     private readonly frontendObservability = inject(FrontendObservabilityService);

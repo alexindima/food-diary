@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -7,7 +7,7 @@ import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import { createDefaultGamificationData } from '../lib/gamification.constants';
 import type { GamificationData } from '../models/gamification.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GamificationService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.gamification;
 

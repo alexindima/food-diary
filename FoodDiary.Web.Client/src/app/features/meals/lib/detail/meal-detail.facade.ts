@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -13,7 +13,7 @@ import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
 import type { Meal } from '../../models/meal.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MealDetailFacade {
     private readonly dialogRef = inject(FdUiDialogRef<unknown, MealDetailActionResult>);
     private readonly fdDialogService = inject(FdUiDialogService);

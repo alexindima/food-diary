@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import type { DietologistRecommendation } from '../../../shared/models/dietologist.data';
 import { RecommendationsService } from '../api/recommendations.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RecommendationsFacade {
     private readonly recommendationsService = inject(RecommendationsService);
 

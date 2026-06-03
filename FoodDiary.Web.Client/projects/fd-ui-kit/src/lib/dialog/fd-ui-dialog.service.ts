@@ -2,7 +2,7 @@ import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import type { ComponentType } from '@angular/cdk/portal';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, PLATFORM_ID, type StaticProvider } from '@angular/core';
+import { inject, PLATFORM_ID, Service, type StaticProvider } from '@angular/core';
 
 import type { FdUiDialogSize } from './fd-ui-dialog';
 import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
@@ -31,7 +31,7 @@ type ResolvedDialogLayout = {
     isFullscreen: boolean;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FdUiDialogService {
     private readonly dialog = inject(Dialog);
     private readonly overlay = inject(Overlay);

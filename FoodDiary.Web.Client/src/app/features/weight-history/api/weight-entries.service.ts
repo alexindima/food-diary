@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -14,7 +14,7 @@ import type {
     WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WeightEntriesService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.weights;
 

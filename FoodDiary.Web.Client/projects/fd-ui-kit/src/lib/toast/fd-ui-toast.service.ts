@@ -1,5 +1,5 @@
 import type { AriaLivePoliteness } from '@angular/cdk/a11y';
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Service, signal } from '@angular/core';
 import { type Observable, Subject } from 'rxjs';
 
 export type FdUiToastAppearance = 'default' | 'positive' | 'negative' | 'warning' | 'info';
@@ -79,7 +79,7 @@ export class FdUiToastRef {
     }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FdUiToastService {
     private readonly enterAnimationMs = ENTER_ANIMATION_MS;
     private readonly exitAnimationMs = EXIT_ANIMATION_MS;

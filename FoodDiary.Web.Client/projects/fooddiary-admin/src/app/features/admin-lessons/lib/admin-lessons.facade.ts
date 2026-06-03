@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AdminLessonsService } from '../api/admin-lessons.service';
@@ -10,7 +10,7 @@ import type {
     AdminLessonUpdateRequest,
 } from '../models/admin-lesson.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminLessonsFacade {
     private readonly lessonsService = inject(AdminLessonsService);
 

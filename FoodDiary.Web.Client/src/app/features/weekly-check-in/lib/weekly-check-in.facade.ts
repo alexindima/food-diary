@@ -1,11 +1,11 @@
-import { computed, inject, Injectable, resource } from '@angular/core';
+import { computed, inject, resource, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
 import { buildWeeklyCheckInSuggestionRows, buildWeeklyCheckInTrendCards } from './weekly-check-in.mapper';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WeeklyCheckInFacade {
     private readonly service = inject(WeeklyCheckInService);
     private readonly dataResource = resource({

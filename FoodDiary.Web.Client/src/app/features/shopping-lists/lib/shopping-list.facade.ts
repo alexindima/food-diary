@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -17,7 +17,7 @@ export type ShoppingListDraftItem = {
     category: string | null;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ShoppingListFacade {
     private readonly shoppingListService = inject(ShoppingListService);
     private readonly translateService = inject(TranslateService);

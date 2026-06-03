@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { PremiumBillingService } from '../api/premium-billing.service';
@@ -10,7 +10,7 @@ import type {
     PortalSessionResponse,
 } from '../models/billing.models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PremiumBillingFacade {
     private readonly billingService = inject(PremiumBillingService);
 

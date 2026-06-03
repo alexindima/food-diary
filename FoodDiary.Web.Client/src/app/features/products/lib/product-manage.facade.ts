@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -17,7 +17,7 @@ import type { ProductSaveSuccessDialogData } from '../dialogs/product-save-succe
 import type { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
 import type { ProductDeleteResult, RedirectAction } from './product-manage.types';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProductManageFacade {
     private readonly productService = inject(ProductService);
     private readonly navigationService = inject(NavigationService);

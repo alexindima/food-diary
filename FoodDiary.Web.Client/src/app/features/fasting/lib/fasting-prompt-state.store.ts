@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { isRecord } from '../../../shared/lib/unknown-value.utils';
 import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
@@ -8,7 +8,7 @@ type FastingPromptState = {
     snoozedUntilUtc?: string;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FastingPromptStateStore {
     private static readonly StorageKey = 'fd_fasting_prompt_state';
     private readonly storage = inject(BrowserStorageService);

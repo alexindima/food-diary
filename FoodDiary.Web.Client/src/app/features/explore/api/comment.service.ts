@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -7,7 +7,7 @@ import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { CreateCommentDto, RecipeComment, UpdateCommentDto } from '../models/comment.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CommentService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.recipes;
 

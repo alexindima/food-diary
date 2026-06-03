@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error';
@@ -16,7 +16,7 @@ import {
     createRegisterForm,
 } from './auth-form.factory';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AuthFormManager {
     private readonly translateService = inject(TranslateService);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });

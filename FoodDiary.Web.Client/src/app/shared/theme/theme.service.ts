@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 
 import {
     APP_THEMES,
@@ -31,7 +31,7 @@ const PUBLIC_SEO_PATHS = new Set([
     '/meal-prep-planner',
 ]);
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ThemeService {
     private readonly document = inject(DOCUMENT);
     private readonly themeStorageKey = 'fd_theme';

@@ -1,11 +1,11 @@
-import { inject, Injectable, RendererFactory2, signal } from '@angular/core';
+import { inject, RendererFactory2, Service, signal } from '@angular/core';
 
 import { environment } from '../../../../../../environments/environment';
 import { GoogleIdentityService } from '../../../lib/google-identity.service';
 
 export type AuthGoogleMode = 'login' | 'register';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AuthGoogleManager {
     private readonly googleIdentityService = inject(GoogleIdentityService);
     private readonly renderer = inject(RendererFactory2).createRenderer(null, null);

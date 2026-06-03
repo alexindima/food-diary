@@ -1,12 +1,12 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { isPlatformBrowser } from '@angular/common';
-import { computed, inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { computed, inject, PLATFORM_ID, Service } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
 
 import { APP_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ViewportService {
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly platformId = inject(PLATFORM_ID);

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { Observable } from 'rxjs';
 
@@ -14,7 +14,7 @@ export type PublicAuthDialogRef = {
     afterClosed: () => Observable<unknown>;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PublicAuthDialogService {
     private readonly fdDialogService = inject(FdUiDialogService);
 

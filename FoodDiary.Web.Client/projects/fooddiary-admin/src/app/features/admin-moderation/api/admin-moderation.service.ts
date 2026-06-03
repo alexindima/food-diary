@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -14,7 +14,7 @@ type ApiPagedResponse<T> = {
     totalItems: number;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminModerationService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/moderation`;

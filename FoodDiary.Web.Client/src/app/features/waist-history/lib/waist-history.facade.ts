@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +22,7 @@ import {
 } from './waist-history-range.utils';
 import { buildWhtViewModel } from './waist-history-wht.mapper';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WaistHistoryFacade {
     private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly userService = inject(UserService);

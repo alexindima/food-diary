@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
     type AbstractControl,
     type FormArray,
@@ -47,7 +47,7 @@ import {
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT, MEAL_MANAGE_MIN_ITEM_AMOUNT, MEAL_MANAGE_MIN_NUTRITION_VALUE } from './meal-manage.config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MealManageFacade {
     private readonly mealService = inject(MealService);
     private readonly authService = inject(AuthService);

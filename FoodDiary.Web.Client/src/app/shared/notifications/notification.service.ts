@@ -1,5 +1,5 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, type Observable, shareReplay, tap } from 'rxjs';
 
@@ -75,7 +75,7 @@ type FetchUnreadCountOptions = {
     force?: boolean;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class NotificationService {
     private readonly http = inject(HttpClient);
     private readonly authService = inject(AuthService);

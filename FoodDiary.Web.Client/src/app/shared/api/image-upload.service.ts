@@ -1,5 +1,5 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -7,7 +7,7 @@ import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { rethrowApiError } from '../lib/api-error.utils';
 import type { ImageUploadUrlResponse } from '../models/image-upload.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ImageUploadService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = environment.apiUrls.images;

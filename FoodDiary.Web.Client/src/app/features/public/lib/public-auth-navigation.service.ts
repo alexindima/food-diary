@@ -1,9 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 
 import type { PublicAuthMode } from './public-auth-dialog.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PublicAuthNavigationService {
     private readonly router = inject(Router);
 

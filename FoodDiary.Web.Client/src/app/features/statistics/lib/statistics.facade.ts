@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -38,7 +38,7 @@ import {
 import { buildStatisticsExportRequest } from './statistics-export.mapper';
 import { mapStatistics } from './statistics-statistics.mapper';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class StatisticsFacade {
     private readonly statisticsService = inject(StatisticsService);
     private readonly weightEntriesService = inject(WeightEntriesService);

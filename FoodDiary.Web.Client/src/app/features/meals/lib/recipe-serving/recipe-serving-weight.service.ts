@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable, of } from 'rxjs';
 
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
 import type { RecipeLookup, RecipeLookupIngredient } from '../../../../shared/models/recipe-lookup.data';
 import type { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RecipeServingWeightService {
     private readonly recipeLookupService = inject(RecipeLookupService);
     private readonly cache = new Map<string, number | null>();

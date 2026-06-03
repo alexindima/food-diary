@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -16,7 +16,7 @@ import {
     MIN_SYMPTOM_VALUE,
 } from './cycle-tracking.config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CycleTrackingFacade {
     private readonly cyclesService = inject(CyclesService);
     private readonly fb = inject(FormBuilder);

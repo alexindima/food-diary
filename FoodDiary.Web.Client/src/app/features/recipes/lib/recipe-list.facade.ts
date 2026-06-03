@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
@@ -16,7 +16,7 @@ import {
 } from '../components/list/recipe-list.config';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RecipeListFacade {
     private readonly recipeService = inject(RecipeService);
     private readonly navigationService = inject(NavigationService);

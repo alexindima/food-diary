@@ -1,8 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 
 import { GLOBAL_LOADING_TIMING } from '../config/runtime-ui.tokens';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GlobalLoadingService {
     private readonly timing = inject(GLOBAL_LOADING_TIMING);
 

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -16,7 +16,7 @@ import type {
 } from '../models/fasting.data';
 import { FASTING_API_LIMITS } from './fasting-api.tokens';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FastingService extends ApiService {
     private readonly defaultLimits = inject(FASTING_API_LIMITS);
 

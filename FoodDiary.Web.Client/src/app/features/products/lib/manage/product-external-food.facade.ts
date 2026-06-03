@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { UsdaService } from '../../../usda/api/usda.service';
@@ -6,7 +6,7 @@ import type { UsdaFoodDetail } from '../../../usda/models/usda.data';
 import { OpenFoodFactsService } from '../../api/open-food-facts.service';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProductExternalFoodFacade {
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
     private readonly usdaService = inject(UsdaService);

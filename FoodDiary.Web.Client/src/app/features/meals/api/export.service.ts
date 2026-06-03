@@ -1,12 +1,12 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { inject, PLATFORM_ID, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import type { ExportDiaryRequest } from '../models/export.models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ExportService extends ApiService {
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);

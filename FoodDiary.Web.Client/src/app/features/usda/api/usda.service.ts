@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -7,7 +7,7 @@ import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error
 import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../models/usda.data';
 import { USDA_SEARCH_LIMIT } from './usda-api.tokens';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UsdaService extends ApiService {
     private readonly defaultSearchLimit = inject(USDA_SEARCH_LIMIT);
 

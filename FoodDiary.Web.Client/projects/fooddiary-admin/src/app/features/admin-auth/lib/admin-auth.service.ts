@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -8,7 +8,7 @@ import { environment } from '../../../../environments/environment';
 const BASE64_BLOCK_SIZE = 4;
 const BASE64_REMAINDER_NONE = 0;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminAuthService {
     private readonly authUrl = environment.apiUrls.auth;
     private readonly http = inject(HttpClient);

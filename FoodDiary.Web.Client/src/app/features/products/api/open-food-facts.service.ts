@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -7,7 +7,7 @@ import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { OpenFoodFactsProduct } from '../models/open-food-facts.data';
 import { OPEN_FOOD_FACTS_SEARCH_LIMIT } from './product-api.tokens';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class OpenFoodFactsService extends ApiService {
     private readonly defaultSearchLimit = inject(OPEN_FOOD_FACTS_SEARCH_LIMIT);
 

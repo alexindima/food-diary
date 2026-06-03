@@ -1,9 +1,9 @@
-import { type ErrorHandler, inject, Injectable } from '@angular/core';
+import { type ErrorHandler, inject, Service } from '@angular/core';
 
 import { FrontendLoggerService } from './frontend-logger.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GlobalErrorHandler implements ErrorHandler {
     private readonly frontendObservabilityService = inject(FrontendObservabilityService);
     private readonly logger = inject(FrontendLoggerService);

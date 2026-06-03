@@ -1,5 +1,5 @@
 import { HttpContext } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -17,7 +17,7 @@ export type DashboardSnapshotQuery = {
     trendDays?: number;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DashboardService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.dashboard;
     private readonly snapshotQueryDefaults = inject(DASHBOARD_SNAPSHOT_QUERY_DEFAULTS);

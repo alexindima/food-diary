@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
 
 import { environment } from '../../../../environments/environment';
@@ -9,7 +9,7 @@ export function toEmailVerificationHubUrl(authBaseUrl: string): string {
     return buildRealtimeHubUrl(authBaseUrl, '/hubs/email-verification');
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class EmailVerificationRealtimeService {
     private connection: HubConnection | null = null;
     private readonly connectedSignal = signal(false);

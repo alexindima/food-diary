@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import type { AggregatedStatistics, GetStatisticsDto } from '../models/statistics.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class StatisticsService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.statistics;
 

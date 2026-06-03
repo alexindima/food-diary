@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 type StorageScope = 'local' | 'session';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BrowserStorageService {
     public getItem(scope: StorageScope, key: string): string | null {
         try {

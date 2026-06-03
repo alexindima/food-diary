@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
@@ -29,7 +29,7 @@ export type QuickMealDetails = {
     postMealSatietyLevel: number;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class QuickMealService {
     private readonly mealService = inject(MealService);
     private readonly toastService = inject(FdUiToastService);

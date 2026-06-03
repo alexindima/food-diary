@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -14,7 +14,7 @@ import { RecipeService } from '../../api/recipe.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import type { Recipe } from '../../models/recipe.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RecipeDetailFacade {
     private readonly recipeService = inject(RecipeService);
     private readonly favoriteRecipeService = inject(FavoriteRecipeService);

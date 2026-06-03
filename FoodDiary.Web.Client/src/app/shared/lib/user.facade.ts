@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { UserService } from '../api/user.service';
 import type { ChangePasswordRequest, SetPasswordRequest, UpdateUserAppearanceDto, User } from '../models/user.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UserFacade {
     private readonly userService = inject(UserService);
 

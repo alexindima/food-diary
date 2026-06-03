@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -8,7 +8,7 @@ import { addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib
 import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MealPlanService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.mealPlans;
 

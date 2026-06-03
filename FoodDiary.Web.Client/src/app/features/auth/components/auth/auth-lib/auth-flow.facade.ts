@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable, of } from 'rxjs';
 
 import { AuthService } from '../../../../../services/auth.service';
@@ -9,7 +9,7 @@ import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'unknown';
 export type AuthRegisterResult = 'success' | 'emailExists' | 'accountDeleted' | 'unknown';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AuthFlowFacade {
     private readonly authService = inject(AuthService);
     private readonly localizationService = inject(LocalizationService);

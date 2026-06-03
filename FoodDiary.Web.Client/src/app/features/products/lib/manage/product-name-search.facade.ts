@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, debounceTime, map, of, Subject, switchMap } from 'rxjs';
 
@@ -8,7 +8,7 @@ import type { ProductNameAutocompleteOption } from '../../components/manage/prod
 import type { ProductSearchSuggestion } from '../../models/product.data';
 import { PRODUCT_NAME_SEARCH_MIN_LENGTH, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } from '../product-manage.constants';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProductNameSearchFacade {
     private readonly productService = inject(ProductService);
     private readonly destroyRef = inject(DestroyRef);

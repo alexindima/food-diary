@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AdminModerationService } from '../api/admin-moderation.service';
 import type { AdminContentReport, AdminReportAction } from '../models/admin-moderation.data';
 import type { PagedResponse } from '../models/admin-moderation-page.models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminModerationFacade {
     private readonly moderationService = inject(AdminModerationService);
 

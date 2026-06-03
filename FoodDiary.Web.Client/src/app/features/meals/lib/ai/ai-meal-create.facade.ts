@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, finalize, type Observable, of, tap } from 'rxjs';
@@ -7,7 +7,7 @@ import type { AiInputBarResult } from '../../../../components/shared/ai-input-ba
 import type { Meal } from '../../models/meal.data';
 import { AiMealCreateService } from './ai-meal-create.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiMealCreateFacade {
     private readonly aiMealCreateService = inject(AiMealCreateService);
     private readonly toastService = inject(FdUiToastService);

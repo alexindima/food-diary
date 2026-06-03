@@ -1,5 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, PLATFORM_ID, RendererFactory2 } from '@angular/core';
+import { inject, PLATFORM_ID, RendererFactory2, Service } from '@angular/core';
 
 export type PaddleEnvironment = 'sandbox' | 'production';
 
@@ -43,7 +43,7 @@ declare global {
     }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PaddleCheckoutService {
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);

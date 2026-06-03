@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
@@ -67,7 +67,7 @@ export type BodyTargetKey = 'weight' | 'waist';
 
 const CIRCLE_DEGREES = 360;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
     private readonly toastService = inject(FdUiToastService);

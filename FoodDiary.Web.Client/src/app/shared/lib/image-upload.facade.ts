@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { ImageUploadService } from '../api/image-upload.service';
 import type { ImageUploadUrlResponse } from '../models/image-upload.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ImageUploadFacade {
     private readonly imageUploadService = inject(ImageUploadService);
 

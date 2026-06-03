@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -24,7 +24,7 @@ export type ProductOverviewQuery = {
     favoriteLimit?: number;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProductService extends ApiService {
     private readonly defaultLimits = inject(PRODUCT_API_LIMITS);
 

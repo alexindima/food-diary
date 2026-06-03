@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { catchError, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -34,7 +34,7 @@ declare global {
 
 const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
     private readonly quickConsumptionService = inject(QuickMealService);

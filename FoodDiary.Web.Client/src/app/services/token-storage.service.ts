@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { BrowserStorageService } from '../shared/platform/browser-storage.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TokenStorageService {
     private readonly storage = inject(BrowserStorageService);
 

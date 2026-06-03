@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AiFoodService } from '../api/ai-food.service';
@@ -10,7 +10,7 @@ import type {
     FoodVisionResponse,
 } from '../models/ai.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiFoodFacade {
     private readonly aiFoodService = inject(AiFoodService);
 

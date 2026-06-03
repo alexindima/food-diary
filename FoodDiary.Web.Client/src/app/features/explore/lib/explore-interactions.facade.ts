@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
@@ -11,7 +11,7 @@ import type { ExploreFilters, ExploreRecipe } from '../models/explore.data';
 import type { RecipeLikeStatus } from '../models/like.data';
 import type { ContentReport, CreateReportDto } from '../models/report.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ExploreInteractionsFacade {
     private readonly commentService = inject(CommentService);
     private readonly exploreService = inject(ExploreService);

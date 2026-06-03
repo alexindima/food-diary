@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
@@ -8,7 +8,7 @@ import type {
     AdminEmailTemplateUpsertRequest,
 } from '../models/admin-email-template.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminEmailTemplatesFacade {
     private readonly templatesService = inject(AdminEmailTemplatesService);
 

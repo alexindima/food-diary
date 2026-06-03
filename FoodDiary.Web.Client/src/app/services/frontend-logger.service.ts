@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { environment } from '../../environments/environment';
 
@@ -6,7 +6,7 @@ type FrontendLoggerOptions = {
     devOnly?: boolean;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FrontendLoggerService {
     public warn(message: string, error?: unknown, options?: FrontendLoggerOptions): void {
         if (!this.shouldLog(options)) {

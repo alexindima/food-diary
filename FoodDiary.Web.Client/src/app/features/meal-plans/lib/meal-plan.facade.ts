@@ -1,11 +1,11 @@
-import { computed, DestroyRef, inject, Injectable, resource, signal } from '@angular/core';
+import { computed, DestroyRef, inject, resource, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 
 import { MealPlanService } from '../api/meal-plan.service';
 import type { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MealPlanFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly service = inject(MealPlanService);

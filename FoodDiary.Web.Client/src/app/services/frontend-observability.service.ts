@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -12,7 +12,7 @@ const FIRST_NAVIGATION_ENTRY_INDEX = 0;
 const DECIMAL_ROUNDING_FACTOR = 10;
 const DECIMAL_ROUNDING_DIVISOR = 10;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FrontendObservabilityService {
     private readonly router = inject(Router);
     private readonly loggingApiService = inject(LoggingApiService);

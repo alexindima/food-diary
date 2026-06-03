@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import type { PartialObserver } from 'rxjs';
@@ -23,7 +23,7 @@ import {
 } from './dashboard-nutrition.utils';
 import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);

@@ -1,11 +1,11 @@
-import { computed, inject, Injectable, resource } from '@angular/core';
+import { computed, inject, resource, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { GamificationService } from '../api/gamification.service';
 import type { GamificationData } from '../models/gamification.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GamificationFacade {
     private readonly gamificationService = inject(GamificationService);
     private readonly dataResource = resource({

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 export type UnsavedChangesHandler = {
     hasChanges: () => boolean;
@@ -6,7 +6,7 @@ export type UnsavedChangesHandler = {
     discard: () => void;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UnsavedChangesService {
     private handler: UnsavedChangesHandler | null = null;
 

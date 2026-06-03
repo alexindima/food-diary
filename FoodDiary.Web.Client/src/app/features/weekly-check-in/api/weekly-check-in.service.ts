@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -6,7 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import type { WeeklyCheckInData, WeekSummary, WeekTrend } from '../models/weekly-check-in.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WeeklyCheckInService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.weeklyCheckIn;
 

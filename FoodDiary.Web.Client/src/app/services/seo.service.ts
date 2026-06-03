@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -23,7 +23,7 @@ export type SeoData = {
     structuredDataFaqKeys?: readonly string[];
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SeoService {
     private readonly title = inject(Title);
     private readonly meta = inject(Meta);

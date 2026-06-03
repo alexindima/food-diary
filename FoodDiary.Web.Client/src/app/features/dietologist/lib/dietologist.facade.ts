@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import type {
@@ -14,7 +14,7 @@ import type {
 import type { DashboardSnapshot } from '../../dashboard/models/dashboard.data';
 import { type DietologistClientDashboardQuery, DietologistService } from '../api/dietologist.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DietologistFacade {
     private readonly dietologistService = inject(DietologistService);
 

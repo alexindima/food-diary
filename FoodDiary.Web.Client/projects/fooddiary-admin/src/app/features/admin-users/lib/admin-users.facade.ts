@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AdminUsersService } from '../api/admin-users.service';
@@ -14,7 +14,7 @@ import type {
     PagedResponse,
 } from '../models/admin-user.models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminUsersFacade {
     private readonly usersService = inject(AdminUsersService);
 

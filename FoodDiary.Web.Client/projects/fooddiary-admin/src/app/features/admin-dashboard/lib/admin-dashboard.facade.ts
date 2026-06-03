@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AdminAiUsageService } from '../../admin-ai-usage/api/admin-ai-usage.service';
@@ -10,7 +10,7 @@ import { AdminTelemetryService } from '../api/admin-telemetry.service';
 import type { AdminDashboardSummary } from '../models/admin-dashboard.data';
 import type { FastingTelemetrySummary } from '../models/admin-telemetry.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AdminDashboardFacade {
     private readonly dashboardService = inject(AdminDashboardService);
     private readonly aiUsageService = inject(AdminAiUsageService);

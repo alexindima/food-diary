@@ -1,5 +1,5 @@
 import { HttpContext } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import { catchError, map, type Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -26,7 +26,7 @@ export type UserProfileOverview = {
     dietologistRelationship: DietologistRelationship | null;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UserService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.users;
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);

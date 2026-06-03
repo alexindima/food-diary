@@ -1,4 +1,4 @@
-import { DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
@@ -12,7 +12,7 @@ import { NotificationService, type WebPushSubscriptionRequest } from './notifica
 
 export type PushNotificationEnableResult = 'subscribed' | 'already-subscribed' | 'unsupported' | 'blocked' | 'unavailable';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PushNotificationService {
     private readonly swPush = inject(SwPush);
     private readonly authService = inject(AuthService);
