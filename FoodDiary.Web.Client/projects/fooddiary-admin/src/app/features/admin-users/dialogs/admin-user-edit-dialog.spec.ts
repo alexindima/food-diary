@@ -62,8 +62,7 @@ describe('AdminUserEditDialogComponent', () => {
     });
 
     it('should save and close with true on success', () => {
-        component['form'].controls.isEmailConfirmed.setValue(true);
-        component['form'].controls.language.setValue('ru');
+        component['formModel'].update(value => ({ ...value, isEmailConfirmed: true, language: 'ru' }));
         component['save']();
 
         expect(usersService.updateUser).toHaveBeenCalledWith('u1', {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, maxLength, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -23,7 +23,7 @@ export type ReportDialogData = {
     templateUrl: './report-dialog.html',
     styleUrls: ['./report-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
+    imports: [FormField, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
 })
 export class ReportDialogComponent {
     private readonly dialogRef = inject<FdUiDialogRef<ReportDialogComponent, boolean>>(FdUiDialogRef);
@@ -34,12 +34,19 @@ export class ReportDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly reportReasonMaxLength = inject(REPORT_REASON_MAX_LENGTH);
 
-    protected readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(this.reportReasonMaxLength)]);
+    protected readonly formModel = signal({
+        reason: '',
+    });
+    protected readonly form = form(this.formModel, path => {
+        required(path.reason);
+        maxLength(path.reason, this.reportReasonMaxLength);
+    });
     protected readonly isSubmitting = signal(false);
 
     protected onSubmit(): void {
-        const reason = (this.reasonControl.value ?? '').trim();
-        if (reason.length === 0 || this.reasonControl.invalid || this.isSubmitting()) {
+        this.form().markAsTouched();
+        const reason = this.formModel().reason.trim();
+        if (reason.length === 0 || this.form().invalid() || this.isSubmitting()) {
             return;
         }
 

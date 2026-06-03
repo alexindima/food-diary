@@ -1,27 +1,26 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, type FormControl, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, maxLength, minLength, required } from '@angular/forms/signals';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import { merge } from 'rxjs';
 
 import { ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH } from '../lib/admin-user.constants';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminImpersonationStart, AdminUser } from '../models/admin-user.models';
 
-type AdminUserImpersonationForm = {
-    reason: FormControl<string>;
+type AdminUserImpersonationFormModel = {
+    reason: string;
 };
 
 const REASON_MIN_LENGTH = 10;
 
 @Component({
     selector: 'fd-admin-user-impersonation-dialog',
-    imports: [ReactiveFormsModule, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiTextareaComponent],
+    imports: [FormField, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiTextareaComponent],
     templateUrl: './admin-user-impersonation-dialog.html',
     styleUrl: './admin-user-impersonation-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,38 +30,36 @@ export class AdminUserImpersonationDialogComponent {
         inject<FdUiDialogRef<AdminUserImpersonationDialogComponent, AdminImpersonationStart | null>>(FdUiDialogRef);
     private readonly user = inject<AdminUser>(FD_UI_DIALOG_DATA);
     private readonly usersService = inject(AdminUsersFacade);
-    private readonly fb = inject(FormBuilder);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly targetEmail = this.user.email;
     protected readonly isSubmitting = signal(false);
     protected readonly submitError = signal<string | null>(null);
-    protected readonly form: FormGroup<AdminUserImpersonationForm> = this.fb.group({
-        reason: this.fb.nonNullable.control('', [
-            Validators.required,
-            Validators.minLength(REASON_MIN_LENGTH),
-            Validators.maxLength(ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH),
-        ]),
+    protected readonly formModel = signal<AdminUserImpersonationFormModel>({
+        reason: '',
     });
-    private readonly reasonValidationVersion = signal(0);
+    protected readonly form = form(this.formModel, path => {
+        required(path.reason);
+        minLength(path.reason, REASON_MIN_LENGTH);
+        maxLength(path.reason, ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH);
+    });
 
     protected readonly reasonError = computed((): string | null => {
-        this.reasonValidationVersion();
-
-        const control = this.form.controls.reason;
-        if (!control.touched && !control.dirty) {
+        const state = this.form.reason();
+        if (!state.touched() && !state.dirty()) {
             return null;
         }
 
-        if (control.hasError('required')) {
+        const errors = state.errors();
+        if (errors.some(error => error.kind === 'required')) {
             return 'Reason is required.';
         }
 
-        if (control.hasError('minlength')) {
+        if (errors.some(error => error.kind === 'minLength')) {
             return 'Reason must be at least 10 characters.';
         }
 
-        if (control.hasError('maxlength')) {
+        if (errors.some(error => error.kind === 'maxLength')) {
             return 'Reason must be 500 characters or fewer.';
         }
 
@@ -71,30 +68,20 @@ export class AdminUserImpersonationDialogComponent {
 
     protected readonly submitLabel = computed(() => (this.isSubmitting() ? 'Starting...' : 'Start'));
 
-    public constructor() {
-        const reason = this.form.controls.reason;
-        merge(reason.statusChanges, reason.valueChanges)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.refreshReasonValidation();
-            });
-    }
-
     protected close(): void {
         this.dialogRef.close(null);
     }
 
     protected submit(): void {
         this.submitError.set(null);
-        this.form.markAllAsTouched();
-        this.refreshReasonValidation();
-        if (this.form.invalid || this.isSubmitting()) {
+        this.form().markAsTouched();
+        if (this.form().invalid() || this.isSubmitting()) {
             return;
         }
 
         this.isSubmitting.set(true);
         this.usersService
-            .startImpersonation(this.user.id, this.form.controls.reason.value.trim())
+            .startImpersonation(this.user.id, this.formModel().reason.trim())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -105,9 +92,5 @@ export class AdminUserImpersonationDialogComponent {
                     this.isSubmitting.set(false);
                 },
             });
-    }
-
-    private refreshReasonValidation(): void {
-        this.reasonValidationVersion.update(version => version + 1);
     }
 }

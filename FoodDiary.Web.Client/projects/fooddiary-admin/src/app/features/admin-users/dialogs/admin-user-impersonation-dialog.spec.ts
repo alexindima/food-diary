@@ -56,7 +56,7 @@ describe('AdminUserImpersonationDialogComponent', () => {
     });
 
     it('should validate minimum reason length', () => {
-        component['form'].controls.reason.setValue('too short');
+        component['form'].reason().value.set('too short');
         component['submit']();
 
         expect(usersService.startImpersonation).not.toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('AdminUserImpersonationDialogComponent', () => {
     });
 
     it('should start impersonation and close with response', () => {
-        component['form'].controls.reason.setValue(' Support case investigation ');
+        component['form'].reason().value.set(' Support case investigation ');
         component['submit']();
 
         expect(usersService.startImpersonation).toHaveBeenCalledWith('u1', 'Support case investigation');
@@ -73,7 +73,7 @@ describe('AdminUserImpersonationDialogComponent', () => {
 
     it('should show submit error on failure', () => {
         usersService.startImpersonation.mockReturnValueOnce(throwError(() => new Error('failed')));
-        component['form'].controls.reason.setValue('Support case investigation');
+        component['form'].reason().value.set('Support case investigation');
         component['submit']();
 
         expect(dialogRef.close).not.toHaveBeenCalled();

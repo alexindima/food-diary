@@ -53,6 +53,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Use lazy loading for feature routes.
 - Use `NgOptimizedImage` for static images where applicable.
 - Use Reactive Forms rather than template-driven forms for new form work.
+- Prefer Signal Forms for new simple forms and migration pilots. Keep Reactive Forms for complex `FormArray`, dynamic validator, manual error, disabled-state, and CVA-heavy flows until local patterns are proven.
 - Do not import from Angular internals (`@angular/*/src`) or RxJS internals.
 - Import RxJS operators from `rxjs`, not `rxjs/operators`.
 

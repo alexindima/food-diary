@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, type FormControl, type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { form, FormField } from '@angular/forms/signals';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -10,16 +10,16 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserUpdate } from '../models/admin-user.models';
 
-type AdminUserForm = {
-    isActive: FormControl<boolean>;
-    isEmailConfirmed: FormControl<boolean>;
-    roles: FormControl<string[]>;
-    language: FormControl<'en' | 'ru'>;
+type AdminUserFormModel = {
+    isActive: boolean;
+    isEmailConfirmed: boolean;
+    roles: string[];
+    language: 'en' | 'ru';
 };
 
 @Component({
     selector: 'fd-admin-user-edit-dialog',
-    imports: [CommonModule, ReactiveFormsModule, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
+    imports: [CommonModule, FormField, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
     templateUrl: './admin-user-edit-dialog.html',
     styleUrl: './admin-user-edit-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +28,6 @@ export class AdminUserEditDialogComponent {
     private readonly dialogRef = inject<FdUiDialogRef<AdminUserEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly data = inject<AdminUser>(FD_UI_DIALOG_DATA);
     private readonly usersService = inject(AdminUsersFacade);
-    private readonly fb = inject(FormBuilder);
 
     protected readonly roles = ['Admin', 'Premium', 'Support'];
     protected readonly isSaving = signal(false);
@@ -36,12 +35,13 @@ export class AdminUserEditDialogComponent {
         { value: 'en', label: 'English' },
         { value: 'ru', label: 'Russian' },
     ];
-    protected readonly form: FormGroup<AdminUserForm> = this.fb.group({
-        isActive: this.fb.nonNullable.control(this.data.isActive),
-        isEmailConfirmed: this.fb.nonNullable.control(this.data.isEmailConfirmed),
-        roles: this.fb.nonNullable.control(this.data.roles),
-        language: this.fb.nonNullable.control(this.normalizeLanguage(this.data.language) ?? 'en'),
+    protected readonly formModel = signal<AdminUserFormModel>({
+        isActive: this.data.isActive,
+        isEmailConfirmed: this.data.isEmailConfirmed,
+        roles: this.data.roles,
+        language: this.normalizeLanguage(this.data.language) ?? 'en',
     });
+    protected readonly form = form(this.formModel);
 
     protected readonly user = this.data;
 
@@ -54,7 +54,7 @@ export class AdminUserEditDialogComponent {
             return;
         }
 
-        const value = this.form.getRawValue();
+        const value = this.formModel();
         const payload: AdminUserUpdate = {
             isActive: value.isActive,
             isEmailConfirmed: value.isEmailConfirmed,
@@ -78,14 +78,14 @@ export class AdminUserEditDialogComponent {
     }
 
     protected toggleRole(role: string): void {
-        const current = this.form.controls.roles.value;
+        const current = this.formModel().roles;
         const hasRole = current.includes(role);
         const next = hasRole ? current.filter(item => item !== role) : [...current, role];
-        this.form.controls.roles.setValue(next);
+        this.formModel.update(value => ({ ...value, roles: next }));
     }
 
     protected hasRole(role: string): boolean {
-        return this.form.controls.roles.value.includes(role);
+        return this.formModel().roles.includes(role);
     }
 
     private normalizeLanguage(value: string | null | undefined): 'en' | 'ru' | null {

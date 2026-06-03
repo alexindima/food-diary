@@ -1,12 +1,12 @@
 <fd-ui-dialog title="Edit user">
-    <div class="admin-user-edit-dialog fd-grid fd-gap-md" [formGroup]="form">
+    <div class="admin-user-edit-dialog fd-grid fd-gap-md">
         <div>
-            <input id="admin-user-edit-is-active" type="checkbox" formControlName="isActive" />
+            <input id="admin-user-edit-is-active" type="checkbox" [formField]="form.isActive" />
             <label for="admin-user-edit-is-active">Active</label>
         </div>
 
         <div>
-            <input id="admin-user-edit-is-email-confirmed" type="checkbox" formControlName="isEmailConfirmed" />
+            <input id="admin-user-edit-is-email-confirmed" type="checkbox" [formField]="form.isEmailConfirmed" />
             <label for="admin-user-edit-is-email-confirmed">Email confirmed</label>
         </div>
 
@@ -22,7 +22,7 @@
 
         <div class="fd-grid fd-gap-xxs">
             <label for="admin-user-edit-language">Language</label>
-            <select id="admin-user-edit-language" formControlName="language">
+            <select id="admin-user-edit-language" [formField]="form.language">
                 @for (language of languages; track language.value) {
                 <option [value]="language.value">{{ language.label }}</option>
                 }
