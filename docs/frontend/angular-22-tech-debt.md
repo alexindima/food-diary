@@ -43,6 +43,18 @@ Close this when:
 - `@angular-eslint/*` and `angular-eslint` are upgraded together.
 - `npm run lint` still passes.
 
+### Incremental hydration is explicitly disabled
+
+Angular 22 enables incremental hydration by default for SSR applications. The main application currently keeps the previous non-incremental behavior through `withNoIncrementalHydration()` in `FoodDiary.Web.Client/src/app/app.config.ts`.
+
+Treat this as a migration compatibility setting until SSR and prerendered routes are verified with the Angular 22 default hydration behavior.
+
+Close this when:
+
+- `withNoIncrementalHydration()` is removed from the client hydration providers.
+- Public prerendered pages and client-rendered authenticated routes are smoke-tested in the browser.
+- `npm run build` and the frontend smoke tests still pass.
+
 ## Verification Commands
 
 Run these before closing the migration debt:
