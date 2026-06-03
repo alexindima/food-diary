@@ -25,11 +25,14 @@ Cannot find module '@angular-devkit/build-angular/package.json'
 
 Keep `@angular-devkit/build-angular` as a dev-only Storybook compatibility dependency until Storybook publishes Angular 22-compatible support that no longer requires it.
 
+`FoodDiary.Web.Client/.npmrc` also temporarily sets `legacy-peer-deps=true` so GitHub Actions `npm ci` and the frontend Docker build can install dependencies with the current Storybook Angular peer range.
+
 Close this when:
 
 - `@storybook/angular` supports Angular 22 peer ranges.
 - `npm run build:storybook` works without `@angular-devkit/build-angular`.
 - `@angular-devkit/build-angular` is removed from `devDependencies`.
+- `FoodDiary.Web.Client/.npmrc` is removed, or at least no longer needs `legacy-peer-deps=true`.
 
 ### Angular ESLint has no Angular 22 peer range yet
 
