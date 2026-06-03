@@ -1,6 +1,7 @@
 using FoodDiary.MailInbox.Application;
 using FoodDiary.MailInbox.Infrastructure.Extensions;
 using FoodDiary.MailInbox.Presentation.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,4 +22,5 @@ app.MapMailInboxPresentation();
 
 app.Run();
 
+[ExcludeFromCodeCoverage]
 public partial class Program;

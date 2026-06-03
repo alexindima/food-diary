@@ -1,5 +1,6 @@
 using FoodDiary.Telegram.Bot;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 using Telegram.Bot;
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -26,3 +27,6 @@ builder.Services.AddHostedService<TelegramBotWorker>();
 var app = builder.Build();
 
 await app.RunAsync().ConfigureAwait(false);
+
+[ExcludeFromCodeCoverage]
+public partial class Program;

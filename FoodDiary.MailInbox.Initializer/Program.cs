@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Initializer;
 using FoodDiary.MailInbox.Infrastructure.Services;
@@ -131,6 +132,9 @@ Examples:
   dotnet run --project FoodDiary.MailInbox.Initializer -- update --connection-string "Host=..."
 """);
 }
+
+[ExcludeFromCodeCoverage]
+public partial class Program;
 
 namespace FoodDiary.MailInbox.Initializer {
     internal sealed record InitializerCommand(string Name, string? ConnectionString) {

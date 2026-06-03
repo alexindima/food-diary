@@ -1,10 +1,12 @@
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace FoodDiary.Initializer;
 
+[ExcludeFromCodeCoverage]
 internal static class UsdaDataSeeder {
     public static async Task SeedAsync(FoodDiaryDbContext dbContext, string csvDirectory) {
         if (!Directory.Exists(csvDirectory)) {
@@ -130,8 +132,8 @@ internal static class UsdaDataSeeder {
         // Load food categories if available
         var categories = new Dictionary<int, string>();
         if (File.Exists(categoryCsvPath)) {
-            await foreach (var line in ReadCsvLinesAsync(categoryCsvPath).ConfigureAwait(false)) {
-                var fields = ParseCsvLine(line);
+            await foreach (var line in UsdaCsvReader.ReadLinesAsync(categoryCsvPath).ConfigureAwait(false)) {
+                var fields = UsdaCsvReader.ParseLine(line);
                 if (fields.Length >= 2 && int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var catId)) {
                     categories[catId] = fields[1];
                 }
@@ -142,8 +144,8 @@ internal static class UsdaDataSeeder {
         var writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaFoods" ("FdcId", "Description", "FoodCategoryId", "FoodCategory") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (var line in ReadCsvLinesAsync(foodCsvPath).ConfigureAwait(false)) {
-                var fields = ParseCsvLine(line);
+            await foreach (var line in UsdaCsvReader.ReadLinesAsync(foodCsvPath).ConfigureAwait(false)) {
+                var fields = UsdaCsvReader.ParseLine(line);
                 // food.csv: fdc_id, data_type, description, food_category_id, publication_date
                 if (fields.Length < 4) continue;
                 if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var fdcId)) continue;
@@ -157,14 +159,14 @@ internal static class UsdaDataSeeder {
 
                 await writer.StartRowAsync().ConfigureAwait(false);
                 await writer.WriteAsync(fdcId, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(Truncate(fields[2], 512), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 512), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
                 if (foodCategoryId.HasValue) {
                     await writer.WriteAsync(foodCategoryId.Value, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }
                 if (foodCategory is not null) {
-                    await writer.WriteAsync(Truncate(foodCategory, 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(foodCategory, 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }
@@ -186,16 +188,16 @@ internal static class UsdaDataSeeder {
         var writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaNutrients" ("Id", "Name", "UnitName") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (var line in ReadCsvLinesAsync(csvPath).ConfigureAwait(false)) {
-                var fields = ParseCsvLine(line);
+            await foreach (var line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
+                var fields = UsdaCsvReader.ParseLine(line);
                 // nutrient.csv: id, name, unit_name, nutrient_nbr, rank
                 if (fields.Length < 3) continue;
                 if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)) continue;
 
                 await writer.StartRowAsync().ConfigureAwait(false);
                 await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(Truncate(fields[1], 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
-                await writer.WriteAsync(Truncate(fields[2], 32), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[1], 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 32), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
                 count++;
             }
 
@@ -217,8 +219,8 @@ internal static class UsdaDataSeeder {
         var writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaFoodNutrients" ("Id", "FdcId", "NutrientId", "Amount") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (var line in ReadCsvLinesAsync(csvPath).ConfigureAwait(false)) {
-                var fields = ParseCsvLine(line);
+            await foreach (var line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
+                var fields = UsdaCsvReader.ParseLine(line);
                 // food_nutrient.csv: id, fdc_id, nutrient_id, amount, ...
                 if (fields.Length < 4) continue;
                 if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)) continue;
@@ -253,8 +255,8 @@ internal static class UsdaDataSeeder {
         var writer = await connection.BeginBinaryImportAsync(
             """COPY "UsdaFoodPortions" ("Id", "FdcId", "Amount", "MeasureUnitName", "GramWeight", "PortionDescription", "Modifier") FROM STDIN (FORMAT BINARY)""").ConfigureAwait(false);
         await using (writer.ConfigureAwait(false)) {
-            await foreach (var line in ReadCsvLinesAsync(csvPath).ConfigureAwait(false)) {
-                var fields = ParseCsvLine(line);
+            await foreach (var line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
+                var fields = UsdaCsvReader.ParseLine(line);
                 // food_portion.csv: id, fdc_id, seq_num, amount, measure_unit_id, portion_description, modifier, gram_weight, ...
                 if (fields.Length < 8) continue;
                 if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)) continue;
@@ -278,15 +280,15 @@ internal static class UsdaDataSeeder {
                 await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
                 await writer.WriteAsync(fdcId, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
                 await writer.WriteAsync(amount, NpgsqlTypes.NpgsqlDbType.Double).ConfigureAwait(false);
-                await writer.WriteAsync(Truncate(measureUnitName, 128), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(measureUnitName, 128), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
                 await writer.WriteAsync(gramWeight, NpgsqlTypes.NpgsqlDbType.Double).ConfigureAwait(false);
                 if (portionDescription is not null) {
-                    await writer.WriteAsync(Truncate(portionDescription, 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(portionDescription, 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }
                 if (modifier is not null) {
-                    await writer.WriteAsync(Truncate(modifier, 128), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(modifier, 128), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }
@@ -327,43 +329,4 @@ internal static class UsdaDataSeeder {
         }
     }
 
-    private static async IAsyncEnumerable<string> ReadCsvLinesAsync(string filePath) {
-        using var reader = new StreamReader(filePath);
-        // Skip header
-        await reader.ReadLineAsync().ConfigureAwait(false);
-        while (await reader.ReadLineAsync().ConfigureAwait(false) is { } line) {
-            if (!string.IsNullOrWhiteSpace(line)) {
-                yield return line;
-            }
-        }
-    }
-
-    private static string[] ParseCsvLine(string line) {
-        var fields = new List<string>();
-        var inQuotes = false;
-        var start = 0;
-
-        for (var i = 0; i < line.Length; i++) {
-            if (line[i] == '"') {
-                inQuotes = !inQuotes;
-            } else if (line[i] == ',' && !inQuotes) {
-                fields.Add(ExtractField(line, start, i));
-                start = i + 1;
-            }
-        }
-
-        fields.Add(ExtractField(line, start, line.Length));
-        return fields.ToArray();
-    }
-
-    private static string ExtractField(string line, int start, int end) {
-        var field = line[start..end].Trim();
-        if (field.Length >= 2 && field[0] == '"' && field[^1] == '"') {
-            field = field[1..^1].Replace("\"\"", "\"");
-        }
-        return field;
-    }
-
-    private static string Truncate(string value, int maxLength) =>
-        value.Length <= maxLength ? value : value[..maxLength];
 }

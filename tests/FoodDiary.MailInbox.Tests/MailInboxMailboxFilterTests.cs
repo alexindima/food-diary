@@ -7,6 +7,21 @@ namespace FoodDiary.MailInbox.Tests;
 
 public sealed class MailInboxMailboxFilterTests {
     [Fact]
+    public async Task CanAcceptFromAsync_ReturnsTrue() {
+        var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
+            AllowedRecipients = ["admin@fooddiary.club"]
+        }));
+
+        var canAccept = await filter.CanAcceptFromAsync(
+            context: null!,
+            from: new Mailbox("sender", "example.com"),
+            size: 1024,
+            cancellationToken: CancellationToken.None);
+
+        Assert.True(canAccept);
+    }
+
+    [Fact]
     public async Task CanDeliverToAsync_WhenRecipientIsAllowed_ReturnsTrue() {
         var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club"]

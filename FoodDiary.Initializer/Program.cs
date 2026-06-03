@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Application;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -240,3 +241,6 @@ namespace FoodDiary.Initializer {
             Task.CompletedTask;
     }
 }
+
+[ExcludeFromCodeCoverage]
+public partial class Program;
