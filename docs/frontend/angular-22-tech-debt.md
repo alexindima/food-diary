@@ -9,6 +9,7 @@ This document tracks temporary follow-up work after the Angular 22 upgrade.
 - `ChangeDetectionStrategy.Eager` is not used in the codebase.
 - ESLint blocks `changeDetection: ChangeDetectionStrategy.Eager`.
 - `$safeNavigationMigration(...)` is not used in the codebase.
+- Angular template diagnostics for `nullishCoalescingNotNullable` and `optionalChainNotNullable` are enforced as errors.
 
 ## Temporary Debt
 
@@ -41,21 +42,6 @@ Close this when:
 - Angular ESLint publishes an Angular 22-compatible version.
 - `@angular-eslint/*` and `angular-eslint` are upgraded together.
 - `npm run lint` still passes.
-
-### Template diagnostics are suppressed for migration compatibility
-
-The Angular 22 migration added suppressions for:
-
-- `nullishCoalescingNotNullable`
-- `optionalChainNotNullable`
-
-These are currently present in frontend app, admin app, and UI kit tsconfigs. They should be treated as migration debt, not as permanent defaults.
-
-Close this when:
-
-- Templates are reviewed and unnecessary optional chains/nullish coalescing are removed.
-- The suppressions are removed from tsconfigs.
-- `npm run build`, `npm run build:admin`, and `npm run test:ci:ui-kit` pass.
 
 ## Verification Commands
 
