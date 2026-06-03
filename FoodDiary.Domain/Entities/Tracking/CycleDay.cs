@@ -1,6 +1,7 @@
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodDiary.Domain.Entities.Tracking;
 
@@ -13,6 +14,7 @@ public sealed class CycleDay : Entity<CycleDayId> {
 
     public Cycle Cycle { get; private set; } = null!;
 
+    [ExcludeFromCodeCoverage]
     private CycleDay() {
     }
 

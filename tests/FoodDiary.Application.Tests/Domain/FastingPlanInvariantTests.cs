@@ -92,6 +92,18 @@ public class FastingPlanInvariantTests {
     }
 
     [Fact]
+    public void CreateExtended_WithEmptyUserId_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            FastingPlan.CreateExtended(UserId.Empty, FastingProtocol.Custom, 24, DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void CreateCyclic_WithEmptyUserId_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            FastingPlan.CreateCyclic(UserId.Empty, 1, 1, 16, 8, DateTime.UtcNow, DateTime.UtcNow));
+    }
+
+    [Fact]
     public void CreateIntermittent_WithExtendedProtocol_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FastingPlan.CreateIntermittent(UserId.New(), FastingProtocol.F72_0, 16, 8, DateTime.UtcNow));
@@ -99,7 +111,9 @@ public class FastingPlanInvariantTests {
 
     [Theory]
     [InlineData(0, 24)]
+    [InlineData(24, 24)]
     [InlineData(24, 0)]
+    [InlineData(1, 24)]
     [InlineData(24, 1)]
     public void CreateIntermittent_WithInvalidHours_Throws(int fastHours, int eatingWindowHours) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -125,6 +139,19 @@ public class FastingPlanInvariantTests {
     }
 
     [Fact]
+    public void CreateCyclic_WithUnspecifiedAnchorDate_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            FastingPlan.CreateCyclic(
+                UserId.New(),
+                fastDays: 1,
+                eatDays: 1,
+                eatDayFastHours: 16,
+                eatDayEatingWindowHours: 8,
+                anchorDateUtc: new DateTime(2026, 3, 27),
+                startedAtUtc: DateTime.UtcNow));
+    }
+
+    [Fact]
     public void Create_WithUnspecifiedTimestamp_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FastingPlan.CreateExtended(UserId.New(), FastingProtocol.Custom, 24, new DateTime(2026, 3, 27)));
@@ -134,6 +161,13 @@ public class FastingPlanInvariantTests {
     public void Create_WithTooLongTitle_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FastingPlan.CreateExtended(UserId.New(), FastingProtocol.Custom, 24, DateTime.UtcNow, new string('t', 121)));
+    }
+
+    [Fact]
+    public void Create_WithWhitespaceTitle_NormalizesToNull() {
+        var plan = FastingPlan.CreateExtended(UserId.New(), FastingProtocol.Custom, 24, DateTime.UtcNow, "   ");
+
+        Assert.Null(plan.Title);
     }
 
     [Fact]
@@ -160,6 +194,16 @@ public class FastingPlanInvariantTests {
     }
 
     [Fact]
+    public void Resume_WhenAlreadyActive_DoesNotSetModifiedOnUtc() {
+        var plan = FastingPlan.CreateExtended(UserId.New(), FastingProtocol.Custom, 24, DateTime.UtcNow);
+
+        plan.Resume();
+
+        Assert.Equal(FastingPlanStatus.Active, plan.Status);
+        Assert.Null(plan.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void Rename_WithDifferentTitle_UpdatesTitle() {
         var plan = FastingPlan.CreateExtended(UserId.New(), FastingProtocol.Custom, 24, DateTime.UtcNow, "Plan");
 
@@ -178,6 +222,17 @@ public class FastingPlanInvariantTests {
 
         Assert.Equal(DateTime.SpecifyKind(nextDate.ToUniversalTime().Date, DateTimeKind.Utc), plan.CyclicNextPhaseDateUtc);
         Assert.NotNull(plan.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ScheduleNextCyclicPhase_WithSameDate_DoesNotSetModifiedOnUtc() {
+        var anchorDateUtc = DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
+        var plan = FastingPlan.CreateCyclic(UserId.New(), 1, 3, 16, 8, anchorDateUtc, DateTime.UtcNow);
+
+        plan.ScheduleNextCyclicPhase(anchorDateUtc);
+
+        Assert.Equal(anchorDateUtc, plan.CyclicNextPhaseDateUtc);
+        Assert.Null(plan.ModifiedOnUtc);
     }
 
     [Fact]

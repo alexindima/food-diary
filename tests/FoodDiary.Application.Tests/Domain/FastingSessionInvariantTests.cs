@@ -75,11 +75,15 @@ public class FastingSessionInvariantTests {
         Assert.Equal(FastingSessionStatus.Completed, session.Status);
     }
 
-    [Fact]
-    public void End_IntermittentBeforeTargetReached_SetsCompletedStatus() {
+    [Theory]
+    [InlineData(FastingProtocol.F16_8, 16)]
+    [InlineData(FastingProtocol.F18_6, 18)]
+    [InlineData(FastingProtocol.F20_4, 20)]
+    [InlineData(FastingProtocol.CustomIntermittent, 16)]
+    public void End_IntermittentBeforeTargetReached_SetsCompletedStatus(FastingProtocol protocol, int plannedDurationHours) {
         var startedAt = DateTime.UtcNow;
         var session = FastingSession.Create(
-            UserId.New(), FastingProtocol.F16_8, 16, startedAt);
+            UserId.New(), protocol, plannedDurationHours, startedAt);
 
         session.End(startedAt.AddHours(10));
 
@@ -114,16 +118,43 @@ public class FastingSessionInvariantTests {
     }
 
     [Fact]
+    public void GetStatus_WhenSessionHasNotEnded_ReturnsActive() {
+        var session = FastingSession.Create(
+            UserId.New(), FastingProtocol.F16_8, 16, DateTime.UtcNow);
+
+        Assert.Equal(FastingSessionStatus.Active, session.GetStatus());
+    }
+
+    [Theory]
+    [InlineData(FastingProtocol.F24_0, 24, 23, FastingSessionStatus.Interrupted)]
+    [InlineData(FastingProtocol.F36_0, 36, 36, FastingSessionStatus.Completed)]
+    [InlineData(FastingProtocol.F72_0, 72, 73, FastingSessionStatus.Completed)]
+    public void GetStatus_ForExtendedProtocols_UsesPlannedDurationTarget(
+        FastingProtocol protocol,
+        int plannedDurationHours,
+        int elapsedHours,
+        FastingSessionStatus expectedStatus) {
+        var startedAt = DateTime.UtcNow;
+        var session = FastingSession.Create(
+            UserId.New(), protocol, plannedDurationHours, startedAt);
+        session.End(startedAt.AddHours(elapsedHours));
+
+        Assert.Equal(expectedStatus, session.GetStatus());
+    }
+
+    [Fact]
     public void End_WhenAlreadyCompleted_IsIdempotent() {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F16_8, 16, DateTime.UtcNow);
         var endedAt = DateTime.UtcNow.AddHours(16);
         session.End(endedAt);
+        var modifiedOnUtc = session.ModifiedOnUtc;
         var laterEndedAt = DateTime.UtcNow.AddHours(20);
 
         session.End(laterEndedAt);
 
         Assert.Equal(endedAt, session.EndedAtUtc);
+        Assert.Equal(modifiedOnUtc, session.ModifiedOnUtc);
     }
 
     [Fact]
@@ -142,7 +173,7 @@ public class FastingSessionInvariantTests {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F16_8, 16, DateTime.UtcNow, notes: "Test");
 
-        session.UpdateNotes("Test");
+        session.UpdateNotes("  Test  ");
 
         Assert.Null(session.ModifiedOnUtc);
     }
@@ -208,5 +239,10 @@ public class FastingSessionInvariantTests {
         var session = FastingSession.Create(UserId.New(), FastingProtocol.F72_0, 72, DateTime.UtcNow);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => session.Extend(additionalHours));
+    }
+
+    [Fact]
+    public void GetDefaultDuration_WithUnknownProtocol_ReturnsDefaultDuration() {
+        Assert.Equal(16, FastingSession.GetDefaultDuration((FastingProtocol)999));
     }
 }

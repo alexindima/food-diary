@@ -144,7 +144,6 @@ public sealed partial class User {
         EnsureBirthDateIsNotFuture(birthDate);
         EnsurePositive(weight, nameof(weight));
         EnsurePositive(height, nameof(height));
-        EnsureGender(gender, nameof(gender));
 
         var state = GetPersonalProfileState();
         var changed = false;
@@ -293,9 +292,9 @@ public sealed partial class User {
         string? theme,
         string? uiStyle) {
         state = ApplyStringPreference(state, dashboardLayoutJson, NormalizeOptionalProfileText, static (current, value) => current with { DashboardLayoutJson = value });
-        state = ApplyStringPreference(state, language, value => NormalizeOptionalLanguage(value, nameof(language)), static (current, value) => current with { Language = value });
-        state = ApplyStringPreference(state, theme, value => NormalizeOptionalTheme(value, nameof(theme)), static (current, value) => current with { Theme = value });
-        return ApplyStringPreference(state, uiStyle, value => NormalizeOptionalUiStyle(value, nameof(uiStyle)), static (current, value) => current with { UiStyle = value });
+        state = ApplyStringPreference(state, language, value => NormalizeOptionalLanguage(value!, nameof(language)), static (current, value) => current with { Language = value });
+        state = ApplyStringPreference(state, theme, value => NormalizeOptionalTheme(value!, nameof(theme)), static (current, value) => current with { Theme = value });
+        return ApplyStringPreference(state, uiStyle, value => NormalizeOptionalUiStyle(value!, nameof(uiStyle)), static (current, value) => current with { UiStyle = value });
     }
 
     private static UserPreferenceState ApplyNotificationPreferenceChanges(

@@ -1,11 +1,13 @@
 using FoodDiary.MailInbox.Domain.Common;
 using FoodDiary.MailInbox.Domain.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodDiary.MailInbox.Domain.Messages;
 
 public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
     private readonly List<string> _toRecipients = new();
 
+    [ExcludeFromCodeCoverage]
     private InboundMailMessage() {
     }
 

@@ -189,6 +189,46 @@ public sealed class InboundMailMessageTests {
     }
 
     [Fact]
+    public void EntityObjectEquality_HandlesNullReferenceAndDifferentRuntimeType() {
+        var entity = new TestEntity(Guid.NewGuid());
+        object? nullObject = null;
+        object otherType = new OtherTestEntity(entity.Id);
+
+        Assert.False(entity.Equals(nullObject));
+        Assert.False(entity.Equals(otherType));
+    }
+
+    [Fact]
+    public void EntityGetHashCode_WhenNonTransient_CachesComputedHashCode() {
+        var entity = new TestEntity(Guid.NewGuid());
+
+        var firstHashCode = entity.GetHashCode();
+        var secondHashCode = entity.GetHashCode();
+
+        Assert.Equal(firstHashCode, secondHashCode);
+    }
+
+    [Fact]
+    public void EntityGetHashCode_WhenMaterializedWithoutCachedHashCode_ComputesAndCachesHashCode() {
+        var entity = new TestEntity();
+        var id = Guid.NewGuid();
+        var entityType = typeof(Entity<Guid>);
+        entityType.GetField(
+            "_id",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(entity, id);
+        entityType.GetField(
+            "_cachedHashCode",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(entity, null);
+
+        var hashCode = entity.GetHashCode();
+
+        Assert.Equal(
+            HashCode.Combine(typeof(TestEntity), EqualityComparer<Guid>.Default.GetHashCode(id)),
+            hashCode);
+        Assert.Equal(hashCode, entity.GetHashCode());
+    }
+
+    [Fact]
     public void EntityEquality_TreatsTransientEntitiesAsDifferent() {
         var first = new TestEntity();
         var second = new TestEntity();

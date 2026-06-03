@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Events;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
@@ -31,6 +32,33 @@ public class ShoppingListInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() => list.AddItem(
             name: new string('m', 257),
+            productId: null,
+            amount: 1,
+            unit: null,
+            category: null,
+            isChecked: false,
+            sortOrder: 0));
+    }
+
+    [Fact]
+    public void AddItem_WithBlankName_Throws() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+
+        Assert.Throws<ArgumentException>(() => list.AddItem(
+            name: "   ",
+            productId: null,
+            amount: 1,
+            unit: null,
+            category: null,
+            isChecked: false,
+            sortOrder: 0));
+    }
+
+    [Fact]
+    public void ShoppingListItem_Create_WithEmptyShoppingListId_Throws() {
+        Assert.Throws<ArgumentException>(() => ShoppingListItem.Create(
+            ShoppingListId.Empty,
+            name: "Milk",
             productId: null,
             amount: 1,
             unit: null,
@@ -123,6 +151,43 @@ public class ShoppingListInvariantTests {
             sortOrder: 0);
 
         Assert.Null(item.Category);
+    }
+
+    [Fact]
+    public void AddItem_WithNullAmountAndTrimmedFields_AddsItem() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+
+        var item = list.AddItem(
+            name: "  Milk  ",
+            productId: null,
+            amount: null,
+            unit: MeasurementUnit.Ml,
+            category: "  Dairy  ",
+            isChecked: true,
+            sortOrder: 0);
+
+        Assert.Equal("Milk", item.Name);
+        Assert.Null(item.Amount);
+        Assert.Equal(MeasurementUnit.Ml, item.Unit);
+        Assert.Equal("Dairy", item.Category);
+        Assert.True(item.IsChecked);
+        Assert.NotNull(list.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void AddItem_WithMaximumAmount_AddsItem() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+
+        var item = list.AddItem(
+            name: "Rice",
+            productId: null,
+            amount: 1000000d,
+            unit: MeasurementUnit.G,
+            category: null,
+            isChecked: false,
+            sortOrder: 0);
+
+        Assert.Equal(1000000d, item.Amount);
     }
 
     [Fact]

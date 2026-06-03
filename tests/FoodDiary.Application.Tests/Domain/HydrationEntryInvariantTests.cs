@@ -38,6 +38,18 @@ public class HydrationEntryInvariantTests {
         Assert.Null(entry.ModifiedOnUtc);
     }
 
+    [Fact]
+    public void Update_WithChangedValues_UpdatesState() {
+        var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
+        var nextTimestamp = DateTime.UtcNow.AddMinutes(5);
+
+        entry.Update(amountMl: 500, timestampUtc: nextTimestamp);
+
+        Assert.Equal(500, entry.AmountMl);
+        Assert.Equal(nextTimestamp, entry.Timestamp);
+        Assert.NotNull(entry.ModifiedOnUtc);
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]

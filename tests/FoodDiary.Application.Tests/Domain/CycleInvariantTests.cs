@@ -43,6 +43,13 @@ public class CycleInvariantTests {
     }
 
     [Fact]
+    public void Create_WithWhitespaceNotes_NormalizesToNull() {
+        var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow, notes: "   ");
+
+        Assert.Null(cycle.Notes);
+    }
+
+    [Fact]
     public void UpdateLengths_WithClearNotesAndValue_Throws() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow, averageLength: 28, lutealLength: 14, notes: "notes");
 
@@ -195,5 +202,16 @@ public class CycleInvariantTests {
         day.Update(clearNotes: true);
 
         Assert.Null(day.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void RemoveDay_WhenDateDoesNotExist_ReturnsFalseAndDoesNotSetModifiedOnUtc() {
+        var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
+
+        var removed = cycle.RemoveDay(DateTime.UtcNow.AddDays(1));
+
+        Assert.False(removed);
+        Assert.Null(cycle.ModifiedOnUtc);
+        Assert.Empty(cycle.DomainEvents);
     }
 }

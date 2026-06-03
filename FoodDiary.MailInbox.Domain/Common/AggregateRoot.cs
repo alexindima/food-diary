@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.MailInbox.Domain.Common;
 
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateWithEvents
@@ -6,6 +8,7 @@ public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateWithEvents
 
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
+    [ExcludeFromCodeCoverage]
     protected AggregateRoot() {
     }
 

@@ -49,6 +49,24 @@ public sealed class TelegramBotWorkerTests {
     }
 
     [Fact]
+    public async Task ExecuteAsync_WhenBotUsernameIsMissing_UsesBotIdForStartupLog() {
+        var botClient = new RecordingTelegramBotClient {
+            MeResponse = new User {
+                Id = 456,
+                IsBot = true,
+                FirstName = "FoodDiary"
+            }
+        };
+        var worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await InvokeExecuteAsync(worker, cts.Token);
+
+        Assert.Contains(botClient.Requests, request => string.Equals(request.GetType().Name, "GetMeRequest", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task StartAsync_WhenStoppedAfterReceiverStarts_CompletesGracefully() {
         var botClient = new RecordingTelegramBotClient();
         var worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
@@ -442,6 +460,13 @@ public sealed class TelegramBotWorkerTests {
     private sealed class RecordingTelegramBotClient : ITelegramBotClient {
         public List<object> Requests { get; } = [];
 
+        public User MeResponse { get; init; } = new() {
+            Id = 123,
+            IsBot = true,
+            FirstName = "FoodDiary",
+            Username = "fooddiary_bot"
+        };
+
         public bool LocalBotServer => false;
 
         public long BotId => 123;
@@ -466,12 +491,7 @@ public sealed class TelegramBotWorkerTests {
             Requests.Add(request);
 
             object response = request.GetType().Name switch {
-                "GetMeRequest" => new User {
-                    Id = 123,
-                    IsBot = true,
-                    FirstName = "FoodDiary",
-                    Username = "fooddiary_bot"
-                },
+                "GetMeRequest" => MeResponse,
                 "SendMessageRequest" => new Message {
                     Id = 20,
                     Date = DateTime.UtcNow,

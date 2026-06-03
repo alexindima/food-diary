@@ -1,6 +1,7 @@
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodDiary.Domain.Entities.Meals;
 
@@ -22,6 +23,7 @@ public sealed class MealAiItem : Entity<MealAiItemId> {
 
     public MealAiSession Session { get; private set; } = null!;
 
+    [ExcludeFromCodeCoverage]
     private MealAiItem() { }
 
     internal static MealAiItem Create(

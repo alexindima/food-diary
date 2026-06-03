@@ -186,6 +186,19 @@ public sealed class MailInboxApplicationTests {
     }
 
     [Fact]
+    public async Task MailInboxValidationBehavior_WhenFailureResponseTypeIsUnsupported_Throws() {
+        var behavior = new MailInboxValidationBehavior<TestUnsupportedResultCommand, UnsupportedResult>(
+            [new AlwaysFailingUnsupportedResultCommandValidator()]);
+
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => behavior.Handle(
+            new TestUnsupportedResultCommand(),
+            _ => Task.FromResult(new UnsupportedResult()),
+            CancellationToken.None));
+
+        Assert.Contains(nameof(UnsupportedResult), ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task MailInboxValidationBehavior_WhenNoValidators_InvokesNext() {
         var behavior = new MailInboxValidationBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>([]);
         var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]);
@@ -349,12 +362,23 @@ public sealed class MailInboxApplicationTests {
     private sealed record TestCommand : IRequest<Result>;
 
     [ExcludeFromCodeCoverage]
+    private sealed record TestUnsupportedResultCommand : IRequest<UnsupportedResult>;
+
+    [ExcludeFromCodeCoverage]
     private sealed class AlwaysFailingTestCommandValidator : AbstractValidator<TestCommand> {
         public AlwaysFailingTestCommandValidator() {
             RuleFor(static command => command)
                 .Custom(static (_, context) => context.AddFailure(new ValidationFailure("Name", "Required") {
                     ErrorCode = ""
                 }));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class AlwaysFailingUnsupportedResultCommandValidator : AbstractValidator<TestUnsupportedResultCommand> {
+        public AlwaysFailingUnsupportedResultCommandValidator() {
+            RuleFor(static command => command)
+                .Custom(static (_, context) => context.AddFailure("Name", "Required"));
         }
     }
 
@@ -372,4 +396,7 @@ public sealed class MailInboxApplicationTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class ExposedResult(bool isSuccess, MailInboxError? error) : Result(isSuccess, error);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class UnsupportedResult() : Result(isSuccess: true, error: null);
 }

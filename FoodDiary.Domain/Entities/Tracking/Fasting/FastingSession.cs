@@ -2,6 +2,7 @@ using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodDiary.Domain.Entities.Tracking.Fasting;
 
@@ -24,6 +25,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
 
     public User User { get; private set; } = null!;
 
+    [ExcludeFromCodeCoverage]
     private FastingSession() {
     }
 

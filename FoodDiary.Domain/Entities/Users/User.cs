@@ -192,16 +192,17 @@ public sealed partial class User : AggregateRoot<UserId> {
             return DailyCalorieTarget;
         }
 
-        return date.DayOfWeek switch {
-            DayOfWeek.Monday => MondayCalories ?? DailyCalorieTarget,
-            DayOfWeek.Tuesday => TuesdayCalories ?? DailyCalorieTarget,
-            DayOfWeek.Wednesday => WednesdayCalories ?? DailyCalorieTarget,
-            DayOfWeek.Thursday => ThursdayCalories ?? DailyCalorieTarget,
-            DayOfWeek.Friday => FridayCalories ?? DailyCalorieTarget,
-            DayOfWeek.Saturday => SaturdayCalories ?? DailyCalorieTarget,
-            DayOfWeek.Sunday => SundayCalories ?? DailyCalorieTarget,
-            _ => DailyCalorieTarget
-        };
+        double?[] dayTargets = [
+            SundayCalories ?? DailyCalorieTarget,
+            MondayCalories ?? DailyCalorieTarget,
+            TuesdayCalories ?? DailyCalorieTarget,
+            WednesdayCalories ?? DailyCalorieTarget,
+            ThursdayCalories ?? DailyCalorieTarget,
+            FridayCalories ?? DailyCalorieTarget,
+            SaturdayCalories ?? DailyCalorieTarget
+        ];
+
+        return dayTargets[(int)date.DayOfWeek];
     }
 
     public double GetWeeklyCalorieTarget() {
@@ -460,16 +461,6 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
-    private static void EnsureGender(string? value, string paramName) {
-        if (value is null) {
-            return;
-        }
-
-        if (!GenderCode.TryParse(value, out _)) {
-            throw new ArgumentOutOfRangeException(paramName, "Gender must be one of the supported codes.");
-        }
-    }
-
     private static void EnsureActivityLevel(ActivityLevel? value, string paramName) {
         if (value.HasValue && !Enum.IsDefined(value.Value)) {
             throw new ArgumentOutOfRangeException(paramName, "Activity level must be one of the supported values.");
@@ -484,31 +475,19 @@ public sealed partial class User : AggregateRoot<UserId> {
         return gender.Value;
     }
 
-    private static string NormalizeOptionalLanguage(string? value, string paramName) {
-        if (value is null) {
-            return string.Empty;
-        }
-
+    private static string NormalizeOptionalLanguage(string value, string paramName) {
         return !LanguageCode.TryParse(value, out var languageCode)
             ? throw new ArgumentOutOfRangeException(paramName, "Language must be one of the supported codes.")
             : languageCode.Value;
     }
 
-    private static string NormalizeOptionalTheme(string? value, string paramName) {
-        if (value is null) {
-            return string.Empty;
-        }
-
+    private static string NormalizeOptionalTheme(string value, string paramName) {
         return !ThemeCode.TryParse(value, out var themeCode)
             ? throw new ArgumentOutOfRangeException(paramName, "Theme must be one of the supported codes.")
             : themeCode.Value;
     }
 
-    private static string NormalizeOptionalUiStyle(string? value, string paramName) {
-        if (value is null) {
-            return string.Empty;
-        }
-
+    private static string NormalizeOptionalUiStyle(string value, string paramName) {
         return !UiStyleCode.TryParse(value, out var uiStyleCode)
             ? throw new ArgumentOutOfRangeException(paramName, "UI style must be one of the supported codes.")
             : uiStyleCode.Value;

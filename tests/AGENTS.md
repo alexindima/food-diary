@@ -20,6 +20,7 @@ Rules for `tests/`.
 - For HTTP contract changes, update snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
 - Do not weaken architecture tests to make a feature pass; update the architecture intentionally and document why.
 - Keep test helpers local to the test project unless reuse is clear.
+- Mark every test type and test-only helper type with `[ExcludeFromCodeCoverage]` so test implementation details stay out of dotCover reports.
 
 ## Commands
 - Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`

@@ -82,6 +82,17 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdateAiTokenLimits_WithPrimitiveLimits_UpdatesChangedLimits() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdateAiTokenLimits(321, 654);
+
+        Assert.Equal(321, user.AiInputTokenLimit);
+        Assert.Equal(654, user.AiOutputTokenLimit);
+        Assert.NotNull(user.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void UpdateRefreshToken_WithNull_DoesNotSetLastLogin() {
         var user = User.Create("test@example.com", "hash");
 
@@ -125,6 +136,18 @@ public class UserInvariantTests {
         user.MarkDeleted(DateTime.UtcNow);
 
         Assert.Throws<InvalidOperationException>(() => user.Activate());
+    }
+
+    [Fact]
+    public void Activate_WithExplicitTimestamp_ActivatesAndSetsModifiedTimestamp() {
+        var user = User.Create("test@example.com", "hash");
+        user.Deactivate();
+        var activatedAtUtc = DateTime.UtcNow.AddMinutes(5);
+
+        user.Activate(activatedAtUtc);
+
+        Assert.True(user.IsActive);
+        Assert.Equal(activatedAtUtc, user.ModifiedOnUtc);
     }
 
     [Fact]
@@ -397,6 +420,19 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdateActivity_WithSameHydrationGoalWithinTolerance_DoesNotSetModifiedOnUtc() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateActivity(hydrationGoal: 2.2);
+        user.ClearDomainEvents();
+        var modifiedOnUtc = user.ModifiedOnUtc;
+
+        user.UpdateActivity(hydrationGoal: 2.2000005);
+
+        Assert.Equal(2.2, user.HydrationGoal);
+        Assert.Equal(modifiedOnUtc, user.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void UpdateGoals_WithNegativeCalorieTarget_Throws() {
         var user = User.Create("test@example.com", "hash");
 
@@ -506,6 +542,16 @@ public class UserInvariantTests {
         Assert.Equal(2300, user.GetCalorieTargetForDate(new DateTime(2026, 6, 6)));
         Assert.Equal(2000, user.GetCalorieTargetForDate(new DateTime(2026, 6, 7)));
         Assert.Equal(14300, user.GetWeeklyCalorieTarget());
+    }
+
+    [Fact]
+    public void GetCalorieTargets_WhenCyclingEnabledWithoutDailyTarget_ReturnsNullFallbackAndZeroWeeklyTarget() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdateGoals(new UserGoalUpdate(CalorieCyclingEnabled: true));
+
+        Assert.Null(user.GetCalorieTargetForDate(new DateTime(2026, 6, 7)));
+        Assert.Equal(0, user.GetWeeklyCalorieTarget());
     }
 
     [Theory]
@@ -695,6 +741,17 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdatePreferences_WithWhitespaceDashboardLayout_NormalizesToEmptyString() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{\"layout\":\"compact\"}"));
+
+        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "   "));
+
+        Assert.Equal(string.Empty, user.DashboardLayoutJson);
+        Assert.NotNull(user.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void AcceptAiConsent_WhenNotAccepted_SetsTimestamp() {
         var user = User.Create("test@example.com", "hash");
 
@@ -814,6 +871,17 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdateAiTokenLimits_WithNullLimits_DoesNotSetModifiedOnUtc() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdateAiTokenLimits(null, null);
+
+        Assert.Equal(5_000_000, user.AiInputTokenLimit);
+        Assert.Equal(1_000_000, user.AiOutputTokenLimit);
+        Assert.Null(user.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void AdminNarrowOperations_WithRolesAndAccountChanges_UpdateAdminControlledState() {
         var user = User.Create("test@example.com", "hash");
         var adminRole = Role.Create("Admin");
@@ -855,6 +923,14 @@ public class UserInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Gender: "X")));
+    }
+
+    [Fact]
+    public void UpdateProfile_WithBlankGender_Throws() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Gender: "   ")));
     }
 
     [Fact]
@@ -1023,6 +1099,19 @@ public class UserInvariantTests {
             Height: 1));
 
         Assert.Null(user.CalculateBmr());
+    }
+
+    [Fact]
+    public void CalculateBmr_WhenAgeIsNotPositive_ReturnsNull() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
+            BirthDate: DateTime.UtcNow.Date,
+            Gender: "M",
+            Weight: 80,
+            Height: 180));
+
+        Assert.Null(user.CalculateBmr());
+        Assert.Null(user.CalculateEstimatedTdee());
     }
 
     [Fact]

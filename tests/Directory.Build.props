@@ -1,8 +1,13 @@
 <Project>
   <Import Project="..\Directory.Build.props" />
 
+  <PropertyGroup>
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)test.runsettings</RunSettingsFilePath>
+  </PropertyGroup>
+
   <ItemGroup>
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.json" Link="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
 </Project>

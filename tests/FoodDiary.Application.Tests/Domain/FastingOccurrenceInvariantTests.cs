@@ -105,6 +105,14 @@ public class FastingOccurrenceInvariantTests {
             FastingOccurrence.Create(FastingPlanId.New(), UserId.Empty, FastingOccurrenceKind.FastDay, DateTime.UtcNow, 1));
     }
 
+    [Fact]
+    public void Schedule_WithEmptyIds_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            FastingOccurrence.Schedule(FastingPlanId.Empty, UserId.New(), FastingOccurrenceKind.FastDay, DateTime.UtcNow, 1));
+        Assert.Throws<ArgumentException>(() =>
+            FastingOccurrence.Schedule(FastingPlanId.New(), UserId.Empty, FastingOccurrenceKind.FastDay, DateTime.UtcNow, 1));
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
@@ -161,6 +169,22 @@ public class FastingOccurrenceInvariantTests {
         Assert.Equal(startedAtUtc, occurrence.StartedAtUtc);
         Assert.Null(occurrence.EndedAtUtc);
         Assert.NotNull(occurrence.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Start_WhenAlreadyActive_DoesNotSetModifiedOnUtc() {
+        var startedAtUtc = DateTime.UtcNow;
+        var occurrence = FastingOccurrence.Create(
+            FastingPlanId.New(),
+            UserId.New(),
+            FastingOccurrenceKind.FastDay,
+            startedAtUtc,
+            sequenceNumber: 1);
+
+        occurrence.Start(startedAtUtc.AddHours(1));
+
+        Assert.Equal(startedAtUtc, occurrence.StartedAtUtc);
+        Assert.Null(occurrence.ModifiedOnUtc);
     }
 
     [Fact]
@@ -263,6 +287,16 @@ public class FastingOccurrenceInvariantTests {
         Assert.Equal("headache,tired", occurrence.Symptoms);
         Assert.Equal("ok", occurrence.CheckInNotes);
         Assert.Equal(checkedInAtUtc, occurrence.CheckInAtUtc);
+    }
+
+    [Fact]
+    public void UpdateCheckIn_WithBlankSymptomsAndNotes_NormalizesToNull() {
+        var occurrence = FastingOccurrence.Create(FastingPlanId.New(), UserId.New(), FastingOccurrenceKind.FastDay, DateTime.UtcNow, 1);
+
+        occurrence.UpdateCheckIn(1, 2, 3, ["   "], "   ", DateTime.UtcNow);
+
+        Assert.Null(occurrence.Symptoms);
+        Assert.Null(occurrence.CheckInNotes);
     }
 
     [Fact]
