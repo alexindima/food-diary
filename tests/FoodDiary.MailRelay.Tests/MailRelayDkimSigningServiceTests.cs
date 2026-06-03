@@ -6,6 +6,7 @@ using MimeKit;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayDkimSigningServiceTests {
     [Fact]
     public void Sign_WhenDisabled_DoesNotAddDkimSignature() {

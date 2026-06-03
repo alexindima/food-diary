@@ -19,6 +19,7 @@ using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Common;
 
+[ExcludeFromCodeCoverage]
 public class CommonAbstractionsTests {
     private static readonly TimeSpan ErrorCodeRegexTimeout = TimeSpan.FromSeconds(1);
 
@@ -397,8 +398,10 @@ public class CommonAbstractionsTests {
         Assert.InRange(now, before, after);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record GenericCommand(string Value) : ICommand<Result<string>>;
 
+    [ExcludeFromCodeCoverage]
     private sealed class GenericCommandValidator : AbstractValidator<GenericCommand> {
         public GenericCommandValidator() {
             RuleFor(x => x.Value)
@@ -410,10 +413,13 @@ public class CommonAbstractionsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record NonGenericCommand(string Value) : ICommand<Result>;
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestResult(bool isSuccess, Error error) : Result(isSuccess, error);
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingProductRepository : IProductRepository {
         public ProductId CapturedProductId { get; private set; }
         public UserId CapturedUserId { get; private set; }
@@ -463,6 +469,7 @@ public class CommonAbstractionsTests {
         public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingUserRepository : IUserRepository {
         public string? CapturedSearch { get; private set; }
         public int CapturedPage { get; private set; }
@@ -509,6 +516,7 @@ public class CommonAbstractionsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NonGenericCommandValidator : AbstractValidator<NonGenericCommand> {
         public NonGenericCommandValidator() {
             RuleFor(x => x.Value)

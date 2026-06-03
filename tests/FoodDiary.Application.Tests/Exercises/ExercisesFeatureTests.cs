@@ -9,6 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Exercises;
 
+[ExcludeFromCodeCoverage]
 public class ExercisesFeatureTests {
     [Fact]
     public async Task CreateExerciseEntry_WithValidData_Succeeds() {
@@ -117,6 +118,7 @@ public class ExercisesFeatureTests {
         Assert.Single(result.Value);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryExerciseEntryRepository : IExerciseEntryRepository {
         private readonly List<ExerciseEntry> _entries = [];
         public bool DeleteCalled { get; private set; }

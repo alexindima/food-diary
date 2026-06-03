@@ -38,6 +38,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
+[ExcludeFromCodeCoverage]
 public class DietologistFeatureTests {
     private static readonly DietologistPermissionsInput AllPermissions = new(true, true, true, true, true, true);
     private static readonly DietologistPermissions AllDomainPermissions = new(true, true, true, true, true, true);
@@ -188,7 +189,7 @@ public class DietologistFeatureTests {
             notificationPusher ?? new FakeNotificationPusher(),
             userRepository ?? new InMemoryUserRepository());
 
-    // ── InviteDietologist ──
+    // â”€â”€ InviteDietologist â”€â”€
 
     [Fact]
     public async Task InviteDietologist_WithNullUserId_ReturnsFailure() {
@@ -366,7 +367,7 @@ public class DietologistFeatureTests {
         Assert.Single(notificationRepo.Added);
     }
 
-    // ── AcceptInvitation ──
+    // â”€â”€ AcceptInvitation â”€â”€
 
     [Fact]
     public async Task AcceptInvitation_WithNullUserId_ReturnsFailure() {
@@ -562,7 +563,7 @@ public class DietologistFeatureTests {
         Assert.Equal("Accepted", result.Value.Status);
     }
 
-    // ── DeclineInvitation ──
+    // â”€â”€ DeclineInvitation â”€â”€
 
     [Fact]
     public async Task DeclineInvitation_WhenNotFound_ReturnsFailure() {
@@ -657,7 +658,7 @@ public class DietologistFeatureTests {
         Assert.True(webPushSender.SendCalled);
     }
 
-    // ── RevokeInvitation ──
+    // â”€â”€ RevokeInvitation â”€â”€
 
     [Fact]
     public async Task RevokeInvitation_WithNullUserId_ReturnsFailure() {
@@ -725,7 +726,7 @@ public class DietologistFeatureTests {
         Assert.True(result.IsSuccess);
     }
 
-    // ── DisconnectDietologist ──
+    // â”€â”€ DisconnectDietologist â”€â”€
 
     [Fact]
     public async Task DisconnectDietologist_WithNullUserId_ReturnsFailure() {
@@ -776,7 +777,7 @@ public class DietologistFeatureTests {
         Assert.True(result.IsSuccess);
     }
 
-    // ── UpdateDietologistPermissions ──
+    // â”€â”€ UpdateDietologistPermissions â”€â”€
 
     [Fact]
     public async Task UpdatePermissions_WithNullUserId_ReturnsFailure() {
@@ -828,7 +829,7 @@ public class DietologistFeatureTests {
         Assert.True(result.IsSuccess);
     }
 
-    // ── CreateRecommendation ──
+    // â”€â”€ CreateRecommendation â”€â”€
 
     [Fact]
     public async Task CreateRecommendation_WithNullUserId_ReturnsFailure() {
@@ -935,7 +936,7 @@ public class DietologistFeatureTests {
         Assert.Empty(recRepo.Added);
     }
 
-    // ── MarkRecommendationRead ──
+    // â”€â”€ MarkRecommendationRead â”€â”€
 
     [Fact]
     public async Task MarkRecommendationRead_WithNullUserId_ReturnsFailure() {
@@ -1021,7 +1022,7 @@ public class DietologistFeatureTests {
         Assert.False(recommendation.IsRead);
     }
 
-    // ── GetMyDietologist ──
+    // â”€â”€ GetMyDietologist â”€â”€
 
     [Fact]
     public async Task GetMyDietologist_WithNullUserId_ReturnsFailure() {
@@ -1051,7 +1052,7 @@ public class DietologistFeatureTests {
         Assert.Null(result.Value);
     }
 
-    // ── GetMyClients ──
+    // â”€â”€ GetMyClients â”€â”€
 
     [Fact]
     public async Task GetMyClients_WithNullUserId_ReturnsFailure() {
@@ -1133,7 +1134,7 @@ public class DietologistFeatureTests {
         Assert.False(clientSummary.Permissions.ShareProfile);
     }
 
-    // ── GetInvitationByToken ──
+    // â”€â”€ GetInvitationByToken â”€â”€
 
     [Fact]
     public async Task GetInvitationByToken_WhenNotFound_ReturnsFailure() {
@@ -1205,7 +1206,7 @@ public class DietologistFeatureTests {
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
-    // ── GetClientDashboard ──
+    // â”€â”€ GetClientDashboard â”€â”€
 
     [Fact]
     public async Task GetClientDashboard_WithNullUserId_ReturnsFailure() {
@@ -1324,7 +1325,7 @@ public class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-    // ── GetClientGoals ──
+    // â”€â”€ GetClientGoals â”€â”€
 
     [Fact]
     public async Task GetClientGoals_WithNullUserId_ReturnsFailure() {
@@ -1408,7 +1409,7 @@ public class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-    // ── GetMyRecommendations ──
+    // â”€â”€ GetMyRecommendations â”€â”€
 
     [Fact]
     public async Task GetMyRecommendations_WithNullUserId_ReturnsFailure() {
@@ -1443,7 +1444,7 @@ public class DietologistFeatureTests {
         Assert.Equal(2, result.Value.Count);
     }
 
-    // ── GetRecommendationsForClient ──
+    // â”€â”€ GetRecommendationsForClient â”€â”€
 
     [Fact]
     public async Task GetRecommendationsForClient_WithNullUserId_ReturnsFailure() {
@@ -1516,7 +1517,7 @@ public class DietologistFeatureTests {
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
-    // ── RecommendationCreatedEventHandler ──
+    // â”€â”€ RecommendationCreatedEventHandler â”€â”€
 
     [Fact]
     public async Task RecommendationCreatedEventHandler_CreatesNotificationAndPushes() {
@@ -1574,8 +1575,9 @@ public class DietologistFeatureTests {
         Assert.Equal($"/recommendations?recommendationId={recommendationId}", targetUrl);
     }
 
-    // ── Test Doubles ──
+    // â”€â”€ Test Doubles â”€â”€
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryInvitationRepository : IDietologistInvitationRepository {
         private readonly List<DietologistInvitation> _invitations = [];
         public List<DietologistInvitation> Added { get; } = [];
@@ -1625,6 +1627,7 @@ public class DietologistFeatureTests {
             Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository : IUserRepository {
         private readonly List<User> _users = [];
         private readonly List<Role> _roles = [];
@@ -1669,6 +1672,7 @@ public class DietologistFeatureTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryRecommendationRepository : IRecommendationRepository {
         private readonly List<Recommendation> _recommendations = [];
         public List<Recommendation> Added { get; } = [];
@@ -1702,6 +1706,7 @@ public class DietologistFeatureTests {
             Task.FromResult(_recommendations.Count(r => r.ClientUserId == clientUserId && !r.IsRead));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryNotificationRepository : INotificationRepository {
         private readonly List<Notification> _notifications = [];
         public List<Notification> Added { get; } = [];
@@ -1740,11 +1745,13 @@ public class DietologistFeatureTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubPasswordHasher(bool verifyResult = true) : IPasswordHasher {
         public string Hash(string password) => $"hashed-{password}";
         public bool Verify(string password, string hashedPassword) => verifyResult;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeEmailSender : IDietologistEmailSender {
         public int SentCount { get; private set; }
 
@@ -1754,15 +1761,18 @@ public class DietologistFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingEmailSender : IDietologistEmailSender {
         public Task SendDietologistInvitationAsync(DietologistInvitationMessage message, CancellationToken ct = default) =>
             throw new InvalidOperationException("SMTP unavailable");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => DateTime.UtcNow;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeNotificationPusher : INotificationPusher {
         public bool PushCalled { get; private set; }
 
@@ -1777,6 +1787,7 @@ public class DietologistFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeWebPushNotificationSender : IWebPushNotificationSender {
         public bool SendCalled { get; private set; }
 
@@ -1786,6 +1797,7 @@ public class DietologistFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingDashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         public Task<Result<DashboardSnapshotModel>> BuildAsync(
             DashboardSnapshotRequest request,
@@ -1793,6 +1805,7 @@ public class DietologistFeatureTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingDashboardSnapshotBuilder(DashboardSnapshotModel snapshot) : IDashboardSnapshotBuilder {
         public DashboardSnapshotRequest? LastRequest { get; private set; }
 

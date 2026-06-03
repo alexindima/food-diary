@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class WaistEntryInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {
@@ -45,6 +46,18 @@ public class WaistEntryInvariantTests {
         entry.Update(circumference: 85, date: date);
 
         Assert.Null(entry.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Update_WithDifferentValues_SetsModifiedOnUtc() {
+        var entry = WaistEntry.Create(UserId.New(), DateTime.UtcNow.Date, 85);
+        var newDate = DateTime.UtcNow.AddDays(-1);
+
+        entry.Update(circumference: 86.5, date: newDate);
+
+        Assert.Equal(86.5, entry.Circumference);
+        Assert.Equal(DateTime.SpecifyKind(newDate.ToUniversalTime().Date, DateTimeKind.Utc), entry.Date);
+        Assert.NotNull(entry.ModifiedOnUtc);
     }
 
     [Theory]

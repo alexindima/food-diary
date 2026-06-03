@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PresentationErrorCatalogTests {
     [Fact]
     public void CentralErrorCatalog_HasExpectedHttpCoverage() {

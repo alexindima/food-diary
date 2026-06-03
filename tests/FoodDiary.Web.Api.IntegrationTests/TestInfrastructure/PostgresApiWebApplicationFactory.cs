@@ -14,6 +14,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime {
     private PostgreSqlContainer? _container;
     private string? _connectionString;

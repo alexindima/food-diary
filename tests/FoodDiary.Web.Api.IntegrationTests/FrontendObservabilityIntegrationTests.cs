@@ -5,6 +5,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFactory apiFactory)
     : IClassFixture<ApiWebApplicationFactory> {
     [Fact]

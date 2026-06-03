@@ -8,6 +8,7 @@ using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
 
+[ExcludeFromCodeCoverage]
 public class ShoppingListsValidatorTests {
     [Fact]
     public async Task CreateShoppingList_WithNullUserId_HasError() {

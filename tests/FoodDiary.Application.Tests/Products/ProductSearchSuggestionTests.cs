@@ -12,6 +12,7 @@ using FoodDiary.Presentation.Api.Features.Products.Mappings;
 
 namespace FoodDiary.Application.Tests.Products;
 
+[ExcludeFromCodeCoverage]
 public sealed class ProductSearchSuggestionTests {
     private readonly SearchProductSuggestionsQueryValidator _validator = new();
 
@@ -201,6 +202,7 @@ public sealed class ProductSearchSuggestionTests {
     private static OpenFoodFactsProductModel CreateOpenFoodFactsProduct(string barcode) =>
         new(barcode, "Fanta", "Coca-Cola", "Beverages", "https://example.com/fanta.jpg", 48, 0, 0, 12, 0);
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubProductSearchSuggestionProvider(IReadOnlyList<ProductSearchSuggestionModel> suggestions)
         : IProductSearchSuggestionProvider {
         public string Source => "stub";
@@ -215,6 +217,7 @@ public sealed class ProductSearchSuggestionTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubOpenFoodFactsService(IReadOnlyList<OpenFoodFactsProductModel> searchResults) : IOpenFoodFactsService {
         public int SearchCallCount { get; private set; }
 
@@ -232,6 +235,7 @@ public sealed class ProductSearchSuggestionTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubOpenFoodFactsProductCacheRepository(
         IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts = null) : IOpenFoodFactsProductCacheRepository {
         public IReadOnlyList<OpenFoodFactsProductModel> UpsertedProducts { get; private set; } = [];
@@ -250,6 +254,7 @@ public sealed class ProductSearchSuggestionTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUsdaFoodRepository(IReadOnlyList<UsdaFood> foods) : IUsdaFoodRepository {
         public Task<IReadOnlyList<UsdaFood>> SearchAsync(
             string query,
@@ -279,6 +284,7 @@ public sealed class ProductSearchSuggestionTests {
             Task.FromResult<IReadOnlyDictionary<int, DailyReferenceValue>>(new Dictionary<int, DailyReferenceValue>());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUsdaFoodSearchService(IReadOnlyList<UsdaFoodModel> brandedFoods) : IUsdaFoodSearchService {
         public (string Search, int Limit)? LastBrandedSearchCall { get; private set; }
 

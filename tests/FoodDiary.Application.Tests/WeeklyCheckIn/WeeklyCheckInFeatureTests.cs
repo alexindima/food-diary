@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.WeeklyCheckIn;
 
+[ExcludeFromCodeCoverage]
 public class WeeklyCheckInFeatureTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
@@ -91,6 +92,7 @@ public class WeeklyCheckInFeatureTests {
 
     // Test Doubles
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMealRepository : IMealRepository {
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
@@ -106,6 +108,7 @@ public class WeeklyCheckInFeatureTests {
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubWeightEntryRepository : IWeightEntryRepository {
         public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
@@ -119,6 +122,7 @@ public class WeeklyCheckInFeatureTests {
         public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubWaistEntryRepository : IWaistEntryRepository {
         public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
@@ -132,6 +136,7 @@ public class WeeklyCheckInFeatureTests {
         public Task<IReadOnlyList<WaistEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubHydrationEntryRepository : IHydrationEntryRepository {
         public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
@@ -145,6 +150,7 @@ public class WeeklyCheckInFeatureTests {
         public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository : IUserRepository {
         private readonly List<User> _users = [];
 
@@ -165,6 +171,7 @@ public class WeeklyCheckInFeatureTests {
         public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => Today;
     }

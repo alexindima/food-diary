@@ -2,6 +2,7 @@ using FoodDiary.JobManager.Services;
 
 namespace FoodDiary.JobManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class OptionsValidationTests {
     [Fact]
     public void ImageCleanupOptions_WithInvalidValues_FailsValidation() {

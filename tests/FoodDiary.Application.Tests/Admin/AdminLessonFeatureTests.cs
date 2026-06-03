@@ -9,6 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Admin;
 
+[ExcludeFromCodeCoverage]
 public class AdminLessonFeatureTests {
     [Fact]
     public async Task CreateAdminLessonHandler_WithValidData_ReturnsSuccess() {
@@ -278,6 +279,7 @@ public class AdminLessonFeatureTests {
         Assert.True(result.IsValid);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryLessonRepository : INutritionLessonRepository {
         private readonly List<NutritionLesson> _lessons = [];
 

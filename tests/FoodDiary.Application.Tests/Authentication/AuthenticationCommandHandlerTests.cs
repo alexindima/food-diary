@@ -22,6 +22,7 @@ using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task AdminSsoStartHandler_WithEmptyUserId_ReturnsValidationFailure() {
@@ -184,10 +185,12 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.Single(notificationRepository.Notifications);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NullAuditLogger : IAuditLogger {
         public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) { }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubAdminSsoService : IAdminSsoService {
         public int CreateCodeCallCount { get; private set; }
 
@@ -200,6 +203,7 @@ public sealed class AuthenticationCommandHandlerTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user = null) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
@@ -216,16 +220,19 @@ public sealed class AuthenticationCommandHandlerTests {
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubPasswordHasher : IPasswordHasher {
         public string Hash(string password) => password;
 
         public bool Verify(string password, string hashedPassword) => string.Equals(password, hashedPassword, StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => new(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubAuthenticationTokenService : IAuthenticationTokenService {
         public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
             User user,
@@ -236,6 +243,7 @@ public sealed class AuthenticationCommandHandlerTests {
         public string IssueAccessToken(User user) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubNotificationRepository(params Notification[] notifications) : INotificationRepository {
         public List<Notification> Notifications { get; } = notifications.ToList();
 
@@ -273,11 +281,13 @@ public sealed class AuthenticationCommandHandlerTests {
             CancellationToken cancellationToken = default) => Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubEmailVerificationNotifier : IEmailVerificationNotifier {
         public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubEmailSender : IEmailSender {
         public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
@@ -289,11 +299,13 @@ public sealed class AuthenticationCommandHandlerTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAuthValidator : ITelegramAuthValidator {
         public FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<TelegramInitData> ValidateInitData(string initData) =>
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload) : IGoogleTokenValidator {
         public Task<FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
             string credential,

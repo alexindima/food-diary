@@ -4,6 +4,7 @@ using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 
 namespace FoodDiary.Application.Tests.Exercises;
 
+[ExcludeFromCodeCoverage]
 public class ExercisesValidatorTests {
     private readonly CreateExerciseEntryCommandValidator _createValidator = new();
     private readonly GetExerciseEntriesQueryValidator _getValidator = new();

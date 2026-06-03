@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class WeightEntryHttpMappingsTests {
     [Fact]
     public void CreateRequest_ToCommand_MapsAllFields() {

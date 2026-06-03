@@ -10,6 +10,7 @@ using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithStoredRefreshToken_RotatesTokens() {
@@ -85,6 +86,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
     private static User CreateUser(string email) => User.Create(email, "password-hash");
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
@@ -102,6 +104,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator(UserId userId, string email) : IJwtTokenGenerator {
         public string GenerateAccessToken(UserId generatedUserId, string generatedEmail, IReadOnlyCollection<string> roles) => "unused-access-token";
         public string GenerateAccessToken(
@@ -119,11 +122,13 @@ public sealed class RefreshTokenCommandHandlerTests {
             string.Equals(token, "current-refresh-token", StringComparison.Ordinal) ? (userId, email) : null;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakePasswordHasher : IPasswordHasher {
         public string Hash(string password) => $"hashed:{password}";
         public bool Verify(string password, string hashedPassword) => string.Equals(hashedPassword, $"hashed:{password}", StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeAuthenticationTokenService : IAuthenticationTokenService {
         public int IssueAndStoreCallCount { get; private set; }
 

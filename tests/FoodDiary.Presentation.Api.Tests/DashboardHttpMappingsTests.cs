@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DashboardHttpMappingsTests {
     [Fact]
     public void GetDashboardSnapshotHttpQuery_ToQuery_MapsAllFields() {

@@ -13,6 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Ai;
 
+[ExcludeFromCodeCoverage]
 public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithEmptyIds_Fails() {
@@ -212,6 +213,7 @@ public class AiValidatorsTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -226,6 +228,7 @@ public class AiValidatorsTests {
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubImageAssetRepository : IImageAssetRepository {
         public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
@@ -246,6 +249,7 @@ public class AiValidatorsTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubOpenAiFoodService : IOpenAiFoodService {
         public bool WasCalculateNutritionCalled { get; private set; }
 
@@ -280,6 +284,7 @@ public class AiValidatorsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubImageStorageService : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
             UserId userId,
@@ -298,6 +303,7 @@ public class AiValidatorsTests {
             Task.FromResult(new ImageObjectValidationResult(true));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingAiUsageRepository : IAiUsageRepository {
         public DateTime LastFromUtc { get; private set; }
         public DateTime LastToUtc { get; private set; }
@@ -322,6 +328,7 @@ public class AiValidatorsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow => utcNow;
     }

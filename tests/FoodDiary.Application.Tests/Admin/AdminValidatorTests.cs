@@ -5,8 +5,9 @@ using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 
 namespace FoodDiary.Application.Tests.Admin;
 
+[ExcludeFromCodeCoverage]
 public class AdminValidatorTests {
-    // ── UpdateAdminUser (Guid UserId, bool? IsActive, bool? IsEmailConfirmed, IReadOnlyList<string>? Roles, string? Language, long? AiInputTokenLimit, long? AiOutputTokenLimit) ──
+    // â”€â”€ UpdateAdminUser (Guid UserId, bool? IsActive, bool? IsEmailConfirmed, IReadOnlyList<string>? Roles, string? Language, long? AiInputTokenLimit, long? AiOutputTokenLimit) â”€â”€
 
     [Fact]
     public async Task UpdateAdminUser_WithEmptyUserId_HasError() {
@@ -50,7 +51,7 @@ public class AdminValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── UpsertAdminEmailTemplate (string Key, string Locale, string Subject, string HtmlBody, string TextBody, bool IsActive) ──
+    // â”€â”€ UpsertAdminEmailTemplate (string Key, string Locale, string Subject, string HtmlBody, string TextBody, bool IsActive) â”€â”€
 
     [Fact]
     public async Task UpsertEmailTemplate_WithEmptyKey_HasError() {
@@ -80,7 +81,7 @@ public class AdminValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── GetAdminAiUsageSummary (DateOnly?, DateOnly?) ──
+    // â”€â”€ GetAdminAiUsageSummary (DateOnly?, DateOnly?) â”€â”€
 
     [Fact]
     public async Task GetAdminAiUsage_WithInvertedDates_HasError() {

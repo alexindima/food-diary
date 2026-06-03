@@ -3,6 +3,7 @@ using FoodDiary.Infrastructure.Services;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
+[ExcludeFromCodeCoverage]
 public sealed class DatabaseCommandTelemetryInterceptorTests {
     private const string InfrastructureMeterName = "FoodDiary.Infrastructure";
 

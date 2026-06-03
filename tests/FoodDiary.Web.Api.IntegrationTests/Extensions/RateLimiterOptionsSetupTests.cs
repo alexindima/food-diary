@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class RateLimiterOptionsSetupTests {
     [Fact]
     public void GetPartitionKey_IgnoresSpoofedForwardedForHeader_AndUsesRemoteIp() {

@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
+[ExcludeFromCodeCoverage]
 public class UpdateRecipeCommandHandlerTests {
     [Fact]
     public async Task Handle_WithDuplicateStepOrder_ThrowsArgumentException() {
@@ -440,6 +441,7 @@ public class UpdateRecipeCommandHandlerTests {
             .SetValue(recipe, recipeId);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubRecipeRepository : IRecipeRepository {
         private readonly RecipeId _recipeId;
         private readonly UserId _userId;
@@ -498,6 +500,7 @@ public class UpdateRecipeCommandHandlerTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopImageAssetCleanupService : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(new DeleteImageAssetResult(true));
@@ -506,6 +509,7 @@ public class UpdateRecipeCommandHandlerTests {
             Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class AllowAllProductLookupService : IProductLookupService {
         public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
@@ -515,6 +519,7 @@ public class UpdateRecipeCommandHandlerTests {
                 ids.Distinct().ToDictionary(id => id, id => CreateProduct(userId, id)));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class AllowAllRecipeLookupService : IRecipeLookupService {
         public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
@@ -540,6 +545,7 @@ public class UpdateRecipeCommandHandlerTests {
         return recipe;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

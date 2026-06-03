@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ProjectDependencyMatrixTests {
     private static readonly IReadOnlyDictionary<string, string[]> AllowedProductionProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {

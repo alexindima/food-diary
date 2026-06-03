@@ -2,6 +2,7 @@ using FoodDiary.Infrastructure.Services;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public class PasswordHasherTests {
     private readonly PasswordHasher _hasher = new();
 

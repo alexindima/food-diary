@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public sealed class JwtTokenGeneratorTests {
     [Fact]
     public void GenerateAndValidateToken_RoundTrip_Succeeds() {
@@ -91,6 +92,7 @@ public sealed class JwtTokenGeneratorTests {
         });
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public StubDateTimeProvider()
             : this(new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)) {

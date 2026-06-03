@@ -7,6 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
+[ExcludeFromCodeCoverage]
 public class UpdateRecipeCommandValidatorTests {
     [Fact]
     public async Task ValidateAsync_WithDuplicateStepOrder_ReturnsValidationError() {
@@ -110,6 +111,7 @@ public class UpdateRecipeCommandValidatorTests {
             Ingredients: [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100)]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubRecipeRepository : IRecipeRepository {
         private readonly RecipeId _recipeId;
         private readonly UserId _userId;

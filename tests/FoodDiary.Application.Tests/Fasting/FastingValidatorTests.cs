@@ -12,6 +12,7 @@ using FoodDiary.Application.Fasting.Queries.GetFastingStats;
 
 namespace FoodDiary.Application.Tests.Fasting;
 
+[ExcludeFromCodeCoverage]
 public class FastingValidatorTests {
     private readonly StartFastingCommandValidator _validator = new();
 

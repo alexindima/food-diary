@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
+[ExcludeFromCodeCoverage]
 public class HydrationFeatureTests {
     [Fact]
     public async Task CreateHydrationEntryCommandValidator_WithEmptyUserId_Fails() {
@@ -192,6 +193,7 @@ public class HydrationFeatureTests {
         Assert.Contains("HydrationEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHydrationEntryRepository : IHydrationEntryRepository {
         public DateTime? LastDailyTotalDateUtc { get; private set; }
 
@@ -221,6 +223,7 @@ public class HydrationFeatureTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -235,6 +238,7 @@ public class HydrationFeatureTests {
         public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null) : IHydrationEntryRepository {
         private HydrationEntry? _entry = entry;
         public HydrationEntry? AddedEntry { get; private set; }

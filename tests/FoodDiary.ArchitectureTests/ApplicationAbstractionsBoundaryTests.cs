@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ApplicationAbstractionsBoundaryTests {
     [Fact]
     public void ApplicationAbstractions_Interfaces_AreKeptInPurposeFolders() {

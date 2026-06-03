@@ -5,6 +5,7 @@ using System.Net;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AuthHttpMappingsTests {
     [Fact]
     public void RegisterRequest_ToCommand_MapsAllFields() {
@@ -12,7 +13,7 @@ public sealed class AuthHttpMappingsTests {
             Email: "alex@example.com",
             Password: "P@ssw0rd!",
             Language: "ru",
-            ClientOrigin: "https://дневникеды.рф");
+            ClientOrigin: "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„");
 
         var command = request.ToCommand();
 

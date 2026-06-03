@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class HydrationHttpMappingsTests {
     [Fact]
     public void CreateHydrationEntryRequest_ToCommand_MapsAllFields() {

@@ -14,6 +14,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
     public int Weight { get; private set; }
     public string? Tag { get; private set; }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private DailyAdvice() {
     }
 

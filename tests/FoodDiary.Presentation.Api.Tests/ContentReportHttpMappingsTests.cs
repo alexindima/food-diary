@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ContentReportHttpMappingsTests {
     [Fact]
     public void CreateContentReportRequest_ToCommand_MapsAllFields() {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ResultExtensionsTests {
     [Theory]
     [InlineData("Authentication.TelegramInvalidData", StatusCodes.Status400BadRequest)]
@@ -149,5 +150,6 @@ public sealed class ResultExtensionsTests {
             },
         };
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestController : ControllerBase;
 }

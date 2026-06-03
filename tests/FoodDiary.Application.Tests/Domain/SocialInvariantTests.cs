@@ -4,6 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class SocialInvariantTests {
     [Fact]
     public void RecipeLike_Create_WithEmptyUserId_Throws() {

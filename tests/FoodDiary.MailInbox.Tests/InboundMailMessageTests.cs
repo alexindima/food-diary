@@ -5,6 +5,7 @@ using System.Globalization;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class InboundMailMessageTests {
     [Fact]
     public void Receive_WhenValuesAreValid_CreatesReceivedAggregate() {
@@ -274,6 +275,7 @@ public sealed class InboundMailMessageTests {
             "raw",
             DateTimeOffset.UtcNow);
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestEntity : Entity<Guid> {
         public TestEntity() {
         }
@@ -298,5 +300,6 @@ public sealed class InboundMailMessageTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class OtherTestEntity(Guid id) : Entity<Guid>(id);
 }

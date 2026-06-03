@@ -3,6 +3,7 @@ using FoodDiary.Application.Authentication.Common;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public sealed class AuthenticationUserAccessPolicyTests {
     [Fact]
     public void EnsureCanAuthenticate_WithNullUser_ReturnsInvalidCredentials() {

@@ -5,6 +5,7 @@ using FoodDiary.Integrations.Services;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class S3ImageStorageServiceTests {
     private const string IntegrationsMeterName = "FoodDiary.Integrations";
 
@@ -168,6 +169,7 @@ public sealed class S3ImageStorageServiceTests {
         return null;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubObjectStorageClient(StoredObjectInfo? objectInfo = null) : IObjectStorageClient {
         public string GetPreSignedUploadUrl(
             string bucketName,
@@ -183,6 +185,7 @@ public sealed class S3ImageStorageServiceTests {
             Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(1024, "image/webp"));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingObjectStorageClient(Exception exception) : IObjectStorageClient {
         public string GetPreSignedUploadUrl(
             string bucketName,
@@ -197,6 +200,7 @@ public sealed class S3ImageStorageServiceTests {
             Task.FromException<StoredObjectInfo?>(exception);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : FoodDiary.Application.Abstractions.Common.Interfaces.Services.IDateTimeProvider {
         public DateTime UtcNow { get; } = new(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc);
     }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class ApiExceptionHandlerTests {
     [Fact]
     public async Task TryHandleAsync_ForCurrentUserUnavailable_ReturnsUnauthorizedApiError() {

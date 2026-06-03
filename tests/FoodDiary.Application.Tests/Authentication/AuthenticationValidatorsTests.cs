@@ -8,6 +8,7 @@ using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public class AuthenticationValidatorsTests {
     [Fact]
     public async Task AdminSsoStartValidator_WithEmptyUserId_Fails() {

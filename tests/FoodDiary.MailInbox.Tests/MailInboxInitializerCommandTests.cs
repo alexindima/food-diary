@@ -2,6 +2,7 @@ using System.Reflection;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxInitializerCommandTests {
     [Fact]
     public void Parse_WhenArgsAreEmpty_ReturnsNull() {

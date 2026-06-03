@@ -198,6 +198,8 @@ public sealed partial class User {
         ActivityLevel? activityLevel,
         int? stepGoal,
         double? hydrationGoal) {
+        EnsureActivityLevel(activityLevel, nameof(activityLevel));
+
         var updatedActivityGoals = GetActivityGoals().With(
             stepGoal: stepGoal,
             hydrationGoal: hydrationGoal);

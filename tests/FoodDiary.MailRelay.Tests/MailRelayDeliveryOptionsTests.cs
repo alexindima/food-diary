@@ -2,6 +2,7 @@ using FoodDiary.MailRelay.Infrastructure.Options;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayDeliveryOptionsTests {
     [Theory]
     [InlineData(MailRelayDeliveryOptions.SmtpSubmissionMode)]

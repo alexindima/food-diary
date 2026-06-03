@@ -22,6 +22,7 @@ using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Application.Tests.Admin;
 
+[ExcludeFromCodeCoverage]
 public class AdminFeatureTests {
     [Fact]
     public async Task GetAdminBillingPaymentsHandler_NormalizesFiltersAndReturnsPagedPayments() {
@@ -713,10 +714,12 @@ public class AdminFeatureTests {
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)),
             new NullAuditLogger());
 
+    [ExcludeFromCodeCoverage]
     private sealed class NullAuditLogger : IAuditLogger {
         public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) { }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository : IUserRepository {
         private readonly User _user;
         private readonly Dictionary<string, Role> _roles;
@@ -770,6 +773,7 @@ public class AdminFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -787,6 +791,7 @@ public class AdminFeatureTests {
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingImpersonationSessionRepository : IAdminImpersonationSessionRepository {
         public int AddCallCount { get; private set; }
 
@@ -803,6 +808,7 @@ public class AdminFeatureTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubJwtTokenGenerator : IJwtTokenGenerator {
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "access-token";
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc) => "access-token";
@@ -811,6 +817,7 @@ public class AdminFeatureTests {
         public (UserId userId, string email)? ValidateToken(string token) => null;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingAiUsageRepository : IAiUsageRepository {
         public DateTime LastFromUtc { get; private set; }
         public DateTime LastToUtc { get; private set; }
@@ -843,10 +850,12 @@ public class AdminFeatureTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow => utcNow;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingEmailTransport : IEmailTransport {
         public string? ToEmail { get; private set; }
         public string? Subject { get; private set; }
@@ -865,6 +874,7 @@ public class AdminFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryEmailTemplateRepository : IEmailTemplateRepository {
         public Task<EmailTemplate> UpsertAsync(
             string key,
@@ -892,6 +902,7 @@ public class AdminFeatureTests {
             Task.FromResult<EmailTemplate?>(null);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingAdminBillingRepository : IAdminBillingRepository {
         public AdminBillingListFilter? LastSubscriptionsFilter { get; private set; }
         public AdminBillingListFilter? LastPaymentsFilter { get; private set; }

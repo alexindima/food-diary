@@ -3,6 +3,7 @@ using FoodDiary.Resources.Notifications;
 
 namespace FoodDiary.Resources.Tests.Notifications;
 
+[ExcludeFromCodeCoverage]
 public sealed class NotificationResourceRendererTests {
     [Fact]
     public void Render_WithEmptyType_ThrowsArgumentException() {

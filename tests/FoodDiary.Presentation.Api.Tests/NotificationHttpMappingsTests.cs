@@ -6,6 +6,7 @@ using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class NotificationHttpMappingsTests {
     [Fact]
     public void ToNotificationsQuery_MapsUserId() {

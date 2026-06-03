@@ -1,5 +1,6 @@
 namespace FoodDiary.Telegram.Bot.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class TelegramBotOptionsTests {
     [Fact]
     public void HasValidWebAppUrl_WithRelativeUrl_ReturnsFalse() {

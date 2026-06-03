@@ -9,6 +9,7 @@ using Npgsql;
 namespace FoodDiary.MailRelay.Tests;
 
 [Collection("mailrelay-environment")]
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixture fixture) {
     [RequiresDockerFact]
     public async Task EnqueueClaimAndMarkSentAsync_UpdatesMessageLifecycle() {

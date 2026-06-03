@@ -9,8 +9,9 @@ using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public class AuthenticationAdditionalValidatorTests {
-    // ── AdminSsoExchange ──
+    // â”€â”€ AdminSsoExchange â”€â”€
 
     [Fact]
     public async Task AdminSsoExchange_WithEmptyCode_HasError() {
@@ -26,7 +27,7 @@ public class AuthenticationAdditionalValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── GoogleLogin ──
+    // â”€â”€ GoogleLogin â”€â”€
 
     [Fact]
     public async Task GoogleLogin_WithEmptyCredential_HasError() {
@@ -42,7 +43,7 @@ public class AuthenticationAdditionalValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── LinkTelegram ──
+    // â”€â”€ LinkTelegram â”€â”€
 
     [Fact]
     public async Task LinkTelegram_WithEmptyUserId_HasError() {
@@ -65,7 +66,7 @@ public class AuthenticationAdditionalValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── Login ──
+    // â”€â”€ Login â”€â”€
 
     [Fact]
     public async Task Login_WithEmptyEmail_HasError() {
@@ -95,7 +96,7 @@ public class AuthenticationAdditionalValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── RefreshToken ──
+    // â”€â”€ RefreshToken â”€â”€
 
     [Fact]
     public async Task RefreshToken_WithEmptyToken_HasError() {
@@ -111,7 +112,7 @@ public class AuthenticationAdditionalValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── RestoreAccount ──
+    // â”€â”€ RestoreAccount â”€â”€
 
     [Fact]
     public async Task RestoreAccount_WithEmptyEmail_HasError() {
@@ -134,7 +135,7 @@ public class AuthenticationAdditionalValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── TelegramVerify ──
+    // â”€â”€ TelegramVerify â”€â”€
 
     [Fact]
     public async Task TelegramVerify_WithEmptyInitData_HasError() {

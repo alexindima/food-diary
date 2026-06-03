@@ -14,6 +14,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class TestAuthApiWebApplicationFactory : WebApplicationFactory<Program> {
     private readonly string _databaseName = $"fooddiary-tests-auth-{Guid.NewGuid():N}";
     private readonly InMemoryDatabaseRoot _databaseRoot = new();

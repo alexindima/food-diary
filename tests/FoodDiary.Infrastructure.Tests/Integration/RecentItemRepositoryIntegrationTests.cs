@@ -11,6 +11,7 @@ using Npgsql;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task RegisterUsageAsync_WhenRecentProductsAtCapacity_KeepsNewestHundredIncludingNewItem() {
@@ -57,6 +58,7 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
         Assert.Contains(storedItems, x => x.ItemId == existingProductIds[0]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }

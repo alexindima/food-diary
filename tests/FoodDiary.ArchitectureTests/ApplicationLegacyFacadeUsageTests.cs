@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public class ApplicationLegacyFacadeUsageTests {
     [Fact]
     public void ApplicationLayer_DoesNotUse_RecipeWideUpdateFacade() {

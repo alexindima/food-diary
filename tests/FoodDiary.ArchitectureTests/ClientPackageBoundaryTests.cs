@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ClientPackageBoundaryTests {
     [Theory]
     [InlineData("FoodDiary.MailRelay.Client")]

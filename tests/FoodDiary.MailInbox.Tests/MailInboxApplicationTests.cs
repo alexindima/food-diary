@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxApplicationTests {
     [Fact]
     public async Task ReceiveInboundMailHandler_SavesReceivedAggregateAndReturnsStoreId() {
@@ -293,6 +294,7 @@ public sealed class MailInboxApplicationTests {
         Assert.Throws<InvalidOperationException>(() => result.Value);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingInboundMailStore : IInboundMailStore {
         public Guid SavedId { get; } = Guid.NewGuid();
         public InboundMailMessage? LastSaved { get; private set; }
@@ -316,6 +318,7 @@ public sealed class MailInboxApplicationTests {
             Task.FromResult(Details is not null && Details.Id == id ? Details : null);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingReadinessChecker : IMailInboxReadinessChecker {
         public bool Called { get; private set; }
         public CancellationToken CancellationToken { get; private set; }
@@ -342,8 +345,10 @@ public sealed class MailInboxApplicationTests {
             InboundMailMessageStatus.Received.ToString(),
             DateTimeOffset.UtcNow);
 
+    [ExcludeFromCodeCoverage]
     private sealed record TestCommand : IRequest<Result>;
 
+    [ExcludeFromCodeCoverage]
     private sealed class AlwaysFailingTestCommandValidator : AbstractValidator<TestCommand> {
         public AlwaysFailingTestCommandValidator() {
             RuleFor(static command => command)
@@ -353,6 +358,7 @@ public sealed class MailInboxApplicationTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class MultipleFailuresTestCommandValidator : AbstractValidator<TestCommand> {
         public MultipleFailuresTestCommandValidator() {
             RuleFor(static command => command)
@@ -364,5 +370,6 @@ public sealed class MailInboxApplicationTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ExposedResult(bool isSuccess, MailInboxError? error) : Result(isSuccess, error);
 }

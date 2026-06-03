@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class OpenFoodFactsHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsBarcode() {
@@ -24,8 +25,8 @@ public sealed class OpenFoodFactsHttpMappingsTests {
     public void ToHttpResponse_MapsAllFields() {
         var model = new OpenFoodFactsProductModel(
             "4600000000001",
-            "Молоко 3.2%",
-            "Простоквашино",
+            "ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%",
+            "ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾",
             "Dairy",
             "https://images.openfoodfacts.org/test.jpg",
             60,
@@ -38,8 +39,8 @@ public sealed class OpenFoodFactsHttpMappingsTests {
 
         Assert.NotNull(response);
         Assert.Equal("4600000000001", response.Barcode);
-        Assert.Equal("Молоко 3.2%", response.Name);
-        Assert.Equal("Простоквашино", response.Brand);
+        Assert.Equal("ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%", response.Name);
+        Assert.Equal("ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾", response.Brand);
         Assert.Equal("Dairy", response.Category);
         Assert.Equal("https://images.openfoodfacts.org/test.jpg", response.ImageUrl);
         Assert.Equal(60, response.CaloriesPer100G);

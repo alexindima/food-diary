@@ -11,6 +11,7 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 
 namespace FoodDiary.Application.Tests.Ai;
 
+[ExcludeFromCodeCoverage]
 public sealed class OpenAiFoodServiceTests {
     [Fact]
     public async Task CalculateNutritionAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
@@ -78,6 +79,7 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Equal(18, usage.TotalTokens);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingOpenAiFoodClient : IOpenAiFoodClient {
         public int CalculateNutritionCalls { get; private set; }
 
@@ -118,6 +120,7 @@ public sealed class OpenAiFoodServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingAiUsageRepository(AiUsageTotals totals) : IAiUsageRepository {
         public List<AiUsage> Items { get; } = [];
 
@@ -133,6 +136,7 @@ public sealed class OpenAiFoodServiceTests {
             Task.FromResult(totals);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user = null) : IUserRepository {
         private readonly User user = user ?? User.Create("ai-tests@example.com", "hash");
 
@@ -150,10 +154,12 @@ public sealed class OpenAiFoodServiceTests {
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow { get; } = new(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubAiPromptProvider : IAiPromptProvider {
         public Task<string> GetPromptAsync(string key, CancellationToken cancellationToken = default) =>
             Task.FromResult(key);

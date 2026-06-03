@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.RecipeComments.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class RecipeCommentHttpMappingsTests {
     [Fact]
     public void CreateRecipeCommentRequest_ToCommand_MapsAllFields() {

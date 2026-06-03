@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public class PresentationConventionsTests {
     [Fact]
     public void PresentationApi_ProjectGuide_Exists() {

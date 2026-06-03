@@ -7,6 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Lessons;
 
+[ExcludeFromCodeCoverage]
 public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WhenLessonExists_Succeeds() {
@@ -59,6 +60,7 @@ public class LessonsFeatureTests {
         Assert.True(result.IsFailure);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubLessonRepository(NutritionLesson? lesson, bool hasProgress) : INutritionLessonRepository {
         public bool ProgressAdded { get; private set; }
 
@@ -85,6 +87,7 @@ public class LessonsFeatureTests {
         public Task DeleteAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
     }

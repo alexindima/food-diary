@@ -2,14 +2,15 @@ using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class MealAiInvariantTests {
     [Fact]
     public void MealAiItemData_Create_WithValidValues_Succeeds() {
         var data = MealAiItemData.Create(
-            "Chicken", "Курица", 100, "g", 165, 31, 3.6, 0, 0, 0);
+            "Chicken", "ÐšÑƒÑ€Ð¸Ñ†Ð°", 100, "g", 165, 31, 3.6, 0, 0, 0);
 
         Assert.Equal("Chicken", data.NameEn);
-        Assert.Equal("Курица", data.NameLocal);
+        Assert.Equal("ÐšÑƒÑ€Ð¸Ñ†Ð°", data.NameLocal);
         Assert.Equal(100, data.Amount);
         Assert.Equal("g", data.Unit);
     }

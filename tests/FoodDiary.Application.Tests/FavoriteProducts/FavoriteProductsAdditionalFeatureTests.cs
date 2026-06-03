@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.FavoriteProducts;
 
+[ExcludeFromCodeCoverage]
 public sealed class FavoriteProductsAdditionalFeatureTests {
     [Fact]
     public async Task AddFavoriteProduct_WithAccessibleProduct_PersistsAndReturnsModel() {
@@ -133,6 +134,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             alcoholPerBase: 0,
             visibility: Visibility.Private);
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryFavoriteProductRepository(
         Product? product = null,
         IReadOnlyList<FavoriteProduct>? favorites = null) : IFavoriteProductRepository {
@@ -180,6 +182,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
                 _favorites.Where(f => f.UserId == userId && productIds.Contains(f.ProductId)).ToDictionary(f => f.ProductId));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleProductRepository(Product? product) : IProductRepository {
         public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(UserId userId, bool includePublic, int page, int limit, string? search, IReadOnlyCollection<ProductType>? productTypes = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -190,6 +193,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

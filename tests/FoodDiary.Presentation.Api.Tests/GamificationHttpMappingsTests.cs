@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Gamification.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class GamificationHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsUserId() {

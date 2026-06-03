@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 internal static class ArchitectureTestPaths {
     public static string RepositoryRoot { get; } = FindRepositoryRoot();
 

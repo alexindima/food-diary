@@ -5,6 +5,7 @@ using Npgsql;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class NpgsqlInboundMailStoreHelperTests {
     [Theory]
     [InlineData("dmarc@fooddiary.club", "Hello", InboundMailMessageCategories.DmarcReport)]

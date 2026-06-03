@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class TelegramBotSecretAuthorizationFilterTests {
     [Fact]
     public async Task OnAuthorizationAsync_WithoutConfiguredSecret_ReturnsServerErrorContract() {

@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -218,12 +219,16 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken, AuthUserPayload User);
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(Guid Id);
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthenticatedUser(HttpClient Client, string Email, Guid UserId);
 
+    [ExcludeFromCodeCoverage]
     private sealed record RecommendationPayload(
         Guid Id,
         Guid DietologistUserId,
@@ -234,6 +239,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         DateTime CreatedAtUtc,
         DateTime? ReadAtUtc);
 
+    [ExcludeFromCodeCoverage]
     private sealed record NotificationPayload(
         Guid Id,
         string Type,
@@ -244,6 +250,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         bool IsRead,
         DateTime CreatedAtUtc);
 
+    [ExcludeFromCodeCoverage]
     private sealed record DietologistRelationshipPayload(
         Guid InvitationId,
         string Status,

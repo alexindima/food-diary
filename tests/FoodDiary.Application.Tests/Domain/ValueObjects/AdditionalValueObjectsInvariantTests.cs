@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Tests.Domain.ValueObjects;
 
+[ExcludeFromCodeCoverage]
 public class AdditionalValueObjectsInvariantTests {
     // --- MealAiItemState ---
 
@@ -51,10 +52,10 @@ public class AdditionalValueObjectsInvariantTests {
     [Fact]
     public void MealAiItemState_Create_TrimsAndNormalizesText() {
         var state = MealAiItemState.Create(
-            "  Chicken  ", "  Курица  ", 100, "  g  ", 165, 31, 3.6, 0, 0, 0);
+            "  Chicken  ", "  ÐšÑƒÑ€Ð¸Ñ†Ð°  ", 100, "  g  ", 165, 31, 3.6, 0, 0, 0);
 
         Assert.Equal("Chicken", state.NameEn);
-        Assert.Equal("Курица", state.NameLocal);
+        Assert.Equal("ÐšÑƒÑ€Ð¸Ñ†Ð°", state.NameLocal);
         Assert.Equal("g", state.Unit);
     }
 
@@ -113,6 +114,29 @@ public class AdditionalValueObjectsInvariantTests {
         var withDessert = FoodQualityScore.Calculate(300, 5, 10, 40, 1, 0, ProductType.Dessert);
 
         Assert.True(withDessert.Score < withoutType.Score);
+    }
+
+    [Theory]
+    [InlineData(ProductType.Fruit)]
+    [InlineData(ProductType.Seafood)]
+    [InlineData(ProductType.Meat)]
+    [InlineData(ProductType.Dairy)]
+    [InlineData(ProductType.Grain)]
+    public void FoodQualityScore_Calculate_PositiveProductTypeModifiers_IncreaseScore(ProductType productType) {
+        var withoutType = FoodQualityScore.Calculate(180, 8, 4, 20, 3, 0, ProductType.Unknown);
+        var withType = FoodQualityScore.Calculate(180, 8, 4, 20, 3, 0, productType);
+
+        Assert.True(withType.Score > withoutType.Score);
+    }
+
+    [Theory]
+    [InlineData(ProductType.Cheese)]
+    [InlineData(ProductType.Beverage)]
+    public void FoodQualityScore_Calculate_NegativeProductTypeModifiers_DecreaseScore(ProductType productType) {
+        var withoutType = FoodQualityScore.Calculate(180, 8, 4, 20, 3, 0, ProductType.Unknown);
+        var withType = FoodQualityScore.Calculate(180, 8, 4, 20, 3, 0, productType);
+
+        Assert.True(withType.Score < withoutType.Score);
     }
 
     [Fact]
@@ -198,6 +222,69 @@ public class AdditionalValueObjectsInvariantTests {
         Assert.InRange(result.Heart.Score, 0, 100);
     }
 
+    [Fact]
+    public void HealthAreaScores_Calculate_WithPartialDailyValues_SkipsMissingAndInvalidDailyValues() {
+        var amounts = new Dictionary<int, double> {
+            [1092] = 2350,
+            [1090] = 420,
+        };
+        var dailyValues = new Dictionary<int, double> {
+            [1092] = 4700,
+            [1090] = 0,
+        };
+
+        var result = HealthAreaScores.Calculate(amounts, dailyValues);
+
+        Assert.Equal(50, result.Heart.Score);
+        Assert.Equal(HealthAreaGrade.Good, result.Heart.Grade);
+    }
+
+    [Fact]
+    public void HealthAreaScores_Calculate_WithLowAmount_ReturnsLowGrade() {
+        var amounts = new Dictionary<int, double> {
+            [1092] = 100,
+            [1090] = 10,
+        };
+        var dailyValues = new Dictionary<int, double> {
+            [1092] = 4700,
+            [1090] = 420,
+        };
+
+        var result = HealthAreaScores.Calculate(amounts, dailyValues);
+
+        Assert.Equal(HealthAreaGrade.Low, result.Heart.Grade);
+    }
+
+    [Fact]
+    public void HealthAreaScores_Calculate_WithFairAmount_ReturnsFairGrade() {
+        var amounts = new Dictionary<int, double> {
+            [1092] = 1410,
+            [1090] = 126,
+        };
+        var dailyValues = new Dictionary<int, double> {
+            [1092] = 4700,
+            [1090] = 420,
+        };
+
+        var result = HealthAreaScores.Calculate(amounts, dailyValues);
+
+        Assert.Equal(HealthAreaGrade.Fair, result.Heart.Grade);
+    }
+
+    [Fact]
+    public void HealthAreaScores_Calculate_WithZeroAmountAndKnownDailyValues_ReturnsUnknownGrade() {
+        var amounts = new Dictionary<int, double>();
+        var dailyValues = new Dictionary<int, double> {
+            [1092] = 4700,
+            [1090] = 420,
+        };
+
+        var result = HealthAreaScores.Calculate(amounts, dailyValues);
+
+        Assert.Equal(0, result.Heart.Score);
+        Assert.Equal(HealthAreaGrade.Unknown, result.Heart.Grade);
+    }
+
     // --- RecipeStepContentState ---
 
     [Fact]
@@ -246,6 +333,23 @@ public class AdditionalValueObjectsInvariantTests {
     }
 
     [Fact]
+    public void UserProfileState_CreateInitial_ExposesProjectionStates() {
+        var state = UserProfileState.CreateInitial();
+
+        Assert.Equal(ActivityLevel.Moderate, state.ActivityLevel);
+        Assert.Equal(ThemeCode.Default.Value, state.Theme);
+        Assert.Equal(UiStyleCode.Default.Value, state.UiStyle);
+        Assert.False(state.PushNotificationsEnabled);
+        Assert.True(state.FastingPushNotificationsEnabled);
+        Assert.True(state.SocialPushNotificationsEnabled);
+        Assert.Equal(12, state.FastingCheckInReminderHours);
+        Assert.Equal(20, state.FastingCheckInFollowUpReminderHours);
+        Assert.Equal(state.Username, state.PersonalInfo.Username);
+        Assert.Equal(state.ProfileImage, state.Media.ProfileImage);
+        Assert.Equal(state.DashboardLayoutJson, state.Preferences.DashboardLayoutJson);
+    }
+
+    [Fact]
     public void UserAccountState_WithTelegram_SetsTelegramUserId() {
         var state = UserAccountState.CreateInitial().WithTelegram(12345);
 
@@ -257,6 +361,15 @@ public class AdditionalValueObjectsInvariantTests {
         var state = UserAccountState.CreateInitial().Deactivate();
 
         Assert.False(state.IsActive);
+    }
+
+    [Fact]
+    public void UserAccountState_Activate_SetsActive() {
+        var state = UserAccountState.CreateInitial()
+            .Deactivate()
+            .Activate();
+
+        Assert.True(state.IsActive);
     }
 
     [Fact]
@@ -589,5 +702,175 @@ public class AdditionalValueObjectsInvariantTests {
         Assert.True(perms.ShareHydration);
         Assert.True(perms.ShareProfile);
         Assert.True(perms.ShareFasting);
+    }
+
+    // --- DailySymptoms ---
+
+    [Fact]
+    public void DailySymptoms_CreateAndUpdate_StoreValuesAndValidateRange() {
+        var symptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
+
+        var updated = symptoms.Update(pain: 8, libido: 9);
+
+        Assert.Equal(8, updated.Pain);
+        Assert.Equal(2, updated.Mood);
+        Assert.Equal(9, updated.Libido);
+        Assert.Throws<ArgumentOutOfRangeException>(() => symptoms.Update(mood: 10));
+        Assert.Throws<ArgumentOutOfRangeException>(() => DailySymptoms.Create(-1, 2, 3, 4, 5, 6, 7));
+    }
+
+    [Fact]
+    public void DailySymptoms_Equality_ComparesValues() {
+        var first = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
+        var same = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
+        var different = DailySymptoms.Create(7, 6, 5, 4, 3, 2, 1);
+
+        Assert.True(first.Equals(first));
+        Assert.True(first.Equals(same));
+        Assert.False(first.Equals(different));
+        Assert.False(first.Equals(null));
+        Assert.True(first.Equals((object)same));
+        Assert.False(first.Equals(new object()));
+        Assert.Equal(first.GetHashCode(), same.GetHashCode());
+    }
+
+    // --- Simple code value objects ---
+
+    [Theory]
+    [InlineData(" en ", "en")]
+    [InlineData("RU", "ru")]
+    public void LanguageCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
+        var parsed = LanguageCode.TryParse(value, out var language);
+
+        Assert.True(parsed);
+        Assert.Equal(expected, language.Value);
+        Assert.Equal(expected, language.ToString());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("de")]
+    public void LanguageCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
+        var parsed = LanguageCode.TryParse(value, out var language);
+
+        Assert.False(parsed);
+        Assert.Equal(default, language);
+    }
+
+    [Theory]
+    [InlineData(null, "en")]
+    [InlineData(" ", "en")]
+    [InlineData("ru-RU", "ru")]
+    [InlineData("en-US", "en")]
+    public void LanguageCode_FromPreferred_ReturnsSupportedLanguage(string? value, string expected) {
+        var language = LanguageCode.FromPreferred(value);
+
+        Assert.Equal(expected, language.Value);
+    }
+
+    [Theory]
+    [InlineData("m", "M")]
+    [InlineData(" f ", "F")]
+    [InlineData("O", "O")]
+    public void GenderCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
+        var parsed = GenderCode.TryParse(value, out var gender);
+
+        Assert.True(parsed);
+        Assert.Equal(expected, gender.Value);
+        Assert.Equal(expected, gender.ToString());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("x")]
+    public void GenderCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
+        var parsed = GenderCode.TryParse(value, out var gender);
+
+        Assert.False(parsed);
+        Assert.Equal(default, gender);
+    }
+
+    [Theory]
+    [InlineData(" ocean ", "ocean")]
+    [InlineData("LEAF", "leaf")]
+    [InlineData("dark", "dark")]
+    public void ThemeCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
+        var parsed = ThemeCode.TryParse(value, out var theme);
+
+        Assert.True(parsed);
+        Assert.Equal(expected, theme.Value);
+        Assert.Equal(expected, theme.ToString());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("light")]
+    public void ThemeCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
+        var parsed = ThemeCode.TryParse(value, out var theme);
+
+        Assert.False(parsed);
+        Assert.Equal(default, theme);
+        Assert.Equal("ocean", ThemeCode.Default.Value);
+    }
+
+    [Theory]
+    [InlineData(" classic ", "classic")]
+    [InlineData("MODERN", "modern")]
+    public void UiStyleCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
+        var parsed = UiStyleCode.TryParse(value, out var style);
+
+        Assert.True(parsed);
+        Assert.Equal(expected, style.Value);
+        Assert.Equal(expected, style.ToString());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("compact")]
+    public void UiStyleCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
+        var parsed = UiStyleCode.TryParse(value, out var style);
+
+        Assert.False(parsed);
+        Assert.Equal(default, style);
+        Assert.Equal("classic", UiStyleCode.Default.Value);
+    }
+
+    // --- EmailAddress ---
+
+    [Fact]
+    public void EmailAddress_Create_NormalizesAndToStringReturnsValue() {
+        var email = EmailAddress.Create("  USER@Example.COM  ");
+
+        Assert.Equal("user@example.com", email.Value);
+        Assert.Equal(email.Value, email.ToString());
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("not-an-email")]
+    [InlineData("a@b@c")]
+    public void EmailAddress_Create_WithInvalidValue_Throws(string value) {
+        Assert.Throws<ArgumentException>(() => EmailAddress.Create(value));
+    }
+
+    [Fact]
+    public void EmailAddress_Create_WithDisplayName_Throws() {
+        Assert.Throws<ArgumentException>(() => EmailAddress.Create("User <user@example.com>"));
+    }
+
+    // --- Desired values ---
+
+    [Fact]
+    public void DesiredWeightAndWaist_Create_ExposeValues() {
+        var weight = DesiredWeight.Create(75.5);
+        var waist = DesiredWaist.Create(82.3);
+
+        Assert.Equal(75.5, weight.Value);
+        Assert.Equal(82.3, waist.Value);
     }
 }

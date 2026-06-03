@@ -2,6 +2,7 @@ using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxDomainProject_DoesNotReferenceOtherMailInboxLayers() {

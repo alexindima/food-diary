@@ -5,6 +5,7 @@ using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
 
 namespace FoodDiary.Application.Tests.OpenFoodFacts;
 
+[ExcludeFromCodeCoverage]
 public class OpenFoodFactsFeatureTests {
     private static OpenFoodFactsProductModel CreateProduct(string barcode = "4600000000001") =>
         new(barcode, "Test Product", "Brand", "Category", "https://example.com/img.jpg", 250, 10, 8, 30, 3);
@@ -95,6 +96,7 @@ public class OpenFoodFactsFeatureTests {
         Assert.Equal(0, service.SearchCallCount);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubOpenFoodFactsService(
         OpenFoodFactsProductModel? barcodeResult,
         IReadOnlyList<OpenFoodFactsProductModel>? searchResults = null) : IOpenFoodFactsService {
@@ -111,6 +113,7 @@ public class OpenFoodFactsFeatureTests {
         public int SearchCallCount { get; private set; }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubOpenFoodFactsProductCacheRepository(
         IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts = null) : IOpenFoodFactsProductCacheRepository {
         public IReadOnlyList<OpenFoodFactsProductModel> UpsertedProducts { get; private set; } = [];

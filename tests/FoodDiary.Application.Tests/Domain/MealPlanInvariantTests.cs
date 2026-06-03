@@ -4,6 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class MealPlanInvariantTests {
     [Fact]
     public void CreateCurated_WithBlankName_Throws() {
@@ -74,6 +75,15 @@ public class MealPlanInvariantTests {
 
         Assert.Equal(1, day.DayNumber);
         Assert.Single(plan.Days);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(32)]
+    public void AddDay_WithInvalidDayNumber_Throws(int dayNumber) {
+        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => plan.AddDay(dayNumber));
     }
 
     [Fact]

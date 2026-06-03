@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class InitializerTests {
     [Fact]
     public void InitializerCommandParse_WithNoArguments_ReturnsNull() {

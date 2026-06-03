@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public class FeatureStructureTests {
     [Fact]
     public void Application_Features_HaveCommandsOrQueriesFolders() {

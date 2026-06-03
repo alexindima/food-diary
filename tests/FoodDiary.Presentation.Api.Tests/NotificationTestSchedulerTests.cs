@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class NotificationTestSchedulerTests {
     [Fact]
     public async Task ScheduleAsync_NormalizesInput_AndDispatchesNotification() {
@@ -73,6 +74,7 @@ public sealed class NotificationTestSchedulerTests {
         return services.BuildServiceProvider();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationRepository : INotificationRepository {
         public List<Notification> Notifications { get; } = [];
 
@@ -110,6 +112,7 @@ public sealed class NotificationTestSchedulerTests {
             CancellationToken cancellationToken = default) => Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationPusher : INotificationPusher {
         public Guid UserId { get; private set; }
         public int UnreadCount { get; private set; }
@@ -128,6 +131,7 @@ public sealed class NotificationTestSchedulerTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingWebPushNotificationSender : IWebPushNotificationSender {
         private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -142,6 +146,7 @@ public sealed class NotificationTestSchedulerTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingWebPushNotificationSender : IWebPushNotificationSender {
         private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -157,6 +162,7 @@ public sealed class NotificationTestSchedulerTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestHostApplicationLifetime : IHostApplicationLifetime, IDisposable {
         private readonly CancellationTokenSource cts = new();
 

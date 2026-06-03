@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, ITestOutputHelper output)
     : IClassFixture<ApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -370,9 +371,12 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         return payload.Id;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ProductPayload(Guid Id);
 }

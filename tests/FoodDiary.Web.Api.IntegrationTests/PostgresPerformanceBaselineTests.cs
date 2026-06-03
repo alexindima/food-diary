@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFactory factory)
     : IClassFixture<PostgresApiWebApplicationFactory> {
     private const int SeedCount = 1500;
@@ -289,13 +290,18 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);
 
+    [ExcludeFromCodeCoverage]
     private sealed record PagedPayload<T>(IReadOnlyList<T> Data, int Page, int Limit, int TotalPages, int TotalItems);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ItemPayload(Guid Id);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ImageUploadPayload(string UploadUrl, string FileUrl, DateTime ExpiresAtUtc, Guid AssetId);
 }

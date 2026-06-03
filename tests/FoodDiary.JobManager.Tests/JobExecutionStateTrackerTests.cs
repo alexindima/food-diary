@@ -3,6 +3,7 @@ using System.Diagnostics.Metrics;
 
 namespace FoodDiary.JobManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class JobExecutionStateTrackerTests : IDisposable {
     private const string JobManagerMeterName = "FoodDiary.JobManager";
 

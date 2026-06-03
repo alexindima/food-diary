@@ -9,6 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Usda;
 
+[ExcludeFromCodeCoverage]
 public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WithValidData_Succeeds() {
@@ -94,6 +95,7 @@ public class UsdaFeatureTests {
         Assert.True(result.IsFailure);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubProductRepository(Product? product) : IProductRepository {
         public bool UpdateCalled { get; private set; }
         public bool GetByIdForUpdateCalled { get; private set; }
@@ -118,6 +120,7 @@ public class UsdaFeatureTests {
         public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(IEnumerable<ProductId> ids, UserId userId, bool includePublic = true, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUsdaFoodRepository(UsdaFood? food) : IUsdaFoodRepository {
         public Task<UsdaFood?> GetByFdcIdAsync(int fdcId, CancellationToken ct = default) =>
             Task.FromResult(food);

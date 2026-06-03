@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 internal static class CSharpSyntaxReader {
     public static IReadOnlyList<MethodDeclaration> ReadMethods(string path) {
         var source = File.ReadAllText(path);
@@ -42,6 +43,7 @@ internal static class CSharpSyntaxReader {
                classDeclaration.Identifier.ValueText.EndsWith("ControllerBase", StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     internal sealed record MethodDeclaration(
         string Path,
         int Line,

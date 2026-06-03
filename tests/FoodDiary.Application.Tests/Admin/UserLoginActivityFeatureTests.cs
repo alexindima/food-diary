@@ -6,6 +6,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Tests.Admin;
 
+[ExcludeFromCodeCoverage]
 public sealed class UserLoginActivityFeatureTests {
     [Fact]
     public async Task GetAdminUserLoginEvents_MasksIpAddressAndNormalizesPaging() {
@@ -93,6 +94,7 @@ public sealed class UserLoginActivityFeatureTests {
         Assert.Equal(lastSeenAtUtc, item.LastSeenAtUtc);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingUserLoginEventRepository : IUserLoginEventRepository {
         public IReadOnlyList<UserLoginEventReadModel> PagedItems { get; init; } = [];
         public int TotalItems { get; init; }

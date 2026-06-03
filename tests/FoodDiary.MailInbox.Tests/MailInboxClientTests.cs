@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessagesAsync_SendsApiKeyHeader() {
@@ -202,6 +203,7 @@ public sealed class MailInboxClientTests {
         Assert.Equal(TimeSpan.FromSeconds(3), httpClient.Timeout);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHandler(HttpResponseMessage response) : HttpMessageHandler {
         public HttpRequestMessage? Request { get; private set; }
 

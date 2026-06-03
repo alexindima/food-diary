@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Users;
 
+[ExcludeFromCodeCoverage]
 public sealed class UpdateUserCommandHandlerTests {
     [Fact]
     public async Task Handle_WithDashboardLayout_SerializesInApplicationLayer() {
@@ -173,6 +174,7 @@ public sealed class UpdateUserCommandHandlerTests {
         Assert.Equal("modern", result.Value.UiStyle);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -187,6 +189,7 @@ public sealed class UpdateUserCommandHandlerTests {
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubImageAssetCleanupService(string? errorCode = null) : IImageAssetCleanupService {
         public List<ImageAssetId> RequestedAssetIds { get; } = [];
 

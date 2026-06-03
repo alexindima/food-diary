@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MealPlanHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsUserIdAndDietType() {

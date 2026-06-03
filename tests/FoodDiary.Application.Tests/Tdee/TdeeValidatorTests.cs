@@ -3,6 +3,7 @@ using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 
 namespace FoodDiary.Application.Tests.Tdee;
 
+[ExcludeFromCodeCoverage]
 public class TdeeValidatorTests {
     private readonly GetTdeeInsightQueryValidator _validator = new();
 

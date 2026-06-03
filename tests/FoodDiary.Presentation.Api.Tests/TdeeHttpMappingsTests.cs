@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Tdee.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class TdeeHttpMappingsTests {
     [Fact]
     public void ToTdeeQuery_MapsUserId() {

@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AllowImageAssetAccessService : IImageAssetAccessService {
     public static AllowImageAssetAccessService Instance { get; } = new();
 

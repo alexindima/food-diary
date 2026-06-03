@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class EmailSenderTests {
     private const string EmailMeterName = "FoodDiary.Application.Email";
 
@@ -85,7 +86,7 @@ public sealed class EmailSenderTests {
                 FromAddress = "noreply@example.com",
                 FromName = "FoodDiary",
                 FrontendBaseUrl = "https://fooddiary.club",
-                AllowedFrontendBaseUrls = ["https://fooddiary.club", "https://дневникеды.рф"],
+                AllowedFrontendBaseUrls = ["https://fooddiary.club", "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"],
                 VerificationPath = "/verify-email",
                 PasswordResetPath = "/reset-password"
             });
@@ -142,11 +143,13 @@ public sealed class EmailSenderTests {
         return null;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubEmailTemplateProvider : IEmailTemplateProvider {
         public Task<EmailTemplateContent?> GetActiveTemplateAsync(string key, string locale, CancellationToken cancellationToken = default) =>
             Task.FromResult<EmailTemplateContent?>(null);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingEmailTransport : IEmailTransport {
         public string Body { get; private set; } = string.Empty;
 
@@ -156,6 +159,7 @@ public sealed class EmailSenderTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingEmailTransport(Exception exception) : IEmailTransport {
         public Task SendAsync(MailMessage message, CancellationToken cancellationToken) => Task.FromException(exception);
     }

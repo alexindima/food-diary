@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class HostCompositionBoundaryTests {
     [Fact]
     public void NonHostProductionProjects_DoNotReferencePrimaryWebApiNamespace() {

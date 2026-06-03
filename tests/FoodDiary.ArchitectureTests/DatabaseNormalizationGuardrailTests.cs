@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DatabaseNormalizationGuardrailTests {
     private static readonly HashSet<string> AllowedDocumentColumns = new(StringComparer.Ordinal) {
         "BillingPayment.ProviderMetadataJson",
@@ -313,5 +314,6 @@ public sealed class DatabaseNormalizationGuardrailTests {
     private static string FormatProperty(IEntityType entity, IProperty property) =>
         $"{entity.ClrType.Name}.{property.Name}";
 
+    [ExcludeFromCodeCoverage]
     private sealed record BusinessKeyExpectation(string EntityName, string[] PropertyNames);
 }

@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Usda.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class UsdaHttpMappingsTests {
     [Fact]
     public void ToQuery_Search_MapsSearchAndLimit() {

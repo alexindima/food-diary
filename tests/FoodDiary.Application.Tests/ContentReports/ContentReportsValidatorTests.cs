@@ -3,6 +3,7 @@ using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 
 namespace FoodDiary.Application.Tests.ContentReports;
 
+[ExcludeFromCodeCoverage]
 public class ContentReportsValidatorTests {
     private readonly CreateContentReportCommandValidator _validator = new();
 

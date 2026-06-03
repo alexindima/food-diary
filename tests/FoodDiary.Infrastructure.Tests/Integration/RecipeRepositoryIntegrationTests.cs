@@ -6,6 +6,7 @@ using System.Diagnostics;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private const int PerformanceSeedCount = 1500;
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);

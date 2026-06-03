@@ -3,6 +3,7 @@ using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 
 namespace FoodDiary.Application.Tests.RecipeComments;
 
+[ExcludeFromCodeCoverage]
 public class RecipeCommentsValidatorTests {
     private readonly CreateRecipeCommentCommandValidator _validator = new();
 

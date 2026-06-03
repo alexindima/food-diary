@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class OpenFoodFactsServiceTests {
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductFound_ReturnsMappedProduct() {
@@ -12,8 +13,8 @@ public sealed class OpenFoodFactsServiceTests {
             {
               "status": 1,
               "product": {
-                "product_name": "Молоко 3.2%",
-                "brands": "Простоквашино",
+                "product_name": "ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%",
+                "brands": "ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾",
                 "categories": "Dairy",
                 "image_url": "https://images.openfoodfacts.org/test.jpg",
                 "nutriments": {
@@ -32,8 +33,8 @@ public sealed class OpenFoodFactsServiceTests {
 
         Assert.NotNull(result);
         Assert.Equal("4600000000001", result.Barcode);
-        Assert.Equal("Молоко 3.2%", result.Name);
-        Assert.Equal("Простоквашино", result.Brand);
+        Assert.Equal("ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%", result.Name);
+        Assert.Equal("ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾", result.Brand);
         Assert.Equal("Dairy", result.Category);
         Assert.Equal(60, result.CaloriesPer100G);
         Assert.Equal(3.2, result.ProteinsPer100G);
@@ -267,6 +268,7 @@ public sealed class OpenFoodFactsServiceTests {
             NullLogger<OpenFoodFactsService>.Instance);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SuccessHttpMessageHandler(string json) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
@@ -275,18 +277,21 @@ public sealed class OpenFoodFactsServiceTests {
             });
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingHttpMessageHandler(Exception exception) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromException<HttpResponseMessage>(exception);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ErrorHttpMessageHandler(HttpStatusCode statusCode) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromResult(new HttpResponseMessage(statusCode));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class CountingHttpMessageHandler(string json) : HttpMessageHandler {
         public int RequestCount { get; private set; }
 
@@ -299,6 +304,7 @@ public sealed class OpenFoodFactsServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHttpMessageHandler(string json) : HttpMessageHandler {
         public Uri? LastRequestUri { get; private set; }
 

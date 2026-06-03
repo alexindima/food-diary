@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.RecipeLikes.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class RecipeLikeHttpMappingsTests {
     [Fact]
     public void ToCommand_MapsUserIdAndRecipeId() {

@@ -8,6 +8,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PostgresDietologistInvitationNotificationIntegrationTests(PostgresApiWebApplicationFactory factory)
     : IClassFixture<PostgresApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -80,10 +81,13 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken);
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthenticatedUser(HttpClient Client, string Email);
 
+    [ExcludeFromCodeCoverage]
     private sealed record NotificationPayload(
         Guid Id,
         string Type,

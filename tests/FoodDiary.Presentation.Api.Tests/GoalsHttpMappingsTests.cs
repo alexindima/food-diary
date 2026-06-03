@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Goals.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class GoalsHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsUserId() {

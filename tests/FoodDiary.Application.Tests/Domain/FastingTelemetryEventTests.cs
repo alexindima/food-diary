@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public sealed class FastingTelemetryEventTests {
     [Fact]
     public void Create_WithValidValues_NormalizesAndStoresAllFields() {

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ControllerSecurityContractTests {
     [Fact]
     public void AiFoodController_RequiresPremiumRole_AndAiRateLimitPolicy() {

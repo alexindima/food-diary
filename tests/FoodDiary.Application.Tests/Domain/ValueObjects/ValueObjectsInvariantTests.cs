@@ -2,6 +2,7 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Tests.Domain.ValueObjects;
 
+[ExcludeFromCodeCoverage]
 public class ValueObjectsInvariantTests {
     [Fact]
     public void DailySymptoms_Create_WithOutOfRangeValue_Throws() {

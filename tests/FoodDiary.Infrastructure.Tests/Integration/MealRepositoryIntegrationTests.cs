@@ -6,6 +6,7 @@ using FoodDiary.Infrastructure.Persistence.Meals;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task GetPagedAsync_AppliesDateFilterAndKeepsPagingMetadata() {
@@ -185,7 +186,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             new DateTime(2026, 5, 4, 13, 46, 0, DateTimeKind.Utc),
             null,
             [
-                MealAiItemData.Create("Rice", "Рис", 445, "g", 905, 58, 45, 66, 4, 0),
+                MealAiItemData.Create("Rice", "Ð Ð¸Ñ", 445, "g", 905, 58, 45, 66, 4, 0),
             ]);
 
         context.Meals.Add(meal);

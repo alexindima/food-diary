@@ -11,6 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.RecipeComments;
 
+[ExcludeFromCodeCoverage]
 public class RecipeCommentsFeatureTests {
     [Fact]
     public async Task CreateRecipeComment_WithValidData_Succeeds() {
@@ -146,6 +147,7 @@ public class RecipeCommentsFeatureTests {
         Assert.NotNull(await repo.GetByIdAsync(comment.Id));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryRecipeCommentRepository : IRecipeCommentRepository {
         private readonly List<RecipeComment> _comments = [];
 
@@ -173,6 +175,7 @@ public class RecipeCommentsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationRepository : INotificationRepository {
         public List<Notification> Added { get; } = [];
 
@@ -200,6 +203,7 @@ public class RecipeCommentsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubRecipeRepository(Recipe? recipe) : IRecipeRepository {
         public Task<Recipe?> GetByIdAsync(RecipeId id, UserId userId, bool includePublic = true,
             bool includeSteps = false, bool asTracking = false, CancellationToken cancellationToken = default) =>

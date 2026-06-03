@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ShoppingListHttpMappingsTests {
     [Fact]
     public void ToCurrentQuery_MapsUserId() {

@@ -11,6 +11,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -282,7 +283,10 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         return payload.Id;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(Guid Id, string Email);
+    [ExcludeFromCodeCoverage]
     private sealed record RecipePayload(Guid Id);
 }

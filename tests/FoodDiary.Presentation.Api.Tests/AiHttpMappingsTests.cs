@@ -5,6 +5,7 @@ using FoodDiary.Presentation.Api.Features.Ai.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AiHttpMappingsTests {
     [Fact]
     public void UserId_ToUsageQuery_MapsUserId() {
@@ -43,7 +44,7 @@ public sealed class AiHttpMappingsTests {
     public void FoodNutritionHttpRequest_ToCommand_MapsNestedItems() {
         var userId = Guid.NewGuid();
         var request = new FoodNutritionHttpRequest([
-            new FoodVisionItemHttpModel("egg", "яйцо", 2, "pcs", 0.95m)
+            new FoodVisionItemHttpModel("egg", "ÑÐ¹Ñ†Ð¾", 2, "pcs", 0.95m)
         ]);
 
         var command = request.ToCommand(userId);
@@ -51,7 +52,7 @@ public sealed class AiHttpMappingsTests {
         Assert.Equal(userId, command.UserId);
         var item = Assert.Single(command.Items);
         Assert.Equal("egg", item.NameEn);
-        Assert.Equal("яйцо", item.NameLocal);
+        Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal);
         Assert.Equal(2, item.Amount);
         Assert.Equal("pcs", item.Unit);
         Assert.Equal(0.95m, item.Confidence);
@@ -60,7 +61,7 @@ public sealed class AiHttpMappingsTests {
     [Fact]
     public void FoodVisionModel_ToHttpResponse_MapsNestedItems() {
         var model = new FoodVisionModel(
-            Items: [new FoodVisionItemModel("egg", "яйцо", 2, "pcs", 0.95m)],
+            Items: [new FoodVisionItemModel("egg", "ÑÐ¹Ñ†Ð¾", 2, "pcs", 0.95m)],
             Notes: "looks cooked");
 
         var response = model.ToHttpResponse();
@@ -68,7 +69,7 @@ public sealed class AiHttpMappingsTests {
         Assert.Equal("looks cooked", response.Notes);
         var item = Assert.Single(response.Items);
         Assert.Equal("egg", item.NameEn);
-        Assert.Equal("яйцо", item.NameLocal);
+        Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal);
         Assert.Equal(2, item.Amount);
         Assert.Equal("pcs", item.Unit);
         Assert.Equal(0.95m, item.Confidence);

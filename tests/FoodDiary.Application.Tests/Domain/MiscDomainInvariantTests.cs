@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class MiscDomainInvariantTests {
     [Fact]
     public void Role_Create_WithBlankName_Throws() {

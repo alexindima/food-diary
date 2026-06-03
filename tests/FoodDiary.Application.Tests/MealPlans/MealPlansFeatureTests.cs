@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.MealPlans;
 
+[ExcludeFromCodeCoverage]
 public class MealPlansFeatureTests {
     [Fact]
     public async Task AdoptMealPlan_WhenPlanNotFound_ReturnsFailure() {
@@ -157,6 +158,7 @@ public class MealPlansFeatureTests {
         Assert.Equal(2, model.TotalRecipes);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMealPlanRepository(MealPlan? plan) : IMealPlanRepository {
         public Task<MealPlan?> GetByIdAsync(MealPlanId id, bool includeDays = false, CancellationToken ct = default) =>
             Task.FromResult(plan);
@@ -166,6 +168,7 @@ public class MealPlansFeatureTests {
         public Task<IReadOnlyList<MealPlan>> GetByUserAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingShoppingListRepository : IShoppingListRepository {
         public ShoppingList? Added { get; private set; }
 

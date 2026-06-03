@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class WearableHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsUserId() {

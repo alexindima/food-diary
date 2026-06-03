@@ -5,6 +5,7 @@ using SmtpServer.Mail;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxMailboxFilterTests {
     [Fact]
     public async Task CanAcceptFromAsync_ReturnsTrue() {

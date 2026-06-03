@@ -8,6 +8,7 @@ using OptionsFactory = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.HealthChecks;
 
+[ExcludeFromCodeCoverage]
 public sealed class S3HealthCheckTests {
     [Fact]
     public async Task CheckHealthAsync_WhenBucketIsBlank_ReturnsHealthyWithoutCallingS3() {
@@ -71,6 +72,7 @@ public sealed class S3HealthCheckTests {
         return client;
     }
 
+    [ExcludeFromCodeCoverage]
     private class AmazonS3Proxy : DispatchProxy {
         public Func<MethodInfo, object?[]?, object?> InvokeHandler { get; set; } =
             (_, _) => throw new NotSupportedException();

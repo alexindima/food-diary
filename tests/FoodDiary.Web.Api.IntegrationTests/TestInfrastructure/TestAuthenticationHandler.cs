@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class TestAuthenticationHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,
     ILoggerFactory logger,

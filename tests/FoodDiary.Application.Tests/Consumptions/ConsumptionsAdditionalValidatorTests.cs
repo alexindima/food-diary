@@ -5,8 +5,9 @@ using FoodDiary.Application.Consumptions.Services;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
+[ExcludeFromCodeCoverage]
 public class ConsumptionsAdditionalValidatorTests {
-    // ── RepeatMealCommandValidator ──
+    // â”€â”€ RepeatMealCommandValidator â”€â”€
 
     [Fact]
     public async Task RepeatMeal_WithNullUserId_HasError() {
@@ -22,7 +23,7 @@ public class ConsumptionsAdditionalValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.MealId);
     }
 
-    // ── ConsumptionItemValidator ──
+    // â”€â”€ ConsumptionItemValidator â”€â”€
 
     [Fact]
     public void ConsumptionItem_WithNoProductOrRecipe_ReturnsFailure() {
@@ -52,7 +53,7 @@ public class ConsumptionsAdditionalValidatorTests {
         Assert.True(result.IsSuccess);
     }
 
-    // ── ManualNutritionValidator ──
+    // â”€â”€ ManualNutritionValidator â”€â”€
 
     [Fact]
     public void ManualNutrition_WithNullCalories_ReturnsFailure() {
@@ -81,7 +82,7 @@ public class ConsumptionsAdditionalValidatorTests {
         Assert.Equal(0, result.Value.Alcohol);
     }
 
-    // ── SatietyLevelValidator ──
+    // â”€â”€ SatietyLevelValidator â”€â”€
 
     [Fact]
     public void SatietyLevel_WithValidLevels_ReturnsSuccess() {

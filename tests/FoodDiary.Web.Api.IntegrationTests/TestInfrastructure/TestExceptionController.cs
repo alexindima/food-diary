@@ -4,6 +4,7 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 [ApiController]
 [Route("test/exceptions")]
+[ExcludeFromCodeCoverage]
 public sealed class TestExceptionController : ControllerBase {
     [HttpGet("unhandled")]
     public IActionResult ThrowUnhandled() {

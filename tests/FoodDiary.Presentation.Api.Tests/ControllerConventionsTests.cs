@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ControllerConventionsTests {
     private static readonly Assembly PresentationAssembly = typeof(FoodDiary.Presentation.Api.Controllers.BaseApiController).Assembly;
 

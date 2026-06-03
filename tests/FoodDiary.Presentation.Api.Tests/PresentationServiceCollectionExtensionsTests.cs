@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PresentationServiceCollectionExtensionsTests {
     [Fact]
     public void AddPresentationApi_RegistersPresentationServices() {
@@ -86,6 +87,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification/negotiate", StringComparison.Ordinal));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubFastingTelemetryEventRepository : IFastingTelemetryEventRepository {
         public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
@@ -94,6 +96,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
             Task.FromResult<IReadOnlyList<FastingTelemetryEventRecord>>([]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     }

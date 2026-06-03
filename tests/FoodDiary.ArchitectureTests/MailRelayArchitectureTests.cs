@@ -2,6 +2,7 @@ using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayDomainProject_DoesNotReferenceOtherMailRelayLayers() {

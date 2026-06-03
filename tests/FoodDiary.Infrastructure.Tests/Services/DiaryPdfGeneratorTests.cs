@@ -8,6 +8,7 @@ using FoodDiary.Infrastructure.Services.DiaryPdf;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithMeals_ReturnsPdfDocument() {
@@ -25,7 +26,7 @@ public sealed class DiaryPdfGeneratorTests {
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             null,
             240,
-            "https://дневникеды.рф",
+            "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„",
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -117,7 +118,7 @@ public sealed class DiaryPdfGeneratorTests {
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             "ru",
             240,
-            "https://дневникеды.рф",
+            "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„",
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -134,8 +135,8 @@ public sealed class DiaryPdfGeneratorTests {
             new DateTime(2026, 5, 4, 15, 3, 0, DateTimeKind.Utc),
             null,
             [
-                MealAiItemData.Create("carrot", "морковь", 100, "g", 41, 1, 0, 10, 3, 0),
-                MealAiItemData.Create("rice", "рис", 445, "g", 905, 58, 45, 66, 4, 0),
+                MealAiItemData.Create("carrot", "Ð¼Ð¾Ñ€ÐºÐ¾Ð²ÑŒ", 100, "g", 41, 1, 0, 10, 3, 0),
+                MealAiItemData.Create("rice", "Ñ€Ð¸Ñ", 445, "g", 905, 58, 45, 66, 4, 0),
             ]);
         var generator = new DiaryPdfGenerator();
 
@@ -247,6 +248,7 @@ public sealed class DiaryPdfGeneratorTests {
             .SetValue(session, asset);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingImageHandler : HttpMessageHandler {
         private const string TransparentPngBase64 =
             "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=";

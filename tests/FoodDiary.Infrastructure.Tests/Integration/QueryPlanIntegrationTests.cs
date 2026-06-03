@@ -11,6 +11,7 @@ using Npgsql;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private const int SeedCount = 1500;
 

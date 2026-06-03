@@ -5,6 +5,7 @@ using FoodDiary.Presentation.Api.Services;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task GetSummaryAsync_AggregatesTrackedFastingEvents() {
@@ -75,6 +76,7 @@ public sealed class FastingTelemetrySummaryServiceTests {
             Details: details);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryFastingTelemetryEventRepository : IFastingTelemetryEventRepository {
         private readonly List<FastingTelemetryEventRecord> _events = [];
 

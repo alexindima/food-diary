@@ -16,6 +16,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PresentationPayloadContractIntegrationTests(
     ApiWebApplicationFactory apiFactory,
     TestAuthApiWebApplicationFactory testAuthFactory)
@@ -543,5 +544,6 @@ public sealed class PresentationPayloadContractIntegrationTests(
             actual.ReplaceLineEndings("\n").TrimEnd());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken);
 }

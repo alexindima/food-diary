@@ -10,6 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Wearables;
 
+[ExcludeFromCodeCoverage]
 public class WearablesFeatureTests {
     [Fact]
     public async Task ConnectWearable_WithValidCode_CreatesConnection() {
@@ -215,6 +216,7 @@ public class WearablesFeatureTests {
         Assert.True(connectionRepository.UpdateCalled);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubWearableClient(WearableProvider provider, WearableTokenResult? tokenResult) : IWearableClient {
         public WearableProvider Provider => provider;
         public WearableTokenResult? RefreshTokenResult { get; init; } = new("new-access", "new-refresh", "ext", DateTime.UtcNow.AddHours(1));
@@ -232,6 +234,7 @@ public class WearablesFeatureTests {
             Task.FromResult(DataPoints);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubWearableOAuthStateService : IWearableOAuthStateService {
         private readonly HashSet<string> _validStates = [];
 
@@ -245,6 +248,7 @@ public class WearablesFeatureTests {
             _validStates.Contains(state) && state.StartsWith($"{provider}:", StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryWearableConnectionRepository : IWearableConnectionRepository {
         private readonly List<WearableConnection> _connections = [];
         public bool UpdateCalled { get; private set; }
@@ -268,6 +272,7 @@ public class WearablesFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryWearableSyncRepository : IWearableSyncRepository {
         private readonly List<WearableSyncEntry> _entries = [];
         public int AddedCount { get; private set; }

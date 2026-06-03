@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class UsdaFoodSearchServiceTests {
     [Fact]
     public async Task GetFoodDetailAsync_WhenBrandedFoodFound_ReturnsMappedNutrients() {
@@ -81,6 +82,7 @@ public sealed class UsdaFoodSearchServiceTests {
             NullLogger<UsdaFoodSearchService>.Instance);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SuccessHttpMessageHandler(string json) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
@@ -89,6 +91,7 @@ public sealed class UsdaFoodSearchServiceTests {
             });
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ErrorHttpMessageHandler(HttpStatusCode statusCode) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>

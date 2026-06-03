@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.OpenFoodFacts;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public sealed class OpenFoodFactsProductTests {
     [Fact]
     public void Create_WithValidValues_NormalizesFieldsAndMarksSeen() {

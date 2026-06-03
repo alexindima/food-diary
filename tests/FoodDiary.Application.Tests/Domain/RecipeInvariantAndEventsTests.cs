@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Create_WithInvalidName_Throws() {
@@ -122,6 +123,37 @@ public class RecipeInvariantAndEventsTests {
     }
 
     [Fact]
+    public void Update_WithChangedVisibilityAndTiming_UpdatesState() {
+        var recipe = Recipe.Create(
+            UserId.New(),
+            name: "Soup",
+            servings: 2,
+            prepTime: 10,
+            cookTime: 20,
+            visibility: Visibility.Public);
+
+        recipe.Update(new RecipeUpdate(
+            PrepTime: 15,
+            CookTime: 25,
+            Visibility: Visibility.Private));
+
+        Assert.Equal(15, recipe.PrepTime);
+        Assert.Equal(25, recipe.CookTime);
+        Assert.Equal(Visibility.Private, recipe.Visibility);
+        Assert.NotNull(recipe.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Create_InitializesDefaultCountersAndNutritionState() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+
+        Assert.Equal(0, recipe.UsageCount);
+        Assert.True(recipe.IsNutritionAutoCalculated);
+        Assert.Null(recipe.TotalCalories);
+        Assert.Null(recipe.ManualCalories);
+    }
+
+    [Fact]
     public void UpdateIdentity_WithTrimmedValues_UpdatesAndNormalizes() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
@@ -155,6 +187,16 @@ public class RecipeInvariantAndEventsTests {
     }
 
     [Fact]
+    public void UpdateIdentity_WithChangedComment_UpdatesComment() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2, comment: "Old comment");
+
+        recipe.UpdateIdentity(comment: "  New comment  ");
+
+        Assert.Equal("New comment", recipe.Comment);
+        Assert.NotNull(recipe.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void UpdateIdentity_WithClearFlagAndValue_Throws() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
@@ -171,6 +213,17 @@ public class RecipeInvariantAndEventsTests {
 
         Assert.Equal("https://img", recipe.ImageUrl);
         Assert.Equal(initialAssetId, recipe.ImageAssetId);
+    }
+
+    [Fact]
+    public void UpdateMedia_WithImageAssetIdOnly_UpdatesImageAssetId() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+        var imageAssetId = ImageAssetId.New();
+
+        recipe.UpdateMedia(imageAssetId: imageAssetId);
+
+        Assert.Equal(imageAssetId, recipe.ImageAssetId);
+        Assert.NotNull(recipe.ModifiedOnUtc);
     }
 
     [Fact]
@@ -205,6 +258,17 @@ public class RecipeInvariantAndEventsTests {
         Assert.Equal(4, recipe.Servings);
         Assert.Equal(10, recipe.PrepTime);
         Assert.Equal(20, recipe.CookTime);
+    }
+
+    [Fact]
+    public void UpdateTimingAndServings_WithTimesOnly_UpdatesTimes() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+
+        recipe.UpdateTimingAndServings(prepTime: 5, cookTime: 15);
+
+        Assert.Equal(5, recipe.PrepTime);
+        Assert.Equal(15, recipe.CookTime);
+        Assert.NotNull(recipe.ModifiedOnUtc);
     }
 
     [Fact]
@@ -250,6 +314,30 @@ public class RecipeInvariantAndEventsTests {
     }
 
     [Fact]
+    public void ClearSteps_WithExistingSteps_RemovesStepsAndSetsModifiedOnUtc() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+        recipe.AddStep(1, "Step 1");
+        recipe.ClearDomainEvents();
+
+        recipe.ClearSteps();
+
+        Assert.Empty(recipe.Steps);
+        Assert.NotNull(recipe.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void RemoveStep_WhenStepBelongsToRecipe_RemovesStepAndSetsModifiedOnUtc() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+        var step = recipe.AddStep(1, "Step 1");
+        recipe.ClearDomainEvents();
+
+        recipe.RemoveStep(step);
+
+        Assert.Empty(recipe.Steps);
+        Assert.NotNull(recipe.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void AddStep_WithEmptyInstruction_Throws() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
@@ -287,6 +375,33 @@ public class RecipeInvariantAndEventsTests {
     }
 
     [Fact]
+    public void Step_AddNestedRecipeIngredient_WithValidValues_AddsIngredient() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+        var step = recipe.AddStep(1, "Step");
+        var nestedRecipeId = RecipeId.New();
+
+        var ingredient = step.AddNestedRecipeIngredient(nestedRecipeId, 1.5);
+
+        Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
+        Assert.Null(ingredient.ProductId);
+        Assert.Equal(1.5, ingredient.Amount);
+        Assert.Single(step.Ingredients);
+        Assert.NotNull(step.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Step_RemoveIngredient_WhenIngredientExists_RemovesIngredientAndSetsModifiedOnUtc() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+        var step = recipe.AddStep(1, "Step");
+        var ingredient = step.AddProductIngredient(ProductId.New(), 100);
+
+        step.RemoveIngredient(ingredient);
+
+        Assert.Empty(step.Ingredients);
+        Assert.NotNull(step.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void Step_Update_WithTitleOverLimit_Throws() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         var step = recipe.AddStep(1, "Instruction");
@@ -310,10 +425,24 @@ public class RecipeInvariantAndEventsTests {
         Assert.Throws<ArgumentException>(() => step.AddNestedRecipeIngredient(RecipeId.Empty, 1));
     }
 
+    [Fact]
+    public void Step_Create_WithEmptyRecipeId_Throws() {
+        var method = typeof(RecipeStep).GetMethod(
+            "Create",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+        var exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+            method!.Invoke(null, [RecipeId.Empty, 1, "Step", null, null, null]));
+
+        Assert.IsType<ArgumentException>(exception.InnerException);
+    }
+
     [Theory]
     [InlineData(0d)]
     [InlineData(-1d)]
     [InlineData(1000000.0001d)]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
     public void Step_AddProductIngredient_WithInvalidAmount_Throws(double amount) {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         var step = recipe.AddStep(1, "Step");
@@ -342,6 +471,18 @@ public class RecipeInvariantAndEventsTests {
 
         Assert.Equal(1000000d, ingredient.Amount);
         Assert.NotNull(ingredient.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Ingredient_CreateWithRecipe_WithEmptyRecipeStepId_Throws() {
+        var method = typeof(RecipeIngredient).GetMethod(
+            "CreateWithRecipe",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+        var exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+            method!.Invoke(null, [RecipeStepId.Empty, RecipeId.New(), 1d]));
+
+        Assert.IsType<ArgumentException>(exception.InnerException);
     }
 
     [Fact]
@@ -401,6 +542,16 @@ public class RecipeInvariantAndEventsTests {
     }
 
     [Fact]
+    public void EnableAutoNutrition_WhenAlreadyAutoWithoutManualNutrition_DoesNothing() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+
+        recipe.EnableAutoNutrition();
+
+        Assert.Empty(recipe.DomainEvents);
+        Assert.Null(recipe.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void SetManualNutrition_WithSameValues_DoesNotRaiseDuplicateEvent() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
@@ -432,6 +583,21 @@ public class RecipeInvariantAndEventsTests {
         recipe.ApplyComputedNutrition(null, null, null, null, null, null);
 
         Assert.Null(recipe.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void ApplyComputedNutrition_WithDifferentValues_UpdatesTotals() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+
+        recipe.ApplyComputedNutrition(100, 10, 20, 30, 4, 0);
+
+        Assert.Equal(100, recipe.TotalCalories);
+        Assert.Equal(10, recipe.TotalProteins);
+        Assert.Equal(20, recipe.TotalFats);
+        Assert.Equal(30, recipe.TotalCarbs);
+        Assert.Equal(4, recipe.TotalFiber);
+        Assert.Equal(0, recipe.TotalAlcohol);
+        Assert.NotNull(recipe.ModifiedOnUtc);
     }
 
     [Fact]

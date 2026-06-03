@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class WeeklyCheckInHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsUserId() {

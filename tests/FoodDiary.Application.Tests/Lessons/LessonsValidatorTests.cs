@@ -3,6 +3,7 @@ using FoodDiary.Application.Lessons.Queries.GetLessons;
 
 namespace FoodDiary.Application.Tests.Lessons;
 
+[ExcludeFromCodeCoverage]
 public class LessonsValidatorTests {
     private readonly GetLessonsQueryValidator _validator = new();
 

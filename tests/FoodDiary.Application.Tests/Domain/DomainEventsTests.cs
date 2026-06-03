@@ -7,6 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class DomainEventsTests {
     [Fact]
     public void User_MarkDeleted_AndRestore_RaisesEvents() {

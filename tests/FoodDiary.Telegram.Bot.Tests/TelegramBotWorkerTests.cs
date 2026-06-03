@@ -11,6 +11,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace FoodDiary.Telegram.Bot.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class TelegramBotWorkerTests {
     [Fact]
     public async Task StartAsync_WhenTokenIsMissing_DoesNotCallTelegramApi() {
@@ -437,6 +438,7 @@ public sealed class TelegramBotWorkerTests {
     private static TValue GetPropertyValue<TValue>(object instance, string propertyName) =>
         (TValue)instance.GetType().GetProperty(propertyName)!.GetValue(instance)!;
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingTelegramBotClient : ITelegramBotClient {
         public List<object> Requests { get; } = [];
 
@@ -496,6 +498,7 @@ public sealed class TelegramBotWorkerTests {
 
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHttpClientFactory : IHttpClientFactory {
         private readonly RecordingHttpMessageHandler _handler;
 
@@ -507,6 +510,7 @@ public sealed class TelegramBotWorkerTests {
 
         public HttpClient CreateClient(string name) => new(_handler, disposeHandler: false);
 
+        [ExcludeFromCodeCoverage]
         private sealed class RecordingHttpMessageHandler(Queue<HttpResponseMessage> responses) : HttpMessageHandler {
             private readonly Queue<HttpResponseMessage> _responses = responses;
 

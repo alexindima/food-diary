@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ImageCleanupJobTests : IDisposable {
     private readonly JobExecutionStateTracker _stateTracker = new();
 
@@ -58,6 +59,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
 
     public void Dispose() => _stateTracker.Dispose();
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubImageCleanupService(int itemsPerBatch, int totalAvailable = 0) : IImageAssetCleanupService {
         public int TotalDeleted { get; private set; }
         public int CallCount { get; private set; }
@@ -75,6 +77,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingImageCleanupService : IImageAssetCleanupService {
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken ct = default) =>
             throw new InvalidOperationException("S3 error");
@@ -84,6 +87,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
     }

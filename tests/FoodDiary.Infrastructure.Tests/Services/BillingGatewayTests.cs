@@ -13,6 +13,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class BillingGatewayTests {
     [Fact]
     public void ConfigurableAccessor_ReturnsConfiguredProviderIgnoringCaseAndWhitespace() {
@@ -983,6 +984,7 @@ public sealed class BillingGatewayTests {
     private static StringContent JsonContent(string json) =>
         new(json, Encoding.UTF8, "application/json");
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubBillingGateway(string provider) : IBillingProviderGateway {
         public string Provider => provider;
         public Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(BillingCheckoutSessionRequestModel request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -990,6 +992,7 @@ public sealed class BillingGatewayTests {
         public Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(string payload, string signatureHeader, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHttpMessageHandler : HttpMessageHandler {
         private readonly Queue<HttpResponseMessage> _responses;
 

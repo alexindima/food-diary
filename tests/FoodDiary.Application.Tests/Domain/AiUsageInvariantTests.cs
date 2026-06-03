@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class AiUsageInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {

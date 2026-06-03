@@ -2,6 +2,7 @@ using FoodDiary.Domain.Common;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class EntityAndAggregateRootBaseTests {
     [Fact]
     public void Entity_Equals_SameReference_ReturnsTrue() {
@@ -196,6 +197,7 @@ public class EntityAndAggregateRootBaseTests {
         Assert.Empty(aggregate.DomainEvents);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestEntity : Entity<Guid> {
         private TestEntity() {
         }
@@ -216,6 +218,7 @@ public class EntityAndAggregateRootBaseTests {
         public void MarkModified(DateTime modifiedOnUtc) => SetModified(modifiedOnUtc);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class AnotherTestEntity : Entity<Guid> {
         private AnotherTestEntity(Guid id) : base(id) {
         }
@@ -223,6 +226,7 @@ public class EntityAndAggregateRootBaseTests {
         public static AnotherTestEntity WithId(Guid id) => new(id);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestAggregateRoot : AggregateRoot<Guid> {
         private TestAggregateRoot(Guid id) : base(id) {
         }
@@ -232,5 +236,6 @@ public class EntityAndAggregateRootBaseTests {
         public void AddEvent(IDomainEvent domainEvent) => RaiseDomainEvent(domainEvent);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record TestDomainEvent(DateTime OccurredOnUtc) : IDomainEvent;
 }

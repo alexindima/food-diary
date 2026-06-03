@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleOk_ReturnsMappedOkResult() {
@@ -101,6 +102,7 @@ public sealed class BaseApiControllerTests {
         return controller;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestController(ISender mediator) : BaseApiController(mediator) {
         public Task<IActionResult> HandleOkPublic<TResponse, THttpResponse>(
             IRequest<Result<TResponse>> request,
@@ -126,14 +128,19 @@ public sealed class BaseApiControllerTests {
             HandleObservedOk(request, map, logger, operationName, userId);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record CreatedModel(Guid Id);
 
+    [ExcludeFromCodeCoverage]
     private sealed record TestOkRequest : IRequest<Result<string>>;
 
+    [ExcludeFromCodeCoverage]
     private sealed record TestCreatedRequest : IRequest<Result<CreatedModel>>;
 
+    [ExcludeFromCodeCoverage]
     private sealed record TestNoContentRequest : IRequest<Result>;
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubSender : ISender {
         private readonly Dictionary<object, object> _responses = new();
 
@@ -168,6 +175,7 @@ public sealed class BaseApiControllerTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestActivityListener : IDisposable {
         private readonly ActivityListener _listener;
 

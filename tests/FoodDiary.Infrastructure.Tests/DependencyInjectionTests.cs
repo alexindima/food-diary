@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_WithInvalidEmailBaseUrl_FailsOptionsValidation() {
@@ -208,6 +209,7 @@ public sealed class DependencyInjectionTests {
             .Build();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestDiaryPdfReportTextProvider : IDiaryPdfReportTextProvider {
         public DiaryPdfReportTexts GetTexts(string? locale) =>
             new(
@@ -289,6 +291,7 @@ public sealed class DependencyInjectionTests {
             : null;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NullPublisher : IPublisher {
         public Task Publish(object notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification => Task.CompletedTask;

@@ -1,5 +1,6 @@
 namespace FoodDiary.Telegram.Bot.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class BotUriHelperTests {
     [Fact]
     public void TryCreateApiBaseUri_WithValidUrl_ReturnsTrue() {

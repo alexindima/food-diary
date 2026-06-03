@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 
 namespace FoodDiary.JobManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class UserCleanupJobTests : IDisposable {
     private readonly JobExecutionStateTracker _stateTracker = new();
 
@@ -80,6 +81,7 @@ public sealed class UserCleanupJobTests : IDisposable {
 
     public void Dispose() => _stateTracker.Dispose();
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserCleanupService(int usersPerBatch, int totalAvailable = 0) : IUserCleanupService {
         public int TotalDeleted { get; private set; }
         public int CallCount { get; private set; }
@@ -96,12 +98,14 @@ public sealed class UserCleanupJobTests : IDisposable {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingUserCleanupService : IUserCleanupService {
         public Task<int> CleanupDeletedUsersAsync(
             DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken ct = default) =>
             throw new InvalidOperationException("DB error");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
     }

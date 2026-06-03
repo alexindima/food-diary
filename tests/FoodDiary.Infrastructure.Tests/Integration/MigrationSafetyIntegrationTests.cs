@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -6,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private const string InitialMigration = "20251108210736_InitialCreate";
 

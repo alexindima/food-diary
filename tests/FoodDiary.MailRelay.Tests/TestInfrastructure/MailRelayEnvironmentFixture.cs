@@ -4,6 +4,7 @@ using Testcontainers.RabbitMq;
 
 namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
     private PostgreSqlContainer? _postgres;
     private RabbitMqContainer? _rabbitMq;

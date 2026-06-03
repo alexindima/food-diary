@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Export;
 
+[ExcludeFromCodeCoverage]
 public class ExportFeatureTests {
     private static readonly DateTime TestDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -56,7 +57,7 @@ public class ExportFeatureTests {
         var handler = new ExportDiaryQueryHandler(new StubMealRepository(meals), new SingleUserRepository(), pdfGenerator);
 
         var result = await handler.Handle(
-            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://дневникеды.рф"),
+            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -64,7 +65,7 @@ public class ExportFeatureTests {
         Assert.EndsWith(".pdf", result.Value.FileName, StringComparison.Ordinal);
         Assert.Equal("ru", pdfGenerator.LastLocale);
         Assert.Equal(240, pdfGenerator.LastTimeZoneOffsetMinutes);
-        Assert.Equal("https://дневникеды.рф", pdfGenerator.LastReportOrigin);
+        Assert.Equal("https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„", pdfGenerator.LastReportOrigin);
     }
 
     [Fact]
@@ -304,6 +305,7 @@ public class ExportFeatureTests {
         Assert.Equal(0xBF, csv[2]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMealRepository(IReadOnlyList<Meal> meals) : IMealRepository {
         public DateTime? LastDateFrom { get; private set; }
         public DateTime? LastDateTo { get; private set; }
@@ -325,6 +327,7 @@ public class ExportFeatureTests {
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User? user = null) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
@@ -340,6 +343,7 @@ public class ExportFeatureTests {
         public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubPdfGenerator : IDiaryPdfGenerator {
         public string? LastLocale { get; private set; }
         public int? LastTimeZoneOffsetMinutes { get; private set; }

@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Lessons.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class LessonHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsAllFields() {

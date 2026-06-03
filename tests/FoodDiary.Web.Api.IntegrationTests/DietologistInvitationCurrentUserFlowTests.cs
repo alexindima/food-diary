@@ -8,6 +8,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -123,10 +124,13 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken);
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthenticatedUser(HttpClient Client, string Email);
 
+    [ExcludeFromCodeCoverage]
     private sealed record DietologistRelationshipPayload(
         Guid InvitationId,
         string Status,
@@ -139,6 +143,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         DateTime ExpiresAtUtc,
         DateTime? AcceptedAtUtc);
 
+    [ExcludeFromCodeCoverage]
     private sealed record DietologistInvitationForCurrentUserPayload(
         Guid InvitationId,
         Guid ClientUserId,

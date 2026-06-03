@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayMessageProcessorTests {
     [Fact]
     public async Task ProcessAsync_WhenRecipientIsSuppressed_MarksMessageSuppressedAndDoesNotSend() {
@@ -80,6 +81,7 @@ public sealed class MailRelayMessageProcessorTests {
             attemptCount,
             maxAttempts);
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingTransport : IRelayDeliveryTransport {
         public bool SendCalled { get; private set; }
         public Exception? Exception { get; init; }
@@ -90,6 +92,7 @@ public sealed class MailRelayMessageProcessorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingQueueStore : IMailRelayQueueStore {
         public IReadOnlyList<string> SuppressedRecipients { get; init; } = [];
         public string? Status { get; private set; }

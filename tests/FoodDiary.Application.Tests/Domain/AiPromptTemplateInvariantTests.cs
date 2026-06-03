@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.Ai;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class AiPromptTemplateInvariantTests {
     [Fact]
     public void Create_WithBlankKey_Throws() {

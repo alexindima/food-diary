@@ -2,6 +2,7 @@ using FoodDiary.Presentation.Api.Security;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class SecretComparisonTests {
     [Fact]
     public void FixedTimeEquals_WithMatchingSecrets_ReturnsTrue() {

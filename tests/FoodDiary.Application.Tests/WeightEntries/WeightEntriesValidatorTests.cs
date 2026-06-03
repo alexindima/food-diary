@@ -8,6 +8,7 @@ using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 
 namespace FoodDiary.Application.Tests.WeightEntries;
 
+[ExcludeFromCodeCoverage]
 public class WeightEntriesValidatorTests {
     [Fact]
     public async Task CreateWeight_WithNullUserId_HasError() {

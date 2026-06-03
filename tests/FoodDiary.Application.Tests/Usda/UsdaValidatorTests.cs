@@ -3,6 +3,7 @@ using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 
 namespace FoodDiary.Application.Tests.Usda;
 
+[ExcludeFromCodeCoverage]
 public class UsdaValidatorTests {
     private readonly SearchUsdaFoodsQueryValidator _validator = new();
 

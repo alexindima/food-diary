@@ -8,12 +8,13 @@ using FoodDiary.Application.Products.Queries.GetRecentProducts;
 
 namespace FoodDiary.Application.Tests.Products;
 
+[ExcludeFromCodeCoverage]
 public class ProductsValidatorTests {
     private static CreateProductCommand ValidCreateProduct(Guid? userId = null) =>
         new(userId ?? Guid.NewGuid(), null, "Chicken", null, "Other", null, null, null, null, null,
             "g", 100, 100, 165, 31, 3.6, 0, 0, 0, "Private");
 
-    // ── CreateProduct ──
+    // â”€â”€ CreateProduct â”€â”€
 
     [Fact]
     public async Task CreateProduct_WithNullUserId_HasError() {
@@ -63,7 +64,7 @@ public class ProductsValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── DuplicateProduct ──
+    // â”€â”€ DuplicateProduct â”€â”€
 
     [Fact]
     public async Task DuplicateProduct_WithNullUserId_HasError() {
@@ -79,7 +80,7 @@ public class ProductsValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.ProductId);
     }
 
-    // ── GetProductById ──
+    // â”€â”€ GetProductById â”€â”€
 
     [Fact]
     public async Task GetProductById_WithNullUserId_HasError() {
@@ -95,7 +96,7 @@ public class ProductsValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.ProductId);
     }
 
-    // ── GetProducts ──
+    // â”€â”€ GetProducts â”€â”€
 
     [Fact]
     public async Task GetProducts_WithZeroPage_HasError() {
@@ -111,7 +112,7 @@ public class ProductsValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
-    // ── GetProductsWithRecent ──
+    // â”€â”€ GetProductsWithRecent â”€â”€
 
     [Fact]
     public async Task GetProductsOverview_WithNullUserId_HasError() {
@@ -120,7 +121,7 @@ public class ProductsValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
-    // ── GetRecentProducts ──
+    // â”€â”€ GetRecentProducts â”€â”€
 
     [Fact]
     public async Task GetRecentProducts_WithNullUserId_HasError() {

@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class WeightEntryInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {
@@ -45,6 +46,18 @@ public class WeightEntryInvariantTests {
         entry.Update(weight: 72, date: date);
 
         Assert.Null(entry.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Update_WithDifferentValues_SetsModifiedOnUtc() {
+        var entry = WeightEntry.Create(UserId.New(), DateTime.UtcNow.Date, 72);
+        var newDate = DateTime.UtcNow.AddDays(-1);
+
+        entry.Update(weight: 73.5, date: newDate);
+
+        Assert.Equal(73.5, entry.Weight);
+        Assert.Equal(DateTime.SpecifyKind(newDate.ToUniversalTime().Date, DateTimeKind.Utc), entry.Date);
+        Assert.NotNull(entry.ModifiedOnUtc);
     }
 
     [Theory]

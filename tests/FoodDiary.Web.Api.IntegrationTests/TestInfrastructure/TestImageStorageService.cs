@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class TestImageStorageService(IOptions<S3Options> options) : IImageStorageService {
     private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase) {
         "image/jpeg",

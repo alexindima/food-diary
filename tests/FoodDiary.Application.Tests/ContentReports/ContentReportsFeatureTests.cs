@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.ContentReports;
 
+[ExcludeFromCodeCoverage]
 public class ContentReportsFeatureTests {
     [Fact]
     public async Task CreateContentReport_WithValidData_Succeeds() {
@@ -49,6 +50,7 @@ public class ContentReportsFeatureTests {
         Assert.True(result.IsFailure);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryContentReportRepository : IContentReportRepository {
         private readonly List<ContentReport> _reports = [];
         private readonly HashSet<(UserId, ReportTargetType, Guid)> _reported = [];

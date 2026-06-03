@@ -29,6 +29,7 @@ using FoodDiary.Application.Abstractions.Recipes.Common;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
+[ExcludeFromCodeCoverage]
 public class ConsumptionsFeatureTests {
     [Fact]
     public void ConsumptionItemValidator_WhenIdsAreMissing_Fails() {
@@ -1013,7 +1014,7 @@ public class ConsumptionsFeatureTests {
             recognizedAtUtc: new DateTime(2026, 3, 26, 20, 1, 0, DateTimeKind.Utc),
             notes: "photo",
             items: [
-                MealAiItemData.Create("Pasta", "Паста", 250, "g", 420, 14, 8, 72, 4, 0)
+                MealAiItemData.Create("Pasta", "ÐŸÐ°ÑÑ‚Ð°", 250, "g", 420, 14, 8, 72, 4, 0)
             ]);
         sourceMeal.ApplyNutrition(new MealNutritionUpdate(
             TotalCalories: 430,
@@ -1053,6 +1054,7 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(430, repository.LastAddedMeal.ManualCalories);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {
         public bool UpdateCalled { get; private set; }
         public Meal? LastAddedMeal { get; private set; }
@@ -1109,6 +1111,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ReloadMissingMealRepository(Meal meal) : IMealRepository {
         private bool _reloadStarted;
         public bool UpdateCalled { get; private set; }
@@ -1158,6 +1161,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class CreatingMealRepository : IMealRepository {
         public Meal? StoredMeal { get; private set; }
 
@@ -1205,6 +1209,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingMealPageRepository(
         IReadOnlyList<Meal>? items = null,
         int totalItems = 0) : IMealRepository {
@@ -1256,6 +1261,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopProductLookupService : IProductLookupService {
         public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
@@ -1264,6 +1270,7 @@ public class ConsumptionsFeatureTests {
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopRecipeLookupService : IRecipeLookupService {
         public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
@@ -1272,6 +1279,7 @@ public class ConsumptionsFeatureTests {
             Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopMealNutritionService : IMealNutritionService {
         public Task<Result<MealNutritionSummary>> CalculateAsync(
             Meal meal,
@@ -1280,6 +1288,7 @@ public class ConsumptionsFeatureTests {
             Task.FromResult(Result.Success(new MealNutritionSummary(0, 0, 0, 0, 0, 0)));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedMealNutritionService(MealNutritionSummary nutritionSummary) : IMealNutritionService {
         public Task<Result<MealNutritionSummary>> CalculateAsync(
             Meal meal,
@@ -1288,6 +1297,7 @@ public class ConsumptionsFeatureTests {
             Task.FromResult(Result.Success(nutritionSummary));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FailingMealNutritionService : IMealNutritionService {
         public Task<Result<MealNutritionSummary>> CalculateAsync(
             Meal meal,
@@ -1297,6 +1307,7 @@ public class ConsumptionsFeatureTests {
                 Errors.Consumption.InvalidData("Nutrition calculation failed.")));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingRecentItemRepository : IRecentItemRepository {
         public IReadOnlyList<ProductId> LastProductIds { get; private set; } = [];
         public IReadOnlyList<RecipeId> LastRecipeIds { get; private set; } = [];
@@ -1322,6 +1333,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingCleanupService(string? errorCode = null) : IImageAssetCleanupService {
         public List<ImageAssetId> RequestedAssetIds { get; } = [];
 
@@ -1336,6 +1348,7 @@ public class ConsumptionsFeatureTests {
             Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => new(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc);
     }
@@ -1357,6 +1370,7 @@ public class ConsumptionsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1371,6 +1385,7 @@ public class ConsumptionsFeatureTests {
         public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubFavoriteMealRepository : IFavoriteMealRepository {
         private readonly IReadOnlyList<FavoriteMeal> _favorites;
 

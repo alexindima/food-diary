@@ -5,6 +5,7 @@ using Testcontainers.PostgreSql;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
+[ExcludeFromCodeCoverage]
 public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     private PostgreSqlContainer? _container;
     private string? _skipReason;

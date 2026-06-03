@@ -7,6 +7,7 @@ using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AdminHttpMappingsTests {
     [Fact]
     public void AdminUserUpdateHttpRequest_ToCommand_MapsAllFields() {

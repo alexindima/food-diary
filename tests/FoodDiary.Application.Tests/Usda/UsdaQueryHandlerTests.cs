@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Usda;
 
+[ExcludeFromCodeCoverage]
 public sealed class UsdaQueryHandlerTests {
     [Fact]
     public async Task SearchUsdaFoods_WhenLocalResultsAreSparse_AddsNonDuplicateBrandedResults() {
@@ -233,6 +234,7 @@ public sealed class UsdaQueryHandlerTests {
             Nutrient = new UsdaNutrient { Id = nutrientId, Name = name, UnitName = unit }
         };
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUsdaFoodRepository : IUsdaFoodRepository {
         public IReadOnlyList<UsdaFood> SearchResults { get; init; } = [];
         public UsdaFood? Food { get; init; }
@@ -273,6 +275,7 @@ public sealed class UsdaQueryHandlerTests {
             Task.FromResult(DailyValues);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUsdaFoodSearchService : IUsdaFoodSearchService {
         public IReadOnlyList<UsdaFoodModel> SearchResults { get; init; } = [];
         public UsdaFoodDetailModel? Detail { get; init; }
@@ -292,6 +295,7 @@ public sealed class UsdaQueryHandlerTests {
             Task.FromResult(Detail?.FdcId == fdcId ? Detail : null);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMealRepository : IMealRepository {
         public IReadOnlyList<Meal> Meals { get; init; } = [];
 

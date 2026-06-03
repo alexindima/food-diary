@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Images;
 
+[ExcludeFromCodeCoverage]
 public class ImagesFeatureTests {
     [Fact]
     public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_ReturnsFailure() {
@@ -171,6 +172,7 @@ public class ImagesFeatureTests {
         Assert.Contains("upload has not completed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeCleanupService(string? errorCode = null) : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(errorCode is null
@@ -181,6 +183,7 @@ public class ImagesFeatureTests {
             Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeImageStorageService(
         ImageObjectValidationResult? validationResult = null) : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
@@ -204,6 +207,7 @@ public class ImagesFeatureTests {
             Task.FromResult(validationResult ?? new ImageObjectValidationResult(true));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingImageStorageService : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
             UserId userId,
@@ -221,6 +225,7 @@ public class ImagesFeatureTests {
             Task.FromException<ImageObjectValidationResult>(new InvalidOperationException("Simulated storage failure."));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeImageAssetRepository : IImageAssetRepository {
         private readonly Dictionary<ImageAssetId, ImageAsset> _assets = [];
         public HashSet<ImageAssetId> InUseIds { get; } = [];

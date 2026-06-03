@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactory factory)
     : IClassFixture<PostgresApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -457,19 +458,27 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         return payload;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ProductPayload(Guid Id);
 
+    [ExcludeFromCodeCoverage]
     private sealed record RecipePayload(Guid Id);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ImageUploadPayload(string UploadUrl, string FileUrl, DateTime ExpiresAtUtc, Guid AssetId);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ShoppingListPayload(Guid Id, string Name, IReadOnlyList<ShoppingListItemPayload> Items);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ShoppingListItemPayload(Guid Id, Guid ShoppingListId, Guid? ProductId, string Name);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ErrorPayload(string Error, string Message, string? TraceId = null, IReadOnlyDictionary<string, string[]>? Errors = null);
 }

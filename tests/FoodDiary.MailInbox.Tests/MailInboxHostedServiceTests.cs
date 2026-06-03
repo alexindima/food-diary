@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxHostedServiceTests {
     [Fact]
     public async Task SchemaInitializerHostedService_StartAsync_EnsuresSchema() {
@@ -42,6 +43,7 @@ public sealed class MailInboxHostedServiceTests {
         await service.StopAsync(CancellationToken.None);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingSchemaInitializer : IMailInboxSchemaInitializer {
         public bool Called { get; private set; }
         public CancellationToken CancellationToken { get; private set; }
@@ -53,6 +55,7 @@ public sealed class MailInboxHostedServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingInboundMailStore : IInboundMailStore {
         public Task<Guid> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();

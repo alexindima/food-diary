@@ -27,6 +27,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxPresentationTests {
     [Fact]
     public void InboundMailHttpMappings_ToQuery_DefaultsLimitToFifty() {
@@ -468,6 +469,7 @@ public sealed class MailInboxPresentationTests {
         };
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubSender : ISender {
         private readonly Dictionary<object, object> _responses = new();
 
@@ -503,6 +505,7 @@ public sealed class MailInboxPresentationTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestMailInboxController(ISender sender) : MailInboxControllerBase(sender) {
         public Task<IActionResult> HandleCommand(IRequest<Result> request) {
             return HandleOk(request, "accepted");
@@ -513,7 +516,9 @@ public sealed class MailInboxPresentationTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record TestMailInboxCommand : IRequest<Result>;
 
+    [ExcludeFromCodeCoverage]
     private sealed record TestPlainCommand : IRequest;
 }

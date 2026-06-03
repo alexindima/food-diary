@@ -9,6 +9,7 @@ using OptionsFactory = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenDisabled_DoesNotDeleteLoginEvents() {
@@ -108,6 +109,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         return services.BuildServiceProvider();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingUserLoginEventRepository(params int[] deleteCounts) : IUserLoginEventRepository {
         private readonly Queue<int> _deleteCounts = new(deleteCounts);
         private readonly TaskCompletionSource _completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -156,6 +158,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class CancelingUserLoginEventRepository : IUserLoginEventRepository {
         private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -194,6 +197,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingUserLoginEventRepository : IUserLoginEventRepository {
         private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
 

@@ -12,8 +12,9 @@ using FoodDiary.Application.Users.Queries.GetUserGoals;
 
 namespace FoodDiary.Application.Tests.Users;
 
+[ExcludeFromCodeCoverage]
 public class UsersValidatorTests {
-    // ── ChangePassword ──
+    // â”€â”€ ChangePassword â”€â”€
 
     [Fact]
     public async Task ChangePassword_WithNullUserId_HasError() {
@@ -50,7 +51,7 @@ public class UsersValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── DeleteUser ──
+    // â”€â”€ DeleteUser â”€â”€
 
     [Fact]
     public async Task DeleteUser_WithNullUserId_HasError() {
@@ -59,7 +60,7 @@ public class UsersValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
-    // ── UpdateDesiredWaist ──
+    // â”€â”€ UpdateDesiredWaist â”€â”€
 
     [Fact]
     public async Task UpdateDesiredWaist_WithNullUserId_HasError() {
@@ -82,7 +83,7 @@ public class UsersValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // ── UpdateDesiredWeight ──
+    // â”€â”€ UpdateDesiredWeight â”€â”€
 
     [Fact]
     public async Task UpdateDesiredWeight_WithZeroValue_HasError() {
@@ -91,7 +92,7 @@ public class UsersValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.DesiredWeight);
     }
 
-    // ── UpdateUser ──
+    // â”€â”€ UpdateUser â”€â”€
 
     [Fact]
     public async Task UpdateUser_WithNullUserId_HasError() {
@@ -107,7 +108,7 @@ public class UsersValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.Weight);
     }
 
-    // ── UpdateGoals ──
+    // â”€â”€ UpdateGoals â”€â”€
 
     [Fact]
     public async Task UpdateGoals_WithNullUserId_HasError() {
@@ -137,7 +138,7 @@ public class UsersValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.MondayCalories);
     }
 
-    // ── Query validators (UserId-only) ──
+    // â”€â”€ Query validators (UserId-only) â”€â”€
 
     [Fact]
     public async Task UpdateGoals_WithInfiniteProteinTarget_HasError() {

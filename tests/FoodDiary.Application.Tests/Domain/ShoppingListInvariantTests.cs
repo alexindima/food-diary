@@ -4,6 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class ShoppingListInvariantTests {
     [Fact]
     public void Create_WithBlankName_Throws() {
@@ -22,6 +23,34 @@ public class ShoppingListInvariantTests {
             category: null,
             isChecked: false,
             sortOrder: -1));
+    }
+
+    [Fact]
+    public void AddItem_WithTooLongName_Throws() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => list.AddItem(
+            name: new string('m', 257),
+            productId: null,
+            amount: 1,
+            unit: null,
+            category: null,
+            isChecked: false,
+            sortOrder: 0));
+    }
+
+    [Fact]
+    public void AddItem_WithTooLongCategory_Throws() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => list.AddItem(
+            name: "Milk",
+            productId: null,
+            amount: 1,
+            unit: null,
+            category: new string('c', 129),
+            isChecked: false,
+            sortOrder: 0));
     }
 
     [Fact]

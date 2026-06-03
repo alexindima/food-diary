@@ -4,6 +4,7 @@ using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
 
 namespace FoodDiary.Application.Tests.OpenFoodFacts;
 
+[ExcludeFromCodeCoverage]
 public class OpenFoodFactsValidatorTests {
     private readonly SearchByBarcodeQueryValidator _barcodeValidator = new();
     private readonly SearchOpenFoodFactsQueryValidator _searchValidator = new();

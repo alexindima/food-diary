@@ -4,6 +4,7 @@ using FoodDiary.Mediator;
 
 namespace FoodDiary.Infrastructure.Tests.Events;
 
+[ExcludeFromCodeCoverage]
 public sealed class MediatorDomainEventPublisherTests {
     [Fact]
     public async Task PublishAsync_WrapsConcreteDomainEventTypeInNotificationEnvelope() {
@@ -34,6 +35,7 @@ public sealed class MediatorDomainEventPublisherTests {
         return (FoodDiary.Application.Abstractions.Common.Abstractions.Events.IDomainEventPublisher)constructor.Invoke([publisher]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingPublisher : IPublisher {
         public object? PublishedNotification { get; private set; }
 

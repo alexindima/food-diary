@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class StructuredAuditLoggerTests {
     private static readonly DateTime FixedUtcNow = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
 
@@ -43,10 +44,12 @@ public sealed class StructuredAuditLoggerTests {
         Assert.Contains("-", logger.LastMessage, StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => FixedUtcNow;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingLogger : ILogger<StructuredAuditLogger> {
         public int LogCount { get; private set; }
         public LogLevel LastLogLevel { get; private set; }

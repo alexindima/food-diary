@@ -10,6 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public class AuthenticationTokenServiceTests {
     [Fact]
     public async Task IssueAndStoreAsync_StoresHashedRefreshToken_AndReturnsTokens() {
@@ -97,6 +98,7 @@ public class AuthenticationTokenServiceTests {
         return user;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user) : IUserRepository {
         public bool Updated { get; private set; }
 
@@ -120,6 +122,7 @@ public class AuthenticationTokenServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserLoginEventRepository : IUserLoginEventRepository {
         public List<UserLoginEvent> Items { get; } = [];
 
@@ -160,6 +163,7 @@ public class AuthenticationTokenServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator : IJwtTokenGenerator {
         public UserId LastAccessUserId { get; private set; }
         public string LastAccessEmail { get; private set; } = string.Empty;
@@ -204,6 +208,7 @@ public class AuthenticationTokenServiceTests {
         public (UserId userId, string email)? ValidateToken(string token) => null;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public StubDateTimeProvider()
             : this(new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)) {

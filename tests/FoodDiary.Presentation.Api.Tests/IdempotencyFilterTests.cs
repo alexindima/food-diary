@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class IdempotencyFilterTests {
     [Fact]
     public async Task OnActionExecutionAsync_WithCachedPostResponse_ReturnsCachedContent() {
@@ -144,6 +145,7 @@ public sealed class IdempotencyFilterTests {
             controller: new object());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryDistributedCache : IDistributedCache {
         private readonly Dictionary<string, byte[]> _entries = new(StringComparer.Ordinal);
 

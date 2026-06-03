@@ -4,6 +4,7 @@ using FoodDiary.Application.Consumptions.Common;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
+[ExcludeFromCodeCoverage]
 public class UpdateConsumptionCommandValidatorTests {
     private readonly UpdateConsumptionCommandValidator _validator = new();
 

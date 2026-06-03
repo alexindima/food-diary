@@ -9,9 +9,6 @@ public sealed class DailySymptoms : IEquatable<DailySymptoms> {
     public int SleepQuality { get; private set; }
     public int Libido { get; private set; }
 
-    private DailySymptoms() {
-    }
-
     private DailySymptoms(int pain, int mood, int edema, int headache, int energy, int sleepQuality, int libido) {
         Pain = pain;
         Mood = mood;

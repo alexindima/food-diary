@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Mediator.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MediatorTests {
     [Fact]
     public async Task Send_WithTypedRequest_InvokesMatchingHandler() {
@@ -189,10 +190,13 @@ public sealed class MediatorTests {
         return services.BuildServiceProvider();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record EchoQuery(string Value) : IRequest<EchoResponse>;
 
+    [ExcludeFromCodeCoverage]
     private sealed record EchoResponse(string Value);
 
+    [ExcludeFromCodeCoverage]
     private sealed class EchoQueryHandler : IRequestHandler<EchoQuery, EchoResponse> {
         public Task<EchoResponse> Handle(EchoQuery request, CancellationToken cancellationToken) {
             BehaviorLog.Entries.Add("handler");
@@ -200,8 +204,10 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record UnitCommand : IRequest;
 
+    [ExcludeFromCodeCoverage]
     private sealed class UnitCommandHandler : IRequestHandler<UnitCommand, Unit> {
         public static bool Handled { get; set; }
 
@@ -211,8 +217,10 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record CapturingTokenQuery : IRequest<Unit>;
 
+    [ExcludeFromCodeCoverage]
     private sealed class CapturingTokenHandler : IRequestHandler<CapturingTokenQuery, Unit> {
         public static CancellationToken CapturedToken { get; private set; }
 
@@ -222,10 +230,12 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record CommandRequest(string Value) : ICommandRequest<EchoResponse>;
 
     private interface ICommandRequest<out TResponse> : IRequest<TResponse>;
 
+    [ExcludeFromCodeCoverage]
     private sealed class CommandRequestHandler : IRequestHandler<CommandRequest, EchoResponse> {
         public Task<EchoResponse> Handle(CommandRequest request, CancellationToken cancellationToken) {
             BehaviorLog.Entries.Add("command-handler");
@@ -233,6 +243,7 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class OuterBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull {
         public async Task<TResponse> Handle(
@@ -246,6 +257,7 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InnerBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull {
         public async Task<TResponse> Handle(
@@ -259,6 +271,7 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ShortCircuitBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull {
         public Task<TResponse> Handle(
@@ -272,6 +285,7 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class CommandOnlyBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommandRequest<TResponse> {
         public async Task<TResponse> Handle(
@@ -285,6 +299,7 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ClosedBehavior : IPipelineBehavior<EchoQuery, EchoResponse> {
         public Task<EchoResponse> Handle(
             EchoQuery request,
@@ -293,8 +308,10 @@ public sealed class MediatorTests {
             next(cancellationToken);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record SampleNotification(string Value) : INotification;
 
+    [ExcludeFromCodeCoverage]
     private sealed class FirstNotificationHandler : INotificationHandler<SampleNotification> {
         public Task Handle(SampleNotification notification, CancellationToken cancellationToken) {
             NotificationLog.Entries.Add($"first:{notification.Value}");
@@ -302,6 +319,7 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SecondNotificationHandler : INotificationHandler<SampleNotification> {
         public Task Handle(SampleNotification notification, CancellationToken cancellationToken) {
             NotificationLog.Entries.Add($"second:{notification.Value}");
@@ -309,12 +327,15 @@ public sealed class MediatorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record SampleStreamRequest : IStreamRequest<string>;
 
+    [ExcludeFromCodeCoverage]
     private static class BehaviorLog {
         public static List<string> Entries { get; } = [];
     }
 
+    [ExcludeFromCodeCoverage]
     private static class NotificationLog {
         public static List<string> Entries { get; } = [];
     }

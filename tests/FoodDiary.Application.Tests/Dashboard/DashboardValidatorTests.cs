@@ -5,6 +5,7 @@ using FoodDiary.Application.Statistics.Queries.GetStatistics;
 
 namespace FoodDiary.Application.Tests.Dashboard;
 
+[ExcludeFromCodeCoverage]
 public class DashboardValidatorTests {
     [Fact]
     public async Task GetDashboardSnapshot_WithNullUserId_HasError() {

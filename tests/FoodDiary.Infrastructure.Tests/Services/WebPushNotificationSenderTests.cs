@@ -10,6 +10,7 @@ using WebPushOptions = FoodDiary.Integrations.Options.WebPushOptions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenMasterPushDisabled_DoesNotLoadSubscriptions() {
@@ -95,6 +96,7 @@ public sealed class WebPushNotificationSenderTests {
             NullLogger<WebPushNotificationSender>.Instance);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingSubscriptionRepository(IEnumerable<WebPushSubscription>? subscriptions = null) : IWebPushSubscriptionRepository {
         public int GetByUserCalls { get; private set; }
         public List<WebPushSubscription> DeletedSubscriptions { get; } = [];
@@ -122,6 +124,7 @@ public sealed class WebPushNotificationSenderTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -136,6 +139,7 @@ public sealed class WebPushNotificationSenderTests {
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubNotificationTextRenderer : INotificationTextRenderer {
         public NotificationText Render(string type, string? locale = null, params object[] arguments) =>
             new("Title", "Body");

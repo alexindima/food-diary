@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DietologistHttpMappingsTests {
     [Fact]
     public void InviteDietologistRequest_ToCommand_MapsAllFields() {

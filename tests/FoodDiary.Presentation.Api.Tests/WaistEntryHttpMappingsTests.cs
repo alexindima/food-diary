@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class WaistEntryHttpMappingsTests {
     [Fact]
     public void CreateRequest_ToCommand_MapsAllFields() {

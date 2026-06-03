@@ -3,6 +3,7 @@ using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
+[ExcludeFromCodeCoverage]
 public class ExploreRecipesQueryValidatorTests {
     private readonly ExploreRecipesQueryValidator _validator = new();
 

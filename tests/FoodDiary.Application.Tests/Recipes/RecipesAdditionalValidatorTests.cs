@@ -7,8 +7,9 @@ using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
+[ExcludeFromCodeCoverage]
 public class RecipesAdditionalValidatorTests {
-    // ── DuplicateRecipe ──
+    // â”€â”€ DuplicateRecipe â”€â”€
 
     [Fact]
     public async Task DuplicateRecipe_WithNullUserId_HasError() {
@@ -24,7 +25,7 @@ public class RecipesAdditionalValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.RecipeId);
     }
 
-    // ── GetRecipeById ──
+    // â”€â”€ GetRecipeById â”€â”€
 
     [Fact]
     public async Task GetRecipeById_WithNullUserId_HasError() {
@@ -40,7 +41,7 @@ public class RecipesAdditionalValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.RecipeId);
     }
 
-    // ── GetRecipes ──
+    // â”€â”€ GetRecipes â”€â”€
 
     [Fact]
     public async Task GetRecipes_WithZeroPage_HasError() {
@@ -56,7 +57,7 @@ public class RecipesAdditionalValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
-    // ── GetRecentRecipes ──
+    // â”€â”€ GetRecentRecipes â”€â”€
 
     [Fact]
     public async Task GetRecentRecipes_WithNullUserId_HasError() {
@@ -65,7 +66,7 @@ public class RecipesAdditionalValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
-    // ── GetRecipesWithRecent ──
+    // â”€â”€ GetRecipesWithRecent â”€â”€
 
     [Fact]
     public async Task GetRecipesOverview_WithNullUserId_HasError() {

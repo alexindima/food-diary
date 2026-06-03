@@ -4,6 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class FastingSessionInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {
@@ -101,6 +102,18 @@ public class FastingSessionInvariantTests {
     }
 
     [Fact]
+    public void End_NonIntermittentAfterTargetReached_SetsCompletedStatus() {
+        var startedAt = DateTime.UtcNow;
+        var session = FastingSession.Create(
+            UserId.New(), FastingProtocol.F24_0, 24, startedAt);
+
+        session.End(startedAt.AddHours(24));
+
+        Assert.Equal(FastingSessionStatus.Completed, session.Status);
+        Assert.True(session.IsSuccessfulCompletion);
+    }
+
+    [Fact]
     public void End_WhenAlreadyCompleted_IsIdempotent() {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F16_8, 16, DateTime.UtcNow);
@@ -176,6 +189,15 @@ public class FastingSessionInvariantTests {
         Assert.Equal(24, session.AddedDurationHours);
         Assert.Equal(96, session.PlannedDurationHours);
         Assert.NotNull(session.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void Extend_WhenCompleted_Throws() {
+        var startedAt = DateTime.UtcNow;
+        var session = FastingSession.Create(UserId.New(), FastingProtocol.F16_8, 16, startedAt);
+        session.End(startedAt.AddHours(16));
+
+        Assert.Throws<InvalidOperationException>(() => session.Extend(1));
     }
 
     [Theory]

@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Cycles;
 
+[ExcludeFromCodeCoverage]
 public class CyclesFeatureTests {
     [Fact]
     public async Task CreateCycleCommandValidator_WithInvalidLength_Fails() {
@@ -130,6 +131,7 @@ public class CyclesFeatureTests {
         Assert.Throws<ArgumentNullException>(() => CyclePredictionService.CalculatePredictions(null!));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopCycleRepository : ICycleRepository {
         public Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) => Task.FromResult(cycle);
         public Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -138,6 +140,7 @@ public class CyclesFeatureTests {
         public Task<IReadOnlyList<Cycle>> GetByUserAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<Cycle>>([]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

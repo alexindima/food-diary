@@ -10,6 +10,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -205,7 +206,10 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
         return payload.Id;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(Guid Id, string Email);
+    [ExcludeFromCodeCoverage]
     private sealed record ConsumptionPayload(Guid Id);
 }

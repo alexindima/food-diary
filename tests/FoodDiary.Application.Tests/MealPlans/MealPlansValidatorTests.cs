@@ -6,6 +6,7 @@ using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
 
 namespace FoodDiary.Application.Tests.MealPlans;
 
+[ExcludeFromCodeCoverage]
 public class MealPlansValidatorTests {
     [Fact]
     public async Task AdoptMealPlan_WithEmptyUserId_HasError() {

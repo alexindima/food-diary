@@ -8,6 +8,7 @@ using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 
 namespace FoodDiary.Application.Tests.WaistEntries;
 
+[ExcludeFromCodeCoverage]
 public class WaistEntriesValidatorTests {
     [Fact]
     public async Task CreateWaist_WithNullUserId_HasError() {

@@ -1,5 +1,6 @@
 namespace FoodDiary.Telegram.Bot.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class BotInputParserTests {
     [Fact]
     public void TryParseWaterAmount_WithValidPayload_ReturnsTrue() {

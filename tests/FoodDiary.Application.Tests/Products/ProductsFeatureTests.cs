@@ -19,6 +19,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Products;
 
+[ExcludeFromCodeCoverage]
 public class ProductsFeatureTests {
     [Fact]
     public async Task GetProductsOverviewQueryValidator_WithEmptyUserId_Fails() {
@@ -800,6 +801,7 @@ public class ProductsFeatureTests {
         Assert.Equal(0, recentRepository.GetRecentProductsCallCount);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopProductRepository : IProductRepository {
         public Product? LastAddedProduct { get; private set; }
 
@@ -843,6 +845,7 @@ public class ProductsFeatureTests {
         public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleProductRepository(Product product) : IProductRepository {
         public bool DeleteCalled { get; private set; }
         public bool UpdateCalled { get; private set; }
@@ -902,6 +905,7 @@ public class ProductsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingCleanupService(string? errorCode = null) : IImageAssetCleanupService {
         public List<ImageAssetId> RequestedAssetIds { get; } = [];
 
@@ -916,6 +920,7 @@ public class ProductsFeatureTests {
             Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class OverviewProductRepository(
         IReadOnlyList<(Product Product, int UsageCount)>? pagedItems = null,
         IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>? productsByIdWithUsage = null) : IProductRepository {
@@ -968,6 +973,7 @@ public class ProductsFeatureTests {
         public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubRecentItemRepository(IReadOnlyList<RecentProductUsage> recentProducts) : IRecentItemRepository {
         private readonly IReadOnlyList<RecentProductUsage> _recentProducts = recentProducts;
         public int GetRecentProductsCallCount { get; private set; }
@@ -992,6 +998,7 @@ public class ProductsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubFavoriteProductRepository(IReadOnlyList<FavoriteProduct> favorites) : IFavoriteProductRepository {
         private readonly IReadOnlyList<FavoriteProduct> _favorites = favorites;
 
@@ -1005,6 +1012,7 @@ public class ProductsFeatureTests {
             Task.FromResult(_favorites);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class UserCleanupServiceTests {
     [Fact]
     public async Task CleanupDeletedUsersAsync_WithNonPositiveBatchSize_Throws() {
@@ -16,6 +17,7 @@ public sealed class UserCleanupServiceTests {
         Assert.Equal("batchSize", ex.ParamName);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoOpImageStorageService : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
             UserId userId,

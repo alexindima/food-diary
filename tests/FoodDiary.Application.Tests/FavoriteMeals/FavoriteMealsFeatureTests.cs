@@ -11,6 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.FavoriteMeals;
 
+[ExcludeFromCodeCoverage]
 public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task AddFavoriteMeal_WithNullUserId_ReturnsFailure() {
@@ -103,6 +104,7 @@ public class FavoriteMealsFeatureTests {
         Assert.True(favRepo.DeleteCalled);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubFavoriteMealRepository(
         FavoriteMeal? existingByMealId = null,
         FavoriteMeal? existingById = null) : IFavoriteMealRepository {
@@ -137,6 +139,7 @@ public class FavoriteMealsFeatureTests {
             Task.FromResult<IReadOnlyList<FavoriteMeal>>([]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMealRepository(Meal? meal) : IMealRepository {
         public Task<Meal?> GetByIdAsync(MealId id, UserId userId, bool includeItems = false, bool asTracking = false, CancellationToken ct = default) =>
             Task.FromResult(meal);
@@ -151,6 +154,7 @@ public class FavoriteMealsFeatureTests {
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user) : IUserRepository {
         public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
             Task.FromResult(user);

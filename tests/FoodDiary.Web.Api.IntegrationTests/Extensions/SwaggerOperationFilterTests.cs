@@ -10,6 +10,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class SwaggerOperationFilterTests {
     [Fact]
     public void Apply_ForAnonymousAction_AddsOnlyStandard500Response() {
@@ -132,6 +133,7 @@ public sealed class SwaggerOperationFilterTests {
             methodInfo);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestController : ControllerBase {
         [AllowAnonymous]
         public OkResult Anonymous() => Ok();

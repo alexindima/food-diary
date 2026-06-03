@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
+[ExcludeFromCodeCoverage]
 public class RecipeNutritionCalculatorTests {
     [Fact]
     public void Calculate_WhenRecipeHasNoSteps_ReturnsStoredNutrition() {

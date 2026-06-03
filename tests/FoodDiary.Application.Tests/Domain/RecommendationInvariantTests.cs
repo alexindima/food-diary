@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class RecommendationInvariantTests {
     [Fact]
     public void Create_WithEmptyDietologistUserId_Throws() {

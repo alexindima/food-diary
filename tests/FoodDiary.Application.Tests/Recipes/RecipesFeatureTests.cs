@@ -22,6 +22,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
+[ExcludeFromCodeCoverage]
 public class RecipesFeatureTests {
     [Fact]
     public async Task GetRecentRecipesQueryValidator_WithEmptyUserId_Fails() {
@@ -661,6 +662,7 @@ public class RecipesFeatureTests {
             Ingredients: [new RecipeIngredientInput(ProductId: productId, NestedRecipeId: null, Amount: 100)]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleRecipeRepository(Recipe recipe) : IRecipeRepository {
         public bool DeleteCalled { get; private set; }
         public Recipe? LastAddedRecipe { get; private set; }
@@ -719,6 +721,7 @@ public class RecipesFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleRecipeRepositoryForCreate : IRecipeRepository {
         public Recipe? LastAddedRecipe { get; private set; }
 
@@ -767,6 +770,7 @@ public class RecipesFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class OverviewRecipeRepository(
         IReadOnlyList<(Recipe Recipe, int UsageCount)>? pagedItems = null,
         IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>? recipesByIdWithUsage = null) : IRecipeRepository {
@@ -821,6 +825,7 @@ public class RecipesFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubRecentItemRepository(IReadOnlyList<RecentRecipeUsage> recentRecipes) : IRecentItemRepository {
         private readonly IReadOnlyList<RecentRecipeUsage> _recentRecipes = recentRecipes;
         public int GetRecentRecipesCallCount { get; private set; }
@@ -845,6 +850,7 @@ public class RecipesFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubFavoriteRecipeRepository(IReadOnlyList<FavoriteRecipe> favorites) : IFavoriteRecipeRepository {
         private readonly IReadOnlyList<FavoriteRecipe> _favorites = favorites;
 
@@ -858,6 +864,7 @@ public class RecipesFeatureTests {
             Task.FromResult(_favorites);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingCleanupService(string? errorCode = null) : IImageAssetCleanupService {
         public List<ImageAssetId> RequestedAssetIds { get; } = [];
 
@@ -872,6 +879,7 @@ public class RecipesFeatureTests {
             Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class AllowAllProductLookupService : IProductLookupService {
         public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
@@ -881,6 +889,7 @@ public class RecipesFeatureTests {
                 ids.Distinct().ToDictionary(id => id, id => CreateProduct(userId, id)));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class EmptyProductLookupService : IProductLookupService {
         public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
@@ -889,6 +898,7 @@ public class RecipesFeatureTests {
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class AllowAllRecipeLookupService : IRecipeLookupService {
         public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
@@ -898,6 +908,7 @@ public class RecipesFeatureTests {
                 ids.Distinct().ToDictionary(id => id, id => CreateNestedRecipe(userId, id)));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class EmptyRecipeLookupService : IRecipeLookupService {
         public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
@@ -958,6 +969,7 @@ public class RecipesFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

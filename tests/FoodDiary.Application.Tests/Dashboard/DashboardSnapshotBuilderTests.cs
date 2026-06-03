@@ -23,6 +23,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Dashboard;
 
+[ExcludeFromCodeCoverage]
 public sealed class DashboardSnapshotBuilderTests {
     [Fact]
     public async Task BuildAsync_WithEmptyUserId_ReturnsValidationFailure() {
@@ -154,6 +155,7 @@ public sealed class DashboardSnapshotBuilderTests {
         Assert.Equal(100, sender.LastConsumptionsQuery.Limit);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class EmptyTrendSender : ISender {
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : IRequest =>
@@ -181,6 +183,7 @@ public sealed class DashboardSnapshotBuilderTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingConsumptionsSender : ISender {
         public GetConsumptionsQuery? LastConsumptionsQuery { get; private set; }
 
@@ -208,6 +211,7 @@ public sealed class DashboardSnapshotBuilderTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class AccessibleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -222,6 +226,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FilteringWeightEntryRepository(IReadOnlyList<WeightEntry> entries) : IWeightEntryRepository {
         public DateTime? LastDateTo { get; private set; }
 
@@ -254,6 +259,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FilteringWaistEntryRepository(IReadOnlyList<WaistEntry> entries) : IWaistEntryRepository {
         public DateTime? LastDateTo { get; private set; }
 
@@ -286,6 +292,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubSender : ISender {
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : IRequest =>
@@ -304,6 +311,7 @@ public sealed class DashboardSnapshotBuilderTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -318,6 +326,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubWeightEntryRepository : IWeightEntryRepository {
         public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -328,6 +337,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubExerciseEntryRepository : IExerciseEntryRepository {
         public Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -337,6 +347,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubHydrationEntryRepository : IHydrationEntryRepository {
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -352,6 +363,7 @@ public sealed class DashboardSnapshotBuilderTests {
             throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubFastingOccurrenceRepository : IFastingOccurrenceRepository {
         public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<FastingOccurrence?>(null);
         public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -376,6 +388,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubWaistEntryRepository : IWaistEntryRepository {
         public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();

@@ -52,7 +52,7 @@ public sealed partial class User {
             ActivityLevel.Moderate => 1.55,
             ActivityLevel.High => 1.725,
             ActivityLevel.Extreme => 1.9,
-            _ => 1.55
+            _ => throw new ArgumentOutOfRangeException(nameof(level), "Activity level must be one of the supported values.")
         };
     }
 

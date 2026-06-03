@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class ExtensionsTests {
     [Fact]
     public void ResultExtensions_Success_ReturnsOkObjectResult() {
@@ -203,6 +204,7 @@ public sealed class ExtensionsTests {
             failureStatus: null,
             tags);
 
+    [ExcludeFromCodeCoverage]
     private sealed class HealthyCheck : IHealthCheck {
         public Task<HealthCheckResult> CheckHealthAsync(
             HealthCheckContext context,

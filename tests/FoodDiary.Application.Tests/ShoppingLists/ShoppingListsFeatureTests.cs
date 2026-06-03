@@ -16,6 +16,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
 
+[ExcludeFromCodeCoverage]
 public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
@@ -270,6 +271,7 @@ public class ShoppingListsFeatureTests {
         Assert.Contains("ProductId", result.Error.Message, StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopShoppingListRepository : IShoppingListRepository {
         public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.FromResult(list);
 
@@ -295,6 +297,7 @@ public class ShoppingListsFeatureTests {
         public Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleShoppingListRepository(ShoppingList list) : IShoppingListRepository {
         public bool UpdateCalled { get; private set; }
 
@@ -330,6 +333,7 @@ public class ShoppingListsFeatureTests {
         public Task DeleteAsync(ShoppingList deletedList, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopProductLookupService : IProductLookupService {
         public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
@@ -338,6 +342,7 @@ public class ShoppingListsFeatureTests {
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ProductLookupService(params Product[] products) : IProductLookupService {
         private readonly Dictionary<ProductId, Product> _products = products.ToDictionary(product => product.Id);
 
@@ -361,6 +366,7 @@ public class ShoppingListsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

@@ -22,6 +22,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Tests.Users;
 
+[ExcludeFromCodeCoverage]
 public class UsersFeatureTests {
     [Fact]
     public async Task ChangePasswordHandler_WithEmptyUserId_ReturnsInvalidToken() {
@@ -269,19 +270,23 @@ public class UsersFeatureTests {
         Assert.True(result.IsValid);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class PassthroughPasswordHasher : IPasswordHasher {
         public string Hash(string password) => password;
         public bool Verify(string password, string hashedPassword) => string.Equals(password, hashedPassword, StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NullAuditLogger : IAuditLogger {
         public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) { }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -312,6 +317,7 @@ public class UsersFeatureTests {
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedWebPushSubscriptionRepository(IReadOnlyList<WebPushSubscription> subscriptions) : IWebPushSubscriptionRepository {
         public Task<WebPushSubscription?> GetByEndpointAsync(string endpoint, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult(subscriptions.FirstOrDefault(item => string.Equals(item.Endpoint, endpoint, StringComparison.Ordinal)));
@@ -330,6 +336,7 @@ public class UsersFeatureTests {
             Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDietologistInvitationRepository(DietologistInvitation? invitation) : IDietologistInvitationRepository {
         public Task<DietologistInvitation?> GetByIdAsync(DietologistInvitationId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult(invitation?.Id == id ? invitation : null);

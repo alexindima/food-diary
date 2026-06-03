@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Behaviors;
 
+[ExcludeFromCodeCoverage]
 public class BehaviorTests {
     [Fact]
     public async Task LoggingBehavior_WhenHandlerSucceeds_ReturnsSuccess() {
@@ -48,5 +49,6 @@ public class BehaviorTests {
                 CancellationToken.None));
     }
 
+    [ExcludeFromCodeCoverage]
     private record TestQuery : IQuery<Result<string>>;
 }

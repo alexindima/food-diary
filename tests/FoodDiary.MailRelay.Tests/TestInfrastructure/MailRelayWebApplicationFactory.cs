@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayWebApplicationFactory(
     MailRelayEnvironmentFixture fixture,
     RecordingRelayDeliveryTransport recordingTransport) : WebApplicationFactory<Program> {

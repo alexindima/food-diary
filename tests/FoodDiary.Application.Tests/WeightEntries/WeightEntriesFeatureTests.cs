@@ -11,6 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.WeightEntries;
 
+[ExcludeFromCodeCoverage]
 public class WeightEntriesFeatureTests {
     [Fact]
     public async Task CreateWeightEntryCommandValidator_WithEmptyUserId_Fails() {
@@ -225,6 +226,7 @@ public class WeightEntriesFeatureTests {
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryWeightEntryRepository : IWeightEntryRepository {
         private readonly List<WeightEntry> _entries = [];
 
@@ -304,6 +306,7 @@ public class WeightEntriesFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

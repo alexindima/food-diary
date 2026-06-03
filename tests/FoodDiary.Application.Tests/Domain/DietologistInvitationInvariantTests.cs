@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class DietologistInvitationInvariantTests {
     [Fact]
     public void Create_WithEmptyClientUserId_Throws() {

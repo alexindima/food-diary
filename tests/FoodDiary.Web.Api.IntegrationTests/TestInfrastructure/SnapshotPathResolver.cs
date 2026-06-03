@@ -1,5 +1,6 @@
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 internal static class SnapshotPathResolver {
     private static readonly string SnapshotsDirectory = Path.GetFullPath(
         Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Snapshots"));

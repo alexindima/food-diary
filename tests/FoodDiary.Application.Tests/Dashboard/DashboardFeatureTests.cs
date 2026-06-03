@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Dashboard;
 
+[ExcludeFromCodeCoverage]
 public class DashboardFeatureTests {
     [Fact]
     public async Task GetDashboardSnapshotQueryValidator_WithEmptyUserId_Fails() {
@@ -156,6 +157,7 @@ public class DashboardFeatureTests {
         Assert.Equal("ru", emailSender.TestEmailMessage?.Language);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingDashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         public DashboardSnapshotRequest? LastRequest { get; private set; }
         public CancellationToken LastCancellationToken { get; private set; }
@@ -169,6 +171,7 @@ public class DashboardFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingEmailSender(bool throwOnSend = false) : IEmailSender {
         public TestEmailMessage? TestEmailMessage { get; private set; }
 
@@ -188,6 +191,7 @@ public class DashboardFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

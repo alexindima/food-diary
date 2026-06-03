@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class OpenAiFoodServiceTests {
     private const string IntegrationsMeterName = "FoodDiary.Integrations";
     private const string VisionPrompt = "Analyze image. {{languageHint}} {{descriptionHint}}";
@@ -229,11 +230,13 @@ public sealed class OpenAiFoodServiceTests {
         return null;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingHttpMessageHandler(Exception exception) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromException<HttpResponseMessage>(exception);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SequenceHttpMessageHandler(Queue<HttpResponseMessage> responses) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             if (responses.Count == 0) {

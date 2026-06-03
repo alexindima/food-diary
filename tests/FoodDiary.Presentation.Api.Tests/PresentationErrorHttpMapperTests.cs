@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PresentationErrorHttpMapperTests {
     [Theory]
     [InlineData(nameof(CreateTelegramInvalidData), StatusCodes.Status400BadRequest)]

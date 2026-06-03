@@ -2,6 +2,7 @@ using System.IO.Pipes;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 internal static class DockerAvailability {
     private static readonly Lazy<DockerAvailabilityResult> CachedResult = new(CheckAvailability);
 
@@ -29,5 +30,6 @@ internal static class DockerAvailability {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record DockerAvailabilityResult(bool IsAvailable, string? Reason);
 }

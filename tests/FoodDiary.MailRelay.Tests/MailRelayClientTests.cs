@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayClientTests {
     [Fact]
     public async Task EnqueueAsync_SendsExpectedRequestAndApiKeyHeader() {
@@ -66,6 +67,7 @@ public sealed class MailRelayClientTests {
             "correlation",
             "key");
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHandler(HttpResponseMessage response) : HttpMessageHandler {
         public HttpRequestMessage? Request { get; private set; }
         public string? RequestBody { get; private set; }

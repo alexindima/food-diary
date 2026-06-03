@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace FoodDiary.Infrastructure.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public sealed class AdminSsoServiceTests {
     private static readonly DateTime FixedUtcNow = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
 
@@ -66,10 +67,12 @@ public sealed class AdminSsoServiceTests {
     private static AdminSsoService CreateService(InMemoryDistributedCache? cache = null) =>
         new(cache ?? new InMemoryDistributedCache(), new StubDateTimeProvider());
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => FixedUtcNow;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryDistributedCache : IDistributedCache {
         private readonly Dictionary<string, byte[]> _store = new(StringComparer.Ordinal);
 

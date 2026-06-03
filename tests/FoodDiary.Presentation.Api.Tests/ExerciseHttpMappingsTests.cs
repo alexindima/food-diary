@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Exercises.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ExerciseHttpMappingsTests {
     [Fact]
     public void CreateExerciseEntryRequest_ToCommand_MapsAllFields() {

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class ImpersonationAccessGuardMiddlewareTests {
     [Fact]
     public async Task InvokeAsync_WithProtectedEndpointAndImpersonatedUser_ReturnsForbiddenErrorContract() {

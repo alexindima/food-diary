@@ -3,6 +3,7 @@ using FoodDiary.Application.Export.Queries.ExportDiary;
 
 namespace FoodDiary.Application.Tests.Export;
 
+[ExcludeFromCodeCoverage]
 public class ExportValidatorTests {
     private readonly ExportDiaryQueryValidator _validator = new();
 

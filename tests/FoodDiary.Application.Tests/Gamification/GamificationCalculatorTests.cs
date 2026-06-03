@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
+[ExcludeFromCodeCoverage]
 public class GamificationCalculatorTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 

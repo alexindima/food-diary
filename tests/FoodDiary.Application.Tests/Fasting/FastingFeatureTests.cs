@@ -28,6 +28,7 @@ using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Fasting;
 
+[ExcludeFromCodeCoverage]
 public class FastingFeatureTests {
     private static readonly DateTime FixedNow = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
 
@@ -1102,6 +1103,7 @@ public class FastingFeatureTests {
         return user;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {
         public List<FastingPlan> StoredPlans { get; } = active is null ? [] : [active];
         public Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) => Task.FromResult(active);
@@ -1114,6 +1116,7 @@ public class FastingFeatureTests {
         public Task UpdateAsync(FastingPlan plan, CancellationToken ct = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryFastingOccurrenceRepository(FastingOccurrence? current = null) : IFastingOccurrenceRepository {
         public List<FastingOccurrence> StoredOccurrences { get; } = current is null ? [] : [current];
 
@@ -1188,6 +1191,7 @@ public class FastingFeatureTests {
         public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken ct = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryFastingCheckInRepository(params FastingCheckIn[] seed) : IFastingCheckInRepository {
         private readonly List<FastingCheckIn> _stored = [.. seed];
         public IReadOnlyList<FastingCheckIn> Stored => _stored;
@@ -1209,6 +1213,7 @@ public class FastingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingFastingAnalyticsService : IFastingAnalyticsService {
         public DateTime FromUtc { get; private set; }
         public DateTime ToUtc { get; private set; }
@@ -1239,6 +1244,7 @@ public class FastingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemorySchedulerNotificationRepository : INotificationRepository {
         public List<Notification> Stored { get; } = [];
 
@@ -1276,6 +1282,7 @@ public class FastingFeatureTests {
             CancellationToken cancellationToken = default) => Task.FromResult(0);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationPusher : INotificationPusher {
         public List<Guid> UnreadCountUsers { get; } = [];
         public List<Guid> ChangedUsers { get; } = [];
@@ -1291,6 +1298,7 @@ public class FastingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingWebPushNotificationSender : IWebPushNotificationSender {
         public List<Notification> Sent { get; } = [];
 
@@ -1300,11 +1308,13 @@ public class FastingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUnitOfWork : IUnitOfWork {
         public bool HasPendingChanges => false;
         public Task SaveChangesAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user) : IUserRepository {
         public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) => Task.FromResult(user);
         public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
@@ -1319,6 +1329,7 @@ public class FastingFeatureTests {
         public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => FixedNow;
     }

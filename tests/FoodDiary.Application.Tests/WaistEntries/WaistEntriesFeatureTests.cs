@@ -11,6 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.WaistEntries;
 
+[ExcludeFromCodeCoverage]
 public class WaistEntriesFeatureTests {
     [Fact]
     public async Task CreateWaistEntryCommandValidator_WithEmptyUserId_Fails() {
@@ -211,6 +212,7 @@ public class WaistEntriesFeatureTests {
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryWaistEntryRepository : IWaistEntryRepository {
         private readonly List<WaistEntry> _entries = [];
 
@@ -290,6 +292,7 @@ public class WaistEntriesFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

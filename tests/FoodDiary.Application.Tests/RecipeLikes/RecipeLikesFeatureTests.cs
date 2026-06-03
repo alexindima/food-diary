@@ -9,6 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.RecipeLikes;
 
+[ExcludeFromCodeCoverage]
 public class RecipeLikesFeatureTests {
     [Fact]
     public async Task ToggleRecipeLike_WhenNotLiked_AddsLike() {
@@ -96,6 +97,7 @@ public class RecipeLikesFeatureTests {
         Assert.Equal(0, result.Value.TotalLikes);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryRecipeLikeRepository : IRecipeLikeRepository {
         private readonly List<RecipeLike> _likes = [];
 
@@ -118,6 +120,7 @@ public class RecipeLikesFeatureTests {
             Task.FromResult(_likes.Count(l => l.RecipeId == recipeId));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubRecipeRepository(Recipe? recipe) : IRecipeRepository {
         public Task<Recipe?> GetByIdAsync(RecipeId id, UserId userId, bool includePublic = true,
             bool includeSteps = false, bool asTracking = false, CancellationToken cancellationToken = default) =>

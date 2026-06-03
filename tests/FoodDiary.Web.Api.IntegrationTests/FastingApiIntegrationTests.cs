@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory factory)
     : IClassFixture<TestAuthApiWebApplicationFactory> {
     [Fact]
@@ -158,12 +159,14 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record FastingOverviewPayload(
         FastingSessionPayload? CurrentSession,
         FastingStatsPayload Stats,
         FastingInsightsPayload Insights,
         PagedPayload<FastingSessionPayload> History);
 
+    [ExcludeFromCodeCoverage]
     private sealed record FastingStatsPayload(
         int TotalCompleted,
         int CurrentStreak,
@@ -173,10 +176,12 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         DateTime? LastCheckInAtUtc,
         string? TopSymptom);
 
+    [ExcludeFromCodeCoverage]
     private sealed record FastingInsightsPayload(
         IReadOnlyList<FastingMessagePayload> Alerts,
         IReadOnlyList<FastingMessagePayload> Insights);
 
+    [ExcludeFromCodeCoverage]
     private sealed record FastingMessagePayload(
         string Id,
         string TitleKey,
@@ -184,6 +189,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         string Severity,
         IReadOnlyDictionary<string, string>? Parameters);
 
+    [ExcludeFromCodeCoverage]
     private sealed record PagedPayload<T>(
         IReadOnlyList<T> Data,
         int Page,
@@ -191,6 +197,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         int TotalPages,
         int TotalItems);
 
+    [ExcludeFromCodeCoverage]
     private sealed record FastingSessionPayload(
         Guid Id,
         DateTime StartedAtUtc,
@@ -218,6 +225,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         string? CheckInNotes,
         IReadOnlyList<FastingCheckInPayload> CheckIns);
 
+    [ExcludeFromCodeCoverage]
     private sealed record FastingCheckInPayload(
         Guid Id,
         DateTime CheckedInAtUtc,

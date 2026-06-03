@@ -4,6 +4,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Tests.DailyAdvices;
 
+[ExcludeFromCodeCoverage]
 public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdviceQueryValidator_WithEmptyUserId_Fails() {
@@ -37,7 +38,7 @@ public class DailyAdvicesFeatureTests {
         var advices = new List<DailyAdvice> {
             DailyAdvice.Create("Hydrate", "en", weight: 1),
             DailyAdvice.Create("Walk", "en", weight: 1),
-            DailyAdvice.Create("Пей воду", "ru", weight: 1)
+            DailyAdvice.Create("ÐŸÐµÐ¹ Ð²Ð¾Ð´Ñƒ", "ru", weight: 1)
         };
 
         var date = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);

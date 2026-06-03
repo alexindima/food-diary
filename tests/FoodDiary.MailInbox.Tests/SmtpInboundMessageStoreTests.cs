@@ -12,6 +12,7 @@ using SmtpServer.Protocol;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class SmtpInboundMessageStoreTests {
     [Fact]
     public async Task SaveAsync_WhenMessageHasToRecipients_StoresParsedInboundMessage() {
@@ -68,6 +69,7 @@ public sealed class SmtpInboundMessageStoreTests {
         return Encoding.UTF8.GetString(stream.ToArray());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class TestMessageTransaction(IEnumerable<string> recipients) : IMessageTransaction {
         public IMailbox From { get; set; } = new Mailbox("sender", "example.com");
 
@@ -82,6 +84,7 @@ public sealed class SmtpInboundMessageStoreTests {
             new Dictionary<string, string>(StringComparer.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingInboundMailStore : IInboundMailStore {
         public InboundMailMessage? LastSaved { get; private set; }
 

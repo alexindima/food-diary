@@ -2,6 +2,7 @@ using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 internal static class ProjectReferenceReader {
     public static IReadOnlyDictionary<string, string[]> ReadProductionProjectReferences() =>
         ReadProductionProjectPaths()

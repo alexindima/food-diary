@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationSourceFiles_DoNotUseEnumParseDirectly() {

@@ -7,6 +7,7 @@ using FoodDiary.Infrastructure.Persistence.Images;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task MealAiSessionAsset_IsReportedInUse_AndExcludedFromUnusedCandidates() {

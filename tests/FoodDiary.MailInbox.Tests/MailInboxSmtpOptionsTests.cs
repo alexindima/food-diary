@@ -8,6 +8,7 @@ using Npgsql;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxSmtpOptionsTests {
     [Fact]
     public void HasValidConfiguration_WhenValuesAreValid_ReturnsTrue() {

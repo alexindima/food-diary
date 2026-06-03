@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Email.Common;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class DietologistEmailSenderTests {
     private static readonly EmailOptions DefaultOptions = new() {
         FromAddress = "noreply@fooddiary.club",
@@ -128,6 +129,7 @@ public sealed class DietologistEmailSenderTests {
         string toEmail, string language = "en") =>
         new(toEmail, Guid.NewGuid(), "token-value", "Test", "User", language);
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingEmailTransport : IEmailTransport {
         public int SentCount { get; private set; }
         public string LastRecipient { get; private set; } = string.Empty;
@@ -143,6 +145,7 @@ public sealed class DietologistEmailSenderTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubEmailTemplateProvider(EmailTemplateContent? template = null) : IEmailTemplateProvider {
         public string LastKey { get; private set; } = string.Empty;
         public string LastLocale { get; private set; } = string.Empty;

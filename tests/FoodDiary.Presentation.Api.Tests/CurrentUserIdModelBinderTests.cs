@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class CurrentUserIdModelBinderTests {
     [Fact]
     public async Task BindModelAsync_WithValidUserClaim_BindsGuid() {

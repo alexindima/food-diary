@@ -20,6 +20,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 
 namespace FoodDiary.JobManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class JobsTests {
     private const string JobManagerMeterName = "FoodDiary.JobManager";
 
@@ -620,6 +621,7 @@ public sealed class JobsTests {
             null!,
             new FixedDateTimeProvider(utcNow));
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }
@@ -688,6 +690,7 @@ public sealed class JobsTests {
         Assert.Equal(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds, concurrency!.TimeoutSec);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingImageCleanupService(IEnumerable<int> results) : IImageAssetCleanupService {
         private readonly Queue<int> _results = new(results);
 
@@ -705,6 +708,7 @@ public sealed class JobsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingUserCleanupService(IEnumerable<int> results) : IUserCleanupService {
         private readonly Queue<int> _results = new(results);
 
@@ -725,6 +729,7 @@ public sealed class JobsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationCleanupService(IEnumerable<int> results) : INotificationCleanupService {
         private readonly Queue<int> _results = new(results);
 
@@ -772,6 +777,7 @@ public sealed class JobsTests {
         return subscription;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeUserRepository(params User[] users) : IUserRepository {
         private readonly List<User> _users = users.ToList();
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
@@ -830,6 +836,7 @@ public sealed class JobsTests {
         private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
         : IBillingSubscriptionRepository {
         public List<BillingSubscription> Subscriptions { get; } = subscriptions.ToList();
@@ -887,6 +894,7 @@ public sealed class JobsTests {
             Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingBillingPaymentRepository : IBillingPaymentRepository {
         public List<BillingPayment> Payments { get; } = [];
 
@@ -904,6 +912,7 @@ public sealed class JobsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeRecurringBillingGateway(
         string provider,
         BillingRecurringPaymentModel renewal)
@@ -916,11 +925,13 @@ public sealed class JobsTests {
             Task.FromResult(Result.Success(renewal));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoOpBillingTransactionRunner : IBillingTransactionRunner {
         public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
             operation(cancellationToken);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingUserCleanupService : IUserCleanupService {
         public Task<int> CleanupDeletedUsersAsync(
             DateTime olderThanUtc,
@@ -930,11 +941,13 @@ public sealed class JobsTests {
             throw new InvalidOperationException("cleanup failed");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingNotificationCleanupService : INotificationCleanupService {
         public Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("notification cleanup failed");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingRecurringJobManager : IRecurringJobManager {
         public List<string> JobIds { get; } = [];
 
@@ -947,6 +960,7 @@ public sealed class JobsTests {
         public void RemoveIfExists(string recurringJobId) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingRecurringJobRegistrationVerifier : IRecurringJobRegistrationVerifier {
         public List<string> ExpectedJobIds { get; } = [];
 
@@ -955,6 +969,7 @@ public sealed class JobsTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingRecurringJobRegistrationVerifier : IRecurringJobRegistrationVerifier {
         public void EnsureRegistered(IReadOnlyCollection<string> expectedJobIds) {
             throw new InvalidOperationException("verification failed");

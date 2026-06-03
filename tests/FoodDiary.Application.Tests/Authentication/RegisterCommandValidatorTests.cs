@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public class RegisterCommandValidatorTests {
     [Fact]
     public async Task Register_WithEmptyEmail_HasError() {
@@ -69,6 +70,7 @@ public class RegisterCommandValidatorTests {
             .WithErrorCode("Authentication.AccountDeleted");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository : IUserRepository {
         private readonly List<User> _allUsers = [];
 

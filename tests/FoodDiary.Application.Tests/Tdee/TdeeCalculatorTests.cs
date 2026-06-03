@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Tdee;
 
+[ExcludeFromCodeCoverage]
 public class TdeeCalculatorTests {
     private static readonly UserId TestUserId = UserId.New();
 

@@ -6,8 +6,9 @@ using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ConsumptionHttpMappingsTests {
-    // ── Command mappings ──
+    // â”€â”€ Command mappings â”€â”€
 
     [Fact]
     public void ToDeleteCommand_MapsIds() {
@@ -56,7 +57,7 @@ public sealed class ConsumptionHttpMappingsTests {
             [],
             new List<ConsumptionAiSessionHttpRequest> {
                 new(assetId, "Photo", recognizedAt, "AI notes", new List<ConsumptionAiItemHttpRequest> {
-                    new("Chicken breast", "Куриная грудка", 200, "g", 330, 62, 7.2, 0, 0, 0),
+                    new("Chicken breast", "ÐšÑƒÑ€Ð¸Ð½Ð°Ñ Ð³Ñ€ÑƒÐ´ÐºÐ°", 200, "g", 330, 62, 7.2, 0, 0, 0),
                 }),
             });
 
@@ -68,7 +69,7 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.Equal("AI notes", command.AiSessions[0].Notes);
         Assert.Single(command.AiSessions[0].Items);
         Assert.Equal("Chicken breast", command.AiSessions[0].Items[0].NameEn);
-        Assert.Equal("Куриная грудка", command.AiSessions[0].Items[0].NameLocal);
+        Assert.Equal("ÐšÑƒÑ€Ð¸Ð½Ð°Ñ Ð³Ñ€ÑƒÐ´ÐºÐ°", command.AiSessions[0].Items[0].NameLocal);
         Assert.Equal(200, command.AiSessions[0].Items[0].Amount);
         Assert.Equal(330, command.AiSessions[0].Items[0].Calories);
     }
@@ -115,7 +116,7 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.Equal("Dinner", command.MealType);
     }
 
-    // ── Query mappings ──
+    // â”€â”€ Query mappings â”€â”€
 
     [Fact]
     public void GetConsumptionsHttpQuery_ToQuery_MapsAllFields() {
@@ -144,7 +145,7 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.Equal(consumptionId, query.ConsumptionId);
     }
 
-    // ── Response mappings ──
+    // â”€â”€ Response mappings â”€â”€
 
     [Fact]
     public void ConsumptionModel_ToHttpResponse_MapsTopLevelFields() {
@@ -208,7 +209,7 @@ public sealed class ConsumptionHttpMappingsTests {
                 "A"),
         };
         var aiItems = new List<ConsumptionAiItemModel> {
-            new(aiItemId, sessionId, "Rice", "Рис", 200, "g", 260, 5, 0.6, 56, 0.4, 0),
+            new(aiItemId, sessionId, "Rice", "Ð Ð¸Ñ", 200, "g", 260, 5, 0.6, 56, 0.4, 0),
         };
         var sessions = new List<ConsumptionAiSessionModel> {
             new(sessionId, consumptionId, null, null, "Text", DateTime.UtcNow, "Notes", aiItems),
@@ -233,7 +234,7 @@ public sealed class ConsumptionHttpMappingsTests {
         Assert.Equal(sessionId, response.AiSessions[0].Id);
         Assert.Single(response.AiSessions[0].Items);
         Assert.Equal("Rice", response.AiSessions[0].Items[0].NameEn);
-        Assert.Equal("Рис", response.AiSessions[0].Items[0].NameLocal);
+        Assert.Equal("Ð Ð¸Ñ", response.AiSessions[0].Items[0].NameLocal);
         Assert.Equal(260, response.AiSessions[0].Items[0].Calories);
     }
 

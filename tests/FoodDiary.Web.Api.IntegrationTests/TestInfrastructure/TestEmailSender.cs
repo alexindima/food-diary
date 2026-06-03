@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class TestEmailSender : IEmailSender {
     private readonly ConcurrentDictionary<string, PasswordResetMessage> _passwordResetMessages = new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentDictionary<string, EmailVerificationMessage> _emailVerificationMessages = new(StringComparer.OrdinalIgnoreCase);

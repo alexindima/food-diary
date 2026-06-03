@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class ForwardedHeadersMiddlewareTests {
     [Fact]
     public async Task Invoke_WithKnownProxy_UsesForwardedForAndProto() {

@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
+[ExcludeFromCodeCoverage]
 public sealed class TestPasswordHasher : IPasswordHasher {
     private const string Prefix = "test-hash:";
 

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task GetByEmailAsync_ReturnsActiveNonDeletedUserWithRoles() {

@@ -5,6 +5,7 @@
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
           <Format>cobertura</Format>
+          <Exclude>[*.Tests]*,[*.IntegrationTests]*,[*.ArchitectureTests]*</Exclude>
           <ExcludeByFile>**/Migrations/**/*.cs,**/obj/**/*.cs</ExcludeByFile>
         </Configuration>
       </DataCollector>

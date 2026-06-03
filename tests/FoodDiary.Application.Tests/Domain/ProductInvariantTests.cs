@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class ProductInvariantTests {
     private static Product CreateValidProduct() {
         return Product.Create(
@@ -131,6 +132,100 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void Create_WithAllOptionalFields_NormalizesAndStoresThem() {
+        var imageAssetId = ImageAssetId.New();
+
+        var product = Product.Create(
+            UserId.New(),
+            name: "  Yogurt  ",
+            baseUnit: MeasurementUnit.Ml,
+            baseAmount: 100,
+            defaultPortionAmount: 125,
+            caloriesPerBase: 64,
+            proteinsPerBase: 3,
+            fatsPerBase: 2,
+            carbsPerBase: 8,
+            fiberPerBase: 1,
+            alcoholPerBase: 0,
+            barcode: "  123456789  ",
+            brand: "  Dairy Co  ",
+            productType: ProductType.Dairy,
+            category: "  Dairy  ",
+            description: "  Plain yogurt  ",
+            comment: "  Breakfast  ",
+            imageUrl: "  https://img.example/yogurt.jpg  ",
+            imageAssetId,
+            visibility: Visibility.Private);
+
+        Assert.Equal("Yogurt", product.Name);
+        Assert.Equal("123456789", product.Barcode);
+        Assert.Equal("Dairy Co", product.Brand);
+        Assert.Equal(ProductType.Dairy, product.ProductType);
+        Assert.Equal("Dairy", product.Category);
+        Assert.Equal("Plain yogurt", product.Description);
+        Assert.Equal("Breakfast", product.Comment);
+        Assert.Equal("https://img.example/yogurt.jpg", product.ImageUrl);
+        Assert.Equal(imageAssetId, product.ImageAssetId);
+        Assert.Equal(Visibility.Private, product.Visibility);
+        Assert.Equal(125d, product.DefaultPortionAmount);
+    }
+
+    [Fact]
+    public void Create_WithInvalidAmounts_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
+            UserId.New(),
+            "Apple",
+            MeasurementUnit.G,
+            baseAmount: 0,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
+            UserId.New(),
+            "Apple",
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 0,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0));
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    public void Create_WithNonFiniteNutrition_Throws(double value) {
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
+            UserId.New(),
+            "Apple",
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: value,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0));
+    }
+
+    [Fact]
+    public void Create_WithTooLongOptionalFields_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(UserId.New(), "Apple", MeasurementUnit.G, 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, barcode: new string('b', 129)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(UserId.New(), "Apple", MeasurementUnit.G, 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, category: new string('c', 129)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(UserId.New(), "Apple", MeasurementUnit.G, 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, description: new string('d', 2049)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(UserId.New(), "Apple", MeasurementUnit.G, 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, comment: new string('c', 2049)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(UserId.New(), "Apple", MeasurementUnit.G, 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, imageUrl: new string('i', 2049)));
+    }
+
+    [Fact]
     public void UpdateMeasurement_WithInvalidPortion_Throws() {
         var product = Product.Create(
             UserId.New(),
@@ -190,6 +285,39 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateCoreIdentity_WithClears_RemovesOptionalFields() {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            barcode: "123",
+            brand: "Brand");
+
+        product.UpdateCoreIdentity(clearBarcode: true, clearBrand: true, productType: ProductType.Fruit);
+
+        Assert.Null(product.Barcode);
+        Assert.Null(product.Brand);
+        Assert.Equal(ProductType.Fruit, product.ProductType);
+        Assert.NotNull(product.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateCoreIdentity_WithClearConflicts_Throws() {
+        var product = CreateValidProduct();
+
+        Assert.Throws<ArgumentException>(() => product.UpdateCoreIdentity(barcode: "123", clearBarcode: true));
+        Assert.Throws<ArgumentException>(() => product.UpdateCoreIdentity(brand: "Brand", clearBrand: true));
+    }
+
+    [Fact]
     public void UpdateIdentity_WithTooLongBrand_Throws() {
         var product = Product.Create(
             UserId.New(),
@@ -240,6 +368,16 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateCoreIdentity_WithBarcode_NormalizesBarcode() {
+        var product = CreateValidProduct();
+
+        product.UpdateCoreIdentity(barcode: "  123456  ");
+
+        Assert.Equal("123456", product.Barcode);
+        Assert.NotNull(product.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void UpdateDescriptiveIdentity_WithPartialUpdate_PreservesOtherFields() {
         var product = Product.Create(
             UserId.New(),
@@ -264,6 +402,52 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateDescriptiveIdentity_WithCategoryAndDescription_NormalizesValues() {
+        var product = CreateValidProduct();
+
+        product.UpdateDescriptiveIdentity(category: "  Fruit  ", description: "  Fresh apple  ");
+
+        Assert.Equal("Fruit", product.Category);
+        Assert.Equal("Fresh apple", product.Description);
+        Assert.NotNull(product.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateDescriptiveIdentity_WithClears_RemovesOptionalFields() {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            category: "Fruit",
+            description: "Fresh",
+            comment: "Seasonal");
+
+        product.UpdateDescriptiveIdentity(clearCategory: true, clearDescription: true, clearComment: true);
+
+        Assert.Null(product.Category);
+        Assert.Null(product.Description);
+        Assert.Null(product.Comment);
+        Assert.NotNull(product.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateDescriptiveIdentity_WithClearConflicts_Throws() {
+        var product = CreateValidProduct();
+
+        Assert.Throws<ArgumentException>(() => product.UpdateDescriptiveIdentity(category: "Fruit", clearCategory: true));
+        Assert.Throws<ArgumentException>(() => product.UpdateDescriptiveIdentity(description: "Fresh", clearDescription: true));
+        Assert.Throws<ArgumentException>(() => product.UpdateDescriptiveIdentity(comment: "Note", clearComment: true));
+    }
+
+    [Fact]
     public void UpdateMedia_WithClearAndValue_Throws() {
         var product = Product.Create(
             UserId.New(),
@@ -279,6 +463,23 @@ public class ProductInvariantTests {
             alcoholPerBase: 0);
 
         Assert.Throws<ArgumentException>(() => product.UpdateMedia(imageUrl: "https://img", clearImageUrl: true));
+    }
+
+    [Fact]
+    public void UpdateMedia_WithNewValuesAndClears_UpdatesMediaState() {
+        var imageAssetId = ImageAssetId.New();
+        var product = CreateValidProduct();
+
+        product.UpdateMedia(imageUrl: "  https://img.example/apple.jpg  ", imageAssetId: imageAssetId);
+
+        Assert.Equal("https://img.example/apple.jpg", product.ImageUrl);
+        Assert.Equal(imageAssetId, product.ImageAssetId);
+        Assert.NotNull(product.ModifiedOnUtc);
+
+        product.UpdateMedia(clearImageUrl: true, clearImageAssetId: true);
+
+        Assert.Null(product.ImageUrl);
+        Assert.Null(product.ImageAssetId);
     }
 
     [Fact]
@@ -338,6 +539,16 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateMeasurement_WithDifferentDefaultPortion_SetsModifiedOnUtc() {
+        var product = CreateValidProduct();
+
+        product.UpdateMeasurement(defaultPortionAmount: 150);
+
+        Assert.Equal(150d, product.DefaultPortionAmount);
+        Assert.NotNull(product.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void UpdateNutrition_WithNegativeValue_Throws() {
         var product = CreateValidProduct();
 
@@ -372,6 +583,54 @@ public class ProductInvariantTests {
             alcoholPerBase: 0);
 
         Assert.Null(product.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateNutrition_WithNonFiniteValue_Throws() {
+        var product = CreateValidProduct();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            product.UpdateNutrition(caloriesPerBase: double.PositiveInfinity));
+    }
+
+    [Fact]
+    public void LinkAndUnlinkUsdaFood_UpdateOnlyWhenValueChanges() {
+        var product = CreateValidProduct();
+
+        product.LinkToUsdaFood(123);
+
+        Assert.Equal(123, product.UsdaFdcId);
+        Assert.NotNull(product.ModifiedOnUtc);
+
+        product.LinkToUsdaFood(123);
+        product.UnlinkUsdaFood();
+
+        Assert.Null(product.UsdaFdcId);
+    }
+
+    [Fact]
+    public void LinkToUsdaFood_WithInvalidFdcId_Throws() {
+        var product = CreateValidProduct();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => product.LinkToUsdaFood(0));
+    }
+
+    [Fact]
+    public void UnlinkUsdaFood_WhenNotLinked_DoesNotSetModifiedOnUtc() {
+        var product = CreateValidProduct();
+
+        product.UnlinkUsdaFood();
+
+        Assert.Null(product.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void GetQualityScore_ReturnsScoreForProductNutrition() {
+        var product = CreateValidProduct();
+
+        var score = product.GetQualityScore();
+
+        Assert.InRange(score.Score, 0, 100);
     }
 
     [Fact]

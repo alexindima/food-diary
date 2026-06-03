@@ -7,6 +7,7 @@ using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
+[ExcludeFromCodeCoverage]
 public class HydrationValidatorTests {
     [Fact]
     public async Task CreateHydration_WithNullUserId_HasError() {

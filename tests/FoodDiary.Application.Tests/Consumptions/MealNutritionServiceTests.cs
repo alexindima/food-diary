@@ -9,6 +9,7 @@ using FoodDiary.Application.Abstractions.Recipes.Common;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
+[ExcludeFromCodeCoverage]
 public class MealNutritionServiceTests {
     [Fact]
     public async Task CalculateAsync_WhenMealHasNoItems_ReturnsZeroNutrition() {
@@ -109,12 +110,14 @@ public class MealNutritionServiceTests {
             new StubRecipeLookup(recipes ?? new Dictionary<RecipeId, Recipe>()));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubProductLookup(IReadOnlyDictionary<ProductId, Product> products) : IProductLookupService {
         public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids, UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(products);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubRecipeLookup(IReadOnlyDictionary<RecipeId, Recipe> recipes) : IRecipeLookupService {
         public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids, UserId userId, CancellationToken cancellationToken = default) =>

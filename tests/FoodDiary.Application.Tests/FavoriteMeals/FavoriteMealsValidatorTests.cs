@@ -3,6 +3,7 @@ using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
 namespace FoodDiary.Application.Tests.FavoriteMeals;
 
+[ExcludeFromCodeCoverage]
 public class FavoriteMealsValidatorTests {
     private readonly AddFavoriteMealCommandValidator _validator = new();
 

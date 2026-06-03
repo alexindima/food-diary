@@ -6,6 +6,7 @@ using FoodDiary.Application.Dietologist.Models;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
+[ExcludeFromCodeCoverage]
 public class DietologistValidatorTests {
     [Fact]
     public async Task InviteDietologist_WithNullUserId_HasError() {

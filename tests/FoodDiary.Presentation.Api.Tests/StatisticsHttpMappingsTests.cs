@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Statistics.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class StatisticsHttpMappingsTests {
     [Fact]
     public void GetStatisticsHttpQuery_ToQuery_MapsAllFields() {

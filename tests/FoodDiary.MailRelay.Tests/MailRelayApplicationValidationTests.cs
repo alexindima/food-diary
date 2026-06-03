@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayApplicationValidationTests {
     [Fact]
     public async Task EnqueueCommand_WhenRequestIsInvalid_ReturnsValidationFailureWithoutCallingStore() {
@@ -66,10 +67,12 @@ public sealed class MailRelayApplicationValidationTests {
         return services.BuildServiceProvider();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoOpDispatchNotifier : IMailRelayDispatchNotifier {
         public Task NotifyQueuedAsync(Guid queuedEmailId, CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingQueueStore : IMailRelayQueueStore {
         public bool EnqueueCalled { get; private set; }
 

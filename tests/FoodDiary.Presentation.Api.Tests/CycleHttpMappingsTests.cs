@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Cycles.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class CycleHttpMappingsTests {
     [Fact]
     public void UpsertCycleDayRequest_ToCommand_MapsClearNotes() {

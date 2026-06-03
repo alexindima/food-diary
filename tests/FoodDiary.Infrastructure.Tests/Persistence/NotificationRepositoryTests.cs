@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
+[ExcludeFromCodeCoverage]
 public sealed class NotificationRepositoryTests {
     [Fact]
     public async Task DeleteExpiredBatchAsync_WhenReadRecently_KeepsOldCreatedNotification() {

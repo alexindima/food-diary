@@ -19,6 +19,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Notifications;
 
+[ExcludeFromCodeCoverage]
 public class NotificationsFeatureTests {
     private static User CreateUser(UserId? id = null, string email = "notifications@example.com") {
         var user = User.Create(email, "hash");
@@ -450,6 +451,7 @@ public class NotificationsFeatureTests {
         Assert.Equal(cts.Token, repository.DeleteExpiredBatchCancellationToken);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryNotificationRepository : INotificationRepository {
         private readonly List<Notification> _notifications = [];
         public bool MarkAllReadCalled { get; private set; }
@@ -518,6 +520,7 @@ public class NotificationsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationPusher : INotificationPusher {
         public Guid? UnreadCountUserId { get; private set; }
         public int? UnreadCount { get; private set; }
@@ -535,6 +538,7 @@ public class NotificationsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryWebPushSubscriptionRepository(
         IReadOnlyList<WebPushSubscription>? subscriptions = null)
         : IWebPushSubscriptionRepository {
@@ -582,6 +586,7 @@ public class NotificationsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationTestScheduler(ScheduledNotificationData scheduled) : INotificationTestScheduler {
         public bool WasCalled { get; private set; }
         public Guid UserId { get; private set; }
@@ -601,6 +606,7 @@ public class NotificationsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -615,6 +621,7 @@ public class NotificationsFeatureTests {
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingAuditLogger : IAuditLogger {
         public string Action { get; private set; } = string.Empty;
         public UserId ActorId { get; private set; } = UserId.Empty;
@@ -629,6 +636,7 @@ public class NotificationsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingNotificationTextRenderer : INotificationTextRenderer {
         public List<string> RenderedTypes { get; } = [];
 
@@ -641,6 +649,7 @@ public class NotificationsFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow => utcNow;
     }

@@ -4,6 +4,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
+[ExcludeFromCodeCoverage]
 public class CreateRecipeCommandValidatorTests {
     [Fact]
     public async Task ValidateAsync_WithDuplicateStepOrder_ReturnsValidationError() {

@@ -10,6 +10,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Integrations;
 
+[ExcludeFromCodeCoverage]
 public sealed class TelegramAuthValidatorsTests {
     private const string BotToken = "123456:test-token";
     private static readonly DateTime NowUtc = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
@@ -170,6 +171,7 @@ public sealed class TelegramAuthValidatorsTests {
         return sb.ToString();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }

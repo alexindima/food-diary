@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class ApiHostOptionsConfigurationTests {
     [Fact]
     public void AddApiServices_BindsHostOptionsFromConfiguration() {

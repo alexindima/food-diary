@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.JobManager.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class HangfireRecurringJobRegistrationVerifierTests {
     [Fact]
     public void EnsureRegistered_WhenAllExpectedJobsExist_Completes() {
@@ -41,6 +42,7 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
         Assert.Throws<ArgumentNullException>(() => verifier.EnsureRegistered(null!));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeJobStorage(IReadOnlyCollection<string> registeredJobIds) : JobStorage {
         private readonly FakeStorageConnection connection = new(registeredJobIds);
 
@@ -49,6 +51,7 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
         public override IMonitoringApi GetMonitoringApi() => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeStorageConnection(IReadOnlyCollection<string> recurringJobIds) : IStorageConnection {
         public void Dispose() {
         }

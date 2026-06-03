@@ -7,6 +7,7 @@ using OpenTelemetry.Trace;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class OpenTelemetryConfigurationTests {
     [Fact]
     public void AddApiServices_WithoutOtlpEndpoint_DoesNotRegisterTelemetryProviders() {

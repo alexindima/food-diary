@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Images.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ImageHttpMappingsTests {
     [Fact]
     public void ToDeleteCommand_MapsUserIdAndAssetId() {

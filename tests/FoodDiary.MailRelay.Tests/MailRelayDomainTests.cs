@@ -3,6 +3,7 @@ using FoodDiary.MailRelay.Domain.Emails;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayDomainTests {
     [Theory]
     [InlineData("complaint", null, true)]

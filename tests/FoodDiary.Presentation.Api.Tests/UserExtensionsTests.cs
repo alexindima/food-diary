@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Extensions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class UserExtensionsTests {
     [Fact]
     public void GetUserGuid_WithNameIdentifierClaim_ReturnsGuid() {

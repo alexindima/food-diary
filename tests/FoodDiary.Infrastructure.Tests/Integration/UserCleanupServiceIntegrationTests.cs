@@ -17,6 +17,7 @@ using Npgsql;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task CleanupDeletedUsersAsync_WithoutReassign_RemovesUserAndOwnedData() {
@@ -242,6 +243,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.AiUsages.AnyAsync(cancellationToken).ConfigureAwait(false));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingImageStorageService : IImageStorageService {
         public List<string> DeletedObjectKeys { get; } = [];
 

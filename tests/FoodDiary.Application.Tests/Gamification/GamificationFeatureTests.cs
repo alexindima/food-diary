@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
+[ExcludeFromCodeCoverage]
 public class GamificationFeatureTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
@@ -76,8 +77,9 @@ public class GamificationFeatureTests {
         Assert.Equal(0, result.Value.TotalMealsLogged);
     }
 
-    // ── Test Doubles ──
+    // â”€â”€ Test Doubles â”€â”€
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMealRepository : IMealRepository {
         private List<DateTime> _distinctDates = [];
         private int _totalMealCount;
@@ -104,6 +106,7 @@ public class GamificationFeatureTests {
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository : IUserRepository {
         private readonly List<User> _users = [];
 
@@ -124,6 +127,7 @@ public class GamificationFeatureTests {
         public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => Today;
     }

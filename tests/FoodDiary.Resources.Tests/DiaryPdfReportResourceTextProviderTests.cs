@@ -2,6 +2,7 @@ using FoodDiary.Resources.Reports;
 
 namespace FoodDiary.Resources.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DiaryPdfReportResourceTextProviderTests {
     [Theory]
     [InlineData(null, "en")]

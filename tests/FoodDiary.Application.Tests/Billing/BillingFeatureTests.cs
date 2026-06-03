@@ -17,6 +17,7 @@ using FluentValidation.TestHelper;
 
 namespace FoodDiary.Application.Tests.Billing;
 
+[ExcludeFromCodeCoverage]
 public sealed class BillingFeatureTests {
     private static readonly DateTime Now = new(2026, 4, 28, 10, 0, 0, DateTimeKind.Utc);
 
@@ -860,6 +861,7 @@ public sealed class BillingFeatureTests {
             new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
             new FixedDateTimeProvider(Now));
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeUserRepository(params User[] users) : IUserRepository {
         private readonly List<User> _users = users.ToList();
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
@@ -923,6 +925,7 @@ public sealed class BillingFeatureTests {
         private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
         : IBillingSubscriptionRepository {
         public List<BillingSubscription> Subscriptions { get; } = subscriptions.ToList();
@@ -983,6 +986,7 @@ public sealed class BillingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingBillingPaymentRepository : IBillingPaymentRepository {
         public List<BillingPayment> Payments { get; } = [];
 
@@ -1000,6 +1004,7 @@ public sealed class BillingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingBillingWebhookEventRepository : IBillingWebhookEventRepository {
         public HashSet<string> ProcessedEventIds { get; } = new(StringComparer.Ordinal);
         public List<BillingWebhookEvent> Events { get; } = [];
@@ -1021,11 +1026,13 @@ public sealed class BillingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeBillingPublicConfigProvider : IBillingPublicConfigProvider {
         public BillingPublicConfigModel GetPublicConfig() =>
             new(BillingProviderNames.Paddle, "test_client_token", [BillingProviderNames.Paddle, BillingProviderNames.YooKassa]);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeBillingProviderGatewayAccessor(
         IBillingProviderGateway activeProvider,
         params IBillingProviderGateway[] providers)
@@ -1041,6 +1048,7 @@ public sealed class BillingFeatureTests {
             _providers.GetValueOrDefault(provider);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeBillingProviderGateway(
         string provider,
         BillingCheckoutSessionModel? checkoutSession = null,
@@ -1072,6 +1080,7 @@ public sealed class BillingFeatureTests {
             Task.FromResult(Result.Success<BillingWebhookEventModel?>(webhookEvent));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FakeRecurringBillingGateway(
         string provider,
         BillingRecurringPaymentModel renewal)
@@ -1087,6 +1096,7 @@ public sealed class BillingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FailingRecurringBillingGateway(string providerName) : IBillingRecurringProviderGateway {
         private readonly string _provider = providerName;
         public string Provider => _provider;
@@ -1101,10 +1111,12 @@ public sealed class BillingFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoOpBillingTransactionRunner : IBillingTransactionRunner {
         public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
             operation(cancellationToken);

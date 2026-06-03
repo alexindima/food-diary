@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.WeeklyCheckIn;
 
+[ExcludeFromCodeCoverage]
 public class WeeklyCheckInCalculatorTests {
     private static readonly UserId TestUserId = UserId.New();
     private static readonly DateTime WeekStart = new(2026, 3, 30, 0, 0, 0, DateTimeKind.Utc);

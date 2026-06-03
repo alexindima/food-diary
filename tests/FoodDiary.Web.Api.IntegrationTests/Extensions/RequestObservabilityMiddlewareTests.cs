@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class RequestObservabilityMiddlewareTests {
     [Fact]
     public async Task Middleware_PublishesActivity_ForRequest() {

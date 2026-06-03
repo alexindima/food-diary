@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class RecordingImageAssetAccessService : IImageAssetAccessService {
     private readonly Dictionary<ImageAssetId, string> _urls = [];
     private readonly List<ImageAssetId?> _requestedAssetIds = [];

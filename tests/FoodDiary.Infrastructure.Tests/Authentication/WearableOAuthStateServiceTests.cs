@@ -7,6 +7,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Authentication;
 
+[ExcludeFromCodeCoverage]
 public sealed class WearableOAuthStateServiceTests {
     [Fact]
     public void IsValidState_WithMatchingUserAndProvider_ReturnsTrue() {
@@ -46,6 +47,7 @@ public sealed class WearableOAuthStateServiceTests {
             }),
             new StubDateTimeProvider(utcNow ?? new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc)));
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow => utcNow;
     }

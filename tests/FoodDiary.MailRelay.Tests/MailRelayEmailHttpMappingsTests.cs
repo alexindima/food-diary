@@ -9,6 +9,7 @@ using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayEmailHttpMappingsTests {
     [Fact]
     public void StaticQueryMappings_CreateExpectedQueries() {

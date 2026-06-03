@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.FavoriteMeals.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class FavoriteMealHttpMappingsTests {
     [Fact]
     public void AddFavoriteMealRequest_ToCommand_MapsAllFields() {

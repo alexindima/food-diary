@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class EmailTemplateInvariantTests {
     [Fact]
     public void Create_NormalizesKeyLocaleAndFields() {

@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
+[ExcludeFromCodeCoverage]
 public class DietologistAccessPolicyTests {
     [Fact]
     public async Task EnsureCanAccessClientAsync_WithNoActiveInvitation_ReturnsFailure() {
@@ -99,6 +100,7 @@ public class DietologistAccessPolicyTests {
         Assert.NotNull(DietologistAccessPolicy.EnsurePermission(perms, "Unknown"));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubInvitationRepository(DietologistInvitation? invitation) : IDietologistInvitationRepository {
         public Task<DietologistInvitation?> GetActiveByClientAndDietologistAsync(
             UserId clientUserId, UserId dietologistUserId, CancellationToken cancellationToken = default) =>

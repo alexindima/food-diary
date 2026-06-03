@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class NotificationPreferencesIntegrationTests(TestAuthApiWebApplicationFactory factory)
     : IClassFixture<TestAuthApiWebApplicationFactory> {
     [Fact]
@@ -115,11 +116,13 @@ public sealed class NotificationPreferencesIntegrationTests(TestAuthApiWebApplic
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record NotificationPreferencesPayload(
         bool PushNotificationsEnabled,
         bool FastingPushNotificationsEnabled,
         bool SocialPushNotificationsEnabled);
 
+    [ExcludeFromCodeCoverage]
     private sealed record WebPushSubscriptionPayload(
         string Endpoint,
         string EndpointHost,
@@ -129,8 +132,10 @@ public sealed class NotificationPreferencesIntegrationTests(TestAuthApiWebApplic
         DateTime CreatedAtUtc,
         DateTime? UpdatedAtUtc);
 
+    [ExcludeFromCodeCoverage]
     private sealed record RemoveWebPushSubscriptionPayload(string Endpoint);
 
+    [ExcludeFromCodeCoverage]
     private sealed record UpdateNotificationPreferencesPayload(
         bool? PushNotificationsEnabled,
         bool? FastingPushNotificationsEnabled,

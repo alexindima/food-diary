@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PagedHttpResponseMappingsTests {
     [Fact]
     public void ToPagedHttpResponse_MapsItemsAndPagingMetadata() {

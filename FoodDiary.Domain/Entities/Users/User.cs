@@ -311,23 +311,6 @@ public sealed partial class User : AggregateRoot<UserId> {
         return GetProfileState().Media;
     }
 
-    private void ApplyProfileState(UserProfileState state) {
-        Username = state.Username;
-        FirstName = state.FirstName;
-        LastName = state.LastName;
-        BirthDate = state.BirthDate;
-        Gender = state.Gender;
-        Weight = state.Weight;
-        Height = state.Height;
-        ActivityLevel = state.ActivityLevel;
-        ProfileImage = state.ProfileImage;
-        ProfileImageAssetId = state.ProfileImageAssetId;
-        DashboardLayoutJson = state.DashboardLayoutJson;
-        Language = state.Language;
-        Theme = state.Theme;
-        UiStyle = state.UiStyle;
-    }
-
     private void ApplyPersonalProfileState(UserPersonalProfileState state) {
         Username = state.Username;
         FirstName = state.FirstName;
@@ -484,6 +467,12 @@ public sealed partial class User : AggregateRoot<UserId> {
 
         if (!GenderCode.TryParse(value, out _)) {
             throw new ArgumentOutOfRangeException(paramName, "Gender must be one of the supported codes.");
+        }
+    }
+
+    private static void EnsureActivityLevel(ActivityLevel? value, string paramName) {
+        if (value.HasValue && !Enum.IsDefined(value.Value)) {
+            throw new ArgumentOutOfRangeException(paramName, "Activity level must be one of the supported values.");
         }
     }
 

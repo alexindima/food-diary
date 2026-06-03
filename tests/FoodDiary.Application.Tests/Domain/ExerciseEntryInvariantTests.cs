@@ -4,6 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class ExerciseEntryInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {

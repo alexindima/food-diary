@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 internal static class SourceScanner {
     public static string[] FindLinePatternViolations(
         string sourceRoot,

@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.FavoriteRecipes;
 
+[ExcludeFromCodeCoverage]
 public sealed class FavoriteRecipesAdditionalFeatureTests {
     [Fact]
     public async Task AddFavoriteRecipe_WithAccessibleRecipe_PersistsAndReturnsModel() {
@@ -124,6 +125,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         return recipe;
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryFavoriteRecipeRepository(
         Recipe? recipe = null,
         IReadOnlyList<FavoriteRecipe>? favorites = null) : IFavoriteRecipeRepository {
@@ -171,6 +173,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
                 _favorites.Where(f => f.UserId == userId && recipeIds.Contains(f.RecipeId)).ToDictionary(f => f.RecipeId));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleRecipeRepository(Recipe? recipe) : IRecipeRepository {
         public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(UserId userId, bool includePublic, int page, int limit, string? search, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -183,6 +186,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

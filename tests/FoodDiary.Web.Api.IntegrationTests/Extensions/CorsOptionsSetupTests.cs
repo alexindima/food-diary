@@ -5,6 +5,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class CorsOptionsSetupTests {
     [Fact]
     public void Configure_WhenOriginsAreEmpty_UsesLocalhostDefaults() {

@@ -5,6 +5,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Integrations;
 
+[ExcludeFromCodeCoverage]
 public sealed class BillingPublicConfigProviderTests {
     [Fact]
     public void GetPublicConfig_WithValidStripePrimaryAndOtherProviders_ListsAvailableProviders() {

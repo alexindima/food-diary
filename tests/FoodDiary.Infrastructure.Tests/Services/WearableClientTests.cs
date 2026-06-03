@@ -8,6 +8,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class WearableClientTests {
     [Fact]
     public void FitbitGetAuthorizationUrl_EncodesRedirectUriStateAndScopes() {
@@ -207,6 +208,7 @@ public sealed class WearableClientTests {
     private static HttpResponseMessage JsonResponse(string json) =>
         new(HttpStatusCode.OK) { Content = JsonContent(json) };
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHttpMessageHandler(HttpResponseMessage? response = null) : HttpMessageHandler {
         private readonly HttpResponseMessage _response = response ?? JsonResponse("{}");
         public List<HttpRequestMessage> Requests { get; } = [];
@@ -219,6 +221,7 @@ public sealed class WearableClientTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class QueueHttpMessageHandler(IReadOnlyList<HttpResponseMessage> responses) : HttpMessageHandler {
         private readonly Queue<HttpResponseMessage> _responses = new(responses);
         public List<HttpRequestMessage> Requests { get; } = [];

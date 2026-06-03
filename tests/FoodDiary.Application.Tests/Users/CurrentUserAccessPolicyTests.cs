@@ -3,6 +3,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Tests.Users;
 
+[ExcludeFromCodeCoverage]
 public class CurrentUserAccessPolicyTests {
     [Fact]
     public void EnsureCanAccess_WithMissingUser_ReturnsInvalidToken() {

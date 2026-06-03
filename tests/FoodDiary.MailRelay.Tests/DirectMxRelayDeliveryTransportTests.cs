@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DirectMxRelayDeliveryTransportTests {
     [Fact]
     public async Task SendAsync_WhenMxHostIsLoopbackAddress_RejectsBeforeDelivery() {
@@ -32,6 +33,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
         Assert.Contains("private or loopback", ex.InnerException?.Message ?? ex.Message, StringComparison.Ordinal);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMxResolver(IReadOnlyList<MxRecord> records) : IMxResolver {
         public Task<IReadOnlyList<MxRecord>> ResolveAsync(string domain, CancellationToken cancellationToken) =>
             Task.FromResult(records);

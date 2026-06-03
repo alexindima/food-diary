@@ -1,5 +1,6 @@
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class AsyncMethodGuardrailTests {
     private static readonly string[] BackendProjectFolders = [
         "FoodDiary.Application",
@@ -143,6 +144,7 @@ public sealed class AsyncMethodGuardrailTests {
         throw new InvalidOperationException("Repository root was not found.");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record MethodDeclaration(
         string Path,
         int Line,

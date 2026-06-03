@@ -4,6 +4,7 @@ using FoodDiary.Application.Fasting.Models;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class FastingHttpMappingsTests {
     [Fact]
     public void StartFastingRequest_ToCommand_MapsAllFields() {

@@ -5,6 +5,7 @@ using FoodDiary.Application.Cycles.Models;
 
 namespace FoodDiary.Application.Tests.Cycles;
 
+[ExcludeFromCodeCoverage]
 public class CyclesValidatorTests {
     [Fact]
     public async Task CreateCycle_WithNullUserId_HasError() {

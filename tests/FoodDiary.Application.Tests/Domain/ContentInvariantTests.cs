@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class ContentInvariantTests {
     [Fact]
     public void NutritionLesson_Create_WithBlankTitle_Throws() {
@@ -92,6 +93,148 @@ public class ContentInvariantTests {
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
 
         Assert.Equal(512, lesson.Summary!.Length);
+    }
+
+    [Fact]
+    public void NutritionLesson_Update_WithSameNormalizedValues_DoesNotSetModifiedOnUtc() {
+        var lesson = NutritionLesson.Create(
+            "Title",
+            "Content",
+            "Summary",
+            "en",
+            LessonCategory.Macronutrients,
+            LessonDifficulty.Beginner,
+            5,
+            1);
+
+        lesson.Update(
+            "  Title  ",
+            "  Content  ",
+            "  Summary  ",
+            "EN",
+            LessonCategory.Macronutrients,
+            LessonDifficulty.Beginner,
+            5,
+            1);
+
+        Assert.Null(lesson.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void NutritionLesson_Update_WithDifferentValues_NormalizesAndSetsModifiedOnUtc() {
+        var lesson = NutritionLesson.Create(
+            "Title",
+            "Content",
+            null,
+            "en",
+            LessonCategory.Macronutrients,
+            LessonDifficulty.Beginner,
+            5,
+            1);
+
+        lesson.Update(
+            "  New title  ",
+            "  New content  ",
+            "  New summary  ",
+            "RU",
+            LessonCategory.Micronutrients,
+            LessonDifficulty.Advanced,
+            estimatedReadMinutes: 0,
+            sortOrder: -1);
+
+        Assert.Equal("New title", lesson.Title);
+        Assert.Equal("New content", lesson.Content);
+        Assert.Equal("New summary", lesson.Summary);
+        Assert.Equal("ru", lesson.Locale);
+        Assert.Equal(LessonCategory.Micronutrients, lesson.Category);
+        Assert.Equal(LessonDifficulty.Advanced, lesson.Difficulty);
+        Assert.Equal(1, lesson.EstimatedReadMinutes);
+        Assert.Equal(0, lesson.SortOrder);
+        Assert.NotNull(lesson.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void NutritionLesson_Update_WithInvalidValues_Throws() {
+        var lesson = NutritionLesson.Create(
+            "Title",
+            "Content",
+            null,
+            "en",
+            LessonCategory.Macronutrients,
+            LessonDifficulty.Beginner,
+            5);
+
+        Assert.Throws<ArgumentException>(() => lesson.Update(" ", "Content", null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentException>(() => lesson.Update("Title", " ", null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentException>(() => lesson.Update("Title", "Content", null, " ", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => lesson.Update(new string('t', 257), "Content", null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => lesson.Update("Title", new string('c', 65537), null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+    }
+
+    [Fact]
+    public void DailyAdvice_Create_NormalizesValuesAndClampsWeight() {
+        var advice = DailyAdvice.Create("  Drink water  ", "  ru-RU  ", weight: 0, tag: "  hydration  ");
+
+        Assert.NotEqual(DailyAdviceId.Empty, advice.Id);
+        Assert.Equal("Drink water", advice.Value);
+        Assert.Equal("ru", advice.Locale);
+        Assert.Equal(1, advice.Weight);
+        Assert.Equal("hydration", advice.Tag);
+        Assert.NotEqual(default, advice.CreatedOnUtc);
+    }
+
+    [Fact]
+    public void DailyAdvice_Create_WithInvalidValues_Throws() {
+        Assert.Throws<ArgumentException>(() => DailyAdvice.Create(" ", "en"));
+        Assert.Throws<ArgumentException>(() => DailyAdvice.Create("Advice", " "));
+        Assert.Throws<ArgumentOutOfRangeException>(() => DailyAdvice.Create(new string('v', 513), "en"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => DailyAdvice.Create("Advice", "de"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => DailyAdvice.Create("Advice", "en", tag: new string('t', 65)));
+    }
+
+    [Fact]
+    public void DailyAdvice_Update_WithSameNormalizedValues_DoesNotSetModifiedOnUtc() {
+        var advice = DailyAdvice.Create("Advice", "en", weight: 2, tag: "tag");
+
+        advice.Update(value: "  Advice  ", locale: "en-US", weight: 2, tag: "  tag  ");
+
+        Assert.Null(advice.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void DailyAdvice_Update_WithDifferentValues_NormalizesAndSetsModifiedOnUtc() {
+        var advice = DailyAdvice.Create("Advice", "en", weight: 2, tag: "tag");
+
+        advice.Update(value: "  New advice  ", locale: "ru", weight: 0, tag: "  new-tag  ");
+
+        Assert.Equal("New advice", advice.Value);
+        Assert.Equal("ru", advice.Locale);
+        Assert.Equal(1, advice.Weight);
+        Assert.Equal("new-tag", advice.Tag);
+        Assert.NotNull(advice.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void DailyAdvice_Update_WithClearTag_ClearsTagAndRejectsConflicts() {
+        var advice = DailyAdvice.Create("Advice", "en", tag: "tag");
+
+        Assert.Throws<ArgumentException>(() => advice.Update(tag: "tag", clearTag: true));
+
+        advice.Update(clearTag: true);
+
+        Assert.Null(advice.Tag);
+        Assert.NotNull(advice.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void DailyAdvice_Update_WithInvalidValues_Throws() {
+        var advice = DailyAdvice.Create("Advice", "en");
+
+        Assert.Throws<ArgumentException>(() => advice.Update(value: " "));
+        Assert.Throws<ArgumentException>(() => advice.Update(locale: " "));
+        Assert.Throws<ArgumentOutOfRangeException>(() => advice.Update(value: new string('v', 513)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => advice.Update(locale: "de"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => advice.Update(tag: new string('t', 65)));
     }
 
     [Fact]

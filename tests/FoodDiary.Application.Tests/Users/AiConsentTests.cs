@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Users;
 
+[ExcludeFromCodeCoverage]
 public class AiConsentTests {
     [Fact]
     public async Task AcceptAiConsent_WithValidUser_SetsConsentTimestamp() {
@@ -88,6 +89,7 @@ public class AiConsentTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(user.Id == id ? user : null);

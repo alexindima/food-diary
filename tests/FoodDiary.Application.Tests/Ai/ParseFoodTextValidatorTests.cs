@@ -3,6 +3,7 @@ using FoodDiary.Application.Ai.Commands.ParseFoodText;
 
 namespace FoodDiary.Application.Tests.Ai;
 
+[ExcludeFromCodeCoverage]
 public class ParseFoodTextValidatorTests {
     private readonly ParseFoodTextCommandValidator _validator = new();
 

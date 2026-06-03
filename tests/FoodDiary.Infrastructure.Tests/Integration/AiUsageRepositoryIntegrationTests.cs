@@ -5,6 +5,7 @@ using FoodDiary.Infrastructure.Persistence.Ai;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task GetSummaryAsync_AggregatesTotalsAndBreakdownsAgainstPostgres() {

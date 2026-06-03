@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class FastingNotificationHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenDisabled_DoesNotProcessNotifications() {
@@ -78,6 +79,7 @@ public sealed class FastingNotificationHostedServiceTests {
         return services.BuildServiceProvider();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingFastingNotificationScheduler : IFastingNotificationScheduler {
         private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -95,6 +97,7 @@ public sealed class FastingNotificationHostedServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class CancelingFastingNotificationScheduler : IFastingNotificationScheduler {
         private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -113,6 +116,7 @@ public sealed class FastingNotificationHostedServiceTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingFastingNotificationScheduler : IFastingNotificationScheduler {
         private readonly TaskCompletionSource completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
 

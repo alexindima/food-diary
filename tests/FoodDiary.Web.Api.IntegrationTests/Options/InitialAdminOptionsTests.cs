@@ -2,6 +2,7 @@ using FoodDiary.Web.Api.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Options;
 
+[ExcludeFromCodeCoverage]
 public sealed class InitialAdminOptionsTests {
     [Fact]
     public void HasValidConfiguration_WhenPasswordIsBlank_ReturnsTrue() {

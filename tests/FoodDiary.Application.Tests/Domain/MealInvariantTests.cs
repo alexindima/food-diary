@@ -7,6 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class MealInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {
@@ -110,6 +111,45 @@ public class MealInvariantTests {
     }
 
     [Fact]
+    public void UpdateImage_WithNewImageUrl_UpdatesImageUrl() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, imageUrl: "https://old");
+
+        meal.UpdateImage("  https://new  ");
+
+        Assert.Equal("https://new", meal.ImageUrl);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateDate_WithSameNormalizedDate_DoesNotSetModifiedOnUtc() {
+        var date = new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Utc);
+        var meal = Meal.Create(UserId.New(), date);
+
+        meal.UpdateDate(date);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateMealType_WithSameValue_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Breakfast);
+
+        meal.UpdateMealType(MealType.Breakfast);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateMealType_WithDifferentValue_UpdatesMealType() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Breakfast);
+
+        meal.UpdateMealType(MealType.Dinner);
+
+        Assert.Equal(MealType.Dinner, meal.MealType);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void AddProduct_WithEmptyProductId_Throws() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
@@ -121,6 +161,23 @@ public class MealInvariantTests {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
         Assert.Throws<ArgumentException>(() => meal.AddRecipe(RecipeId.Empty, 1));
+    }
+
+    [Fact]
+    public void AddRecipe_WithValidValues_AddsRecipeItem() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        var recipeId = RecipeId.New();
+
+        var item = meal.AddRecipe(recipeId, 2);
+
+        Assert.Equal(meal.Id, item.MealId);
+        Assert.Null(item.ProductId);
+        Assert.Equal(recipeId, item.RecipeId);
+        Assert.Equal(2, item.Amount);
+        Assert.False(item.IsProduct);
+        Assert.True(item.IsRecipe);
+        Assert.Contains(item, meal.Items);
+        Assert.NotNull(meal.ModifiedOnUtc);
     }
 
     [Theory]
@@ -154,6 +211,17 @@ public class MealInvariantTests {
     }
 
     [Fact]
+    public void RemoveItem_WhenItemExists_RemovesItemAndSetsModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        var item = meal.AddProduct(ProductId.New(), 100);
+
+        meal.RemoveItem(item);
+
+        Assert.Empty(meal.Items);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void MealItem_UpdateAmount_WithSameValue_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
         var item = meal.AddProduct(ProductId.New(), 100);
@@ -184,6 +252,17 @@ public class MealInvariantTests {
     }
 
     [Fact]
+    public void ClearItems_WithExistingItems_RemovesItemsAndSetsModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.AddProduct(ProductId.New(), 100);
+
+        meal.ClearItems();
+
+        Assert.Empty(meal.Items);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void ClearAiSessions_WhenAlreadyEmpty_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
@@ -193,10 +272,41 @@ public class MealInvariantTests {
     }
 
     [Fact]
+    public void ClearAiSessions_WithExistingSession_RemovesSessionsAndSetsModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.AddAiSession(null, AiRecognitionSource.Text, DateTime.UtcNow, null, []);
+
+        meal.ClearAiSessions();
+
+        Assert.Empty(meal.AiSessions);
+        Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void UpdateSatietyLevels_WithOutOfRangeValue_Throws() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => meal.UpdateSatietyLevels(6, 5));
+    }
+
+    [Fact]
+    public void UpdateSatietyLevels_WithSameValues_DoesNotSetModifiedOnUtc() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, preMealSatietyLevel: 2, postMealSatietyLevel: 4);
+
+        meal.UpdateSatietyLevels(2, 4);
+
+        Assert.Null(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateSatietyLevels_WithDifferentValues_UpdatesLevels() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        meal.UpdateSatietyLevels(1, 5);
+
+        Assert.Equal(1, meal.PreMealSatietyLevel);
+        Assert.Equal(5, meal.PostMealSatietyLevel);
+        Assert.NotNull(meal.ModifiedOnUtc);
     }
 
     [Fact]
@@ -300,6 +410,43 @@ public class MealInvariantTests {
         Assert.Null(meal.ManualAlcohol);
         Assert.Single(meal.DomainEvents);
         Assert.IsType<MealNutritionAppliedDomainEvent>(meal.DomainEvents[0]);
+    }
+
+    [Fact]
+    public void ApplyNutrition_ManualModeWithFallbackThenExplicitManualValues_UpdatesManualValues() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false));
+        meal.ClearDomainEvents();
+
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 1));
+
+        Assert.Equal(510, meal.ManualCalories);
+        Assert.Equal(31, meal.ManualProteins);
+        Assert.Equal(21, meal.ManualFats);
+        Assert.Equal(41, meal.ManualCarbs);
+        Assert.Equal(9, meal.ManualFiber);
+        Assert.Equal(1, meal.ManualAlcohol);
+        Assert.Single(meal.DomainEvents);
     }
 
     [Fact]
@@ -413,7 +560,7 @@ public class MealInvariantTests {
             items: [
                 MealAiItemData.Create(
                     nameEn: "  Apple  ",
-                    nameLocal: "  Яблоко  ",
+                    nameLocal: "  Ð¯Ð±Ð»Ð¾ÐºÐ¾  ",
                     amount: 100,
                     unit: "  g  ",
                     calories: 52,
@@ -426,7 +573,7 @@ public class MealInvariantTests {
 
         var aiItem = Assert.Single(session.Items);
         Assert.Equal("Apple", aiItem.NameEn);
-        Assert.Equal("Яблоко", aiItem.NameLocal);
+        Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", aiItem.NameLocal);
         Assert.Equal("g", aiItem.Unit);
         Assert.Equal(session.Id, aiItem.MealAiSessionId);
     }
@@ -535,7 +682,7 @@ public class MealInvariantTests {
     public void MealAiItemData_Create_WithValidData_NormalizesValues() {
         var data = MealAiItemData.Create(
             nameEn: "  Apple  ",
-            nameLocal: "  Яблоко  ",
+            nameLocal: "  Ð¯Ð±Ð»Ð¾ÐºÐ¾  ",
             amount: 100,
             unit: "  g  ",
             calories: 52,
@@ -546,7 +693,7 @@ public class MealInvariantTests {
             alcohol: 0);
 
         Assert.Equal("Apple", data.NameEn);
-        Assert.Equal("Яблоко", data.NameLocal);
+        Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", data.NameLocal);
         Assert.Equal("g", data.Unit);
         Assert.Equal(100, data.Amount);
     }
@@ -555,7 +702,7 @@ public class MealInvariantTests {
     public void MealAiItemData_TryCreate_WithValidData_ReturnsTrue() {
         var success = MealAiItemData.TryCreate(
             nameEn: "  Apple  ",
-            nameLocal: "  Яблоко  ",
+            nameLocal: "  Ð¯Ð±Ð»Ð¾ÐºÐ¾  ",
             amount: 100,
             unit: "  g  ",
             calories: 52,
@@ -609,6 +756,32 @@ public class MealInvariantTests {
         var listWithNull = new List<MealAiItem> { item, null! };
 
         var ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [listWithNull]));
+
+        Assert.IsType<ArgumentException>(ex.InnerException);
+    }
+
+    [Fact]
+    public void MealAiSession_AddItems_WithItemAttachedToDifferentSession_Throws() {
+        var createMethod = typeof(MealAiSession).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        var addItemsMethod = typeof(MealAiSession).GetMethod(
+            "AddItems",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var itemCreateMethod = typeof(MealAiItem).GetMethod(
+            "Create",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        var attachMethod = typeof(MealAiItem).GetMethod(
+            "AttachToSession",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        var session = (MealAiSession)createMethod.Invoke(null, [MealId.New(), null, AiRecognitionSource.Text, DateTime.UtcNow, null])!;
+        var item = (MealAiItem)itemCreateMethod.Invoke(
+            null,
+            ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;
+        attachMethod.Invoke(item, [MealAiSessionId.New()]);
+
+        var ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [new List<MealAiItem> { item }]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
     }

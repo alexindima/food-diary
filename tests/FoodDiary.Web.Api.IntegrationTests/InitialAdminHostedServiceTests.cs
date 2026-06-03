@@ -11,6 +11,7 @@ using OptionsFactory = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class InitialAdminHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenPasswordIsBlank_DoesNotCreateUser() {

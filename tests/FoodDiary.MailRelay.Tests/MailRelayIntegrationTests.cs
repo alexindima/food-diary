@@ -11,6 +11,7 @@ using FoodDiary.MailRelay.Tests.TestInfrastructure;
 namespace FoodDiary.MailRelay.Tests;
 
 [Collection("mailrelay-environment")]
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixture) {
     [RequiresDockerFact]
     public async Task SendEndpoint_WhenRelayPipelineSucceeds_ProcessesQueuedMessageAndRecordsTelemetry() {
@@ -234,11 +235,15 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         throw new TimeoutException("Condition was not satisfied in time.");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record QueuedResponse(Guid Id, string Status);
 
+    [ExcludeFromCodeCoverage]
     private sealed record MessageDetails(Guid Id, string Status, string? LastError);
 
+    [ExcludeFromCodeCoverage]
     private sealed record SuppressionEntry(string Email, string Reason, string Source);
 
+    [ExcludeFromCodeCoverage]
     private sealed record DeliveryEventEntry(string EventType, string Email, string? Classification);
 }

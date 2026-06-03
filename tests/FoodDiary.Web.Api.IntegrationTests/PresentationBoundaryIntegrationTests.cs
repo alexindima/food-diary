@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PresentationBoundaryIntegrationTests(
     ApiWebApplicationFactory apiFactory,
     TestAuthApiWebApplicationFactory testAuthFactory)
@@ -680,14 +681,19 @@ public sealed class PresentationBoundaryIntegrationTests(
             actual.ReplaceLineEndings("\n").TrimEnd());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ErrorPayload(string Error, string Message, string? TraceId = null, IReadOnlyDictionary<string, string[]>? Errors = null);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ErrorContractSnapshot(string Error, string Message, IReadOnlyDictionary<string, string[]>? Errors = null);
 
+    [ExcludeFromCodeCoverage]
     private sealed record NegotiatePayload(string ConnectionId, string ConnectionToken);
 
+    [ExcludeFromCodeCoverage]
     private sealed record ApiVersionPayload(
         string CommitSha,
         string ImageTag,
@@ -695,9 +701,12 @@ public sealed class PresentationBoundaryIntegrationTests(
         string ApplicationVersion,
         DateTimeOffset StartedAtUtc);
 
+    [ExcludeFromCodeCoverage]
     private sealed record OpenApiFocusedSnapshot(string OpenApi, IReadOnlyList<EndpointSnapshot> Endpoints);
 
+    [ExcludeFromCodeCoverage]
     private sealed record EndpointSnapshot(string Path, IReadOnlyList<OperationSnapshot> Operations);
 
+    [ExcludeFromCodeCoverage]
     private sealed record OperationSnapshot(string Method, bool HasRequestBody, IReadOnlyList<string> ResponseCodes);
 }

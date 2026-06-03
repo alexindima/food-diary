@@ -5,6 +5,7 @@ using MimeKit;
 
 namespace FoodDiary.MailInbox.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class DmarcReportParserTests {
     [Fact]
     public void TryParse_WhenMessageContainsGzipDmarcReport_ReturnsPreview() {

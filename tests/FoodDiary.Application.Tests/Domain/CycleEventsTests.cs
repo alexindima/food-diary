@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
+[ExcludeFromCodeCoverage]
 public class CycleEventsTests {
     [Fact]
     public void AddOrUpdateDay_RaisesUpsertEvent() {

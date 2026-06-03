@@ -12,6 +12,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
+[ExcludeFromCodeCoverage]
 public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory factory)
     : IClassFixture<PostgresApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -130,10 +131,16 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken);
+    [ExcludeFromCodeCoverage]
     private sealed record IdPayload(Guid Id);
+    [ExcludeFromCodeCoverage]
     private sealed record ErrorPayload(string Error, string Message);
+    [ExcludeFromCodeCoverage]
     private sealed record DashboardPayload(DashboardStatisticsPayload Statistics);
+    [ExcludeFromCodeCoverage]
     private sealed record DashboardStatisticsPayload(double TotalCalories);
+    [ExcludeFromCodeCoverage]
     private sealed record HydrationDailyTotalPayload(int TotalMl);
 }

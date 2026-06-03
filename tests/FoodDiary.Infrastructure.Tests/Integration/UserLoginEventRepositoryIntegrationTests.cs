@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
 public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task DeleteOlderThanAsync_DeletesOnlyExpiredEventsWithinBatch() {

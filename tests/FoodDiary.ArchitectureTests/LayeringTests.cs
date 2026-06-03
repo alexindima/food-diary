@@ -2,6 +2,7 @@ using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
 
+[ExcludeFromCodeCoverage]
 public class LayeringTests {
     [Fact]
     public void DomainProject_DoesNotReference_OtherApplicationLayers() {

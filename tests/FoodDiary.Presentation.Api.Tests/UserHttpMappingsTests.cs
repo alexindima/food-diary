@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Users.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class UserHttpMappingsTests {
     [Fact]
     public void UpdateUserRequest_ToCommand_MapsAllFields() {

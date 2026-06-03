@@ -11,6 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Tdee;
 
+[ExcludeFromCodeCoverage]
 public class TdeeFeatureTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
@@ -61,6 +62,7 @@ public class TdeeFeatureTests {
             new StubExerciseEntryRepository(),
             new StubDateTimeProvider());
 
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository : IUserRepository {
         private readonly List<User> _users = [];
 
@@ -81,6 +83,7 @@ public class TdeeFeatureTests {
         public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubWeightEntryRepository : IWeightEntryRepository {
         public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<WeightEntry>>([]);
@@ -93,6 +96,7 @@ public class TdeeFeatureTests {
         public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubMealRepository : IMealRepository {
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<Meal>>([]);
@@ -107,6 +111,7 @@ public class TdeeFeatureTests {
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubExerciseEntryRepository : IExerciseEntryRepository {
         public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<ExerciseEntry>>([]);
@@ -118,6 +123,7 @@ public class TdeeFeatureTests {
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => Today;
     }

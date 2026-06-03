@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class SecurityHeadersMiddlewareTests {
     [Fact]
     public async Task Middleware_SetsXContentTypeOptions() {

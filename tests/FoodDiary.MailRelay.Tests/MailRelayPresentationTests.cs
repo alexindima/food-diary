@@ -17,6 +17,7 @@ using System.Reflection;
 
 namespace FoodDiary.MailRelay.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailRelayPresentationTests {
     [Theory]
     [InlineData(ErrorKind.Validation, StatusCodes.Status400BadRequest)]

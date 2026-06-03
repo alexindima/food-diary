@@ -6,6 +6,7 @@ using FoodDiary.Presentation.Api.Features.Products.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[ExcludeFromCodeCoverage]
 public sealed class ProductHttpMappingsTests {
     [Fact]
     public void CreateProductRequest_ToCommand_MapsAllFields() {

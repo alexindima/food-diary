@@ -9,6 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Statistics;
 
+[ExcludeFromCodeCoverage]
 public class StatisticsFeatureTests {
     [Fact]
     public async Task GetStatisticsQueryValidator_WithEmptyUserId_Fails() {
@@ -129,6 +130,7 @@ public class StatisticsFeatureTests {
         Assert.Equal(7, bucket.TotalFiber);
     }
 
+    [ExcludeFromCodeCoverage]
     private class NoopMealRepository : IMealRepository {
         public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => Task.FromResult(meal);
         public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -173,6 +175,7 @@ public class StatisticsFeatureTests {
             Task.FromResult<IReadOnlyList<Meal>>(Array.Empty<Meal>());
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StaticMealRepository(IReadOnlyList<Meal> meals) : NoopMealRepository {
         public override Task<IReadOnlyList<Meal>> GetByPeriodAsync(
             UserId userId,
@@ -182,6 +185,7 @@ public class StatisticsFeatureTests {
             Task.FromResult<IReadOnlyList<Meal>>(meals);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class NoopUserRepository : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -196,6 +200,7 @@ public class StatisticsFeatureTests {
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

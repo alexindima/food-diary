@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application.Tests.Common;
 
+[ExcludeFromCodeCoverage]
 public sealed class ApplicationDependencyInjectionTests {
     [Fact]
     public void AddApplication_RegistersCoreApplicationServices() {
