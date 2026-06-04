@@ -40,6 +40,7 @@ import {
     ConsumptionSourceType,
 } from '../../models/meal.data';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
+import type { MealItemsListItemState } from './meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
 import type {
     CalorieMismatchWarning,
@@ -62,6 +63,7 @@ import {
     getTimeInputValue,
 } from './meal-manage-lib/meal-manage-form.mapper';
 import { buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-lib/meal-manage-options.mapper';
+import { resolveMealManageControlError } from './meal-manage-lib/meal-manage-view.utils';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar';
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card';
@@ -155,6 +157,33 @@ export class MealManageFormComponent {
         const nutrients = this.nutrientChartData();
         return calculateMacroBarState(nutrients.proteins, nutrients.fats, nutrients.carbs);
     });
+    protected readonly itemListItems = computed<readonly MealItemsListItemState[]>(() => {
+        this.itemsRenderVersion();
+
+        return this.items.controls.map(group => {
+            const value = group.getRawValue();
+            const productInvalid =
+                value.sourceType === ConsumptionSourceType.Product && group.controls.product.invalid && group.controls.product.touched;
+            const recipeInvalid =
+                value.sourceType === ConsumptionSourceType.Recipe && group.controls.recipe.invalid && group.controls.recipe.touched;
+            const sourceError =
+                productInvalid || recipeInvalid ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR') : null;
+
+            return {
+                ...value,
+                amountError: resolveMealManageControlError(group.controls.amount, this.translateService),
+                productInvalid,
+                recipeInvalid,
+                sourceError,
+            };
+        });
+    });
+    protected readonly itemsError = computed(() => {
+        this.itemsRenderVersion();
+        return this.items.touched && this.items.errors?.['nonEmptyArray'] === true
+            ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY')
+            : null;
+    });
 
     protected consumptionForm: FormGroup<ConsumptionFormData>;
     protected mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
@@ -200,6 +229,7 @@ export class MealManageFormComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
             this.updateGeneralFieldErrors();
+            this.bumpItemsRenderVersion();
         });
     }
 
@@ -492,6 +522,7 @@ export class MealManageFormComponent {
         this.consumptionSignalForm().markAsTouched();
         this.updateGeneralFieldErrors();
         this.markFormGroupTouched(this.consumptionForm);
+        this.bumpItemsRenderVersion();
 
         if (this.macrosError() !== null) {
             return;

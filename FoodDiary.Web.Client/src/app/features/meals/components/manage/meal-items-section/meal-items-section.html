@@ -15,7 +15,8 @@
         />
 
         <fd-meal-items-list
-            [formArray]="items()"
+            [items]="items()"
+            [arrayError]="itemsError()"
             [hasExternalItems]="aiSessions().length > 0"
             [renderVersion]="renderVersion()"
             (editItem)="editItem.emit($event)"

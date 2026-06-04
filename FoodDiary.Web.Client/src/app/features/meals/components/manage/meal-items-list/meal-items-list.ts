@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { FormArray, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,13 +9,8 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
-import {
-    formatMealManageAmount,
-    formatMealManageMacro,
-    getEmptyNutritionTotals,
-    resolveMealManageControlError,
-} from '../meal-manage-lib/meal-manage-view.utils';
+import type { ConsumptionItemFormValues, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
+import { formatMealManageAmount, formatMealManageMacro, getEmptyNutritionTotals } from '../meal-manage-lib/meal-manage-view.utils';
 
 @Component({
     selector: 'fd-meal-items-list',
@@ -30,8 +24,9 @@ export class MealItemsListComponent {
     private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly formArray = input.required<FormArray<FormGroup<ConsumptionItemFormData>>>();
+    public readonly items = input.required<readonly MealItemsListItemState[]>();
     public readonly hasExternalItems = input.required<boolean>();
+    public readonly arrayError = input<string | null>(null);
     public readonly renderVersion = input<number>(0);
 
     public readonly editItem = output<number>();
@@ -41,18 +36,18 @@ export class MealItemsListComponent {
         this.renderVersion();
         this.activeLang();
 
-        return this.formArray()
-            .controls.map((_group, index) => ({ index }))
-            .filter(({ index }) => this.hasManualItem(index))
-            .map(({ index }) => {
-                const totals = this.getManualItemTotals(index);
+        return this.items()
+            .map((item, index) => ({ index, item }))
+            .filter(({ item }) => this.hasManualItem(item))
+            .map(({ index, item }) => {
+                const totals = this.getManualItemTotals(item);
 
                 return {
                     index,
-                    imageUrl: this.getManualItemImageUrl(index),
-                    icon: this.getItemSourceIcon(index),
-                    sourceName: this.getItemSourceName(index),
-                    amountLabel: this.formatManualAmount(index),
+                    imageUrl: this.getManualItemImageUrl(item),
+                    icon: this.getItemSourceIcon(item),
+                    sourceName: this.getItemSourceName(item),
+                    amountLabel: this.formatManualAmount(item),
                     caloriesLabel: formatMealManageMacro(totals.calories, 'GENERAL.UNITS.KCAL', this.translateService),
                     proteinsLabel: formatMealManageMacro(totals.proteins, 'GENERAL.UNITS.G', this.translateService),
                     fatsLabel: formatMealManageMacro(totals.fats, 'GENERAL.UNITS.G', this.translateService),
@@ -60,12 +55,6 @@ export class MealItemsListComponent {
                 };
             });
     });
-    protected readonly arrayError = computed(() =>
-        this.formArray().touched && this.formArray().errors?.['nonEmptyArray'] === true
-            ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY')
-            : null,
-    );
-
     private readonly activeLang = signal(this.translateService.getCurrentLang());
 
     public constructor() {
@@ -75,26 +64,24 @@ export class MealItemsListComponent {
     }
 
     protected isProductItem(index: number): boolean {
-        return this.formArray().at(index).controls.sourceType.value === ConsumptionSourceType.Product;
+        return this.getItem(index)?.sourceType === ConsumptionSourceType.Product;
     }
 
     protected isRecipeItem(index: number): boolean {
-        return this.formArray().at(index).controls.sourceType.value === ConsumptionSourceType.Recipe;
+        return this.getItem(index)?.sourceType === ConsumptionSourceType.Recipe;
     }
 
     protected getProductName(index: number): string {
-        const control = this.formArray().at(index).controls.product;
-        return control.value?.name ?? '';
+        return this.getItem(index)?.product?.name ?? '';
     }
 
     protected getRecipeName(index: number): string {
-        const control = this.formArray().at(index).controls.recipe;
-        return control.value?.name ?? '';
+        return this.getItem(index)?.recipe?.name ?? '';
     }
 
     protected getAmountUnitLabel(index: number): string | null {
         if (this.isProductItem(index)) {
-            const unit = this.formArray().at(index).controls.product.value?.baseUnit;
+            const unit = this.getItem(index)?.product?.baseUnit;
             return unit !== undefined ? this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`) : null;
         }
 
@@ -106,19 +93,11 @@ export class MealItemsListComponent {
     }
 
     protected isProductInvalid(index: number): boolean {
-        if (!this.isProductItem(index)) {
-            return false;
-        }
-        const control = this.formArray().at(index).controls.product;
-        return control.invalid && control.touched;
+        return this.getItem(index)?.productInvalid ?? false;
     }
 
     protected isRecipeInvalid(index: number): boolean {
-        if (!this.isRecipeItem(index)) {
-            return false;
-        }
-        const control = this.formArray().at(index).controls.recipe;
-        return control.invalid && control.touched;
+        return this.getItem(index)?.recipeInvalid ?? false;
     }
 
     protected isItemSourceInvalid(index: number): boolean {
@@ -126,43 +105,41 @@ export class MealItemsListComponent {
     }
 
     protected getItemSourceError(index: number): string | null {
-        return this.isItemSourceInvalid(index) ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR') : null;
+        return this.getItem(index)?.sourceError ?? null;
     }
 
-    private getItemSourceName(index: number): string {
-        if (this.isRecipeItem(index)) {
-            return this.getRecipeName(index);
+    private getItemSourceName(item: MealItemsListItemState): string {
+        if (item.sourceType === ConsumptionSourceType.Recipe) {
+            return item.recipe?.name ?? '';
         }
-        return this.getProductName(index);
+        return item.product?.name ?? '';
     }
 
-    private getItemSourceIcon(index: number): string {
-        if (this.isRecipeItem(index) && this.formArray().at(index).controls.recipe.value !== null) {
+    private getItemSourceIcon(item: MealItemsListItemState): string {
+        if (item.sourceType === ConsumptionSourceType.Recipe && item.recipe !== null) {
             return 'menu_book';
         }
-        if (this.isProductItem(index) && this.formArray().at(index).controls.product.value !== null) {
+        if (item.sourceType === ConsumptionSourceType.Product && item.product !== null) {
             return 'restaurant';
         }
         return 'search';
     }
 
     protected getAmountControlError(index: number): string | null {
-        const group = (this.formArray().controls as Array<FormGroup<ConsumptionItemFormData> | undefined>)[index];
-        return resolveMealManageControlError(group?.controls.amount ?? null, this.translateService);
+        return this.getItem(index)?.amountError ?? null;
     }
 
-    private getManualItemTotals(index: number): NutritionTotals {
-        const group = this.formArray().at(index);
-        const amount = group.controls.amount.value ?? 0;
+    private getManualItemTotals(item: MealItemsListItemState): NutritionTotals {
+        const amount = item.amount ?? 0;
 
-        if (group.controls.sourceType.value === ConsumptionSourceType.Product) {
-            return this.getProductManualItemTotals(group.controls.product.value, amount);
+        if (item.sourceType === ConsumptionSourceType.Product) {
+            return this.getProductManualItemTotals(item.product, amount);
         }
 
-        return this.getRecipeManualItemTotals(group.controls.recipe.value, amount);
+        return this.getRecipeManualItemTotals(item.recipe, amount);
     }
 
-    private getProductManualItemTotals(product: ConsumptionItemFormData['product']['value'], amount: number): NutritionTotals {
+    private getProductManualItemTotals(product: ConsumptionItemFormValues['product'], amount: number): NutritionTotals {
         if (product === null || product.baseAmount <= 0) {
             return getEmptyNutritionTotals();
         }
@@ -178,7 +155,7 @@ export class MealItemsListComponent {
         };
     }
 
-    private getRecipeManualItemTotals(recipe: ConsumptionItemFormData['recipe']['value'], amount: number): NutritionTotals {
+    private getRecipeManualItemTotals(recipe: ConsumptionItemFormValues['recipe'], amount: number): NutritionTotals {
         if (recipe === null || recipe.servings <= 0) {
             return getEmptyNutritionTotals();
         }
@@ -194,28 +171,30 @@ export class MealItemsListComponent {
         };
     }
 
-    private formatManualAmount(index: number): string {
-        const amount = this.formArray().at(index).controls.amount.value ?? 0;
-        const unitLabel = this.getAmountUnitLabel(index);
+    private formatManualAmount(item: MealItemsListItemState): string {
+        const amount = item.amount ?? 0;
+        const unitLabel = this.getAmountUnitLabelForItem(item);
         return formatMealManageAmount(amount, unitLabel, this.translateService);
     }
 
-    private getManualItemImageUrl(index: number): string | null {
-        if (this.isRecipeItem(index)) {
-            return this.formArray().at(index).controls.recipe.value?.imageUrl ?? null;
+    private getManualItemImageUrl(item: MealItemsListItemState): string | null {
+        if (item.sourceType === ConsumptionSourceType.Recipe) {
+            return item.recipe?.imageUrl ?? null;
         }
 
-        return this.formArray().at(index).controls.product.value?.imageUrl ?? null;
+        return item.product?.imageUrl ?? null;
     }
 
     protected onEditItem(index: number): void {
         this.editItem.emit(index);
     }
 
-    protected hasManualItem(index: number): boolean {
+    protected hasManualItem(index: number): boolean;
+    protected hasManualItem(item: MealItemsListItemState): boolean;
+    protected hasManualItem(value: number | MealItemsListItemState): boolean {
         this.renderVersion();
-        const group = this.formArray().at(index);
-        return group.controls.product.value !== null || group.controls.recipe.value !== null;
+        const item = typeof value === 'number' ? this.getItem(value) : value;
+        return item !== undefined && (item.product !== null || item.recipe !== null);
     }
 
     protected onRemoveItem(index: number): void {
@@ -225,7 +204,27 @@ export class MealItemsListComponent {
     protected onItemSourceClick(index: number): void {
         this.openItemSelect.emit(index);
     }
+
+    private getItem(index: number): MealItemsListItemState | undefined {
+        return this.items()[index];
+    }
+
+    private getAmountUnitLabelForItem(item: MealItemsListItemState): string | null {
+        if (item.sourceType === ConsumptionSourceType.Product) {
+            const unit = item.product?.baseUnit;
+            return unit !== undefined ? this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`) : null;
+        }
+
+        return this.translateService.instant('PRODUCT_AMOUNT_UNITS.G');
+    }
 }
+
+export type MealItemsListItemState = ConsumptionItemFormValues & {
+    amountError: string | null;
+    productInvalid: boolean;
+    recipeInvalid: boolean;
+    sourceError: string | null;
+};
 
 type ManualItemRowViewModel = {
     index: number;

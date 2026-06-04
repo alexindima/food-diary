@@ -9,7 +9,7 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 - Baseline date: 2026-06-04.
 - Migrated Signal Forms: 51 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 28 files.
+- Remaining legacy Reactive Forms surface: 24 files.
 
 Tracker patterns:
 
@@ -152,6 +152,13 @@ Tracker patterns:
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.spec.ts`
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.spec.ts`
 
+## Decoupled From Reactive Forms
+
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-section/meal-items-section.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-section/meal-items-section.spec.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-list/meal-items-list.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-list/meal-items-list.spec.ts`
+
 ## Next Candidates
 
 - Small dialogs/pages without `FormArray`.
@@ -177,7 +184,8 @@ Tracker patterns:
 - Product manage now keeps `ProductFormValues` as the signal model and passes mapped nutrition fields into the shared nutrition editor.
 - Meal manual item dialog uses a scalar Signal Form for amount and now accepts/returns plain item values. `meal-manage-form` remains the legacy adapter for its items `FormArray`.
 - Meal manage complex migration has started with value-based form factories, nutrition summary helpers, Signal Forms general-info and nutrition sidebar blocks. The root remains hybrid until items move off legacy forms.
-- Meal items list no longer needs a template `[formGroup]`; it still reads the legacy items `FormArray` until item rows are migrated.
+- Meal items list no longer needs a template `[formGroup]` and now renders value/error state from the parent adapter.
+- Meal items section/list now render value/error state instead of receiving the legacy items `FormArray`; `meal-manage-form` remains the adapter until item editing moves to Signal Forms.
 - Recipe manage complex migration has started with Signal Forms basic-info fields. The root remains hybrid while nutrition and steps stay on legacy forms.
 - Recipe nutrition editor now consumes Signal Forms fields. `recipe-manage` remains the adapter for the legacy nutrition manager until the manager itself is migrated.
 - Shared nutrition editor is now Signal Forms only; the legacy `FormGroup`/`controlNames` fallback was removed after all consumers moved to `[form]`.

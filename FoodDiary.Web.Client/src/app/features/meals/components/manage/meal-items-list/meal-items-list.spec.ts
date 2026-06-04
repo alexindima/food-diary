@@ -1,5 +1,4 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -7,8 +6,7 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
-import { MealItemsListComponent } from './meal-items-list';
+import { MealItemsListComponent, type MealItemsListItemState } from './meal-items-list';
 
 const PRODUCT_AMOUNT = 150;
 const PRODUCT_BASE_AMOUNT = 100;
@@ -22,7 +20,7 @@ describe('MealItemsListComponent rows', () => {
     it('should build product row with calculated nutrition totals', async () => {
         const product = createProduct();
         const { component } = await setupComponentAsync({
-            items: [createItemGroup({ sourceType: ConsumptionSourceType.Product, product, amount: PRODUCT_AMOUNT })],
+            items: [createItemState({ sourceType: ConsumptionSourceType.Product, product, amount: PRODUCT_AMOUNT })],
         });
 
         expect(component['manualItemRows']()).toEqual([
@@ -44,7 +42,7 @@ describe('MealItemsListComponent rows', () => {
         const recipe = createRecipe();
         const recipeWeight = { convertGramsToServings: vi.fn().mockReturnValue(2) };
         const { component } = await setupComponentAsync({
-            items: [createItemGroup({ sourceType: ConsumptionSourceType.Recipe, recipe, amount: RECIPE_AMOUNT_GRAMS })],
+            items: [createItemState({ sourceType: ConsumptionSourceType.Recipe, recipe, amount: RECIPE_AMOUNT_GRAMS })],
             recipeWeight,
         });
 
@@ -67,7 +65,7 @@ describe('MealItemsListComponent rows', () => {
     it('should hide empty manual item rows when only external items exist', async () => {
         const { component } = await setupComponentAsync({
             hasExternalItems: true,
-            items: [createItemGroup({ sourceType: ConsumptionSourceType.Product, product: null, amount: null })],
+            items: [createItemState({ sourceType: ConsumptionSourceType.Product, product: null, amount: null })],
         });
 
         expect(component['manualItemRows']()).toEqual([]);
@@ -77,16 +75,17 @@ describe('MealItemsListComponent rows', () => {
 
 describe('MealItemsListComponent validation', () => {
     it('should expose array and amount errors after controls are touched', async () => {
-        const item = createItemGroup({ sourceType: ConsumptionSourceType.Product, product: createProduct(), amount: null });
-        item.controls.amount.addValidators(Validators.required);
-        item.controls.amount.markAsTouched();
-        item.controls.amount.updateValueAndValidity();
-        const formArray = new FormArray<FormGroup<ConsumptionItemFormData>>([item], {
-            validators: (): { nonEmptyArray: boolean } => ({ nonEmptyArray: true }),
+        const { component } = await setupComponentAsync({
+            arrayError: 'FORM_ERRORS.NON_EMPTY_ARRAY',
+            items: [
+                createItemState({
+                    amount: null,
+                    amountError: 'FORM_ERRORS.REQUIRED',
+                    product: createProduct(),
+                    sourceType: ConsumptionSourceType.Product,
+                }),
+            ],
         });
-        formArray.markAsTouched();
-        formArray.updateValueAndValidity();
-        const { component } = await setupComponentAsync({ formArray });
 
         expect(component['arrayError']()).toBe('FORM_ERRORS.NON_EMPTY_ARRAY');
         expect(component['getAmountControlError'](0)).toBe('FORM_ERRORS.REQUIRED');
@@ -94,10 +93,16 @@ describe('MealItemsListComponent validation', () => {
 
     it('should expose missing source errors for selected item type', async () => {
         const { component } = await setupComponentAsync({
-            items: [createItemGroup({ sourceType: ConsumptionSourceType.Product, product: null, amount: PRODUCT_AMOUNT })],
+            items: [
+                createItemState({
+                    sourceType: ConsumptionSourceType.Product,
+                    product: null,
+                    amount: PRODUCT_AMOUNT,
+                    productInvalid: true,
+                    sourceError: 'CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR',
+                }),
+            ],
         });
-        component['formArray']().at(0).controls.product.setErrors({ required: true });
-        component['formArray']().at(0).controls.product.markAsTouched();
 
         expect(component['isProductInvalid'](0)).toBe(true);
         expect(component['isRecipeInvalid'](0)).toBe(false);
@@ -127,9 +132,9 @@ describe('MealItemsListComponent actions', () => {
 });
 
 type MealItemsListSetupOptions = {
-    formArray?: FormArray<FormGroup<ConsumptionItemFormData>>;
+    arrayError?: string | null;
     hasExternalItems?: boolean;
-    items?: Array<FormGroup<ConsumptionItemFormData>>;
+    items?: MealItemsListItemState[];
     recipeWeight?: { convertGramsToServings: ReturnType<typeof vi.fn> };
 };
 
@@ -148,8 +153,9 @@ async function setupComponentAsync(
     TestBed.inject(TranslateService).use('en');
 
     const fixture = TestBed.createComponent(MealItemsListComponent);
-    fixture.componentRef.setInput('formArray', options.formArray ?? new FormArray(options.items ?? [createItemGroup()]));
+    fixture.componentRef.setInput('items', options.items ?? [createItemState()]);
     fixture.componentRef.setInput('hasExternalItems', options.hasExternalItems ?? false);
+    fixture.componentRef.setInput('arrayError', options.arrayError ?? null);
     fixture.componentRef.setInput('renderVersion', 0);
     fixture.detectChanges();
 
@@ -159,15 +165,17 @@ async function setupComponentAsync(
     };
 }
 
-function createItemGroup(
-    values: Partial<{ sourceType: ConsumptionSourceType; product: Product | null; recipe: Recipe | null; amount: number | null }> = {},
-): FormGroup<ConsumptionItemFormData> {
-    return new FormGroup<ConsumptionItemFormData>({
-        sourceType: new FormControl(values.sourceType ?? ConsumptionSourceType.Product, { nonNullable: true }),
-        product: new FormControl(values.product ?? null),
-        recipe: new FormControl(values.recipe ?? null),
-        amount: new FormControl(values.amount ?? null),
-    });
+function createItemState(values: Partial<MealItemsListItemState> = {}): MealItemsListItemState {
+    return {
+        sourceType: values.sourceType ?? ConsumptionSourceType.Product,
+        product: values.product ?? null,
+        recipe: values.recipe ?? null,
+        amount: values.amount ?? null,
+        amountError: values.amountError ?? null,
+        productInvalid: values.productInvalid ?? false,
+        recipeInvalid: values.recipeInvalid ?? false,
+        sourceError: values.sourceError ?? null,
+    };
 }
 
 function createProduct(): Product {

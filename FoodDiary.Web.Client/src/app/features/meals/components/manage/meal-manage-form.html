@@ -25,7 +25,8 @@
                 />
 
                 <fd-meal-items-section
-                    [items]="items"
+                    [items]="itemListItems()"
+                    [itemsError]="itemsError()"
                     [aiSessions]="aiSessions()"
                     [selectedMealType]="selectedMealType()"
                     [isProcessing]="consumptionForm.disabled"
