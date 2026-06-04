@@ -27,11 +27,10 @@
         </div>
 
         <fd-ui-textarea
-            [formControl]="descriptionControl"
+            [formField]="descriptionForm.description"
             [label]="'PRODUCT_AI_DIALOG.DESCRIPTION' | translate"
             [placeholder]="'PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER' | translate"
             [rows]="3"
-            [disabled]="isLoading() || isNutritionLoading()"
         />
 
         <fd-product-ai-recognition-action

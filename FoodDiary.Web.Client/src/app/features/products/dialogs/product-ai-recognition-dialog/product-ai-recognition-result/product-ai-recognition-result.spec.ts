@@ -1,11 +1,13 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FoodNutritionResponse } from '../../../../../shared/models/ai.data';
 import { MeasurementUnit } from '../../../models/product.data';
-import { createProductAiRecognitionForm } from '../product-ai-recognition-lib/product-ai-recognition.helpers';
+import { createProductAiRecognitionFormModel } from '../product-ai-recognition-lib/product-ai-recognition.helpers';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result';
 
 const PRODUCT_CALORIES = 150;
@@ -79,7 +81,11 @@ describe('ProductAiRecognitionResultComponent', () => {
 });
 
 function setRequiredInputs(itemNames: readonly string[]): void {
-    fixture.componentRef.setInput('form', createProductAiRecognitionForm());
+    const model = signal(createProductAiRecognitionFormModel());
+    fixture.componentRef.setInput(
+        'form',
+        TestBed.runInInjectionContext(() => form(model)),
+    );
     fixture.componentRef.setInput('nutrition', createNutrition());
     fixture.componentRef.setInput('itemNames', itemNames);
 }

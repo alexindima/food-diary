@@ -142,9 +142,15 @@ describe('ProductListFacade search and filters', () => {
         productService.query.mockClear();
 
         facade.searchForm.search().value.set('banana');
-        await flushDebounceAsync();
+        await vi.waitFor(() => {
+            expect(productService.query).toHaveBeenCalledWith(
+                1,
+                PRODUCT_LIST_PAGE_SIZE,
+                expect.objectContaining({ search: 'banana' }),
+                true,
+            );
+        });
 
-        expect(productService.query).toHaveBeenCalledWith(1, PRODUCT_LIST_PAGE_SIZE, expect.objectContaining({ search: 'banana' }), true);
         expect(openFoodFactsService.search).toHaveBeenCalledWith('banana', PRODUCT_LIST_OFF_SEARCH_LIMIT);
         expect(facade.searchValue()).toBe('banana');
         expect(facade.recentProducts()).toEqual([]);

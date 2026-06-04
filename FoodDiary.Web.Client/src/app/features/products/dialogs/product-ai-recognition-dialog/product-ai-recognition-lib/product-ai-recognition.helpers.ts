@@ -1,29 +1,28 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { FormControl, FormGroup } from '@angular/forms';
 
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../../models/product.data';
-import type { ProductAiRecognitionFormGroup, ProductAiRecognitionResult } from '../product-ai-recognition-dialog.types';
+import type { ProductAiRecognitionFormModel, ProductAiRecognitionResult } from '../product-ai-recognition-dialog.types';
 
-export function createProductAiRecognitionForm(): ProductAiRecognitionFormGroup {
-    return new FormGroup({
-        name: new FormControl('', { nonNullable: true }),
-        portionAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, { nonNullable: true }),
-        baseUnit: new FormControl<MeasurementUnit>(MeasurementUnit.G, { nonNullable: true }),
-        caloriesPerBase: new FormControl(0, { nonNullable: true }),
-        proteinsPerBase: new FormControl(0, { nonNullable: true }),
-        fatsPerBase: new FormControl(0, { nonNullable: true }),
-        carbsPerBase: new FormControl(0, { nonNullable: true }),
-        fiberPerBase: new FormControl(0, { nonNullable: true }),
-        alcoholPerBase: new FormControl(0, { nonNullable: true }),
-    });
+export function createProductAiRecognitionFormModel(): ProductAiRecognitionFormModel {
+    return {
+        name: '',
+        portionAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+        baseUnit: MeasurementUnit.G,
+        caloriesPerBase: 0,
+        proteinsPerBase: 0,
+        fatsPerBase: 0,
+        carbsPerBase: 0,
+        fiberPerBase: 0,
+        alcoholPerBase: 0,
+    };
 }
 
 export type ProductAiRecognitionResultBuildParams = {
-    form: ProductAiRecognitionFormGroup;
+    model: ProductAiRecognitionFormModel;
     selection: ImageSelection | null;
     itemNames: readonly string[];
     results: readonly FoodVisionItem[];
@@ -31,10 +30,10 @@ export type ProductAiRecognitionResultBuildParams = {
 };
 
 export function buildProductAiRecognitionResult(params: ProductAiRecognitionResultBuildParams): ProductAiRecognitionResult {
-    const { form, selection, itemNames, results, description } = params;
-    const name = form.controls.name.value.trim();
-    const baseUnit = form.controls.baseUnit.value;
-    const requestedBaseAmount = getNumericValue(form.controls.portionAmount.value);
+    const { model, selection, itemNames, results, description } = params;
+    const name = model.name.trim();
+    const baseUnit = model.baseUnit;
+    const requestedBaseAmount = getNumericValue(model.portionAmount);
     const baseAmount = requestedBaseAmount > 0 ? requestedBaseAmount : getRecognizedAmount(results, baseUnit);
 
     return {
@@ -43,24 +42,24 @@ export function buildProductAiRecognitionResult(params: ProductAiRecognitionResu
         image: selection !== null ? { ...selection } : null,
         baseAmount,
         baseUnit,
-        caloriesPerBase: getNumericValue(form.controls.caloriesPerBase.value),
-        proteinsPerBase: getNumericValue(form.controls.proteinsPerBase.value),
-        fatsPerBase: getNumericValue(form.controls.fatsPerBase.value),
-        carbsPerBase: getNumericValue(form.controls.carbsPerBase.value),
-        fiberPerBase: getNumericValue(form.controls.fiberPerBase.value),
-        alcoholPerBase: getNumericValue(form.controls.alcoholPerBase.value),
+        caloriesPerBase: getNumericValue(model.caloriesPerBase),
+        proteinsPerBase: getNumericValue(model.proteinsPerBase),
+        fatsPerBase: getNumericValue(model.fatsPerBase),
+        carbsPerBase: getNumericValue(model.carbsPerBase),
+        fiberPerBase: getNumericValue(model.fiberPerBase),
+        alcoholPerBase: getNumericValue(model.alcoholPerBase),
     };
 }
 
-export function applyNutritionToProductAiRecognitionForm(
-    form: ProductAiRecognitionFormGroup,
+export function buildProductAiRecognitionModelFromNutrition(
     items: readonly FoodVisionItem[],
     nutrition: FoodNutritionResponse,
-): void {
+): ProductAiRecognitionFormModel {
     const primary = items.length > 0 ? items[0] : null;
     const name = primary === null ? '' : capitalizeName(primary.nameLocal?.trim() ?? primary.nameEn.trim());
     const baseUnit = resolveAiMeasurementUnit(primary?.unit);
-    form.patchValue({
+
+    return {
         name,
         portionAmount: getRecognizedAmount(items, baseUnit),
         baseUnit,
@@ -70,7 +69,7 @@ export function applyNutritionToProductAiRecognitionForm(
         carbsPerBase: nutrition.carbs,
         fiberPerBase: nutrition.fiber,
         alcoholPerBase: nutrition.alcohol,
-    });
+    };
 }
 
 export function normalizeItemsForNutrition(items: readonly FoodVisionItem[]): FoodVisionItem[] {

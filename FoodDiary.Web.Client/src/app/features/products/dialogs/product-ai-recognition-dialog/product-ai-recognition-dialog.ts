@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { disabled as disabledRule, form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -15,12 +15,12 @@ import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/m
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
 import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action/product-ai-recognition-action';
-import type { ProductAiDialogData, ProductAiRecognitionFormGroup, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
+import type { ProductAiDialogData, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
 import {
-    applyNutritionToProductAiRecognitionForm,
+    buildProductAiRecognitionModelFromNutrition,
     buildProductAiRecognitionResult,
     capitalizeName,
-    createProductAiRecognitionForm,
+    createProductAiRecognitionFormModel,
     mapAiNutritionErrorKey,
     mapAiRecognitionErrorKey,
     normalizeItemsForNutrition,
@@ -33,7 +33,7 @@ import { ProductAiRecognitionResultComponent } from './product-ai-recognition-re
     styleUrls: ['./product-ai-recognition-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
@@ -59,19 +59,12 @@ export class ProductAiRecognitionDialogComponent {
     protected readonly selection = signal<ImageSelection | null>(null);
     protected readonly results = signal<FoodVisionItem[]>([]);
     protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
-    protected readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
-    protected readonly resultForm: ProductAiRecognitionFormGroup = createProductAiRecognitionForm();
-
-    public constructor() {
-        effect(() => {
-            const disabled = this.isLoading() || this.isNutritionLoading();
-            if (disabled) {
-                this.descriptionControl.disable({ emitEvent: false });
-            } else {
-                this.descriptionControl.enable({ emitEvent: false });
-            }
-        });
-    }
+    protected readonly descriptionModel = signal({ description: this.dialogData.initialDescription ?? '' });
+    protected readonly descriptionForm = form(this.descriptionModel, path => {
+        disabledRule(path.description, { when: () => this.isLoading() || this.isNutritionLoading() });
+    });
+    protected readonly resultFormModel = signal(createProductAiRecognitionFormModel());
+    protected readonly resultForm = form(this.resultFormModel);
 
     protected readonly statusKey = computed(() => {
         if (this.selection() === null) {
@@ -137,7 +130,7 @@ export class ProductAiRecognitionDialogComponent {
         }
 
         const result = buildProductAiRecognitionResult({
-            form: this.resultForm,
+            model: this.resultFormModel(),
             selection: this.selection(),
             itemNames: this.itemNames(),
             results: this.results(),
@@ -197,12 +190,12 @@ export class ProductAiRecognitionDialogComponent {
                     return;
                 }
                 this.nutrition.set(response);
-                applyNutritionToProductAiRecognitionForm(this.resultForm, items, response);
+                this.resultFormModel.set(buildProductAiRecognitionModelFromNutrition(items, response));
             });
     }
 
     private getDescription(): string | null {
-        const value = this.descriptionControl.value.trim();
+        const value = this.descriptionModel().description.trim();
         return value.length > 0 ? value : null;
     }
 

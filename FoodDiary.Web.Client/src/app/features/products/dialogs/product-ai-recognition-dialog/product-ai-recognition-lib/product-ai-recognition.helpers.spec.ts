@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../shared/models/ai.data';
 import { MeasurementUnit } from '../../../models/product.data';
 import {
-    applyNutritionToProductAiRecognitionForm,
+    buildProductAiRecognitionModelFromNutrition,
     buildProductAiRecognitionResult,
-    createProductAiRecognitionForm,
+    createProductAiRecognitionFormModel,
     getRecognizedAmount,
     mapAiNutritionErrorKey,
     mapAiRecognitionErrorKey,
@@ -76,22 +76,20 @@ describe('product AI recognition helpers', () => {
     });
 
     it('should apply nutrition response to result form', () => {
-        const form = createProductAiRecognitionForm();
+        const model = buildProductAiRecognitionModelFromNutrition(ITEMS, NUTRITION);
 
-        applyNutritionToProductAiRecognitionForm(form, ITEMS, NUTRITION);
-
-        expect(form.controls.name.value).toBe('Apple local');
-        expect(form.controls.portionAmount.value).toBe(RECOGNIZED_GRAMS);
-        expect(form.controls.baseUnit.value).toBe(MeasurementUnit.G);
-        expect(form.controls.caloriesPerBase.value).toBe(NUTRITION.calories);
+        expect(model.name).toBe('Apple local');
+        expect(model.portionAmount).toBe(RECOGNIZED_GRAMS);
+        expect(model.baseUnit).toBe(MeasurementUnit.G);
+        expect(model.caloriesPerBase).toBe(NUTRITION.calories);
     });
 
     it('should build dialog result with fallback name and copied image', () => {
-        const form = createProductAiRecognitionForm();
+        const model = createProductAiRecognitionFormModel();
         const image = { assetId: 'asset-1', url: 'https://example.test/image.jpg' };
 
         const result = buildProductAiRecognitionResult({
-            form,
+            model,
             selection: image,
             itemNames: ['Fallback name'],
             results: ITEMS,

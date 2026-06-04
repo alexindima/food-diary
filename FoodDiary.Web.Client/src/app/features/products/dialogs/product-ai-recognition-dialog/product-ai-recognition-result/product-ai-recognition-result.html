@@ -1,4 +1,4 @@
-<div class="product-ai-dialog__summary fd-stack fd-gap-md" [formGroup]="form()">
+<div class="product-ai-dialog__summary fd-stack fd-gap-md">
     @if (itemNames().length) {
     <div class="product-ai-dialog__items fd-stack fd-gap-sm">
         <div class="product-ai-dialog__items-label fd-ui-caption">{{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}</div>
@@ -18,22 +18,22 @@
 
     <div class="product-ai-dialog__form-grid fd-grid fd-gap-md">
         <fd-ui-input
-            formControlName="name"
+            [formField]="form().name"
             [label]="'PRODUCT_AI_DIALOG.NAME' | translate"
             [placeholder]="'PRODUCT_AI_DIALOG.NAME_PLACEHOLDER' | translate"
         />
         <div class="product-ai-dialog__portion-grid fd-grid fd-gap-md">
-            <fd-ui-input formControlName="portionAmount" type="number" [label]="'PRODUCT_AI_DIALOG.PORTION_AMOUNT' | translate" />
-            <fd-ui-select formControlName="baseUnit" [label]="'PRODUCT_AI_DIALOG.PORTION_UNIT' | translate" [options]="unitOptions()" />
+            <fd-ui-input type="number" [formField]="form().portionAmount" [label]="'PRODUCT_AI_DIALOG.PORTION_AMOUNT' | translate" />
+            <fd-ui-select [formField]="form().baseUnit" [label]="'PRODUCT_AI_DIALOG.PORTION_UNIT' | translate" [options]="unitOptions()" />
         </div>
     </div>
 
     <div class="product-ai-dialog__nutrition-grid fd-grid fd-gap-md">
-        <fd-ui-input formControlName="caloriesPerBase" type="number" [label]="'PRODUCT_MANAGE.CALORIES' | translate" />
-        <fd-ui-input formControlName="proteinsPerBase" type="number" [label]="'PRODUCT_MANAGE.PROTEINS' | translate" />
-        <fd-ui-input formControlName="fatsPerBase" type="number" [label]="'PRODUCT_MANAGE.FATS' | translate" />
-        <fd-ui-input formControlName="carbsPerBase" type="number" [label]="'PRODUCT_MANAGE.CARBS' | translate" />
-        <fd-ui-input formControlName="fiberPerBase" type="number" [label]="'PRODUCT_MANAGE.FIBER' | translate" />
-        <fd-ui-input formControlName="alcoholPerBase" type="number" [label]="'PRODUCT_MANAGE.ALCOHOL' | translate" />
+        <fd-ui-input type="number" [formField]="form().caloriesPerBase" [label]="'PRODUCT_MANAGE.CALORIES' | translate" />
+        <fd-ui-input type="number" [formField]="form().proteinsPerBase" [label]="'PRODUCT_MANAGE.PROTEINS' | translate" />
+        <fd-ui-input type="number" [formField]="form().fatsPerBase" [label]="'PRODUCT_MANAGE.FATS' | translate" />
+        <fd-ui-input type="number" [formField]="form().carbsPerBase" [label]="'PRODUCT_MANAGE.CARBS' | translate" />
+        <fd-ui-input type="number" [formField]="form().fiberPerBase" [label]="'PRODUCT_MANAGE.FIBER' | translate" />
+        <fd-ui-input type="number" [formField]="form().alcoholPerBase" [label]="'PRODUCT_MANAGE.ALCOHOL' | translate" />
     </div>
 </div>

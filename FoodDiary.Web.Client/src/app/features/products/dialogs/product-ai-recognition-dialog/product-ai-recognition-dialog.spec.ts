@@ -65,7 +65,7 @@ beforeEach(() => {
 
 describe('ProductAiRecognitionDialogComponent state', () => {
     it('initializes description and disables analysis until image is selected', () => {
-        expect(component['descriptionControl'].value).toBe(' fresh apple ');
+        expect(component['descriptionModel']().description).toBe(' fresh apple ');
         expect(component['statusKey']()).toBeNull();
         expect(component['canApply']()).toBe(false);
         expect(component['isAnalyzeDisabled']()).toBe(true);
@@ -106,7 +106,7 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
         });
         expect(component['statusKey']()).toBe('PRODUCT_AI_DIALOG.STATUS_DONE');
         expect(component['canApply']()).toBe(true);
-        expect(component['resultForm'].controls.name.value).toBe('Apple local');
+        expect(component['resultFormModel']().name).toBe('Apple local');
         expect(dialogRef.close).toHaveBeenCalledWith(
             expect.objectContaining({
                 name: 'Apple local',
