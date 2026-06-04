@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { FdUiRadioGroupComponent, type FdUiRadioOption } from './fd-ui-radio-group';
 
@@ -74,54 +74,50 @@ describe('FdUiRadioGroupComponent', () => {
     });
 });
 
-describe('FdUiRadioGroupComponent CVA', () => {
-    it('should write value via CVA', async () => {
+describe('FdUiRadioGroupComponent signal form control', () => {
+    it('should write value from model', async () => {
         const { component, fixture } = await setupRadioGroupAsync();
 
         setRadioOptions(fixture);
-        component['writeValue']('b');
+        component.value.set('b');
         fixture.detectChanges();
 
-        expect(component['internalValue']).toBe('b');
+        expect(component.value()).toBe('b');
     });
 
-    it('should call onChange on selection', async () => {
+    it('should update value on selection', async () => {
         const { component, fixture } = await setupRadioGroupAsync();
-        const onChangeSpy = vi.fn();
 
         setRadioOptions(fixture);
-        component['registerOnChange'](onChangeSpy);
 
         component['selectOption'](TEST_OPTIONS[0]);
         fixture.detectChanges();
 
-        expect(onChangeSpy).toHaveBeenCalledWith('a');
+        expect(component.value()).toBe('a');
     });
 
-    it('should call onTouched on blur', async () => {
+    it('should mark touched on blur', async () => {
         const { component, fixture } = await setupRadioGroupAsync();
-        const onTouchedSpy = vi.fn();
 
         setRadioOptions(fixture);
-        component['registerOnTouched'](onTouchedSpy);
 
         const radioInput = fixture.debugElement.query(By.css('.fd-ui-radio__input'));
         radioInput.triggerEventHandler('blur', {});
         fixture.detectChanges();
 
-        expect(onTouchedSpy).toHaveBeenCalled();
+        expect(component.touched()).toBe(true);
     });
 
     it('should set disabled state', async () => {
         const { component, fixture } = await setupRadioGroupAsync();
 
         setRadioOptions(fixture);
-        component['setDisabledState'](true);
+        fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(true);
 
-        component['setDisabledState'](false);
+        fixture.componentRef.setInput('disabled', false);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(false);

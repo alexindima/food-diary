@@ -55,8 +55,8 @@
                         type="number"
                         size="sm"
                         [label]="'FASTING.ADD_HOURS' | translate"
-                        [ngModel]="extendHours()"
-                        (ngModelChange)="extendHoursChange.emit($event)"
+                        [value]="extendHours()"
+                        (valueChange)="extendHoursChange.emit(normalizeNumericControlValue($event))"
                     />
                 </div>
                 <fd-ui-button
@@ -127,8 +127,8 @@
                         type="number"
                         size="sm"
                         [label]="'FASTING.REDUCE_HOURS' | translate"
-                        [ngModel]="reduceHours()"
-                        (ngModelChange)="reduceHoursChange.emit($event)"
+                        [value]="reduceHours()"
+                        (valueChange)="reduceHoursChange.emit(normalizeNumericControlValue($event))"
                     />
                 </div>
                 <fd-ui-button

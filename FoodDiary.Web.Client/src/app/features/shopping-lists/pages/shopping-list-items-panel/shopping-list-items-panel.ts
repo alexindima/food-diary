@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -18,7 +17,6 @@ import type { ShoppingListItem } from '../../models/shopping-list.data';
     selector: 'fd-shopping-list-items-panel',
     imports: [
         FormField,
-        FormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,

@@ -1,7 +1,7 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, signal } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, LOCALE_ID, model, signal } from '@angular/core';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar';
 import { fdUiFormatDateInputValue, fdUiParseLocalDate, fdUiStartOfLocalDay } from '../date/fd-ui-date.utils';
@@ -16,15 +16,8 @@ let uniqueId = 0;
     templateUrl: './fd-ui-date-input.html',
     styleUrls: ['./fd-ui-date-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiDateInputComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiDateInputComponent implements ControlValueAccessor {
+export class FdUiDateInputComponent implements FormValueControl<string | Date | null> {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly locale = inject(LOCALE_ID);
     private readonly document = inject(DOCUMENT);
@@ -35,13 +28,15 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     public readonly error = input<string | null>();
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
-    public readonly min = input<string | Date | null | undefined>(null);
-    public readonly max = input<string | Date | null | undefined>(null);
+    public readonly min = input<string | Date>();
+    public readonly max = input<string | Date>();
+    public readonly value = model<string | Date | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
 
     protected readonly internalValue = signal<Date | null>(null);
     protected readonly isOpen = signal(false);
     protected readonly displayMonth = signal(new Date());
-    protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
 
     protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
@@ -70,28 +65,16 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         }).format(value);
     });
 
-    private onChange: (value: string | null) => void = () => {};
-    private onTouched: () => void = () => {};
+    public constructor() {
+        effect(() => {
+            this.applyValue(this.value());
+        });
 
-    public writeValue(value: string | Date | null | undefined): void {
-        const parsed = fdUiParseLocalDate(value ?? null);
-        this.internalValue.set(parsed);
-        this.displayMonth.set(parsed ?? new Date());
-    }
-
-    public registerOnChange(fn: (value: string | null) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
-        if (isDisabled) {
-            this.closeDatePicker();
-        }
+        effect(() => {
+            if (this.disabled()) {
+                this.closeDatePicker();
+            }
+        });
     }
 
     protected openDatePicker(): void {
@@ -111,7 +94,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
 
         this.isOpen.set(false);
         this.isFocused.set(false);
-        this.onTouched();
+        this.touched.set(true);
     }
 
     protected onDateSelect(value: Date | null): void {
@@ -122,7 +105,8 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         const normalized = this.stripTime(value);
         this.internalValue.set(normalized);
         this.displayMonth.set(normalized);
-        this.onChange(this.formatIsoDate(normalized));
+        const isoDate = this.formatIsoDate(normalized);
+        this.value.set(isoDate);
         this.closeDatePicker();
     }
 
@@ -149,7 +133,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         }
 
         this.isFocused.set(false);
-        this.onTouched();
+        this.touched.set(true);
     }
 
     protected onInputKeydown(event: KeyboardEvent): void {
@@ -187,5 +171,11 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
 
     private formatIsoDate(date: Date): string {
         return fdUiFormatDateInputValue(date);
+    }
+
+    private applyValue(value: string | Date | null): void {
+        const parsed = fdUiParseLocalDate(value);
+        this.internalValue.set(parsed);
+        this.displayMonth.set(parsed ?? new Date());
     }
 }

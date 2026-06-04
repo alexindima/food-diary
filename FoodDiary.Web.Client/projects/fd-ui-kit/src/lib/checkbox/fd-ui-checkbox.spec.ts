@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiCheckboxComponent } from './fd-ui-checkbox';
 
@@ -56,60 +56,43 @@ describe('FdUiCheckboxComponent', () => {
         expect(hintEl.textContent.trim()).toBe('Please read carefully');
     });
 
-    it('should write value via CVA (true/false/null)', () => {
-        component['writeValue'](true);
-        expect(component['checked']).toBe(true);
+    it('should write checked state from model', () => {
+        component.checked.set(true);
+        fixture.detectChanges();
+        expect(component['checkedValue']).toBe(true);
 
-        component['writeValue'](false);
-        expect(component['checked']).toBe(false);
-
-        component['writeValue'](null);
-        expect(component['checked']).toBe(false);
+        component.checked.set(false);
+        fixture.detectChanges();
+        expect(component['checkedValue']).toBe(false);
     });
 
-    it('should call onChange when checkbox changes', () => {
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-
+    it('should update checked model when checkbox changes', () => {
         const changeEvent = dispatchCheckboxChange(true);
         component['updateCheckedValue'](changeEvent);
 
-        expect(component['checked']).toBe(true);
-        expect(onChangeSpy).toHaveBeenCalledWith(true);
+        expect(component.checked()).toBe(true);
 
         const uncheckEvent = dispatchCheckboxChange(false);
         component['updateCheckedValue'](uncheckEvent);
 
-        expect(component['checked']).toBe(false);
-        expect(onChangeSpy).toHaveBeenCalledWith(false);
+        expect(component.checked()).toBe(false);
     });
 
-    it('should call onTouched on blur', () => {
-        const onTouchedSpy = vi.fn();
-        component['registerOnTouched'](onTouchedSpy);
-
+    it('should mark touched on blur', () => {
         component['touchControl']();
 
-        expect(onTouchedSpy).toHaveBeenCalled();
+        expect(component.touched()).toBe(true);
     });
 
-    it('should set disabled state via CVA', () => {
-        component['setDisabledState'](true);
+    it('should set disabled state from input', () => {
+        fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(true);
 
-        component['setDisabledState'](false);
+        fixture.componentRef.setInput('disabled', false);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(false);
-    });
-
-    it('should handle null writeValue as false', () => {
-        component['writeValue'](true);
-        expect(component['checked']).toBe(true);
-
-        component['writeValue'](null);
-        expect(component['checked']).toBe(false);
     });
 });

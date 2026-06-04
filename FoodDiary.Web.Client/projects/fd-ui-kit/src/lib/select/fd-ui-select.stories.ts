@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiSelectComponent } from './fd-ui-select';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiSelectComponent<string>> = {
     title: 'Components/Select',
     component: FdUiSelectComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         placeholder: { control: 'text' },

@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiNutrientInputComponent> = {
     title: 'Components/NutrientInput',
     component: FdUiNutrientInputComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         icon: { control: 'text' },
@@ -128,7 +125,7 @@ export const WithError: Story = {
 export const Readonly: Story = {
     render: () => ({
         template:
-            '<fd-ui-nutrient-input label="Total" [ngModel]="350" unitLabel="kcal" [readonly]="true" tintColor="#ff6b35" textColor="#ff6b35"></fd-ui-nutrient-input>',
+            '<fd-ui-nutrient-input label="Total" [value]="350" unitLabel="kcal" [readonly]="true" tintColor="#ff6b35" textColor="#ff6b35"></fd-ui-nutrient-input>',
     }),
 };
 
@@ -136,10 +133,10 @@ export const NutritionGroup: Story = {
     render: () => ({
         template: `
             <div style="display: flex; gap: var(--fd-space-sm); flex-wrap: wrap;">
-                <fd-ui-nutrient-input label="Calories" icon="local_fire_department" [ngModel]="2100" unitLabel="kcal" tintColor="#ff6b35" textColor="#ff6b35"></fd-ui-nutrient-input>
-                <fd-ui-nutrient-input label="Proteins" icon="fitness_center" [ngModel]="85" unitLabel="g" tintColor="#4a90e2" textColor="#4a90e2"></fd-ui-nutrient-input>
-                <fd-ui-nutrient-input label="Fats" icon="water_drop" [ngModel]="70" unitLabel="g" tintColor="#f5a623" textColor="#f5a623"></fd-ui-nutrient-input>
-                <fd-ui-nutrient-input label="Carbs" icon="grain" [ngModel]="250" unitLabel="g" tintColor="#50e3c2" textColor="#50e3c2"></fd-ui-nutrient-input>
+                <fd-ui-nutrient-input label="Calories" icon="local_fire_department" [value]="2100" unitLabel="kcal" tintColor="#ff6b35" textColor="#ff6b35"></fd-ui-nutrient-input>
+                <fd-ui-nutrient-input label="Proteins" icon="fitness_center" [value]="85" unitLabel="g" tintColor="#4a90e2" textColor="#4a90e2"></fd-ui-nutrient-input>
+                <fd-ui-nutrient-input label="Fats" icon="water_drop" [value]="70" unitLabel="g" tintColor="#f5a623" textColor="#f5a623"></fd-ui-nutrient-input>
+                <fd-ui-nutrient-input label="Carbs" icon="grain" [value]="250" unitLabel="g" tintColor="#50e3c2" textColor="#50e3c2"></fd-ui-nutrient-input>
             </div>
         `,
     }),

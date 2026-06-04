@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiDatetimeInputComponent } from './fd-ui-datetime-input';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiDatetimeInputComponent> = {
     title: 'Components/DatetimeInput',
     component: FdUiDatetimeInputComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         placeholder: { control: 'text' },
@@ -31,7 +28,7 @@ export const Default: Story = {
 
 export const WithValue: Story = {
     render: () => ({
-        template: '<fd-ui-datetime-input label="Meal Time" [ngModel]="\'2024-03-15T12:30\'"></fd-ui-datetime-input>',
+        template: '<fd-ui-datetime-input label="Meal Time" [value]="\'2024-03-15T12:30\'"></fd-ui-datetime-input>',
     }),
 };
 

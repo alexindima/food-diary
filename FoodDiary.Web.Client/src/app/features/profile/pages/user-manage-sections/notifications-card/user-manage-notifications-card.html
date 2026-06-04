@@ -86,17 +86,15 @@
                         type="number"
                         size="sm"
                         [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_FIRST' | translate"
-                        [ngModel]="fastingCheckInReminderHours()"
-                        [ngModelOptions]="{ standalone: true }"
-                        (ngModelChange)="fastingReminderHoursChange.emit({ value: $event, field: 'first' })"
+                        [value]="fastingCheckInReminderHours()"
+                        (valueChange)="fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'first' })"
                     />
                     <fd-ui-input
                         type="number"
                         size="sm"
                         [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SECOND' | translate"
-                        [ngModel]="fastingCheckInFollowUpReminderHours()"
-                        [ngModelOptions]="{ standalone: true }"
-                        (ngModelChange)="fastingReminderHoursChange.emit({ value: $event, field: 'followUp' })"
+                        [value]="fastingCheckInFollowUpReminderHours()"
+                        (valueChange)="fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'followUp' })"
                     />
                     <fd-ui-button
                         class="user-manage__notifications-reminder-save"

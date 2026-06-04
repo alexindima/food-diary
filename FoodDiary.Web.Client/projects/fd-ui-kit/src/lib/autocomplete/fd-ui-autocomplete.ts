@@ -1,7 +1,18 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, output, signal, viewChild } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    type ElementRef,
+    input,
+    model,
+    output,
+    signal,
+    viewChild,
+} from '@angular/core';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -24,15 +35,8 @@ let uniqueId = 0;
     templateUrl: './fd-ui-autocomplete.html',
     styleUrls: ['./fd-ui-autocomplete.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiAutocompleteComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAccessor {
+export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<T | string | null> {
     protected readonly controlRef = viewChild<ElementRef<HTMLInputElement>>('control');
     protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
@@ -50,20 +54,33 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
     public readonly displayWith = input<(value: T | null) => string>();
+    public readonly value = model<T | string | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
 
     public readonly queryChange = output<string>();
     public readonly optionSelected = output<FdUiAutocompleteOption<T>>();
 
     protected readonly internalValue = signal<T | null>(null);
     protected readonly queryText = signal('');
-    protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
     protected readonly isOpen = signal(false);
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
-    private onChange: (value: T | string | null) => void = () => {};
-    private onTouched: () => void = () => {};
+    public constructor() {
+        effect(() => {
+            const value = this.value();
+            if (typeof value === 'string') {
+                this.internalValue.set(null);
+                this.queryText.set(value);
+                return;
+            }
+
+            this.internalValue.set(value);
+            this.queryText.set(this.getDisplayText(value));
+        });
+    }
 
     protected readonly sizeClass = computed(() => `fd-ui-autocomplete--size-${this.size()}`);
     protected readonly hasError = computed(() => {
@@ -99,23 +116,6 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
                     this.emptyText() !== undefined)),
     );
 
-    public writeValue(value: T | null): void {
-        this.internalValue.set(value);
-        this.queryText.set(this.getDisplayText(value));
-    }
-
-    public registerOnChange(fn: (value: T | string | null) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
-    }
-
     protected onInput(value: string): void {
         if (this.disabled()) {
             return;
@@ -123,7 +123,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
         this.queryText.set(value);
         this.internalValue.set(null);
-        this.onChange(value);
+        this.value.set(value);
         this.queryChange.emit(value);
         this.openMenu();
     }
@@ -136,7 +136,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
     protected onBlur(): void {
         if (!this.isOpen()) {
             this.isFocused.set(false);
-            this.onTouched();
+            this.touched.set(true);
         }
     }
 
@@ -150,7 +150,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
         this.internalValue.set(null);
         this.queryText.set('');
-        this.onChange('');
+        this.value.set('');
         this.queryChange.emit('');
         this.closeMenu();
         this.controlRef()?.nativeElement.focus();
@@ -163,8 +163,8 @@ export class FdUiAutocompleteComponent<T = unknown> implements ControlValueAcces
 
         this.internalValue.set(option.value);
         this.queryText.set(option.label);
-        this.onChange(option.value);
-        this.onTouched();
+        this.value.set(option.value);
+        this.touched.set(true);
         this.optionSelected.emit(option);
         this.closeMenu();
         this.controlRef()?.nativeElement.focus();

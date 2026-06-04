@@ -2,13 +2,13 @@
     <div class="toolbar fd-row fd-gap-sm fd-justify-end fd-wrap">
         <div class="toolbar__field fd-grid fd-gap-xxs fd-ui-helper-strong">
             <label for="admin-mail-inbox-category-filter">Type</label>
-            <select id="admin-mail-inbox-category-filter" [ngModel]="categoryFilter()" (ngModelChange)="setCategoryFilter($event)">
+            <select id="admin-mail-inbox-category-filter" [value]="categoryFilter()" (change)="setCategoryFilter(getSelectValue($event))">
                 <option value="all">All</option>
                 <option value="dmarc-report">DMARC reports</option>
                 <option value="general">Other mail</option>
             </select>
         </div>
-        <fd-ui-input type="number" placeholder="Limit" [ngModel]="limit()" (ngModelChange)="updateLimit($event)" />
+        <fd-ui-input type="number" placeholder="Limit" [value]="limit()" (valueChange)="updateLimit($event)" />
         <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
     </div>
 

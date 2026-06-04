@@ -1,7 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, LOCALE_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
@@ -25,7 +24,7 @@ const ADMIN_MODERATION_PAGE_SIZE = 20;
 
 @Component({
     selector: 'fd-admin-moderation',
-    imports: [CommonModule, FormsModule, FdUiButtonComponent, FdUiPaginationComponent],
+    imports: [CommonModule, FdUiButtonComponent, FdUiPaginationComponent],
     templateUrl: './admin-moderation.html',
     styleUrl: './admin-moderation.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,6 +80,10 @@ export class AdminModerationComponent {
         this.statusFilter.set(status);
         this.page.set(1);
         this.loadReports();
+    }
+
+    protected getSelectValue(event: Event): string {
+        return event.target instanceof HTMLSelectElement ? event.target.value : '';
     }
 
     protected goToPage(page: number): void {

@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { FdUiTimeInputComponent } from './fd-ui-time-input';
 
@@ -86,46 +86,49 @@ describe('FdUiTimeInputComponent rendering', () => {
     });
 });
 
-describe('FdUiTimeInputComponent CVA', () => {
-    it('should write value via CVA', async () => {
-        const { component } = await setupTimeInputAsync();
-        component['writeValue']('14:30');
+describe('FdUiTimeInputComponent signal form control', () => {
+    it('should write value from model', async () => {
+        const { component, fixture } = await setupTimeInputAsync();
+        component.value.set('14:30');
+        fixture.detectChanges();
         expect(component['internalValue']()).toBe('14:30');
     });
 
-    it('should write null value via CVA as empty string', async () => {
-        const { component } = await setupTimeInputAsync();
-        component['writeValue']('10:00');
+    it('should write null value as empty string', async () => {
+        const { component, fixture } = await setupTimeInputAsync();
+        component.value.set('10:00');
+        fixture.detectChanges();
         expect(component['internalValue']()).toBe('10:00');
 
-        component['writeValue'](null);
+        component.value.set(null);
+        fixture.detectChanges();
         expect(component['internalValue']()).toBe('');
     });
 
     it('should set disabled state', async () => {
-        const { component } = await setupTimeInputAsync();
-        component['setDisabledState'](true);
+        const { component, fixture } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
 
         expect(component['disabled']()).toBe(true);
     });
 
     it('should re-enable after being disabled', async () => {
         const { component, fixture } = await setupTimeInputAsync();
-        component['setDisabledState'](true);
-        component['setDisabledState'](false);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        fixture.componentRef.setInput('disabled', false);
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(false);
     });
 
-    it('should call onTouched on blur', async () => {
+    it('should mark touched on blur', async () => {
         const { component } = await setupTimeInputAsync();
-        const onTouchedSpy = vi.fn();
-        component['registerOnTouched'](onTouchedSpy);
 
         component['onBlur']();
 
-        expect(onTouchedSpy).toHaveBeenCalled();
+        expect(component.touched()).toBe(true);
     });
 });
 
@@ -147,78 +150,62 @@ describe('FdUiTimeInputComponent classes', () => {
 });
 
 describe('FdUiTimeInputComponent input handling', () => {
-    it('should call onChange with formatted time on valid input', async () => {
+    it('should update value with formatted time on valid input', async () => {
         const { component } = await setupTimeInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('14:30');
 
-        expect(onChangeSpy).toHaveBeenCalledWith('14:30');
+        expect(component.value()).toBe('14:30');
         expect(component['internalValue']()).toBe('14:30');
     });
 
-    it('should call onChange with null on empty input', async () => {
+    it('should update value with null on empty input', async () => {
         const { component } = await setupTimeInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('');
 
-        expect(onChangeSpy).toHaveBeenCalledWith(null);
+        expect(component.value()).toBeNull();
         expect(component['internalValue']()).toBe('');
     });
 
-    it('should not call onChange on invalid time input', async () => {
+    it('should not update value on invalid time input', async () => {
         const { component } = await setupTimeInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         component['onInput']('abc');
 
-        expect(onChangeSpy).not.toHaveBeenCalled();
+        expect(component.value()).toBeNull();
         expect(component['internalValue']()).toBe('abc');
     });
 
     it('should not process input when disabled', async () => {
-        const { component } = await setupTimeInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-        component['setDisabledState'](true);
+        const { component, fixture } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
 
         component['onInput']('14:30');
 
-        expect(onChangeSpy).not.toHaveBeenCalled();
+        expect(component.value()).toBeNull();
     });
 
     it('should pad single-digit hours and minutes', async () => {
         const { component } = await setupTimeInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-
         component['onInput']('9:05');
 
-        expect(onChangeSpy).toHaveBeenCalledWith('09:05');
+        expect(component.value()).toBe('09:05');
         expect(component['internalValue']()).toBe('09:05');
     });
 
     it('should reject hours above 23', async () => {
         const { component } = await setupTimeInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-
         component['onInput']('25:00');
 
-        expect(onChangeSpy).not.toHaveBeenCalled();
+        expect(component.value()).toBeNull();
     });
 
     it('should reject minutes above 59', async () => {
         const { component } = await setupTimeInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-
         component['onInput']('12:60');
 
-        expect(onChangeSpy).not.toHaveBeenCalled();
+        expect(component.value()).toBeNull();
     });
 });

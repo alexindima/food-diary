@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input';
 
@@ -43,123 +43,118 @@ describe('FdUiNutrientInputComponent', () => {
     });
 });
 
-describe('FdUiNutrientInputComponent CVA', () => {
-    it('should write value via CVA', async () => {
-        const { component } = await setupNutrientInputAsync();
-        component['writeValue']('42');
-        expect(component['value']).toBe('42');
+describe('FdUiNutrientInputComponent signal form control', () => {
+    it('should write value from model', async () => {
+        const { component, fixture } = await setupNutrientInputAsync();
+        component.value.set('42');
+        fixture.detectChanges();
+        expect(component['displayValue']).toBe('42');
     });
 
-    it('should write numeric value via CVA and convert to string', async () => {
-        const { component } = await setupNutrientInputAsync();
-        component['writeValue'](NUMERIC_VALUE);
-        expect(component['value']).toBe(String(NUMERIC_VALUE));
+    it('should write numeric value from model and convert to string', async () => {
+        const { component, fixture } = await setupNutrientInputAsync();
+        component.value.set(NUMERIC_VALUE);
+        fixture.detectChanges();
+        expect(component['displayValue']).toBe(String(NUMERIC_VALUE));
     });
 
-    it('should write null value via CVA as empty string', async () => {
-        const { component } = await setupNutrientInputAsync();
-        component['writeValue']('50');
-        expect(component['value']).toBe('50');
+    it('should write null value as empty string', async () => {
+        const { component, fixture } = await setupNutrientInputAsync();
+        component.value.set('50');
+        fixture.detectChanges();
+        expect(component['displayValue']).toBe('50');
 
-        component['writeValue'](null);
-        expect(component['value']).toBe('');
+        component.value.set(null);
+        fixture.detectChanges();
+        expect(component['displayValue']).toBe('');
     });
 
     it('should set disabled state', async () => {
-        const { component, fixture, input } = await setupNutrientInputAsync();
-        expect(component['disabled']).toBe(false);
+        const { fixture, input } = await setupNutrientInputAsync();
 
-        component['setDisabledState'](true);
+        fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBe(true);
         expect(input().disabled).toBe(true);
     });
 
-    it('should call onTouched on blur', async () => {
+    it('should mark touched on blur', async () => {
         const { component, input } = await setupNutrientInputAsync();
-        const onTouchedSpy = vi.fn();
-        component['registerOnTouched'](onTouchedSpy);
 
         input().dispatchEvent(new Event('blur'));
 
-        expect(onTouchedSpy).toHaveBeenCalled();
+        expect(component.touched()).toBe(true);
     });
 });
 
 describe('FdUiNutrientInputComponent input handling', () => {
-    it('should emit onChange on input', async () => {
+    it('should update value on input', async () => {
         const { component, input } = await setupNutrientInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         const inputEl = input();
         inputEl.value = '123';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(onChangeSpy).toHaveBeenCalledWith('123');
+        expect(component.value()).toBe('123');
     });
 
     it('should sanitize non-numeric characters for number type', async () => {
         const { component, fixture, input } = await setupNutrientInputAsync();
         fixture.componentRef.setInput('type', 'number');
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         const inputEl = input();
         inputEl.value = '12abc3.5';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(onChangeSpy).toHaveBeenCalledWith('123.5');
-        expect(component['value']).toBe('123.5');
+        expect(component.value()).toBe('123.5');
+        expect(component['displayValue']).toBe('123.5');
     });
 
     it('should replace comma with dot in number type', async () => {
         const { component, fixture, input } = await setupNutrientInputAsync();
         fixture.componentRef.setInput('type', 'number');
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         const inputEl = input();
         inputEl.value = '12,5';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(onChangeSpy).toHaveBeenCalledWith('12.5');
+        expect(component.value()).toBe('12.5');
     });
 
     it('should not sanitize text type input', async () => {
         const { component, fixture, input } = await setupNutrientInputAsync();
         fixture.componentRef.setInput('type', 'text');
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         const inputEl = input();
         inputEl.value = 'abc123';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(onChangeSpy).toHaveBeenCalledWith('abc123');
-        expect(component['value']).toBe('abc123');
+        expect(component.value()).toBe('abc123');
+        expect(component['displayValue']).toBe('abc123');
     });
 });
 
 describe('FdUiNutrientInputComponent dynamic width', () => {
     it('should update inputWidth based on value length', async () => {
-        const { component } = await setupNutrientInputAsync();
-        component['writeValue']('12345');
+        const { component, fixture } = await setupNutrientInputAsync();
+        component.value.set('12345');
+        fixture.detectChanges();
         expect(component['inputWidth']).toBe(`${CLAMPED_INPUT_SIZE}ch`);
         expect(component['inputSize']).toBe(CLAMPED_INPUT_SIZE);
     });
 
     it('should clamp inputWidth to maxInputChars', async () => {
-        const { component } = await setupNutrientInputAsync();
-        component['writeValue']('1234567890');
+        const { component, fixture } = await setupNutrientInputAsync();
+        component.value.set('1234567890');
+        fixture.detectChanges();
         expect(component['inputSize']).toBe(component['maxInputChars']);
         expect(component['inputWidth']).toBe(`${component['maxInputChars']}ch`);
     });
 
     it('should default inputWidth to 1ch for empty value', async () => {
-        const { component } = await setupNutrientInputAsync();
-        component['writeValue']('');
+        const { component, fixture } = await setupNutrientInputAsync();
+        component.value.set('');
+        fixture.detectChanges();
         expect(component['inputWidth']).toBe('1ch');
         expect(component['inputSize']).toBe(1);
     });

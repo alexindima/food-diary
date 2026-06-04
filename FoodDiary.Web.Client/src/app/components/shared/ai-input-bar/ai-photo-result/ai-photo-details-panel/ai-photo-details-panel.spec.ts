@@ -1,5 +1,4 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -7,7 +6,7 @@ import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel';
 
 async function setupAiPhotoDetailsPanelAsync(): Promise<ComponentFixture<AiPhotoDetailsPanelComponent>> {
     await TestBed.configureTestingModule({
-        imports: [AiPhotoDetailsPanelComponent, FormsModule, TranslateModule.forRoot()],
+        imports: [AiPhotoDetailsPanelComponent, TranslateModule.forRoot()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiPhotoDetailsPanelComponent);

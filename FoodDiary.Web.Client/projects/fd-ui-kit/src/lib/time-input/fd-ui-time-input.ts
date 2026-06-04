@@ -1,6 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, signal } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, model, signal } from '@angular/core';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -20,31 +20,29 @@ let uniqueId = 0;
     templateUrl: './fd-ui-time-input.html',
     styleUrls: ['./fd-ui-time-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiTimeInputComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiTimeInputComponent implements ControlValueAccessor {
+export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     public readonly id = input(`fd-ui-time-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
+    public readonly value = model<string | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
 
     protected readonly internalValue = signal('');
-    protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
 
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly document = inject(DOCUMENT);
 
-    private onChange: (value: string | null) => void = () => {};
-    private onTouched: () => void = () => {};
+    public constructor() {
+        effect(() => {
+            this.internalValue.set(this.value() ?? '');
+        });
+    }
 
     protected readonly sizeClass = computed(() => `fd-ui-time-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
@@ -60,22 +58,6 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? 'HH:mm') : null));
 
-    public writeValue(value: string | null): void {
-        this.internalValue.set(value ?? '');
-    }
-
-    public registerOnChange(fn: (value: string | null) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
-    }
-
     protected onInput(value: string): void {
         if (this.disabled()) {
             return;
@@ -83,7 +65,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
 
         if (value.length === 0) {
             this.internalValue.set('');
-            this.onChange(null);
+            this.value.set(null);
             return;
         }
 
@@ -94,7 +76,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
         }
 
         this.internalValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
-        this.onChange(this.internalValue());
+        this.value.set(this.internalValue());
     }
 
     protected onBlur(): void {
@@ -104,10 +86,10 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
             const parsed = this.parseTime(internalValue);
             if (parsed !== null) {
                 this.internalValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
-                this.onChange(this.internalValue());
+                this.value.set(this.internalValue());
             }
         }
-        this.onTouched();
+        this.touched.set(true);
     }
 
     protected onFocus(): void {
@@ -128,7 +110,7 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
             return;
         }
         this.isFocused.set(false);
-        this.onTouched();
+        this.touched.set(true);
     }
 
     private parseTime(value: string): { hours: number; minutes: number } | null {

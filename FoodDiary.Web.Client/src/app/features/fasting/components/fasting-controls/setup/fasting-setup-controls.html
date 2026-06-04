@@ -29,8 +29,8 @@
                     type="number"
                     size="sm"
                     [label]="'FASTING.FAST_HOURS_SHORT' | translate"
-                    [ngModel]="customIntermittentFastHours()"
-                    (ngModelChange)="customIntermittentFastHoursChange.emit($event)"
+                    [value]="customIntermittentFastHours()"
+                    (valueChange)="customIntermittentFastHoursChange.emit(normalizeNumericControlValue($event))"
                 />
             </div>
             <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
@@ -61,8 +61,8 @@
                     type="number"
                     size="sm"
                     [label]="'FASTING.CUSTOM_HOURS' | translate"
-                    [ngModel]="customHours()"
-                    (ngModelChange)="customHoursChange.emit($event)"
+                    [value]="customHours()"
+                    (valueChange)="customHoursChange.emit(normalizeNumericControlValue($event))"
                 />
             </div>
         </div>

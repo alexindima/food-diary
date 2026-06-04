@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiRadioGroupComponent } from './fd-ui-radio-group';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiRadioGroupComponent<string>> = {
     title: 'Components/RadioGroup',
     component: FdUiRadioGroupComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         hint: { control: 'text' },

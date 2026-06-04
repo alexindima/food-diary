@@ -1,5 +1,9 @@
 <fd-ui-dialog [title]="'USDA_SEARCH.TITLE' | translate">
-    <fd-ui-input [placeholder]="'USDA_SEARCH.PLACEHOLDER' | translate" [ngModel]="searchQuery()" (ngModelChange)="onSearchChange($event)" />
+    <fd-ui-input
+        [placeholder]="'USDA_SEARCH.PLACEHOLDER' | translate"
+        [value]="searchQuery()"
+        (valueChange)="onSearchControlChange($event)"
+    />
 
     <div class="results-container">
         @if (isLoading()) {

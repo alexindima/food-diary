@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
@@ -8,7 +7,7 @@ import type { AdminUserLoginEvent } from '../models/admin-user.models';
 
 @Component({
     selector: 'fd-admin-login-activity-section',
-    imports: [DatePipe, FormsModule, FdUiInputComponent, FdUiPaginationComponent],
+    imports: [DatePipe, FdUiInputComponent, FdUiPaginationComponent],
     templateUrl: './admin-login-activity-section.html',
     styleUrl: './admin-users.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

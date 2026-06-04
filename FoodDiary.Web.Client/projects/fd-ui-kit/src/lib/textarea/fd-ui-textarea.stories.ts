@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiTextareaComponent } from './fd-ui-textarea';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiTextareaComponent> = {
     title: 'Components/Textarea',
     component: FdUiTextareaComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         placeholder: { control: 'text' },
@@ -37,7 +34,7 @@ export const Default: Story = {
 export const WithValue: Story = {
     render: () => ({
         template:
-            '<fd-ui-textarea label="Notes" [ngModel]="\'This is a pre-filled textarea with some content.\'" [rows]="4"></fd-ui-textarea>',
+            '<fd-ui-textarea label="Notes" [value]="\'This is a pre-filled textarea with some content.\'" [rows]="4"></fd-ui-textarea>',
     }),
 };
 
@@ -74,6 +71,6 @@ export const WithMaxLength: Story = {
 export const Readonly: Story = {
     render: () => ({
         template:
-            '<fd-ui-textarea label="Readonly" [ngModel]="\'This content cannot be edited.\'" [readonly]="true" [rows]="3"></fd-ui-textarea>',
+            '<fd-ui-textarea label="Readonly" [value]="\'This content cannot be edited.\'" [readonly]="true" [rows]="3"></fd-ui-textarea>',
     }),
 };

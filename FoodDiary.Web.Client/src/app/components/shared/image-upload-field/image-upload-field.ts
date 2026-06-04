@@ -12,7 +12,7 @@ import {
     output,
     viewChild,
 } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { FormValueControl } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -64,15 +64,8 @@ type CropInteraction = {
     templateUrl: './image-upload-field.html',
     styleUrls: ['./image-upload-field.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: ImageUploadFieldComponent,
-            multi: true,
-        },
-    ],
 })
-export class ImageUploadFieldComponent implements ControlValueAccessor {
+export class ImageUploadFieldComponent implements FormValueControl<ImageSelection | null> {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly imageUploadFacade = inject(ImageUploadFacade);
     private readonly translateService = inject(TranslateService);
@@ -92,7 +85,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly resizeQuality = input<number>(DEFAULT_RESIZE_QUALITY);
     public readonly deleteOnClear = input<boolean>(false);
     public readonly initialSelection = input<ImageSelection | null>(null);
-    public readonly controlValue = model<ImageSelection | null>();
+    public readonly value = model<ImageSelection | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
     public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'hidden'>('default');
 
     public readonly imageChanged = output<ImageSelection | null>();
@@ -107,7 +102,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     protected isDragging = false;
     protected isUploading = false;
     protected error: string | null = null;
-    protected disabled = false;
     protected isCropping = false;
 
     protected cropPreviewUrl: string | null = null;
@@ -117,16 +111,13 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     private cropImageElement: HTMLImageElement | null = null;
     private cropInteraction: CropInteraction | null = null;
 
-    private onChange: (value: ImageSelection | null) => void = () => {};
-    private onTouched: () => void = () => {};
-
     protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
 
     public constructor() {
         effect(() => {
-            const value = this.controlValue();
-            if (value !== undefined) {
-                this.selection = value ?? { url: null, assetId: null };
+            const value = this.value();
+            if (value !== null) {
+                this.selection = value;
                 this.cdr.markForCheck();
                 return;
             }
@@ -147,24 +138,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         return initial !== null && (initial.url !== null || initial.assetId !== null);
     }
 
-    public writeValue(value: ImageSelection | null): void {
-        this.selection = value ?? { url: null, assetId: null };
-        this.cdr.markForCheck();
-    }
-
-    public registerOnChange(fn: (value: ImageSelection | null) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.cdr.markForCheck();
-    }
-
     protected onFileSelected(event: Event): void {
         if (!(event.target instanceof HTMLInputElement)) {
             return;
@@ -181,7 +154,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     protected onDrop(event: DragEvent): void {
         event.preventDefault();
         event.stopPropagation();
-        if (this.disabled || this.isUploading) {
+        if (this.disabled() || this.isUploading) {
             return;
         }
         this.isDragging = false;
@@ -193,7 +166,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     protected onDragOver(event: DragEvent): void {
         event.preventDefault();
-        if (this.disabled || this.isUploading) {
+        if (this.disabled() || this.isUploading) {
             return;
         }
         this.isDragging = true;
@@ -208,9 +181,8 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         const assetId = this.selection.assetId;
         this.selection = { url: null, assetId: null };
         this.error = null;
-        this.onChange(this.selection);
-        this.onTouched();
-        this.controlValue.set(this.selection);
+        this.value.set(this.selection);
+        this.touched.set(true);
         this.imageChanged.emit(this.selection);
         this.isCropping = false;
         this.clearCropState();
@@ -319,7 +291,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     protected onZoneClick(fileInput: HTMLInputElement): void {
-        if (this.disabled || this.isUploading || this.selection.url !== null) {
+        if (this.disabled() || this.isUploading || this.selection.url !== null) {
             return;
         }
         fileInput.click();
@@ -335,7 +307,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     private async handleIncomingFileAsync(file: File): Promise<void> {
-        if (this.disabled || this.isUploading) {
+        if (this.disabled() || this.isUploading) {
             return;
         }
 
@@ -441,7 +413,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     private uploadFile(file: File): void {
-        if (this.disabled || this.isUploading) {
+        if (this.disabled() || this.isUploading) {
             return;
         }
 
@@ -473,9 +445,8 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             .subscribe({
                 next: selection => {
                     this.selection = selection;
-                    this.onChange(selection);
-                    this.onTouched();
-                    this.controlValue.set(selection);
+                    this.value.set(selection);
+                    this.touched.set(true);
                     this.imageChanged.emit(selection);
                     this.cdr.markForCheck();
                 },

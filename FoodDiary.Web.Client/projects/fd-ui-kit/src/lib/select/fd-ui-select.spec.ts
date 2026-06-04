@@ -77,13 +77,13 @@ describe('FdUiSelectComponent rendering', () => {
     });
 });
 
-describe('FdUiSelectComponent CVA', () => {
-    it('should write value via CVA', async () => {
+describe('FdUiSelectComponent signal form control', () => {
+    it('should write value from model', async () => {
         const { component, fixture } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
-        component['writeValue']('banana');
+        component.value.set('banana');
         fixture.detectChanges();
 
         expect(component['internalValue']()).toBe('banana');
@@ -94,17 +94,12 @@ describe('FdUiSelectComponent CVA', () => {
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
-        const onChangeSpy = vi.fn();
-        const onTouchedSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-        component['registerOnTouched'](onTouchedSpy);
-
         component['onOptionSelect'](TEST_OPTIONS[1]);
         fixture.detectChanges();
 
         expect(component['internalValue']()).toBe('banana');
-        expect(onChangeSpy).toHaveBeenCalledWith('banana');
-        expect(onTouchedSpy).toHaveBeenCalled();
+        expect(component.value()).toBe('banana');
+        expect(component.touched()).toBe(true);
     });
 
     it('should not select when disabled', async () => {
@@ -112,20 +107,20 @@ describe('FdUiSelectComponent CVA', () => {
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-        component['setDisabledState'](true);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
 
         component['onOptionSelect'](TEST_OPTIONS[0]);
         fixture.detectChanges();
 
         expect(component['internalValue']()).toBeNull();
-        expect(onChangeSpy).not.toHaveBeenCalled();
+        expect(component.value()).toBeNull();
     });
 
-    it('should set disabled state via CVA', async () => {
-        const { component } = await setupSelectAsync();
-        component['setDisabledState'](true);
+    it('should set disabled state from input', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
 
         expect(component['disabled']()).toBe(true);
     });
@@ -137,7 +132,7 @@ describe('FdUiSelectComponent computed state', () => {
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
-        component['writeValue']('cherry');
+        component.value.set('cherry');
         fixture.detectChanges();
 
         expect(component['selectedLabel']()).toBe('Cherry');
@@ -151,7 +146,8 @@ describe('FdUiSelectComponent computed state', () => {
 
         expect(component['shouldFloatLabel']()).toBe(false);
 
-        component['writeValue']('apple');
+        component.value.set('apple');
+        fixture.detectChanges();
 
         expect(component['shouldFloatLabel']()).toBe(true);
     });
@@ -257,29 +253,23 @@ describe('FdUiSelectComponent overlay', () => {
         const { component, fixture } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
-        const onTouchedSpy = vi.fn();
-        component['registerOnTouched'](onTouchedSpy);
-
         component['openMenu']();
         component['onBlur']();
 
         expect(component['isFocused']()).toBe(true);
-        expect(onTouchedSpy).not.toHaveBeenCalled();
+        expect(component.touched()).toBe(false);
 
         component['closeMenu']();
         component['onBlur']();
 
         expect(component['isFocused']()).toBe(false);
-        expect(onTouchedSpy).toHaveBeenCalledOnce();
+        expect(component.touched()).toBe(true);
     });
 
     it('should navigate listbox with arrow, home, end and select active option', async () => {
         const { component, fixture } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-
         component['openMenu']();
         component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(component['activeIndex']()).toBe(1);
@@ -292,7 +282,7 @@ describe('FdUiSelectComponent overlay', () => {
 
         component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Enter' }));
 
-        expect(onChangeSpy).toHaveBeenCalledWith('apple');
+        expect(component.value()).toBe('apple');
         expect(component['isOpen']()).toBe(false);
     });
 
@@ -331,16 +321,13 @@ describe('FdUiSelectComponent keyboard and wrapper interactions', () => {
         const { component, fixture } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-
         component['openMenu']();
         component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'ArrowUp' }));
         expect(component['activeIndex']()).toBe(2);
 
         component['onListboxKeydown'](new KeyboardEvent('keydown', { key: ' ' }));
 
-        expect(onChangeSpy).toHaveBeenCalledWith('cherry');
+        expect(component.value()).toBe('cherry');
         expect(component['isOpen']()).toBe(false);
     });
 
@@ -406,7 +393,8 @@ describe('FdUiSelectComponent control wrapper interactions', () => {
 
         expect(component['isOpen']()).toBe(false);
 
-        component['setDisabledState'](true);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
         const wrapperEvent = new MouseEvent('click', { bubbles: true });
         Object.defineProperty(wrapperEvent, 'target', { value: requireElement('.fd-ui-select__control-wrap') });
         component['onControlWrapClick'](wrapperEvent);

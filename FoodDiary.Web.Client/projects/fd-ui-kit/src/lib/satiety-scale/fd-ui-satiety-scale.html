@@ -9,7 +9,7 @@
     <p class="satiety-scale__hint">{{ hint() }}</p>
     }
 
-    <div class="satiety-scale__list" role="radiogroup" [attr.aria-disabled]="disabled">
+    <div class="satiety-scale__list" role="radiogroup" [attr.aria-disabled]="disabled()">
         @for (level of levels(); track level.value) {
         <button
             fdUiAccentSurface
@@ -18,7 +18,7 @@
             accentSide="left"
             role="radio"
             [class.satiety-scale__option--selected]="isSelected(level.value)"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             [accentColor]="level.gradient"
             [active]="isSelected(level.value)"
             [tinted]="true"

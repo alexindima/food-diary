@@ -18,8 +18,8 @@
                     type="number"
                     size="sm"
                     [label]="'FASTING.CYCLIC_FAST_DAYS_SHORT' | translate"
-                    [ngModel]="cyclicFastDays()"
-                    (ngModelChange)="cyclicFastDaysChange.emit($event)"
+                    [value]="cyclicFastDays()"
+                    (valueChange)="cyclicFastDaysChange.emit(normalizeNumericControlValue($event))"
                 />
             </div>
             <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
@@ -27,8 +27,8 @@
                     type="number"
                     size="sm"
                     [label]="'FASTING.CYCLIC_EAT_DAYS_SHORT' | translate"
-                    [ngModel]="cyclicEatDays()"
-                    (ngModelChange)="cyclicEatDaysChange.emit($event)"
+                    [value]="cyclicEatDays()"
+                    (valueChange)="cyclicEatDaysChange.emit(normalizeNumericControlValue($event))"
                 />
             </div>
             <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">{{ cyclicFastDays() }}:{{ cyclicEatDays() }}</div>
@@ -57,8 +57,8 @@
                     type="number"
                     size="sm"
                     [label]="'FASTING.FAST_HOURS_SHORT' | translate"
-                    [ngModel]="cyclicEatDayFastHours()"
-                    (ngModelChange)="cyclicEatDayFastHoursChange.emit($event)"
+                    [value]="cyclicEatDayFastHours()"
+                    (valueChange)="cyclicEatDayFastHoursChange.emit(normalizeNumericControlValue($event))"
                 />
             </div>
             <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -8,7 +7,7 @@ import type { FastingCustomActionState } from '../fasting-controls.types';
 
 @Component({
     selector: 'fd-fasting-active-extended-controls',
-    imports: [FormsModule, TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './fasting-active-extended-controls.html',
     styleUrl: '../fasting-controls.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,4 +70,8 @@ export class FastingActiveExtendedControlsComponent {
     protected readonly extendActionsDisabled = (): boolean => this.isExtending() || this.isReducing() || this.isEnding();
     protected readonly reduceActionsDisabled = (): boolean => this.isReducing() || this.isExtending() || this.isEnding();
     protected readonly endDisabled = (): boolean => this.isEnding() || this.isReducing() || this.isExtending() || this.isUpdatingCycle();
+
+    protected normalizeNumericControlValue(value: string | number | null | undefined): string | number {
+        return value ?? '';
+    }
 }

@@ -1,5 +1,5 @@
 <fd-ui-dialog size="lg" [title]="data.titleKey | translate" [subtitle]="subtitle()">
-    <fd-ui-satiety-scale layout="vertical" [ngModel]="selectedValue()" (ngModelChange)="onValueSelected($event)" />
+    <fd-ui-satiety-scale layout="vertical" [value]="selectedValue()" (valueChange)="onControlValueSelected($event)" />
 
     <div fdUiDialogFooter>
         <fd-ui-button variant="secondary" fill="outline" (click)="close()">

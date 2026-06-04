@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiDateRangeInputComponent } from './fd-ui-date-range-input';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiDateRangeInputComponent> = {
     title: 'Components/DateRangeInput',
     component: FdUiDateRangeInputComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         startLabel: { control: 'text' },
         endLabel: { control: 'text' },

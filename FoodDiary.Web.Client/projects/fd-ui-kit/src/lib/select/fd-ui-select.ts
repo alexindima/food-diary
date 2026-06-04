@@ -1,7 +1,7 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, signal, viewChild } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, effect, type ElementRef, input, model, signal, viewChild } from '@angular/core';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -25,15 +25,8 @@ export type FdUiSelectOption<T = unknown> = {
     templateUrl: './fd-ui-select.html',
     styleUrls: ['./fd-ui-select.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiSelectComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
+export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | null> {
     protected readonly isEqual = Object.is;
     protected readonly controlRef = viewChild<ElementRef<HTMLButtonElement>>('control');
     protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
@@ -47,16 +40,21 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     public readonly options = input<Array<FdUiSelectOption<T>>>([]);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
+    public readonly value = model<T | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
 
     protected readonly internalValue = signal<T | null>(null);
-    protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
     protected readonly isOpen = signal(false);
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
-    private onChange: (value: T | null) => void = () => {};
-    private onTouched: () => void = () => {};
+    public constructor() {
+        effect(() => {
+            this.internalValue.set(this.value());
+        });
+    }
 
     protected readonly sizeClass = computed(() => `fd-ui-select--size-${this.size()}`);
     protected readonly hasError = computed(() => {
@@ -92,30 +90,14 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
         return this.getOptionId(activeIndex);
     });
 
-    public writeValue(value: T | null): void {
-        this.internalValue.set(value);
-    }
-
-    public registerOnChange(fn: (value: T | null) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
-    }
-
     protected onOptionSelect(option: FdUiSelectOption<T>): void {
         if (this.disabled()) {
             return;
         }
 
         this.internalValue.set(option.value);
-        this.onChange(this.internalValue());
-        this.onTouched();
+        this.value.set(this.internalValue());
+        this.touched.set(true);
         this.closeMenu();
     }
 
@@ -126,7 +108,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected onBlur(): void {
         if (!this.isOpen()) {
             this.isFocused.set(false);
-            this.onTouched();
+            this.touched.set(true);
         }
     }
 

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { form, FormField, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -33,15 +32,7 @@ export type MealManualItemDialogData = {
     templateUrl: './meal-manual-item-dialog.html',
     styleUrls: ['./meal-manual-item-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        FormField,
-        FormsModule,
-        TranslatePipe,
-        FdUiButtonComponent,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-        FdUiInputComponent,
-    ],
+    imports: [FormField, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiInputComponent],
 })
 export class MealManualItemDialogComponent {
     private readonly data = inject<MealManualItemDialogData>(FD_UI_DIALOG_DATA);

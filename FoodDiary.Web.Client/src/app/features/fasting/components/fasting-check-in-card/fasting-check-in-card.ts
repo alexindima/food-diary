@@ -10,7 +10,6 @@ import {
     type WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiEmojiPickerComponent, type FdUiEmojiPickerOption } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -32,7 +31,6 @@ import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fast
 @Component({
     selector: 'fd-fasting-check-in-card',
     imports: [
-        FormsModule,
         TranslatePipe,
         FdUiChipSelectComponent,
         FdUiEmojiPickerComponent,
@@ -104,6 +102,10 @@ export class FastingCheckInCardComponent {
 
     protected setMoodLevel(value: FdUiEmojiPickerValue | null): void {
         this.setNumericLevel(this.moodLevel(), value);
+    }
+
+    protected setNotes(event: Event): void {
+        this.notes().set(event.target instanceof HTMLTextAreaElement ? event.target.value : '');
     }
 
     private setNumericLevel(target: WritableSignal<number>, value: FdUiEmojiPickerValue | null): void {

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,14 +9,7 @@ import { FastingCyclicSetupControlsComponent } from '../cyclic-setup/fasting-cyc
 
 @Component({
     selector: 'fd-fasting-setup-controls',
-    imports: [
-        FormsModule,
-        TranslatePipe,
-        FdUiSegmentedToggleComponent,
-        FdUiButtonComponent,
-        FdUiInputComponent,
-        FastingCyclicSetupControlsComponent,
-    ],
+    imports: [TranslatePipe, FdUiSegmentedToggleComponent, FdUiButtonComponent, FdUiInputComponent, FastingCyclicSetupControlsComponent],
     templateUrl: './fasting-setup-controls.html',
     styleUrl: '../fasting-controls.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,4 +47,8 @@ export class FastingSetupControlsComponent {
     public readonly cyclicEatDayProtocolChange = output<string>();
     public readonly cyclicEatDayFastHoursChange = output<string | number>();
     public readonly startFasting = output();
+
+    protected normalizeNumericControlValue(value: string | number | null | undefined): string | number {
+        return value ?? '';
+    }
 }

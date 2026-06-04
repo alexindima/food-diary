@@ -17,7 +17,7 @@
             [id]="id()"
             [options]="options()"
             [disabled]="disabled()"
-            [value]="internalValue"
+            [value]="value()"
             (optionSelected)="selectOption($event)"
             (optionBlur)="touchControl()"
             (optionKeydown)="selectOptionByKeyboard($event.index, $event.event)"

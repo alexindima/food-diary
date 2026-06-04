@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -27,7 +26,7 @@ type AdminModerationActionDialogViewState = {
 
 @Component({
     selector: 'fd-admin-moderation-action-dialog',
-    imports: [FormsModule, FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
+    imports: [FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
     templateUrl: './admin-moderation-action-dialog.html',
     styleUrls: ['./admin-moderation-action-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +38,7 @@ export class AdminModerationActionDialogComponent {
     private readonly moderationFacade = inject(AdminModerationFacade);
     private readonly destroyRef = inject(DestroyRef);
 
-    protected adminNote = '';
+    protected readonly adminNote = signal('');
     protected readonly isSubmitting = signal(false);
 
     protected readonly viewState = computed(
@@ -59,7 +58,7 @@ export class AdminModerationActionDialogComponent {
 
     protected onConfirm(): void {
         this.isSubmitting.set(true);
-        const adminNote = this.adminNote.trim();
+        const adminNote = this.adminNote().trim();
         const action = { adminNote: adminNote.length > 0 ? adminNote : null };
 
         const operation =

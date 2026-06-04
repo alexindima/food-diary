@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -12,7 +11,7 @@ import type { UsdaFood } from '../../models/usda.data';
 
 @Component({
     selector: 'fd-usda-food-search-dialog',
-    imports: [FormsModule, TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiInputComponent],
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './usda-food-search-dialog.html',
     styleUrls: ['./usda-food-search-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +31,10 @@ export class UsdaFoodSearchDialogComponent {
 
     protected onSearchChange(value: string): void {
         this.usdaFoodSearchFacade.updateSearchQuery(value);
+    }
+
+    protected onSearchControlChange(value: string | number | null | undefined): void {
+        this.onSearchChange(value === null || value === undefined ? '' : String(value));
     }
 
     protected selectFood(food: UsdaFood): void {

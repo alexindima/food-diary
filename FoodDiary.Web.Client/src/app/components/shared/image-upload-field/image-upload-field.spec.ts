@@ -55,11 +55,12 @@ describe('ImageUploadFieldComponent control value', () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
         fixture.detectChanges();
 
-        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
-        component['setDisabledState'](true);
+        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
 
         expect(component['selection']).toEqual({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
-        expect(component['disabled']).toBe(true);
+        expect(component.disabled()).toBe(true);
     });
 });
 
@@ -121,18 +122,14 @@ describe('ImageUploadFieldComponent clearing', () => {
     it('clears selection and deletes asset when configured', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         fixture.componentRef.setInput('deleteOnClear', true);
-        const onChange = vi.fn();
-        const onTouched = vi.fn();
-        component['registerOnChange'](onChange);
-        component['registerOnTouched'](onTouched);
-        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
         fixture.detectChanges();
 
         component['clearImage']();
 
         expect(component['selection']).toEqual({ url: null, assetId: null });
-        expect(onChange).toHaveBeenCalledWith({ url: null, assetId: null });
-        expect(onTouched).toHaveBeenCalledOnce();
+        expect(component.value()).toEqual({ url: null, assetId: null });
+        expect(component.touched()).toBe(true);
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
     });
 
@@ -140,7 +137,7 @@ describe('ImageUploadFieldComponent clearing', () => {
         const { component, fixture, imageUploadService, logger } = await setupImageUploadFieldAsync();
         imageUploadService.deleteAsset.mockReturnValueOnce(throwError(() => new Error('delete failed')));
         fixture.componentRef.setInput('deleteOnClear', true);
-        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
         fixture.detectChanges();
 
         component['clearImage']();
@@ -157,10 +154,12 @@ describe('ImageUploadFieldComponent interactions', () => {
         const fileInput = { click: clickSpy } as unknown as HTMLInputElement;
         fixture.detectChanges();
 
-        component['setDisabledState'](true);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
         component['onZoneClick'](fileInput);
-        component['setDisabledState'](false);
-        component['writeValue']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        fixture.componentRef.setInput('disabled', false);
+        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        fixture.detectChanges();
         component['onZoneClick'](fileInput);
 
         expect(clickSpy).not.toHaveBeenCalled();
@@ -184,7 +183,8 @@ describe('ImageUploadFieldComponent interactions', () => {
         const stopPropagation = vi.fn();
         fixture.detectChanges();
 
-        component['setDisabledState'](true);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
         component['onDragOver']({ preventDefault } as unknown as DragEvent);
         component['onDrop']({
             preventDefault,

@@ -99,9 +99,10 @@ function registerLabelTests(): void {
 }
 
 function registerValueAccessorTests(): void {
-    describe('value accessor', () => {
-        it('should write value via CVA with string', () => {
-            component['writeValue'](MARCH_DATE_STRING);
+    describe('signal form control', () => {
+        it('should write value from model with string', () => {
+            component.value.set(MARCH_DATE_STRING);
+            fixture.detectChanges();
 
             const dateValue = component['internalValue']();
             expect(dateValue).toBeTruthy();
@@ -110,17 +111,20 @@ function registerValueAccessorTests(): void {
             expect(dateValue?.getDate()).toBe(TEST_DAY);
         });
 
-        it('should write null value via CVA', () => {
-            component['writeValue'](JANUARY_DATE_STRING);
+        it('should write null value', () => {
+            component.value.set(JANUARY_DATE_STRING);
+            fixture.detectChanges();
             expect(component['internalValue']()).toBeTruthy();
 
-            component['writeValue'](null);
+            component.value.set(null);
+            fixture.detectChanges();
             expect(component['internalValue']()).toBeNull();
         });
 
-        it('should write Date object via CVA', () => {
+        it('should write Date object from model', () => {
             const date = new Date(TEST_YEAR, JUNE_INDEX, JUNE_DAY);
-            component['writeValue'](date);
+            component.value.set(date);
+            fixture.detectChanges();
 
             const dateValue = component['internalValue']();
             expect(dateValue).toBeTruthy();
@@ -184,7 +188,7 @@ function registerStateTests(): void {
         });
 
         it('should set disabled state', () => {
-            component['setDisabledState'](true);
+            fixture.componentRef.setInput('disabled', true);
             fixture.detectChanges();
 
             expect(component['disabled']()).toBe(true);
@@ -194,24 +198,22 @@ function registerStateTests(): void {
         });
 
         it('should re-enable after being disabled', () => {
-            component['setDisabledState'](true);
-            component['setDisabledState'](false);
+            fixture.componentRef.setInput('disabled', true);
+            fixture.detectChanges();
+            fixture.componentRef.setInput('disabled', false);
             fixture.detectChanges();
 
             expect(component['disabled']()).toBe(false);
         });
 
-        it('should call onChange with formatted date string when date is selected', () => {
-            const onChangeSpy = vi.fn();
-            component['registerOnChange'](onChangeSpy);
-
+        it('should update value with formatted date string when date is selected', () => {
             component['onDateSelect'](new Date(TEST_YEAR, MARCH_INDEX, TEST_DAY));
 
-            expect(onChangeSpy).toHaveBeenCalledWith(MARCH_DATE_STRING);
+            expect(component.value()).toBe(MARCH_DATE_STRING);
         });
 
         it('should display selected date value in the control', () => {
-            component['writeValue'](MARCH_DATE_STRING);
+            component.value.set(MARCH_DATE_STRING);
             fixture.detectChanges();
 
             const inputEl = requireInputElement('.fd-ui-date-input__control');
@@ -223,14 +225,13 @@ function registerStateTests(): void {
 function registerInteractionTests(): void {
     describe('interaction', () => {
         it('should not change value when selected date is null', () => {
-            const onChangeSpy = vi.fn();
-            component['registerOnChange'](onChangeSpy);
-            component['writeValue'](MARCH_DATE_STRING);
+            component.value.set(MARCH_DATE_STRING);
+            fixture.detectChanges();
 
             component['onDateSelect'](null);
 
             expect(component['internalValue']()?.getDate()).toBe(TEST_DAY);
-            expect(onChangeSpy).not.toHaveBeenCalled();
+            expect(component.value()).toBe(MARCH_DATE_STRING);
         });
 
         it('should open date picker from keyboard and close with escape', () => {
@@ -289,7 +290,8 @@ function registerInteractionTests(): void {
         it('should close date picker when disabled while open', () => {
             component['openDatePicker']();
 
-            component['setDisabledState'](true);
+            fixture.componentRef.setInput('disabled', true);
+            fixture.detectChanges();
 
             expect(component['disabled']()).toBe(true);
             expect(component['isOpen']()).toBe(false);

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
@@ -22,7 +21,7 @@ const MAX_MAIL_INBOX_LIMIT = 200;
 
 @Component({
     selector: 'fd-admin-mail-inbox',
-    imports: [CommonModule, FormsModule, FdUiButtonComponent, FdUiInputComponent],
+    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './admin-mail-inbox.html',
     styleUrl: './admin-mail-inbox.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -143,6 +142,10 @@ export class AdminMailInboxComponent {
         }
 
         this.categoryFilter.set('all');
+    }
+
+    protected getSelectValue(event: Event): string {
+        return event.target instanceof HTMLSelectElement ? event.target.value : 'all';
     }
 
     private formatRecipients(recipients: string[]): string {

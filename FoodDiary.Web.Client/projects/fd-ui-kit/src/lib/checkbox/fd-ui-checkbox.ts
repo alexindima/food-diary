@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, input, model } from '@angular/core';
+import type { FormCheckboxControl } from '@angular/forms/signals';
 
 let nextId = 0;
 
@@ -8,39 +8,21 @@ let nextId = 0;
     templateUrl: './fd-ui-checkbox.html',
     styleUrls: ['./fd-ui-checkbox.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            multi: true,
-            useExisting: FdUiCheckboxComponent,
-        },
-    ],
 })
-export class FdUiCheckboxComponent implements ControlValueAccessor {
+export class FdUiCheckboxComponent implements FormCheckboxControl {
     public readonly id = input(`fd-ui-checkbox-${nextId++}`);
     public readonly label = input('');
     public readonly hint = input<string>();
-    public readonly disabled = model(false);
+    public readonly disabled = input(false);
+    public readonly checked = model(false);
+    public readonly touched = model(false);
 
-    protected checked = false;
+    protected checkedValue = false;
 
-    private onChange: (value: boolean) => void = () => {};
-    private onTouched: () => void = () => {};
-
-    public writeValue(value: boolean | null): void {
-        this.checked = value === true;
-    }
-
-    public registerOnChange(fn: (value: boolean) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
+    public constructor() {
+        effect(() => {
+            this.checkedValue = this.checked();
+        });
     }
 
     protected updateCheckedValue(event: Event): void {
@@ -49,11 +31,11 @@ export class FdUiCheckboxComponent implements ControlValueAccessor {
         }
 
         const checkboxInput = event.target;
-        this.checked = checkboxInput.checked;
-        this.onChange(checkboxInput.checked);
+        this.checkedValue = checkboxInput.checked;
+        this.checked.set(checkboxInput.checked);
     }
 
     protected touchControl(): void {
-        this.onTouched();
+        this.touched.set(true);
     }
 }

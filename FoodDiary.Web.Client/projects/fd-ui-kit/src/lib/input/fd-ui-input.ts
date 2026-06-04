@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal } from '@angular/core';
 import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -33,15 +33,8 @@ export type FdUiInputAutocomplete =
     templateUrl: './fd-ui-input.html',
     styleUrls: ['./fd-ui-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiInputComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiInputComponent implements ControlValueAccessor {
+export class FdUiInputComponent implements FormValueControl<string | number | null> {
     private readonly destroyRef = inject(DestroyRef);
     private readonly autofillMonitor = inject(AutofillMonitor);
     private readonly autofillSyncDelaysMs = inject(FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS);
@@ -63,24 +56,20 @@ export class FdUiInputComponent implements ControlValueAccessor {
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
     public readonly appearance = input<FdUiInputAppearance>('default');
-    public readonly controlValue = model<string | number | null>();
+    public readonly value = model<string | number | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
 
     public readonly suffixButtonClicked = output();
 
     protected readonly internalValue = signal<string | number>('');
-    protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
 
-    private onChange: (value: string) => void = () => {};
-    private onTouched: () => void = () => {};
     private autofillSyncTimers: Array<ReturnType<typeof setTimeout>> = [];
 
     public constructor() {
         effect(() => {
-            const value = this.controlValue();
-            if (value !== undefined) {
-                this.internalValue.set(value ?? '');
-            }
+            this.internalValue.set(this.value() ?? '');
         });
 
         afterNextRender(() => {
@@ -125,35 +114,18 @@ export class FdUiInputComponent implements ControlValueAccessor {
     });
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
 
-    public writeValue(value: string | number | null): void {
-        this.internalValue.set(value ?? '');
-    }
-
-    public registerOnChange(fn: (value: string) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
-    }
-
     protected onInput(value: string): void {
         if (this.disabled()) {
             return;
         }
 
         this.internalValue.set(value);
-        this.controlValue.set(value);
-        this.onChange(value);
+        this.value.set(value);
     }
 
     protected onBlur(): void {
         this.isFocused.set(false);
-        this.onTouched();
+        this.touched.set(true);
     }
 
     protected onFocus(): void {
@@ -208,7 +180,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
         this.internalValue.set(value);
 
         if (!this.disabled()) {
-            this.onChange(value);
+            this.value.set(value);
         }
     }
 

@@ -1,6 +1,6 @@
 <div class="admin-moderation">
     <div class="toolbar fd-row fd-gap-sm">
-        <select [ngModel]="statusFilter()" (ngModelChange)="onStatusChange($event)">
+        <select [value]="statusFilter()" (change)="onStatusChange(getSelectValue($event))">
             <option value="">All</option>
             <option value="Pending">Pending</option>
             <option value="Reviewed">Reviewed</option>

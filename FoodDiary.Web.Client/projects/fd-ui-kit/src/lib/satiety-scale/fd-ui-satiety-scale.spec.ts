@@ -58,12 +58,12 @@ function registerRenderingTests(): void {
 }
 
 function registerValueAccessorTests(): void {
-    describe('value accessor', () => {
-        it('should write value via CVA', () => {
-            component['writeValue'](HIGH_LEVEL);
+    describe('signal form control', () => {
+        it('should write value from model', () => {
+            component.value.set(HIGH_LEVEL);
             fixture.detectChanges();
 
-            expect(component['value']).toBe(HIGH_LEVEL);
+            expect(component.value()).toBe(HIGH_LEVEL);
 
             const levelButtons = buttons();
             const selectedButton = levelButtons[HIGH_LEVEL_INDEX];
@@ -71,7 +71,7 @@ function registerValueAccessorTests(): void {
         });
 
         it('should mark selected level', () => {
-            component['writeValue'](SELECTED_LEVEL);
+            component.value.set(SELECTED_LEVEL);
             fixture.detectChanges();
 
             const levelButtons = buttons();
@@ -84,14 +84,14 @@ function registerValueAccessorTests(): void {
             }
         });
 
-        it('should write null value via CVA', () => {
-            component['writeValue'](HIGH_LEVEL);
+        it('should write null value', () => {
+            component.value.set(HIGH_LEVEL);
             fixture.detectChanges();
-            expect(component['value']).toBe(HIGH_LEVEL);
+            expect(component.value()).toBe(HIGH_LEVEL);
 
-            component['writeValue'](null);
+            component.value.set(null);
             fixture.detectChanges();
-            expect(component['value']).toBeNull();
+            expect(component.value()).toBeNull();
 
             const selected = host().querySelectorAll<HTMLButtonElement>('.satiety-scale__option--selected');
             expect(selected.length).toBe(0);
@@ -102,39 +102,29 @@ function registerValueAccessorTests(): void {
 function registerInteractionTests(): void {
     describe('interaction', () => {
         it('should select level on click', () => {
-            const onChangeSpy = vi.fn();
-            component['registerOnChange'](onChangeSpy);
-
             const levelButtons = buttons();
             levelButtons[SELECTED_LEVEL_INDEX].click();
             fixture.detectChanges();
 
-            expect(onChangeSpy).toHaveBeenCalledWith(SELECTED_LEVEL);
-            expect(component['value']).toBe(SELECTED_LEVEL);
+            expect(component.value()).toBe(SELECTED_LEVEL);
         });
 
         it('should not select when disabled', () => {
-            const onChangeSpy = vi.fn();
-            component['registerOnChange'](onChangeSpy);
-            component['setDisabledState'](true);
+            fixture.componentRef.setInput('disabled', true);
             fixture.detectChanges();
 
             const levelButtons = buttons();
             levelButtons[DISABLED_LEVEL_INDEX].click();
             fixture.detectChanges();
 
-            expect(onChangeSpy).not.toHaveBeenCalled();
-            expect(component['value']).toBeNull();
+            expect(component.value()).toBeNull();
         });
 
-        it('should call onTouched when level is selected', () => {
-            const onTouchedSpy = vi.fn();
-            component['registerOnTouched'](onTouchedSpy);
-
+        it('should mark touched when level is selected', () => {
             const levelButtons = buttons();
             levelButtons[LOW_LEVEL_INDEX].click();
 
-            expect(onTouchedSpy).toHaveBeenCalled();
+            expect(component.touched()).toBe(true);
         });
 
         it('should emit levelSelected output on click', () => {

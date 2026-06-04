@@ -5,9 +5,8 @@
                 class="goals__preset-select"
                 [label]="'GOALS_PAGE.MACRO_PRESET_LABEL' | translate"
                 [options]="macroPresetOptions()"
-                [ngModel]="selectedPreset()"
-                [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="presetChange.emit($event)"
+                [value]="selectedPreset()"
+                (valueChange)="emitPresetChange($event)"
             />
         </div>
         @for (macro of macros(); track macro.key) {

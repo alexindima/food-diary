@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiSatietyScaleComponent } from './fd-ui-satiety-scale';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiSatietyScaleComponent> = {
     title: 'Components/SatietyScale',
     component: FdUiSatietyScaleComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         hint: { control: 'text' },
@@ -61,6 +58,6 @@ export const Required: Story = {
 
 export const WithValue: Story = {
     render: () => ({
-        template: '<fd-ui-satiety-scale label="Current level" layout="grid" [ngModel]="5"></fd-ui-satiety-scale>',
+        template: '<fd-ui-satiety-scale label="Current level" layout="grid" [value]="5"></fd-ui-satiety-scale>',
     }),
 };

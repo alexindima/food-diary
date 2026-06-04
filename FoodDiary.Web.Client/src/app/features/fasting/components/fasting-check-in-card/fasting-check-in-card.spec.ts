@@ -74,7 +74,9 @@ describe('FastingCheckInCardComponent', () => {
         emojiPickers[1].triggerEventHandler('selectedValueChange', UPDATED_ENERGY_LEVEL);
         emojiPickers[2].triggerEventHandler('selectedValueChange', UPDATED_MOOD_LEVEL);
         fixture.debugElement.query(By.css('fd-ui-chip-select')).triggerEventHandler('selectedValuesChange', ['headache']);
-        fixture.debugElement.query(By.css('textarea')).triggerEventHandler('ngModelChange', 'Feeling okay');
+        const notesInput = fixture.debugElement.query(By.css('textarea')).nativeElement as HTMLTextAreaElement;
+        notesInput.value = 'Feeling okay';
+        notesInput.dispatchEvent(new Event('input'));
         fixture.detectChanges();
 
         const element = getElement(fixture);

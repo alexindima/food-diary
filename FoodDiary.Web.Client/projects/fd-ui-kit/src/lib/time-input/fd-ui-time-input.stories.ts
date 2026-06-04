@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiTimeInputComponent } from './fd-ui-time-input';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiTimeInputComponent> = {
     title: 'Components/TimeInput',
     component: FdUiTimeInputComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         placeholder: { control: 'text' },
@@ -31,7 +28,7 @@ export const Default: Story = {
 
 export const WithValue: Story = {
     render: () => ({
-        template: '<fd-ui-time-input label="Meal Time" [ngModel]="\'12:30\'"></fd-ui-time-input>',
+        template: '<fd-ui-time-input label="Meal Time" [value]="\'12:30\'"></fd-ui-time-input>',
     }),
 };
 

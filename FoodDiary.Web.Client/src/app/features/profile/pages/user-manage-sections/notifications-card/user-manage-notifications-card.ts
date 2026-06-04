@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -21,7 +20,6 @@ export type FastingReminderHoursChange = {
 @Component({
     selector: 'fd-user-manage-notifications-card',
     imports: [
-        FormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -115,4 +113,8 @@ export class UserManageNotificationsCardComponent {
     public readonly fastingReminderHoursSave = output();
     public readonly testNotificationSchedule = output();
     public readonly connectedDeviceRemove = output<WebPushSubscriptionItem>();
+
+    protected normalizeReminderHoursValue(value: string | number | null | undefined): string | number {
+        return value ?? '';
+    }
 }

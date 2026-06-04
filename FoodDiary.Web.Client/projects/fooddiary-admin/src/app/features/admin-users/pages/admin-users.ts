@@ -1,7 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -18,7 +17,7 @@ const ADMIN_USERS_PAGE_SIZE = 20;
 
 @Component({
     selector: 'fd-admin-users',
-    imports: [CommonModule, FormsModule, FdUiInputComponent, FdUiSelectComponent, AdminUsersTableComponent],
+    imports: [CommonModule, FdUiInputComponent, FdUiSelectComponent, AdminUsersTableComponent],
     templateUrl: './admin-users.html',
     styleUrl: './admin-users.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

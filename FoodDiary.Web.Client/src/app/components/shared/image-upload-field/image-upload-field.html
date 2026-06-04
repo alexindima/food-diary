@@ -1,10 +1,10 @@
-<div [class]="`image-upload-field fd-stack fd-gap-xs ${appearanceClass()}`" [class.image-upload-field--disabled]="disabled">
+<div [class]="`image-upload-field fd-stack fd-gap-xs ${appearanceClass()}`" [class.image-upload-field--disabled]="disabled()">
     <div
         class="image-upload-field__dropzone fd-place-center"
         role="button"
         tabindex="0"
         [attr.aria-label]="'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate"
-        [attr.aria-disabled]="disabled || isUploading"
+        [attr.aria-disabled]="disabled() || isUploading"
         [attr.aria-busy]="isUploading"
         [attr.aria-describedby]="error ? errorId : null"
         [class.image-upload-field__dropzone--dragging]="isDragging"
@@ -20,7 +20,7 @@
             type="file"
             hidden
             [accept]="acceptedTypes()"
-            [disabled]="disabled || isUploading"
+            [disabled]="disabled() || isUploading"
             (change)="onFileSelected($event)"
         />
 

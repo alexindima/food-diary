@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, input, model, signal } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import type { FdUiFieldSize } from '../types/field-size.type';
 
@@ -13,15 +13,8 @@ const DEFAULT_ROWS = 4;
     templateUrl: './fd-ui-textarea.html',
     styleUrls: ['./fd-ui-textarea.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiTextareaComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiTextareaComponent implements ControlValueAccessor {
+export class FdUiTextareaComponent implements FormValueControl<string | number | null> {
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -32,21 +25,17 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     public readonly maxLength = input<number>();
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
-    public readonly controlValue = model<string | number | null>();
+    public readonly value = model<string | number | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
 
     protected readonly internalValue = signal('');
-    protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
-
-    private onChange: (value: string) => void = () => {};
-    private onTouched: () => void = () => {};
 
     public constructor() {
         effect(() => {
-            const value = this.controlValue();
-            if (value !== undefined) {
-                this.internalValue.set(value === null ? '' : String(value));
-            }
+            const value = this.value();
+            this.internalValue.set(value === null ? '' : String(value));
         });
     }
 
@@ -64,35 +53,18 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     protected readonly shouldShowPlaceholder = computed(() => this.isFocused() && this.internalValue().trim().length === 0);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
 
-    public writeValue(value: string | number | null): void {
-        this.internalValue.set(value === null ? '' : String(value));
-    }
-
-    public registerOnChange(fn: (value: string) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
-    }
-
     protected onInput(value: string): void {
         if (this.disabled()) {
             return;
         }
 
         this.internalValue.set(value);
-        this.controlValue.set(value);
-        this.onChange(value);
+        this.value.set(value);
     }
 
     protected onBlur(): void {
         this.isFocused.set(false);
-        this.onTouched();
+        this.touched.set(true);
     }
 
     protected onFocus(): void {

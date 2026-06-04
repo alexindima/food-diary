@@ -34,8 +34,8 @@
             <fd-ui-checkbox
                 class="shopping-list__checkbox"
                 label=""
-                [ngModel]="item.isChecked"
-                (ngModelChange)="itemCheckedChange.emit({ itemId: item.id, checked: $event })"
+                [checked]="item.isChecked"
+                (checkedChange)="itemCheckedChange.emit({ itemId: item.id, checked: $event })"
             />
             <div class="shopping-list__item-body">
                 <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>

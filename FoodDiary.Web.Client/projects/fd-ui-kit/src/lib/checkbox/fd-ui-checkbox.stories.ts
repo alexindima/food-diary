@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiCheckboxComponent } from './fd-ui-checkbox';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiCheckboxComponent> = {
     title: 'Components/Checkbox',
     component: FdUiCheckboxComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         hint: { control: 'text' },
@@ -33,7 +30,7 @@ export const WithHint: Story = {
 
 export const Checked: Story = {
     render: () => ({
-        template: '<fd-ui-checkbox label="Checked by default" [ngModel]="true"></fd-ui-checkbox>',
+        template: '<fd-ui-checkbox label="Checked by default" [checked]="true"></fd-ui-checkbox>',
     }),
 };
 
@@ -41,9 +38,9 @@ export const Multiple: Story = {
     render: () => ({
         template: `
             <div style="display: flex; flex-direction: column; gap: var(--fd-space-xs);">
-                <fd-ui-checkbox label="Proteins" [ngModel]="true"></fd-ui-checkbox>
+                <fd-ui-checkbox label="Proteins" [checked]="true"></fd-ui-checkbox>
                 <fd-ui-checkbox label="Fats"></fd-ui-checkbox>
-                <fd-ui-checkbox label="Carbohydrates" [ngModel]="true"></fd-ui-checkbox>
+                <fd-ui-checkbox label="Carbohydrates" [checked]="true"></fd-ui-checkbox>
                 <fd-ui-checkbox label="Fiber"></fd-ui-checkbox>
             </div>
         `,

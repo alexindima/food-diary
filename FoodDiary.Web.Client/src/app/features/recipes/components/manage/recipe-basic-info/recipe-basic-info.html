@@ -29,7 +29,6 @@
                 [formField]="recipeForm.name"
                 [label]="'RECIPE_MANAGE.NAME' | translate"
                 [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
-                [required]="true"
                 [error]="errors.name"
             />
         </div>
@@ -48,7 +47,6 @@
                 [formField]="recipeForm.cookTime"
                 [step]="1"
                 [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
-                [required]="true"
                 [error]="errors.cookTime"
             />
         </div>
@@ -70,7 +68,6 @@
             [formField]="recipeForm.servings"
             [step]="1"
             [label]="'RECIPE_MANAGE.SERVINGS' | translate"
-            [required]="true"
             [error]="errors.servings"
         />
 
@@ -80,7 +77,6 @@
             [label]="'RECIPE_MANAGE.DESCRIPTION' | translate"
             [placeholder]="'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
             [rows]="3"
-            [maxLength]="1000"
             [error]="errors.description"
         />
     </div>
@@ -100,7 +96,6 @@
                 size="lg"
                 [formField]="recipeForm.visibility"
                 [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
-                [required]="true"
                 [options]="visibilitySelectOptions()"
                 [error]="errors.visibility"
             />
@@ -111,7 +106,6 @@
                 [label]="'RECIPE_MANAGE.COMMENT' | translate"
                 [placeholder]="'RECIPE_MANAGE.COMMENT_PLACEHOLDER' | translate"
                 [rows]="4"
-                [maxLength]="1000"
                 [error]="errors.comment"
             />
         </div>

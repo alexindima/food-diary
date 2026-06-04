@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -20,7 +19,7 @@ export type SatietyLevelDialogData = {
     selector: 'fd-meal-satiety-level-dialog',
     templateUrl: './meal-satiety-level-dialog.html',
     styleUrls: ['./meal-satiety-level-dialog.scss'],
-    imports: [FormsModule, TranslateModule, FdUiSatietyScaleComponent, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
+    imports: [TranslateModule, FdUiSatietyScaleComponent, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealSatietyLevelDialogComponent {
@@ -42,6 +41,12 @@ export class MealSatietyLevelDialogComponent {
 
     protected onValueSelected(level: number): void {
         this.selectedValue.set(level);
+    }
+
+    protected onControlValueSelected(level: number | null | undefined): void {
+        if (level !== null && level !== undefined) {
+            this.onValueSelected(level);
+        }
     }
 
     protected closeWithValue(): void {

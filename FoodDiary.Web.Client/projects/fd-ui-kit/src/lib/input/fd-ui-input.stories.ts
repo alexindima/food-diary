@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiInputComponent } from './fd-ui-input';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiInputComponent> = {
     title: 'Components/Input',
     component: FdUiInputComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         placeholder: { control: 'text' },
@@ -40,7 +37,7 @@ export const Default: Story = {
 
 export const WithValue: Story = {
     render: () => ({
-        template: '<fd-ui-input label="Name" placeholder="Enter your name" [ngModel]="\'John Doe\'"></fd-ui-input>',
+        template: '<fd-ui-input label="Name" placeholder="Enter your name" [value]="\'John Doe\'"></fd-ui-input>',
     }),
 };
 
@@ -64,7 +61,7 @@ export const Required: Story = {
 
 export const Readonly: Story = {
     render: () => ({
-        template: '<fd-ui-input label="Status" [ngModel]="\'Active\'" [readonly]="true"></fd-ui-input>',
+        template: '<fd-ui-input label="Status" [value]="\'Active\'" [readonly]="true"></fd-ui-input>',
     }),
 };
 

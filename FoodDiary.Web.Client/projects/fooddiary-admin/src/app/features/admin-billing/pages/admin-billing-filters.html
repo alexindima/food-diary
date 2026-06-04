@@ -1,17 +1,17 @@
 <section class="admin-billing__filters fd-row fd-gap-sm fd-wrap">
-    <fd-ui-input placeholder="Search email or external id" [ngModel]="search()" (ngModelChange)="searchChange.emit($event)" />
-    <fd-ui-input placeholder="Provider" [ngModel]="provider()" (ngModelChange)="providerChange.emit($event)" />
-    <fd-ui-input placeholder="Status" [ngModel]="status()" (ngModelChange)="statusChange.emit($event)" />
+    <fd-ui-input placeholder="Search email or external id" [value]="search()" (valueChange)="searchChange.emit($event)" />
+    <fd-ui-input placeholder="Provider" [value]="provider()" (valueChange)="providerChange.emit($event)" />
+    <fd-ui-input placeholder="Status" [value]="status()" (valueChange)="statusChange.emit($event)" />
     @if (activeTab() === 'payments') {
-    <fd-ui-input placeholder="Kind" [ngModel]="kind()" (ngModelChange)="kindChange.emit($event)" />
+    <fd-ui-input placeholder="Kind" [value]="kind()" (valueChange)="kindChange.emit($event)" />
     }
     <div class="fd-grid fd-gap-xxs">
         <label for="admin-billing-from-date">From</label>
-        <input id="admin-billing-from-date" type="date" [ngModel]="fromDate()" (ngModelChange)="fromDateChange.emit($event)" />
+        <input id="admin-billing-from-date" type="date" [value]="fromDate()" (input)="fromDateChange.emit(getInputValue($event))" />
     </div>
     <div class="fd-grid fd-gap-xxs">
         <label for="admin-billing-to-date">To</label>
-        <input id="admin-billing-to-date" type="date" [ngModel]="toDate()" (ngModelChange)="toDateChange.emit($event)" />
+        <input id="admin-billing-to-date" type="date" [value]="toDate()" (input)="toDateChange.emit(getInputValue($event))" />
     </div>
     <fd-ui-button type="button" (click)="filtersApply.emit()"> Apply </fd-ui-button>
     <fd-ui-button type="button" variant="secondary" (click)="filtersReset.emit()"> Reset </fd-ui-button>

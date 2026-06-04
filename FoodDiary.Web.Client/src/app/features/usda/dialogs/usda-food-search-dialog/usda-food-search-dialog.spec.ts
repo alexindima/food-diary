@@ -1,6 +1,5 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -85,7 +84,7 @@ function setupComponent(): {
     fixture: ComponentFixture<UsdaFoodSearchDialogComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [UsdaFoodSearchDialogComponent, FormsModule, TranslateModule.forRoot()],
+        imports: [UsdaFoodSearchDialogComponent, TranslateModule.forRoot()],
         providers: [
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: UsdaFoodSearchFacade, useValue: facade },

@@ -71,9 +71,9 @@
                 id="fasting-check-in-notes"
                 class="fasting__textarea"
                 rows="4"
-                [ngModel]="notes()()"
+                [value]="notes()()"
                 [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
-                (ngModelChange)="notes().set($event)"
+                (input)="setNotes($event)"
             ></textarea>
         </div>
 

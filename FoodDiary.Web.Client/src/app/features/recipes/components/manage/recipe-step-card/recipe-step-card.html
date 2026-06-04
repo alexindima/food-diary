@@ -12,9 +12,9 @@
                 <fd-ui-input
                     class="recipe-step-card__title-input"
                     appearance="inline-edit"
-                    [controlValue]="step().title.value"
+                    [value]="step().title.value"
                     [placeholder]="titleDisplay()"
-                    (controlValueChange)="onStepTitleInput($event)"
+                    (valueChange)="onStepTitleInput($event)"
                     (focusout)="onStepTitleBlur()"
                 />
                 } @else {
@@ -62,23 +62,23 @@
                     appearance="step"
                     recommendedSize="512 x 512"
                     acceptedTypes="image/png,image/jpeg,image/webp"
-                    [controlValue]="step().imageUrl.value"
+                    [value]="step().imageUrl.value"
                     [description]="'RECIPE_MANAGE.STEP_IMAGE_HINT' | translate"
                     [maxSizeMb]="10"
                     [cropEnabled]="true"
                     [cropSize]="512"
                     [cropAspectRatio]="1"
-                    (controlValueChange)="onStepImageChange($event)"
+                    (valueChange)="onStepImageChange($event)"
                 />
             </div>
             <div class="recipe-step-card__description">
                 <fd-ui-textarea
-                    [controlValue]="step().description.value"
+                    [value]="step().description.value"
                     [rows]="3"
                     [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
                     [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
                     [error]="descriptionError()"
-                    (controlValueChange)="onStepDescriptionInput($event)"
+                    (valueChange)="onStepDescriptionInput($event)"
                 />
             </div>
         </div>
@@ -90,7 +90,7 @@
                 <fd-ui-input
                     class="recipe-ingredient__name"
                     size="lg"
-                    [controlValue]="ingredients[row.index]?.foodName.value ?? ''"
+                    [value]="ingredients[row.index]?.foodName.value ?? ''"
                     [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
                     [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
                     [readonly]="true"
@@ -104,11 +104,11 @@
                     <fd-ui-input
                         size="lg"
                         type="number"
-                        [controlValue]="ingredients[row.index]?.amount.value"
+                        [value]="ingredients[row.index]?.amount.value"
                         [step]="0.01"
                         [label]="row.amountLabel"
                         [error]="row.amountError"
-                        (controlValueChange)="onIngredientAmountInput(row.index, $event)"
+                        (valueChange)="onIngredientAmountInput(row.index, $event)"
                     />
                     <fd-ui-button
                         type="button"

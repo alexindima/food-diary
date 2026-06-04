@@ -27,7 +27,6 @@
                 [formField]="form().name"
                 [label]="'PRODUCT_MANAGE.NAME' | translate"
                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
-                [required]="true"
                 [error]="errors.name"
                 [options]="nameOptions()"
                 [loading]="isNameSearchLoading()"
@@ -85,7 +84,6 @@
                     [formField]="form().defaultPortionAmount"
                     [label]="'PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT' | translate"
                     [placeholder]="'PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER' | translate"
-                    [required]="true"
                     [error]="errors.defaultPortionAmount"
                 />
             </div>

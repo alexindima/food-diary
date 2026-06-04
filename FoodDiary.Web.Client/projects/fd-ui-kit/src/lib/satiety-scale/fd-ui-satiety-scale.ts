@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, output } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, output } from '@angular/core';
+import type { FormValueControl } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { FdUiAccentSurfaceComponent } from '../accent-surface/fd-ui-accent-surface';
@@ -98,15 +98,8 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
     templateUrl: './fd-ui-satiety-scale.html',
     styleUrls: ['./fd-ui-satiety-scale.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiSatietyScaleComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiSatietyScaleComponent implements ControlValueAccessor {
+export class FdUiSatietyScaleComponent implements FormValueControl<number | null> {
     private readonly cdr = inject(ChangeDetectorRef);
 
     public readonly label = input<string>();
@@ -115,47 +108,35 @@ export class FdUiSatietyScaleComponent implements ControlValueAccessor {
     public readonly required = input(false);
     public readonly layout = input<'grid' | 'vertical'>('grid');
     public readonly levels = input<FdUiSatietyScaleLevel[]>(DEFAULT_SATIETY_LEVELS);
+    public readonly value = model<number | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
     public readonly levelSelected = output<number>();
 
-    protected value: number | null = null;
-    protected disabled = false;
+    protected selectedValue: number | null = null;
 
-    private onChange: (value: number | null) => void = () => {};
-    private onTouched: () => void = () => {};
-
-    public writeValue(value: number | null): void {
-        this.value = value;
-        this.cdr.markForCheck();
-    }
-
-    public registerOnChange(fn: (value: number | null) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.cdr.markForCheck();
+    public constructor() {
+        effect(() => {
+            this.selectedValue = this.value();
+            this.cdr.markForCheck();
+        });
     }
 
     protected selectLevel(level: number): void {
-        if (this.disabled) {
+        if (this.disabled()) {
             return;
         }
-        this.value = level;
-        this.onChange(level);
-        this.onTouched();
+        this.selectedValue = level;
+        this.value.set(level);
+        this.touched.set(true);
         this.levelSelected.emit(level);
     }
 
     protected touchControl(): void {
-        this.onTouched();
+        this.touched.set(true);
     }
 
     protected isSelected(level: number): boolean {
-        return this.value === level;
+        return this.selectedValue === level;
     }
 }

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -10,7 +9,7 @@ import { GoalsMacroSliderComponent } from '../macro-slider/goals-macro-slider';
 
 @Component({
     selector: 'fd-goals-macros-card',
-    imports: [FormsModule, TranslatePipe, FdUiCardComponent, FdUiSelectComponent, GoalsMacroSliderComponent],
+    imports: [TranslatePipe, FdUiCardComponent, FdUiSelectComponent, GoalsMacroSliderComponent],
     templateUrl: './goals-macros-card.html',
     styleUrl: '../../goals-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,5 +33,9 @@ export class GoalsMacrosCardComponent {
         if (key !== undefined) {
             this.macroSlider.emit({ key, event });
         }
+    }
+
+    protected emitPresetChange(value: MacroPresetKey | null | undefined): void {
+        this.presetChange.emit(value ?? null);
     }
 }

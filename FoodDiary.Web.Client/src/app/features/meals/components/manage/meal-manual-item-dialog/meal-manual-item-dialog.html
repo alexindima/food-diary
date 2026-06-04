@@ -1,8 +1,7 @@
 <fd-ui-dialog size="md" [title]="'CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_TITLE' | translate">
     <div class="meal-manual-item-dialog fd-stack fd-gap-md">
         <fd-ui-input
-            [ngModel]="itemSourceName()"
-            [ngModelOptions]="{ standalone: true }"
+            [value]="itemSourceName()"
             [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
             [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
             [readonly]="true"
@@ -17,7 +16,6 @@
             [step]="0.01"
             [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
             [placeholder]="amountPlaceholderKey() | translate"
-            [required]="true"
             [error]="amountError()"
         />
     </div>

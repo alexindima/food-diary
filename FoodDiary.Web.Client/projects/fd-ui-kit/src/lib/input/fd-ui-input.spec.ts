@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { disabled, form, FormField } from '@angular/forms/signals';
+import { By } from '@angular/platform-browser';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiInputComponent } from './fd-ui-input';
@@ -165,7 +166,7 @@ describe('FdUiInputComponent suffix button', () => {
     it('should not emit suffixButtonClicked when disabled', async () => {
         const { component, el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('suffixButtonIcon', 'visibility');
-        component['setDisabledState'](true);
+        fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
         const spy = vi.spyOn(component['suffixButtonClicked'], 'emit');
@@ -177,56 +178,51 @@ describe('FdUiInputComponent suffix button', () => {
     });
 });
 
-describe('FdUiInputComponent CVA', () => {
-    it('should write value via CVA', async () => {
+describe('FdUiInputComponent signal form control', () => {
+    it('should write value from model', async () => {
         const { component, fixture, input } = await setupInputAsync();
-        component['writeValue']('hello');
+        component.value.set('hello');
         fixture.detectChanges();
 
         expect(input().value).toBe('hello');
     });
 
-    it('should call onChange on input event', async () => {
+    it('should update value on input event', async () => {
         const { component, input } = await setupInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
 
         const inputEl = input();
         inputEl.value = 'test';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(onChangeSpy).toHaveBeenCalledWith('test');
+        expect(component.value()).toBe('test');
     });
 
-    it('should call onTouched on blur', async () => {
+    it('should mark touched on blur', async () => {
         const { component, input } = await setupInputAsync();
-        const onTouchedSpy = vi.fn();
-        component['registerOnTouched'](onTouchedSpy);
 
         input().dispatchEvent(new Event('blur'));
 
-        expect(onTouchedSpy).toHaveBeenCalled();
+        expect(component.touched()).toBe(true);
     });
 
-    it('should set disabled state via CVA', async () => {
-        const { component, fixture, input } = await setupInputAsync();
-        component['setDisabledState'](true);
+    it('should set disabled state from input', async () => {
+        const { fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
         expect(input().disabled).toBe(true);
     });
 
     it('should not process input when disabled', async () => {
-        const { component, input } = await setupInputAsync();
-        const onChangeSpy = vi.fn();
-        component['registerOnChange'](onChangeSpy);
-        component['setDisabledState'](true);
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
 
         const inputEl = input();
         inputEl.value = 'blocked';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(onChangeSpy).not.toHaveBeenCalled();
+        expect(component.value()).toBeNull();
     });
 });
 
@@ -246,7 +242,7 @@ describe('FdUiInputComponent floating label', () => {
     it('should float label when has value', async () => {
         const { component, el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Name');
-        component['writeValue']('something');
+        component.value.set('something');
         fixture.detectChanges();
 
         const wrapper = el.querySelector('.fd-ui-input');
@@ -281,7 +277,7 @@ describe('FdUiInputComponent attributes', () => {
         fixture.detectChanges();
         expect(inputEl.getAttribute('placeholder')).toBe('Enter text');
 
-        component['writeValue']('x');
+        component.value.set('x');
         fixture.detectChanges();
         expect(inputEl.getAttribute('placeholder')).toBeNull();
     });
@@ -345,13 +341,14 @@ describe('FdUiInputComponent with TestHost', () => {
     });
 
     it('should mark control as touched on blur', async () => {
-        const { hostComponent, hostFixture, input } = await setupInputHostAsync();
-        expect(hostComponent['inputForm'].value().touched()).toBe(false);
+        const { hostFixture, input } = await setupInputHostAsync();
+        const component = hostFixture.debugElement.query(By.directive(FdUiInputComponent)).componentInstance as FdUiInputComponent;
+        expect(component.touched()).toBe(false);
 
         input().dispatchEvent(new Event('blur'));
         hostFixture.detectChanges();
 
-        expect(hostComponent['inputForm'].value().touched()).toBe(true);
+        expect(component.touched()).toBe(true);
     });
 
     it('should disable input when Signal Form field is disabled', async () => {

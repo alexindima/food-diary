@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import type { FdUiRadioOption } from './fd-ui-radio.types';
 import { FdUiRadioOptionsComponent } from './fd-ui-radio-options';
@@ -14,15 +14,8 @@ let nextId = 0;
     templateUrl: './fd-ui-radio-group.html',
     styleUrls: ['./fd-ui-radio-group.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiRadioGroupComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccessor {
+export class FdUiRadioGroupComponent<T = unknown> implements FormValueControl<T | null> {
     protected readonly isEqual = Object.is;
 
     public readonly id = input(`fd-radio-${nextId++}`);
@@ -32,40 +25,20 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
     public readonly required = input(false);
     public readonly orientation = input<'vertical' | 'horizontal'>('vertical');
     public readonly options = input<Array<FdUiRadioOption<T>>>([]);
-
-    protected readonly disabled = model(false);
-    protected internalValue: T | null = null;
-
-    private onChange: (value: T | null) => void = () => {};
-    private onTouched: () => void = () => {};
-
-    public writeValue(value: T | null): void {
-        this.internalValue = value;
-    }
-
-    public registerOnChange(fn: (value: T | null) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled.set(isDisabled);
-    }
+    public readonly disabled = input(false);
+    public readonly value = model<T | null>(null);
+    public readonly touched = model(false);
 
     protected selectOption(option: FdUiRadioOption<T>): void {
         if (this.disabled()) {
             return;
         }
 
-        this.internalValue = option.value;
-        this.onChange(option.value);
+        this.value.set(option.value);
     }
 
     protected touchControl(): void {
-        this.onTouched();
+        this.touched.set(true);
     }
 
     protected selectOptionByKeyboard(index: number, event: KeyboardEvent): void {

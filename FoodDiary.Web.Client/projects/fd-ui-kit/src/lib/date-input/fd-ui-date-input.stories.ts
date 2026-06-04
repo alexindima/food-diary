@@ -1,6 +1,4 @@
-import { FormsModule } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 
 import { FdUiDateInputComponent } from './fd-ui-date-input';
 
@@ -8,7 +6,6 @@ const meta: Meta<FdUiDateInputComponent> = {
     title: 'Components/DateInput',
     component: FdUiDateInputComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FormsModule] })],
     argTypes: {
         label: { control: 'text' },
         placeholder: { control: 'text' },
@@ -31,7 +28,7 @@ export const Default: Story = {
 
 export const WithValue: Story = {
     render: () => ({
-        template: '<fd-ui-date-input label="Birth Date" [ngModel]="\'2000-01-15\'"></fd-ui-date-input>',
+        template: '<fd-ui-date-input label="Birth Date" [value]="\'2000-01-15\'"></fd-ui-date-input>',
     }),
 };
 

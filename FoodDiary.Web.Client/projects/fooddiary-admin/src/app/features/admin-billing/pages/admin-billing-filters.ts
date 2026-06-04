@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
@@ -7,7 +6,7 @@ import type { AdminBillingTab } from '../models/admin-billing.models';
 
 @Component({
     selector: 'fd-admin-billing-filters',
-    imports: [FormsModule, FdUiButtonComponent, FdUiInputComponent],
+    imports: [FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './admin-billing-filters.html',
     styleUrl: './admin-billing.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,4 +28,8 @@ export class AdminBillingFiltersComponent {
     public readonly toDateChange = output<string>();
     public readonly filtersApply = output();
     public readonly filtersReset = output();
+
+    protected getInputValue(event: Event): string {
+        return event.target instanceof HTMLInputElement ? event.target.value : '';
+    }
 }

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input } from '@angular/core';
-import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model } from '@angular/core';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 
@@ -11,27 +11,21 @@ const DEFAULT_MAX_INPUT_CHARS = 8;
     templateUrl: './fd-ui-nutrient-input.html',
     styleUrls: ['./fd-ui-nutrient-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: FdUiNutrientInputComponent,
-            multi: true,
-        },
-    ],
 })
-export class FdUiNutrientInputComponent implements ControlValueAccessor {
+export class FdUiNutrientInputComponent implements FormValueControl<string | number | null> {
     private readonly cdr = inject(ChangeDetectorRef);
 
     public readonly label = input('');
     public readonly icon = input<string>();
     public readonly placeholder = input('0');
-    public readonly name = input<string>();
+    public readonly name = input('');
     public readonly type = input<'text' | 'number'>('number');
     public readonly step = input<string | number>();
     public readonly min = input<string | number>();
     public readonly max = input<string | number>();
     public readonly required = input(false);
     public readonly readonly = input(false);
+    public readonly controlReadonly = input(false);
     public readonly error = input<string | null>();
     public readonly tintColor = input<string>();
     public readonly textColor = input<string>();
@@ -40,39 +34,29 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     public readonly labelUppercase = input(true);
     public readonly valueAlign = input<'center' | 'left'>('center');
     public readonly unitLabel = input<string>();
+    public readonly value = model<string | number | null>(null);
+    public readonly touched = model(false);
+    public readonly disabled = input(false);
 
-    protected disabled = false;
-    protected value = '';
+    protected displayValue = '';
     protected inputSize = 1;
     protected inputWidth = '1ch';
     protected readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
 
-    private onChange: (value: string) => void = () => {};
-    private onTouched: () => void = () => {};
+    public constructor() {
+        effect(() => {
+            this.setValue(this.value());
+        });
+    }
 
     protected get hostClass(): string {
         const error = this.error();
         const hasError = error !== null && error !== undefined && error.length > 0;
-        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()}${this.disabled ? ' fd-ui-nutrient-input--disabled' : ''}${this.readonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
+        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()}${this.disabled() ? ' fd-ui-nutrient-input--disabled' : ''}${this.isReadonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
     }
 
-    public writeValue(value: string | number | null): void {
-        this.value = value === null ? '' : String(value);
-        this.updateInputMeasure(this.value);
-        this.cdr.markForCheck();
-    }
-
-    public registerOnChange(fn: (value: string) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.cdr.markForCheck();
+    protected isReadonly(): boolean {
+        return this.readonly() || this.controlReadonly();
     }
 
     protected onInput(event: Event): void {
@@ -85,20 +69,20 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
 
         if (this.type() === 'number') {
             const sanitized = this.sanitizeDecimalInput(rawValue);
-            this.value = sanitized;
+            this.displayValue = sanitized;
             target.value = sanitized;
             this.updateInputMeasure(sanitized);
-            this.onChange(sanitized);
+            this.value.set(sanitized);
             return;
         }
 
-        this.value = rawValue;
+        this.displayValue = rawValue;
         this.updateInputMeasure(rawValue);
-        this.onChange(rawValue);
+        this.value.set(rawValue);
     }
 
     protected onBlur(): void {
-        this.onTouched();
+        this.touched.set(true);
     }
 
     private sanitizeDecimalInput(value: string): string {
@@ -121,5 +105,11 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
         const clamped = Math.min(this.maxInputChars, length);
         this.inputSize = clamped;
         this.inputWidth = `${clamped}ch`;
+    }
+
+    private setValue(value: string | number | null): void {
+        this.displayValue = value === null ? '' : String(value);
+        this.updateInputMeasure(this.displayValue);
+        this.cdr.markForCheck();
     }
 }
