@@ -1,5 +1,4 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -9,10 +8,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
-import { MealManageFacade } from '../../../lib/manage/meal-manage.facade';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
+import type { ConsumptionItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog';
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 125;
@@ -23,8 +21,6 @@ type DialogSetup = {
     dialogRef: { close: ReturnType<typeof vi.fn> };
     fdDialogService: { open: ReturnType<typeof vi.fn> };
     fixture: ComponentFixture<MealManualItemDialogComponent>;
-    group: FormGroup<ConsumptionItemFormData>;
-    mealManageFacade: { configureItemType: ReturnType<typeof vi.fn> };
 };
 
 describe('MealManualItemDialogComponent selection', () => {
@@ -56,19 +52,21 @@ describe('MealManualItemDialogComponent selection', () => {
 });
 
 describe('MealManualItemDialogComponent save', () => {
-    it('should patch form group and close with true on valid save', async () => {
+    it('should close with item value on valid save', async () => {
         const product = createProduct();
-        const { component, dialogRef, group, mealManageFacade } = await setupComponentAsync({
+        const { component, dialogRef } = await setupComponentAsync({
             product,
             amount: PRODUCT_DEFAULT_PORTION_AMOUNT,
         });
 
         component['save']();
 
-        expect(group.controls.product.value).toBe(product);
-        expect(group.controls.amount.value).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
-        expect(mealManageFacade.configureItemType).toHaveBeenCalledWith(group, ConsumptionSourceType.Product);
-        expect(dialogRef.close).toHaveBeenCalledWith(true);
+        expect(dialogRef.close).toHaveBeenCalledWith({
+            sourceType: ConsumptionSourceType.Product,
+            product,
+            recipe: null,
+            amount: PRODUCT_DEFAULT_PORTION_AMOUNT,
+        });
     });
 
     it('should keep dialog open when source is missing', async () => {
@@ -85,27 +83,23 @@ describe('MealManualItemDialogComponent save', () => {
 
         component['cancel']();
 
-        expect(dialogRef.close).toHaveBeenCalledWith(false);
+        expect(dialogRef.close).toHaveBeenCalledWith(null);
     });
 });
 
 async function setupComponentAsync(values: Partial<{ product: Product; recipe: Recipe; amount: number }> = {}): Promise<DialogSetup> {
-    const group = createItemGroup(values);
+    const item = createItemValue(values);
     const dialogRef = { close: vi.fn() };
     const fdDialogService = {
         open: vi.fn().mockReturnValue({ afterClosed: () => of(null) }),
-    };
-    const mealManageFacade = {
-        configureItemType: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
         imports: [MealManualItemDialogComponent, TranslateModule.forRoot()],
         providers: [
-            { provide: FD_UI_DIALOG_DATA, useValue: { group } satisfies MealManualItemDialogData },
+            { provide: FD_UI_DIALOG_DATA, useValue: { item } satisfies MealManualItemDialogData },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FdUiDialogService, useValue: fdDialogService },
-            { provide: MealManageFacade, useValue: mealManageFacade },
             {
                 provide: RecipeServingWeightService,
                 useValue: {
@@ -123,20 +117,16 @@ async function setupComponentAsync(values: Partial<{ product: Product; recipe: R
         dialogRef,
         fdDialogService,
         fixture,
-        group,
-        mealManageFacade,
     };
 }
 
-function createItemGroup(values: Partial<{ product: Product; recipe: Recipe; amount: number }>): FormGroup<ConsumptionItemFormData> {
-    return new FormGroup<ConsumptionItemFormData>({
-        sourceType: new FormControl(values.recipe === undefined ? ConsumptionSourceType.Product : ConsumptionSourceType.Recipe, {
-            nonNullable: true,
-        }),
-        product: new FormControl(values.product ?? null),
-        recipe: new FormControl(values.recipe ?? null),
-        amount: new FormControl(values.amount ?? null),
-    });
+function createItemValue(values: Partial<{ product: Product; recipe: Recipe; amount: number }>): ConsumptionItemFormValues {
+    return {
+        sourceType: values.recipe === undefined ? ConsumptionSourceType.Product : ConsumptionSourceType.Recipe,
+        product: values.product ?? null,
+        recipe: values.recipe ?? null,
+        amount: values.amount ?? null,
+    };
 }
 
 function createProduct(): Product {

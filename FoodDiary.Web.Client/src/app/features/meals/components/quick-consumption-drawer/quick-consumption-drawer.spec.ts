@@ -1,6 +1,5 @@
 import { computed, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
@@ -11,7 +10,7 @@ import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.da
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealDetails, type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import { ConsumptionSourceType } from '../../models/meal.data';
-import type { ConsumptionItemFormData } from '../manage/meal-manage-lib/meal-manage.types';
+import type { ConsumptionItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
 import { QuickConsumptionDrawerComponent } from './quick-consumption-drawer';
 
 const PRODUCT_AMOUNT = 150;
@@ -67,7 +66,6 @@ type QuickMealServiceMock = {
 
 type MealManageFacadeMock = {
     convertRecipeGramsToServings: ReturnType<typeof vi.fn>;
-    createConsumptionItem: ReturnType<typeof vi.fn>;
     resolveRecipeServingsToGramsAsync: ReturnType<typeof vi.fn>;
 };
 
@@ -137,12 +135,10 @@ describe('QuickConsumptionDrawerComponent state', () => {
 
 describe('QuickConsumptionDrawerComponent edit', () => {
     it('should update product item after edit dialog is saved', async () => {
-        const { component, quickService, mealManageFacade } = await setupComponentAsync([
+        const { component, quickService } = await setupComponentAsync([
             { key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT },
         ]);
-        mealManageFacade.createConsumptionItem.mockReturnValue(
-            createItemGroup(ConsumptionSourceType.Product, product, null, PRODUCT_AMOUNT),
-        );
+        mockEditDialogResult(createItemValue(ConsumptionSourceType.Product, product, null, PRODUCT_AMOUNT));
 
         component['edit']({ key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT });
         await flushPromisesAsync();
@@ -160,7 +156,7 @@ describe('QuickConsumptionDrawerComponent edit', () => {
             { key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS },
         ]);
         mealManageFacade.resolveRecipeServingsToGramsAsync.mockResolvedValue(RECIPE_GRAMS);
-        mealManageFacade.createConsumptionItem.mockReturnValue(createItemGroup(ConsumptionSourceType.Recipe, null, recipe, RECIPE_GRAMS));
+        mockEditDialogResult(createItemValue(ConsumptionSourceType.Recipe, null, recipe, RECIPE_GRAMS));
 
         component['edit']({ key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS });
         await flushPromisesAsync();
@@ -238,10 +234,6 @@ function createQuickMealServiceMock(items: QuickMealItem[]): QuickMealServiceMoc
 function createMealManageFacadeMock(): MealManageFacadeMock {
     return {
         convertRecipeGramsToServings: vi.fn().mockReturnValue(RECIPE_SERVINGS),
-        createConsumptionItem: vi.fn(
-            (selectedProduct: Product | null, selectedRecipe: Recipe | null, amount: number, sourceType: ConsumptionSourceType) =>
-                createItemGroup(sourceType, selectedProduct, selectedRecipe, amount),
-        ),
         resolveRecipeServingsToGramsAsync: vi.fn().mockResolvedValue(RECIPE_GRAMS),
     };
 }
@@ -251,16 +243,20 @@ async function flushPromisesAsync(): Promise<void> {
     await Promise.resolve();
 }
 
-function createItemGroup(
+function mockEditDialogResult(item: ConsumptionItemFormValues | null): void {
+    TestBed.inject(FdUiDialogService).open = vi.fn().mockReturnValue({ afterClosed: () => of(item) });
+}
+
+function createItemValue(
     sourceType: ConsumptionSourceType,
     selectedProduct: Product | null,
     selectedRecipe: Recipe | null,
     amount: number,
-): FormGroup<ConsumptionItemFormData> {
-    return new FormGroup<ConsumptionItemFormData>({
-        sourceType: new FormControl(sourceType, { nonNullable: true }),
-        product: new FormControl(selectedProduct),
-        recipe: new FormControl(selectedRecipe),
-        amount: new FormControl(amount),
-    });
+): ConsumptionItemFormValues {
+    return {
+        sourceType,
+        product: selectedProduct,
+        recipe: selectedRecipe,
+        amount,
+    };
 }

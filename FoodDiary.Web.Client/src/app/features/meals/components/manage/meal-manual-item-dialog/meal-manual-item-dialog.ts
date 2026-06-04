@@ -18,14 +18,14 @@ import type {
 } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
-import { MealManageFacade } from '../../../lib/manage/meal-manage.facade';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
+import type { ConsumptionItemFormValues } from '../meal-manage-lib/meal-manage.types';
 
 const MIN_AMOUNT = 0.01;
 
 export type MealManualItemDialogData = {
-    group: ReturnType<MealManageFacade['createConsumptionItem']>;
+    item: ConsumptionItemFormValues;
 };
 
 @Component({
@@ -45,16 +45,15 @@ export type MealManualItemDialogData = {
 })
 export class MealManualItemDialogComponent {
     private readonly data = inject<MealManualItemDialogData>(FD_UI_DIALOG_DATA);
-    private readonly dialogRef = inject(FdUiDialogRef<MealManualItemDialogComponent, boolean>);
+    private readonly dialogRef = inject(FdUiDialogRef<MealManualItemDialogComponent, ConsumptionItemFormValues | null>);
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly mealManageFacade = inject(MealManageFacade);
     private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly translateService = inject(TranslateService);
 
-    protected readonly sourceType = signal(this.data.group.controls.sourceType.value);
-    protected readonly product = signal<Product | null>(this.data.group.controls.product.value);
-    protected readonly recipe = signal<Recipe | null>(this.data.group.controls.recipe.value);
-    protected readonly amountModel = signal<number | null>(this.data.group.controls.amount.value);
+    protected readonly sourceType = signal(this.data.item.sourceType);
+    protected readonly product = signal<Product | null>(this.data.item.product);
+    protected readonly recipe = signal<Recipe | null>(this.data.item.recipe);
+    protected readonly amountModel = signal<number | null>(this.data.item.amount);
     protected readonly amount = form(this.amountModel, path => {
         required(path);
         min(path, MIN_AMOUNT);
@@ -144,18 +143,16 @@ export class MealManualItemDialogComponent {
             return;
         }
 
-        this.data.group.patchValue({
+        this.dialogRef.close({
             sourceType: this.sourceType(),
             product: this.product(),
             recipe: this.recipe(),
             amount: this.amountModel(),
         });
-        this.mealManageFacade.configureItemType(this.data.group, this.sourceType());
-        this.dialogRef.close(true);
     }
 
     protected cancel(): void {
-        this.dialogRef.close(false);
+        this.dialogRef.close(null);
     }
 
     private resolveProductAmount(product: Product): number {

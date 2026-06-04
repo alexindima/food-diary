@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
-import type { FormGroup } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -15,7 +14,7 @@ import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import { ConsumptionSourceType } from '../../models/meal.data';
-import type { ConsumptionItemFormData } from '../manage/meal-manage-lib/meal-manage.types';
+import type { ConsumptionItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
 
 type QuickConsumptionItemView = {
@@ -189,21 +188,24 @@ export class QuickConsumptionDrawerComponent {
     }
 
     private async openEditDialogAsync(item: QuickMealItem): Promise<void> {
-        const group = await this.createFormGroupAsync(item);
-        const saved = await firstValueFrom(
+        const dialogItem = await this.createDialogItemAsync(item);
+        const result = await firstValueFrom(
             this.fdDialogService
-                .open<MealManualItemDialogComponent, MealManualItemDialogData, boolean>(MealManualItemDialogComponent, {
-                    preset: 'form',
-                    data: { group },
-                })
+                .open<MealManualItemDialogComponent, MealManualItemDialogData, ConsumptionItemFormValues | null>(
+                    MealManualItemDialogComponent,
+                    {
+                        preset: 'form',
+                        data: { item: dialogItem },
+                    },
+                )
                 .afterClosed(),
         );
 
-        if (saved !== true) {
+        if (result === null || result === undefined) {
             return;
         }
 
-        const updatedItem = this.toQuickMealItem(group);
+        const updatedItem = this.toQuickMealItem(result);
         if (updatedItem === null) {
             return;
         }
@@ -211,27 +213,26 @@ export class QuickConsumptionDrawerComponent {
         this.quickService.updateItem(item.key, updatedItem);
     }
 
-    private async createFormGroupAsync(item: QuickMealItem): Promise<FormGroup<ConsumptionItemFormData>> {
+    private async createDialogItemAsync(item: QuickMealItem): Promise<ConsumptionItemFormValues> {
         const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
         const amount =
             sourceType === ConsumptionSourceType.Recipe
                 ? await this.mealManageFacade.resolveRecipeServingsToGramsAsync(item.recipe ?? null, item.amount)
                 : item.amount;
 
-        return this.mealManageFacade.createConsumptionItem(
-            sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
-            sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
-            amount,
+        return {
             sourceType,
-        );
+            product: sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
+            recipe: sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
+            amount,
+        };
     }
 
-    private toQuickMealItem(group: FormGroup<ConsumptionItemFormData>): Omit<QuickMealItem, 'flashId'> | null {
-        const sourceType = group.controls.sourceType.value;
-        const amount = group.controls.amount.value ?? 0;
+    private toQuickMealItem(item: ConsumptionItemFormValues): Omit<QuickMealItem, 'flashId'> | null {
+        const amount = item.amount ?? 0;
 
-        if (sourceType === ConsumptionSourceType.Product) {
-            const product = group.controls.product.value;
+        if (item.sourceType === ConsumptionSourceType.Product) {
+            const product = item.product;
             if (product?.id === undefined || product.id.length === 0) {
                 return null;
             }
@@ -244,7 +245,7 @@ export class QuickConsumptionDrawerComponent {
             };
         }
 
-        const recipe = group.controls.recipe.value;
+        const recipe = item.recipe;
         if (recipe?.id === undefined || recipe.id.length === 0) {
             return null;
         }

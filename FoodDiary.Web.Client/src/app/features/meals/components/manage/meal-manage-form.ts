@@ -46,6 +46,7 @@ import type {
     ConsumptionFormData,
     ConsumptionFormValues,
     ConsumptionItemFormData,
+    ConsumptionItemFormValues,
     MacroBarState,
     MealNutritionSummaryState,
     NutritionMode,
@@ -347,13 +348,18 @@ export class MealManageFormComponent {
         const group = this.items.at(index);
         void firstValueFrom(
             this.fdDialogService
-                .open<MealManualItemDialogComponent, MealManualItemDialogData, boolean>(MealManualItemDialogComponent, {
-                    preset: 'form',
-                    data: { group },
-                })
+                .open<MealManualItemDialogComponent, MealManualItemDialogData, ConsumptionItemFormValues | null>(
+                    MealManualItemDialogComponent,
+                    {
+                        preset: 'form',
+                        data: { item: group.getRawValue() },
+                    },
+                )
                 .afterClosed(),
-        ).then(saved => {
-            if (saved === true) {
+        ).then(item => {
+            if (item !== null && item !== undefined) {
+                group.patchValue(item);
+                this.mealManageFacade.configureItemType(group, item.sourceType);
                 this.bumpItemsRenderVersion();
                 this.updateItemValidationRules();
                 this.updateSummary();

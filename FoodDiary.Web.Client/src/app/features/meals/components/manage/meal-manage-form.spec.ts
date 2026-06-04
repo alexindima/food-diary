@@ -37,6 +37,7 @@ type MealManageFacadeMock = {
     buildNutritionSummaryState: ReturnType<typeof vi.fn>;
     convertRecipeGramsToServings: ReturnType<typeof vi.fn>;
     convertRecipeServingsToGrams: ReturnType<typeof vi.fn>;
+    configureItemType: ReturnType<typeof vi.fn>;
     createConsumptionItem: ReturnType<typeof vi.fn>;
     createItemsValidator: ReturnType<typeof vi.fn>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
@@ -295,6 +296,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
     return {
         addAiSession: vi.fn((_sessions: ConsumptionAiSessionManageDto[], session: ConsumptionAiSessionManageDto) => [session]),
         buildNutritionSummaryState: vi.fn((_form, _items, _aiSessions, _threshold) => createNutritionSummaryState()),
+        configureItemType: vi.fn(),
         convertRecipeGramsToServings: vi.fn((_recipe, amount: number) => amount),
         convertRecipeServingsToGrams: vi.fn((_recipe, amount: number) => amount),
         createConsumptionItem: vi.fn(createConsumptionItemGroup),
