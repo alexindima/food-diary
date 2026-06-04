@@ -103,7 +103,7 @@ function registerValueAccessorTests(): void {
         it('should write value via CVA with string', () => {
             component['writeValue'](MARCH_DATE_STRING);
 
-            const dateValue = component['value']();
+            const dateValue = component['internalValue']();
             expect(dateValue).toBeTruthy();
             expect(dateValue?.getFullYear()).toBe(TEST_YEAR);
             expect(dateValue?.getMonth()).toBe(MARCH_INDEX);
@@ -112,17 +112,17 @@ function registerValueAccessorTests(): void {
 
         it('should write null value via CVA', () => {
             component['writeValue'](JANUARY_DATE_STRING);
-            expect(component['value']()).toBeTruthy();
+            expect(component['internalValue']()).toBeTruthy();
 
             component['writeValue'](null);
-            expect(component['value']()).toBeNull();
+            expect(component['internalValue']()).toBeNull();
         });
 
         it('should write Date object via CVA', () => {
             const date = new Date(TEST_YEAR, JUNE_INDEX, JUNE_DAY);
             component['writeValue'](date);
 
-            const dateValue = component['value']();
+            const dateValue = component['internalValue']();
             expect(dateValue).toBeTruthy();
             expect(dateValue?.getFullYear()).toBe(TEST_YEAR);
             expect(dateValue?.getMonth()).toBe(JUNE_INDEX);
@@ -229,7 +229,7 @@ function registerInteractionTests(): void {
 
             component['onDateSelect'](null);
 
-            expect(component['value']()?.getDate()).toBe(TEST_DAY);
+            expect(component['internalValue']()?.getDate()).toBe(TEST_DAY);
             expect(onChangeSpy).not.toHaveBeenCalled();
         });
 

@@ -4,20 +4,20 @@
     bodyScrollInset="edge"
     [title]="isNew ? 'Create email template' : 'Edit email template'"
 >
-    <form class="email-template-edit-dialog fd-grid fd-gap-md" [formGroup]="form" (ngSubmit)="onSave()">
+    <form class="email-template-edit-dialog fd-grid fd-gap-md" (ngSubmit)="onSave()">
         <section class="template-meta fd-grid fd-gap-md fd-align-center" aria-label="Template metadata">
-            <fd-ui-input formControlName="key" label="Key" />
-            <fd-ui-input formControlName="locale" label="Locale" />
-            <fd-ui-checkbox formControlName="isActive">Active</fd-ui-checkbox>
+            <fd-ui-input label="Key" [formField]="form.key" />
+            <fd-ui-input label="Locale" [formField]="form.locale" />
+            <fd-ui-checkbox [formField]="form.isActive">Active</fd-ui-checkbox>
         </section>
 
         <div class="template-workspace fd-grid fd-gap-md">
             <section class="template-editor fd-grid fd-gap-md" aria-label="Template editor">
-                <fd-ui-input formControlName="subject" label="Subject" />
+                <fd-ui-input label="Subject" [formField]="form.subject" />
 
                 <div class="editor-grid fd-grid fd-gap-md">
-                    <fd-ui-textarea formControlName="htmlBody" label="HTML body" [rows]="18" />
-                    <fd-ui-textarea formControlName="textBody" label="Text body" [rows]="18" />
+                    <fd-ui-textarea label="HTML body" [rows]="18" [formField]="form.htmlBody" />
+                    <fd-ui-textarea label="Text body" [rows]="18" [formField]="form.textBody" />
                 </div>
             </section>
 
@@ -62,11 +62,11 @@
                 </dl>
 
                 <div class="test-send fd-grid fd-gap-sm fd-align-center">
-                    <fd-ui-input label="Send test to" [formControl]="testEmailControl" />
+                    <fd-ui-input label="Send test to" [formField]="testEmailForm.email" />
                     <fd-ui-button
                         type="button"
                         variant="secondary"
-                        [disabled]="form.invalid || testEmailControl.invalid || isSendingTest()"
+                        [disabled]="form().invalid() || testEmailForm().invalid() || isSendingTest()"
                         (click)="onSendTest()"
                     >
                         {{ isSendingTest() ? 'Sending...' : 'Send test' }}
@@ -89,6 +89,6 @@
 
     <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
         <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
-        <fd-ui-button type="button" [disabled]="form.invalid || isSaving()" (click)="onSave()">Save</fd-ui-button>
+        <fd-ui-button type="button" [disabled]="form().invalid() || isSaving()" (click)="onSave()">Save</fd-ui-button>
     </div>
 </fd-ui-dialog>

@@ -174,6 +174,9 @@ describe('ProductListFacade search and filters', () => {
         await flushDebounceAsync();
         facade.searchForm.search().value.set('apple');
         await flushDebounceAsync();
+        await vi.waitFor(() => {
+            expect(openFoodFactsService.search).toHaveBeenCalledTimes(2);
+        });
 
         firstSearch.next([createOpenFoodFactsProduct({ barcode: 'stale', name: 'Stale banana' })]);
         firstSearch.complete();

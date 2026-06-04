@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -31,7 +30,7 @@ beforeEach(() => {
     };
 
     TestBed.configureTestingModule({
-        providers: [FormBuilder, CycleTrackingFacade, { provide: CyclesService, useValue: cyclesService }],
+        providers: [CycleTrackingFacade, { provide: CyclesService, useValue: cyclesService }],
     });
 
     facade = TestBed.inject(CycleTrackingFacade);
@@ -46,7 +45,7 @@ describe('CycleTrackingFacade current cycle', () => {
     });
 
     it('creates a new cycle from form values', () => {
-        facade.startCycleForm.setValue({
+        facade.startCycleModel.set({
             startDate: '2026-04-03',
             averageLength: 30,
             lutealLength: 15,
@@ -63,12 +62,12 @@ describe('CycleTrackingFacade current cycle', () => {
     });
 
     it('marks start cycle form as touched when invalid', () => {
-        facade.startCycleForm.controls.startDate.setValue(null);
+        facade.startCycleModel.update(value => ({ ...value, startDate: null }));
 
         facade.startCycle();
 
         expect(cyclesService.create).not.toHaveBeenCalled();
-        expect(facade.startCycleForm.controls.startDate.touched).toBe(true);
+        expect(facade.startCycleForm.startDate().touched()).toBe(true);
     });
 });
 
@@ -107,7 +106,7 @@ describe('CycleTrackingFacade days', () => {
 describe('CycleTrackingFacade symptom values', () => {
     it('clamps symptom values before saving a day', () => {
         facade.initialize();
-        facade.dayForm.setValue({
+        facade.dayModel.set({
             date: '2026-04-02',
             isPeriod: false,
             pain: -1,
@@ -144,7 +143,7 @@ describe('CycleTrackingFacade day ordering', () => {
             }),
         );
         facade.initialize();
-        facade.dayForm.controls.date.setValue('2026-04-02');
+        facade.dayModel.update(value => ({ ...value, date: '2026-04-02' }));
 
         facade.saveDay();
 
@@ -186,7 +185,7 @@ function createCycleDayResponse(): CycleDay {
 }
 
 function setValidDayForm(): void {
-    facade.dayForm.setValue({
+    facade.dayModel.set({
         date: '2026-04-02',
         isPeriod: true,
         pain: 5,

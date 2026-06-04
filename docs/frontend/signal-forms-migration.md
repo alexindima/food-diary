@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 15 forms.
-- Signal Forms files: 34.
-- Remaining legacy Reactive Forms surface: 129 files.
+- Migrated Signal Forms: 21 forms.
+- Signal Forms files: 41.
+- Remaining legacy Reactive Forms surface: 121 files.
 
 Tracker patterns:
 
@@ -52,6 +52,15 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.ts`
 - `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html`
 - `FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-form.types.ts`
+- `FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.ts`
+- `FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.html`
+- `FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts`
+- `FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.html`
+- `FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts`
+- `FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts`
+- `FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.html`
 
 ## Next Candidates
 
@@ -62,7 +71,7 @@ Tracker patterns:
 
 - Forms with `FormArray`.
 - Forms using `setValidators`, `addValidators`, `removeValidators`, or `clearValidators`.
-- Forms using `enable()` / `disable()`.
+- Forms using imperative `enable()` / `disable()` until they can be mapped to declarative Signal Forms logic.
 - Forms using `setErrors()` / `markAsPending()`.
 - Complex `fd-ui-kit` ControlValueAccessor forms until UI-kit-specific patterns are proven.
 
@@ -71,5 +80,7 @@ Tracker patterns:
 - Use `signal()` for the form model and `form()` for the field tree.
 - Import `FormField` instead of `ReactiveFormsModule` when a component only binds native controls through `[formField]`.
 - `FormField` can interoperate with `ControlValueAccessor` components for backwards compatibility. Treat each `fd-ui-*` form migration as a small pilot until UI-kit-specific patterns are proven.
+- Prefer declarative `disabled(path.field, () => condition)` for disabled Signal Forms fields.
+- `fd-ui-date-input` is adapted for Signal Forms CVA binding; keep internal control state away from public/protected `value` fields so Angular does not treat CVA components as Signal Forms custom controls accidentally.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

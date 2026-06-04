@@ -8,24 +8,24 @@
     <fd-page-body>
         <div class="cycle-tracking__grid fd-grid fd-gap-card-content">
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate">
-                <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formGroup]="startCycleForm" (ngSubmit)="startCycle()">
+                <form class="cycle-tracking__form fd-stack fd-gap-card-header" (ngSubmit)="startCycle()">
                     <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
                         <fd-ui-date-input
                             class="cycle-tracking__form-control"
-                            formControlName="startDate"
                             [label]="'CYCLE_TRACKING.START_DATE' | translate"
+                            [formField]="startCycleForm.startDate"
                         />
                         <fd-ui-input
                             class="cycle-tracking__form-control"
                             type="number"
-                            formControlName="averageLength"
                             [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
+                            [formField]="startCycleForm.averageLength"
                         />
                         <fd-ui-input
                             class="cycle-tracking__form-control"
                             type="number"
-                            formControlName="lutealLength"
                             [label]="'CYCLE_TRACKING.LUTEAL_LENGTH' | translate"
+                            [formField]="startCycleForm.lutealLength"
                         />
                     </div>
                     <div class="cycle-tracking__actions fd-ui-actions">
@@ -44,14 +44,14 @@
                 @if (!cycle()) {
                 <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
                 } @else {
-                <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formGroup]="dayForm" (ngSubmit)="saveDay()">
+                <form class="cycle-tracking__form fd-stack fd-gap-card-header" (ngSubmit)="saveDay()">
                     <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
                         <fd-ui-date-input
                             class="cycle-tracking__form-control"
-                            formControlName="date"
                             [label]="'CYCLE_TRACKING.DAY_DATE' | translate"
+                            [formField]="dayForm.date"
                         />
-                        <fd-ui-checkbox class="cycle-tracking__form-control cycle-tracking__checkbox" formControlName="isPeriod">
+                        <fd-ui-checkbox class="cycle-tracking__form-control cycle-tracking__checkbox" [formField]="dayForm.isPeriod">
                             {{ 'CYCLE_TRACKING.IS_PERIOD' | translate }}
                         </fd-ui-checkbox>
                     </div>
@@ -63,16 +63,16 @@
                             type="number"
                             [step]="1"
                             [label]="field.labelKey | translate"
-                            [formControlName]="field.key"
+                            [formField]="symptomField(field.key)"
                         />
                         }
                     </div>
 
                     <fd-ui-input
                         class="cycle-tracking__form-control"
-                        formControlName="notes"
                         [label]="'CYCLE_TRACKING.NOTES' | translate"
                         [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
+                        [formField]="dayForm.notes"
                     />
 
                     <div class="cycle-tracking__actions fd-ui-actions">

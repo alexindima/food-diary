@@ -1,7 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { disabled, email, form, FormField, required } from '@angular/forms/signals';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
@@ -15,20 +13,23 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 
-type TemplateForm = {
-    key: FormControl<string>;
-    locale: FormControl<string>;
-    subject: FormControl<string>;
-    htmlBody: FormControl<string>;
-    textBody: FormControl<string>;
-    isActive: FormControl<boolean>;
+type TemplateFormModel = {
+    key: string;
+    locale: string;
+    subject: string;
+    htmlBody: string;
+    textBody: string;
+    isActive: boolean;
+};
+
+type TestEmailFormModel = {
+    email: string;
 };
 
 @Component({
     selector: 'fd-admin-email-template-edit-dialog',
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
+        FormField,
         FdUiInputComponent,
         FdUiTextareaComponent,
         FdUiCheckboxComponent,
@@ -44,7 +45,6 @@ export class AdminEmailTemplateEditDialogComponent {
     protected readonly data = inject<AdminEmailTemplate>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
 
     protected readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
@@ -52,55 +52,67 @@ export class AdminEmailTemplateEditDialogComponent {
     protected readonly isSendingTest = signal(false);
     protected readonly testSendStatus = signal<'idle' | 'sent' | 'failed'>('idle');
     protected readonly previewMode = signal<'html' | 'text'>('html');
-    protected readonly previewHtml = signal<SafeHtml>('');
-    protected readonly previewText = signal('');
     protected readonly previewBrand = signal('FoodDiary');
     protected readonly previewClientName = signal('Alex Johnson');
     protected readonly previewLink = signal(this.getDefaultPreviewLink(this.data.key));
-    protected readonly testEmailControl = new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required, Validators.email],
+    protected readonly testEmailModel = signal<TestEmailFormModel>({ email: '' });
+    protected readonly testEmailForm = form(this.testEmailModel, path => {
+        required(path.email);
+        email(path.email);
     });
-    protected readonly form = new FormGroup<TemplateForm>({
-        key: new FormControl(this.data.key, { nonNullable: true, validators: [Validators.required] }),
-        locale: new FormControl(this.data.locale, { nonNullable: true, validators: [Validators.required] }),
-        subject: new FormControl(this.data.subject, { nonNullable: true, validators: [Validators.required] }),
-        htmlBody: new FormControl(this.data.htmlBody, { nonNullable: true, validators: [Validators.required] }),
-        textBody: new FormControl(this.data.textBody, { nonNullable: true, validators: [Validators.required] }),
-        isActive: new FormControl(this.data.isActive, { nonNullable: true }),
+    protected readonly formModel = signal<TemplateFormModel>({
+        key: this.data.key,
+        locale: this.data.locale,
+        subject: this.data.subject,
+        htmlBody: this.data.htmlBody,
+        textBody: this.data.textBody,
+        isActive: this.data.isActive,
     });
+    protected readonly form = form(this.formModel, path => {
+        required(path.key);
+        required(path.locale);
+        required(path.subject);
+        required(path.htmlBody);
+        required(path.textBody);
+        disabled(path.key, { when: () => !this.isNew });
+        disabled(path.locale, { when: () => !this.isNew });
+    });
+    protected readonly previewHtml = computed<SafeHtml>(() => {
+        const { htmlBody, subject } = this.formModel();
+        const html = this.applyTokens(
+            htmlBody !== '' ? htmlBody : `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
+            this.previewLink(),
+            this.previewBrand(),
+            this.previewClientName(),
+        );
 
-    public constructor() {
-        if (!this.isNew) {
-            this.form.controls.key.disable({ emitEvent: false });
-            this.form.controls.locale.disable({ emitEvent: false });
-        }
-
-        this.updatePreview();
-        this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.updatePreview();
-        });
-    }
+        return this.sanitizer.bypassSecurityTrustHtml(html);
+    });
+    protected readonly previewText = computed(() => {
+        const { subject, textBody } = this.formModel();
+        return this.applyTokens(textBody !== '' ? textBody : subject, this.previewLink(), this.previewBrand(), this.previewClientName());
+    });
 
     protected onCancel(): void {
         this.dialogRef.close(false);
     }
 
     protected onSave(): void {
-        if (this.form.invalid || this.isSaving()) {
+        if (this.form().invalid() || this.isSaving()) {
             return;
         }
 
         this.isSaving.set(true);
-        const key = this.form.controls.key.value.trim();
-        const locale = this.form.controls.locale.value.trim();
+        const value = this.formModel();
+        const key = value.key.trim();
+        const locale = value.locale.trim();
 
         this.templatesFacade
             .upsert(key, locale, {
-                subject: this.form.controls.subject.value,
-                htmlBody: this.form.controls.htmlBody.value,
-                textBody: this.form.controls.textBody.value,
-                isActive: this.form.controls.isActive.value,
+                subject: value.subject,
+                htmlBody: value.htmlBody,
+                textBody: value.textBody,
+                isActive: value.isActive,
             })
             .subscribe({
                 next: () => {
@@ -119,20 +131,21 @@ export class AdminEmailTemplateEditDialogComponent {
 
     protected onSendTest(): void {
         this.testSendStatus.set('idle');
-        if (this.form.invalid || this.testEmailControl.invalid || this.isSendingTest()) {
-            this.form.markAllAsTouched();
-            this.testEmailControl.markAsTouched();
+        if (this.form().invalid() || this.testEmailForm().invalid() || this.isSendingTest()) {
+            this.form().markAsTouched();
+            this.testEmailForm().markAsTouched();
             return;
         }
 
         this.isSendingTest.set(true);
+        const value = this.formModel();
         this.templatesFacade
             .sendTest({
-                toEmail: this.testEmailControl.value.trim(),
-                key: this.form.controls.key.value.trim(),
-                subject: this.form.controls.subject.value,
-                htmlBody: this.form.controls.htmlBody.value,
-                textBody: this.form.controls.textBody.value,
+                toEmail: this.testEmailModel().email.trim(),
+                key: value.key.trim(),
+                subject: value.subject,
+                htmlBody: value.htmlBody,
+                textBody: value.textBody,
             })
             .subscribe({
                 next: () => {
@@ -144,24 +157,6 @@ export class AdminEmailTemplateEditDialogComponent {
                     this.testSendStatus.set('failed');
                 },
             });
-    }
-
-    private updatePreview(): void {
-        const subject = this.form.controls.subject.value;
-        const htmlBody = this.form.controls.htmlBody.value;
-        const textBody = this.form.controls.textBody.value;
-        const brand = this.previewBrand();
-        const link = this.previewLink();
-        const clientName = this.previewClientName();
-
-        const html = this.applyTokens(
-            htmlBody !== '' ? htmlBody : `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
-            link,
-            brand,
-            clientName,
-        );
-        this.previewHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
-        this.previewText.set(this.applyTokens(textBody !== '' ? textBody : subject, link, brand, clientName));
     }
 
     private applyTokens(value: string, link: string, brand: string, clientName: string): string {

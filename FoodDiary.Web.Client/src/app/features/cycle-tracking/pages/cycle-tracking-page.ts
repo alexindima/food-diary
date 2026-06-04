@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -13,6 +13,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
+import type { DailySymptoms } from '../models/cycle.data';
 import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
 import { CYCLE_SYMPTOM_FIELDS } from './cycle-tracking-page-lib/cycle-tracking-page.config';
@@ -25,7 +26,7 @@ import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } f
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        ReactiveFormsModule,
+        FormField,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,
@@ -72,6 +73,10 @@ export class CycleTrackingPageComponent {
 
     protected saveDay(): void {
         this.facade.saveDay();
+    }
+
+    protected symptomField(key: keyof DailySymptoms): FieldTree<number> {
+        return this.dayForm[key];
     }
 
     private appLocale(): string {

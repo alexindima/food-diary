@@ -29,19 +29,19 @@
 
     @if (hasPeriodFilterPermission()) {
     <fd-ui-card>
-        <form class="client-dashboard__date-filter" [formGroup]="dateFilterForm" (ngSubmit)="applyDateFilter()">
+        <form class="client-dashboard__date-filter" (ngSubmit)="applyDateFilter()">
             <div class="client-dashboard__date-field">
                 <fd-ui-date-input
-                    formControlName="dateFrom"
                     [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_LABEL' | translate"
                     [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_PLACEHOLDER' | translate"
+                    [formField]="dateFilterForm.dateFrom"
                 />
             </div>
             <div class="client-dashboard__date-field">
                 <fd-ui-date-input
-                    formControlName="dateTo"
                     [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TO_LABEL' | translate"
                     [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TO_PLACEHOLDER' | translate"
+                    [formField]="dateFilterForm.dateTo"
                 />
             </div>
             <div class="client-dashboard__date-actions fd-row fd-wrap fd-gap-xs">
@@ -63,7 +63,7 @@
                 <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showNextPeriod()">
                     {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.NEXT_PERIOD' | translate }}
                 </fd-ui-button>
-                <fd-ui-button type="submit" [disabled]="dateFilterForm.invalid || detailsLoading()">
+                <fd-ui-button type="submit" [disabled]="dateFilterForm().invalid() || detailsLoading()">
                     {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.APPLY' | translate }}
                 </fd-ui-button>
             </div>
@@ -246,21 +246,17 @@
         <fd-ui-card>
             <div class="client-dashboard__section client-dashboard__recommendations">
                 <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TITLE' | translate }}</h2>
-                <form
-                    class="client-dashboard__recommendation-form fd-stack fd-gap-sm"
-                    [formGroup]="recommendationForm"
-                    (ngSubmit)="submitRecommendation()"
-                >
+                <form class="client-dashboard__recommendation-form fd-stack fd-gap-sm" (ngSubmit)="submitRecommendation()">
                     <fd-ui-textarea
-                        formControlName="text"
                         [label]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_LABEL' | translate"
                         [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_PLACEHOLDER' | translate"
                         [rows]="5"
                         [required]="true"
+                        [formField]="recommendationForm.text"
                     />
                     <div class="client-dashboard__recommendation-actions fd-row fd-justify-between fd-gap-sm">
                         <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.LIMIT' | translate }} </span>
-                        <fd-ui-button type="submit" [disabled]="recommendationForm.invalid || savingRecommendation()">
+                        <fd-ui-button type="submit" [disabled]="recommendationForm().invalid() || savingRecommendation()">
                             {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND' | translate }}
                         </fd-ui-button>
                     </div>

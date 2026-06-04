@@ -63,16 +63,15 @@ describe('AdminEmailTemplateEditDialogComponent', () => {
     it('should disable key and locale controls for existing template', async () => {
         const { component } = await setupEmailTemplateDialogAsync();
 
-        expect(component['form'].controls.key.disabled).toBe(true);
-        expect(component['form'].controls.locale.disabled).toBe(true);
+        expect(component['form'].key().disabled()).toBe(true);
+        expect(component['form'].locale().disabled()).toBe(true);
     });
 });
 
 describe('AdminEmailTemplateEditDialogComponent preview', () => {
     it('should update preview when form changes', async () => {
         const { component } = await setupEmailTemplateDialogAsync();
-        component['form'].controls.subject.setValue('Hello {{brand}}');
-        component['form'].controls.textBody.setValue('Open {{link}}');
+        component['formModel'].update(value => ({ ...value, subject: 'Hello {{brand}}', textBody: 'Open {{link}}' }));
 
         expect(component['previewText']()).toContain('https://fooddiary.club/verify-email');
         expect(component['previewBrand']()).toBe('FoodDiary');
@@ -94,7 +93,7 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
 
     it('should save and close true on success', async () => {
         const { component, dialogRef, service } = await setupEmailTemplateDialogAsync();
-        component['form'].controls.subject.setValue('Updated subject');
+        component['formModel'].update(value => ({ ...value, subject: 'Updated subject' }));
         component['onSave']();
 
         expect(service.upsert).toHaveBeenCalledWith('email_verification', 'en', {
@@ -119,8 +118,8 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
 describe('AdminEmailTemplateEditDialogComponent test send', () => {
     it('should send current form values as a test email', async () => {
         const { component, service } = await setupEmailTemplateDialogAsync();
-        component['testEmailControl'].setValue('admin@example.com');
-        component['form'].controls.subject.setValue('Updated subject');
+        component['testEmailModel'].set({ email: 'admin@example.com' });
+        component['formModel'].update(value => ({ ...value, subject: 'Updated subject' }));
 
         component['onSendTest']();
 
@@ -137,7 +136,7 @@ describe('AdminEmailTemplateEditDialogComponent test send', () => {
     it('should show failed status when test email send fails', async () => {
         const { component, service } = await setupEmailTemplateDialogAsync();
         service.sendTest.mockReturnValueOnce(throwError(() => new Error('send failed')));
-        component['testEmailControl'].setValue('admin@example.com');
+        component['testEmailModel'].set({ email: 'admin@example.com' });
 
         component['onSendTest']();
 

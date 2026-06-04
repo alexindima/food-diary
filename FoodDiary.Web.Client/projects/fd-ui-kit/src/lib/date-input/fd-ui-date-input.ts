@@ -35,10 +35,10 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     public readonly error = input<string | null>();
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
-    public readonly min = input<string | Date | null>(null);
-    public readonly max = input<string | Date | null>(null);
+    public readonly min = input<string | Date | null | undefined>(null);
+    public readonly max = input<string | Date | null | undefined>(null);
 
-    protected readonly value = signal<Date | null>(null);
+    protected readonly internalValue = signal<Date | null>(null);
     protected readonly isOpen = signal(false);
     protected readonly displayMonth = signal(new Date());
     protected readonly disabled = signal(false);
@@ -50,15 +50,15 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
 
         return error !== null && error !== undefined && error.trim().length > 0;
     });
-    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.isOpen() || this.value() !== null);
+    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.isOpen() || this.internalValue() !== null);
     protected readonly hostClass = computed(
         () =>
             `fd-ui-date-input ${this.sizeClass()}${this.hasError() ? ' fd-ui-date-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-date-input--floating' : ''}`,
     );
-    protected readonly shouldShowPlaceholder = computed(() => (this.isFocused() || this.isOpen()) && this.value() === null);
+    protected readonly shouldShowPlaceholder = computed(() => (this.isFocused() || this.isOpen()) && this.internalValue() === null);
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
     protected readonly displayValue = computed(() => {
-        const value = this.value();
+        const value = this.internalValue();
         if (value === null) {
             return '';
         }
@@ -73,9 +73,9 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     private onChange: (value: string | null) => void = () => {};
     private onTouched: () => void = () => {};
 
-    public writeValue(value: string | Date | null): void {
-        const parsed = fdUiParseLocalDate(value);
-        this.value.set(parsed);
+    public writeValue(value: string | Date | null | undefined): void {
+        const parsed = fdUiParseLocalDate(value ?? null);
+        this.internalValue.set(parsed);
         this.displayMonth.set(parsed ?? new Date());
     }
 
@@ -99,7 +99,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
             return;
         }
 
-        this.displayMonth.set(this.value() ?? new Date());
+        this.displayMonth.set(this.internalValue() ?? new Date());
         this.isOpen.set(true);
         this.isFocused.set(true);
     }
@@ -120,7 +120,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         }
 
         const normalized = this.stripTime(value);
-        this.value.set(normalized);
+        this.internalValue.set(normalized);
         this.displayMonth.set(normalized);
         this.onChange(this.formatIsoDate(normalized));
         this.closeDatePicker();

@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, maxLength, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -53,18 +53,19 @@ const PERIOD_PRESET_DAYS = {
     month: 30,
 } as const;
 
+type DateFilterFormModel = {
+    dateFrom: string;
+    dateTo: string;
+};
+
+type RecommendationFormModel = {
+    text: string;
+};
+
 @Component({
     selector: 'fd-client-dashboard',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        DatePipe,
-        ReactiveFormsModule,
-        TranslatePipe,
-        FdUiButtonComponent,
-        FdUiCardComponent,
-        FdUiDateInputComponent,
-        FdUiTextareaComponent,
-    ],
+    imports: [DatePipe, FormField, TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiDateInputComponent, FdUiTextareaComponent],
     templateUrl: './client-dashboard.html',
     styleUrls: ['./client-dashboard.scss'],
 })
@@ -72,7 +73,6 @@ export class ClientDashboardComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly dietologistFacade = inject(DietologistFacade);
-    private readonly formBuilder = inject(NonNullableFormBuilder);
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private readonly destroyRef = inject(DestroyRef);
@@ -89,12 +89,18 @@ export class ClientDashboardComponent {
     protected readonly sectionLoadError = signal<string | null>(null);
     protected readonly selectedDateTo = signal(formatDateInputValue(new Date()));
     protected readonly selectedDateFrom = signal(formatDateInputValue(this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1))));
-    protected readonly dateFilterForm = this.formBuilder.group({
-        dateFrom: [this.selectedDateFrom(), [Validators.required]],
-        dateTo: [this.selectedDateTo(), [Validators.required]],
+    protected readonly dateFilterModel = signal<DateFilterFormModel>({
+        dateFrom: this.selectedDateFrom(),
+        dateTo: this.selectedDateTo(),
     });
-    protected readonly recommendationForm = this.formBuilder.group({
-        text: ['', [Validators.required, Validators.maxLength(RECOMMENDATION_MAX_LENGTH)]],
+    protected readonly dateFilterForm = form(this.dateFilterModel, path => {
+        required(path.dateFrom);
+        required(path.dateTo);
+    });
+    protected readonly recommendationModel = signal<RecommendationFormModel>({ text: '' });
+    protected readonly recommendationForm = form(this.recommendationModel, path => {
+        required(path.text);
+        maxLength(path.text, RECOMMENDATION_MAX_LENGTH);
     });
     protected readonly clientTitle = computed(() => {
         const client = this.client();
@@ -180,11 +186,11 @@ export class ClientDashboardComponent {
         const nextPeriod = this.getPeriodFromForm();
         if (
             client === null ||
-            this.dateFilterForm.invalid ||
+            this.dateFilterForm().invalid() ||
             nextPeriod === null ||
             (nextPeriod.dateFrom === this.selectedDateFrom() && nextPeriod.dateTo === this.selectedDateTo())
         ) {
-            this.dateFilterForm.markAllAsTouched();
+            this.dateFilterForm().markAsTouched();
             return;
         }
 
@@ -214,15 +220,15 @@ export class ClientDashboardComponent {
 
     protected submitRecommendation(): void {
         const client = this.client();
-        if (client === null || this.recommendationForm.invalid || this.savingRecommendation()) {
-            this.recommendationForm.markAllAsTouched();
+        if (client === null || this.recommendationForm().invalid() || this.savingRecommendation()) {
+            this.recommendationForm().markAsTouched();
             return;
         }
 
-        const text = this.recommendationForm.controls.text.value.trim();
+        const text = this.recommendationModel().text.trim();
         if (text.length === 0) {
-            this.recommendationForm.controls.text.setValue('');
-            this.recommendationForm.markAllAsTouched();
+            this.recommendationModel.set({ text: '' });
+            this.recommendationForm().markAsTouched();
             return;
         }
 
@@ -233,7 +239,7 @@ export class ClientDashboardComponent {
             .subscribe({
                 next: recommendation => {
                     this.recommendations.update(items => [recommendation, ...items]);
-                    this.recommendationForm.reset();
+                    this.recommendationModel.set({ text: '' });
                     this.savingRecommendation.set(false);
                     this.toastService.success(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT'));
                 },
@@ -337,7 +343,7 @@ export class ClientDashboardComponent {
     }
 
     private applyPeriod(dateFrom: string, dateTo: string): void {
-        this.dateFilterForm.setValue({ dateFrom, dateTo });
+        this.dateFilterModel.set({ dateFrom, dateTo });
         const client = this.client();
         if (client === null) {
             this.selectedDateFrom.set(dateFrom);
@@ -361,8 +367,7 @@ export class ClientDashboardComponent {
     }
 
     private getPeriodFromForm(): { dateFrom: string; dateTo: string } | null {
-        const dateFrom = this.dateFilterForm.controls.dateFrom.value;
-        const dateTo = this.dateFilterForm.controls.dateTo.value;
+        const { dateFrom, dateTo } = this.dateFilterModel();
         const parsedFrom = parseLocalDateInputValue(dateFrom);
         const parsedTo = parseLocalDateInputValue(dateTo);
         if (parsedFrom === null || parsedTo === null || parsedFrom > parsedTo) {

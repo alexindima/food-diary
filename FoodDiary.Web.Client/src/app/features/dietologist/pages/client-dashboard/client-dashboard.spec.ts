@@ -151,7 +151,7 @@ function registerActionTests(): void {
     it('reloads dashboard for selected period', () => {
         createComponent('client-1');
 
-        component['dateFilterForm'].setValue({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
+        component['dateFilterModel'].set({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
         component['applyDateFilter']();
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
@@ -166,7 +166,7 @@ function registerActionTests(): void {
     it('moves dashboard dates with period navigation', () => {
         createComponent('client-1');
 
-        component['dateFilterForm'].setValue({ dateFrom: '2026-05-17', dateTo: '2026-05-23' });
+        component['dateFilterModel'].set({ dateFrom: '2026-05-17', dateTo: '2026-05-23' });
         component['applyDateFilter']();
         component['showPreviousPeriod']();
 
@@ -186,7 +186,7 @@ function registerActionTests(): void {
     it('sends recommendation and prepends it to the list', () => {
         createComponent('client-1');
 
-        component['recommendationForm'].controls.text.setValue('Add protein');
+        component['recommendationModel'].set({ text: 'Add protein' });
         component['submitRecommendation']();
 
         expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });

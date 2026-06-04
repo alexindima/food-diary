@@ -1,5 +1,5 @@
 import { computed, inject, Service, signal } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { form, max, min, required } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
@@ -16,37 +16,61 @@ import {
     MIN_SYMPTOM_VALUE,
 } from './cycle-tracking.config';
 
+type StartCycleFormModel = {
+    startDate: string | null;
+    averageLength: number | null;
+    lutealLength: number | null;
+};
+
+export type CycleDayFormModel = {
+    date: string | null;
+    isPeriod: boolean;
+    pain: number;
+    mood: number;
+    edema: number;
+    headache: number;
+    energy: number;
+    sleepQuality: number;
+    libido: number;
+    notes: string | null;
+};
+
 @Service()
 export class CycleTrackingFacade {
     private readonly cyclesService = inject(CyclesService);
-    private readonly fb = inject(FormBuilder);
 
     public readonly isLoading = signal(false);
     public readonly isSavingCycle = signal(false);
     public readonly isSavingDay = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
 
-    public readonly startCycleForm = this.fb.group({
-        startDate: new FormControl<string | null>(formatDateInputValue(new Date()), { validators: [Validators.required] }),
-        averageLength: new FormControl<number | null>(DEFAULT_AVERAGE_CYCLE_LENGTH, {
-            validators: [Validators.min(MIN_AVERAGE_CYCLE_LENGTH), Validators.max(MAX_AVERAGE_CYCLE_LENGTH)],
-        }),
-        lutealLength: new FormControl<number | null>(DEFAULT_LUTEAL_LENGTH, {
-            validators: [Validators.min(MIN_LUTEAL_LENGTH), Validators.max(MAX_LUTEAL_LENGTH)],
-        }),
+    public readonly startCycleModel = signal<StartCycleFormModel>({
+        startDate: formatDateInputValue(new Date()),
+        averageLength: DEFAULT_AVERAGE_CYCLE_LENGTH,
+        lutealLength: DEFAULT_LUTEAL_LENGTH,
+    });
+    public readonly startCycleForm = form(this.startCycleModel, path => {
+        required(path.startDate);
+        min(path.averageLength, MIN_AVERAGE_CYCLE_LENGTH);
+        max(path.averageLength, MAX_AVERAGE_CYCLE_LENGTH);
+        min(path.lutealLength, MIN_LUTEAL_LENGTH);
+        max(path.lutealLength, MAX_LUTEAL_LENGTH);
     });
 
-    public readonly dayForm = this.fb.group({
-        date: new FormControl<string | null>(formatDateInputValue(new Date()), { validators: [Validators.required] }),
-        isPeriod: new FormControl<boolean>(false),
-        pain: new FormControl<number>(0),
-        mood: new FormControl<number>(0),
-        edema: new FormControl<number>(0),
-        headache: new FormControl<number>(0),
-        energy: new FormControl<number>(0),
-        sleepQuality: new FormControl<number>(0),
-        libido: new FormControl<number>(0),
-        notes: new FormControl<string | null>(null),
+    public readonly dayModel = signal<CycleDayFormModel>({
+        date: formatDateInputValue(new Date()),
+        isPeriod: false,
+        pain: 0,
+        mood: 0,
+        edema: 0,
+        headache: 0,
+        energy: 0,
+        sleepQuality: 0,
+        libido: 0,
+        notes: null,
+    });
+    public readonly dayForm = form(this.dayModel, path => {
+        required(path.date);
     });
 
     public readonly predictions = computed<CyclePredictions | null>(() => this.cycle()?.predictions ?? null);
@@ -60,13 +84,13 @@ export class CycleTrackingFacade {
     }
 
     public startCycle(): void {
-        if (this.startCycleForm.invalid) {
-            this.startCycleForm.markAllAsTouched();
+        if (this.startCycleForm().invalid()) {
+            this.startCycleForm().markAsTouched();
             return;
         }
 
-        const formValue = this.startCycleForm.value;
-        if (formValue.startDate === null || formValue.startDate === undefined || formValue.startDate.length === 0) {
+        const formValue = this.startCycleModel();
+        if (formValue.startDate === null || formValue.startDate.length === 0) {
             return;
         }
 
@@ -96,14 +120,14 @@ export class CycleTrackingFacade {
             return;
         }
 
-        if (this.dayForm.invalid) {
-            this.dayForm.markAllAsTouched();
+        if (this.dayForm().invalid()) {
+            this.dayForm().markAsTouched();
             return;
         }
 
-        const formValue = this.dayForm.value;
+        const formValue = this.dayModel();
         const date = formValue.date;
-        if (date === null || date === undefined || date.length === 0) {
+        if (date === null || date.length === 0) {
             return;
         }
 
@@ -122,7 +146,7 @@ export class CycleTrackingFacade {
         this.cyclesService
             .upsertDay(currentCycle.id, {
                 date: entryDate.toISOString(),
-                isPeriod: formValue.isPeriod === true,
+                isPeriod: formValue.isPeriod,
                 symptoms,
                 notes: formValue.notes ?? undefined,
             })
