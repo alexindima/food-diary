@@ -1095,6 +1095,34 @@ const noFdUiKitSelfImportRule = {
     create: createNoFdUiKitSelfImportRule,
 };
 
+const createNoLegacyAngularFormsImportsRule = context => ({
+    ImportDeclaration(node) {
+        if (node.source.value !== '@angular/forms') {
+            return;
+        }
+
+        context.report({
+            node: node.source,
+            messageId: 'legacyAngularFormsImport',
+        });
+    },
+});
+
+const noLegacyAngularFormsImportsRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Disallow classic Angular Forms imports after migrating the frontend to Signal Forms.',
+        },
+        messages: {
+            legacyAngularFormsImport:
+                'Do not import classic Angular Forms from `@angular/forms`. Use Signal Forms from `@angular/forms/signals` instead.',
+        },
+        schema: [],
+    },
+    create: createNoLegacyAngularFormsImportsRule,
+};
+
 const localTsPlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
@@ -1105,6 +1133,7 @@ const localTsPlugin = {
         'no-new-api-import-in-presentation': noNewApiImportInPresentationRule,
         'no-browser-globals': noBrowserGlobalsRule,
         'no-fd-ui-kit-self-import': noFdUiKitSelfImportRule,
+        'no-legacy-angular-forms-imports': noLegacyAngularFormsImportsRule,
         'prefer-protected-template-members': preferProtectedTemplateMembersRule,
         'action-oriented-host-event-handlers': actionOrientedHostEventHandlersRule,
         'async-function-suffix': {
@@ -1291,6 +1320,7 @@ export default [
             'local/no-http-client-in-presentation': 'error',
             'local/no-new-api-import-in-presentation': 'error',
             'local/no-mojibake': 'error',
+            'local/no-legacy-angular-forms-imports': 'error',
             'local/no-locally-caught-throw': 'error',
             'no-else-return': 'error',
             'no-implicit-coercion': 'error',

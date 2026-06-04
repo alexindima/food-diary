@@ -67,8 +67,8 @@ export class AdminUsersComponent {
             });
     }
 
-    protected onSearchChange(value: string): void {
-        this.search.set(value);
+    protected onSearchChange(value: string | number | null): void {
+        this.search.set(value === null ? '' : String(value));
         this.page.set(1);
         this.loadUsers();
     }

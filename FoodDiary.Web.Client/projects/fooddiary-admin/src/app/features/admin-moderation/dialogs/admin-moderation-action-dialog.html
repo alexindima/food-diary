@@ -9,7 +9,7 @@
         placeholder="Add an admin note..."
         [rows]="3"
         [value]="adminNote()"
-        (valueChange)="adminNote.set($event)"
+        (valueChange)="updateAdminNote($event)"
     />
 
     <div class="dialog-actions fd-row fd-justify-end fd-gap-xs">

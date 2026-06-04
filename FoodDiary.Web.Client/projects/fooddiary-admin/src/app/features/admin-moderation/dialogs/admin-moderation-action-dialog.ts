@@ -79,4 +79,8 @@ export class AdminModerationActionDialogComponent {
     protected onCancel(): void {
         this.dialogRef.close({ confirmed: false });
     }
+
+    protected updateAdminNote(value: string | number | null): void {
+        this.adminNote.set(value === null ? '' : String(value));
+    }
 }

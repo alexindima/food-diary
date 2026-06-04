@@ -32,4 +32,8 @@ export class AdminBillingFiltersComponent {
     protected getInputValue(event: Event): string {
         return event.target instanceof HTMLInputElement ? event.target.value : '';
     }
+
+    protected getControlTextValue(value: string | number | null): string {
+        return value === null ? '' : String(value);
+    }
 }

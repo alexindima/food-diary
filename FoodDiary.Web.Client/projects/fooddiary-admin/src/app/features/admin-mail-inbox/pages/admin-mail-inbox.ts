@@ -122,8 +122,8 @@ export class AdminMailInboxComponent {
             });
     }
 
-    protected updateLimit(value: string): void {
-        const parsed = Number.parseInt(value, 10);
+    protected updateLimit(value: string | number | null): void {
+        const parsed = Number.parseInt(value === null ? '' : String(value), 10);
         if (!Number.isFinite(parsed)) {
             return;
         }

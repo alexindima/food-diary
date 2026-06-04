@@ -23,4 +23,8 @@ export class AdminSessionsSectionComponent {
 
     public readonly searchChange = output<string>();
     public readonly pageChange = output<number>();
+
+    protected getControlTextValue(value: string | number | null): string {
+        return value === null ? '' : String(value);
+    }
 }

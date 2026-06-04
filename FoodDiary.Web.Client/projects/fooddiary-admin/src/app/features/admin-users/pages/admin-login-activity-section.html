@@ -4,7 +4,7 @@
             <h2 class="fd-ui-title-sm">Login activity</h2>
             <p class="fd-ui-body-xs">Successful authentication events with masked IP and parsed client details.</p>
         </div>
-        <fd-ui-input placeholder="Search logins" [value]="search()" (valueChange)="searchChange.emit($event)" />
+        <fd-ui-input placeholder="Search logins" [value]="search()" (valueChange)="searchChange.emit(getControlTextValue($event))" />
     </div>
 
     @if (isLoading()) {

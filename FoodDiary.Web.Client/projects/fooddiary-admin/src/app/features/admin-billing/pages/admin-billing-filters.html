@@ -1,9 +1,13 @@
 <section class="admin-billing__filters fd-row fd-gap-sm fd-wrap">
-    <fd-ui-input placeholder="Search email or external id" [value]="search()" (valueChange)="searchChange.emit($event)" />
-    <fd-ui-input placeholder="Provider" [value]="provider()" (valueChange)="providerChange.emit($event)" />
-    <fd-ui-input placeholder="Status" [value]="status()" (valueChange)="statusChange.emit($event)" />
+    <fd-ui-input
+        placeholder="Search email or external id"
+        [value]="search()"
+        (valueChange)="searchChange.emit(getControlTextValue($event))"
+    />
+    <fd-ui-input placeholder="Provider" [value]="provider()" (valueChange)="providerChange.emit(getControlTextValue($event))" />
+    <fd-ui-input placeholder="Status" [value]="status()" (valueChange)="statusChange.emit(getControlTextValue($event))" />
     @if (activeTab() === 'payments') {
-    <fd-ui-input placeholder="Kind" [value]="kind()" (valueChange)="kindChange.emit($event)" />
+    <fd-ui-input placeholder="Kind" [value]="kind()" (valueChange)="kindChange.emit(getControlTextValue($event))" />
     }
     <div class="fd-grid fd-gap-xxs">
         <label for="admin-billing-from-date">From</label>
