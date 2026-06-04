@@ -37,13 +37,7 @@
             [macroSummaryBlocks]="macroSummaryBlocks"
         />
         } @case ('nutrients') {
-        <fd-nutrition-editor
-            class="product-detail__nutrients"
-            [formGroup]="nutritionForm"
-            [controlNames]="nutritionControlNames"
-            [macroState]="macroBarState"
-            [readonly]="true"
-        />
+        <fd-nutrition-editor class="product-detail__nutrients" [form]="nutritionForm" [macroState]="macroBarState" [readonly]="true" />
         } }
     </div>
 

@@ -20,7 +20,7 @@ describe('buildProductDetailNutritionViewModel', () => {
     it('should build readonly nutrition form from product values', () => {
         const viewModel = buildProductDetailNutritionViewModel(createProduct());
 
-        expect(viewModel.nutritionForm.getRawValue()).toEqual({
+        expect(viewModel.nutritionModel).toEqual({
             calories: PRODUCT_CALORIES,
             proteins: PRODUCT_PROTEINS,
             fats: PRODUCT_FATS,

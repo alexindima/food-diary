@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 39 forms.
-- Signal Forms files: 91.
-- Remaining legacy Reactive Forms surface: 67 files.
+- Migrated Signal Forms: 42 forms.
+- Signal Forms files: 96.
+- Remaining legacy Reactive Forms surface: 58 files.
 
 Tracker patterns:
 
@@ -118,6 +118,17 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.html`
 - `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.ts`
 - `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.html`
+- `FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.ts`
+- `FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.html`
+- `FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html`
+- `FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-lib/product-detail-nutrition.mapper.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html`
+- `FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-lib/meal-detail.mapper.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail-nutrition.mapper.ts`
 
 ## Next Candidates
 
@@ -137,7 +148,7 @@ Tracker patterns:
 - Use `signal()` for the form model and `form()` for the field tree.
 - Import `FormField` instead of `ReactiveFormsModule` when a component only binds native controls through `[formField]`.
 - `FormField` can interoperate with `ControlValueAccessor` components for backwards compatibility. Treat each `fd-ui-*` form migration as a small pilot until UI-kit-specific patterns are proven.
-- Prefer declarative `disabled(path.field, () => condition)` for disabled Signal Forms fields.
+- Prefer declarative `disabled(path.field, { when: () => condition })` for disabled Signal Forms fields.
 - `fd-ui-date-input` is adapted for Signal Forms CVA binding; keep internal control state away from public/protected `value` fields so Angular does not treat CVA components as Signal Forms custom controls accidentally.
 - `fd-ui-date-range-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.

@@ -113,9 +113,9 @@ describe('ProductDetailComponent summary state', () => {
 
     it('should display product nutrition', () => {
         expect(component['calories']).toBe(PRODUCT_CALORIES);
-        expect(component['nutritionForm'].controls.proteins.value).toBe(PRODUCT_PROTEINS);
-        expect(component['nutritionForm'].controls.fats.value).toBe(PRODUCT_FATS);
-        expect(component['nutritionForm'].controls.carbs.value).toBe(0);
+        expect(component['nutritionForm'].proteins().value()).toBe(PRODUCT_PROTEINS);
+        expect(component['nutritionForm'].fats().value()).toBe(PRODUCT_FATS);
+        expect(component['nutritionForm'].carbs().value()).toBe(0);
     });
 
     it('should build macro blocks and macro bar state with positive segments only', () => {

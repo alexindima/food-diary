@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import type { FormGroup } from '@angular/forms';
+import { type FieldTree, form } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -9,8 +9,8 @@ import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
 import {
-    type NutritionControlNames,
     NutritionEditorComponent,
+    type NutritionFormModel,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
@@ -19,11 +19,7 @@ import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils'
 import type { Product } from '../../../models/product.data';
 import { ProductDetailActionsComponent } from '../product-detail-actions/product-detail-actions';
 import type { ProductDetailTab } from '../product-detail-lib/product-detail.types';
-import {
-    buildProductDetailNutritionViewModel,
-    type ProductDetailMacroBlock,
-    type ProductDetailNutritionForm,
-} from '../product-detail-lib/product-detail-nutrition.mapper';
+import { buildProductDetailNutritionViewModel, type ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
 import { ProductDetailSummaryComponent } from '../product-detail-summary/product-detail-summary';
 
 @Component({
@@ -84,15 +80,7 @@ export class ProductDetailComponent {
     });
     protected readonly macroBlocks: ProductDetailMacroBlock[];
     protected readonly macroSummaryBlocks: ProductDetailMacroBlock[];
-    protected readonly nutritionControlNames: NutritionControlNames = {
-        calories: 'calories',
-        proteins: 'proteins',
-        fats: 'fats',
-        carbs: 'carbs',
-        fiber: 'fiber',
-        alcohol: 'alcohol',
-    };
-    protected readonly nutritionForm: FormGroup<ProductDetailNutritionForm>;
+    protected readonly nutritionForm: FieldTree<NutritionFormModel>;
     protected readonly macroBarState: NutritionMacroState;
     public constructor() {
         this.product = inject<Product>(FD_UI_DIALOG_DATA);
@@ -104,7 +92,7 @@ export class ProductDetailComponent {
         this.calories = this.product.caloriesPerBase;
 
         const nutritionViewModel = buildProductDetailNutritionViewModel(this.product);
-        this.nutritionForm = nutritionViewModel.nutritionForm;
+        this.nutritionForm = form(signal(nutritionViewModel.nutritionModel));
         this.macroBarState = nutritionViewModel.macroBarState;
         this.macroBlocks = nutritionViewModel.macroBlocks;
         this.macroSummaryBlocks = nutritionViewModel.macroSummaryBlocks;

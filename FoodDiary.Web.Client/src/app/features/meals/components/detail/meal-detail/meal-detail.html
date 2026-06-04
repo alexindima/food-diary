@@ -52,13 +52,7 @@
             (itemPreviewExpandedToggle)="toggleItemPreviewExpanded()"
         />
         } @case ('nutrients') {
-        <fd-nutrition-editor
-            class="consumption-detail__nutrients"
-            [formGroup]="nutritionForm"
-            [controlNames]="nutritionControlNames"
-            [macroState]="macroBarState"
-            [readonly]="true"
-        />
+        <fd-nutrition-editor class="consumption-detail__nutrients" [form]="nutritionForm" [macroState]="macroBarState" [readonly]="true" />
         } }
     </div>
 

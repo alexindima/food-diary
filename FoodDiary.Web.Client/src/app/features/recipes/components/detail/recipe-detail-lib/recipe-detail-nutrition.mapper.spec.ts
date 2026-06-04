@@ -37,7 +37,7 @@ describe('buildRecipeDetailViewModel nutrition', () => {
         expect(viewModel.qualityGrade).toBe('green');
         expect(viewModel.macroBlocks).toHaveLength(MACRO_BLOCK_COUNT);
         expect(viewModel.macroSummaryBlocks).toHaveLength(RECIPE_DETAIL_MACRO_SUMMARY_LIMIT);
-        expect(viewModel.nutritionForm.getRawValue()).toEqual({
+        expect(viewModel.nutritionModel).toEqual({
             calories: TOTAL_CALORIES,
             proteins: TOTAL_PROTEINS,
             fats: TOTAL_FATS,

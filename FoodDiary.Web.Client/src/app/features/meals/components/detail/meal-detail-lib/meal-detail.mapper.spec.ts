@@ -135,7 +135,7 @@ describe('buildMealDetailViewModel nutrition state', () => {
         expect(viewModel.fiber).toBe(TOTAL_FIBER);
         expect(viewModel.alcohol).toBe(TOTAL_ALCOHOL);
         expect(viewModel.mealTypeLabel).toBe('translated:MEAL_TYPES.breakfast');
-        expect(viewModel.nutritionForm.controls.calories.value).toBe(TOTAL_CALORIES);
+        expect(viewModel.nutritionModel.calories).toBe(TOTAL_CALORIES);
     });
 
     it('builds macro blocks and macro bar state from core macros', () => {

@@ -1,6 +1,8 @@
-import { FormControl, FormGroup } from '@angular/forms';
-
-import type { NutritionControlNames, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import type {
+    NutritionControlNames,
+    NutritionFormModel,
+    NutritionMacroState,
+} from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
@@ -15,15 +17,6 @@ import type { IngredientPreviewItem, MacroBlock } from './recipe-detail.types';
 
 const MIN_MACRO_REFERENCE_VALUE = 1;
 
-export type RecipeDetailNutritionForm = {
-    calories: FormControl<number | null>;
-    proteins: FormControl<number | null>;
-    fats: FormControl<number | null>;
-    carbs: FormControl<number | null>;
-    fiber: FormControl<number | null>;
-    alcohol: FormControl<number | null>;
-};
-
 export type RecipeDetailViewModel = {
     calories: number;
     proteins: number;
@@ -37,7 +30,7 @@ export type RecipeDetailViewModel = {
     macroSummaryBlocks: MacroBlock[];
     ingredientPreview: IngredientPreviewItem[];
     nutritionControlNames: NutritionControlNames;
-    nutritionForm: FormGroup<RecipeDetailNutritionForm>;
+    nutritionModel: NutritionFormModel;
     macroBarState: NutritionMacroState;
     totalTime: number | null;
     ingredientCount: number;
@@ -73,7 +66,7 @@ export function buildRecipeDetailViewModel(recipe: Recipe, unknownIngredientName
             fiber: 'fiber',
             alcohol: 'alcohol',
         },
-        nutritionForm: buildNutritionForm({ calories, proteins, fats, carbs, fiber, alcohol }),
+        nutritionModel: buildNutritionModel({ calories, proteins, fats, carbs, fiber, alcohol }),
         macroBarState: calculateMacroBarState(proteins, fats, carbs),
         totalTime: calculateTotalPreparationTime(recipe),
         ingredientCount: computeIngredientCount(recipe),
@@ -103,22 +96,22 @@ function buildMacroBlock(labelKey: string, value: number, color: string, referen
     };
 }
 
-function buildNutritionForm(values: {
+function buildNutritionModel(values: {
     calories: number;
     proteins: number;
     fats: number;
     carbs: number;
     fiber: number;
     alcohol: number;
-}): FormGroup<RecipeDetailNutritionForm> {
-    return new FormGroup<RecipeDetailNutritionForm>({
-        calories: new FormControl(values.calories),
-        proteins: new FormControl(values.proteins),
-        fats: new FormControl(values.fats),
-        carbs: new FormControl(values.carbs),
-        fiber: new FormControl(values.fiber),
-        alcohol: new FormControl(values.alcohol),
-    });
+}): NutritionFormModel {
+    return {
+        calories: values.calories,
+        proteins: values.proteins,
+        fats: values.fats,
+        carbs: values.carbs,
+        fiber: values.fiber,
+        alcohol: values.alcohol,
+    };
 }
 
 function resolveMacroPercent(value: number, values: number[]): number {

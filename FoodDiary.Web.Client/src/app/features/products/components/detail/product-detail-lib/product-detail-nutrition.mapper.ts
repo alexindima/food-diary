@@ -1,6 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
-
-import type { NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
@@ -18,17 +16,8 @@ export type ProductDetailMacroBlock = {
     percent: number;
 };
 
-export type ProductDetailNutritionForm = {
-    calories: FormControl<number | null>;
-    proteins: FormControl<number | null>;
-    fats: FormControl<number | null>;
-    carbs: FormControl<number | null>;
-    fiber: FormControl<number | null>;
-    alcohol: FormControl<number | null>;
-};
-
 export type ProductDetailNutritionViewModel = {
-    nutritionForm: FormGroup<ProductDetailNutritionForm>;
+    nutritionModel: NutritionFormModel;
     macroBarState: NutritionMacroState;
     macroBlocks: ProductDetailMacroBlock[];
     macroSummaryBlocks: ProductDetailMacroBlock[];
@@ -45,22 +34,22 @@ export function buildProductDetailNutritionViewModel(product: Product): ProductD
     ];
 
     return {
-        nutritionForm: buildNutritionForm(product),
+        nutritionModel: buildNutritionModel(product),
         macroBarState: calculateMacroBarState(product.proteinsPerBase, product.fatsPerBase, product.carbsPerBase),
         macroBlocks,
         macroSummaryBlocks: macroBlocks.slice(0, MACRO_SUMMARY_LIMIT),
     };
 }
 
-function buildNutritionForm(product: Product): FormGroup<ProductDetailNutritionForm> {
-    return new FormGroup<ProductDetailNutritionForm>({
-        calories: new FormControl(product.caloriesPerBase),
-        proteins: new FormControl(product.proteinsPerBase),
-        fats: new FormControl(product.fatsPerBase),
-        carbs: new FormControl(product.carbsPerBase),
-        fiber: new FormControl(product.fiberPerBase),
-        alcohol: new FormControl(product.alcoholPerBase),
-    });
+function buildNutritionModel(product: Product): NutritionFormModel {
+    return {
+        calories: product.caloriesPerBase,
+        proteins: product.proteinsPerBase,
+        fats: product.fatsPerBase,
+        carbs: product.carbsPerBase,
+        fiber: product.fiberPerBase,
+        alcohol: product.alcoholPerBase,
+    };
 }
 
 function buildMacroBlock(labelKey: string, value: number, color: string, referenceValues: number[]): ProductDetailMacroBlock {

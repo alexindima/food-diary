@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import type { FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { type FieldTree, form } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,14 +10,14 @@ import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
 import {
-    type NutritionControlNames,
     NutritionEditorComponent,
+    type NutritionFormModel,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
 import type { Recipe } from '../../../models/recipe.data';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
-import { buildRecipeDetailViewModel, type RecipeDetailNutritionForm } from '../recipe-detail-lib/recipe-detail-nutrition.mapper';
+import { buildRecipeDetailViewModel } from '../recipe-detail-lib/recipe-detail-nutrition.mapper';
 import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-detail-summary';
 
 @Component({
@@ -60,8 +60,7 @@ export class RecipeDetailComponent {
     protected readonly macroBlocks: MacroBlock[];
     protected readonly macroSummaryBlocks: MacroBlock[];
     protected readonly ingredientPreview: IngredientPreviewItem[];
-    protected readonly nutritionControlNames: NutritionControlNames;
-    protected readonly nutritionForm: FormGroup<RecipeDetailNutritionForm>;
+    protected readonly nutritionForm: FieldTree<NutritionFormModel>;
     protected readonly macroBarState: NutritionMacroState;
     protected readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'RECIPE_DETAIL.TABS.SUMMARY' },
@@ -94,8 +93,7 @@ export class RecipeDetailComponent {
         this.macroBlocks = viewModel.macroBlocks;
         this.macroSummaryBlocks = viewModel.macroSummaryBlocks;
         this.ingredientPreview = viewModel.ingredientPreview;
-        this.nutritionControlNames = viewModel.nutritionControlNames;
-        this.nutritionForm = viewModel.nutritionForm;
+        this.nutritionForm = form(signal(viewModel.nutritionModel));
         this.macroBarState = viewModel.macroBarState;
         this.totalTime = viewModel.totalTime;
         this.ingredientCount = viewModel.ingredientCount;

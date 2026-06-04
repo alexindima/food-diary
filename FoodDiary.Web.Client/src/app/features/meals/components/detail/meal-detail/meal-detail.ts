@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import type { FormGroup } from '@angular/forms';
+import { type FieldTree, form } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -11,14 +11,14 @@ import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
 import {
-    type NutritionControlNames,
     NutritionEditorComponent,
+    type NutritionFormModel,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { MealDetailFacade } from '../../../lib/detail/meal-detail.facade';
 import type { Meal } from '../../../models/meal.data';
 import { MEAL_DETAIL_MACRO_SUMMARY_LIMIT } from '../meal-detail-lib/meal-detail.config';
-import { buildMealDetailViewModel, type MealDetailNutritionForm } from '../meal-detail-lib/meal-detail.mapper';
+import { buildMealDetailViewModel } from '../meal-detail-lib/meal-detail.mapper';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';
 import { MealDetailSummaryComponent } from '../meal-detail-summary/meal-detail-summary';
 
@@ -70,8 +70,7 @@ export class MealDetailComponent {
     protected readonly macroBlocks: MealMacroBlock[];
     protected readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MEAL_DETAIL_MACRO_SUMMARY_LIMIT));
     protected readonly itemPreview: MealDetailItemPreview[];
-    protected readonly nutritionControlNames: NutritionControlNames;
-    protected readonly nutritionForm: FormGroup<MealDetailNutritionForm>;
+    protected readonly nutritionForm: FieldTree<NutritionFormModel>;
     protected readonly macroBarState: NutritionMacroState;
 
     public constructor() {
@@ -91,8 +90,7 @@ export class MealDetailComponent {
         this.postMealSatietyMeta = viewModel.postMealSatietyMeta;
         this.itemPreview = viewModel.itemPreview;
         this.macroBlocks = viewModel.macroBlocks;
-        this.nutritionControlNames = viewModel.nutritionControlNames;
-        this.nutritionForm = viewModel.nutritionForm;
+        this.nutritionForm = form(signal(viewModel.nutritionModel));
         this.macroBarState = viewModel.macroBarState;
 
         this.mealDetailFacade.initialize(meal);

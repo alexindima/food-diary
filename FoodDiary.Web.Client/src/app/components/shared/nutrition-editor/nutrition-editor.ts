@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input';
 
@@ -28,16 +29,26 @@ export type NutritionMismatchWarning = {
     actualCalories: number;
 };
 
+export type NutritionFormModel = {
+    calories: number | null;
+    proteins: number | null;
+    fats: number | null;
+    carbs: number | null;
+    fiber: number | null;
+    alcohol: number | null;
+};
+
 @Component({
     selector: 'fd-nutrition-editor',
-    imports: [CommonModule, ReactiveFormsModule, TranslatePipe, FdUiNutrientInputComponent],
+    imports: [CommonModule, FormField, ReactiveFormsModule, TranslatePipe, FdUiNutrientInputComponent],
     templateUrl: './nutrition-editor.html',
     styleUrls: ['./nutrition-editor.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NutritionEditorComponent {
-    public readonly formGroup = input.required<FormGroup>();
-    public readonly controlNames = input.required<NutritionControlNames>();
+    public readonly form = input<FieldTree<NutritionFormModel> | null>(null);
+    public readonly formGroup = input<FormGroup | null>(null);
+    public readonly controlNames = input<NutritionControlNames | null>(null);
     public readonly macroState = input.required<NutritionMacroState>();
     public readonly readonly = input(false);
     public readonly caloriesError = input<string | null>(null);

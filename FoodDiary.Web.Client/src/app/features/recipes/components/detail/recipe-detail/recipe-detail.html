@@ -38,13 +38,7 @@
             [ingredientPreview]="ingredientPreview"
         />
         } @case ('nutrients') {
-        <fd-nutrition-editor
-            class="recipe-detail__nutrients"
-            [formGroup]="nutritionForm"
-            [controlNames]="nutritionControlNames"
-            [macroState]="macroBarState"
-            [readonly]="true"
-        />
+        <fd-nutrition-editor class="recipe-detail__nutrients" [form]="nutritionForm" [macroState]="macroBarState" [readonly]="true" />
         } }
     </div>
 
