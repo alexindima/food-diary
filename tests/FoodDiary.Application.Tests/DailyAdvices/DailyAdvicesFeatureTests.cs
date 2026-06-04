@@ -64,6 +64,35 @@ public class DailyAdvicesFeatureTests {
     }
 
     [Fact]
+    public void DailyAdviceSelector_SelectForDate_WithEmptyAdviceList_ReturnsNull() {
+        var selected = InvokeSelectForDate([], DateTime.UtcNow, "en");
+
+        Assert.Null(selected);
+    }
+
+    [Fact]
+    public void DailyAdviceSelector_SelectForDate_WhenPreviousDaySelectsSameAdvice_UsesNextAdvice() {
+        var advices = new List<DailyAdvice> {
+            DailyAdvice.Create("Hydrate", "en", weight: 1),
+            DailyAdvice.Create("Walk", "en", weight: 1),
+            DailyAdvice.Create("Sleep", "en", weight: 1)
+        };
+        var ordered = advices.OrderBy(advice => advice.Id.Value).ToList();
+        var date = Enumerable
+            .Range(0, 10_000)
+            .Select(offset => new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(offset))
+            .First(candidate =>
+                InvokeGetWeightedIndex(ordered, candidate, "en") ==
+                InvokeGetWeightedIndex(ordered, candidate.AddDays(-1), "en"));
+        var todayIndex = InvokeGetWeightedIndex(ordered, date, "en");
+
+        var selected = InvokeSelectForDate(advices, date, "en");
+
+        Assert.NotNull(selected);
+        Assert.Equal(ordered[(todayIndex + 1) % ordered.Count].Id, selected!.Id);
+    }
+
+    [Fact]
     public async Task GetDailyAdvice_WithInvalidUserId_ReturnsInvalidToken() {
         var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(User.Create("advice@example.com", "hash")));
 
@@ -110,6 +139,19 @@ public class DailyAdvicesFeatureTests {
         Assert.Equal("DailyAdvice.NotFound", result.Error.Code);
     }
 
+    [Fact]
+    public async Task GetDailyAdvice_WhenLoadedAdviceDoesNotMatchLocale_ReturnsNotFound() {
+        var user = User.Create("locale-mismatch-advice@example.com", "hash");
+        var repository = new RecordingDailyAdviceRepository();
+        repository.Seed("en", DailyAdvice.Create("Russian advice", "ru", weight: 1));
+        var handler = new GetDailyAdviceQueryHandler(repository, new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("DailyAdvice.NotFound", result.Error.Code);
+    }
+
     private static string InvokeNormalizeLocale(string locale) {
         var selectorType = GetSelectorType();
         var method = selectorType.GetMethod("NormalizeLocale", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
@@ -124,6 +166,14 @@ public class DailyAdvicesFeatureTests {
         Assert.NotNull(method);
 
         return (DailyAdvice?)method!.Invoke(null, [advices, date, locale]);
+    }
+
+    private static int InvokeGetWeightedIndex(IReadOnlyList<DailyAdvice> advices, DateTime date, string locale) {
+        var selectorType = GetSelectorType();
+        var method = selectorType.GetMethod("GetWeightedIndex", BindingFlags.Static | BindingFlags.NonPublic);
+        Assert.NotNull(method);
+
+        return (int)method!.Invoke(null, [advices, date, locale])!;
     }
 
     private static Type GetSelectorType() {

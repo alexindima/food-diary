@@ -1,5 +1,6 @@
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
+using FoodDiary.Application.Ai.Commands.ParseFoodText;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
@@ -61,6 +62,121 @@ public class AiValidatorsTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var handler = new AnalyzeFoodImageCommandHandler(
+            new StubImageAssetRepository(),
+            new StubUserRepository(User.Create("ai-empty-image-user@example.com", "hash")),
+            new StubOpenAiFoodService(),
+            new StubImageStorageService());
+
+        var result = await handler.Handle(
+            new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_WhenImageAssetMissing_ReturnsImageNotFound() {
+        var user = User.Create("ai-missing-image@example.com", "hash");
+        var handler = new AnalyzeFoodImageCommandHandler(
+            new StubImageAssetRepository(),
+            new StubUserRepository(user),
+            new StubOpenAiFoodService(),
+            new StubImageStorageService());
+
+        var result = await handler.Handle(
+            new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.ImageNotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_WhenImageBelongsToAnotherUser_ReturnsForbidden() {
+        var owner = User.Create("ai-image-owner@example.com", "hash");
+        var requester = User.Create("ai-image-requester@example.com", "hash");
+        var asset = ImageAsset.Create(owner.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
+        var handler = new AnalyzeFoodImageCommandHandler(
+            new StubImageAssetRepository(asset),
+            new StubUserRepository(requester),
+            new StubOpenAiFoodService(),
+            new StubImageStorageService());
+
+        var result = await handler.Handle(
+            new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.Forbidden", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_WhenUploadedObjectInvalid_ReturnsImageInvalidData() {
+        var user = User.Create("ai-invalid-image@example.com", "hash");
+        var asset = ImageAsset.Create(user.Id, "images/invalid.jpg", "https://cdn.example.com/invalid.jpg");
+        var handler = new AnalyzeFoodImageCommandHandler(
+            new StubImageAssetRepository(asset),
+            new StubUserRepository(user),
+            new StubOpenAiFoodService(),
+            new StubImageStorageService(isValid: false, message: "upload incomplete"));
+
+        var result = await handler.Handle(
+            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("upload incomplete", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_WhenUserMissing_ReturnsInvalidToken() {
+        var userId = UserId.New();
+        var asset = ImageAsset.Create(userId, "images/orphan.jpg", "https://cdn.example.com/orphan.jpg");
+        var openAiFoodService = new StubOpenAiFoodService();
+        var handler = new AnalyzeFoodImageCommandHandler(
+            new StubImageAssetRepository(asset),
+            new StubUserRepository(null),
+            openAiFoodService,
+            new StubImageStorageService());
+
+        var result = await handler.Handle(
+            new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(openAiFoodService.WasAnalyzeFoodImageCalled);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_WithValidImage_CallsOpenAiFoodService() {
+        var user = User.Create("ai-valid-image@example.com", "hash");
+        user.SetLanguage("ru");
+        var asset = ImageAsset.Create(user.Id, "images/valid.jpg", "https://cdn.example.com/valid.jpg");
+        var openAiFoodService = new StubOpenAiFoodService();
+        var handler = new AnalyzeFoodImageCommandHandler(
+            new StubImageAssetRepository(asset),
+            new StubUserRepository(user),
+            openAiFoodService,
+            new StubImageStorageService());
+
+        var result = await handler.Handle(
+            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(openAiFoodService.WasAnalyzeFoodImageCalled);
+        Assert.Equal(asset.Url, openAiFoodService.LastImageUrl);
+        Assert.Equal("ru", openAiFoodService.LastLanguage);
+        Assert.Equal("dinner", openAiFoodService.LastDescription);
     }
 
     [Fact]
@@ -149,6 +265,20 @@ public class AiValidatorsTests {
     }
 
     [Fact]
+    public async Task CalculateFoodNutritionHandler_WithEmptyItems_ReturnsEmptyItems() {
+        var handler = new CalculateFoodNutritionCommandHandler(
+            new StubOpenAiFoodService(),
+            new StubUserRepository(User.Create("ai-empty-items@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new CalculateFoodNutritionCommand(Guid.NewGuid(), []),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.EmptyItems", result.Error.Code);
+    }
+
+    [Fact]
     public async Task CalculateFoodNutritionHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive-ai-nutrition@example.com", "hash");
         user.Deactivate();
@@ -183,6 +313,45 @@ public class AiValidatorsTests {
     }
 
     [Fact]
+    public async Task ParseFoodTextHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new ParseFoodTextCommandHandler(
+            new StubOpenAiFoodService(),
+            new StubUserRepository(User.Create("ai-empty-text-user@example.com", "hash")));
+
+        var result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ParseFoodTextHandler_WhenUserMissing_ReturnsInvalidToken() {
+        var openAiFoodService = new StubOpenAiFoodService();
+        var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(null));
+
+        var result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(openAiFoodService.WasParseFoodTextCalled);
+    }
+
+    [Fact]
+    public async Task ParseFoodTextHandler_WithActiveUser_ParsesText() {
+        var user = User.Create("active-ai-text@example.com", "hash");
+        user.SetLanguage("ru");
+        var openAiFoodService = new StubOpenAiFoodService();
+        var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(user));
+
+        var result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(openAiFoodService.WasParseFoodTextCalled);
+        Assert.Equal("apple 100g", openAiFoodService.LastText);
+        Assert.Equal("ru", openAiFoodService.LastLanguage);
+    }
+
+    [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_UsesDateTimeProviderForMonthBounds() {
         var user = User.Create("ai-usage@example.com", "hash");
         var userRepository = new StubUserRepository(user);
@@ -214,11 +383,11 @@ public class AiValidatorsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User user) : IUserRepository {
+    private sealed class StubUserRepository(User? user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -229,12 +398,12 @@ public class AiValidatorsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubImageAssetRepository : IImageAssetRepository {
+    private sealed class StubImageAssetRepository(ImageAsset? asset = null) : IImageAssetRepository {
         public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult<ImageAsset?>(null);
+            Task.FromResult(asset is not null && asset.Id == id ? asset : null);
 
         public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
@@ -251,22 +420,41 @@ public class AiValidatorsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubOpenAiFoodService : IOpenAiFoodService {
+        public bool WasAnalyzeFoodImageCalled { get; private set; }
+        public bool WasParseFoodTextCalled { get; private set; }
         public bool WasCalculateNutritionCalled { get; private set; }
+        public string? LastImageUrl { get; private set; }
+        public string? LastText { get; private set; }
+        public string? LastLanguage { get; private set; }
+        public string? LastDescription { get; private set; }
 
         public Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
             string imageUrl,
             string? userLanguage,
             UserId userId,
             string? description,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+            CancellationToken cancellationToken) {
+            WasAnalyzeFoodImageCalled = true;
+            LastImageUrl = imageUrl;
+            LastLanguage = userLanguage;
+            LastDescription = description;
+            return Task.FromResult(Result.Success(new FoodVisionModel(
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+                null)));
+        }
 
         public Task<Result<FoodVisionModel>> ParseFoodTextAsync(
             string text,
             string? userLanguage,
             UserId userId,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+            CancellationToken cancellationToken) {
+            WasParseFoodTextCalled = true;
+            LastText = text;
+            LastLanguage = userLanguage;
+            return Task.FromResult(Result.Success(new FoodVisionModel(
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+                null)));
+        }
 
         public Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
             IReadOnlyList<FoodVisionItemModel> items,
@@ -285,7 +473,7 @@ public class AiValidatorsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubImageStorageService : IImageStorageService {
+    private sealed class StubImageStorageService(bool isValid = true, string? message = null) : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
             UserId userId,
             string fileName,
@@ -300,7 +488,7 @@ public class AiValidatorsTests {
         public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
             string objectKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(true));
+            Task.FromResult(new ImageObjectValidationResult(isValid, Message: message));
     }
 
     [ExcludeFromCodeCoverage]

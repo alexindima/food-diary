@@ -434,6 +434,206 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenAiSourceInvalid_ReturnsValidationFailure() {
+        var user = User.Create("create-invalid-ai-source@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                user.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                null,
+                null,
+                [],
+                [new ConsumptionAiSessionInput(null, "Scanner", DateTime.UtcNow, null, [
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                ])],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown AI recognition source value.", result.Error.Message, StringComparison.Ordinal);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenAiRecognizedAtIsUnspecified_ReturnsValidationFailure() {
+        var user = User.Create("create-unspecified-ai-time@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                user.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                null,
+                null,
+                [],
+                [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), null, [
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                ])],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("RecognizedAtUtc timestamp kind must be specified.", result.Error.Message, StringComparison.Ordinal);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithAiSessionDefaultsSourceAndRecognizedAt_Succeeds() {
+        var user = User.Create("create-ai-defaults@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new FixedMealNutritionService(new MealNutritionSummary(120, 8, 3, 16, 2, 0)),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                user.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                null,
+                null,
+                [],
+                [new ConsumptionAiSessionInput(null, null, null, "recognized", [
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                ])],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var session = Assert.Single(repository.StoredMeal!.AiSessions);
+        Assert.Equal(AiRecognitionSource.Text, session.Source);
+        Assert.Equal(new StubDateTimeProvider().UtcNow, session.RecognizedAtUtc);
+        Assert.Equal("recognized", session.Notes);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenCreatedMealCannotBeReloaded_ReturnsInvalidData() {
+        var user = User.Create("create-reload-missing@example.com", "hash");
+        var repository = new CreateReloadMissingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                user.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                false,
+                600,
+                30,
+                20,
+                50,
+                5,
+                0,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Consumption.InvalidData", result.Error.Code);
+        Assert.NotNull(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenAutoNutritionFails_ReturnsServiceErrorWithoutPersisting() {
+        var user = User.Create("create-nutrition-failure@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new FailingMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                user.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                4),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Consumption.InvalidData", result.Error.Code);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var meal = Meal.Create(
@@ -532,6 +732,52 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteConsumptionCommandHandler_WhenMealIsMissing_ReturnsNotFound() {
+        var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
+
+        var result = await handler.Handle(
+            new DeleteConsumptionCommand(Guid.NewGuid(), Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Consumption.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteConsumptionCommandHandler_WhenMealExists_DeletesMeal() {
+        var user = User.Create("delete-consumption@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = new DeleteConsumptionCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new DeleteConsumptionCommand(user.Id.Value, meal.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(meal, repository.DeletedMeal);
+    }
+
+    [Fact]
+    public async Task GetConsumptionsOverviewQueryValidator_WithNullUserId_HasInvalidTokenError() {
+        var validator = new GetConsumptionsOverviewQueryValidator();
+
+        var result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(null, 1, 10, null, null));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task GetConsumptionsOverviewQueryValidator_WithValidUserId_HasNoErrors() {
+        var validator = new GetConsumptionsOverviewQueryValidator();
+
+        var result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(Guid.NewGuid(), 1, 10, null, null));
+
+        Assert.True(result.IsValid);
     }
 
     [Fact]
@@ -866,6 +1112,65 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithAiSessionDefaults_UpdatesMealAndCleansOldAsset() {
+        var user = User.Create("update-ai-session@example.com", "hash");
+        var oldAssetId = ImageAssetId.New();
+        var newAssetId = ImageAssetId.New();
+        var meal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
+            MealType.Lunch,
+            imageUrl: "https://cdn.example/old.jpg",
+            imageAssetId: oldAssetId);
+        var repository = new SingleMealRepository(meal);
+        var cleanup = new RecordingCleanupService();
+        var recentItems = new RecordingRecentItemRepository();
+        var handler = new UpdateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            recentItems,
+            cleanup,
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 19, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                newAssetId.Value,
+                [],
+                [new ConsumptionAiSessionInput(null, null, null, "generated", [
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                ])],
+                false,
+                120,
+                8,
+                3,
+                16,
+                2,
+                null,
+                2,
+                5),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
+        Assert.Equal(MealType.Dinner, meal.MealType);
+        Assert.Equal(newAssetId, meal.ImageAssetId);
+        Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
+        Assert.Empty(recentItems.LastProductIds);
+        var session = Assert.Single(meal.AiSessions);
+        Assert.Equal(AiRecognitionSource.Text, session.Source);
+        Assert.Equal(new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc), session.RecognizedAtUtc);
+        Assert.Single(session.Items);
+    }
+
+    [Fact]
     public async Task GetConsumptionByIdQueryHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var meal = Meal.Create(
@@ -1058,6 +1363,7 @@ public class ConsumptionsFeatureTests {
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {
         public bool UpdateCalled { get; private set; }
         public Meal? LastAddedMeal { get; private set; }
+        public Meal? DeletedMeal { get; private set; }
 
         public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
             LastAddedMeal = meal;
@@ -1069,7 +1375,10 @@ public class ConsumptionsFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
+            DeletedMeal = meal;
+            return Task.CompletedTask;
+        }
 
         public Task<Meal?> GetByIdAsync(
             MealId id,
@@ -1181,6 +1490,54 @@ public class ConsumptionsFeatureTests {
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Meal?>(StoredMeal is not null && StoredMeal.Id == id && StoredMeal.UserId == userId ? StoredMeal : null);
+
+        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int> GetTotalMealCountAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+            UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CreateReloadMissingMealRepository : IMealRepository {
+        public Meal? StoredMeal { get; private set; }
+
+        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
+            StoredMeal = meal;
+            return Task.FromResult(meal);
+        }
+
+        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Meal?> GetByIdAsync(
+            MealId id,
+            UserId userId,
+            bool includeItems = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<Meal?>(null);
 
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,

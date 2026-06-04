@@ -22,12 +22,7 @@ import type {
     MealNutritionSummaryState,
     NutritionTotals,
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
-import {
-    applyMealConsumptionItemRules,
-    applyMealManualNutritionRules,
-    createConsumptionItemGroup,
-    createMealConsumptionItemsRule,
-} from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
+import { createConsumptionItemValue } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import {
     type ConsumptionManageRedirectAction,
     type ConsumptionManageSuccessDialogData,
@@ -42,10 +37,6 @@ import {
 } from '../../models/meal.data';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT } from './meal-manage.config';
-
-type MealItemHandle = ReturnType<typeof createConsumptionItemGroup>;
-type MealItemsHandle = Parameters<typeof applyMealConsumptionItemRules>[0];
-type MealRootHandle = Parameters<typeof applyMealManualNutritionRules>[0];
 
 @Service()
 export class MealManageFacade {
@@ -146,11 +137,8 @@ export class MealManageFacade {
         recipe: Recipe | null = null,
         amount: number | null = null,
         sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
-    ): MealItemHandle {
-        const group = createConsumptionItemGroup(product, recipe, amount, sourceType);
-        this.configureItemType(group, sourceType);
-        this.updateAmountControlState(group);
-        return group;
+    ): ConsumptionItemFormValues {
+        return createConsumptionItemValue(product, recipe, amount, sourceType);
     }
 
     public createConsumptionItemValue(
@@ -167,26 +155,21 @@ export class MealManageFacade {
         };
     }
 
-    public configureItemType(group: MealItemHandle, type: ConsumptionSourceType, clearSelection = false): void {
-        group.controls.sourceType.setValue(type);
-
-        if (type === ConsumptionSourceType.Product) {
-            if (clearSelection) {
-                group.controls.recipe.setValue(null);
-            }
-        } else if (clearSelection) {
-            group.controls.product.setValue(null);
-        }
-
-        if (clearSelection) {
-            group.controls.amount.setValue(null);
-            group.controls.amount.markAsUntouched();
-        }
-
-        this.updateAmountControlState(group);
+    public configureItemType(
+        item: ConsumptionItemFormValues,
+        type: ConsumptionSourceType,
+        clearSelection = false,
+    ): ConsumptionItemFormValues {
+        return {
+            ...item,
+            sourceType: type,
+            product: clearSelection && type === ConsumptionSourceType.Recipe ? null : item.product,
+            recipe: clearSelection && type === ConsumptionSourceType.Product ? null : item.recipe,
+            amount: clearSelection ? null : item.amount,
+        };
     }
 
-    public async openItemSelectionDialogAsync(group: MealItemHandle, initialTab: 'Product' | 'Recipe'): Promise<void> {
+    public async openItemSelectionDialogAsync(initialTab: 'Product' | 'Recipe'): Promise<ConsumptionItemFormValues | null> {
         const selection = await firstValueFrom(
             this.fdDialogService
                 .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
@@ -197,46 +180,20 @@ export class MealManageFacade {
         );
 
         if (selection === null || selection === undefined) {
-            return;
+            return null;
         }
 
         if (selection.type === 'Product') {
-            group.patchValue({
-                product: selection.product,
-                recipe: null,
-                amount: this.resolveProductAmount(selection.product),
-            });
-            this.configureItemType(group, ConsumptionSourceType.Product);
-            return;
+            return createConsumptionItemValue(
+                selection.product,
+                null,
+                this.resolveProductAmount(selection.product),
+                ConsumptionSourceType.Product,
+            );
         }
 
-        group.patchValue({
-            recipe: selection.recipe,
-            product: null,
-            amount: MEAL_MANAGE_DEFAULT_ITEM_AMOUNT,
-        });
-        this.configureItemType(group, ConsumptionSourceType.Recipe);
-        this.ensureRecipeWeightForExistingItem(group, MEAL_MANAGE_DEFAULT_ITEM_AMOUNT, selection.recipe);
-    }
-
-    public ensureRecipeWeightForExistingItem(group: MealItemHandle, servingsAmount: number, recipe: Recipe | null): void {
-        if (recipe === null) {
-            return;
-        }
-
-        this.recipeWeight.loadServingWeight(recipe).subscribe(servingWeight => {
-            if (servingWeight === null || servingWeight <= 0) {
-                return;
-            }
-
-            const currentRecipe = group.controls.recipe.value;
-            if (group.controls.sourceType.value !== ConsumptionSourceType.Recipe || currentRecipe?.id !== recipe.id) {
-                return;
-            }
-
-            const grams = servingsAmount * servingWeight;
-            group.controls.amount.setValue(grams);
-        });
+        const amount = await this.resolveRecipeServingsToGramsAsync(selection.recipe, MEAL_MANAGE_DEFAULT_ITEM_AMOUNT);
+        return createConsumptionItemValue(null, selection.recipe, amount, ConsumptionSourceType.Recipe);
     }
 
     public async resolveRecipeServingsToGramsAsync(recipe: Recipe | null, servingsAmount: number): Promise<number> {
@@ -250,34 +207,6 @@ export class MealManageFacade {
 
     public convertRecipeServingsToGrams(recipe: Recipe | null, servings: number): number {
         return this.recipeWeight.convertServingsToGrams(recipe, servings);
-    }
-
-    public createItemsRule(getAiSessions: () => ConsumptionAiSessionManageDto[]): ReturnType<typeof createMealConsumptionItemsRule> {
-        return createMealConsumptionItemsRule(getAiSessions);
-    }
-
-    public updateItemRules(items: MealItemsHandle): void {
-        applyMealConsumptionItemRules(items);
-    }
-
-    public updateManualNutritionRules(form: MealRootHandle, isAuto: boolean): void {
-        applyMealManualNutritionRules(form, isAuto);
-    }
-
-    public buildNutritionSummaryState(
-        form: MealRootHandle,
-        items: MealItemsHandle,
-        aiSessions: ConsumptionAiSessionManageDto[],
-        calorieMismatchThreshold: number,
-    ): MealNutritionSummaryState {
-        const autoTotals = this.calculateAutoNutritionTotals(items, aiSessions);
-        const isAuto = form.controls.isNutritionAutoCalculated.value;
-        const summaryTotals = isAuto ? autoTotals : this.getManualNutritionTotals(form);
-        return {
-            autoTotals: this.roundTotals(autoTotals),
-            summaryTotals: this.roundTotals(summaryTotals),
-            warning: this.buildCalorieMismatchWarning(form, calorieMismatchThreshold),
-        };
     }
 
     public buildNutritionSummaryStateFromValues(
@@ -294,28 +223,14 @@ export class MealManageFacade {
         };
     }
 
-    public syncManualNutritionFromTotals(form: MealRootHandle, totals: NutritionTotals): void {
-        form.patchValue(
-            {
-                manualCalories: roundNutrient(totals.calories),
-                manualProteins: roundNutrient(totals.proteins),
-                manualFats: roundNutrient(totals.fats),
-                manualCarbs: roundNutrient(totals.carbs),
-                manualFiber: roundNutrient(totals.fiber),
-                manualAlcohol: roundNutrient(totals.alcohol),
-            },
-            { emitEvent: false },
-        );
-    }
-
-    public getManualNutritionTotals(form: MealRootHandle): NutritionTotals {
+    public buildManualNutritionPatchFromTotals(totals: NutritionTotals): Partial<ConsumptionFormValues> {
         return {
-            calories: this.getNumericValue(form.controls.manualCalories.value),
-            proteins: this.getNumericValue(form.controls.manualProteins.value),
-            fats: this.getNumericValue(form.controls.manualFats.value),
-            carbs: this.getNumericValue(form.controls.manualCarbs.value),
-            fiber: this.getNumericValue(form.controls.manualFiber.value),
-            alcohol: this.getNumericValue(form.controls.manualAlcohol.value),
+            manualCalories: roundNutrient(totals.calories),
+            manualProteins: roundNutrient(totals.proteins),
+            manualFats: roundNutrient(totals.fats),
+            manualCarbs: roundNutrient(totals.carbs),
+            manualFiber: roundNutrient(totals.fiber),
+            manualAlcohol: roundNutrient(totals.alcohol),
         };
     }
 
@@ -330,18 +245,6 @@ export class MealManageFacade {
         };
     }
 
-    private updateAmountControlState(group: MealItemHandle): void {
-        const shouldDisable = group.controls.product.value === null && group.controls.recipe.value === null;
-        if (shouldDisable && group.controls.amount.enabled) {
-            group.controls.amount.disable({ emitEvent: false });
-            return;
-        }
-
-        if (!shouldDisable && group.controls.amount.disabled) {
-            group.controls.amount.enable({ emitEvent: false });
-        }
-    }
-
     private resolveProductAmount(product: Product): number {
         if (product.defaultPortionAmount > 0) {
             return product.defaultPortionAmount;
@@ -354,28 +257,12 @@ export class MealManageFacade {
         return MEAL_MANAGE_DEFAULT_ITEM_AMOUNT;
     }
 
-    private calculateAutoNutritionTotals(items: MealItemsHandle, aiSessions: ConsumptionAiSessionManageDto[]): NutritionTotals {
-        const aiTotals = this.getAiNutritionTotals(aiSessions);
-        return items.controls.reduce((totals, group) => this.addItemNutritionTotals(totals, group), { ...aiTotals });
-    }
-
     private calculateAutoNutritionTotalsFromValues(
         items: ConsumptionItemFormValues[],
         aiSessions: ConsumptionAiSessionManageDto[],
     ): NutritionTotals {
         const aiTotals = this.getAiNutritionTotals(aiSessions);
         return items.reduce((totals, item) => this.addItemNutritionTotalsFromValue(totals, item), { ...aiTotals });
-    }
-
-    private addItemNutritionTotals(totals: NutritionTotals, group: MealItemHandle): NutritionTotals {
-        const sourceType = group.controls.sourceType.value;
-        const amount = group.controls.amount.value ?? 0;
-
-        if (sourceType === ConsumptionSourceType.Product) {
-            return this.addProductNutritionTotals(totals, group.controls.product.value, amount);
-        }
-
-        return this.addRecipeNutritionTotals(totals, group.controls.recipe.value, amount);
     }
 
     private addItemNutritionTotalsFromValue(totals: NutritionTotals, item: ConsumptionItemFormValues): NutritionTotals {
@@ -441,21 +328,6 @@ export class MealManageFacade {
                 ),
             { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
         );
-    }
-
-    private buildCalorieMismatchWarning(form: MealRootHandle, calorieMismatchThreshold: number): CalorieMismatchWarning | null {
-        if (form.controls.isNutritionAutoCalculated.value) {
-            return null;
-        }
-
-        return calculateCalorieMismatchWarning({
-            calories: this.getNumericValue(form.controls.manualCalories.value),
-            proteins: this.getNumericValue(form.controls.manualProteins.value),
-            fats: this.getNumericValue(form.controls.manualFats.value),
-            carbs: this.getNumericValue(form.controls.manualCarbs.value),
-            alcohol: this.getNumericValue(form.controls.manualAlcohol.value),
-            threshold: calorieMismatchThreshold,
-        });
     }
 
     private buildCalorieMismatchWarningFromValue(

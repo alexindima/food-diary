@@ -18,7 +18,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import { EMPTY, firstValueFrom, merge, type Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header';
@@ -30,6 +30,7 @@ import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
     type Consumption,
@@ -53,19 +54,15 @@ import type {
 import {
     buildMealManageDto,
     buildMealManageFormPatchValue,
-    createMealManageForm,
     createMealManageFormValue,
     getConsumptionItemInitialAmount,
     getDateInputValue,
     getTimeInputValue,
 } from './meal-manage-lib/meal-manage-form.mapper';
 import { buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-lib/meal-manage-options.mapper';
-import { resolveMealManageControlError } from './meal-manage-lib/meal-manage-view.utils';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar';
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card';
-
-export type { ConsumptionFormData, ConsumptionItemFormData } from './meal-manage-lib/meal-manage-form.mapper';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -93,6 +90,9 @@ const SIGNAL_MANAGED_FORM_FIELDS = [
     'manualCarbs',
     'manualFiber',
     'manualAlcohol',
+    'items',
+    'preMealSatietyLevel',
+    'postMealSatietyLevel',
 ] as const satisfies ReadonlyArray<keyof ConsumptionFormValues>;
 
 @Component({
@@ -132,7 +132,7 @@ export class MealManageFormComponent {
     });
     protected readonly globalError = signal<string | null>(null);
     protected readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
-    protected readonly itemsRenderVersion = signal(0);
+    protected readonly itemsTouched = signal(false);
     protected readonly nutritionMode = signal<NutritionMode>('auto');
     protected readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
     protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
@@ -154,20 +154,17 @@ export class MealManageFormComponent {
         return calculateMacroBarState(nutrients.proteins, nutrients.fats, nutrients.carbs);
     });
     protected readonly itemListItems = computed<readonly MealItemsListItemState[]>(() => {
-        this.itemsRenderVersion();
+        const touched = this.itemsTouched();
 
-        return this.items.controls.map(group => {
-            const value = group.getRawValue();
-            const productInvalid =
-                value.sourceType === ConsumptionSourceType.Product && group.controls.product.invalid && group.controls.product.touched;
-            const recipeInvalid =
-                value.sourceType === ConsumptionSourceType.Recipe && group.controls.recipe.invalid && group.controls.recipe.touched;
+        return this.consumptionFormModel().items.map(value => {
+            const productInvalid = touched && value.sourceType === ConsumptionSourceType.Product && value.product === null;
+            const recipeInvalid = touched && value.sourceType === ConsumptionSourceType.Recipe && value.recipe === null;
             const sourceError =
                 productInvalid || recipeInvalid ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR') : null;
-
+            const amountError = this.getItemAmountError(value, touched);
             return {
                 ...value,
-                amountError: resolveMealManageControlError(group.controls.amount, this.translateService),
+                amountError,
                 productInvalid,
                 recipeInvalid,
                 sourceError,
@@ -175,27 +172,17 @@ export class MealManageFormComponent {
         });
     });
     protected readonly itemsError = computed(() => {
-        this.itemsRenderVersion();
-        return this.items.touched && this.items.errors?.['nonEmptyArray'] === true
-            ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY')
-            : null;
+        return this.itemsTouched() && !this.hasSelectedItems() ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY') : null;
     });
 
-    protected consumptionForm: MealLegacyForm;
     protected mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
-        this.consumptionForm = this.createConsumptionForm();
         this.buildMealTypeOptions();
-        this.nutritionMode.set(this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual');
         this.watchLanguageChanges();
         this.watchGeneralFieldErrors();
         this.watchSignalFormModelChanges();
         this.updateGeneralFieldErrors();
-        this.watchSatietyChanges();
-        this.watchMealTypeChanges();
-        this.updateManualNutritionValidators(true);
-        this.updateItemValidationRules();
         this.watchNutritionModeChanges();
 
         const presetMealType = this.resolvePresetMealType();
@@ -210,22 +197,12 @@ export class MealManageFormComponent {
         if (presetMealType === null && this.consumption() === null) {
             this.watchAutoMealTypeChanges();
         }
-
-        this.watchFormChanges();
-    }
-
-    private createConsumptionForm(): MealLegacyForm {
-        return createMealManageForm({
-            createItem: () => this.mealManageFacade.createConsumptionItem(),
-            createItemsRule: () => this.mealManageFacade.createItemsRule(() => this.aiSessions()),
-        });
     }
 
     private watchLanguageChanges(): void {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
             this.updateGeneralFieldErrors();
-            this.bumpItemsRenderVersion();
         });
     }
 
@@ -242,21 +219,16 @@ export class MealManageFormComponent {
             this.consumptionSignalForm.mealType().dirty();
             this.updateGeneralFieldErrors();
         });
-
-        const formEvents = (this.consumptionForm as { events?: Observable<unknown> }).events ?? EMPTY;
-        merge(formEvents, this.consumptionForm.statusChanges, this.consumptionForm.valueChanges)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.updateGeneralFieldErrors();
-            });
     }
 
     private watchSignalFormModelChanges(): void {
         effect(() => {
             const value = this.consumptionFormModel();
             untracked(() => {
-                this.syncSignalManagedValuesToLegacyForm(value);
                 this.selectedMealType.set(value.mealType);
+                this.nutritionMode.set(value.isNutritionAutoCalculated ? 'auto' : 'manual');
+                this.preMealSatietyLevel.set(value.preMealSatietyLevel);
+                this.postMealSatietyLevel.set(value.postMealSatietyLevel);
                 this.updateGeneralFieldErrors();
                 this.updateSummary();
                 this.clearGlobalError();
@@ -264,33 +236,12 @@ export class MealManageFormComponent {
         });
     }
 
-    private watchSatietyChanges(): void {
-        merge(
-            this.consumptionForm.controls.preMealSatietyLevel.valueChanges,
-            this.consumptionForm.controls.postMealSatietyLevel.valueChanges,
-        )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.preMealSatietyLevel.set(this.consumptionForm.controls.preMealSatietyLevel.value);
-                this.postMealSatietyLevel.set(this.consumptionForm.controls.postMealSatietyLevel.value);
-            });
-    }
-
-    private watchMealTypeChanges(): void {
-        this.consumptionForm.controls.mealType.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-            this.selectedMealType.set(value);
-        });
-    }
-
     private watchNutritionModeChanges(): void {
-        this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(isAuto => {
-            this.nutritionMode.set(isAuto ? 'auto' : 'manual');
-            this.patchConsumptionFormModel({ isNutritionAutoCalculated: isAuto });
-            this.updateManualNutritionValidators(isAuto);
-            if (!isAuto) {
-                this.populateManualNutritionFromCurrentSummary();
-            }
-            this.updateSummary();
+        effect(() => {
+            const isAuto = this.consumptionFormModel().isNutritionAutoCalculated;
+            untracked(() => {
+                this.nutritionMode.set(isAuto ? 'auto' : 'manual');
+            });
         });
     }
 
@@ -309,7 +260,6 @@ export class MealManageFormComponent {
 
                 this.populatedConsumption = consumption;
                 this.populateForm(consumption);
-                this.updateItemValidationRules();
                 this.updateSummary();
             });
         });
@@ -321,29 +271,14 @@ export class MealManageFormComponent {
             this.consumptionFormModel().time;
             this.setAutoMealTypeFromDate();
         });
-
-        this.consumptionForm.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.setAutoMealTypeFromDate();
-        });
-        this.consumptionForm.controls.time.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.setAutoMealTypeFromDate();
-        });
-    }
-
-    private watchFormChanges(): void {
-        this.consumptionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.updateItemValidationRules();
-            this.updateSummary();
-            this.clearGlobalError();
-        });
     }
 
     protected async onCancelAsync(): Promise<void> {
         await this.navigationService.navigateToConsumptionListAsync();
     }
 
-    protected get items(): MealLegacyItemsControl {
-        return this.consumptionForm.controls.items;
+    protected get items(): ConsumptionItemFormValues[] {
+        return this.consumptionFormModel().items;
     }
 
     // --- Item management (delegated from MealItemsListComponent events) ---
@@ -353,7 +288,9 @@ export class MealManageFormComponent {
         const itemIndex = reusableIndex >= 0 ? reusableIndex : this.items.length;
 
         if (reusableIndex < 0) {
-            this.items.push(this.mealManageFacade.createConsumptionItem());
+            this.patchConsumptionFormModel({
+                items: [...this.items, this.mealManageFacade.createConsumptionItem()],
+            });
         }
 
         queueMicrotask(() => {
@@ -362,8 +299,9 @@ export class MealManageFormComponent {
     }
 
     protected removeItem(index: number): void {
-        this.items.removeAt(index);
-        this.bumpItemsRenderVersion();
+        this.patchConsumptionFormModel({
+            items: this.items.filter((_, currentIndex) => currentIndex !== index),
+        });
     }
 
     protected onItemSourceClick(index: number): void {
@@ -371,25 +309,25 @@ export class MealManageFormComponent {
     }
 
     protected openManualItemDialog(index: number): void {
-        const group = this.items.at(index);
+        const item = this.items[index];
         void firstValueFrom(
             this.fdDialogService
                 .open<MealManualItemDialogComponent, MealManualItemDialogData, ConsumptionItemFormValues | null>(
                     MealManualItemDialogComponent,
                     {
                         preset: 'form',
-                        data: { item: group.getRawValue() },
+                        data: { item },
                     },
                 )
                 .afterClosed(),
-        ).then(item => {
-            if (item !== null && item !== undefined) {
-                group.patchValue(item);
-                this.mealManageFacade.configureItemType(group, item.sourceType);
-                this.bumpItemsRenderVersion();
-                this.updateItemValidationRules();
-                this.updateSummary();
+        ).then(selectedItem => {
+            if (selectedItem === null || selectedItem === undefined) {
+                return;
             }
+
+            this.replaceConsumptionItem(index, this.mealManageFacade.configureItemType(selectedItem, selectedItem.sourceType));
+            this.itemsTouched.set(true);
+            this.updateSummary();
         });
     }
 
@@ -406,15 +344,11 @@ export class MealManageFormComponent {
                 items: result.items,
             }),
         );
-        this.items.updateValueAndValidity({ emitEvent: false });
-        this.updateItemValidationRules();
         this.updateSummary();
     }
 
     protected onDeleteAiSession(index: number): void {
         this.aiSessions.update(current => this.mealManageFacade.removeAiSession(current, index));
-        this.items.updateValueAndValidity({ emitEvent: false });
-        this.updateItemValidationRules();
         this.updateSummary();
     }
 
@@ -433,8 +367,6 @@ export class MealManageFormComponent {
                 return;
             }
             this.aiSessions.update(current => this.mealManageFacade.replaceAiSession(current, index, updated));
-            this.items.updateValueAndValidity({ emitEvent: false });
-            this.updateItemValidationRules();
             this.updateSummary();
         });
     }
@@ -450,8 +382,6 @@ export class MealManageFormComponent {
         this.nutritionMode.set(resolvedMode);
         const isAuto = resolvedMode === 'auto';
         this.patchConsumptionFormModel({ isNutritionAutoCalculated: isAuto });
-        this.syncSignalManagedValuesToLegacyForm(this.consumptionFormModel());
-        this.updateManualNutritionValidators(isAuto);
         if (!isAuto) {
             this.populateManualNutritionFromCurrentSummary();
         }
@@ -486,10 +416,15 @@ export class MealManageFormComponent {
     // --- Satiety ---
 
     protected onSatietyLevelChange(controlName: MealSatietyControlName, value: number | null): void {
-        const control = this.consumptionForm.controls[controlName];
-        control.setValue(normalizeSatietyLevel(value));
-        control.markAsDirty();
-        control.markAsTouched();
+        const normalizedValue = normalizeSatietyLevel(value);
+        this.patchConsumptionFormModel({ [controlName]: normalizedValue });
+
+        if (controlName === 'preMealSatietyLevel') {
+            this.preMealSatietyLevel.set(normalizedValue);
+            return;
+        }
+
+        this.postMealSatietyLevel.set(normalizedValue);
     }
 
     // --- Form control helpers ---
@@ -514,17 +449,15 @@ export class MealManageFormComponent {
     // --- Submit ---
 
     protected onSubmit(): void {
-        this.syncSignalManagedValuesToLegacyForm(this.consumptionFormModel());
         this.consumptionSignalForm().markAsTouched();
+        this.itemsTouched.set(true);
         this.updateGeneralFieldErrors();
-        this.markControlTreeTouched(this.consumptionForm);
-        this.bumpItemsRenderVersion();
 
         if (this.macrosError() !== null) {
             return;
         }
 
-        if (this.consumptionForm.invalid) {
+        if (this.consumptionSignalForm().invalid() || !this.hasSelectedItems()) {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
@@ -543,7 +476,7 @@ export class MealManageFormComponent {
             aiSessions: this.aiSessions(),
             buildDateTime: () => this.buildDateTime(),
             convertRecipeGramsToServings: (recipe, amount) => this.mealManageFacade.convertRecipeGramsToServings(recipe, amount),
-            manualTotals: this.mealManageFacade.getManualNutritionTotals(this.consumptionForm),
+            manualTotals: this.mealManageFacade.getManualNutritionTotalsFromValue(this.consumptionFormModel()),
         });
     }
 
@@ -561,8 +494,7 @@ export class MealManageFormComponent {
             return;
         }
 
-        const mealTypeControl = this.consumptionForm.controls.mealType;
-        if (mealTypeControl.dirty || this.consumptionSignalForm.mealType().dirty()) {
+        if (this.consumptionSignalForm.mealType().dirty()) {
             return;
         }
 
@@ -580,87 +512,45 @@ export class MealManageFormComponent {
         this.selectedMealType.set(mealType);
     }
 
-    private markControlTreeTouched(control: MealLegacyMarkableControl): void {
-        const children = this.getControlChildren(control);
-        if (children.length > 0) {
-            children.forEach(child => {
-                this.markControlTreeTouched(child);
-            });
-            control.updateValueAndValidity();
-            control.markAllAsTouched();
-            return;
-        }
-
-        control.markAllAsTouched();
-        control.updateValueAndValidity();
-    }
-
-    private getControlChildren(control: MealLegacyMarkableControl): MealLegacyMarkableControl[] {
-        if (!this.hasChildControls(control)) {
-            return [];
-        }
-
-        return Array.isArray(control.controls) ? control.controls : Object.values(control.controls);
-    }
-
-    private hasChildControls(control: MealLegacyMarkableControl): control is MealLegacyControlContainer {
-        return 'controls' in control;
-    }
-
     private populateForm(consumption: Consumption): void {
         const patch = buildMealManageFormPatchValue(consumption);
-        this.consumptionForm.patchValue(patch);
         this.patchConsumptionFormModel(patch);
         this.aiSessions.set(consumption.aiSessions ?? []);
 
-        const itemsArray = this.items;
-        itemsArray.clear();
-
         if (consumption.items.length === 0) {
-            itemsArray.push(this.mealManageFacade.createConsumptionItem());
+            this.patchConsumptionFormModel({ items: [this.mealManageFacade.createConsumptionItem()] });
             return;
         }
 
-        consumption.items.forEach(item => {
-            this.appendConsumptionItemForm(item);
+        this.patchConsumptionFormModel({
+            items: consumption.items.map(item => this.createConsumptionItemFromConsumption(item)),
         });
-
-        this.items.updateValueAndValidity({ emitEvent: false });
-        this.updateItemValidationRules();
     }
 
-    private appendConsumptionItemForm(item: ConsumptionItem): void {
+    private createConsumptionItemFromConsumption(item: ConsumptionItem): ConsumptionItemFormValues {
         const sourceType = item.sourceType;
         const initialAmount = getConsumptionItemInitialAmount(item, value =>
             this.mealManageFacade.convertRecipeServingsToGrams(value.recipe ?? null, value.amount),
         );
-        this.items.push(
-            this.mealManageFacade.createConsumptionItem(
-                sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
-                sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
-                initialAmount,
-                sourceType,
-            ),
-        );
 
-        if (sourceType === ConsumptionSourceType.Recipe) {
-            const currentIndex = this.items.length - 1;
-            this.mealManageFacade.ensureRecipeWeightForExistingItem(this.items.at(currentIndex), item.amount, item.recipe ?? null);
-        }
+        return this.mealManageFacade.createConsumptionItem(
+            sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
+            sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
+            initialAmount,
+            sourceType,
+        );
     }
 
     private updateSummary(): void {
-        const nutritionState = this.mealManageFacade.buildNutritionSummaryState(
-            this.consumptionForm,
-            this.items,
+        const nutritionState = this.mealManageFacade.buildNutritionSummaryStateFromValues(
+            this.getConsumptionFormValue(),
             this.aiSessions(),
             this.calorieMismatchThreshold,
         );
 
         this.applySummary(nutritionState);
 
-        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
-            this.mealManageFacade.syncManualNutritionFromTotals(this.consumptionForm, nutritionState.autoTotals);
+        if (this.consumptionFormModel().isNutritionAutoCalculated) {
             this.patchManualNutritionFromTotals(nutritionState.autoTotals);
         }
     }
@@ -697,33 +587,16 @@ export class MealManageFormComponent {
     }
 
     private populateManualNutritionFromCurrentSummary(): void {
-        const nutritionState = this.mealManageFacade.buildNutritionSummaryState(
-            this.consumptionForm,
-            this.items,
+        const nutritionState = this.mealManageFacade.buildNutritionSummaryStateFromValues(
+            this.getConsumptionFormValue(),
             this.aiSessions(),
             this.calorieMismatchThreshold,
         );
-        this.mealManageFacade.syncManualNutritionFromTotals(this.consumptionForm, nutritionState.autoTotals);
         this.patchManualNutritionFromTotals(nutritionState.autoTotals);
     }
 
-    private updateManualNutritionValidators(isAuto: boolean): void {
-        this.mealManageFacade.updateManualNutritionRules(this.consumptionForm, isAuto);
-    }
-
-    private updateItemValidationRules(): void {
-        this.mealManageFacade.updateItemRules(this.consumptionForm.controls.items);
-    }
-
     private patchManualNutritionFromTotals(totals: NutritionTotals): void {
-        this.patchConsumptionFormModel({
-            manualCalories: totals.calories,
-            manualProteins: totals.proteins,
-            manualFats: totals.fats,
-            manualCarbs: totals.carbs,
-            manualFiber: totals.fiber,
-            manualAlcohol: totals.alcohol,
-        });
+        this.patchConsumptionFormModel(this.mealManageFacade.buildManualNutritionPatchFromTotals(totals));
     }
 
     private async addConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
@@ -751,17 +624,13 @@ export class MealManageFormComponent {
                     manualCarbs: null,
                     manualFiber: null,
                     manualAlcohol: null,
-                    preMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
-                    postMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
                 };
-                this.consumptionForm.reset(resetValue);
                 this.consumptionFormModel.set({
                     ...createMealManageFormValue(),
                     ...resetValue,
                 });
-                this.items.clear();
-                this.items.push(this.mealManageFacade.createConsumptionItem());
                 this.aiSessions.set([]);
+                this.itemsTouched.set(false);
                 this.updateSummary();
             }
             await this.mealManageFacade.showSuccessRedirectAsync(Boolean(this.consumption()));
@@ -798,11 +667,7 @@ export class MealManageFormComponent {
     }
 
     private findReusableEmptyItemIndex(): number {
-        return this.items.controls.findIndex(group => group.controls.product.value === null && group.controls.recipe.value === null);
-    }
-
-    private bumpItemsRenderVersion(): void {
-        this.itemsRenderVersion.update(version => version + 1);
+        return this.items.findIndex(item => item.product === null && item.recipe === null);
     }
 
     private buildMealTypeOptions(): void {
@@ -826,10 +691,7 @@ export class MealManageFormComponent {
     }
 
     private getConsumptionFormValue(): ConsumptionFormValues {
-        return {
-            ...this.consumptionForm.getRawValue(),
-            ...this.pickSignalManagedFormValue(this.consumptionFormModel()),
-        };
+        return this.consumptionFormModel();
     }
 
     private patchConsumptionFormModel(patch: Partial<ConsumptionFormValues>): void {
@@ -842,26 +704,6 @@ export class MealManageFormComponent {
 
             return this.hasSignalManagedValueChanges(value, nextValue) ? nextValue : value;
         });
-    }
-
-    private syncSignalManagedValuesToLegacyForm(value: ConsumptionFormValues): void {
-        this.consumptionForm.patchValue(
-            {
-                date: value.date,
-                time: value.time,
-                mealType: value.mealType,
-                comment: value.comment,
-                imageUrl: value.imageUrl,
-                isNutritionAutoCalculated: value.isNutritionAutoCalculated,
-                manualCalories: value.manualCalories,
-                manualProteins: value.manualProteins,
-                manualFats: value.manualFats,
-                manualCarbs: value.manualCarbs,
-                manualFiber: value.manualFiber,
-                manualAlcohol: value.manualAlcohol,
-            },
-            { emitEvent: false },
-        );
     }
 
     private pickSignalManagedFormValue(value: Partial<ConsumptionFormValues>): Partial<ConsumptionFormValues> {
@@ -909,14 +751,32 @@ export class MealManageFormComponent {
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
-}
 
-type MealLegacyForm = ReturnType<typeof createMealManageForm>;
-type MealLegacyItemsControl = MealLegacyForm['controls']['items'];
-type MealLegacyMarkableControl = {
-    markAllAsTouched: () => void;
-    updateValueAndValidity: () => void;
-};
-type MealLegacyControlContainer = MealLegacyMarkableControl & {
-    controls: MealLegacyMarkableControl[] | Record<string, MealLegacyMarkableControl>;
-};
+    private replaceConsumptionItem(index: number, item: ConsumptionItemFormValues): void {
+        this.patchConsumptionFormModel({
+            items: this.items.map((currentItem, currentIndex) => (currentIndex === index ? item : currentItem)),
+        });
+    }
+
+    private hasSelectedItems(): boolean {
+        return this.items.some(item => item.product !== null || item.recipe !== null) || this.aiSessions().length > 0;
+    }
+
+    private getItemAmountError(item: ConsumptionItemFormValues, touched: boolean): string | null {
+        if (!touched || (item.product === null && item.recipe === null)) {
+            return null;
+        }
+
+        if (item.amount === null) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+
+        if (item.amount < MEAL_MANAGE_MIN_ITEM_AMOUNT) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
+                min: MEAL_MANAGE_MIN_ITEM_AMOUNT,
+            });
+        }
+
+        return null;
+    }
+}

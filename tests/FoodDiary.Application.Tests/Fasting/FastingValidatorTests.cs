@@ -1,5 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
+using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
 using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
@@ -87,6 +88,32 @@ public class FastingValidatorTests {
         var result = await validator.TestValidateAsync(new ReduceActiveFastingTargetCommand(Guid.NewGuid(), 0));
 
         result.ShouldHaveValidationErrorFor(x => x.ReducedHours);
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WithNullUserId_HasInvalidTokenError() {
+        var validator = new ExtendActiveFastingCommandValidator();
+        var result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(null, 4));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId)
+            .WithErrorCode("Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WithInvalidHours_HasError() {
+        var validator = new ExtendActiveFastingCommandValidator();
+        var result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 0));
+
+        result.ShouldHaveValidationErrorFor(x => x.AdditionalHours)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WithValidCommand_HasNoErrors() {
+        var validator = new ExtendActiveFastingCommandValidator();
+        var result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 4));
+
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]

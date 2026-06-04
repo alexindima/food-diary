@@ -71,6 +71,163 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task CreateCheckoutSession_WithExistingInactiveSubscription_UpdatesCheckoutContext() {
+        var user = User.Create("existing-checkout@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            "customer_old",
+            "sub_old",
+            "pm_old",
+            "canceled",
+            Now.AddMonths(-2),
+            Now.AddMonths(-1),
+            "evt_canceled",
+            Now.AddMonths(-1));
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var gateway = new FakeBillingProviderGateway(
+            BillingProviderNames.Paddle,
+            checkoutSession: new BillingCheckoutSessionModel(
+                "session_new",
+                "https://checkout.example/session_new",
+                "customer_new",
+                "price_yearly",
+                "yearly"));
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(user),
+            subscriptionRepository,
+            paymentRepository,
+            new FakeBillingProviderGatewayAccessor(gateway),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(
+            new CreateCheckoutSessionCommand(user.Id.Value, " Yearly ", null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, subscriptionRepository.UpdateCount);
+        Assert.Equal("customer_new", subscription.ExternalCustomerId);
+        Assert.Equal("price_yearly", subscription.ExternalPriceId);
+        Assert.Equal("yearly", subscription.Plan);
+        var payment = Assert.Single(paymentRepository.Payments);
+        Assert.Equal(subscription.Id, payment.BillingSubscriptionId);
+        Assert.Equal("session_new", payment.ExternalPaymentId);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("00000000-0000-0000-0000-000000000000")]
+    public async Task CreateCheckoutSession_WithInvalidUserId_ReturnsInvalidToken(string? userIdValue) {
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new RecordingBillingPaymentRepository(),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
+            new FixedDateTimeProvider(Now));
+        Guid? userId = userIdValue is null ? null : Guid.Parse(userIdValue);
+
+        var result = await handler.Handle(
+            new CreateCheckoutSessionCommand(userId, "monthly", BillingProviderNames.Paddle),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateCheckoutSession_WhenUserIsMissing_ReturnsInvalidToken() {
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new RecordingBillingPaymentRepository(),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(
+            new CreateCheckoutSessionCommand(Guid.NewGuid(), "monthly", BillingProviderNames.Paddle),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("active")]
+    [InlineData("trialing")]
+    [InlineData("past_due")]
+    public async Task CreateCheckoutSession_WithActivePaidSubscription_ReturnsAlreadyActive(string status) {
+        var user = User.Create($"{status}@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            $"customer_{status}",
+            $"sub_{status}",
+            $"pm_{status}",
+            status,
+            Now.AddDays(-1),
+            Now.AddDays(1),
+            $"evt_{status}",
+            Now);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(subscription),
+            paymentRepository,
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(
+            new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.SubscriptionAlreadyActive", result.Error.Code);
+        Assert.Empty(paymentRepository.Payments);
+    }
+
+    [Fact]
+    public async Task CreateCheckoutSession_WhenProviderIsMissing_ReturnsProviderNotConfigured() {
+        var user = User.Create("missing-provider@example.com", "hash");
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(),
+            new RecordingBillingPaymentRepository(),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(
+            new CreateCheckoutSessionCommand(user.Id.Value, "monthly", "missing"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderNotConfigured", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateCheckoutSession_WhenProviderFails_ReturnsProviderError() {
+        var user = User.Create("checkout-failure@example.com", "hash");
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(),
+            paymentRepository,
+            new FakeBillingProviderGatewayAccessor(
+                new FakeBillingProviderGateway(
+                    BillingProviderNames.Paddle,
+                    checkoutError: Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, "declined"))),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(
+            new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Empty(paymentRepository.Payments);
+    }
+
+    [Fact]
     public async Task ProcessBillingWebhook_ForNewEvent_StoresSubscriptionPaymentWebhookAndAddsPremiumRole() {
         var user = User.Create("premium@example.com", "hash");
         var userRepository = new FakeUserRepository(user);
@@ -270,6 +427,55 @@ public sealed class BillingFeatureTests {
         Assert.Empty(webhookEventRepository.Events);
         Assert.Empty(paymentRepository.Payments);
         Assert.False(user.HasRole(RoleNames.Premium));
+    }
+
+    [Theory]
+    [InlineData("event-type")]
+    [InlineData("customer-id")]
+    [InlineData("status")]
+    public async Task ProcessBillingWebhook_WhenRequiredEventFieldIsMissing_ReturnsValidationFailure(string missingField) {
+        var user = User.Create($"invalid-webhook-{missingField}@example.com", "hash");
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var gateway = new FakeBillingProviderGateway(
+            BillingProviderNames.YooKassa,
+            webhookEvent: new BillingWebhookEventModel(
+                "evt_missing_field",
+                string.Equals(missingField, "event-type", StringComparison.Ordinal) ? string.Empty : "payment.succeeded",
+                string.Equals(missingField, "customer-id", StringComparison.Ordinal) ? " " : "customer_missing_field",
+                "pay_missing_field",
+                "pm_missing_field",
+                "price_monthly",
+                "monthly",
+                string.Equals(missingField, "status", StringComparison.Ordinal) ? string.Empty : "active",
+                Now,
+                Now.AddMonths(1),
+                false,
+                null,
+                null,
+                null,
+                7.99m,
+                "USD",
+                null,
+                user.Id.Value));
+        var handler = CreateWebhookHandler(
+            gateway,
+            userRepository,
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Empty(subscriptionRepository.Subscriptions);
+        Assert.Empty(webhookEventRepository.Events);
+        Assert.Empty(paymentRepository.Payments);
     }
 
     [Fact]
@@ -729,6 +935,89 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task CreatePortalSession_WhenUserIdIsInvalid_ReturnsInvalidToken() {
+        var handler = new CreatePortalSessionCommandHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
+
+        var result = await handler.Handle(new CreatePortalSessionCommand(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreatePortalSession_WhenUserIsMissing_ReturnsInvalidToken() {
+        var handler = new CreatePortalSessionCommandHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
+
+        var result = await handler.Handle(new CreatePortalSessionCommand(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreatePortalSession_WhenSubscriptionIsMissing_ReturnsUnavailable() {
+        var user = User.Create("portal-missing@example.com", "hash");
+        var handler = new CreatePortalSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
+
+        var result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreatePortalSession_WhenProviderIsMissing_ReturnsUnavailable() {
+        var user = User.Create("portal-provider-missing@example.com", "hash");
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.YooKassa,
+            "customer_missing",
+            "price_monthly",
+            "monthly");
+        var handler = new CreatePortalSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
+
+        var result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreatePortalSession_WhenProviderFails_ReturnsProviderError() {
+        var user = User.Create("portal-provider-failure@example.com", "hash");
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.Paddle,
+            "customer_failure",
+            "price_monthly",
+            "monthly");
+        var handler = new CreatePortalSessionCommandHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingProviderGatewayAccessor(
+                new FakeBillingProviderGateway(
+                    BillingProviderNames.Paddle,
+                    portalError: Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, "portal failed"))));
+
+        var result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+    }
+
+    [Fact]
     public async Task StartPremiumTrial_ForEligibleUser_SetsTrialAndReturnsTrialOverview() {
         var user = User.Create("trial@example.com", "hash");
         var userRepository = new FakeUserRepository(user);
@@ -766,6 +1055,65 @@ public sealed class BillingFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.TrialAlreadyUsed", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task StartPremiumTrial_WithInvalidUserId_ReturnsInvalidToken() {
+        var handler = new StartPremiumTrialCommandHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new StartPremiumTrialCommand(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task StartPremiumTrial_WhenUserIsMissing_ReturnsInvalidToken() {
+        var handler = new StartPremiumTrialCommandHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new StartPremiumTrialCommand(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("active")]
+    [InlineData("trialing")]
+    [InlineData("past_due")]
+    public async Task StartPremiumTrial_WithActivePaidSubscription_ReturnsAlreadyActive(string status) {
+        var user = User.Create($"trial-active-{status}@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            $"customer_trial_{status}",
+            $"sub_trial_{status}",
+            $"pm_trial_{status}",
+            status,
+            Now.AddDays(-1),
+            Now.AddDays(1),
+            $"evt_trial_{status}",
+            Now);
+        var userRepository = new FakeUserRepository(user);
+        var handler = new StartPremiumTrialCommandHandler(
+            userRepository,
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.SubscriptionAlreadyActive", result.Error.Code);
+        Assert.Equal(0, userRepository.UpdateCount);
     }
 
     private static ProcessBillingWebhookCommandHandler CreateWebhookHandler(
@@ -1053,25 +1401,37 @@ public sealed class BillingFeatureTests {
         string provider,
         BillingCheckoutSessionModel? checkoutSession = null,
         BillingWebhookEventModel? webhookEvent = null,
-        BillingPortalSessionModel? portalSession = null)
+        BillingPortalSessionModel? portalSession = null,
+        Error? checkoutError = null,
+        Error? portalError = null)
         : IBillingProviderGateway {
         public string Provider { get; } = provider;
 
         public Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(
             BillingCheckoutSessionRequestModel request,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Result.Success(checkoutSession ?? new BillingCheckoutSessionModel(
+            CancellationToken cancellationToken = default) {
+            if (checkoutError is not null) {
+                return Task.FromResult(Result.Failure<BillingCheckoutSessionModel>(checkoutError));
+            }
+
+            return Task.FromResult(Result.Success(checkoutSession ?? new BillingCheckoutSessionModel(
                 "session",
                 "https://checkout.example/session",
                 request.ExistingCustomerId ?? "customer",
                 "price",
                 request.Plan)));
+        }
 
         public Task<Result<BillingPortalSessionModel>> CreatePortalSessionAsync(
             BillingPortalSessionRequestModel request,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Result.Success(portalSession ?? new BillingPortalSessionModel(
+            CancellationToken cancellationToken = default) {
+            if (portalError is not null) {
+                return Task.FromResult(Result.Failure<BillingPortalSessionModel>(portalError));
+            }
+
+            return Task.FromResult(Result.Success(portalSession ?? new BillingPortalSessionModel(
                 $"https://billing.example/{request.CustomerId}")));
+        }
 
         public Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
             string payload,

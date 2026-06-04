@@ -116,6 +116,14 @@ public sealed class MailRelayDomainTests {
     }
 
     [Fact]
+    public void QueuedEmailId_Factories_ReturnExpectedValues() {
+        var generated = QueuedEmailId.New();
+
+        Assert.NotEqual(Guid.Empty, generated.Value);
+        Assert.Equal(Guid.Empty, QueuedEmailId.Empty.Value);
+    }
+
+    [Fact]
     public void Entity_Equals_ReturnsExpectedResultsForCommonCases() {
         var id = Guid.NewGuid();
         var entity = new TestEntity(id);

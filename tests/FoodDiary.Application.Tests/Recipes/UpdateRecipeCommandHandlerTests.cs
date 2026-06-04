@@ -415,6 +415,116 @@ public class UpdateRecipeCommandHandlerTests {
         Assert.Equal(15, recipe.PrepTime);
     }
 
+    [Fact]
+    public async Task Handle_WhenUpdatedRecipeCannotBeReloaded_ReturnsInvalidData() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        SetRecipeId(recipe, recipeId);
+        recipe.AddStep(1, "Initial step");
+        var repository = new ReloadMissingRecipeRepository(recipeId, userId, recipe);
+        var handler = new UpdateRecipeCommandHandler(
+            repository,
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                userId.Value,
+                recipeId.Value,
+                Name: "Updated soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                PrepTime: null,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Public.ToString(),
+                CalculateNutritionAutomatically: false,
+                ManualCalories: 100,
+                ManualProteins: 10,
+                ManualFats: 4,
+                ManualCarbs: 20,
+                ManualFiber: 2,
+                ManualAlcohol: null,
+                Steps: [CreateStep(order: 1, "Updated step")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Recipe.InvalidData", result.Error.Code);
+        Assert.True(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task Handle_WithNewRecipeAndStepAssets_CleansOldUnusedAssets() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var oldRecipeAssetId = ImageAssetId.New();
+        var oldStepAssetId = ImageAssetId.New();
+        var newRecipeAssetId = ImageAssetId.New();
+        var newStepAssetId = ImageAssetId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2, imageUrl: "https://old", imageAssetId: oldRecipeAssetId);
+        SetRecipeId(recipe, recipeId);
+        recipe.AddStep(1, "Initial step", imageUrl: "https://old-step", imageAssetId: oldStepAssetId);
+        var cleanup = new RecordingImageAssetCleanupService();
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            cleanup,
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                userId.Value,
+                recipeId.Value,
+                Name: "Updated soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: newRecipeAssetId.Value,
+                ClearImageAssetId: false,
+                PrepTime: null,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Public.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [new RecipeStepInput(
+                    Order: 1,
+                    Description: "Updated step",
+                    Title: "Prep",
+                    ImageUrl: null,
+                    ImageAssetId: newStepAssetId.Value,
+                    Ingredients: [new RecipeIngredientInput(ProductId: ProductId.New().Value, NestedRecipeId: null, Amount: 100)])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(newRecipeAssetId, recipe.ImageAssetId);
+        Assert.Equal([oldRecipeAssetId, oldStepAssetId], cleanup.RequestedAssetIds);
+    }
+
     private static RecipeStepInput CreateStep(int order, string description) {
         return new RecipeStepInput(
             Order: order,
@@ -501,9 +611,81 @@ public class UpdateRecipeCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class ReloadMissingRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) : IRecipeRepository {
+        public bool UpdateCalled { get; private set; }
+
+        public Task<Recipe> AddAsync(Recipe addedRecipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
+            UserId ownerId,
+            bool includePublic,
+            int page,
+            int limit,
+            string? search,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Recipe?> GetByIdAsync(
+            RecipeId id,
+            UserId ownerId,
+            bool includePublic = true,
+            bool includeSteps = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) {
+            if (!UpdateCalled && id == recipeId && ownerId == userId) {
+                return Task.FromResult<Recipe?>(recipe);
+            }
+
+            return Task.FromResult<Recipe?>(null);
+        }
+
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId ownerId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
+            IEnumerable<RecipeId> ids,
+            UserId ownerId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Recipe updatedRecipe, CancellationToken cancellationToken = default) {
+            UpdateCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteAsync(Recipe deletedRecipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateNutritionAsync(Recipe updatedRecipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+            int page,
+            int limit,
+            string? search,
+            string? category,
+            int? maxPrepTime,
+            string sortBy,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class NoopImageAssetCleanupService : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(new DeleteImageAssetResult(true));
+
+        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingImageAssetCleanupService : IImageAssetCleanupService {
+        public List<ImageAssetId> RequestedAssetIds { get; } = [];
+
+        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
+            RequestedAssetIds.Add(assetId);
+            return Task.FromResult(new DeleteImageAssetResult(true));
+        }
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);

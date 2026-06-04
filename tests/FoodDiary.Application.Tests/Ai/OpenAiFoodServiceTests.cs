@@ -56,6 +56,72 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task CalculateNutritionAsync_WhenUserMissing_ReturnsNotFoundWithoutCallingClient() {
+        var client = new RecordingOpenAiFoodClient();
+        var userId = UserId.New();
+        var service = new OpenAiFoodService(
+            client,
+            new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
+            new StubUserRepository(returnNull: true),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            userId,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+        Assert.Equal(0, client.CalculateNutritionCalls);
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenClientSucceeds_ReturnsNutritionAndStoresUsage() {
+        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+        var client = new RecordingOpenAiFoodClient();
+        var service = new OpenAiFoodService(
+            client,
+            usageRepository,
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            UserId.New(),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(52m, result.Value.Calories);
+        Assert.Equal(1, client.CalculateNutritionCalls);
+        Assert.Single(usageRepository.Items);
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
+        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+        var client = new RecordingOpenAiFoodClient {
+            CalculateNutritionResult = Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(Errors.Ai.EmptyItems())
+        };
+        var service = new OpenAiFoodService(
+            client,
+            usageRepository,
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            UserId.New(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.EmptyItems", result.Error.Code);
+        Assert.Empty(usageRepository.Items);
+    }
+
+    [Fact]
     public async Task AnalyzeFoodImageAsync_WhenClientSucceeds_StoresUsage() {
         var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
         var service = new OpenAiFoodService(
@@ -79,8 +145,133 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Equal(18, usage.TotalTokens);
     }
 
+    [Fact]
+    public async Task AnalyzeFoodImageAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
+        var client = new RecordingOpenAiFoodClient();
+        var service = new OpenAiFoodService(
+            client,
+            new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            UserId.New(),
+            null,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
+        Assert.Equal(0, client.AnalyzeFoodImageCalls);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
+        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+        var client = new RecordingOpenAiFoodClient {
+            AnalyzeFoodImageResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.Forbidden())
+        };
+        var service = new OpenAiFoodService(
+            client,
+            usageRepository,
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            UserId.New(),
+            null,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.Forbidden", result.Error.Code);
+        Assert.Empty(usageRepository.Items);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageAsync_WhenResponseHasNoUsage_DoesNotStoreUsage() {
+        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+        var client = new RecordingOpenAiFoodClient {
+            AnalyzeFoodImageResult = Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
+                CreateVisionModel(),
+                "vision",
+                "test-model",
+                Usage: null))
+        };
+        var service = new OpenAiFoodService(
+            client,
+            usageRepository,
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            UserId.New(),
+            null,
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(usageRepository.Items);
+    }
+
+    [Fact]
+    public async Task ParseFoodTextAsync_WhenClientSucceeds_ReturnsVisionAndStoresUsage() {
+        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+        var client = new RecordingOpenAiFoodClient();
+        var service = new OpenAiFoodService(
+            client,
+            usageRepository,
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(result.Value.Items);
+        Assert.Equal(1, client.ParseFoodTextCalls);
+        Assert.Single(usageRepository.Items);
+    }
+
+    [Fact]
+    public async Task ParseFoodTextAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
+        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+        var client = new RecordingOpenAiFoodClient {
+            ParseFoodTextResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.EmptyItems())
+        };
+        var service = new OpenAiFoodService(
+            client,
+            usageRepository,
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.EmptyItems", result.Error.Code);
+        Assert.Empty(usageRepository.Items);
+    }
+
+    private static FoodVisionModel CreateVisionModel() =>
+        new([
+            new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)
+        ]);
+
     [ExcludeFromCodeCoverage]
     private sealed class RecordingOpenAiFoodClient : IOpenAiFoodClient {
+        public Result<OpenAiFoodClientResponse<FoodVisionModel>>? AnalyzeFoodImageResult { get; init; }
+        public Result<OpenAiFoodClientResponse<FoodVisionModel>>? ParseFoodTextResult { get; init; }
+        public Result<OpenAiFoodClientResponse<FoodNutritionModel>>? CalculateNutritionResult { get; init; }
+
+        public int AnalyzeFoodImageCalls { get; private set; }
+        public int ParseFoodTextCalls { get; private set; }
         public int CalculateNutritionCalls { get; private set; }
 
         public Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> AnalyzeFoodImageAsync(
@@ -89,12 +280,13 @@ public sealed class OpenAiFoodServiceTests {
             string? description,
             string promptTemplate,
             CancellationToken cancellationToken) {
-            var model = new FoodVisionModel([
-                new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)
-            ]);
+            AnalyzeFoodImageCalls++;
+            if (AnalyzeFoodImageResult is not null) {
+                return Task.FromResult(AnalyzeFoodImageResult);
+            }
 
             return Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
-                model,
+                CreateVisionModel(),
                 "vision",
                 "test-model",
                 new AiUsageTokens(11, 7, 18))));
@@ -104,14 +296,28 @@ public sealed class OpenAiFoodServiceTests {
             string text,
             string? userLanguage,
             string promptTemplate,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+            CancellationToken cancellationToken) {
+            ParseFoodTextCalls++;
+            if (ParseFoodTextResult is not null) {
+                return Task.FromResult(ParseFoodTextResult);
+            }
+
+            return Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
+                CreateVisionModel(),
+                "text-parse",
+                "test-model",
+                new AiUsageTokens(11, 7, 18))));
+        }
 
         public Task<Result<OpenAiFoodClientResponse<FoodNutritionModel>>> CalculateNutritionAsync(
             IReadOnlyList<FoodVisionItemModel> items,
             string promptTemplate,
             CancellationToken cancellationToken) {
             CalculateNutritionCalls++;
+            if (CalculateNutritionResult is not null) {
+                return Task.FromResult(CalculateNutritionResult);
+            }
+
             return Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(
                 new FoodNutritionModel(52m, 0.3m, 0.2m, 14m, 2.4m, 0m, []),
                 "nutrition",
@@ -137,13 +343,13 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User? user = null) : IUserRepository {
+    private sealed class StubUserRepository(User? user = null, bool returnNull = false) : IUserRepository {
         private readonly User user = user ?? User.Create("ai-tests@example.com", "hash");
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult<User?>(user);
+            Task.FromResult<User?>(returnNull ? null : user);
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();

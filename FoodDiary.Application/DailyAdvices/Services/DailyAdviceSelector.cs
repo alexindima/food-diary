@@ -48,7 +48,7 @@ internal static class DailyAdviceSelector {
         var offset = (int)(hashValue % totalWeight);
 
         var cumulative = 0;
-        for (var i = 0; i < advices.Count; i++) {
+        for (var i = 0; i < advices.Count - 1; i++) {
             cumulative += Math.Max(1, advices[i].Weight);
             if (offset < cumulative) {
                 return i;

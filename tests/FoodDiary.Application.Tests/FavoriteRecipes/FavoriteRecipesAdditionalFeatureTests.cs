@@ -71,6 +71,55 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task AddFavoriteRecipe_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new AddFavoriteRecipeCommandHandler(
+            new InMemoryFavoriteRecipeRepository(),
+            new SingleRecipeRepository(null),
+            new SingleUserRepository(User.Create("invalid-add-favorite-recipe@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new AddFavoriteRecipeCommand(Guid.Empty, Guid.NewGuid(), "Invalid"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AddFavoriteRecipe_WhenUserDeleted_ReturnsAccessFailure() {
+        var user = User.Create("deleted-add-favorite-recipe@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var recipe = CreateRecipe(user.Id, "Deleted User Soup");
+        var handler = new AddFavoriteRecipeCommandHandler(
+            new InMemoryFavoriteRecipeRepository(recipe),
+            new SingleRecipeRepository(recipe),
+            new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Dinner"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AddFavoriteRecipe_WhenUserMissing_ReturnsInvalidToken() {
+        var recipe = CreateRecipe(UserId.New(), "Missing User Soup");
+        var handler = new AddFavoriteRecipeCommandHandler(
+            new InMemoryFavoriteRecipeRepository(recipe),
+            new SingleRecipeRepository(recipe),
+            new SingleUserRepository(null));
+
+        var result = await handler.Handle(
+            new AddFavoriteRecipeCommand(Guid.NewGuid(), recipe.Id.Value, "Dinner"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetFavoriteRecipes_ReturnsMappedFavorites() {
         var user = User.Create("get-favorite-recipes@example.com", "hash");
         var recipe = CreateRecipe(user.Id, "Chicken Soup");
@@ -88,6 +137,18 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task GetFavoriteRecipes_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetFavoriteRecipesQueryHandler(
+            new InMemoryFavoriteRecipeRepository(),
+            new SingleUserRepository(User.Create("invalid-get-favorite-recipes@example.com", "hash")));
+
+        var result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetFavoriteRecipes_WhenUserDeleted_ReturnsAccessFailure() {
         var user = User.Create("deleted-get-favorite-recipes@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
@@ -99,6 +160,18 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetFavoriteRecipes_WhenUserMissing_ReturnsInvalidToken() {
+        var handler = new GetFavoriteRecipesQueryHandler(
+            new InMemoryFavoriteRecipeRepository(),
+            new SingleUserRepository(null));
+
+        var result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]
@@ -133,6 +206,34 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task IsRecipeFavorite_WhenUserMissing_ReturnsInvalidToken() {
+        var handler = new IsRecipeFavoriteQueryHandler(
+            new InMemoryFavoriteRecipeRepository(),
+            new SingleUserRepository(null));
+
+        var result = await handler.Handle(
+            new IsRecipeFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task IsRecipeFavorite_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new IsRecipeFavoriteQueryHandler(
+            new InMemoryFavoriteRecipeRepository(),
+            new SingleUserRepository(User.Create("invalid-is-favorite-recipe@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new IsRecipeFavoriteQuery(Guid.Empty, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task RemoveFavoriteRecipe_DeletesExistingFavorite() {
         var user = User.Create("remove-favorite-recipe@example.com", "hash");
         var recipe = CreateRecipe(user.Id, "Pear Tart");
@@ -161,6 +262,59 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("FavoriteRecipe.NotFound", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteRecipe_WithEmptyUserId_ReturnsInvalidToken() {
+        var repository = new InMemoryFavoriteRecipeRepository();
+        var handler = new RemoveFavoriteRecipeCommandHandler(
+            repository,
+            new SingleUserRepository(User.Create("invalid-remove-favorite-recipe@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new RemoveFavoriteRecipeCommand(Guid.Empty, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteRecipe_WhenUserDeleted_ReturnsAccessFailure() {
+        var user = User.Create("deleted-remove-favorite-recipe@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var recipe = CreateRecipe(user.Id, "Deleted User Tart");
+        var favorite = FavoriteRecipe.Create(user.Id, recipe.Id, "Dessert");
+        SetRecipeNavigation(favorite, recipe);
+        var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new RemoveFavoriteRecipeCommand(user.Id.Value, favorite.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteRecipe_WhenUserMissing_ReturnsInvalidToken() {
+        var userId = Guid.NewGuid();
+        var recipe = CreateRecipe(new UserId(userId), "Missing User Tart");
+        var favorite = FavoriteRecipe.Create(new UserId(userId), recipe.Id, "Dessert");
+        SetRecipeNavigation(favorite, recipe);
+        var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(null));
+
+        var result = await handler.Handle(
+            new RemoveFavoriteRecipeCommand(userId, favorite.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
 
@@ -232,11 +386,11 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository {
+    private sealed class SingleUserRepository(User? user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();

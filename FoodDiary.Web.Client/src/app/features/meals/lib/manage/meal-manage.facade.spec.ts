@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { MealService } from '../../api/meal.service';
 import type { ConsumptionFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
-import { createMealManageForm } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -120,7 +119,6 @@ const consumptionData: ConsumptionManageDto = {
     isNutritionAutoCalculated: true,
 };
 
-type ConsumptionItemHandle = ReturnType<MealManageFacade['createConsumptionItem']>;
 describe('MealManageFacade', () => {
     beforeEach(() => {
         mealService = {
@@ -236,40 +234,24 @@ function registerAiSessionTests(): void {
 
 function registerItemSelectionTests(): void {
     describe('item selection', () => {
-        it('should create product-based consumption item form group', () => {
-            const group = facade.createConsumptionItem(null, null, null, ConsumptionSourceType.Product);
+        it('should create product-based consumption item value', () => {
+            const item = facade.createConsumptionItem(null, null, null, ConsumptionSourceType.Product);
 
-            expect(group.controls.sourceType.value).toBe(ConsumptionSourceType.Product);
-            expect(group.controls.amount.disabled).toBe(true);
+            expect(item).toEqual({
+                sourceType: ConsumptionSourceType.Product,
+                product: null,
+                recipe: null,
+                amount: null,
+            });
         });
 
-        it('should enable amount and set recipe weight for recipe item', () => {
+        it('should resolve recipe servings to grams', async () => {
             const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
-            const group = facade.createConsumptionItem(null, recipe, RECIPE_SERVING_AMOUNT, ConsumptionSourceType.Recipe);
 
-            facade.ensureRecipeWeightForExistingItem(group, RECIPE_SERVING_AMOUNT, recipe);
+            const amount = await facade.resolveRecipeServingsToGramsAsync(recipe, RECIPE_SERVING_AMOUNT);
 
             expect(recipeWeightService.loadServingWeight).toHaveBeenCalled();
-            expect(group.controls.amount.value).toBe(EXPECTED_RECIPE_AMOUNT);
-        });
-
-        it('should ignore stale recipe weight response after item source changes', () => {
-            const servingWeight = new Subject<number | null>();
-            const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
-            const product = { ...createEmptyProductSnapshot(), id: 'p1' };
-            const group = facade.createConsumptionItem(null, recipe, RECIPE_SERVING_AMOUNT, ConsumptionSourceType.Recipe);
-            recipeWeightService.loadServingWeight.mockReturnValue(servingWeight.asObservable());
-
-            facade.ensureRecipeWeightForExistingItem(group, RECIPE_SERVING_AMOUNT, recipe);
-            group.patchValue({
-                sourceType: ConsumptionSourceType.Product,
-                recipe: null,
-                product,
-                amount: PRODUCT_PORTION_AMOUNT,
-            });
-            servingWeight.next(RECIPE_SERVING_WEIGHT);
-
-            expect(group.controls.amount.value).toBe(PRODUCT_PORTION_AMOUNT);
+            expect(amount).toBe(EXPECTED_RECIPE_AMOUNT);
         });
 
         it('should use product default portion amount after manual selection', async () => {
@@ -279,56 +261,29 @@ function registerItemSelectionTests(): void {
                 defaultPortionAmount: PRODUCT_PORTION_AMOUNT,
                 baseAmount: RECIPE_AMOUNT,
             };
-            const group = facade.createConsumptionItem();
             dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
 
-            await facade.openItemSelectionDialogAsync(group, 'Product');
+            const item = await facade.openItemSelectionDialogAsync('Product');
 
-            expect(group.controls.product.value).toBe(product);
-            expect(group.controls.amount.value).toBe(PRODUCT_PORTION_AMOUNT);
+            expect(item?.product).toBe(product);
+            expect(item?.amount).toBe(PRODUCT_PORTION_AMOUNT);
         });
 
         it('should convert one recipe serving to grams after manual selection', async () => {
             const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
-            const group = facade.createConsumptionItem();
             dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
             recipeWeightService.loadServingWeight.mockReturnValue(of(MANUAL_RECIPE_WEIGHT));
 
-            await facade.openItemSelectionDialogAsync(group, 'Recipe');
+            const item = await facade.openItemSelectionDialogAsync('Recipe');
 
-            expect(group.controls.recipe.value).toBe(recipe);
-            expect(group.controls.amount.value).toBe(MANUAL_RECIPE_WEIGHT);
-        });
-
-        it('should validate items array as non-empty when ai sessions are absent', () => {
-            const validator = facade.createItemsRule(() => []);
-            const form = createNutritionForm([], true);
-
-            expect(validator(form.controls.items)).toEqual({ nonEmptyArray: true });
+            expect(item?.recipe).toBe(recipe);
+            expect(item?.amount).toBe(MANUAL_RECIPE_WEIGHT);
         });
     });
 }
 
 function registerNutritionSummaryTests(): void {
     describe('nutrition summary', () => {
-        it('should calculate nutrition summary from manual items and ai sessions', () => {
-            recipeWeightService.loadServingWeight.mockReturnValue(of(RECIPE_SERVING_WEIGHT));
-            const form = createNutritionForm(
-                [
-                    facade.createConsumptionItem(createNutritionProduct(), null, PRODUCT_AMOUNT, ConsumptionSourceType.Product),
-                    facade.createConsumptionItem(null, createNutritionRecipe(), RECIPE_AMOUNT, ConsumptionSourceType.Recipe),
-                ],
-                true,
-            );
-            const items = form.controls.items;
-
-            const state = facade.buildNutritionSummaryState(form, items, AI_RECOGNITION_SESSIONS, CALORIE_MISMATCH_THRESHOLD);
-
-            expect(state.autoTotals).toEqual(EXPECTED_AUTO_TOTALS);
-            expect(state.summaryTotals).toEqual(state.autoTotals);
-            expect(state.warning).toBeNull();
-        });
-
         it('should calculate nutrition summary from signal form values', () => {
             const state = facade.buildNutritionSummaryStateFromValues(
                 createNutritionFormValue(true),
@@ -341,18 +296,6 @@ function registerNutritionSummaryTests(): void {
             expect(state.warning).toBeNull();
         });
 
-        it('should build calorie mismatch warning in manual mode', () => {
-            const form = createNutritionForm([facade.createConsumptionItem()], false);
-            const items = form.controls.items;
-
-            const state = facade.buildNutritionSummaryState(form, items, [], CALORIE_MISMATCH_THRESHOLD);
-
-            expect(state.summaryTotals.calories).toBe(MANUAL_CALORIES);
-            expect(state.warning).toEqual({
-                expectedCalories: EXPECTED_MISMATCH_CALORIES,
-                actualCalories: MANUAL_CALORIES,
-            });
-        });
         it('should build calorie mismatch warning from signal form values in manual mode', () => {
             const state = facade.buildNutritionSummaryStateFromValues(createNutritionFormValue(false), [], CALORIE_MISMATCH_THRESHOLD);
 
@@ -391,33 +334,6 @@ function createNutritionRecipe(): ReturnType<typeof createEmptyRecipeSnapshot> {
         totalFiber: RECIPE_TOTAL_FIBER,
         totalAlcohol: 0,
     };
-}
-
-function createNutritionForm(items: ConsumptionItemHandle[], isAuto: boolean): ReturnType<typeof createMealManageForm> {
-    const form = createMealManageForm(
-        {
-            createItem: () => facade.createConsumptionItem(),
-            createItemsRule: () => facade.createItemsRule(() => []),
-        },
-        new Date('2026-04-02T12:00:00'),
-    );
-
-    form.controls.items.clear();
-    items.forEach(item => {
-        form.controls.items.push(item);
-    });
-    form.patchValue({
-        isNutritionAutoCalculated: isAuto,
-        manualCalories: isAuto ? null : MANUAL_CALORIES,
-        manualProteins: isAuto ? null : MANUAL_PROTEINS,
-        manualFats: isAuto ? null : MANUAL_FATS,
-        manualCarbs: isAuto ? null : MANUAL_CARBS,
-        manualFiber: 0,
-        manualAlcohol: 0,
-        preMealSatietyLevel: null,
-        postMealSatietyLevel: null,
-    });
-    return form;
 }
 
 function createNutritionFormValue(isAuto: boolean): ConsumptionFormValues {

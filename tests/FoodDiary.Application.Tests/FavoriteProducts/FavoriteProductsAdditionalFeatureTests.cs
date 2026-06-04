@@ -71,6 +71,37 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task AddFavoriteProduct_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new AddFavoriteProductCommandHandler(
+            new InMemoryFavoriteProductRepository(),
+            new SingleProductRepository(null),
+            new SingleUserRepository(User.Create("invalid-add-favorite-product@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new AddFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AddFavoriteProduct_WhenUserMissing_ReturnsInvalidToken() {
+        var product = CreateProduct(UserId.New(), "Missing User Apple");
+        var handler = new AddFavoriteProductCommandHandler(
+            new InMemoryFavoriteProductRepository(product),
+            new SingleProductRepository(product),
+            new SingleUserRepository(null));
+
+        var result = await handler.Handle(
+            new AddFavoriteProductCommand(Guid.NewGuid(), product.Id.Value, "Snack"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetFavoriteProducts_ReturnsMappedFavorites() {
         var user = User.Create("get-favorite-products@example.com", "hash");
         var product = CreateProduct(user.Id, "Chicken");
@@ -85,6 +116,30 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
         Assert.Equal("Chicken", result.Value[0].ProductName);
+    }
+
+    [Fact]
+    public async Task GetFavoriteProducts_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetFavoriteProductsQueryHandler(
+            new InMemoryFavoriteProductRepository(),
+            new SingleUserRepository(User.Create("invalid-get-favorite-products@example.com", "hash")));
+
+        var result = await handler.Handle(new GetFavoriteProductsQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetFavoriteProducts_WhenUserMissing_ReturnsInvalidToken() {
+        var handler = new GetFavoriteProductsQueryHandler(
+            new InMemoryFavoriteProductRepository(),
+            new SingleUserRepository(null));
+
+        var result = await handler.Handle(new GetFavoriteProductsQuery(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]
@@ -133,6 +188,34 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task IsProductFavorite_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new IsProductFavoriteQueryHandler(
+            new InMemoryFavoriteProductRepository(),
+            new SingleUserRepository(User.Create("invalid-is-favorite-product@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new IsProductFavoriteQuery(Guid.Empty, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task IsProductFavorite_WhenUserMissing_ReturnsInvalidToken() {
+        var handler = new IsProductFavoriteQueryHandler(
+            new InMemoryFavoriteProductRepository(),
+            new SingleUserRepository(null));
+
+        var result = await handler.Handle(
+            new IsProductFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task RemoveFavoriteProduct_DeletesExistingFavorite() {
         var user = User.Create("remove-favorite-product@example.com", "hash");
         var product = CreateProduct(user.Id, "Pear");
@@ -161,6 +244,40 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("FavoriteProduct.NotFound", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteProduct_WithEmptyUserId_ReturnsInvalidToken() {
+        var repository = new InMemoryFavoriteProductRepository();
+        var handler = new RemoveFavoriteProductCommandHandler(
+            repository,
+            new SingleUserRepository(User.Create("invalid-remove-favorite-product@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new RemoveFavoriteProductCommand(Guid.Empty, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteProduct_WhenUserMissing_ReturnsInvalidToken() {
+        var userId = Guid.NewGuid();
+        var product = CreateProduct(new UserId(userId), "Missing User Pear");
+        var favorite = FavoriteProduct.Create(new UserId(userId), product.Id, "Snack");
+        SetProductNavigation(favorite, product);
+        var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
+        var handler = new RemoveFavoriteProductCommandHandler(repository, new SingleUserRepository(null));
+
+        var result = await handler.Handle(
+            new RemoveFavoriteProductCommand(userId, favorite.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
 
@@ -239,11 +356,11 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository {
+    private sealed class SingleUserRepository(User? user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();

@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 51 forms.
+- Migrated Signal Forms: 52 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 2 files.
+- Remaining legacy Reactive Forms surface: 1 file.
 
 Tracker patterns:
 
@@ -165,6 +165,7 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.html`
 - `FoodDiary.Web.Client/src/app/shared/lib/validation-error.utils.spec.ts`
 - `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-lib/meal-manage-view.utils.spec.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-lib/meal-manage-form.mapper.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-form-error.utils.spec.ts`
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts`
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.spec.ts`
@@ -202,9 +203,9 @@ Tracker patterns:
 - `fd-ui-date-range-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - `fd-ui-datetime-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - Product manage now keeps `ProductFormValues` as the signal model and passes mapped nutrition fields into the shared nutrition editor.
-- Meal manual item dialog uses a scalar Signal Form for amount and now accepts/returns plain item values. `meal-manage-form` remains the legacy adapter for its items `FormArray`.
-- Meal manage complex migration has started with value-based form factories, nutrition summary helpers, Signal Forms general-info and nutrition sidebar blocks. The root remains hybrid until items move off legacy forms.
-- Meal manage root template no longer uses `[formGroup]`/`ngSubmit`; submit is handled through native `submit` while the TS adapter still owns the legacy item form array.
+- Meal manual item dialog uses a scalar Signal Form for amount and now accepts/returns plain item values.
+- Meal manage root now uses value-backed Signal Forms for the full manage surface; the mapper is value-only and no longer creates Reactive Forms controls.
+- Meal manage root template no longer uses `[formGroup]`/`ngSubmit`; submit is handled through native `submit`.
 - Meal items list no longer needs a template `[formGroup]` and now renders value/error state from the parent adapter.
 - Meal items section/list now render value/error state instead of receiving the legacy items `FormArray`; `meal-manage-form` remains the adapter until item editing moves to Signal Forms.
 - Recipe manage complex migration has started with Signal Forms basic-info/nutrition fields. The root remains hybrid while step editing and step managers stay on legacy forms.
@@ -220,9 +221,9 @@ Tracker patterns:
 - Recipe nutrition manager now depends on structural form operations instead of `FormGroup`/`FormControl` types; the root recipe adapter still supplies the legacy form instance.
 - Recipe step manager now depends on structural step-array operations instead of `FormArray`/`FormGroup` types; the root recipe adapter still owns the concrete legacy array.
 - Recipe manage root adapter no longer imports `FormGroup`/`FormArray` directly; recursive touch handling now uses structural control containers while the concrete legacy form still lives in the mapper.
-- Meal manage root adapter no longer imports `FormGroup`/`FormArray` directly; recursive touch handling now uses structural control containers while the concrete legacy form still lives in the mapper.
-- Meal manage facade and facade specs now use mapper-owned form factories/rules instead of importing Reactive Forms directly; the remaining meal legacy surface is isolated in the root form adapter and mapper specs.
-- Meal manage root and mapper specs now reuse mapper-owned factories/rules instead of creating Reactive Forms controls directly; the remaining surface is the actual recipe/meal form factories plus their shared form-control type helper.
+- Meal manage root adapter no longer imports `FormGroup`/`FormArray`; item state is patched through the signal model and validated through Signal Forms plus explicit item-selection state.
+- Meal manage facade and facade specs now use value-level mapper helpers instead of importing Reactive Forms directly.
+- Meal manage root and mapper specs now use value-level mapper helpers instead of creating Reactive Forms controls directly; the remaining surface is the recipe form factory plus its localized form-control type helper.
 - Shared `common.data.ts` no longer imports Angular Forms; legacy form-control mapped types are localized inside the remaining recipe/meal form factories.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

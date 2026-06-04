@@ -12,10 +12,7 @@ import type { ConsumptionFormValues, ConsumptionItemFormValues, NutritionTotals 
 import {
     buildMealManageDto,
     buildMealManageFormPatchValue,
-    createConsumptionItemGroup,
     createConsumptionItemValue,
-    createMealConsumptionItemsRule,
-    createMealManageForm,
     createMealManageFormValue,
     getConsumptionItemInitialAmount,
 } from './meal-manage-form.mapper';
@@ -54,21 +51,6 @@ const image: ImageSelection = {
 };
 
 describe('meal manage form creation', () => {
-    it('should create form with fixed date, time and one item', () => {
-        const form = createMealManageForm(
-            {
-                createItem: () => createConsumptionItemGroup(product, null, PRODUCT_AMOUNT, ConsumptionSourceType.Product),
-                createItemsRule: () => createMealConsumptionItemsRule(() => []),
-            },
-            FIXED_DATE,
-        );
-
-        expect(form.controls.date.value).toBe('2026-04-05');
-        expect(form.controls.time.value).toBe('09:07');
-        expect(form.controls.items.length).toBe(1);
-        expect(form.controls.isNutritionAutoCalculated.value).toBe(true);
-    });
-
     it('should create signal form value with fixed date, time and one item', () => {
         const value = createMealManageFormValue(FIXED_DATE);
 

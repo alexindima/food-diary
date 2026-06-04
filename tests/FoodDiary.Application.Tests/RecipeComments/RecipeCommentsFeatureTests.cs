@@ -4,6 +4,7 @@ using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -68,6 +69,21 @@ public class RecipeCommentsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new CreateRecipeCommentCommandHandler(
+            new InMemoryRecipeCommentRepository(),
+            new StubRecipeRepository(Recipe.Create(UserId.New(), "Pasta", 1)),
+            new RecordingNotificationRepository());
+
+        var result = await handler.Handle(
+            new CreateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateRecipeComment_ByAuthor_Succeeds() {
         var userId = UserId.New();
         var comment = RecipeComment.Create(userId, RecipeId.New(), "Old text");
@@ -98,6 +114,30 @@ public class RecipeCommentsFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Contains("NotAuthor", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpdateRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateRecipeComment_WhenCommentMissing_ReturnsNotFound() {
+        var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("RecipeComment.NotFound", result.Error.Code);
     }
 
     [Fact]
@@ -147,6 +187,71 @@ public class RecipeCommentsFeatureTests {
         Assert.NotNull(await repo.GetByIdAsync(comment.Id));
     }
 
+    [Fact]
+    public async Task DeleteRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new DeleteRecipeCommentCommandHandler(
+            new InMemoryRecipeCommentRepository(),
+            new StubRecipeRepository(null));
+
+        var result = await handler.Handle(
+            new DeleteRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteRecipeComment_ByNonAuthorWithoutRecipeAccess_ReturnsNotAuthor() {
+        var recipeId = RecipeId.New();
+        var comment = RecipeComment.Create(UserId.New(), recipeId, "Text");
+        var repo = new InMemoryRecipeCommentRepository();
+        repo.Seed(comment);
+
+        var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(null));
+        var result = await handler.Handle(
+            new DeleteRecipeCommentCommand(Guid.NewGuid(), recipeId.Value, comment.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("RecipeComment.NotAuthor", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetRecipeComments_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetRecipeCommentsQueryHandler(new InMemoryRecipeCommentRepository());
+
+        var result = await handler.Handle(
+            new GetRecipeCommentsQuery(Guid.Empty, Guid.NewGuid(), 1, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetRecipeComments_ReturnsPagedCommentsAndOwnershipFlag() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var repo = new InMemoryRecipeCommentRepository();
+        repo.Seed(RecipeComment.Create(userId, recipeId, "Mine"));
+        repo.Seed(RecipeComment.Create(UserId.New(), recipeId, "Other"));
+        repo.Seed(RecipeComment.Create(userId, RecipeId.New(), "Different recipe"));
+        var handler = new GetRecipeCommentsQueryHandler(repo);
+
+        var result = await handler.Handle(
+            new GetRecipeCommentsQuery(userId.Value, recipeId.Value, 0, 0),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value.Page);
+        Assert.Equal(1, result.Value.Limit);
+        Assert.Equal(2, result.Value.TotalItems);
+        Assert.Equal(2, result.Value.TotalPages);
+        Assert.Single(result.Value.Data);
+        Assert.True(result.Value.Data[0].IsOwnedByCurrentUser);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryRecipeCommentRepository : IRecipeCommentRepository {
         private readonly List<RecipeComment> _comments = [];
@@ -170,8 +275,9 @@ public class RecipeCommentsFeatureTests {
 
         public Task<(IReadOnlyList<RecipeComment> Items, int Total)> GetPagedByRecipeAsync(
             RecipeId recipeId, int page, int limit, CancellationToken ct = default) {
-            var items = _comments.Where(c => c.RecipeId == recipeId).ToList();
-            return Task.FromResult<(IReadOnlyList<RecipeComment>, int)>((items, items.Count));
+            var matching = _comments.Where(c => c.RecipeId == recipeId).ToList();
+            var items = matching.Skip((page - 1) * limit).Take(limit).ToList();
+            return Task.FromResult<(IReadOnlyList<RecipeComment>, int)>((items, matching.Count));
         }
     }
 

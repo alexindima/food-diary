@@ -8,6 +8,7 @@ using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
+using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
@@ -129,6 +130,83 @@ public class RecipesFeatureTests {
         var result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
 
         Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task UpdateRecipeCommandValidator_WhenRecipeIsMissing_ReturnsNotFoundError() {
+        var validator = new UpdateRecipeCommandValidator(new SingleRecipeRepositoryForCreate());
+
+        var result = await validator.ValidateAsync(new UpdateRecipeCommand(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Name: "Soup",
+            Description: null,
+            ClearDescription: false,
+            Comment: null,
+            ClearComment: false,
+            Category: null,
+            ClearCategory: false,
+            ImageUrl: null,
+            ClearImageUrl: false,
+            ImageAssetId: null,
+            ClearImageAssetId: false,
+            PrepTime: null,
+            CookTime: null,
+            Servings: 2,
+            Visibility: Visibility.Private.ToString(),
+            CalculateNutritionAutomatically: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            Steps: [CreateRecipeCreateStep(order: 1, "Mix")]));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Recipe.NotFound", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task UpdateRecipeCommandValidator_WithConflictingClearFlagsDuplicateStepsAndMissingManualNutrition_ReturnsErrors() {
+        var userId = UserId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        var validator = new UpdateRecipeCommandValidator(new SingleRecipeRepository(recipe));
+
+        var result = await validator.ValidateAsync(new UpdateRecipeCommand(
+            userId.Value,
+            recipe.Id.Value,
+            Name: "Soup",
+            Description: "description",
+            ClearDescription: true,
+            Comment: "comment",
+            ClearComment: true,
+            Category: "category",
+            ClearCategory: true,
+            ImageUrl: "https://cdn.test/soup.png",
+            ClearImageUrl: true,
+            ImageAssetId: ImageAssetId.New().Value,
+            ClearImageAssetId: true,
+            PrepTime: -1,
+            CookTime: 0,
+            Servings: 0,
+            Visibility: "unknown",
+            CalculateNutritionAutomatically: false,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: -1,
+            Steps: [
+                CreateRecipeCreateStep(order: 1, "Mix"),
+                CreateRecipeCreateStep(order: 1, "Serve")
+            ]));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => error.ErrorMessage.IndexOf("Step order", StringComparison.Ordinal) >= 0);
+        Assert.Contains(result.Errors, error => error.ErrorMessage.IndexOf("Manual nutrition", StringComparison.Ordinal) >= 0);
     }
 
     [Fact]
@@ -402,6 +480,31 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task DuplicateRecipeCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new DuplicateRecipeCommandHandler(new SingleRecipeRepositoryForCreate());
+
+        var result = await handler.Handle(
+            new DuplicateRecipeCommand(Guid.Empty, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DuplicateRecipeCommandHandler_WhenOriginalRecipeIsMissing_ReturnsNotFound() {
+        var userId = Guid.NewGuid();
+        var handler = new DuplicateRecipeCommandHandler(new SingleRecipeRepositoryForCreate());
+
+        var result = await handler.Handle(
+            new DuplicateRecipeCommand(userId, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Recipe.NotFound", result.Error.Code);
+    }
+
+    [Fact]
     public async Task DuplicateRecipeCommandHandler_WithExistingRecipe_CopiesFieldsAndClearsImageAsset() {
         var user = User.Create("duplicate-recipe@example.com", "hash");
         var nestedRecipeId = RecipeId.New();
@@ -436,6 +539,28 @@ public class RecipesFeatureTests {
         Assert.Single(repository.LastAddedRecipe.Steps);
         Assert.Equal(2, repository.LastAddedRecipe.Steps.Single().Ingredients.Count);
         Assert.True(result.Value.IsOwnedByCurrentUser);
+    }
+
+    [Fact]
+    public async Task DuplicateRecipeCommandHandler_WithManualNutrition_CopiesManualValues() {
+        var user = User.Create("duplicate-manual-recipe@example.com", "hash");
+        var original = Recipe.Create(user.Id, "Manual Recipe", servings: 1);
+        original.SetManualNutrition(250, 20, 8, 30, 5, 1);
+
+        var repository = new SingleRecipeRepository(original);
+        var handler = new DuplicateRecipeCommandHandler(repository);
+
+        var result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.LastAddedRecipe);
+        Assert.False(repository.LastAddedRecipe.IsNutritionAutoCalculated);
+        Assert.Equal(250, repository.LastAddedRecipe.ManualCalories);
+        Assert.Equal(20, repository.LastAddedRecipe.ManualProteins);
+        Assert.Equal(8, repository.LastAddedRecipe.ManualFats);
+        Assert.Equal(30, repository.LastAddedRecipe.ManualCarbs);
+        Assert.Equal(5, repository.LastAddedRecipe.ManualFiber);
+        Assert.Equal(1, repository.LastAddedRecipe.ManualAlcohol);
     }
 
     [Fact]
@@ -575,6 +700,29 @@ public class RecipesFeatureTests {
         Assert.True(result.Value[1].IsOwnedByCurrentUser);
         Assert.Equal(2, result.Value[0].UsageCount);
         Assert.Equal(5, result.Value[1].UsageCount);
+    }
+
+    [Fact]
+    public async Task ExploreRecipesQueryHandler_ReturnsPagedPublicRecipesAndOwnerFlags() {
+        var user = User.Create("explore-recipes@example.com", "hash");
+        var owned = Recipe.Create(user.Id, "Owned Public Soup", servings: 2, visibility: Visibility.Public);
+        owned.AddStep(1, "Cook");
+        var publicRecipe = Recipe.Create(UserId.New(), "Shared Salad", servings: 1, visibility: Visibility.Public);
+        publicRecipe.AddStep(1, "Mix");
+        var repository = new OverviewRecipeRepository(pagedItems: [(owned, 3), (publicRecipe, 7)]);
+        var handler = new ExploreRecipesQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new ExploreRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", Category: "Lunch", MaxPrepTime: 20, SortBy: "popular"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value.Page);
+        Assert.Equal(1, result.Value.Limit);
+        Assert.Equal(2, result.Value.TotalItems);
+        Assert.True(result.Value.Data[0].IsOwnedByCurrentUser);
+        Assert.False(result.Value.Data[1].IsOwnedByCurrentUser);
+        Assert.Equal([owned.Id.Value, publicRecipe.Id.Value], result.Value.Data.Select(x => x.Id).ToArray());
     }
 
     [Fact]
@@ -934,7 +1082,8 @@ public class RecipesFeatureTests {
 
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
             int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult((_pagedItems, _pagedItems.Count));
     }
 
     [ExcludeFromCodeCoverage]

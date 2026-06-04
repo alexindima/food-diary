@@ -48,6 +48,18 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
+    public async Task SendDashboardTestEmailCommandValidator_WithEmptyUserId_Fails() {
+        var validator = new SendDashboardTestEmailCommandValidator();
+
+        var result = await validator.ValidateAsync(new SendDashboardTestEmailCommand(Guid.Empty));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Errors,
+            error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void DashboardMapping_ToStatisticsModel_WhenResponseIsNull_ReturnsEmptyModel() {
         var dto = DashboardMapping.ToStatisticsModel(null, null);
 
@@ -176,6 +188,23 @@ public class DashboardFeatureTests {
         Assert.Equal(cts.Token, builder.LastCancellationToken);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("00000000-0000-0000-0000-000000000000")]
+    public async Task GetDashboardSnapshotQueryHandler_WithMissingUserId_ReturnsInvalidToken(string? userIdText) {
+        var builder = new RecordingDashboardSnapshotBuilder();
+        var handler = new GetDashboardSnapshotQueryHandler(builder);
+        var userId = userIdText is null ? (Guid?)null : Guid.Parse(userIdText);
+
+        var result = await handler.Handle(
+            new GetDashboardSnapshotQuery(userId, DateTime.UtcNow, Page: 1, PageSize: 10, Locale: "en", TrendDays: 7),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(builder.LastRequest);
+    }
+
     [Fact]
     public async Task SendDashboardTestEmail_WhenEmailSenderFails_ReturnsValidationFailure() {
         var user = User.Create("dashboard-email@example.com", "hash");
@@ -206,6 +235,21 @@ public class DashboardFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("dashboard-email-ok@example.com", emailSender.TestEmailMessage?.ToEmail);
         Assert.Equal("ru", emailSender.TestEmailMessage?.Language);
+    }
+
+    [Fact]
+    public async Task SendDashboardTestEmail_WhenUserMissing_ReturnsInvalidToken() {
+        var emailSender = new RecordingEmailSender();
+        var handler = new SendDashboardTestEmailCommandHandler(
+            new SingleUserRepository(null),
+            emailSender,
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+
+        var result = await handler.Handle(new SendDashboardTestEmailCommand(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(emailSender.TestEmailMessage);
     }
 
     [ExcludeFromCodeCoverage]
@@ -243,11 +287,11 @@ public class DashboardFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository {
+    private sealed class SingleUserRepository(User? user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();

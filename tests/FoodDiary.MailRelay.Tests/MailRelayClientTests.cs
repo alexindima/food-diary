@@ -56,6 +56,24 @@ public sealed class MailRelayClientTests {
         await Assert.ThrowsAsync<InvalidOperationException>(() => client.EnqueueAsync(CreateRequest(), CancellationToken.None));
     }
 
+    [Fact]
+    public async Task EnqueueAsync_WhenResponseJsonIsInvalid_ThrowsInvalidOperationException() {
+        using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Accepted) {
+            Content = new StringContent("{not-json", System.Text.Encoding.UTF8, "application/json")
+        })) {
+            BaseAddress = new Uri("https://relay.example.test")
+        };
+        var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions {
+            BaseUrl = "https://relay.example.test"
+        }));
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => client.EnqueueAsync(CreateRequest(), CancellationToken.None));
+
+        Assert.Equal("Mail relay returned an invalid enqueue response.", exception.Message);
+        Assert.IsType<System.Text.Json.JsonException>(exception.InnerException);
+    }
+
     private static EnqueueMailRelayEmailRequest CreateRequest() =>
         new(
             "relay@example.com",

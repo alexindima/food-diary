@@ -46,6 +46,29 @@ public class ConsumptionsAdditionalValidatorTests {
         Assert.True(result.IsFailure);
     }
 
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void ConsumptionItem_WithNonFiniteAmount_ReturnsFailure(double amount) {
+        var item = new ConsumptionItemInput(Guid.NewGuid(), null, amount);
+
+        var result = ConsumptionItemValidator.Validate(item);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public void ConsumptionItem_WithTooLargeAmount_ReturnsFailure() {
+        var item = new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_000.01d);
+
+        var result = ConsumptionItemValidator.Validate(item);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
     [Fact]
     public void ConsumptionItem_WithValidProductAndAmount_ReturnsSuccess() {
         var item = new ConsumptionItemInput(Guid.NewGuid(), null, 150);
@@ -83,6 +106,14 @@ public class ConsumptionsAdditionalValidatorTests {
     public void ManualNutrition_WithNegativeValue_ReturnsFailure() {
         var result = ManualNutritionValidator.Validate(200, -1, 10, 50, 5, 0);
         Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public void ManualNutrition_WithNegativeAlcohol_ReturnsFailure() {
+        var result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, -0.1);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
     [Fact]
