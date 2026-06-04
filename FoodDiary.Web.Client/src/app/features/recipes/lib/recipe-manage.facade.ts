@@ -1,5 +1,4 @@
 import { inject, Service, signal } from '@angular/core';
-import type { FormArray, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -13,7 +12,7 @@ import type {
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constants';
 import { RecipeService } from '../api/recipe.service';
-import type { IngredientFormData, NutritionScaleMode, StepFormData } from '../components/manage/recipe-manage-lib/recipe-manage.types';
+import type { IngredientFormValues, NutritionScaleMode } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import type { Recipe, RecipeDto } from '../models/recipe.data';
 
 export type RecipeNutritionSummary = {
@@ -23,6 +22,35 @@ export type RecipeNutritionSummary = {
     carbs: number;
     fiber: number;
     alcohol: number;
+};
+
+export type RecipeIngredientSelectionTarget = {
+    patchValue: (value: Partial<IngredientFormValues>) => void;
+};
+
+export type RecipeControlValue<T> = {
+    value: T;
+};
+
+export type RecipeIngredientNutritionState = {
+    controls: {
+        amount: RecipeControlValue<number | null>;
+        food: RecipeControlValue<IngredientFormValues['food']>;
+        nestedRecipe: RecipeControlValue<IngredientFormValues['nestedRecipe']>;
+    };
+};
+
+export type RecipeStepNutritionState = {
+    controls: {
+        ingredients: {
+            controls: readonly RecipeIngredientNutritionState[];
+        };
+    };
+};
+
+export type RecipeStepsNutritionState = {
+    controls: readonly RecipeStepNutritionState[];
+    length: number;
 };
 
 @Service()
@@ -46,7 +74,7 @@ export class RecipeManageFacade {
             .pipe(map(selection => selection ?? null));
     }
 
-    public applyItemSelection(foodGroup: FormGroup<IngredientFormData>, selection: ItemSelection): void {
+    public applyItemSelection(foodGroup: RecipeIngredientSelectionTarget, selection: ItemSelection): void {
         if (selection.type === 'Product') {
             const food = selection.product;
             const defaultAmount = food.defaultPortionAmount;
@@ -94,7 +122,7 @@ export class RecipeManageFacade {
         };
     }
 
-    public calculateAutoSummary(stepsArray: FormArray<FormGroup<StepFormData>>): RecipeNutritionSummary {
+    public calculateAutoSummary(stepsArray: RecipeStepsNutritionState): RecipeNutritionSummary {
         if (stepsArray.length === 0) {
             return {
                 calories: 0,
@@ -169,7 +197,7 @@ export class RecipeManageFacade {
         };
     }
 
-    private calculateProductSummary(food: NonNullable<IngredientFormData['food']['value']>, amount: number): RecipeNutritionSummary {
+    private calculateProductSummary(food: NonNullable<IngredientFormValues['food']>, amount: number): RecipeNutritionSummary {
         const baseAmount = food.baseAmount > 0 ? food.baseAmount : 1;
         const multiplier = amount / baseAmount;
 

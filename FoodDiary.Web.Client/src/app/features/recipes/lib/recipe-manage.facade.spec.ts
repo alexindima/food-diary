@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom, of, throwError } from 'rxjs';
@@ -9,9 +8,14 @@ import { NavigationService } from '../../../services/navigation.service';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { RecipeService } from '../api/recipe.service';
-import type { IngredientFormData, StepFormData } from '../components/manage/recipe-manage-lib/recipe-manage.types';
+import type { IngredientFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import { type Recipe, RecipeVisibility } from '../models/recipe.data';
-import { RecipeManageFacade } from './recipe-manage.facade';
+import {
+    type RecipeIngredientNutritionState,
+    type RecipeIngredientSelectionTarget,
+    RecipeManageFacade,
+    type RecipeStepsNutritionState,
+} from './recipe-manage.facade';
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 150;
 const APPLE_CALORIES = 52;
@@ -150,14 +154,7 @@ describe('RecipeManageFacade selection', () => {
     });
 
     it('applies product selection defaults to ingredient form group', () => {
-        const ingredientGroup = new FormGroup({
-            food: new FormControl(null),
-            amount: new FormControl<number | null>(null),
-            foodName: new FormControl<string | null>(null),
-            nestedRecipe: new FormControl(null),
-            nestedRecipeId: new FormControl<string | null>(null),
-            nestedRecipeName: new FormControl<string | null>(null),
-        }) as unknown as FormGroup<IngredientFormData>;
+        const ingredientGroup = createIngredientSelectionTarget();
 
         facade.applyItemSelection(ingredientGroup, {
             type: 'Product',
@@ -196,31 +193,15 @@ describe('RecipeManageFacade selection', () => {
 
 describe('RecipeManageFacade nutrition summary', () => {
     it('calculates nutrient summary from recipe steps', () => {
-        const stepsArray = new FormArray([
-            new FormGroup({
-                title: new FormControl<string | null>(null),
-                imageUrl: new FormControl(null),
-                description: new FormControl('Step'),
-                ingredients: new FormArray([
-                    new FormGroup({
-                        food: new FormControl({
-                            baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
-                            caloriesPerBase: 200,
-                            proteinsPerBase: 10,
-                            fatsPerBase: 5,
-                            carbsPerBase: 20,
-                            fiberPerBase: 3,
-                            alcoholPerBase: 0,
-                        }),
-                        amount: new FormControl(INGREDIENT_AMOUNT),
-                        foodName: new FormControl('Ingredient'),
-                        nestedRecipe: new FormControl(null),
-                        nestedRecipeId: new FormControl<string | null>(null),
-                        nestedRecipeName: new FormControl<string | null>(null),
-                    }),
-                ]),
-            }),
-        ]) as unknown as FormArray<FormGroup<StepFormData>>;
+        const stepsArray = createStepsNutritionState([
+            [
+                {
+                    amount: INGREDIENT_AMOUNT,
+                    food: createNutritionProduct(),
+                    nestedRecipe: null,
+                },
+            ],
+        ]);
 
         const summary = facade.calculateAutoSummary(stepsArray);
 
@@ -244,23 +225,15 @@ describe('RecipeManageFacade nutrition summary', () => {
             totalFiber: 6,
             totalAlcohol: 0,
         });
-        const stepsArray = new FormArray([
-            new FormGroup({
-                title: new FormControl<string | null>(null),
-                imageUrl: new FormControl(null),
-                description: new FormControl('Step'),
-                ingredients: new FormArray([
-                    new FormGroup({
-                        food: new FormControl(null),
-                        amount: new FormControl(1),
-                        foodName: new FormControl('Nested recipe'),
-                        nestedRecipe: new FormControl(nestedRecipe),
-                        nestedRecipeId: new FormControl<string | null>(nestedRecipe.id),
-                        nestedRecipeName: new FormControl<string | null>(nestedRecipe.name),
-                    }),
-                ]),
-            }),
-        ]) as unknown as FormArray<FormGroup<StepFormData>>;
+        const stepsArray = createStepsNutritionState([
+            [
+                {
+                    amount: 1,
+                    food: null,
+                    nestedRecipe,
+                },
+            ],
+        ]);
 
         const summary = facade.calculateAutoSummary(stepsArray);
 
@@ -274,6 +247,85 @@ describe('RecipeManageFacade nutrition summary', () => {
         });
     });
 });
+
+type TestIngredientSelectionTarget = RecipeIngredientSelectionTarget & {
+    value: IngredientFormValues;
+};
+
+type TestIngredientNutritionInput = {
+    amount: number | null;
+    food: IngredientFormValues['food'];
+    nestedRecipe: IngredientFormValues['nestedRecipe'];
+};
+
+function createIngredientSelectionTarget(): TestIngredientSelectionTarget {
+    const target: TestIngredientSelectionTarget = {
+        patchValue: value => {
+            target.value = { ...target.value, ...value };
+        },
+        value: {
+            amount: null,
+            food: null,
+            foodName: null,
+            nestedRecipe: null,
+            nestedRecipeId: null,
+            nestedRecipeName: null,
+        },
+    };
+
+    return target;
+}
+
+function createStepsNutritionState(steps: ReadonlyArray<readonly TestIngredientNutritionInput[]>): RecipeStepsNutritionState {
+    return {
+        controls: steps.map(ingredients => ({
+            controls: {
+                ingredients: {
+                    controls: ingredients.map(createIngredientNutritionState),
+                },
+            },
+        })),
+        length: steps.length,
+    };
+}
+
+function createIngredientNutritionState(input: TestIngredientNutritionInput): RecipeIngredientNutritionState {
+    return {
+        controls: {
+            amount: { value: input.amount },
+            food: { value: input.food },
+            nestedRecipe: { value: input.nestedRecipe },
+        },
+    };
+}
+
+function createNutritionProduct(): NonNullable<IngredientFormValues['food']> {
+    return {
+        id: 'product-1',
+        name: 'Ingredient',
+        baseUnit: MeasurementUnit.G,
+        baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+        defaultPortionAmount: PRODUCT_DEFAULT_PORTION_AMOUNT,
+        productType: ProductType.Fruit,
+        barcode: null,
+        brand: null,
+        category: null,
+        description: null,
+        imageUrl: null,
+        caloriesPerBase: 200,
+        proteinsPerBase: 10,
+        fatsPerBase: 5,
+        carbsPerBase: 20,
+        fiberPerBase: 3,
+        alcoholPerBase: 0,
+        usageCount: 0,
+        visibility: ProductVisibility.Private,
+        createdAt: new Date(),
+        isOwnedByCurrentUser: true,
+        qualityScore: APPLE_QUALITY_SCORE,
+        qualityGrade: 'yellow',
+    };
+}
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {

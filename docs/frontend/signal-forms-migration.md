@@ -9,7 +9,7 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 - Baseline date: 2026-06-04.
 - Migrated Signal Forms: 51 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 15 files.
+- Remaining legacy Reactive Forms surface: 13 files.
 
 Tracker patterns:
 
@@ -170,6 +170,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.spec.ts`
 - `FoodDiary.Web.Client/src/app/shared/forms/match-field.validator.spec.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/lib/non-empty-array.validator.spec.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.spec.ts`
 
 ## Next Candidates
 
@@ -207,5 +209,6 @@ Tracker patterns:
 - `fd-ui-input` and `fd-ui-textarea` host integration specs now use Signal Forms `[formField]`, including declarative disabled-state checks.
 - Error utility specs now use structural control-state doubles instead of Angular `FormControl`, keeping actual Reactive Forms usage visible in adapters/managers.
 - `fd-ui-form-error` now accepts a minimal structural control state, and validator specs use plain control doubles instead of Angular `FormControl`/`FormGroup`.
+- Recipe manage facade now uses value-level and structural nutrition/selection contracts; the root recipe adapter still owns the legacy steps `FormArray`.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.
