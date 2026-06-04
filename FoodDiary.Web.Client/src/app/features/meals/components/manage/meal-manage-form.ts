@@ -217,7 +217,7 @@ export class MealManageFormComponent {
     private createConsumptionForm(): MealLegacyForm {
         return createMealManageForm({
             createItem: () => this.mealManageFacade.createConsumptionItem(),
-            createItemsValidator: () => this.mealManageFacade.createItemsValidator(() => this.aiSessions()),
+            createItemsRule: () => this.mealManageFacade.createItemsRule(() => this.aiSessions()),
         });
     }
 
@@ -708,11 +708,11 @@ export class MealManageFormComponent {
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {
-        this.mealManageFacade.updateManualNutritionValidators(this.consumptionForm, isAuto);
+        this.mealManageFacade.updateManualNutritionRules(this.consumptionForm, isAuto);
     }
 
     private updateItemValidationRules(): void {
-        this.mealManageFacade.updateItemValidationRules(this.consumptionForm.controls.items);
+        this.mealManageFacade.updateItemRules(this.consumptionForm.controls.items);
     }
 
     private patchManualNutritionFromTotals(totals: NutritionTotals): void {

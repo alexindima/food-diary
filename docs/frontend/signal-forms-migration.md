@@ -9,7 +9,7 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 - Baseline date: 2026-06-04.
 - Migrated Signal Forms: 51 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 7 files.
+- Remaining legacy Reactive Forms surface: 5 files.
 
 Tracker patterns:
 
@@ -220,6 +220,7 @@ Tracker patterns:
 - Recipe nutrition manager now depends on structural form operations instead of `FormGroup`/`FormControl` types; the root recipe adapter still supplies the legacy form instance.
 - Recipe step manager now depends on structural step-array operations instead of `FormArray`/`FormGroup` types; the root recipe adapter still owns the concrete legacy array.
 - Recipe manage root adapter no longer imports `FormGroup`/`FormArray` directly; recursive touch handling now uses structural control containers while the concrete legacy form still lives in the mapper.
-- Meal manage root adapter no longer imports `FormGroup`/`FormArray` directly; recursive touch handling now uses structural control containers while the concrete legacy form still lives in the mapper/facade.
+- Meal manage root adapter no longer imports `FormGroup`/`FormArray` directly; recursive touch handling now uses structural control containers while the concrete legacy form still lives in the mapper.
+- Meal manage facade and facade specs now use mapper-owned form factories/rules instead of importing Reactive Forms directly; the remaining meal legacy surface is isolated in the root form adapter and mapper specs.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

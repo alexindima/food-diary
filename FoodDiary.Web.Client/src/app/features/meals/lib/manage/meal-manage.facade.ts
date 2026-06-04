@@ -1,13 +1,4 @@
 import { inject, Service } from '@angular/core';
-import {
-    type AbstractControl,
-    type FormArray,
-    FormControl,
-    FormGroup,
-    type ValidationErrors,
-    type ValidatorFn,
-    Validators,
-} from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -19,21 +10,24 @@ import type {
     ItemSelectDialogData,
     ItemSelection,
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
-import { calculateCalorieMismatchWarning, getControlNumericValue, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
-import { isRecord } from '../../../../shared/lib/unknown-value.utils';
+import { calculateCalorieMismatchWarning, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
 import type {
     CalorieMismatchWarning,
-    ConsumptionFormData,
     ConsumptionFormValues,
-    ConsumptionItemFormData,
     ConsumptionItemFormValues,
     MealNutritionSummaryState,
     NutritionTotals,
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
+import {
+    applyMealConsumptionItemRules,
+    applyMealManualNutritionRules,
+    createConsumptionItemGroup,
+    createMealConsumptionItemsRule,
+} from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import {
     type ConsumptionManageRedirectAction,
     type ConsumptionManageSuccessDialogData,
@@ -47,7 +41,11 @@ import {
     ConsumptionSourceType,
 } from '../../models/meal.data';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
-import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT, MEAL_MANAGE_MIN_ITEM_AMOUNT, MEAL_MANAGE_MIN_NUTRITION_VALUE } from './meal-manage.config';
+import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT } from './meal-manage.config';
+
+type MealItemHandle = ReturnType<typeof createConsumptionItemGroup>;
+type MealItemsHandle = Parameters<typeof applyMealConsumptionItemRules>[0];
+type MealRootHandle = Parameters<typeof applyMealManualNutritionRules>[0];
 
 @Service()
 export class MealManageFacade {
@@ -148,14 +146,8 @@ export class MealManageFacade {
         recipe: Recipe | null = null,
         amount: number | null = null,
         sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
-    ): FormGroup<ConsumptionItemFormData> {
-        const group = new FormGroup<ConsumptionItemFormData>({
-            sourceType: new FormControl<ConsumptionSourceType>(sourceType, { nonNullable: true }),
-            product: new FormControl<Product | null>(product),
-            recipe: new FormControl<Recipe | null>(recipe),
-            amount: new FormControl<number | null>(amount),
-        });
-
+    ): MealItemHandle {
+        const group = createConsumptionItemGroup(product, recipe, amount, sourceType);
         this.configureItemType(group, sourceType);
         this.updateAmountControlState(group);
         return group;
@@ -175,7 +167,7 @@ export class MealManageFacade {
         };
     }
 
-    public configureItemType(group: FormGroup<ConsumptionItemFormData>, type: ConsumptionSourceType, clearSelection = false): void {
+    public configureItemType(group: MealItemHandle, type: ConsumptionSourceType, clearSelection = false): void {
         group.controls.sourceType.setValue(type);
 
         if (type === ConsumptionSourceType.Product) {
@@ -194,7 +186,7 @@ export class MealManageFacade {
         this.updateAmountControlState(group);
     }
 
-    public async openItemSelectionDialogAsync(group: FormGroup<ConsumptionItemFormData>, initialTab: 'Product' | 'Recipe'): Promise<void> {
+    public async openItemSelectionDialogAsync(group: MealItemHandle, initialTab: 'Product' | 'Recipe'): Promise<void> {
         const selection = await firstValueFrom(
             this.fdDialogService
                 .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
@@ -227,11 +219,7 @@ export class MealManageFacade {
         this.ensureRecipeWeightForExistingItem(group, MEAL_MANAGE_DEFAULT_ITEM_AMOUNT, selection.recipe);
     }
 
-    public ensureRecipeWeightForExistingItem(
-        group: FormGroup<ConsumptionItemFormData>,
-        servingsAmount: number,
-        recipe: Recipe | null,
-    ): void {
+    public ensureRecipeWeightForExistingItem(group: MealItemHandle, servingsAmount: number, recipe: Recipe | null): void {
         if (recipe === null) {
             return;
         }
@@ -264,65 +252,21 @@ export class MealManageFacade {
         return this.recipeWeight.convertServingsToGrams(recipe, servings);
     }
 
-    public createItemsValidator(getAiSessions: () => ConsumptionAiSessionManageDto[]): ValidatorFn {
-        return (control: AbstractControl): ValidationErrors | null => {
-            const value: unknown = control.value;
-            const hasManualItems = Array.isArray(value) ? value.some(item => this.hasSelectedSource(item)) : false;
-            const hasAiItems = getAiSessions().length > 0;
-            return hasManualItems || hasAiItems ? null : { nonEmptyArray: true };
-        };
+    public createItemsRule(getAiSessions: () => ConsumptionAiSessionManageDto[]): ReturnType<typeof createMealConsumptionItemsRule> {
+        return createMealConsumptionItemsRule(getAiSessions);
     }
 
-    private hasSelectedSource(value: unknown): boolean {
-        return (
-            isRecord(value) &&
-            ((value['product'] !== null && value['product'] !== undefined) || (value['recipe'] !== null && value['recipe'] !== undefined))
-        );
+    public updateItemRules(items: MealItemsHandle): void {
+        applyMealConsumptionItemRules(items);
     }
 
-    public updateItemValidationRules(items: FormArray<FormGroup<ConsumptionItemFormData>>): void {
-        items.controls.forEach(group => {
-            const isEmpty = this.isItemEmpty(group);
-            if (isEmpty) {
-                group.controls.product.clearValidators();
-                group.controls.recipe.clearValidators();
-                group.controls.amount.clearValidators();
-            } else {
-                const sourceType = group.controls.sourceType.value;
-                if (sourceType === ConsumptionSourceType.Product) {
-                    group.controls.product.setValidators([Validators.required]);
-                    group.controls.recipe.clearValidators();
-                } else {
-                    group.controls.recipe.setValidators([Validators.required]);
-                    group.controls.product.clearValidators();
-                }
-                group.controls.amount.setValidators([Validators.required, Validators.min(MEAL_MANAGE_MIN_ITEM_AMOUNT)]);
-            }
-
-            group.controls.product.updateValueAndValidity({ emitEvent: false });
-            group.controls.recipe.updateValueAndValidity({ emitEvent: false });
-            group.controls.amount.updateValueAndValidity({ emitEvent: false });
-        });
-
-        items.updateValueAndValidity({ emitEvent: false });
-    }
-
-    public updateManualNutritionValidators(form: FormGroup<ConsumptionFormData>, isAuto: boolean): void {
-        const caloriesValidators = isAuto
-            ? [Validators.min(MEAL_MANAGE_MIN_NUTRITION_VALUE)]
-            : [Validators.required, Validators.min(MEAL_MANAGE_MIN_NUTRITION_VALUE)];
-        form.controls.manualCalories.setValidators(caloriesValidators);
-        form.controls.manualCalories.updateValueAndValidity({ emitEvent: false });
-
-        this.getOptionalManualNutritionControls(form).forEach(control => {
-            control.setValidators([Validators.min(MEAL_MANAGE_MIN_NUTRITION_VALUE)]);
-            control.updateValueAndValidity({ emitEvent: false });
-        });
+    public updateManualNutritionRules(form: MealRootHandle, isAuto: boolean): void {
+        applyMealManualNutritionRules(form, isAuto);
     }
 
     public buildNutritionSummaryState(
-        form: FormGroup<ConsumptionFormData>,
-        items: FormArray<FormGroup<ConsumptionItemFormData>>,
+        form: MealRootHandle,
+        items: MealItemsHandle,
         aiSessions: ConsumptionAiSessionManageDto[],
         calorieMismatchThreshold: number,
     ): MealNutritionSummaryState {
@@ -350,7 +294,7 @@ export class MealManageFacade {
         };
     }
 
-    public syncManualNutritionFromTotals(form: FormGroup<ConsumptionFormData>, totals: NutritionTotals): void {
+    public syncManualNutritionFromTotals(form: MealRootHandle, totals: NutritionTotals): void {
         form.patchValue(
             {
                 manualCalories: roundNutrient(totals.calories),
@@ -364,14 +308,14 @@ export class MealManageFacade {
         );
     }
 
-    public getManualNutritionTotals(form: FormGroup<ConsumptionFormData>): NutritionTotals {
+    public getManualNutritionTotals(form: MealRootHandle): NutritionTotals {
         return {
-            calories: getControlNumericValue(form.controls.manualCalories),
-            proteins: getControlNumericValue(form.controls.manualProteins),
-            fats: getControlNumericValue(form.controls.manualFats),
-            carbs: getControlNumericValue(form.controls.manualCarbs),
-            fiber: getControlNumericValue(form.controls.manualFiber),
-            alcohol: getControlNumericValue(form.controls.manualAlcohol),
+            calories: this.getNumericValue(form.controls.manualCalories.value),
+            proteins: this.getNumericValue(form.controls.manualProteins.value),
+            fats: this.getNumericValue(form.controls.manualFats.value),
+            carbs: this.getNumericValue(form.controls.manualCarbs.value),
+            fiber: this.getNumericValue(form.controls.manualFiber.value),
+            alcohol: this.getNumericValue(form.controls.manualAlcohol.value),
         };
     }
 
@@ -386,7 +330,7 @@ export class MealManageFacade {
         };
     }
 
-    private updateAmountControlState(group: FormGroup<ConsumptionItemFormData>): void {
+    private updateAmountControlState(group: MealItemHandle): void {
         const shouldDisable = group.controls.product.value === null && group.controls.recipe.value === null;
         if (shouldDisable && group.controls.amount.enabled) {
             group.controls.amount.disable({ emitEvent: false });
@@ -410,10 +354,7 @@ export class MealManageFacade {
         return MEAL_MANAGE_DEFAULT_ITEM_AMOUNT;
     }
 
-    private calculateAutoNutritionTotals(
-        items: FormArray<FormGroup<ConsumptionItemFormData>>,
-        aiSessions: ConsumptionAiSessionManageDto[],
-    ): NutritionTotals {
+    private calculateAutoNutritionTotals(items: MealItemsHandle, aiSessions: ConsumptionAiSessionManageDto[]): NutritionTotals {
         const aiTotals = this.getAiNutritionTotals(aiSessions);
         return items.controls.reduce((totals, group) => this.addItemNutritionTotals(totals, group), { ...aiTotals });
     }
@@ -426,7 +367,7 @@ export class MealManageFacade {
         return items.reduce((totals, item) => this.addItemNutritionTotalsFromValue(totals, item), { ...aiTotals });
     }
 
-    private addItemNutritionTotals(totals: NutritionTotals, group: FormGroup<ConsumptionItemFormData>): NutritionTotals {
+    private addItemNutritionTotals(totals: NutritionTotals, group: MealItemHandle): NutritionTotals {
         const sourceType = group.controls.sourceType.value;
         const amount = group.controls.amount.value ?? 0;
 
@@ -502,25 +443,17 @@ export class MealManageFacade {
         );
     }
 
-    private buildCalorieMismatchWarning(
-        form: FormGroup<ConsumptionFormData>,
-        calorieMismatchThreshold: number,
-    ): CalorieMismatchWarning | null {
+    private buildCalorieMismatchWarning(form: MealRootHandle, calorieMismatchThreshold: number): CalorieMismatchWarning | null {
         if (form.controls.isNutritionAutoCalculated.value) {
             return null;
         }
 
-        const calories = getControlNumericValue(form.controls.manualCalories);
-        const proteins = getControlNumericValue(form.controls.manualProteins);
-        const fats = getControlNumericValue(form.controls.manualFats);
-        const carbs = getControlNumericValue(form.controls.manualCarbs);
-        const alcohol = getControlNumericValue(form.controls.manualAlcohol);
         return calculateCalorieMismatchWarning({
-            calories,
-            proteins,
-            fats,
-            carbs,
-            alcohol,
+            calories: this.getNumericValue(form.controls.manualCalories.value),
+            proteins: this.getNumericValue(form.controls.manualProteins.value),
+            fats: this.getNumericValue(form.controls.manualFats.value),
+            carbs: this.getNumericValue(form.controls.manualCarbs.value),
+            alcohol: this.getNumericValue(form.controls.manualAlcohol.value),
             threshold: calorieMismatchThreshold,
         });
     }
@@ -561,21 +494,5 @@ export class MealManageFacade {
             fiber: roundNutrient(totals.fiber),
             alcohol: roundNutrient(totals.alcohol),
         };
-    }
-
-    private isItemEmpty(group: FormGroup<ConsumptionItemFormData>): boolean {
-        const hasSource = group.controls.product.value !== null || group.controls.recipe.value !== null;
-        const amount = group.controls.amount.value ?? 0;
-        return !hasSource && amount <= 0;
-    }
-
-    private getOptionalManualNutritionControls(form: FormGroup<ConsumptionFormData>): Array<FormControl<number | null>> {
-        return [
-            form.controls.manualProteins,
-            form.controls.manualFats,
-            form.controls.manualCarbs,
-            form.controls.manualFiber,
-            form.controls.manualAlcohol,
-        ];
     }
 }

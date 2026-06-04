@@ -39,7 +39,7 @@ type MealManageFacadeMock = {
     convertRecipeServingsToGrams: ReturnType<typeof vi.fn>;
     configureItemType: ReturnType<typeof vi.fn>;
     createConsumptionItem: ReturnType<typeof vi.fn>;
-    createItemsValidator: ReturnType<typeof vi.fn>;
+    createItemsRule: ReturnType<typeof vi.fn>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
     getManualNutritionTotals: ReturnType<typeof vi.fn>;
     openEditAiPhotoSessionDialogAsync: ReturnType<typeof vi.fn>;
@@ -48,8 +48,8 @@ type MealManageFacadeMock = {
     showSuccessRedirectAsync: ReturnType<typeof vi.fn>;
     submitConsumptionAsync: ReturnType<typeof vi.fn>;
     syncManualNutritionFromTotals: ReturnType<typeof vi.fn>;
-    updateItemValidationRules: ReturnType<typeof vi.fn>;
-    updateManualNutritionValidators: ReturnType<typeof vi.fn>;
+    updateItemRules: ReturnType<typeof vi.fn>;
+    updateManualNutritionRules: ReturnType<typeof vi.fn>;
 };
 
 type MealManageFormSetup = {
@@ -220,7 +220,7 @@ describe('MealManageFormComponent nutrition and satiety behavior', () => {
         expect(component['nutritionMode']()).toBe('manual');
         expect(component['consumptionForm'].controls.isNutritionAutoCalculated.value).toBe(false);
         expect(mealManageFacade.syncManualNutritionFromTotals).toHaveBeenCalled();
-        expect(mealManageFacade.updateManualNutritionValidators).toHaveBeenLastCalledWith(component['consumptionForm'], false);
+        expect(mealManageFacade.updateManualNutritionRules).toHaveBeenLastCalledWith(component['consumptionForm'], false);
     });
 
     it('should normalize satiety level changes and mark control dirty', async () => {
@@ -300,7 +300,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         convertRecipeGramsToServings: vi.fn((_recipe, amount: number) => amount),
         convertRecipeServingsToGrams: vi.fn((_recipe, amount: number) => amount),
         createConsumptionItem: vi.fn(createConsumptionItemGroup),
-        createItemsValidator: vi.fn(() => Validators.nullValidator),
+        createItemsRule: vi.fn(() => Validators.nullValidator),
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         getManualNutritionTotals: vi.fn().mockReturnValue(EMPTY_TOTALS),
         openEditAiPhotoSessionDialogAsync: vi.fn().mockResolvedValue(null),
@@ -311,8 +311,8 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         showSuccessRedirectAsync: vi.fn().mockResolvedValue(void 0),
         submitConsumptionAsync: vi.fn().mockResolvedValue(null),
         syncManualNutritionFromTotals: vi.fn(),
-        updateItemValidationRules: vi.fn(),
-        updateManualNutritionValidators: vi.fn(),
+        updateItemRules: vi.fn(),
+        updateManualNutritionRules: vi.fn(),
     };
 }
 

@@ -1,18 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealService } from '../../api/meal.service';
-import type {
-    ConsumptionFormData,
-    ConsumptionFormValues,
-    ConsumptionItemFormData,
-} from '../../components/manage/meal-manage-lib/meal-manage.types';
+import type { ConsumptionFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
+import { createMealManageForm } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -124,6 +119,8 @@ const consumptionData: ConsumptionManageDto = {
     items: [],
     isNutritionAutoCalculated: true,
 };
+
+type ConsumptionItemHandle = ReturnType<MealManageFacade['createConsumptionItem']>;
 describe('MealManageFacade', () => {
     beforeEach(() => {
         mealService = {
@@ -304,9 +301,10 @@ function registerItemSelectionTests(): void {
         });
 
         it('should validate items array as non-empty when ai sessions are absent', () => {
-            const validator = facade.createItemsValidator(() => []);
+            const validator = facade.createItemsRule(() => []);
+            const form = createNutritionForm([], true);
 
-            expect(validator(new FormArray([]))).toEqual({ nonEmptyArray: true });
+            expect(validator(form.controls.items)).toEqual({ nonEmptyArray: true });
         });
     });
 }
@@ -315,17 +313,16 @@ function registerNutritionSummaryTests(): void {
     describe('nutrition summary', () => {
         it('should calculate nutrition summary from manual items and ai sessions', () => {
             recipeWeightService.loadServingWeight.mockReturnValue(of(RECIPE_SERVING_WEIGHT));
-            const items = new FormArray<FormGroup<ConsumptionItemFormData>>([
-                facade.createConsumptionItem(createNutritionProduct(), null, PRODUCT_AMOUNT, ConsumptionSourceType.Product),
-                facade.createConsumptionItem(null, createNutritionRecipe(), RECIPE_AMOUNT, ConsumptionSourceType.Recipe),
-            ]);
-
-            const state = facade.buildNutritionSummaryState(
-                createNutritionForm(items, true),
-                items,
-                AI_RECOGNITION_SESSIONS,
-                CALORIE_MISMATCH_THRESHOLD,
+            const form = createNutritionForm(
+                [
+                    facade.createConsumptionItem(createNutritionProduct(), null, PRODUCT_AMOUNT, ConsumptionSourceType.Product),
+                    facade.createConsumptionItem(null, createNutritionRecipe(), RECIPE_AMOUNT, ConsumptionSourceType.Recipe),
+                ],
+                true,
             );
+            const items = form.controls.items;
+
+            const state = facade.buildNutritionSummaryState(form, items, AI_RECOGNITION_SESSIONS, CALORIE_MISMATCH_THRESHOLD);
 
             expect(state.autoTotals).toEqual(EXPECTED_AUTO_TOTALS);
             expect(state.summaryTotals).toEqual(state.autoTotals);
@@ -345,8 +342,8 @@ function registerNutritionSummaryTests(): void {
         });
 
         it('should build calorie mismatch warning in manual mode', () => {
-            const items = new FormArray<FormGroup<ConsumptionItemFormData>>([facade.createConsumptionItem()]);
-            const form = createNutritionForm(items, false);
+            const form = createNutritionForm([facade.createConsumptionItem()], false);
+            const items = form.controls.items;
 
             const state = facade.buildNutritionSummaryState(form, items, [], CALORIE_MISMATCH_THRESHOLD);
 
@@ -356,7 +353,6 @@ function registerNutritionSummaryTests(): void {
                 actualCalories: MANUAL_CALORIES,
             });
         });
-
         it('should build calorie mismatch warning from signal form values in manual mode', () => {
             const state = facade.buildNutritionSummaryStateFromValues(createNutritionFormValue(false), [], CALORIE_MISMATCH_THRESHOLD);
 
@@ -397,24 +393,31 @@ function createNutritionRecipe(): ReturnType<typeof createEmptyRecipeSnapshot> {
     };
 }
 
-function createNutritionForm(items: FormArray<FormGroup<ConsumptionItemFormData>>, isAuto: boolean): FormGroup<ConsumptionFormData> {
-    return new FormGroup<ConsumptionFormData>({
-        date: new FormControl('2026-04-02', { nonNullable: true }),
-        time: new FormControl('12:00', { nonNullable: true }),
-        mealType: new FormControl<string | null>(null),
-        items,
-        comment: new FormControl<string | null>(null),
-        imageUrl: new FormControl<ImageSelection | null>(null),
-        isNutritionAutoCalculated: new FormControl(isAuto, { nonNullable: true }),
-        manualCalories: new FormControl<number | null>(isAuto ? null : MANUAL_CALORIES),
-        manualProteins: new FormControl<number | null>(isAuto ? null : MANUAL_PROTEINS),
-        manualFats: new FormControl<number | null>(isAuto ? null : MANUAL_FATS),
-        manualCarbs: new FormControl<number | null>(isAuto ? null : MANUAL_CARBS),
-        manualFiber: new FormControl<number | null>(0),
-        manualAlcohol: new FormControl<number | null>(0),
-        preMealSatietyLevel: new FormControl<number | null>(null),
-        postMealSatietyLevel: new FormControl<number | null>(null),
+function createNutritionForm(items: ConsumptionItemHandle[], isAuto: boolean): ReturnType<typeof createMealManageForm> {
+    const form = createMealManageForm(
+        {
+            createItem: () => facade.createConsumptionItem(),
+            createItemsRule: () => facade.createItemsRule(() => []),
+        },
+        new Date('2026-04-02T12:00:00'),
+    );
+
+    form.controls.items.clear();
+    items.forEach(item => {
+        form.controls.items.push(item);
     });
+    form.patchValue({
+        isNutritionAutoCalculated: isAuto,
+        manualCalories: isAuto ? null : MANUAL_CALORIES,
+        manualProteins: isAuto ? null : MANUAL_PROTEINS,
+        manualFats: isAuto ? null : MANUAL_FATS,
+        manualCarbs: isAuto ? null : MANUAL_CARBS,
+        manualFiber: 0,
+        manualAlcohol: 0,
+        preMealSatietyLevel: null,
+        postMealSatietyLevel: null,
+    });
+    return form;
 }
 
 function createNutritionFormValue(isAuto: boolean): ConsumptionFormValues {

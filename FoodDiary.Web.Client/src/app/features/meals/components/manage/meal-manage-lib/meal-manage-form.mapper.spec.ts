@@ -57,7 +57,7 @@ describe('meal manage form creation', () => {
         const form = createMealManageForm(
             {
                 createItem: () => createItemGroup(createProductItem()),
-                createItemsValidator: () => Validators.required,
+                createItemsRule: () => Validators.required,
             },
             FIXED_DATE,
         );
