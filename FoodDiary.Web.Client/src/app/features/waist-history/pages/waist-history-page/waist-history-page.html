@@ -10,7 +10,7 @@
             class="waist-history-page__period"
             [tabs]="rangeTabs"
             [selectedValue]="selectedRange()"
-            [rangeControl]="customRangeControl"
+            [rangeField]="customRangeForm.range"
             [displayRange]="currentRange()"
             [startLabel]="'WAIST_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
             [endLabel]="'WAIST_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
@@ -37,7 +37,7 @@
             />
 
             <fd-waist-history-goal-card
-                [control]="desiredWaistControl"
+                [circumferenceField]="desiredWaistForm.circumference"
                 [isSaving]="isDesiredWaistSaving()"
                 (saveGoal)="saveDesiredWaist()"
             />

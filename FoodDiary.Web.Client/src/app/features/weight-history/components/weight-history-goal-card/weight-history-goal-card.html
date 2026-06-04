@@ -5,9 +5,9 @@
             type="number"
             [step]="0.1"
             [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
-            [suffixButtonIcon]="control().value ? 'backspace' : undefined"
-            [formControl]="control()"
-            (suffixButtonClicked)="control().setValue('')"
+            [suffixButtonIcon]="weightField()().value() ? 'backspace' : undefined"
+            [formField]="weightField()"
+            (suffixButtonClicked)="weightField()().value.set('')"
         />
         <div class="weight-history-page__goal-actions fd-row fd-gap-actions">
             <fd-ui-button type="button" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveGoal.emit()">

@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 21 forms.
-- Signal Forms files: 41.
-- Remaining legacy Reactive Forms surface: 121 files.
+- Migrated Signal Forms: 30 forms.
+- Signal Forms files: 60.
+- Remaining legacy Reactive Forms surface: 99 files.
 
 Tracker patterns:
 
@@ -61,6 +61,27 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html`
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts`
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.html`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.ts`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.html`
+- `FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.ts`
+- `FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html`
+- `FoodDiary.Web.Client/src/app/features/statistics/lib/statistics.facade.ts`
+- `FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts`
+- `FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html`
+- `FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts`
+- `FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts`
+- `FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html`
+- `FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.ts`
+- `FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.html`
+- `FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.ts`
+- `FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html`
+- `FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.facade.ts`
+- `FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts`
+- `FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html`
+- `FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.ts`
+- `FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.html`
+- `FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.ts`
+- `FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html`
 
 ## Next Candidates
 
@@ -82,5 +103,6 @@ Tracker patterns:
 - `FormField` can interoperate with `ControlValueAccessor` components for backwards compatibility. Treat each `fd-ui-*` form migration as a small pilot until UI-kit-specific patterns are proven.
 - Prefer declarative `disabled(path.field, () => condition)` for disabled Signal Forms fields.
 - `fd-ui-date-input` is adapted for Signal Forms CVA binding; keep internal control state away from public/protected `value` fields so Angular does not treat CVA components as Signal Forms custom controls accidentally.
+- `fd-ui-date-range-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

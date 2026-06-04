@@ -47,11 +47,11 @@ export class WeightHistoryPageComponent {
     protected readonly desiredWeight = this.facade.desiredWeight;
     protected readonly isDesiredWeightSaving = this.facade.isDesiredWeightSaving;
     protected readonly isSummaryLoading = this.facade.isSummaryLoading;
-    protected readonly customRangeControl = this.facade.customRangeControl;
+    protected readonly customRangeForm = this.facade.customRangeForm;
     protected readonly entriesDescending = this.facade.entriesDescending;
     protected readonly chartPoints = this.facade.chartPoints;
     protected readonly form = this.facade.form;
-    protected readonly desiredWeightControl = this.facade.desiredWeightControl;
+    protected readonly desiredWeightForm = this.facade.desiredWeightForm;
     protected readonly bmiViewModel = this.facade.bmiViewModel;
 
     protected readonly rangeTabs = WEIGHT_HISTORY_RANGE_TABS;

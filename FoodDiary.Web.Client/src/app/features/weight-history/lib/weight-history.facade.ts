@@ -1,8 +1,8 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { form, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, finalize, startWith } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
@@ -27,13 +27,25 @@ import {
     normalizeStartOfDay,
 } from './weight-history-range.utils';
 
+type WeightEntryFormModel = {
+    date: string;
+    weight: string;
+};
+
+type DesiredWeightFormModel = {
+    weight: string;
+};
+
+type WeightCustomRangeFormModel = {
+    range: WeightHistoryCustomRange | null;
+};
+
 @Service()
 export class WeightHistoryFacade {
     private readonly weightEntriesService = inject(WeightEntriesService);
     private readonly userService = inject(UserService);
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly fb = inject(FormBuilder);
 
     private readonly userHeightCm = signal<number | null>(null);
     private readonly defaultRange: WeightHistoryRange = 'month';
@@ -43,7 +55,7 @@ export class WeightHistoryFacade {
 
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
     public readonly currentRange = computed<WeightHistoryDateRange>(() =>
-        calculateWeightHistoryRangeDates(this.selectedRange(), this.customRangeControl.value),
+        calculateWeightHistoryRangeDates(this.selectedRange(), this.customRangeModel().range),
     );
     public readonly entries = signal<WeightEntry[]>([]);
     public readonly isLoading = signal(false);
@@ -53,14 +65,26 @@ export class WeightHistoryFacade {
     public readonly isDesiredWeightSaving = signal(false);
     public readonly summaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
-    public readonly customRangeControl = new FormControl<WeightHistoryCustomRange | null>(null);
+    public readonly customRangeModel = signal<WeightCustomRangeFormModel>({ range: null });
+    public readonly customRangeForm = form(this.customRangeModel);
 
-    public readonly form = this.fb.group({
-        date: [formatWeightHistoryDateInput(new Date()), Validators.required],
-        weight: ['', [Validators.required, Validators.min(MIN_WEIGHT_KG), Validators.max(MAX_WEIGHT_KG)]],
+    public readonly formModel = signal<WeightEntryFormModel>({
+        date: formatWeightHistoryDateInput(new Date()),
+        weight: '',
+    });
+    public readonly form = form(this.formModel, path => {
+        required(path.date);
+        required(path.weight);
+        validate(path.weight, ({ value }) => {
+            const parsed = parseDecimalInput(value());
+            return parsed === null || parsed < MIN_WEIGHT_KG || parsed > MAX_WEIGHT_KG
+                ? { kind: 'weightRange', message: 'Weight is out of range' }
+                : undefined;
+        });
     });
 
-    public readonly desiredWeightControl = new FormControl<string>('');
+    public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weight: '' });
+    public readonly desiredWeightForm = form(this.desiredWeightModel);
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
 
@@ -73,19 +97,6 @@ export class WeightHistoryFacade {
 
     public readonly bmiViewModel = computed(() => buildBmiViewModel(this.userHeightCm(), this.latestWeight()));
 
-    private readonly customRangeValue = toSignal(
-        this.customRangeControl.valueChanges.pipe(
-            startWith(this.customRangeControl.value),
-            distinctUntilChanged((prev, curr) => {
-                const prevStart = prev?.start?.getTime();
-                const prevEnd = prev?.end?.getTime();
-                const currStart = curr?.start?.getTime();
-                const currEnd = curr?.end?.getTime();
-                return prevStart === currStart && prevEnd === currEnd;
-            }),
-        ),
-    );
-
     public constructor() {
         effect(() => {
             if (!this.initialized()) {
@@ -93,7 +104,7 @@ export class WeightHistoryFacade {
             }
 
             const range = this.selectedRange();
-            const customRange = this.customRangeValue();
+            const customRange = this.customRangeModel().range;
 
             if (range !== 'custom') {
                 this.loadEntries();
@@ -118,8 +129,8 @@ export class WeightHistoryFacade {
     }
 
     public submit(): void {
-        if (this.form.invalid) {
-            this.form.markAllAsTouched();
+        if (this.form().invalid()) {
+            this.form().markAsTouched();
             return;
         }
 
@@ -147,14 +158,14 @@ export class WeightHistoryFacade {
                     return;
                 }
 
-                this.form.controls.weight.setValue(payload.weight.toString());
+                this.form.weight().value.set(payload.weight.toString());
             });
     }
 
     public startEdit(entry: WeightEntry): void {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
-        this.form.setValue({
+        this.formModel.set({
             date: formatWeightHistoryDateInput(new Date(entry.date)),
             weight: entry.weight.toString(),
         });
@@ -163,7 +174,7 @@ export class WeightHistoryFacade {
     public cancelEdit(): void {
         this.resetEditingState();
         const latest = (this.entriesDescending() as Array<WeightEntry | undefined>)[0];
-        this.form.setValue({
+        this.formModel.set({
             date: formatWeightHistoryDateInput(new Date()),
             weight: latest !== undefined ? latest.weight.toString() : '',
         });
@@ -188,13 +199,12 @@ export class WeightHistoryFacade {
     }
 
     public saveDesiredWeight(): void {
-        if (this.desiredWeightControl.invalid) {
+        if (this.desiredWeightForm().invalid()) {
             return;
         }
 
         const parsedValue = this.parseDesiredWeight();
         if (parsedValue === undefined) {
-            this.desiredWeightControl.setErrors({ invalid: true });
             return;
         }
 
@@ -209,13 +219,13 @@ export class WeightHistoryFacade {
             )
             .subscribe(value => {
                 this.desiredWeight.set(value);
-                this.desiredWeightControl.setValue(value?.toString() ?? '');
+                this.desiredWeightModel.set({ weight: value?.toString() ?? '' });
             });
     }
 
     private parseDesiredWeight(): number | null | undefined {
-        const rawValue = this.desiredWeightControl.value?.trim();
-        if (rawValue === undefined || rawValue.length === 0) {
+        const rawValue = this.desiredWeightModel().weight.trim();
+        if (rawValue.length === 0) {
             return null;
         }
 
@@ -231,20 +241,20 @@ export class WeightHistoryFacade {
         this.selectedRange.set(value);
 
         if (value === 'custom') {
-            const current = this.customRangeControl.value;
+            const current = this.customRangeModel().range;
             if (current?.start === undefined || current.start === null || current.end === null) {
-                this.customRangeControl.setValue(buildDefaultWeightHistoryCustomRange(), { emitEvent: true });
+                this.customRangeModel.set({ range: buildDefaultWeightHistoryCustomRange() });
             }
             return;
         }
 
-        this.customRangeControl.setValue(null, { emitEvent: false });
+        this.customRangeModel.set({ range: null });
     }
 
     private loadEntries(showLoader = true, force = false): void {
         const { entriesParams, summaryParams, rangeKey } = buildWeightHistoryFiltersForRange(
             this.selectedRange(),
-            this.customRangeControl.value,
+            this.customRangeModel().range,
         );
 
         if (!force && rangeKey === this.lastLoadedRangeKey) {
@@ -268,9 +278,7 @@ export class WeightHistoryFacade {
                 this.entries.set(entries);
                 if (!this.isEditing() && entries.length > 0) {
                     const latest = [...entries].sort((a, b) => compareDatesDesc(a.date, b.date))[0];
-                    this.form.patchValue({
-                        weight: latest.weight.toString(),
-                    });
+                    this.form.weight().value.set(latest.weight.toString());
                 }
             });
 
@@ -283,7 +291,7 @@ export class WeightHistoryFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(value => {
                 this.desiredWeight.set(value);
-                this.desiredWeightControl.setValue(value?.toString() ?? '');
+                this.desiredWeightModel.set({ weight: value?.toString() ?? '' });
             });
     }
 
@@ -312,13 +320,12 @@ export class WeightHistoryFacade {
     }
 
     private buildPayload(): CreateWeightEntryPayload | null {
-        const rawDate = this.form.value.date;
-        const rawWeight = this.form.value.weight;
-        if (rawDate === null || rawDate === undefined || rawDate.length === 0 || rawWeight === null || rawWeight === undefined) {
+        const { date: rawDate, weight: rawWeight } = this.formModel();
+        if (rawDate.length === 0 || rawWeight.length === 0) {
             return null;
         }
 
-        const date = typeof rawDate === 'string' ? new Date(rawDate) : rawDate;
+        const date = new Date(rawDate);
         const utcDate = normalizeStartOfDay(date);
         const weight = Number(rawWeight);
 
@@ -331,8 +338,6 @@ export class WeightHistoryFacade {
     private resetEditingState(): void {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
-        this.form.patchValue({
-            date: formatWeightHistoryDateInput(new Date()),
-        });
+        this.form.date().value.set(formatWeightHistoryDateInput(new Date()));
     }
 }

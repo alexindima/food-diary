@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
+import { type FieldTree, form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
@@ -23,7 +23,7 @@ type StatisticsFacadeMock = {
     changeNutritionTab: ReturnType<typeof vi.fn>;
     changeRange: ReturnType<typeof vi.fn>;
     currentRange: ReturnType<typeof signal<DateRange>>;
-    customRangeControl: FormControl<{ start: Date | null; end: Date | null } | null>;
+    customRangeForm: FieldTree<{ range: { start: Date | null; end: Date | null } | null }>;
     exportDiary: ReturnType<typeof vi.fn>;
     exportingFormat: ReturnType<typeof signal<ExportFormat | null>>;
     hasBodyData: ReturnType<typeof signal<boolean>>;
@@ -45,16 +45,15 @@ type StatisticsFacadeMock = {
     summarySparklinePoints: ReturnType<typeof signal<unknown[]>>;
 };
 
-async function setupStatisticsAsync(): Promise<{
-    component: StatisticsComponent;
-    facade: StatisticsFacadeMock;
-    fixture: ComponentFixture<StatisticsComponent>;
-}> {
-    const facade: StatisticsFacadeMock = {
+function createStatisticsFacadeMock(): StatisticsFacadeMock {
+    const customRangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
+    const customRangeForm = form(customRangeModel);
+
+    return {
         selectedRange: signal('week'),
         selectedNutritionTab: signal('calories'),
         selectedBodyTab: signal('weight'),
-        customRangeControl: new FormControl(null),
+        customRangeForm,
         currentRange: signal(RANGE),
         isLoading: signal(false),
         isBodyLoading: signal(false),
@@ -78,10 +77,29 @@ async function setupStatisticsAsync(): Promise<{
         reload: vi.fn(),
         exportDiary: vi.fn(),
     };
+}
+
+async function setupStatisticsAsync(): Promise<{
+    component: StatisticsComponent;
+    facade: StatisticsFacadeMock;
+    fixture: ComponentFixture<StatisticsComponent>;
+}> {
+    const facadeRef: { current?: StatisticsFacadeMock } = {};
 
     TestBed.overrideComponent(StatisticsComponent, {
         set: {
-            providers: [{ provide: StatisticsFacade, useValue: facade }],
+            providers: [
+                {
+                    provide: StatisticsFacade,
+                    useFactory: (): StatisticsFacadeMock => {
+                        if (facadeRef.current === undefined) {
+                            throw new Error('StatisticsFacade mock is not initialized.');
+                        }
+
+                        return facadeRef.current;
+                    },
+                },
+            ],
         },
     });
 
@@ -90,11 +108,13 @@ async function setupStatisticsAsync(): Promise<{
         providers: [provideRouter([])],
     }).compileComponents();
 
+    facadeRef.current = TestBed.runInInjectionContext(() => createStatisticsFacadeMock());
+
     const fixture = TestBed.createComponent(StatisticsComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    return { component, facade, fixture };
+    return { component, facade: facadeRef.current, fixture };
 }
 
 describe('StatisticsComponent', () => {

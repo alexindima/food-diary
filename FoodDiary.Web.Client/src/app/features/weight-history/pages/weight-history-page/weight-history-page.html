@@ -10,7 +10,7 @@
             class="weight-history-page__period"
             [tabs]="rangeTabs"
             [selectedValue]="selectedRange()"
-            [rangeControl]="customRangeControl"
+            [rangeField]="customRangeForm.range"
             [displayRange]="currentRange()"
             [startLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
             [endLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
@@ -37,7 +37,7 @@
             />
 
             <fd-weight-history-goal-card
-                [control]="desiredWeightControl"
+                [weightField]="desiredWeightForm.weight"
                 [isSaving]="isDesiredWeightSaving()"
                 (saveGoal)="saveDesiredWeight()"
             />

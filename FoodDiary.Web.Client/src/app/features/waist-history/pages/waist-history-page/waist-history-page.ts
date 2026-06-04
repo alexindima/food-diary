@@ -42,9 +42,9 @@ export class WaistHistoryPageComponent {
     protected readonly isSaving = this.facade.isSaving;
     protected readonly isEditing = this.facade.isEditing;
     protected readonly isSummaryLoading = this.facade.isSummaryLoading;
-    protected readonly customRangeControl = this.facade.customRangeControl;
+    protected readonly customRangeForm = this.facade.customRangeForm;
     protected readonly isDesiredWaistSaving = this.facade.isDesiredWaistSaving;
-    protected readonly desiredWaistControl = this.facade.desiredWaistControl;
+    protected readonly desiredWaistForm = this.facade.desiredWaistForm;
     protected readonly entriesDescending = this.facade.entriesDescending;
     protected readonly chartPoints = this.facade.chartPoints;
     protected readonly form = this.facade.form;

@@ -1,8 +1,8 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { form, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, finalize, startWith } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
@@ -22,13 +22,25 @@ import {
 } from './waist-history-range.utils';
 import { buildWhtViewModel } from './waist-history-wht.mapper';
 
+type WaistEntryFormModel = {
+    date: string;
+    circumference: string;
+};
+
+type DesiredWaistFormModel = {
+    circumference: string;
+};
+
+type WaistCustomRangeFormModel = {
+    range: WaistHistoryCustomRange | null;
+};
+
 @Service()
 export class WaistHistoryFacade {
     private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly userService = inject(UserService);
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly fb = inject(FormBuilder);
 
     private readonly defaultRange: WaistHistoryRange = 'month';
     private readonly editingEntryId = signal<string | null>(null);
@@ -38,7 +50,7 @@ export class WaistHistoryFacade {
 
     public readonly selectedRange = signal<WaistHistoryRange>(this.defaultRange);
     public readonly currentRange = computed<WaistHistoryDateRange>(() =>
-        calculateWaistHistoryRangeDates(this.selectedRange(), this.customRangeControl.value),
+        calculateWaistHistoryRangeDates(this.selectedRange(), this.customRangeModel().range),
     );
     public readonly entries = signal<WaistEntry[]>([]);
     public readonly isLoading = signal(false);
@@ -46,14 +58,26 @@ export class WaistHistoryFacade {
     public readonly isEditing = signal(false);
     public readonly summaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
-    public readonly customRangeControl = new FormControl<WaistHistoryCustomRange | null>(null);
+    public readonly customRangeModel = signal<WaistCustomRangeFormModel>({ range: null });
+    public readonly customRangeForm = form(this.customRangeModel);
     public readonly desiredWaist = signal<number | null>(null);
     public readonly isDesiredWaistSaving = signal(false);
-    public readonly desiredWaistControl = new FormControl<string>('');
+    public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumference: '' });
+    public readonly desiredWaistForm = form(this.desiredWaistModel);
 
-    public readonly form = this.fb.group({
-        date: [formatWaistHistoryDateInput(new Date()), Validators.required],
-        circumference: ['', [Validators.required, Validators.min(MIN_WAIST_CM), Validators.max(MAX_WAIST_CM)]],
+    public readonly formModel = signal<WaistEntryFormModel>({
+        date: formatWaistHistoryDateInput(new Date()),
+        circumference: '',
+    });
+    public readonly form = form(this.formModel, path => {
+        required(path.date);
+        required(path.circumference);
+        validate(path.circumference, ({ value }) => {
+            const parsed = parseDecimalInput(value());
+            return parsed === null || parsed < MIN_WAIST_CM || parsed > MAX_WAIST_CM
+                ? { kind: 'waistRange', message: 'Waist circumference is out of range' }
+                : undefined;
+        });
     });
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
@@ -67,19 +91,6 @@ export class WaistHistoryFacade {
 
     public readonly whtViewModel = computed(() => buildWhtViewModel(this.userHeightCm(), this.latestWaist()));
 
-    private readonly customRangeValue = toSignal(
-        this.customRangeControl.valueChanges.pipe(
-            startWith(this.customRangeControl.value),
-            distinctUntilChanged((prev, curr) => {
-                const prevStart = prev?.start?.getTime();
-                const prevEnd = prev?.end?.getTime();
-                const currStart = curr?.start?.getTime();
-                const currEnd = curr?.end?.getTime();
-                return prevStart === currStart && prevEnd === currEnd;
-            }),
-        ),
-    );
-
     public constructor() {
         effect(() => {
             if (!this.initialized()) {
@@ -87,7 +98,7 @@ export class WaistHistoryFacade {
             }
 
             const range = this.selectedRange();
-            const customRange = this.customRangeValue();
+            const customRange = this.customRangeModel().range;
 
             if (range !== 'custom') {
                 this.loadEntries();
@@ -112,8 +123,8 @@ export class WaistHistoryFacade {
     }
 
     public submit(): void {
-        if (this.form.invalid) {
-            this.form.markAllAsTouched();
+        if (this.form().invalid()) {
+            this.form().markAsTouched();
             return;
         }
 
@@ -141,14 +152,14 @@ export class WaistHistoryFacade {
                     return;
                 }
 
-                this.form.controls.circumference.setValue(payload.circumference.toString());
+                this.form.circumference().value.set(payload.circumference.toString());
             });
     }
 
     public startEdit(entry: WaistEntry): void {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
-        this.form.setValue({
+        this.formModel.set({
             date: formatWaistHistoryDateInput(new Date(entry.date)),
             circumference: entry.circumference.toString(),
         });
@@ -157,7 +168,7 @@ export class WaistHistoryFacade {
     public cancelEdit(): void {
         this.resetEditingState();
         const latest = (this.entriesDescending() as Array<WaistEntry | undefined>)[0];
-        this.form.setValue({
+        this.formModel.set({
             date: formatWaistHistoryDateInput(new Date()),
             circumference: latest !== undefined ? latest.circumference.toString() : '',
         });
@@ -182,13 +193,12 @@ export class WaistHistoryFacade {
     }
 
     public saveDesiredWaist(): void {
-        if (this.desiredWaistControl.invalid) {
+        if (this.desiredWaistForm().invalid()) {
             return;
         }
 
         const parsedValue = this.parseDesiredWaist();
         if (parsedValue === undefined) {
-            this.desiredWaistControl.setErrors({ invalid: true });
             return;
         }
 
@@ -203,7 +213,7 @@ export class WaistHistoryFacade {
             )
             .subscribe(value => {
                 this.desiredWaist.set(value);
-                this.desiredWaistControl.setValue(value?.toString() ?? '');
+                this.desiredWaistModel.set({ circumference: value?.toString() ?? '' });
             });
     }
 
@@ -215,19 +225,19 @@ export class WaistHistoryFacade {
         this.selectedRange.set(value);
 
         if (value === 'custom') {
-            const current = this.customRangeControl.value;
+            const current = this.customRangeModel().range;
             if (current?.start === undefined || current.start === null || current.end === null) {
-                this.customRangeControl.setValue(buildDefaultWaistHistoryCustomRange(), { emitEvent: true });
+                this.customRangeModel.set({ range: buildDefaultWaistHistoryCustomRange() });
             }
             return;
         }
 
-        this.customRangeControl.setValue(null, { emitEvent: false });
+        this.customRangeModel.set({ range: null });
     }
 
     private parseDesiredWaist(): number | null | undefined {
-        const rawValue = this.desiredWaistControl.value?.trim();
-        if (rawValue === undefined || rawValue.length === 0) {
+        const rawValue = this.desiredWaistModel().circumference.trim();
+        if (rawValue.length === 0) {
             return null;
         }
 
@@ -238,7 +248,7 @@ export class WaistHistoryFacade {
     private loadEntries(showLoader = true, force = false): void {
         const { entriesParams, summaryParams, rangeKey } = buildWaistHistoryFiltersForRange(
             this.selectedRange(),
-            this.customRangeControl.value,
+            this.customRangeModel().range,
         );
 
         if (!force && rangeKey === this.lastLoadedRangeKey) {
@@ -262,9 +272,7 @@ export class WaistHistoryFacade {
                 this.entries.set(entries);
                 if (!this.isEditing() && entries.length > 0) {
                     const latest = [...entries].sort((a, b) => compareDatesDesc(a.date, b.date))[0];
-                    this.form.patchValue({
-                        circumference: latest.circumference.toString(),
-                    });
+                    this.form.circumference().value.set(latest.circumference.toString());
                 }
             });
 
@@ -301,24 +309,17 @@ export class WaistHistoryFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(value => {
                 this.desiredWaist.set(value);
-                this.desiredWaistControl.setValue(value?.toString() ?? '');
+                this.desiredWaistModel.set({ circumference: value?.toString() ?? '' });
             });
     }
 
     private buildPayload(): CreateWaistEntryPayload | null {
-        const rawDate = this.form.value.date;
-        const rawCircumference = this.form.value.circumference;
-        if (
-            rawDate === null ||
-            rawDate === undefined ||
-            rawDate.length === 0 ||
-            rawCircumference === null ||
-            rawCircumference === undefined
-        ) {
+        const { date: rawDate, circumference: rawCircumference } = this.formModel();
+        if (rawDate.length === 0 || rawCircumference.length === 0) {
             return null;
         }
 
-        const date = typeof rawDate === 'string' ? new Date(rawDate) : rawDate;
+        const date = new Date(rawDate);
         const utcDate = normalizeStartOfDay(date);
         const circumference = Number(rawCircumference);
 
@@ -331,8 +332,6 @@ export class WaistHistoryFacade {
     private resetEditingState(): void {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
-        this.form.patchValue({
-            date: formatWaistHistoryDateInput(new Date()),
-        });
+        this.form.date().value.set(formatWaistHistoryDateInput(new Date()));
     }
 }

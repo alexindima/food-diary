@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
-import { type FormControl, ReactiveFormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
@@ -7,7 +7,7 @@ type DateRangeValue = { start: Date | null; end: Date | null } | null;
 
 @Component({
     selector: 'fd-period-filter',
-    imports: [FdUiTabsComponent, FdUiDateRangeInputComponent, ReactiveFormsModule],
+    imports: [FdUiTabsComponent, FdUiDateRangeInputComponent, FormField],
     templateUrl: './period-filter.html',
     styleUrls: ['./period-filter.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +15,7 @@ type DateRangeValue = { start: Date | null; end: Date | null } | null;
 export class PeriodFilterComponent {
     public readonly tabs = input.required<FdUiTab[]>();
     public readonly selectedValue = input.required<string>();
-    public readonly rangeControl = input.required<FormControl<DateRangeValue>>();
+    public readonly rangeField = input.required<FieldTree<DateRangeValue>>();
     public readonly displayRange = input<{ start: Date; end: Date } | null>(null);
     public readonly startLabel = input<string>();
     public readonly endLabel = input<string>();
@@ -26,23 +26,16 @@ export class PeriodFilterComponent {
 
     public constructor() {
         effect(() => {
-            const control = this.rangeControl();
+            const field = this.rangeField();
             const value = this.selectedValue();
             const range = this.displayRange();
 
             if (value === 'custom') {
-                if (control.disabled) {
-                    control.enable({ emitEvent: false });
-                }
                 return;
             }
 
             if (range !== null) {
-                control.setValue({ start: range.start, end: range.end }, { emitEvent: false });
-            }
-
-            if (control.enabled) {
-                control.disable({ emitEvent: false });
+                field().value.set({ start: range.start, end: range.end });
             }
         });
     }

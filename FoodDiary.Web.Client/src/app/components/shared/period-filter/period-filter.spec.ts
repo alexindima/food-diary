@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -15,7 +15,7 @@ const NON_STRING_RANGE_VALUE = 42;
         <fd-period-filter
             [tabs]="tabs"
             [selectedValue]="selectedValue()"
-            [rangeControl]="rangeControl"
+            [rangeField]="rangeForm.range"
             (rangeChange)="onRangeChange($event)"
         />
     `,
@@ -28,7 +28,8 @@ class TestHostComponent {
     ];
 
     public readonly selectedValue = signal('week');
-    public readonly rangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
+    public readonly rangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
+    public readonly rangeForm = form(this.rangeModel);
     public lastEmittedValue: string | null = null;
 
     public onRangeChange(value: string): void {
@@ -80,17 +81,17 @@ describe('PeriodFilterComponent', () => {
         expect(host.lastEmittedValue).toBeNull();
     });
 
-    it('should disable range control when not custom', () => {
+    it('should sync display range when not custom', () => {
         host.selectedValue.set('week');
         hostFixture.detectChanges();
 
-        expect(host.rangeControl.disabled).toBe(true);
+        expect(host.rangeModel().range).toBeNull();
     });
 
-    it('should enable range control when custom is selected', () => {
+    it('should keep range field available when custom is selected', () => {
         host.selectedValue.set('custom');
         hostFixture.detectChanges();
 
-        expect(host.rangeControl.enabled).toBe(true);
+        expect(host.rangeForm.range().disabled()).toBe(false);
     });
 });

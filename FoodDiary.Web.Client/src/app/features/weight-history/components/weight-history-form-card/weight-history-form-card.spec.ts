@@ -1,5 +1,6 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -34,12 +35,10 @@ function setupComponent(isEditing: boolean): {
     });
 
     const fixture = TestBed.createComponent(WeightHistoryFormCardComponent);
+    const model = signal({ date: '2026-05-15', weight: '71.5' });
     fixture.componentRef.setInput(
         'form',
-        new FormGroup({
-            date: new FormControl('2026-05-15'),
-            weight: new FormControl('71.5'),
-        }),
+        TestBed.runInInjectionContext(() => form(model)),
     );
     fixture.componentRef.setInput('isSaving', false);
     fixture.componentRef.setInput('isEditing', isEditing);

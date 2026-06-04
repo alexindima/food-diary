@@ -1,8 +1,8 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormControl } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, finalize, forkJoin, startWith } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
@@ -58,7 +58,8 @@ export class StatisticsFacade {
     public readonly selectedRange = signal<StatisticsRange>('week');
     public readonly selectedNutritionTab = signal<NutritionChartTab>('calories');
     public readonly selectedBodyTab = signal<BodyChartTab>('weight');
-    public readonly customRangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
+    public readonly customRangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
+    public readonly customRangeForm = form(this.customRangeModel);
 
     public readonly isLoading = signal(false);
     public readonly isBodyLoading = signal(false);
@@ -70,7 +71,7 @@ export class StatisticsFacade {
     public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly userHeightCm = signal<number | null>(null);
 
-    public readonly currentRange = computed<DateRange>(() => getCurrentDateRange(this.selectedRange(), this.customRangeControl.value));
+    public readonly currentRange = computed<DateRange>(() => getCurrentDateRange(this.selectedRange(), this.customRangeModel().range));
     public readonly summaryMetrics = computed(() =>
         buildSummaryMetrics(this.chartStatisticsData(), getDateRangeDayCount(this.currentRange())),
     );
@@ -128,19 +129,6 @@ export class StatisticsFacade {
         return this.bodyChartPoints().some(point => point.value !== null);
     });
 
-    private readonly customRangeValue = toSignal(
-        this.customRangeControl.valueChanges.pipe(
-            startWith(this.customRangeControl.value),
-            distinctUntilChanged((prev, curr) => {
-                const prevStart = prev?.start?.getTime();
-                const prevEnd = prev?.end?.getTime();
-                const currStart = curr?.start?.getTime();
-                const currEnd = curr?.end?.getTime();
-                return prevStart === currStart && prevEnd === currEnd;
-            }),
-        ),
-    );
-
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.dateLabelFormatterCache = null;
@@ -153,7 +141,7 @@ export class StatisticsFacade {
             }
 
             const range = this.selectedRange();
-            const customRange = this.customRangeValue();
+            const customRange = this.customRangeModel().range;
 
             if (range !== 'custom') {
                 this.loadAllData();
@@ -184,12 +172,12 @@ export class StatisticsFacade {
 
         this.selectedRange.set(value);
 
-        const current = this.customRangeControl.value;
+        const current = this.customRangeModel().range;
         if (current?.start === undefined || current.start === null || current.end === null) {
             const end = new Date();
             const start = new Date(end);
             start.setMonth(start.getMonth() - 1);
-            this.customRangeControl.setValue({ start, end }, { emitEvent: true });
+            this.customRangeModel.set({ range: { start, end } });
         }
     }
 
@@ -232,7 +220,7 @@ export class StatisticsFacade {
     }
 
     private loadAllData(): void {
-        const range = getCurrentDateRange(this.selectedRange(), this.customRangeControl.value);
+        const range = getCurrentDateRange(this.selectedRange(), this.customRangeModel().range);
         const normalizedStart = normalizeStartOfDay(range.start);
         const normalizedEnd = normalizeEndOfDay(range.end);
         const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
@@ -351,7 +339,7 @@ export class StatisticsFacade {
         const end = new Date();
         const start = new Date(end);
         start.setMonth(start.getMonth() - 1);
-        this.customRangeControl.setValue({ start, end }, { emitEvent: false });
+        this.customRangeModel.set({ range: { start, end } });
     }
 
     private formatDateLabel(date: Date): string {

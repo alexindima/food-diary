@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state';
 
@@ -24,7 +23,6 @@ import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS 
     imports: [
         CommonModule,
         TranslatePipe,
-        ReactiveFormsModule,
         FdUiEmptyStateComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -54,7 +52,7 @@ export class StatisticsComponent {
     protected readonly selectedRange = this.facade.selectedRange;
     protected readonly selectedNutritionTab = this.facade.selectedNutritionTab;
     protected readonly selectedBodyTab = this.facade.selectedBodyTab;
-    protected readonly customRangeControl = this.facade.customRangeControl;
+    protected readonly customRangeForm = this.facade.customRangeForm;
     protected readonly currentRange = this.facade.currentRange;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isBodyLoading = this.facade.isBodyLoading;

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -36,7 +35,6 @@ beforeEach(() => {
 
     TestBed.configureTestingModule({
         providers: [
-            FormBuilder,
             WaistHistoryFacade,
             { provide: WaistEntriesService, useValue: waistEntriesService },
             { provide: UserService, useValue: userService },
@@ -65,7 +63,7 @@ describe('WaistHistoryFacade loading', () => {
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
         expect(facade.desiredWaist()).toBe(TARGET_WAIST);
-        expect(facade.form.controls.circumference.value).toBe('82');
+        expect(facade.formModel().circumference).toBe('82');
         expect(facade.whtViewModel()?.value).toBe(EXPECTED_WHTR);
     });
 });
@@ -77,7 +75,7 @@ describe('WaistHistoryFacade entries', () => {
         waistEntriesService.getEntries.mockClear();
         waistEntriesService.getSummary.mockClear();
 
-        facade.form.setValue({
+        facade.formModel.set({
             date: '2026-04-02',
             circumference: '81.7',
         });
@@ -93,7 +91,7 @@ describe('WaistHistoryFacade entries', () => {
     });
 
     it('does not submit invalid form', () => {
-        facade.form.setValue({
+        facade.formModel.set({
             date: '',
             circumference: '',
         });
@@ -102,7 +100,7 @@ describe('WaistHistoryFacade entries', () => {
 
         expect(waistEntriesService.create).not.toHaveBeenCalled();
         expect(waistEntriesService.update).not.toHaveBeenCalled();
-        expect(facade.form.touched).toBe(true);
+        expect(facade.form().touched()).toBe(true);
     });
 
     it('switches to edit mode and updates the existing entry', () => {
@@ -126,7 +124,7 @@ describe('WaistHistoryFacade entries', () => {
         facade.cancelEdit();
 
         expect(facade.isEditing()).toBe(false);
-        expect(facade.form.controls.circumference.value).toBe('80.5');
+        expect(facade.formModel().circumference).toBe('80.5');
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
@@ -153,20 +151,20 @@ describe('WaistHistoryFacade ranges', () => {
         facade.changeRange('custom');
 
         expect(facade.selectedRange()).toBe('custom');
-        expect(facade.customRangeControl.value?.start).toBeInstanceOf(Date);
-        expect(facade.customRangeControl.value?.end).toBeInstanceOf(Date);
+        expect(facade.customRangeModel().range?.start).toBeInstanceOf(Date);
+        expect(facade.customRangeModel().range?.end).toBeInstanceOf(Date);
     });
 });
 
 describe('WaistHistoryFacade desired waist', () => {
     it('saves desired waist after validation', () => {
-        facade.desiredWaistControl.setValue(`${UPDATED_TARGET_WAIST}`);
+        facade.desiredWaistModel.set({ circumference: `${UPDATED_TARGET_WAIST}` });
 
         facade.saveDesiredWaist();
 
         expect(userService.updateDesiredWaist).toHaveBeenCalledWith(UPDATED_TARGET_WAIST);
         expect(facade.desiredWaist()).toBe(UPDATED_TARGET_WAIST);
-        expect(facade.desiredWaistControl.value).toBe(`${UPDATED_TARGET_WAIST}`);
+        expect(facade.desiredWaistModel().circumference).toBe(`${UPDATED_TARGET_WAIST}`);
     });
 });
 

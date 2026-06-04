@@ -5,9 +5,9 @@
             type="number"
             [step]="0.1"
             [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
-            [suffixButtonIcon]="control().value ? 'backspace' : undefined"
-            [formControl]="control()"
-            (suffixButtonClicked)="control().setValue('')"
+            [suffixButtonIcon]="circumferenceField()().value() ? 'backspace' : undefined"
+            [formField]="circumferenceField()"
+            (suffixButtonClicked)="circumferenceField()().value.set('')"
         />
         <div class="waist-history-page__goal-actions">
             <fd-ui-button type="button" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveGoal.emit()">

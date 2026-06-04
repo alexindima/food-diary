@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -37,7 +36,6 @@ beforeEach(() => {
 
     TestBed.configureTestingModule({
         providers: [
-            FormBuilder,
             WeightHistoryFacade,
             { provide: WeightEntriesService, useValue: weightEntriesService },
             { provide: UserService, useValue: userService },
@@ -66,7 +64,7 @@ describe('WeightHistoryFacade loading', () => {
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
         expect(facade.desiredWeight()).toBe(TARGET_WEIGHT);
-        expect(facade.form.controls.weight.value).toBe('74.2');
+        expect(facade.formModel().weight).toBe('74.2');
         expect(facade.bmiViewModel()?.value).toBe(EXPECTED_BMI);
     });
 });
@@ -78,7 +76,7 @@ describe('WeightHistoryFacade entries', () => {
         weightEntriesService.getEntries.mockClear();
         weightEntriesService.getSummary.mockClear();
 
-        facade.form.setValue({
+        facade.formModel.set({
             date: '2026-04-02',
             weight: '73.8',
         });
@@ -94,7 +92,7 @@ describe('WeightHistoryFacade entries', () => {
     });
 
     it('does not submit invalid form', () => {
-        facade.form.setValue({
+        facade.formModel.set({
             date: '',
             weight: '',
         });
@@ -103,7 +101,7 @@ describe('WeightHistoryFacade entries', () => {
 
         expect(weightEntriesService.create).not.toHaveBeenCalled();
         expect(weightEntriesService.update).not.toHaveBeenCalled();
-        expect(facade.form.touched).toBe(true);
+        expect(facade.form().touched()).toBe(true);
     });
 
     it('switches to edit mode and updates the existing entry', () => {
@@ -127,7 +125,7 @@ describe('WeightHistoryFacade entries', () => {
         facade.cancelEdit();
 
         expect(facade.isEditing()).toBe(false);
-        expect(facade.form.controls.weight.value).toBe('73.1');
+        expect(facade.formModel().weight).toBe('73.1');
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
@@ -154,20 +152,20 @@ describe('WeightHistoryFacade ranges', () => {
         facade.changeRange('custom');
 
         expect(facade.selectedRange()).toBe('custom');
-        expect(facade.customRangeControl.value?.start).toBeInstanceOf(Date);
-        expect(facade.customRangeControl.value?.end).toBeInstanceOf(Date);
+        expect(facade.customRangeModel().range?.start).toBeInstanceOf(Date);
+        expect(facade.customRangeModel().range?.end).toBeInstanceOf(Date);
     });
 });
 
 describe('WeightHistoryFacade desired weight', () => {
     it('saves desired weight after validation', () => {
-        facade.desiredWeightControl.setValue(`${UPDATED_TARGET_WEIGHT}`);
+        facade.desiredWeightModel.set({ weight: `${UPDATED_TARGET_WEIGHT}` });
 
         facade.saveDesiredWeight();
 
         expect(userService.updateDesiredWeight).toHaveBeenCalledWith(UPDATED_TARGET_WEIGHT);
         expect(facade.desiredWeight()).toBe(UPDATED_TARGET_WEIGHT);
-        expect(facade.desiredWeightControl.value).toBe(`${UPDATED_TARGET_WEIGHT}`);
+        expect(facade.desiredWeightModel().weight).toBe(`${UPDATED_TARGET_WEIGHT}`);
     });
 });
 

@@ -1,20 +1,20 @@
 <fd-ui-card class="waist-history-page__card waist-history-page__card--form" [title]="'WAIST_HISTORY.ADD_ENTRY_TITLE' | translate">
-    <form class="waist-history-page__form" [formGroup]="form()" (ngSubmit)="formSubmit.emit()">
+    <form class="waist-history-page__form" (ngSubmit)="formSubmit.emit()">
         <div class="waist-history-page__form-row">
             <fd-ui-date-input
                 class="waist-history-page__form-control"
-                formControlName="date"
                 [label]="'WAIST_HISTORY.DATE_LABEL' | translate"
                 [placeholder]="'WAIST_HISTORY.DATE_PLACEHOLDER' | translate"
+                [formField]="form().date"
             />
 
             <fd-ui-input
                 class="waist-history-page__form-control"
-                formControlName="circumference"
                 type="number"
                 [step]="0.1"
                 [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate"
                 [placeholder]="'WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER' | translate"
+                [formField]="form().circumference"
             />
         </div>
 

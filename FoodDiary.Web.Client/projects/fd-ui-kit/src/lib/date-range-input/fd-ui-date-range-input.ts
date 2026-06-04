@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input } from '@angular/core';
-import { DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, signal } from '@angular/core';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { disabled as disabledRule, form, FormField } from '@angular/forms/signals';
 
 import { fdUiFormatDateInputValue, fdUiParseLocalDate } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
@@ -15,7 +14,7 @@ export type FdUiDateRangeValue = {
 
 @Component({
     selector: 'fd-ui-date-range-input',
-    imports: [CommonModule, ReactiveFormsModule, FdUiDateInputComponent],
+    imports: [CommonModule, FormField, FdUiDateInputComponent],
     templateUrl: './fd-ui-date-range-input.html',
     styleUrls: ['./fd-ui-date-range-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,25 +28,37 @@ export type FdUiDateRangeValue = {
 })
 export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
-    private readonly destroyRef = inject(DestroyRef);
 
     public readonly startPlaceholder = input<string>();
     public readonly endPlaceholder = input<string>();
     public readonly startLabel = input<string>();
     public readonly endLabel = input<string>();
     public readonly size = input<FdUiFieldSize>('md');
+    public readonly disabled = input(false);
 
-    protected readonly rangeGroup = new FormGroup({
-        start: new FormControl<string | null>(null),
-        end: new FormControl<string | null>(null),
+    protected readonly disabledState = signal(false);
+    protected readonly rangeModel = signal<{ start: string | null; end: string | null }>({
+        start: null,
+        end: null,
     });
-    protected isDisabled = false;
+    protected readonly rangeForm = form(this.rangeModel, path => {
+        disabledRule(path.start, { when: () => this.disabledState() || this.disabled() });
+        disabledRule(path.end, { when: () => this.disabledState() || this.disabled() });
+    });
+    private skippedModelUpdate: string | null = null;
 
     private onChange: (value: FdUiDateRangeValue) => void = () => {};
     private onTouched: () => void = () => {};
 
     public constructor() {
-        this.rangeGroup.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+        effect(() => {
+            const value = this.rangeModel();
+            const serialized = JSON.stringify(value);
+            if (serialized === this.skippedModelUpdate) {
+                this.skippedModelUpdate = null;
+                return;
+            }
+
             this.onChange({
                 start: this.toDateValue(value.start),
                 end: this.toDateValue(value.end),
@@ -55,9 +66,10 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
         });
     }
 
-    public writeValue(value: FdUiDateRangeValue | null): void {
-        const coerced = this.toRangeValue(value);
-        this.rangeGroup.setValue(coerced, { emitEvent: false });
+    public writeValue(value: FdUiDateRangeValue | null | undefined): void {
+        const coerced = this.toRangeValue(value ?? null);
+        this.skippedModelUpdate = JSON.stringify(coerced);
+        this.rangeModel.set(coerced);
         this.cdr.markForCheck();
     }
 
@@ -70,12 +82,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.isDisabled = isDisabled;
-        if (isDisabled) {
-            this.rangeGroup.disable({ emitEvent: false });
-        } else {
-            this.rangeGroup.enable({ emitEvent: false });
-        }
+        this.disabledState.set(isDisabled);
         this.cdr.markForCheck();
     }
 
