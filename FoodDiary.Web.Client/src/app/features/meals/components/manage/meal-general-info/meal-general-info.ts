@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
@@ -9,7 +9,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
-import type { ConsumptionFormData } from '../meal-manage-lib/meal-manage.types';
+import type { ConsumptionFormValues } from '../meal-manage-lib/meal-manage.types';
 
 export type MealGeneralFieldErrors = {
     date: string | null;
@@ -23,7 +23,7 @@ export type MealGeneralFieldErrors = {
     styleUrls: ['../meal-manage-form.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiCardComponent,
         FdUiDateInputComponent,
@@ -34,7 +34,7 @@ export type MealGeneralFieldErrors = {
     ],
 })
 export class MealGeneralInfoComponent {
-    public readonly consumptionForm = input.required<FormGroup<ConsumptionFormData>>();
+    public readonly consumptionForm = input.required<FieldTree<ConsumptionFormValues>>();
     public readonly mealTypeSelectOptions = input.required<Array<FdUiSelectOption<string>>>();
     public readonly generalErrors = input.required<MealGeneralFieldErrors>();
 }

@@ -82,7 +82,7 @@ describe('MealManageFormComponent submit behavior', () => {
     it('should submit create DTO and reset add form after successful create', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         mealManageFacade.submitConsumptionAsync.mockResolvedValue(createConsumption({ totalCalories: TOTAL_CALORIES }));
-        component['consumptionForm'].patchValue({
+        component['patchConsumptionFormModel']({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'Breakfast',
@@ -116,7 +116,7 @@ describe('MealManageFormComponent submit behavior', () => {
 
     it('should show global error and skip submit when form is invalid', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        component['consumptionForm'].controls.date.setValue('');
+        component['patchConsumptionFormModel']({ date: '' });
 
         component['onSubmit']();
         await Promise.resolve();
@@ -129,7 +129,7 @@ describe('MealManageFormComponent submit behavior', () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         const serverMessage = 'Product is not accessible.';
         mealManageFacade.submitConsumptionAsync.mockRejectedValue(new HttpErrorResponse({ error: { message: serverMessage } }));
-        component['consumptionForm'].patchValue({
+        component['patchConsumptionFormModel']({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'Breakfast',

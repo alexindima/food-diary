@@ -1,9 +1,10 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { form, required } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import type { ConsumptionFormData, ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
+import { createMealManageFormValue } from '../meal-manage-lib/meal-manage-form.mapper';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info';
 
 describe('MealGeneralInfoComponent', () => {
@@ -33,24 +34,13 @@ async function setupComponentAsync(): Promise<MealGeneralInfoSetup> {
     return { fixture };
 }
 
-function createConsumptionForm(): FormGroup<ConsumptionFormData> {
-    return new FormGroup<ConsumptionFormData>({
-        imageUrl: new FormControl(null),
-        date: new FormControl('2026-04-05', { nonNullable: true, validators: Validators.required }),
-        time: new FormControl('10:30', { nonNullable: true, validators: Validators.required }),
-        mealType: new FormControl('BREAKFAST', { nonNullable: true, validators: Validators.required }),
-        comment: new FormControl(null),
-        items: new FormArray<FormGroup<ConsumptionItemFormData>>([]),
-        isNutritionAutoCalculated: new FormControl(true, { nonNullable: true }),
-        manualCalories: new FormControl(null),
-        manualProteins: new FormControl(null),
-        manualFats: new FormControl(null),
-        manualCarbs: new FormControl(null),
-        manualFiber: new FormControl(null),
-        manualAlcohol: new FormControl(null),
-        preMealSatietyLevel: new FormControl(null),
-        postMealSatietyLevel: new FormControl(null),
-    });
+function createConsumptionForm(): ReturnType<typeof form> {
+    return TestBed.runInInjectionContext(() =>
+        form(signal({ ...createMealManageFormValue(), date: '2026-04-05', time: '10:30', mealType: 'BREAKFAST' }), path => {
+            required(path.date);
+            required(path.time);
+        }),
+    );
 }
 
 function createEmptyGeneralErrors(): MealGeneralFieldErrors {

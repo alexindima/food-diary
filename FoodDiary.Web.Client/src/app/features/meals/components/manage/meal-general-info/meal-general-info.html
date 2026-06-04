@@ -5,11 +5,11 @@
     headerAlign="center"
     [title]="'CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE' | translate"
 >
-    <div class="consumption-manage__hero fd-grid fd-gap-lg" [formGroup]="consumptionForm()">
+    <div class="consumption-manage__hero fd-grid fd-gap-lg">
         <div class="consumption-manage__image">
             <fd-image-upload-field
                 appearance="compact"
-                formControlName="imageUrl"
+                [formField]="consumptionForm().imageUrl"
                 [description]="'CONSUMPTION_MANAGE.IMAGE_DESCRIPTION' | translate"
             />
         </div>
@@ -17,8 +17,8 @@
             <div class="consumption-manage__field-row fd-grid fd-gap-lg">
                 <div class="consumption-manage__field fd-stack fd-gap-xs">
                     <fd-ui-date-input
-                        formControlName="date"
                         size="lg"
+                        [formField]="consumptionForm().date"
                         [label]="'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate"
                         [required]="true"
                         [error]="generalErrors().date"
@@ -26,8 +26,8 @@
                 </div>
                 <div class="consumption-manage__field fd-stack fd-gap-xs">
                     <fd-ui-time-input
-                        formControlName="time"
                         size="lg"
+                        [formField]="consumptionForm().time"
                         [label]="'CONSUMPTION_MANAGE.CHOOSE_TIME' | translate"
                         [required]="true"
                         [error]="generalErrors().time"
@@ -36,8 +36,8 @@
             </div>
             <div class="consumption-manage__field fd-stack fd-gap-xs">
                 <fd-ui-select
-                    formControlName="mealType"
                     size="lg"
+                    [formField]="consumptionForm().mealType"
                     [label]="'CONSUMPTION_MANAGE.MEAL_TYPE_LABEL' | translate"
                     [placeholder]="'CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate"
                     [options]="mealTypeSelectOptions()"
@@ -46,10 +46,10 @@
             </div>
         </div>
     </div>
-    <div class="consumption-manage__field consumption-manage__field--full fd-stack fd-gap-xs" [formGroup]="consumptionForm()">
+    <div class="consumption-manage__field consumption-manage__field--full fd-stack fd-gap-xs">
         <fd-ui-textarea
-            formControlName="comment"
             size="lg"
+            [formField]="consumptionForm().comment"
             [label]="'CONSUMPTION_MANAGE.COMMENT' | translate"
             [placeholder]="'CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER' | translate"
             [rows]="3"
