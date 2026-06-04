@@ -1,4 +1,3 @@
-import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
@@ -28,10 +27,6 @@ export type ConsumptionItemFormValues = {
     recipe: Recipe | null;
     amount: number | null;
 };
-
-export type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
-
-export type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;
 
 export type NutritionTotals = {
     calories: number;

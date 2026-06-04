@@ -65,7 +65,7 @@ import { MealManualItemDialogComponent, type MealManualItemDialogData } from './
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar';
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card';
 
-export type { ConsumptionFormData, ConsumptionItemFormData } from './meal-manage-lib/meal-manage.types';
+export type { ConsumptionFormData, ConsumptionItemFormData } from './meal-manage-lib/meal-manage-form.mapper';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,

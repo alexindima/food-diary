@@ -16,13 +16,22 @@ import {
     type ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../../models/meal.data';
-import type {
-    ConsumptionFormData,
-    ConsumptionFormValues,
-    ConsumptionItemFormData,
-    ConsumptionItemFormValues,
-    NutritionTotals,
-} from './meal-manage.types';
+import type { ConsumptionFormValues, ConsumptionItemFormValues, NutritionTotals } from './meal-manage.types';
+
+type IsTuple<T> = T extends [infer _A, ...infer _B] | [] ? true : false;
+
+type LegacyFormGroupControls<T> = {
+    [K in keyof T]: T[K] extends Array<infer U>
+        ? IsTuple<T[K]> extends true
+            ? FormControl<T[K]>
+            : FormArray<FormGroup<LegacyFormGroupControls<U>>>
+        : T[K] extends object
+          ? FormGroup<LegacyFormGroupControls<T[K]>>
+          : FormControl<T[K]>;
+};
+
+export type ConsumptionFormData = LegacyFormGroupControls<ConsumptionFormValues>;
+export type ConsumptionItemFormData = LegacyFormGroupControls<ConsumptionItemFormValues>;
 
 export type MealManageFormCallbacks = {
     createItem: () => FormGroup<ConsumptionItemFormData>;

@@ -5,15 +5,23 @@ import type { ImageSelection } from '../../../../../shared/models/image-upload.d
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { nonEmptyArrayValidator } from '../../../lib/non-empty-array.validator';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../models/recipe.data';
-import type {
-    IngredientFormData,
-    IngredientFormValues,
-    NutritionScaleMode,
-    RecipeFormData,
-    RecipeFormValues,
-    StepFormData,
-    StepFormValues,
-} from './recipe-manage.types';
+import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
+
+type IsTuple<T> = T extends [infer _A, ...infer _B] | [] ? true : false;
+
+type LegacyFormGroupControls<T> = {
+    [K in keyof T]: T[K] extends Array<infer U>
+        ? IsTuple<T[K]> extends true
+            ? FormControl<T[K]>
+            : FormArray<FormGroup<LegacyFormGroupControls<U>>>
+        : T[K] extends object
+          ? FormGroup<LegacyFormGroupControls<T[K]>>
+          : FormControl<T[K]>;
+};
+
+export type RecipeFormData = LegacyFormGroupControls<RecipeFormValues>;
+export type StepFormData = LegacyFormGroupControls<StepFormValues>;
+export type IngredientFormData = LegacyFormGroupControls<IngredientFormValues>;
 
 export const RECIPE_LONG_TEXT_MAX_LENGTH = 1_000;
 export const RECIPE_STEP_TITLE_MAX_LENGTH = 120;

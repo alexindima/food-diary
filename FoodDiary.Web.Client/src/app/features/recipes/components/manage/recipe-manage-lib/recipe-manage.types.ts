@@ -1,4 +1,3 @@
-import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe, RecipeVisibility } from '../../../models/recipe.data';
@@ -38,10 +37,6 @@ export type IngredientFormValues = {
     nestedRecipeId: string | null;
     nestedRecipeName: string | null;
 };
-
-export type RecipeFormData = FormGroupControls<RecipeFormValues>;
-export type StepFormData = FormGroupControls<StepFormValues>;
-export type IngredientFormData = FormGroupControls<IngredientFormValues>;
 
 export type NutritionMode = 'auto' | 'manual';
 export type NutritionScaleMode = 'recipe' | 'portion';
