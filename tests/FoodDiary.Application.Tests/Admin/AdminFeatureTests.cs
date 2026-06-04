@@ -2,6 +2,7 @@ using System.Net.Mail;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
+using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
@@ -10,11 +11,17 @@ using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
+using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
+using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -628,6 +635,27 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertAdminEmailTemplateHandler_WithValidCommand_UpsertsTemplate() {
+        var handler = new UpsertAdminEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository());
+
+        var result = await handler.Handle(
+            new UpsertAdminEmailTemplateCommand(
+                Key: " Verify_Email ",
+                Locale: " EN ",
+                Subject: "Subject",
+                HtmlBody: "<b>Body</b>",
+                TextBody: "Body",
+                IsActive: true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("verify_email", result.Value.Key);
+        Assert.Equal("en", result.Value.Locale);
+        Assert.Equal("Subject", result.Value.Subject);
+        Assert.True(result.Value.IsActive);
+    }
+
+    [Fact]
     public async Task SendAdminEmailTemplateTestHandler_SendsCurrentTemplateToRequestedRecipient() {
         var transport = new RecordingEmailTransport();
         var handler = new SendAdminEmailTemplateTestCommandHandler(
@@ -653,6 +681,41 @@ public class AdminFeatureTests {
         Assert.Contains(
             "Alex Johnson on FoodDiary: https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo",
             transport.AlternateViewBodies);
+    }
+
+    [Fact]
+    public async Task UpsertAdminAiPromptHandler_WhenPromptMissing_CreatesTemplate() {
+        var repository = new InMemoryAiPromptTemplateRepository();
+        var handler = new UpsertAdminAiPromptCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new UpsertAdminAiPromptCommand(" Meal_Summary ", " EN ", " Prompt text ", true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("meal_summary", result.Value.Key);
+        Assert.Equal("en", result.Value.Locale);
+        Assert.Equal("Prompt text", result.Value.PromptText);
+        Assert.True(result.Value.IsActive);
+        Assert.Single(repository.Templates);
+    }
+
+    [Fact]
+    public async Task UpsertAdminAiPromptHandler_WhenPromptExists_UpdatesTrackedTemplate() {
+        var template = AiPromptTemplate.Create("meal_summary", "en", "Old prompt", true);
+        var repository = new InMemoryAiPromptTemplateRepository(template);
+        var handler = new UpsertAdminAiPromptCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new UpsertAdminAiPromptCommand("MEAL_SUMMARY", "EN", "New prompt", false),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(template.Id.Value, result.Value.Id);
+        Assert.Equal("New prompt", result.Value.PromptText);
+        Assert.False(result.Value.IsActive);
+        Assert.Equal(2, result.Value.Version);
+        Assert.Equal(1, repository.UpdateCallCount);
     }
 
     [Fact]
@@ -691,6 +754,100 @@ public class AdminFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 2, 25, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
         Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastToUtc);
+    }
+
+    [Fact]
+    public async Task GetAdminDashboardSummaryQueryHandler_ReturnsSummaryWithPendingReports() {
+        var recentUser = CreateUserWithRoles("recent@example.com", [RoleNames.Premium]);
+        var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
+        var contentReportRepository = new CountingContentReportRepository(4);
+        var handler = new GetAdminDashboardSummaryQueryHandler(userRepository, contentReportRepository);
+
+        var result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(12, result.Value.TotalUsers);
+        Assert.Equal(10, result.Value.ActiveUsers);
+        Assert.Equal(3, result.Value.PremiumUsers);
+        Assert.Equal(1, result.Value.DeletedUsers);
+        Assert.Equal(4, result.Value.PendingReportsCount);
+        Assert.Equal("recent@example.com", Assert.Single(result.Value.RecentUsers).Email);
+        Assert.Equal(2, userRepository.LastRecentLimit);
+    }
+
+    [Fact]
+    public async Task GetAdminImpersonationSessionsQueryHandler_NormalizesPagingAndReturnsPagedResponse() {
+        var session = new AdminImpersonationSessionReadModel(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            "admin@example.com",
+            Guid.NewGuid(),
+            "target@example.com",
+            "Support",
+            "127.0.0.1",
+            "Test",
+            DateTime.UtcNow);
+        var repository = new RecordingImpersonationSessionRepository {
+            PagedResponse = ([session], 45)
+        };
+        var handler = new GetAdminImpersonationSessionsQueryHandler(repository);
+
+        var result = await handler.Handle(new GetAdminImpersonationSessionsQuery(0, 999, " target "), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(session, Assert.Single(result.Value.Data));
+        Assert.Equal(1, result.Value.Page);
+        Assert.Equal(20, result.Value.Limit);
+        Assert.Equal(3, result.Value.TotalPages);
+        Assert.Equal(" target ", repository.LastSearch);
+    }
+
+    [Fact]
+    public async Task GetAdminUserRoleAuditQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var handler = new GetAdminUserRoleAuditQueryHandler(
+            new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
+            new RecordingUserRoleAuditRepository());
+
+        var result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.Empty, 10), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetAdminUserRoleAuditQueryHandler_WhenUserMissing_ReturnsNotFound() {
+        var handler = new GetAdminUserRoleAuditQueryHandler(
+            new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
+            new RecordingUserRoleAuditRepository());
+
+        var result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.NewGuid(), 10), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetAdminUserRoleAuditQueryHandler_WithExistingUser_ClampsLimitAndReturnsEvents() {
+        var user = CreateUserWithRoles("role-audit@example.com", [RoleNames.Admin]);
+        var auditEvent = new AdminUserRoleAuditEventReadModel(
+            Guid.NewGuid(),
+            user.Id.Value,
+            RoleNames.Admin,
+            UserRoleAuditAction.Added.ToString(),
+            null,
+            null,
+            "test",
+            DateTime.UtcNow);
+        var repository = new RecordingUserRoleAuditRepository([auditEvent]);
+        var handler = new GetAdminUserRoleAuditQueryHandler(
+            new InMemoryUserRepository(user, [RoleNames.Admin]),
+            repository);
+
+        var result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 999), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(auditEvent, Assert.Single(result.Value));
+        Assert.Equal(50, repository.LastLimit);
     }
 
     private static User CreateUserWithRoles(string email, IReadOnlyList<string> roleNames) {
@@ -794,6 +951,10 @@ public class AdminFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingImpersonationSessionRepository : IAdminImpersonationSessionRepository {
         public int AddCallCount { get; private set; }
+        public (IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems) PagedResponse { get; set; } = ([], 0);
+        public int LastPage { get; private set; }
+        public int LastLimit { get; private set; }
+        public string? LastSearch { get; private set; }
 
         public Task AddAsync(FoodDiary.Domain.Entities.Admin.AdminImpersonationSession session, CancellationToken cancellationToken = default) {
             AddCallCount++;
@@ -804,8 +965,12 @@ public class AdminFeatureTests {
             int page,
             int limit,
             string? search,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+            CancellationToken cancellationToken = default) {
+            LastPage = page;
+            LastLimit = limit;
+            LastSearch = search;
+            return Task.FromResult(PagedResponse);
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -851,6 +1016,55 @@ public class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class SummaryUserRepository(
+        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) response) : IUserRepository {
+        public int LastRecentLimit { get; private set; }
+
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(
+            int recentLimit,
+            CancellationToken cancellationToken = default) {
+            LastRecentLimit = recentLimit;
+            return Task.FromResult(response);
+        }
+
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CountingContentReportRepository(int pendingCount) : IContentReportRepository {
+        public Task<int> CountByStatusAsync(ReportStatus status, CancellationToken cancellationToken = default) =>
+            Task.FromResult(status == ReportStatus.Pending ? pendingCount : 0);
+
+        public Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<ContentReport?> GetByIdAsync(ContentReportId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(ContentReport report, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<bool> HasUserReportedAsync(UserId userId, ReportTargetType targetType, Guid targetId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<ContentReport> Items, int Total)> GetPagedAsync(ReportStatus? status, int page, int limit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingUserRoleAuditRepository(IReadOnlyList<AdminUserRoleAuditEventReadModel>? events = null) : IAdminUserRoleAuditRepository {
+        public int LastLimit { get; private set; }
+
+        public Task<IReadOnlyList<AdminUserRoleAuditEventReadModel>> GetRecentForUserAsync(
+            Guid userId,
+            int limit,
+            CancellationToken cancellationToken = default) {
+            LastLimit = limit;
+            return Task.FromResult(events ?? []);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow => utcNow;
     }
@@ -871,6 +1085,38 @@ public class AdminFeatureTests {
                 using var reader = new StreamReader(view.ContentStream);
                 AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false));
             }
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryAiPromptTemplateRepository(params AiPromptTemplate[] templates) : IAiPromptTemplateRepository {
+        private readonly List<AiPromptTemplate> _templates = templates.ToList();
+
+        public IReadOnlyList<AiPromptTemplate> Templates => _templates;
+        public int UpdateCallCount { get; private set; }
+
+        public Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<AiPromptTemplate>>(_templates);
+
+        public Task<AiPromptTemplate?> GetByKeyAsync(string key, string locale, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_templates.FirstOrDefault(template =>
+                string.Equals(template.Key, key, StringComparison.Ordinal) &&
+                string.Equals(template.Locale, locale, StringComparison.Ordinal)));
+
+        public Task<AiPromptTemplate?> GetByIdAsync(
+            AiPromptTemplateId id,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_templates.FirstOrDefault(template => template.Id == id));
+
+        public Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
+            _templates.Add(template);
+            return Task.FromResult(template);
+        }
+
+        public Task UpdateAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
+            UpdateCallCount++;
+            return Task.CompletedTask;
         }
     }
 

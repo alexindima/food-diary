@@ -76,6 +76,16 @@ public class ExercisesFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteExerciseEntry_WithNullUserId_ReturnsFailure() {
+        var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
+
+        var result = await handler.Handle(
+            new DeleteExerciseEntryCommand(null, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
+    [Fact]
     public async Task UpdateExerciseEntry_WhenExists_Succeeds() {
         var userId = UserId.New();
         var entry = ExerciseEntry.Create(userId, DateTime.UtcNow, ExerciseType.Running, 30, 200);
@@ -103,6 +113,17 @@ public class ExercisesFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateExerciseEntry_WithNullUserId_ReturnsFailure() {
+        var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
+
+        var result = await handler.Handle(
+            new UpdateExerciseEntryCommand(null, Guid.NewGuid(), null, null, null, null, false, null, false, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
+    [Fact]
     public async Task GetExerciseEntries_ReturnsModels() {
         var userId = UserId.New();
         var entry = ExerciseEntry.Create(userId, DateTime.UtcNow, ExerciseType.Running, 30, 200);
@@ -116,6 +137,17 @@ public class ExercisesFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
+    }
+
+    [Fact]
+    public async Task GetExerciseEntries_WithNullUserId_ReturnsFailure() {
+        var handler = new GetExerciseEntriesQueryHandler(new InMemoryExerciseEntryRepository());
+
+        var result = await handler.Handle(
+            new GetExerciseEntriesQuery(null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
     }
 
     [ExcludeFromCodeCoverage]

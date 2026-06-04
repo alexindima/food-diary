@@ -1,5 +1,6 @@
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
+using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Queries.GetAdminLessons;
 using FoodDiary.Application.Abstractions.Lessons.Common;
@@ -213,6 +214,78 @@ public class AdminLessonFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
+    }
+
+    [Fact]
+    public async Task ImportAdminLessonsHandler_WithValidLessons_AddsAllAndReturnsModels() {
+        var repo = new InMemoryLessonRepository();
+        var handler = new ImportAdminLessonsCommandHandler(repo);
+
+        var result = await handler.Handle(
+            new ImportAdminLessonsCommand(
+                Version: 1,
+                Lessons: [
+                    new ImportAdminLessonItem(" Intro ", " Content ", " Summary ", "EN", "NutritionBasics", "Beginner", 3, 2),
+                    new ImportAdminLessonItem("Advanced", "Details", null, "ru", "Macronutrients", "Advanced", 8, 4)
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.ImportedCount);
+        Assert.Equal(2, repo.Lessons.Count);
+        Assert.Equal("Intro", result.Value.Lessons[0].Title);
+        Assert.Equal("en", result.Value.Lessons[0].Locale);
+    }
+
+    [Fact]
+    public async Task ImportAdminLessonsHandler_WithInvalidCategory_ReturnsIndexedValidationFailure() {
+        var handler = new ImportAdminLessonsCommandHandler(new InMemoryLessonRepository());
+
+        var result = await handler.Handle(
+            new ImportAdminLessonsCommand(
+                Version: 1,
+                Lessons: [
+                    new ImportAdminLessonItem("Title", "Content", null, "en", "Unknown", "Beginner", 3, 0)
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("lessons[0].category", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ImportAdminLessonsHandler_WithInvalidDifficulty_ReturnsIndexedValidationFailure() {
+        var handler = new ImportAdminLessonsCommandHandler(new InMemoryLessonRepository());
+
+        var result = await handler.Handle(
+            new ImportAdminLessonsCommand(
+                Version: 1,
+                Lessons: [
+                    new ImportAdminLessonItem("Title", "Content", null, "en", "NutritionBasics", "Expert", 3, 0)
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("lessons[0].difficulty", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ImportAdminLessonsHandler_WithInvalidLessonState_ReturnsIndexedValidationFailure() {
+        var handler = new ImportAdminLessonsCommandHandler(new InMemoryLessonRepository());
+
+        var result = await handler.Handle(
+            new ImportAdminLessonsCommand(
+                Version: 1,
+                Lessons: [
+                    new ImportAdminLessonItem(" ", "Content", null, "en", "NutritionBasics", "Beginner", 3, 0)
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("lessons[0]", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]

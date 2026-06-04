@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
@@ -7,8 +8,11 @@ using FoodDiary.Application.Authentication.Commands.Register;
 using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
+using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
@@ -63,6 +67,63 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("admin-sso-code", result.Value.Code);
         Assert.Equal(1, adminSsoService.CreateCodeCallCount);
+    }
+
+    [Fact]
+    public async Task AdminSsoExchangeHandler_WithInvalidCode_ReturnsFailure() {
+        var handler = new AdminSsoExchangeCommandHandler(
+            new StubAdminSsoService(),
+            new StubUserRepository(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new AdminSsoExchangeCommand("bad-code"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AdminSsoInvalidCode", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AdminSsoExchangeHandler_WithMissingUser_ReturnsNotFound() {
+        var handler = new AdminSsoExchangeCommandHandler(
+            new StubAdminSsoService(UserId.New()),
+            new StubUserRepository(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AdminSsoExchangeHandler_WithNonAdminUser_ReturnsForbidden() {
+        var user = User.Create("client@example.com", "secret");
+        var handler = new AdminSsoExchangeCommandHandler(
+            new StubAdminSsoService(user.Id),
+            new StubUserRepository(user),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task AdminSsoExchangeHandler_WithAdminUser_IssuesTokens() {
+        var user = User.Create("admin-exchange@example.com", "secret");
+        user.ReplaceRoles([Role.Create(RoleNames.Admin)]);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new AdminSsoExchangeCommandHandler(
+            new StubAdminSsoService(user.Id),
+            new StubUserRepository(user),
+            tokenService);
+
+        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+        Assert.Equal(user, tokenService.LastUser);
     }
 
     [Fact]
@@ -216,6 +277,93 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task VerifyEmailHandler_WhenUserMissing_ReturnsNotFound() {
+        var handler = new VerifyEmailCommandHandler(
+            new StubUserRepository(),
+            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
+            new StubEmailVerificationNotifier());
+
+        var result = await handler.Handle(
+            new VerifyEmailCommand(Guid.NewGuid(), "token"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task VerifyEmailHandler_WhenAlreadyConfirmed_ReturnsSuccess() {
+        var user = User.Create("confirmed-verify@example.com", "secret");
+        user.SetEmailConfirmed(true);
+        var handler = new VerifyEmailCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
+            new StubEmailVerificationNotifier());
+
+        var result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "token"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public async Task VerifyEmailHandler_WhenTokenMissing_ReturnsInvalidToken() {
+        var user = User.Create("missing-token@example.com", "secret");
+        var handler = new VerifyEmailCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
+            new StubEmailVerificationNotifier());
+
+        var result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "token"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task VerifyEmailHandler_WhenTokenDoesNotMatch_ReturnsInvalidToken() {
+        var user = User.Create("bad-token@example.com", "secret");
+        user.SetEmailConfirmationToken(new UserTokenIssue("expected", DateTime.UtcNow.AddHours(1), DateTime.UtcNow));
+        var handler = new VerifyEmailCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
+            new StubEmailVerificationNotifier());
+
+        var result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "actual"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task VerifyEmailHandler_WithValidToken_CompletesVerification() {
+        var user = User.Create("verify@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.UtcNow.AddHours(1), dateTimeProvider.UtcNow));
+        var handler = new VerifyEmailCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            dateTimeProvider,
+            new StubEmailVerificationNotifier());
+
+        var result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "token"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(user.IsEmailConfirmed);
+    }
+
+    [Fact]
     public async Task ResendEmailVerificationHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new ResendEmailVerificationCommandHandler(
             new StubUserRepository(),
@@ -302,6 +450,250 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task LinkTelegramHandler_WhenInitDataInvalid_ReturnsFailure() {
+        var user = User.Create("link-invalid@example.com", "secret");
+        var handler = new LinkTelegramCommandHandler(
+            new StubUserRepository(user),
+            new StubTelegramAuthValidator(validateFailure: true));
+
+        var result = await handler.Handle(
+            new LinkTelegramCommand(user.Id.Value, "bad-init-data"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task LinkTelegramHandler_WhenUserMissing_ReturnsFailure() {
+        var handler = new LinkTelegramCommandHandler(
+            new StubUserRepository(),
+            new StubTelegramAuthValidator());
+
+        var result = await handler.Handle(
+            new LinkTelegramCommand(Guid.NewGuid(), "valid-init-data"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task LinkTelegramHandler_WhenSameTelegramIdAlreadyLinked_ReturnsCurrentUser() {
+        var user = User.Create("same-telegram@example.com", "secret");
+        user.LinkTelegram(123456);
+        var handler = new LinkTelegramCommandHandler(
+            new StubUserRepository(user),
+            new StubTelegramAuthValidator());
+
+        var result = await handler.Handle(
+            new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(123456, user.TelegramUserId);
+    }
+
+    [Fact]
+    public async Task LinkTelegramHandler_WhenTelegramIdBelongsToAnotherUser_ReturnsFailure() {
+        var user = User.Create("current-telegram@example.com", "secret");
+        var existing = User.Create("existing-telegram@example.com", "secret");
+        existing.LinkTelegram(123456);
+        var handler = new LinkTelegramCommandHandler(
+            new StubUserRepository(user, existing),
+            new StubTelegramAuthValidator());
+
+        var result = await handler.Handle(
+            new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramAlreadyLinked", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task LinkTelegramHandler_WithAvailableTelegramId_LinksCurrentUser() {
+        var user = User.Create("link@example.com", "secret");
+        var handler = new LinkTelegramCommandHandler(
+            new StubUserRepository(user),
+            new StubTelegramAuthValidator());
+
+        var result = await handler.Handle(
+            new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(123456, user.TelegramUserId);
+    }
+
+    [Fact]
+    public async Task ConfirmPasswordResetHandler_WhenUserMissing_ReturnsNotFound() {
+        var handler = new ConfirmPasswordResetCommandHandler(
+            new StubUserRepository(),
+            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
+            new StubAuthenticationTokenService(),
+            new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new ConfirmPasswordResetCommand(Guid.NewGuid(), "token", "StrongPass123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ConfirmPasswordResetHandler_WhenTokenMissing_ReturnsInvalidToken() {
+        var user = User.Create("reset-missing-token@example.com", "secret");
+        var handler = new ConfirmPasswordResetCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
+            new StubAuthenticationTokenService(),
+            new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new ConfirmPasswordResetCommand(user.Id.Value, "token", "StrongPass123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ConfirmPasswordResetHandler_WhenTokenDoesNotMatch_ReturnsInvalidToken() {
+        var user = User.Create("reset-bad-token@example.com", "secret");
+        user.SetPasswordResetToken(new UserTokenIssue("expected", DateTime.UtcNow.AddHours(1), DateTime.UtcNow));
+        var handler = new ConfirmPasswordResetCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
+            new StubAuthenticationTokenService(),
+            new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new ConfirmPasswordResetCommand(user.Id.Value, "actual", "StrongPass123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ConfirmPasswordResetHandler_WithValidToken_ChangesPasswordAndIssuesTokens() {
+        var user = User.Create("reset-valid@example.com", "old-password");
+        var dateTimeProvider = new StubDateTimeProvider();
+        user.SetPasswordResetToken(new UserTokenIssue("token", dateTimeProvider.UtcNow.AddHours(1), dateTimeProvider.UtcNow));
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new ConfirmPasswordResetCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            dateTimeProvider,
+            tokenService,
+            new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new ConfirmPasswordResetCommand(user.Id.Value, "token", "new-password"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+        Assert.Equal(user, tokenService.LastUser);
+    }
+
+    [Fact]
+    public async Task TelegramVerifyHandler_WhenInitDataInvalid_ReturnsFailure() {
+        var handler = new TelegramVerifyCommandHandler(
+            new StubUserRepository(),
+            new StubTelegramAuthValidator(validateFailure: true),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new TelegramVerifyCommand("bad-init-data"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task TelegramVerifyHandler_WhenTelegramUserIsNotLinked_ReturnsFailure() {
+        var handler = new TelegramVerifyCommandHandler(
+            new StubUserRepository(),
+            new StubTelegramAuthValidator(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task TelegramVerifyHandler_WithLinkedUser_IssuesTokens() {
+        var user = User.Create("telegram@example.com", "secret");
+        user.LinkTelegram(123456);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new TelegramVerifyCommandHandler(
+            new StubUserRepository(user),
+            new StubTelegramAuthValidator(),
+            tokenService);
+
+        var result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+        Assert.Equal(user, tokenService.LastUser);
+    }
+
+    [Fact]
+    public async Task TelegramLoginWidgetHandler_WhenWidgetDataInvalid_ReturnsFailure() {
+        var handler = new TelegramLoginWidgetCommandHandler(
+            new StubUserRepository(),
+            new StubTelegramLoginWidgetValidator(validateFailure: true),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(
+            new TelegramLoginWidgetCommand(123456, 123, "bad-hash", null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task TelegramLoginWidgetHandler_WhenTelegramUserIsNotLinked_ReturnsFailure() {
+        var handler = new TelegramLoginWidgetCommandHandler(
+            new StubUserRepository(),
+            new StubTelegramLoginWidgetValidator(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(
+            new TelegramLoginWidgetCommand(123456, 123, "hash", null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task TelegramLoginWidgetHandler_WithLinkedUser_IssuesTokens() {
+        var user = User.Create("telegram-widget@example.com", "secret");
+        user.LinkTelegram(123456);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new TelegramLoginWidgetCommandHandler(
+            new StubUserRepository(user),
+            new StubTelegramLoginWidgetValidator(),
+            tokenService);
+
+        var result = await handler.Handle(
+            new TelegramLoginWidgetCommand(123456, 123, "hash", "alex", "Alex", "User", null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+        Assert.Equal(user, tokenService.LastUser);
+    }
+
+    [Fact]
     public async Task RestoreAccountHandler_WithDeletedUser_RestoresAndIssuesTokens() {
         var user = User.Create("deleted@example.com", "secret");
         user.DeleteAccount(DateTime.UtcNow.AddDays(-2));
@@ -362,7 +754,7 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubAdminSsoService : IAdminSsoService {
+    private sealed class StubAdminSsoService(UserId? exchangeUserId = null) : IAdminSsoService {
         public int CreateCodeCallCount { get; private set; }
 
         public Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
@@ -371,19 +763,27 @@ public sealed class AuthenticationCommandHandlerTests {
         }
 
         public Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+            Task.FromResult(string.Equals(code, "admin-sso-code", StringComparison.Ordinal) ? exchangeUserId : null);
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User? user = null) : IUserRepository {
+    private sealed class StubUserRepository(User? user = null, params User[] otherUsers) : IUserRepository {
+        private readonly List<User> _users = user is null ? otherUsers.ToList() : [user, .. otherUsers];
+
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-            Task.FromResult<User?>(user is not null && string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase) ? user : null);
+            Task.FromResult<User?>(_users.FirstOrDefault(candidate => string.Equals(candidate.Email, email, StringComparison.OrdinalIgnoreCase)));
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult<User?>(user is { IsActive: true, DeletedAt: null } && user.Id == id ? user : null);
+            Task.FromResult<User?>(_users.FirstOrDefault(candidate => candidate is { IsActive: true, DeletedAt: null } && candidate.Id == id));
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(_users.FirstOrDefault(candidate =>
+                candidate is { IsActive: true, DeletedAt: null, TelegramUserId: not null } &&
+                candidate.TelegramUserId == telegramUserId));
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(_users.FirstOrDefault(candidate =>
+                candidate.TelegramUserId.HasValue &&
+                candidate.TelegramUserId == telegramUserId));
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -490,9 +890,23 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubTelegramAuthValidator : ITelegramAuthValidator {
+    private sealed class StubTelegramAuthValidator(bool validateFailure = false) : ITelegramAuthValidator {
         public FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<TelegramInitData> ValidateInitData(string initData) =>
-            throw new NotSupportedException();
+            validateFailure
+                ? FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Failure<TelegramInitData>(
+                    Errors.Validation.Invalid("initData", "Invalid Telegram init data."))
+                : FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(
+                    new TelegramInitData(123456, "alex", "Alex", "User", null, "en", DateTime.UtcNow));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubTelegramLoginWidgetValidator(bool validateFailure = false) : ITelegramLoginWidgetValidator {
+        public FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) =>
+            validateFailure
+                ? FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Failure<TelegramInitData>(
+                    Errors.Validation.Invalid("hash", "Invalid Telegram login widget hash."))
+                : FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(
+                    new TelegramInitData(data.Id, data.Username, data.FirstName, data.LastName, data.PhotoUrl, null, DateTime.UtcNow));
     }
 
     [ExcludeFromCodeCoverage]
