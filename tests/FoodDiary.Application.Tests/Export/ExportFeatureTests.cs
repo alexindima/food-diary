@@ -274,6 +274,16 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public void CsvGenerator_WithNewlineInComment_EscapesProperly() {
+        var meal = CreateMeal(comment: "first line\nsecond line");
+
+        var csv = DiaryCsvGenerator.Generate([meal]);
+        var content = System.Text.Encoding.UTF8.GetString(csv);
+
+        Assert.Contains("\"first line\nsecond line\"", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void CsvGenerator_WithNoMealType_WritesEmptyField() {
         var meal = CreateMeal(mealType: null);
 
@@ -293,6 +303,40 @@ public class ExportFeatureTests {
         var content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CsvGenerator_WithInvalidTimeZoneOffset_FallsBackToUtc() {
+        var meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
+
+        var csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 900);
+        var content = System.Text.Encoding.UTF8.GetString(csv);
+
+        Assert.Contains("2026-05-03,Breakfast", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CsvGenerator_WithUnspecifiedDate_TreatsValueAsUtc() {
+        var meal = CreateMeal();
+        SetMealDate(meal, new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Unspecified));
+
+        var csv = DiaryCsvGenerator.Generate([meal], TimeSpan.FromHours(4));
+        var content = System.Text.Encoding.UTF8.GetString(csv);
+
+        Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CsvGenerator_WithLocalDate_ConvertsValueToUtcBeforeApplyingOffset() {
+        var localDate = DateTime.SpecifyKind(new DateTime(2026, 5, 3, 21, 0, 0), DateTimeKind.Local);
+        var meal = CreateMeal();
+        SetMealDate(meal, localDate);
+
+        var csv = DiaryCsvGenerator.Generate([meal], TimeSpan.Zero);
+        var content = System.Text.Encoding.UTF8.GetString(csv);
+        var expectedDate = localDate.ToUniversalTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+
+        Assert.Contains($"{expectedDate},Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -362,5 +406,11 @@ public class ExportFeatureTests {
             LastReportOrigin = reportOrigin;
             return Task.FromResult<byte[]>([0x25, 0x50, 0x44, 0x46]); // %PDF magic bytes
         }
+    }
+
+    private static void SetMealDate(Meal meal, DateTime date) {
+        typeof(Meal)
+            .GetProperty(nameof(Meal.Date))!
+            .SetValue(meal, date);
     }
 }

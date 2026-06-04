@@ -13,6 +13,7 @@ using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -967,6 +968,172 @@ public class RecipesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task RecipeIngredientAccessValidator_WithMissingProduct_ReturnsValidationFailure() {
+        var result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            [CreateRecipeStepWithProduct(order: 1, "Mix", Guid.NewGuid())],
+            recipeId: null,
+            UserId.New(),
+            new EmptyProductLookupService(),
+            new AllowAllRecipeLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Product", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task RecipeIngredientAccessValidator_WithSelfReference_ReturnsValidationFailure() {
+        var recipeId = RecipeId.New();
+        var step = new RecipeStepInput(
+            Order: 1,
+            Description: "Mix",
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: recipeId.Value, Amount: 1)]);
+
+        var result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            [step],
+            recipeId,
+            UserId.New(),
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("itself", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task RecipeIngredientAccessValidator_WithMissingNestedRecipe_ReturnsValidationFailure() {
+        var step = new RecipeStepInput(
+            Order: 1,
+            Description: "Mix",
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: Guid.NewGuid(), Amount: 1)]);
+
+        var result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            [step],
+            recipeId: null,
+            UserId.New(),
+            new AllowAllProductLookupService(),
+            new EmptyRecipeLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Nested recipe", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task RecipeNutritionUpdater_WhenManualNutrition_DoesNotUpdateRepository() {
+        var recipe = Recipe.Create(UserId.New(), "Manual", servings: 1);
+        recipe.SetManualNutrition(100, 10, 1, 2, 3, 0);
+        var repository = new RecordingRecipeNutritionRepository();
+
+        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, repository, CancellationToken.None);
+
+        Assert.Equal(0, repository.UpdateNutritionCallCount);
+    }
+
+    [Fact]
+    public async Task RecipeNutritionUpdater_WhenAutoNutritionChanged_UpdatesComputedNutrition() {
+        var userId = UserId.New();
+        var product = Product.Create(
+            userId,
+            "Ingredient",
+            MeasurementUnit.G,
+            100,
+            null,
+            200,
+            10,
+            5,
+            20,
+            4,
+            0);
+        var recipe = Recipe.Create(userId, "Auto", servings: 1);
+        recipe.ApplyComputedNutrition(1, 1, 1, 1, 1, 1);
+        var step = recipe.AddStep(1, "Mix");
+        step.AddProductIngredient(product.Id, 100);
+        var ingredient = Assert.Single(step.Ingredients);
+        typeof(RecipeIngredient)
+            .GetProperty(nameof(RecipeIngredient.Product))!
+            .SetValue(ingredient, product);
+        var repository = new RecordingRecipeNutritionRepository();
+
+        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, repository, CancellationToken.None);
+
+        Assert.Equal(1, repository.UpdateNutritionCallCount);
+        Assert.Equal(200, recipe.TotalCalories);
+        Assert.Equal(10, recipe.TotalProteins);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingRecipeNutritionRepository : IRecipeRepository {
+        public int UpdateNutritionCallCount { get; private set; }
+
+        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            bool includePublic,
+            int page,
+            int limit,
+            string? search,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<Recipe?> GetByIdAsync(
+            RecipeId id,
+            UserId userId,
+            bool includePublic = true,
+            bool includeSteps = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {
+            UpdateNutritionCallCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+            int page,
+            int limit,
+            string? search,
+            string? category,
+            int? maxPrepTime,
+            string sortBy,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

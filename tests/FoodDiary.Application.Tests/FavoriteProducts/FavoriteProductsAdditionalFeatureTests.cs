@@ -88,6 +88,20 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task GetFavoriteProducts_WhenUserDeleted_ReturnsAccessFailure() {
+        var user = User.Create("deleted-get-favorite-products@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetFavoriteProductsQueryHandler(
+            new InMemoryFavoriteProductRepository(),
+            new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetFavoriteProductsQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task IsProductFavorite_ReturnsFalseWhenFavoriteMissing() {
         var user = User.Create("is-favorite-product@example.com", "hash");
         var handler = new IsProductFavoriteQueryHandler(
@@ -100,6 +114,22 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.False(result.Value);
+    }
+
+    [Fact]
+    public async Task IsProductFavorite_WhenUserDeleted_ReturnsAccessFailure() {
+        var user = User.Create("deleted-is-favorite-product@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new IsProductFavoriteQueryHandler(
+            new InMemoryFavoriteProductRepository(),
+            new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new IsProductFavoriteQuery(user.Id.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -117,6 +147,21 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.True(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteProduct_WhenFavoriteMissing_ReturnsNotFound() {
+        var user = User.Create("missing-remove-favorite-product@example.com", "hash");
+        var repository = new InMemoryFavoriteProductRepository();
+        var handler = new RemoveFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new RemoveFavoriteProductCommand(user.Id.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("FavoriteProduct.NotFound", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
     }
 
     private static Product CreateProduct(UserId userId, string name) =>

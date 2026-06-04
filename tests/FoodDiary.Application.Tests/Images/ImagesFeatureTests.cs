@@ -24,6 +24,37 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
+    public async Task GetImageUploadUrlCommandHandler_WithValidRequest_PersistsAssetAndReturnsPresignedUrl() {
+        var repository = new FakeImageAssetRepository();
+        var handler = new GetImageUploadUrlCommandHandler(
+            new FakeImageStorageService(),
+            repository);
+
+        var result = await handler.Handle(
+            new GetImageUploadUrlCommand(Guid.NewGuid(), "photo.jpg", "image/jpeg", 1024),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("https://upload.example", result.Value.UploadUrl);
+        Assert.Equal("https://cdn.example/file.jpg", result.Value.FileUrl);
+        Assert.NotEqual(Guid.Empty, result.Value.AssetId);
+        Assert.Equal(1, repository.Count);
+    }
+
+    [Fact]
+    public async Task DeleteImageAssetCommandHandler_WhenAssetMissing_ReturnsNotFound() {
+        var handler = new DeleteImageAssetCommandHandler(
+            new FakeImageAssetRepository(),
+            new FakeCleanupService());
+
+        var assetId = Guid.NewGuid();
+        var result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), assetId), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+    }
+
+    [Fact]
     public async Task DeleteImageAssetCommandHandler_WithOtherOwner_ReturnsForbidden() {
         var repo = new FakeImageAssetRepository();
         var owner = UserId.New();
@@ -88,6 +119,29 @@ public class ImagesFeatureTests {
         var removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
 
         Assert.Equal(0, removed);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_CleanupOrphans_DeletesEligibleAssetsAndKeepsInUseAssets() {
+        var repository = new FakeImageAssetRepository();
+        var removable = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
+        var inUse = ImageAsset.Create(UserId.New(), "images/in-use.jpg", "https://cdn/in-use.jpg");
+        await repository.AddAsync(removable, CancellationToken.None);
+        await repository.AddAsync(inUse, CancellationToken.None);
+        repository.InUseIds.Add(inUse.Id);
+        var service = new ImageAssetCleanupService(
+            repository,
+            new FakeImageStorageService(),
+            NullLogger<ImageAssetCleanupService>.Instance);
+
+        var removed = await service.CleanupOrphansAsync(
+            DateTime.UtcNow.AddYears(1),
+            10,
+            CancellationToken.None);
+
+        Assert.Equal(1, removed);
+        Assert.Null(await repository.GetByIdAsync(removable.Id, CancellationToken.None));
+        Assert.NotNull(await repository.GetByIdAsync(inUse.Id, CancellationToken.None));
     }
 
     [Fact]
@@ -229,6 +283,7 @@ public class ImagesFeatureTests {
     private sealed class FakeImageAssetRepository : IImageAssetRepository {
         private readonly Dictionary<ImageAssetId, ImageAsset> _assets = [];
         public HashSet<ImageAssetId> InUseIds { get; } = [];
+        public int Count => _assets.Count;
 
         public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
             _assets[asset.Id] = asset;

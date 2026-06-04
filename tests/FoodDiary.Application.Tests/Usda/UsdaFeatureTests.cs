@@ -95,6 +95,16 @@ public class UsdaFeatureTests {
         Assert.True(result.IsFailure);
     }
 
+    [Fact]
+    public async Task UnlinkProductFromUsdaFood_WithNullUserId_ReturnsFailure() {
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(null));
+
+        var result = await handler.Handle(
+            new UnlinkProductFromUsdaFoodCommand(null, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class StubProductRepository(Product? product) : IProductRepository {
         public bool UpdateCalled { get; private set; }

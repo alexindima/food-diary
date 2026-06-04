@@ -122,6 +122,22 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWeightSummariesQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-weight-summary@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetWeightSummariesQueryHandler(
+            new InMemoryWeightEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetWeightSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 1),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetWeightEntriesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWeightEntriesQueryHandler(
             new InMemoryWeightEntryRepository(),
@@ -215,6 +231,22 @@ public class WeightEntriesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateWeightEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-create-weight@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var repository = new InMemoryWeightEntryRepository();
+        var handler = new CreateWeightEntryCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateWeightEntryCommand(user.Id.Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Null(repository.AddedEntry);
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

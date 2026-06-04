@@ -1,6 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
-using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
+using FoodDiary.Application.Lessons.Mappings;
+using FoodDiary.Application.Lessons.Queries.GetLessonById;
+using FoodDiary.Application.Lessons.Queries.GetLessons;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -60,27 +63,211 @@ public class LessonsFeatureTests {
         Assert.True(result.IsFailure);
     }
 
+    [Fact]
+    public async Task GetLessons_WithLocaleAndCategory_ReturnsSortedLessonsWithReadFlags() {
+        var userId = UserId.New();
+        var firstLesson = CreateLesson("Second", "ru", LessonCategory.Macronutrients, sortOrder: 2);
+        var secondLesson = CreateLesson("First", "ru", LessonCategory.Macronutrients, sortOrder: 1);
+        var otherCategoryLesson = CreateLesson("Hydration", "ru", LessonCategory.Hydration, sortOrder: 0);
+        var progress = UserLessonProgress.Create(userId, secondLesson.Id, DateTime.UtcNow);
+        var repository = new StubLessonRepository(
+            [firstLesson, secondLesson, otherCategoryLesson],
+            [progress]);
+        var handler = new GetLessonsQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetLessonsQuery(userId.Value, " RU ", "macronutrients"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Collection(
+            result.Value,
+            item => {
+                Assert.Equal(secondLesson.Id.Value, item.Id);
+                Assert.Equal("First", item.Title);
+                Assert.True(item.IsRead);
+            },
+            item => {
+                Assert.Equal(firstLesson.Id.Value, item.Id);
+                Assert.Equal("Second", item.Title);
+                Assert.False(item.IsRead);
+            });
+        Assert.Equal(("ru", LessonCategory.Macronutrients), repository.LocaleRequests.Single());
+    }
+
+    [Fact]
+    public async Task GetLessons_WhenLocalizedLessonsAreMissing_FallsBackToEnglish() {
+        var userId = UserId.New();
+        var englishLesson = CreateLesson("English", "en", LessonCategory.NutritionBasics);
+        var repository = new StubLessonRepository([englishLesson], []);
+        var handler = new GetLessonsQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetLessonsQuery(userId.Value, "fr", null), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var lesson = Assert.Single(result.Value);
+        Assert.Equal(englishLesson.Id.Value, lesson.Id);
+        Assert.Equal([("fr", null), ("en", null)], repository.LocaleRequests);
+    }
+
+    [Fact]
+    public async Task GetLessons_WithUnknownCategory_IgnoresCategoryFilter() {
+        var repository = new StubLessonRepository([], []);
+        var handler = new GetLessonsQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetLessonsQuery(Guid.NewGuid(), "en", "unknown"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value);
+        Assert.Equal(("en", null), repository.LocaleRequests.Single());
+    }
+
+    [Fact]
+    public async Task GetLessons_WithNullUserId_ReturnsFailure() {
+        var handler = new GetLessonsQueryHandler(new StubLessonRepository([], []));
+
+        var result = await handler.Handle(
+            new GetLessonsQuery(null, "en", null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task GetLessonById_WhenLessonExists_ReturnsDetailWithReadState() {
+        var userId = UserId.New();
+        var lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
+        var progress = UserLessonProgress.Create(userId, lesson.Id, DateTime.UtcNow);
+        var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([lesson], [progress]));
+
+        var result = await handler.Handle(
+            new GetLessonByIdQuery(userId.Value, lesson.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(lesson.Id.Value, result.Value.Id);
+        Assert.Equal("Protein basics", result.Value.Title);
+        Assert.True(result.Value.IsRead);
+    }
+
+    [Fact]
+    public async Task GetLessonById_WhenLessonIsMissing_ReturnsNotFound() {
+        var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([], []));
+
+        var result = await handler.Handle(
+            new GetLessonByIdQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetLessonById_WithNullUserId_ReturnsFailure() {
+        var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([], []));
+
+        var result = await handler.Handle(
+            new GetLessonByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public void LessonMappings_ToSummaryModel_MapsReadState() {
+        var lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
+
+        var model = lesson.ToSummaryModel(new HashSet<NutritionLessonId> { lesson.Id });
+
+        Assert.Equal(lesson.Id.Value, model.Id);
+        Assert.Equal("Protein basics", model.Title);
+        Assert.Equal("Macronutrients", model.Category);
+        Assert.Equal("Beginner", model.Difficulty);
+        Assert.True(model.IsRead);
+    }
+
+    [Fact]
+    public void LessonMappings_ToDetailModel_MapsContentAndReadState() {
+        var lesson = NutritionLesson.Create(
+            "Protein basics",
+            "Detailed content",
+            "Summary",
+            "en",
+            LessonCategory.Macronutrients,
+            LessonDifficulty.Intermediate,
+            7);
+
+        var model = lesson.ToDetailModel(isRead: false);
+
+        Assert.Equal(lesson.Id.Value, model.Id);
+        Assert.Equal("Detailed content", model.Content);
+        Assert.Equal("Summary", model.Summary);
+        Assert.Equal("Intermediate", model.Difficulty);
+        Assert.False(model.IsRead);
+    }
+
+    private static NutritionLesson CreateLesson(
+        string title,
+        string locale,
+        LessonCategory category,
+        int sortOrder = 0) =>
+        NutritionLesson.Create(title, "Content", $"{title} summary", locale, category, LessonDifficulty.Beginner, 5, sortOrder);
+
     [ExcludeFromCodeCoverage]
-    private sealed class StubLessonRepository(NutritionLesson? lesson, bool hasProgress) : INutritionLessonRepository {
+    private sealed class StubLessonRepository : INutritionLessonRepository {
+        private readonly List<NutritionLesson> _lessons;
+        private readonly List<UserLessonProgress> _progress;
+        private readonly bool _hasProgress;
+
+        public StubLessonRepository(NutritionLesson? lesson, bool hasProgress)
+            : this(lesson is null ? [] : [lesson], []) {
+            _hasProgress = hasProgress;
+        }
+
+        public StubLessonRepository(
+            IReadOnlyCollection<NutritionLesson> lessons,
+            IReadOnlyCollection<UserLessonProgress> progress) {
+            _lessons = [.. lessons];
+            _progress = [.. progress];
+        }
+
         public bool ProgressAdded { get; private set; }
+        public List<(string Locale, LessonCategory? Category)> LocaleRequests { get; } = [];
 
         public Task<NutritionLesson?> GetByIdAsync(NutritionLessonId id, CancellationToken ct = default) =>
-            Task.FromResult(lesson);
+            Task.FromResult(_lessons.FirstOrDefault(lesson => lesson.Id == id));
 
         public Task<UserLessonProgress?> GetUserProgressForLessonAsync(UserId userId, NutritionLessonId lessonId, CancellationToken ct = default) =>
-            Task.FromResult(hasProgress
+            Task.FromResult(_hasProgress
                 ? UserLessonProgress.Create(userId, lessonId, DateTime.UtcNow)
-                : null);
+                : _progress.FirstOrDefault(progress => progress.UserId == userId && progress.LessonId == lessonId));
 
         public Task<UserLessonProgress> AddProgressAsync(UserLessonProgress progress, CancellationToken ct = default) {
             ProgressAdded = true;
+            _progress.Add(progress);
             return Task.FromResult(progress);
         }
 
-        public Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(string locale, LessonCategory? category = null, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(
+            string locale,
+            LessonCategory? category = null,
+            CancellationToken ct = default) {
+            LocaleRequests.Add((locale, category));
+            var lessons = _lessons
+                .Where(lesson => string.Equals(lesson.Locale, locale, StringComparison.OrdinalIgnoreCase))
+                .Where(lesson => !category.HasValue || lesson.Category == category.Value)
+                .ToList();
+
+            return Task.FromResult<IReadOnlyList<NutritionLesson>>(lessons);
+        }
+
+        public Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(UserId userId, CancellationToken ct = default) {
+            var progress = _progress
+                .Where(item => item.UserId == userId)
+                .ToList();
+
+            return Task.FromResult<IReadOnlyList<UserLessonProgress>>(progress);
+        }
+
         public Task<IReadOnlyList<NutritionLesson>> GetAllAsync(CancellationToken ct = default) => throw new NotSupportedException();
         public Task<NutritionLesson?> GetByIdTrackingAsync(NutritionLessonId id, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
         public Task AddAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
         public Task AddRangeAsync(IReadOnlyCollection<NutritionLesson> lessons, CancellationToken ct = default) => throw new NotSupportedException();
         public Task UpdateAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();

@@ -14,6 +14,7 @@ using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
 using FoodDiary.Application.Fasting.Queries.GetFastingStats;
+using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Common.Models;
@@ -158,6 +159,95 @@ public class FastingFeatureTests {
         Assert.Equal("FastDay", result.Value.OccurrenceKind);
         Assert.Equal(1, result.Value.CyclicFastDays);
         Assert.Equal(3, result.Value.CyclicEatDays);
+    }
+
+    [Fact]
+    public void FastingMappings_ToModel_WithSession_MapsProtocolPlanTypeAndOccurrenceKind() {
+        var session = FastingSession.Create(
+            UserId.New(),
+            FastingProtocol.F16_8,
+            plannedDurationHours: 16,
+            FixedNow,
+            notes: "morning fast");
+
+        var model = session.ToModel();
+
+        Assert.Equal("F16_8", model.Protocol);
+        Assert.Equal("Intermittent", model.PlanType);
+        Assert.Equal("FastingWindow", model.OccurrenceKind);
+        Assert.Equal("Active", model.Status);
+        Assert.Equal("morning fast", model.Notes);
+        Assert.Empty(model.CheckIns);
+    }
+
+    [Fact]
+    public void FastingMappings_ToModel_WithOccurrence_UsesLatestCheckInAndDistinctSymptoms() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F36_0, 36, FixedNow.AddHours(-1));
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
+        occurrence.UpdateCheckIn(2, 3, 4, ["tired"], "old check-in", FixedNow.AddMinutes(-30));
+        var olderCheckIn = FastingCheckIn.Create(
+            occurrence.Id,
+            userId,
+            hungerLevel: 1,
+            energyLevel: 2,
+            moodLevel: 3,
+            symptoms: ["old"],
+            notes: "older",
+            checkedInAtUtc: FixedNow.AddMinutes(-20));
+        var latestCheckIn = FastingCheckIn.Create(
+            occurrence.Id,
+            userId,
+            hungerLevel: 4,
+            energyLevel: 5,
+            moodLevel: 3,
+            symptoms: ["headache", "Headache", "focused"],
+            notes: "latest",
+            checkedInAtUtc: FixedNow.AddMinutes(-10));
+
+        var model = occurrence.ToModel(plan, [olderCheckIn, latestCheckIn]);
+
+        Assert.Equal("Extended", model.PlanType);
+        Assert.Equal("FastDay", model.OccurrenceKind);
+        Assert.Equal(36, model.InitialPlannedDurationHours);
+        Assert.Equal(FixedNow.AddMinutes(-10), model.CheckInAtUtc);
+        Assert.Equal(4, model.HungerLevel);
+        Assert.Equal(5, model.EnergyLevel);
+        Assert.Equal("latest", model.CheckInNotes);
+        Assert.Equal(["headache", "focused"], model.Symptoms);
+        Assert.Collection(
+            model.CheckIns,
+            checkIn => Assert.Equal(latestCheckIn.Id.Value, checkIn.Id),
+            checkIn => Assert.Equal(olderCheckIn.Id.Value, checkIn.Id));
+    }
+
+    [Fact]
+    public void FastingMappings_ToModel_WithCyclicEatDay_UsesEatingWindowDefaultsAndPhaseProgress() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(
+            userId,
+            fastDays: 2,
+            eatDays: 3,
+            eatDayFastHours: 18,
+            eatDayEatingWindowHours: 6,
+            anchorDateUtc: FixedNow.AddDays(-4),
+            startedAtUtc: FixedNow.AddDays(-4));
+        var occurrence = FastingOccurrence.Create(
+            plan.Id,
+            userId,
+            FastingOccurrenceKind.EatDay,
+            FixedNow,
+            sequenceNumber: 4);
+
+        var model = occurrence.ToModel(plan);
+
+        Assert.Equal("Cyclic", model.PlanType);
+        Assert.Equal("EatDay", model.OccurrenceKind);
+        Assert.Equal(6, model.InitialPlannedDurationHours);
+        Assert.Equal(6, model.PlannedDurationHours);
+        Assert.Equal(2, model.CyclicPhaseDayNumber);
+        Assert.Equal(3, model.CyclicPhaseDayTotal);
+        Assert.False(model.IsCompleted);
     }
 
     [Fact]

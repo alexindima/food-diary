@@ -3,6 +3,8 @@ using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 using FoodDiary.Application.MealPlans.Mappings;
+using FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -106,6 +108,37 @@ public class MealPlansFeatureTests {
     }
 
     [Fact]
+    public async Task GetMealPlanById_WhenUserDoesNotOwnPrivatePlan_ReturnsNotFound() {
+        var ownerId = UserId.New();
+        var plan = MealPlan.CreateForUser(ownerId, "Private plan", null, DietType.Balanced, 1, null);
+        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan));
+
+        var result = await handler.Handle(
+            new GetMealPlanByIdQuery(Guid.NewGuid(), plan.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetMealPlans_WithDietTypeFilter_ReturnsCuratedAndUserPlans() {
+        var userId = UserId.New();
+        var curated = MealPlan.CreateCurated("Keto curated", null, DietType.Keto, 1, null);
+        var userPlan = MealPlan.CreateForUser(userId, "User plan", null, DietType.Balanced, 1, null);
+        var repository = new StubMealPlanRepository(curated, curatedPlans: [curated], userPlans: [userPlan]);
+        var handler = new GetMealPlansQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetMealPlansQuery(userId.Value, "keto"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DietType.Keto, repository.LastDietTypeFilter);
+        Assert.Equal(["Keto curated", "User plan"], result.Value.Select(plan => plan.Name));
+    }
+
+    [Fact]
     public void MealPlan_ToModel_OrdersDaysAndMealsAndScalesRecipeNutrition() {
         var userId = UserId.New();
         var breakfast = Recipe.Create(userId, "Breakfast bowl", servings: 2);
@@ -159,13 +192,24 @@ public class MealPlansFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubMealPlanRepository(MealPlan? plan) : IMealPlanRepository {
+    private sealed class StubMealPlanRepository(
+        MealPlan? plan,
+        IReadOnlyList<MealPlan>? curatedPlans = null,
+        IReadOnlyList<MealPlan>? userPlans = null) : IMealPlanRepository {
+        public DietType? LastDietTypeFilter { get; private set; }
+
         public Task<MealPlan?> GetByIdAsync(MealPlanId id, bool includeDays = false, CancellationToken ct = default) =>
             Task.FromResult(plan);
 
         public Task<MealPlan> AddAsync(MealPlan p, CancellationToken ct = default) => Task.FromResult(p);
-        public Task<IReadOnlyList<MealPlan>> GetCuratedAsync(DietType? dietType = null, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<MealPlan>> GetByUserAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealPlan>> GetCuratedAsync(DietType? dietType = null, CancellationToken ct = default) {
+            LastDietTypeFilter = dietType;
+            return Task.FromResult(curatedPlans ?? []);
+        }
+
+        public Task<IReadOnlyList<MealPlan>> GetByUserAsync(UserId userId, CancellationToken ct = default) =>
+            Task.FromResult(userPlans ?? []);
     }
 
     [ExcludeFromCodeCoverage]

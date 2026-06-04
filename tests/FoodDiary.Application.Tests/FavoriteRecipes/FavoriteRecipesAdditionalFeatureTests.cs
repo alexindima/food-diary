@@ -88,6 +88,20 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task GetFavoriteRecipes_WhenUserDeleted_ReturnsAccessFailure() {
+        var user = User.Create("deleted-get-favorite-recipes@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetFavoriteRecipesQueryHandler(
+            new InMemoryFavoriteRecipeRepository(),
+            new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetFavoriteRecipesQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task IsRecipeFavorite_ReturnsFalseWhenFavoriteMissing() {
         var user = User.Create("is-favorite-recipe@example.com", "hash");
         var handler = new IsRecipeFavoriteQueryHandler(
@@ -100,6 +114,22 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.False(result.Value);
+    }
+
+    [Fact]
+    public async Task IsRecipeFavorite_WhenUserDeleted_ReturnsAccessFailure() {
+        var user = User.Create("deleted-is-favorite-recipe@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new IsRecipeFavoriteQueryHandler(
+            new InMemoryFavoriteRecipeRepository(),
+            new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new IsRecipeFavoriteQuery(user.Id.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -117,6 +147,21 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.True(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task RemoveFavoriteRecipe_WhenFavoriteMissing_ReturnsNotFound() {
+        var user = User.Create("missing-remove-favorite-recipe@example.com", "hash");
+        var repository = new InMemoryFavoriteRecipeRepository();
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new RemoveFavoriteRecipeCommand(user.Id.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("FavoriteRecipe.NotFound", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
     }
 
     private static Recipe CreateRecipe(UserId userId, string name) {

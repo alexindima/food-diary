@@ -34,6 +34,41 @@ public class TdeeCalculatorTests {
     }
 
     [Fact]
+    public void CalculateAdaptive_WithTooFewCalorieDays_ReturnsInsufficient() {
+        var baseDate = DateTime.UtcNow.AddDays(-30);
+        var weights = CreateWeightEntries(5, startDate: baseDate, startWeight: 80);
+        var meals = CreateMeals(13, startDate: baseDate, caloriesPerMeal: 2000);
+
+        var result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+
+        Assert.False(result.HasData);
+    }
+
+    [Fact]
+    public void CalculateAdaptive_WithCompressedWeightDates_ReturnsInsufficient() {
+        var baseDate = DateTime.UtcNow.AddDays(-10);
+        var weights = Enumerable.Range(0, 5)
+            .Select(index => WeightEntry.Create(TestUserId, baseDate.AddDays(index), 80))
+            .ToList();
+        var meals = CreateMeals(20, startDate: baseDate.AddDays(-10), caloriesPerMeal: 2000);
+
+        var result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+
+        Assert.False(result.HasData);
+    }
+
+    [Fact]
+    public void CalculateAdaptive_WithUnreasonableTdee_ReturnsInsufficient() {
+        var baseDate = DateTime.UtcNow.AddDays(-30);
+        var weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 1);
+        var meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 900);
+
+        var result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+
+        Assert.False(result.HasData);
+    }
+
+    [Fact]
     public void CalculateAdaptive_WithSufficientData_MaintainingWeight_ReturnsTdeeCloseToIntake() {
         var baseDate = DateTime.UtcNow.AddDays(-30);
         // Stable weight at 80 kg over 30 days
@@ -72,6 +107,30 @@ public class TdeeCalculatorTests {
 
         Assert.True(result.HasData);
         Assert.Equal(TdeeConfidence.High, result.Confidence);
+    }
+
+    [Fact]
+    public void CalculateAdaptive_MediumConfidence_WithModerateData() {
+        var baseDate = DateTime.UtcNow.AddDays(-24);
+        var weights = CreateWeightEntries(5, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        var meals = CreateMeals(20, startDate: baseDate, caloriesPerMeal: 2000);
+
+        var result = TdeeCalculator.CalculateAdaptive(weights, meals, 24);
+
+        Assert.True(result.HasData);
+        Assert.Equal(TdeeConfidence.Medium, result.Confidence);
+    }
+
+    [Fact]
+    public void CalculateAdaptive_LowConfidence_WithMinimumData() {
+        var baseDate = DateTime.UtcNow.AddDays(-16);
+        var weights = CreateWeightEntries(3, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        var meals = CreateMeals(14, startDate: baseDate, caloriesPerMeal: 2000);
+
+        var result = TdeeCalculator.CalculateAdaptive(weights, meals, 16);
+
+        Assert.True(result.HasData);
+        Assert.Equal(TdeeConfidence.Low, result.Confidence);
     }
 
     [Fact]
@@ -125,6 +184,24 @@ public class TdeeCalculatorTests {
         var hint = TdeeCalculator.GetGoalAdjustmentHint(2200, 1200, 90, 80);
 
         Assert.Equal("hint.deficit_too_aggressive", hint);
+    }
+
+    [Theory]
+    [InlineData(2200, 1800, 90, 80, "hint.deficit_moderate")]
+    [InlineData(2200, 2000, 90, 80, "hint.deficit_mild")]
+    [InlineData(2200, 2300, 90, 80, "hint.surplus_while_losing_goal")]
+    [InlineData(2200, 2800, 70, 80, "hint.surplus_too_aggressive")]
+    [InlineData(2200, 2500, 70, 80, "hint.surplus_moderate")]
+    [InlineData(2200, 1500, 70, 80, "hint.review_goals")]
+    public void GetGoalAdjustmentHint_ReturnsExpectedHintForGoalState(
+        double adaptiveTdee,
+        double currentTarget,
+        double currentWeight,
+        double desiredWeight,
+        string expected) {
+        var hint = TdeeCalculator.GetGoalAdjustmentHint(adaptiveTdee, currentTarget, currentWeight, desiredWeight);
+
+        Assert.Equal(expected, hint);
     }
 
     [Fact]

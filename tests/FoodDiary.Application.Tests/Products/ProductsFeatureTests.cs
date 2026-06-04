@@ -6,6 +6,7 @@ using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
+using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsOverview;
@@ -21,6 +22,38 @@ namespace FoodDiary.Application.Tests.Products;
 
 [ExcludeFromCodeCoverage]
 public class ProductsFeatureTests {
+    [Fact]
+    public void ProductMappings_ToModel_HidesOwnerCommentForNonOwnerAndPreservesFavoriteMetadata() {
+        var favoriteProductId = FavoriteProductId.New();
+        var product = Product.Create(
+            UserId.New(),
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 120,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            comment: "Owner note",
+            visibility: Visibility.Private);
+
+        var nonOwnerModel = product.ToModel(
+            usageCount: 7,
+            isOwnedByCurrentUser: false,
+            isFavorite: true,
+            favoriteProductId: favoriteProductId.Value);
+        var ownerModel = product.ToModel(isOwnedByCurrentUser: true);
+
+        Assert.Null(nonOwnerModel.Comment);
+        Assert.Equal("Owner note", ownerModel.Comment);
+        Assert.Equal(7, nonOwnerModel.UsageCount);
+        Assert.True(nonOwnerModel.IsFavorite);
+        Assert.Equal(favoriteProductId.Value, nonOwnerModel.FavoriteProductId);
+    }
+
     [Fact]
     public async Task GetProductsOverviewQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetProductsOverviewQueryValidator();

@@ -17,6 +17,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -51,6 +52,105 @@ public sealed class DashboardSnapshotBuilderTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithDateToBeforeDate_ReturnsValidationFailure() {
+        var user = User.Create("dashboard-date-range@example.com", "hash");
+        var builder = new DashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserRepository(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingOccurrenceRepository(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        var result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 3, 27, 12, 0, 0, DateTimeKind.Utc),
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("DateTo", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenUserIsMissing_ReturnsAccessFailure() {
+        var existingUser = User.Create("dashboard-existing@example.com", "hash");
+        var builder = new DashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserRepository(existingUser),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingOccurrenceRepository(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        var result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                Guid.NewGuid(),
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                null,
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithInvalidDashboardLayoutJson_ReturnsSnapshotWithoutLayout() {
+        var user = User.Create("dashboard-invalid-layout@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{"));
+        var builder = new DashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserRepository(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingOccurrenceRepository(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        var result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                null,
+                "",
+                TrendDays: 0,
+                Page: 0,
+                PageSize: 0,
+                Sections: new DashboardSnapshotSections(
+                    IncludeStatistics: false,
+                    IncludeMeals: false,
+                    IncludeWeight: false,
+                    IncludeWaist: false,
+                    IncludeHydration: false,
+                    IncludeFasting: false,
+                    IncludeAdvice: false,
+                    IncludeLayout: true,
+                    IncludeExercise: false,
+                    IncludeTdee: false,
+                    IncludeCycle: false)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Value.DashboardLayout);
+        Assert.Equal(0, result.Value.CaloriesBurned);
     }
 
     [Fact]

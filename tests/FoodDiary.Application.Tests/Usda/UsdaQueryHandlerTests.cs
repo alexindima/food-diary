@@ -221,6 +221,53 @@ public sealed class UsdaQueryHandlerTests {
         Assert.False(repository.NutrientsByFdcIdsCalled);
     }
 
+    [Fact]
+    public async Task GetDailyMicronutrients_WithNullUserId_ReturnsFailure() {
+        var handler = new GetDailyMicronutrientsQueryHandler(new StubMealRepository(), new StubUsdaFoodRepository());
+
+        var result = await handler.Handle(
+            new GetDailyMicronutrientsQuery(null, new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task GetDailyMicronutrients_WhenNutrientsForLinkedProductAreMissing_SkipsProductNutrients() {
+        var userId = UserId.New();
+        var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
+        var product = Product.Create(
+            userId,
+            "Spinach",
+            MeasurementUnit.G,
+            100,
+            null,
+            caloriesPerBase: 23,
+            proteinsPerBase: 2.9,
+            fatsPerBase: 0.4,
+            carbsPerBase: 3.6,
+            fiberPerBase: 2.2,
+            alcoholPerBase: 0);
+        product.LinkToUsdaFood(10);
+        var meal = Meal.Create(userId, date);
+        AddProductItem(meal, product, 50);
+        var repository = new StubUsdaFoodRepository {
+            NutrientsByFdcId = new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>(),
+            DailyValues = new Dictionary<int, DailyReferenceValue>()
+        };
+        var handler = new GetDailyMicronutrientsQueryHandler(
+            new StubMealRepository { Meals = [meal] },
+            repository);
+
+        var result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value.LinkedProductCount);
+        Assert.Equal(1, result.Value.TotalProductCount);
+        Assert.Empty(result.Value.Nutrients);
+        Assert.NotNull(result.Value.HealthScores);
+    }
+
     private static UsdaFoodNutrient CreateNutrient(
         int fdcId,
         int nutrientId,

@@ -36,6 +36,20 @@ public class TdeeFeatureTests {
     }
 
     [Fact]
+    public async Task GetTdeeInsight_WhenUserDisappearsAfterAccessCheck_ReturnsNotFound() {
+        var userId = UserId.New();
+        var user = User.Create("disappearing-tdee-user@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        var handler = CreateHandler(userRepo: new DisappearingUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetTdeeInsight_WithValidUser_ReturnsModel() {
         var userId = UserId.New();
         var user = User.Create("user@test.com", "hashed");
@@ -81,6 +95,27 @@ public class TdeeFeatureTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
         public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DisappearingUserRepository(User user) : IUserRepository {
+        private int _getByIdCalls;
+
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) {
+            _getByIdCalls++;
+            return Task.FromResult<User?>(_getByIdCalls == 1 && user.Id == id ? user : null);
+        }
+
+        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User userToAdd, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User userToUpdate, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

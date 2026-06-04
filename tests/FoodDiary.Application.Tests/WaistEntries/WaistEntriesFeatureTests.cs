@@ -122,6 +122,22 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWaistSummariesQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-waist-summary@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetWaistSummariesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetWaistSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 1),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task DeleteWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
         var handler = new DeleteWaistEntryCommandHandler(
             new InMemoryWaistEntryRepository(),
@@ -201,6 +217,22 @@ public class WaistEntriesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateWaistEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-create-waist@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var repository = new InMemoryWaistEntryRepository();
+        var handler = new CreateWaistEntryCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateWaistEntryCommand(user.Id.Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Null(repository.AddedEntry);
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

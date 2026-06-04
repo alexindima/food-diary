@@ -61,6 +61,24 @@ public class ConsumptionsAdditionalValidatorTests {
         Assert.True(result.IsFailure);
     }
 
+    [Theory]
+    [InlineData("proteins")]
+    [InlineData("fats")]
+    [InlineData("carbs")]
+    [InlineData("fiber")]
+    public void ManualNutrition_WithMissingRequiredMacro_ReturnsFailure(string missingField) {
+        var result = ManualNutritionValidator.Validate(
+            200,
+            string.Equals(missingField, "proteins", StringComparison.Ordinal) ? null : 30,
+            string.Equals(missingField, "fats", StringComparison.Ordinal) ? null : 10,
+            string.Equals(missingField, "carbs", StringComparison.Ordinal) ? null : 50,
+            string.Equals(missingField, "fiber", StringComparison.Ordinal) ? null : 5,
+            0);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+    }
+
     [Fact]
     public void ManualNutrition_WithNegativeValue_ReturnsFailure() {
         var result = ManualNutritionValidator.Validate(200, -1, 10, 50, 5, 0);

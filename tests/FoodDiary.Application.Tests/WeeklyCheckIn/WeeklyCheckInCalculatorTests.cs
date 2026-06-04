@@ -144,6 +144,16 @@ public class WeeklyCheckInCalculatorTests {
     }
 
     [Fact]
+    public void GenerateSuggestions_WhenWeightDecreasing_SuggestsWeightDecreasing() {
+        var summary = new WeekSummaryModel(14000, 2000, 120, 70, 230, 21, 7, null, null, null, null, 0, 0);
+        var trends = new WeekTrendModel(0, 0, 0, 0, -0.8, null, 0, 0);
+
+        var suggestions = WeeklyCheckInCalculator.GenerateSuggestions(summary, trends, null);
+
+        Assert.Contains("suggestion.weight_decreasing", suggestions);
+    }
+
+    [Fact]
     public void GenerateSuggestions_WhenLowHydration_SuggestsDrinkMore() {
         var summary = new WeekSummaryModel(14000, 2000, 120, 70, 230, 21, 7, null, null, null, null, 7000, 1000);
         var trends = new WeekTrendModel(0, 0, 0, 0, null, null, 0, 0);

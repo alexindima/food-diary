@@ -97,6 +97,16 @@ public class RecipeLikesFeatureTests {
         Assert.Equal(0, result.Value.TotalLikes);
     }
 
+    [Fact]
+    public async Task GetRecipeLikeStatus_WithNullUserId_ReturnsFailure() {
+        var handler = new GetRecipeLikeStatusQueryHandler(new InMemoryRecipeLikeRepository());
+
+        var result = await handler.Handle(
+            new GetRecipeLikeStatusQuery(null, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryRecipeLikeRepository : IRecipeLikeRepository {
         private readonly List<RecipeLike> _likes = [];

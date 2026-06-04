@@ -271,6 +271,66 @@ public class ShoppingListsFeatureTests {
         Assert.Contains("ProductId", result.Error.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithNoItems_ReturnsEmptyListWithoutProductLookup() {
+        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+            [],
+            UserId.New(),
+            new ThrowingProductLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value);
+    }
+
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithBlankCustomName_FailsWithNameRequired() {
+        var items = new[] {
+            new ShoppingListItemInput(null, "   ", 1, null, null, false, null)
+        };
+
+        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+            items,
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains("Name", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithProductCategoryOverride_UsesInputCategory() {
+        var userId = UserId.New();
+        var product = Product.Create(
+            userId,
+            "Milk",
+            MeasurementUnit.Ml,
+            100,
+            250,
+            60,
+            3,
+            2,
+            5,
+            0,
+            0,
+            category: "Dairy");
+
+        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+            [
+                new ShoppingListItemInput(product.Id.Value, null, 1, null, "Sale", false, 0)
+            ],
+            userId,
+            new ProductLookupService(product),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var item = Assert.Single(result.Value);
+        Assert.Equal("Sale", item.Category);
+        Assert.Equal(1, item.SortOrder);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class NoopShoppingListRepository : IShoppingListRepository {
         public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.FromResult(list);
@@ -340,6 +400,15 @@ public class ShoppingListsFeatureTests {
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingProductLookupService : IProductLookupService {
+        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+            IEnumerable<ProductId> ids,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("Product lookup should not be called.");
     }
 
     [ExcludeFromCodeCoverage]

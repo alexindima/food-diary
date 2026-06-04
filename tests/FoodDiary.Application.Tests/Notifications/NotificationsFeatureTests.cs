@@ -182,6 +182,35 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task GetUnreadCount_WithNullUserId_ReturnsInvalidToken() {
+        var handler = new GetUnreadCountQueryHandler(
+            new InMemoryNotificationRepository(),
+            new SingleUserRepository(CreateUser()));
+
+        var result = await handler.Handle(new GetUnreadCountQuery(null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetUnreadCount_WithPasswordUser_ExcludesPasswordSetupSuggestion() {
+        var userId = UserId.New();
+        var user = CreateUser(userId);
+        var repo = new InMemoryNotificationRepository();
+        repo.Seed(Notification.Create(userId, NotificationTypes.PasswordSetupSuggested, "{}"));
+        repo.Seed(Notification.Create(userId, NotificationTypes.FastingCompleted, "{}"));
+        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetUnreadCountQuery(userId.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value);
+    }
+
+    [Fact]
     public async Task GetUnreadCount_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
@@ -249,6 +278,29 @@ public class NotificationsFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetNotificationPreferences_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetNotificationPreferencesQueryHandler(new SingleUserRepository(CreateUser()));
+
+        var result = await handler.Handle(new GetNotificationPreferencesQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetNotifications_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetNotificationsQueryHandler(
+            new InMemoryNotificationRepository(),
+            new SingleUserRepository(CreateUser()),
+            new RecordingNotificationTextRenderer());
+
+        var result = await handler.Handle(new GetNotificationsQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]
