@@ -4,6 +4,7 @@ using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
 using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
+using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
@@ -141,6 +142,60 @@ public class FastingValidatorTests {
         var from = DateTime.UtcNow.AddDays(-7);
         var to = DateTime.UtcNow;
         var result = await validator.TestValidateAsync(new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 1, 10));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithNullUserId_HasInvalidTokenError() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        var result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(null, 3, 3, 3, null, null));
+
+        result.ShouldHaveValidationErrorFor(command => command.UserId)
+            .WithErrorCode("Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithInvalidLevels_HasErrors() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        var result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(Guid.NewGuid(), 0, 6, 0, null, null));
+
+        result.ShouldHaveValidationErrorFor(command => command.HungerLevel);
+        result.ShouldHaveValidationErrorFor(command => command.EnergyLevel);
+        result.ShouldHaveValidationErrorFor(command => command.MoodLevel);
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithInvalidSymptomsAndLongNotes_HasErrors() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        var result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(
+                Guid.NewGuid(),
+                3,
+                3,
+                3,
+                ["good", "unknown", " ", "headache", "weakness", "dizziness", "cravings", "irritability", "extra"],
+                new string('n', 501)));
+
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Symptoms[1]", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Symptoms[2]", StringComparison.Ordinal));
+        result.ShouldHaveValidationErrorFor(command => command.Symptoms);
+        result.ShouldHaveValidationErrorFor(command => command.CheckInNotes);
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithValidCommand_HasNoErrors() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        var result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(
+                Guid.NewGuid(),
+                3,
+                4,
+                5,
+                [" good ", "Headache"],
+                "steady"));
 
         result.ShouldNotHaveAnyValidationErrors();
     }

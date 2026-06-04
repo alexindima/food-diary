@@ -1,6 +1,7 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Application.Products.Queries.GetProductById;
@@ -299,6 +300,55 @@ public class ProductsValidatorTests {
 
         var result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
             ValidUpdateProduct(product.UserId.Value, product.Id.Value));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WithNullUserId_HasInvalidTokenError() {
+        var result = await new DeleteProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
+            new DeleteProductCommand(null, Guid.NewGuid()));
+
+        result.ShouldHaveValidationErrorFor(c => c.UserId)
+            .WithErrorCode("Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WithEmptyProductId_HasRequiredError() {
+        var result = await new DeleteProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
+            new DeleteProductCommand(Guid.NewGuid(), Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(c => c.ProductId)
+            .WithErrorCode("Validation.Required");
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WhenProductIsMissing_HasProductNotFoundError() {
+        var result = await new DeleteProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
+            new DeleteProductCommand(Guid.NewGuid(), Guid.NewGuid()));
+
+        result.ShouldHaveValidationErrorFor(c => c.ProductId)
+            .WithErrorCode("Product.NotFound");
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WhenProductIsUsed_HasValidationError() {
+        var product = CreateProduct();
+        SetProductUsageCollections(product, mealItemsCount: 1, recipeIngredientsCount: 0);
+
+        var result = await new DeleteProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
+            new DeleteProductCommand(product.UserId.Value, product.Id.Value));
+
+        result.ShouldHaveValidationErrorFor(c => c.ProductId)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WithUnusedProduct_HasNoValidationErrors() {
+        var product = CreateProduct();
+
+        var result = await new DeleteProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(
+            new DeleteProductCommand(product.UserId.Value, product.Id.Value));
 
         result.ShouldNotHaveAnyValidationErrors();
     }

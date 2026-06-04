@@ -1,12 +1,16 @@
+using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.SetPassword;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
+using FoodDiary.Application.Users.Mappings;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Queries.GetProfileOverview;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
@@ -24,6 +28,62 @@ namespace FoodDiary.Application.Tests.Users;
 
 [ExcludeFromCodeCoverage]
 public class UsersFeatureTests {
+    [Fact]
+    public void UserMappings_ToModel_UsesDefaultPreferencesWhenMissing() {
+        var user = User.Create("default-preferences@example.com", "hash");
+
+        var model = user.ToModel();
+
+        Assert.Equal(user.Id.Value, model.Id);
+        Assert.Equal("default-preferences@example.com", model.Email);
+        Assert.Equal("en", model.Language);
+        Assert.Equal("ocean", model.Theme);
+        Assert.Equal("classic", model.UiStyle);
+        Assert.Null(model.DashboardLayout);
+        Assert.True(model.HasPassword);
+        Assert.True(model.IsActive);
+    }
+
+    [Fact]
+    public void UserMappings_ToModelAndToAdminModel_MapProfilePreferencesGoalsAndRoles() {
+        var user = CreateMappedUser();
+
+        var model = user.ToModel();
+        var goals = user.ToGoalsModel();
+        var adminModel = user.ToAdminModel();
+
+        Assert.Equal("mapped", model.Username);
+        Assert.Equal("ru", model.Language);
+        Assert.Equal("dark", model.Theme);
+        Assert.Equal("modern", model.UiStyle);
+        Assert.Equal(["meals", "weight"], model.DashboardLayout?.Web);
+        Assert.Equal(["summary"], model.DashboardLayout?.Mobile);
+        Assert.Equal(2200, goals.DailyCalorieTarget);
+        Assert.Equal(2350, goals.SaturdayCalories);
+        Assert.Equal(user.Id.Value, adminModel.Id);
+        Assert.Equal(123456, adminModel.TelegramUserId);
+        Assert.Equal(1000, adminModel.AiInputTokenLimit);
+        Assert.Equal(2000, adminModel.AiOutputTokenLimit);
+        Assert.NotNull(adminModel.AiConsentAcceptedAt);
+        Assert.Contains(RoleNames.Admin, adminModel.Roles);
+        Assert.Contains(RoleNames.Support, adminModel.Roles);
+    }
+
+    private static User CreateMappedUser() {
+        var user = User.Create("mapped@example.com", "hash");
+        user.UpdatePersonalInfo("mapped", "Alex", "Tester", new DateTime(1990, 1, 2), "M", 82, 181);
+        user.UpdateActivity(ActivityLevel.High, stepGoal: 9000, hydrationGoal: 2.4);
+        user.UpdateGoals(new UserGoalUpdate(2200, 130, 70, 240, 32, 2.5, 78, 84, true, 2100, 2150, 2200, 2250, 2300, 2350, 2050));
+        var layoutJson = JsonSerializer.Serialize(new DashboardLayoutModel(["meals", "weight"], ["summary"]));
+        user.UpdatePreferences(new UserPreferenceUpdate(layoutJson, "ru", "dark", "modern", true, false, false, 10, 18));
+        user.ReplaceRoles([Role.Create(RoleNames.Admin), Role.Create(RoleNames.Support)]);
+        user.SetEmailConfirmed(true);
+        user.LinkTelegram(123456);
+        user.UpdateAiTokenLimits(1000, 2000);
+        user.AcceptAiConsent();
+        return user;
+    }
+
     [Fact]
     public async Task ChangePasswordHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new ChangePasswordCommandHandler(

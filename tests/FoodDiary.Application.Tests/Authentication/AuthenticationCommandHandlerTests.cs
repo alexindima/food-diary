@@ -16,6 +16,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
@@ -113,6 +114,59 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ResendEmailVerificationHandler_WhenEmailAlreadyConfirmed_ReturnsSuccessWithoutSending() {
+        var user = User.Create("confirmed@example.com", "secret");
+        user.SetEmailConfirmed(true);
+        var sender = new StubEmailSender();
+        var handler = CreateResendEmailVerificationHandler(user, sender);
+
+        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(sender.LastEmailVerification);
+    }
+
+    [Fact]
+    public async Task ResendEmailVerificationHandler_WhenSentRecently_ReturnsCooldownFailure() {
+        var user = User.Create("cooldown@example.com", "secret");
+        user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", DateTime.UtcNow.AddHours(1), new StubDateTimeProvider().UtcNow.AddSeconds(-30)));
+        var handler = CreateResendEmailVerificationHandler(user, new StubEmailSender());
+
+        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("recently", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ResendEmailVerificationHandler_WithActiveUnconfirmedUser_UpdatesTokenAndSendsMessage() {
+        var user = User.Create("resend@example.com", "secret");
+        var sender = new StubEmailSender();
+        var handler = CreateResendEmailVerificationHandler(user, sender);
+
+        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value, "https://client.test"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(user.EmailConfirmationTokenHash);
+        Assert.NotNull(sender.LastEmailVerification);
+        Assert.Equal("resend@example.com", sender.LastEmailVerification.ToEmail);
+        Assert.Equal("https://client.test", sender.LastEmailVerification.ClientOrigin);
+    }
+
+    [Fact]
+    public async Task ResendEmailVerificationHandler_WhenSenderFails_ReturnsValidationFailure() {
+        var user = User.Create("send-fails@example.com", "secret");
+        var handler = CreateResendEmailVerificationHandler(user, new StubEmailSender(throwOnEmailVerification: true));
+
+        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Failed to send", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -229,7 +283,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => new(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        public DateTime UtcNow => new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
     }
 
     [ExcludeFromCodeCoverage]
@@ -288,9 +342,17 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubEmailSender : IEmailSender {
-        public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+    private sealed class StubEmailSender(bool throwOnEmailVerification = false) : IEmailSender {
+        public EmailVerificationMessage? LastEmailVerification { get; private set; }
+
+        public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) {
+            if (throwOnEmailVerification) {
+                throw new InvalidOperationException("smtp failed");
+            }
+
+            LastEmailVerification = message;
+            return Task.CompletedTask;
+        }
 
         public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
@@ -312,4 +374,14 @@ public sealed class AuthenticationCommandHandlerTests {
             CancellationToken cancellationToken) =>
             Task.FromResult(FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(payload));
     }
+
+    private static ResendEmailVerificationCommandHandler CreateResendEmailVerificationHandler(
+        User user,
+        StubEmailSender sender) =>
+        new(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            sender,
+            new StubDateTimeProvider(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<ResendEmailVerificationCommandHandler>.Instance);
 }

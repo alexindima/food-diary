@@ -1,6 +1,10 @@
 using System.Reflection;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.DailyAdvices;
 
@@ -59,6 +63,53 @@ public class DailyAdvicesFeatureTests {
         Assert.Null(selected);
     }
 
+    [Fact]
+    public async Task GetDailyAdvice_WithInvalidUserId_ReturnsInvalidToken() {
+        var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(User.Create("advice@example.com", "hash")));
+
+        var result = await handler.Handle(new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetDailyAdvice_WhenUserDeleted_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-advice@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetDailyAdvice_WithUnsupportedLocale_FallsBackToEnglishAdvice() {
+        var user = User.Create("fallback-advice@example.com", "hash");
+        var repository = new RecordingDailyAdviceRepository();
+        repository.Seed("en", DailyAdvice.Create("Hydrate", "en", weight: 1));
+        var handler = new GetDailyAdviceQueryHandler(repository, new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "de-DE"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("en", result.Value.Locale);
+        Assert.Equal(["en"], repository.RequestedLocales);
+    }
+
+    [Fact]
+    public async Task GetDailyAdvice_WhenNoAdviceExists_ReturnsNotFound() {
+        var user = User.Create("missing-advice@example.com", "hash");
+        var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "ru"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("DailyAdvice.NotFound", result.Error.Code);
+    }
+
     private static string InvokeNormalizeLocale(string locale) {
         var selectorType = GetSelectorType();
         var method = selectorType.GetMethod("NormalizeLocale", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
@@ -79,5 +130,40 @@ public class DailyAdvicesFeatureTests {
         var selectorType = Type.GetType("FoodDiary.Application.DailyAdvices.Services.DailyAdviceSelector, FoodDiary.Application");
         Assert.NotNull(selectorType);
         return selectorType!;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingDailyAdviceRepository : IDailyAdviceRepository {
+        private readonly Dictionary<string, IReadOnlyList<DailyAdvice>> _advices = new(StringComparer.OrdinalIgnoreCase);
+
+        public IReadOnlyList<string> RequestedLocales => _requestedLocales;
+
+        private readonly List<string> _requestedLocales = [];
+
+        public void Seed(string locale, params DailyAdvice[] advices) {
+            _advices[locale] = advices;
+        }
+
+        public Task<IReadOnlyList<DailyAdvice>> GetByLocaleAsync(
+            string locale,
+            CancellationToken cancellationToken = default) {
+            _requestedLocales.Add(locale);
+            return Task.FromResult(_advices.GetValueOrDefault(locale, []));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SingleUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

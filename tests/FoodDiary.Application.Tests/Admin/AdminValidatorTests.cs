@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
@@ -96,4 +97,78 @@ public class AdminValidatorTests {
             new GetAdminAiUsageSummaryQuery(null, null));
         result.ShouldNotHaveAnyValidationErrors();
     }
+
+    [Fact]
+    public async Task ImportAdminLessons_WithEmptyLessons_HasError() {
+        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+            new ImportAdminLessonsCommand(1, []));
+
+        result.ShouldHaveValidationErrorFor(command => command.Lessons);
+    }
+
+    [Fact]
+    public async Task ImportAdminLessons_WithUnsupportedVersion_HasError() {
+        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+            new ImportAdminLessonsCommand(2, [ValidLesson()]));
+
+        result.ShouldHaveValidationErrorFor(command => command.Version)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task ImportAdminLessons_WithTooManyLessons_HasError() {
+        var lessons = Enumerable.Range(0, 101)
+            .Select(index => ValidLesson(title: $"Lesson {index}"))
+            .ToArray();
+
+        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+            new ImportAdminLessonsCommand(1, lessons));
+
+        result.ShouldHaveValidationErrorFor(command => command.Lessons)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task ImportAdminLessons_WithInvalidLessonFields_HasExpectedErrors() {
+        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+            new ImportAdminLessonsCommand(1, [
+                new ImportAdminLessonItem(
+                    Title: "",
+                    Content: "",
+                    Summary: new string('s', 513),
+                    Locale: "",
+                    Category: "",
+                    Difficulty: "",
+                    EstimatedReadMinutes: 0,
+                    SortOrder: -1)
+            ]));
+
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].Title", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].Content", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].Summary", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].Locale", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].Category", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].Difficulty", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].EstimatedReadMinutes", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].SortOrder", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ImportAdminLessons_WithValidLesson_HasNoErrors() {
+        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+            new ImportAdminLessonsCommand(1, [ValidLesson()]));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    private static ImportAdminLessonItem ValidLesson(string title = "Lesson") =>
+        new(
+            title,
+            Content: "Body",
+            Summary: "Summary",
+            Locale: "en",
+            Category: "basics",
+            Difficulty: "easy",
+            EstimatedReadMinutes: 3,
+            SortOrder: 0);
 }

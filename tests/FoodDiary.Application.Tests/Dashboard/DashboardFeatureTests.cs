@@ -48,6 +48,39 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
+    public void DashboardMapping_ToStatisticsModel_WhenResponseIsNull_ReturnsEmptyModel() {
+        var dto = DashboardMapping.ToStatisticsModel(null, null);
+
+        Assert.Equal(0, dto.TotalCalories);
+        Assert.Equal(0, dto.AverageProteins);
+        Assert.Null(dto.ProteinGoal);
+        Assert.Null(dto.FiberGoal);
+    }
+
+    [Fact]
+    public void DashboardMapping_ToStatisticsModel_MapsMacroTargetsFromUser() {
+        var user = User.Create("dashboard-stats@example.com", "hash");
+        user.UpdateGoals(proteinTarget: 120, fatTarget: 70, carbTarget: 210, fiberTarget: 30);
+        var response = new AggregatedStatisticsModel(
+            DateTime.UtcNow.Date,
+            DateTime.UtcNow.Date,
+            1900,
+            110,
+            65,
+            200,
+            28);
+
+        var dto = DashboardMapping.ToStatisticsModel(response, user);
+
+        Assert.Equal(1900, dto.TotalCalories);
+        Assert.Equal(110, dto.AverageProteins);
+        Assert.Equal(120, dto.ProteinGoal);
+        Assert.Equal(70, dto.FatGoal);
+        Assert.Equal(210, dto.CarbGoal);
+        Assert.Equal(30, dto.FiberGoal);
+    }
+
+    [Fact]
     public void DashboardMapping_ToWeeklyCalories_OrdersByDateAscending() {
         var day1 = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var day2 = day1.AddDays(1);
@@ -84,6 +117,15 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
+    public void DashboardMapping_ToWeightModel_WithNoEntries_ReturnsEmptyPoints() {
+        var dto = DashboardMapping.ToWeightModel([], desired: null);
+
+        Assert.Null(dto.Latest);
+        Assert.Null(dto.Previous);
+        Assert.Null(dto.Desired);
+    }
+
+    [Fact]
     public void DashboardMapping_ToWaistModel_MapsLatestAndPreviousEntries() {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
@@ -100,6 +142,15 @@ public class DashboardFeatureTests {
         Assert.Equal(92.1, dto.Latest!.Circumference);
         Assert.Equal(92.8, dto.Previous!.Circumference);
         Assert.Equal(90, dto.Desired);
+    }
+
+    [Fact]
+    public void DashboardMapping_ToWaistModel_WithNoEntries_ReturnsEmptyPoints() {
+        var dto = DashboardMapping.ToWaistModel([], desired: null);
+
+        Assert.Null(dto.Latest);
+        Assert.Null(dto.Previous);
+        Assert.Null(dto.Desired);
     }
 
     [Fact]

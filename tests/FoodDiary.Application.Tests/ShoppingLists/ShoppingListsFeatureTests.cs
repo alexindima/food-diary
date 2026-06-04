@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
+using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
@@ -203,6 +204,103 @@ public class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateShoppingListCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new CreateShoppingListCommandHandler(
+            new RecordingShoppingListRepository(),
+            new ThrowingProductLookupService(),
+            new StubUserRepository(User.Create("shopping-create@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new CreateShoppingListCommand(null, "Weekly", []),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateShoppingListCommandHandler_WithEmptyName_ReturnsRequiredError() {
+        var user = User.Create("shopping-empty-name@example.com", "hash");
+        var handler = new CreateShoppingListCommandHandler(
+            new RecordingShoppingListRepository(),
+            new ThrowingProductLookupService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateShoppingListCommand(user.Id.Value, " ", []),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateShoppingListCommandHandler_WithInaccessibleProduct_ReturnsProductNotAccessible() {
+        var user = User.Create("shopping-inaccessible-product@example.com", "hash");
+        var handler = new CreateShoppingListCommandHandler(
+            new RecordingShoppingListRepository(),
+            new NoopProductLookupService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateShoppingListCommand(
+                user.Id.Value,
+                "Weekly",
+                [new ShoppingListItemInput(ProductId.New().Value, null, 1, null, null, false, null)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Product.NotAccessible", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateShoppingListCommandHandler_WithNameAndItems_AddsListAndReturnsModel() {
+        var user = User.Create("shopping-create-ok@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            "Milk",
+            MeasurementUnit.Ml,
+            100,
+            250,
+            60,
+            3,
+            2,
+            5,
+            0,
+            0,
+            category: "Dairy");
+        var repository = new RecordingShoppingListRepository();
+        var handler = new CreateShoppingListCommandHandler(
+            repository,
+            new ProductLookupService(product),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateShoppingListCommand(
+                user.Id.Value,
+                "  Weekly  ",
+                [
+                    new ShoppingListItemInput(product.Id.Value, null, 2, null, null, true, null),
+                    new ShoppingListItemInput(null, "  Apples  ", 3, "Pcs", "Fruit", false, 9)
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.AddedList);
+        Assert.Equal("Weekly", result.Value.Name);
+        Assert.Equal(2, result.Value.Items.Count);
+        Assert.Contains(result.Value.Items, item =>
+            item.ProductId == product.Id.Value &&
+            string.Equals(item.Name, "Milk", StringComparison.Ordinal) &&
+            item.IsChecked);
+        Assert.Contains(result.Value.Items, item =>
+            item.ProductId is null &&
+            string.Equals(item.Name, "Apples", StringComparison.Ordinal) &&
+            string.Equals(item.Unit, "Pcs", StringComparison.Ordinal) &&
+            item.SortOrder == 9);
+    }
+
+    [Fact]
     public async Task ShoppingListItemBuilder_WithInvalidUnit_FailsWithUnitField() {
         var items = new[] {
             new ShoppingListItemInput(null, "Milk", 1, "invalid_unit", null, false, 1)
@@ -334,6 +432,37 @@ public class ShoppingListsFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class NoopShoppingListRepository : IShoppingListRepository {
         public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.FromResult(list);
+
+        public Task<ShoppingList?> GetByIdAsync(
+            ShoppingListId id,
+            UserId userId,
+            bool includeItems = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) => Task.FromResult<ShoppingList?>(null);
+
+        public Task<ShoppingList?> GetCurrentAsync(
+            UserId userId,
+            bool includeItems = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) => Task.FromResult<ShoppingList?>(null);
+
+        public Task<IReadOnlyList<ShoppingList>> GetAllAsync(
+            UserId userId,
+            bool includeItems = false,
+            CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ShoppingList>>([]);
+
+        public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingShoppingListRepository : IShoppingListRepository {
+        public ShoppingList? AddedList { get; private set; }
+
+        public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
+            AddedList = list;
+            return Task.FromResult(list);
+        }
 
         public Task<ShoppingList?> GetByIdAsync(
             ShoppingListId id,
