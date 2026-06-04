@@ -8,7 +8,11 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MealService } from '../../api/meal.service';
-import type { ConsumptionFormData, ConsumptionItemFormData } from '../../components/manage/meal-manage-lib/meal-manage.types';
+import type {
+    ConsumptionFormData,
+    ConsumptionFormValues,
+    ConsumptionItemFormData,
+} from '../../components/manage/meal-manage-lib/meal-manage.types';
 import {
     type Consumption,
     type ConsumptionAiSessionManageDto,
@@ -328,11 +332,33 @@ function registerNutritionSummaryTests(): void {
             expect(state.warning).toBeNull();
         });
 
+        it('should calculate nutrition summary from signal form values', () => {
+            const state = facade.buildNutritionSummaryStateFromValues(
+                createNutritionFormValue(true),
+                AI_RECOGNITION_SESSIONS,
+                CALORIE_MISMATCH_THRESHOLD,
+            );
+
+            expect(state.autoTotals).toEqual(EXPECTED_AUTO_TOTALS);
+            expect(state.summaryTotals).toEqual(state.autoTotals);
+            expect(state.warning).toBeNull();
+        });
+
         it('should build calorie mismatch warning in manual mode', () => {
             const items = new FormArray<FormGroup<ConsumptionItemFormData>>([facade.createConsumptionItem()]);
             const form = createNutritionForm(items, false);
 
             const state = facade.buildNutritionSummaryState(form, items, [], CALORIE_MISMATCH_THRESHOLD);
+
+            expect(state.summaryTotals.calories).toBe(MANUAL_CALORIES);
+            expect(state.warning).toEqual({
+                expectedCalories: EXPECTED_MISMATCH_CALORIES,
+                actualCalories: MANUAL_CALORIES,
+            });
+        });
+
+        it('should build calorie mismatch warning from signal form values in manual mode', () => {
+            const state = facade.buildNutritionSummaryStateFromValues(createNutritionFormValue(false), [], CALORIE_MISMATCH_THRESHOLD);
 
             expect(state.summaryTotals.calories).toBe(MANUAL_CALORIES);
             expect(state.warning).toEqual({
@@ -389,4 +415,37 @@ function createNutritionForm(items: FormArray<FormGroup<ConsumptionItemFormData>
         preMealSatietyLevel: new FormControl<number | null>(null),
         postMealSatietyLevel: new FormControl<number | null>(null),
     });
+}
+
+function createNutritionFormValue(isAuto: boolean): ConsumptionFormValues {
+    return {
+        date: '2026-04-02',
+        time: '12:00',
+        mealType: null,
+        items: [
+            {
+                sourceType: ConsumptionSourceType.Product,
+                product: createNutritionProduct(),
+                recipe: null,
+                amount: PRODUCT_AMOUNT,
+            },
+            {
+                sourceType: ConsumptionSourceType.Recipe,
+                product: null,
+                recipe: createNutritionRecipe(),
+                amount: RECIPE_AMOUNT,
+            },
+        ],
+        comment: null,
+        imageUrl: null,
+        isNutritionAutoCalculated: isAuto,
+        manualCalories: isAuto ? null : MANUAL_CALORIES,
+        manualProteins: isAuto ? null : MANUAL_PROTEINS,
+        manualFats: isAuto ? null : MANUAL_FATS,
+        manualCarbs: isAuto ? null : MANUAL_CARBS,
+        manualFiber: 0,
+        manualAlcohol: 0,
+        preMealSatietyLevel: null,
+        postMealSatietyLevel: null,
+    };
 }

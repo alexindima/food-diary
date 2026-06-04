@@ -60,6 +60,40 @@ export function createMealManageForm(callbacks: MealManageFormCallbacks, now = n
     });
 }
 
+export function createMealManageFormValue(now = new Date()): ConsumptionFormValues {
+    return {
+        date: getDateInputValue(now),
+        time: getTimeInputValue(now),
+        mealType: null,
+        items: [createConsumptionItemValue()],
+        comment: null,
+        imageUrl: null,
+        isNutritionAutoCalculated: true,
+        manualCalories: null,
+        manualProteins: null,
+        manualFats: null,
+        manualCarbs: null,
+        manualFiber: null,
+        manualAlcohol: null,
+        preMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
+        postMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
+    };
+}
+
+export function createConsumptionItemValue(
+    product: ConsumptionItemFormValues['product'] = null,
+    recipe: ConsumptionItemFormValues['recipe'] = null,
+    amount: number | null = null,
+    sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
+): ConsumptionItemFormValues {
+    return {
+        sourceType,
+        product,
+        recipe,
+        amount,
+    };
+}
+
 export function buildMealManageDto(formValue: ConsumptionFormValues, callbacks: MealManageDtoCallbacks): ConsumptionManageDto {
     const image = formValue.imageUrl;
     const isNutritionAutoCalculated = formValue.isNutritionAutoCalculated;

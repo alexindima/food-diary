@@ -28,7 +28,9 @@ import { MealService } from '../../api/meal.service';
 import type {
     CalorieMismatchWarning,
     ConsumptionFormData,
+    ConsumptionFormValues,
     ConsumptionItemFormData,
+    ConsumptionItemFormValues,
     MealNutritionSummaryState,
     NutritionTotals,
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
@@ -157,6 +159,20 @@ export class MealManageFacade {
         this.configureItemType(group, sourceType);
         this.updateAmountControlState(group);
         return group;
+    }
+
+    public createConsumptionItemValue(
+        product: Product | null = null,
+        recipe: Recipe | null = null,
+        amount: number | null = null,
+        sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
+    ): ConsumptionItemFormValues {
+        return {
+            sourceType,
+            product,
+            recipe,
+            amount,
+        };
     }
 
     public configureItemType(group: FormGroup<ConsumptionItemFormData>, type: ConsumptionSourceType, clearSelection = false): void {
@@ -320,6 +336,20 @@ export class MealManageFacade {
         };
     }
 
+    public buildNutritionSummaryStateFromValues(
+        formValue: ConsumptionFormValues,
+        aiSessions: ConsumptionAiSessionManageDto[],
+        calorieMismatchThreshold: number,
+    ): MealNutritionSummaryState {
+        const autoTotals = this.calculateAutoNutritionTotalsFromValues(formValue.items, aiSessions);
+        const summaryTotals = formValue.isNutritionAutoCalculated ? autoTotals : this.getManualNutritionTotalsFromValue(formValue);
+        return {
+            autoTotals: this.roundTotals(autoTotals),
+            summaryTotals: this.roundTotals(summaryTotals),
+            warning: this.buildCalorieMismatchWarningFromValue(formValue, calorieMismatchThreshold),
+        };
+    }
+
     public syncManualNutritionFromTotals(form: FormGroup<ConsumptionFormData>, totals: NutritionTotals): void {
         form.patchValue(
             {
@@ -342,6 +372,17 @@ export class MealManageFacade {
             carbs: getControlNumericValue(form.controls.manualCarbs),
             fiber: getControlNumericValue(form.controls.manualFiber),
             alcohol: getControlNumericValue(form.controls.manualAlcohol),
+        };
+    }
+
+    public getManualNutritionTotalsFromValue(formValue: ConsumptionFormValues): NutritionTotals {
+        return {
+            calories: this.getNumericValue(formValue.manualCalories),
+            proteins: this.getNumericValue(formValue.manualProteins),
+            fats: this.getNumericValue(formValue.manualFats),
+            carbs: this.getNumericValue(formValue.manualCarbs),
+            fiber: this.getNumericValue(formValue.manualFiber),
+            alcohol: this.getNumericValue(formValue.manualAlcohol),
         };
     }
 
@@ -377,6 +418,14 @@ export class MealManageFacade {
         return items.controls.reduce((totals, group) => this.addItemNutritionTotals(totals, group), { ...aiTotals });
     }
 
+    private calculateAutoNutritionTotalsFromValues(
+        items: ConsumptionItemFormValues[],
+        aiSessions: ConsumptionAiSessionManageDto[],
+    ): NutritionTotals {
+        const aiTotals = this.getAiNutritionTotals(aiSessions);
+        return items.reduce((totals, item) => this.addItemNutritionTotalsFromValue(totals, item), { ...aiTotals });
+    }
+
     private addItemNutritionTotals(totals: NutritionTotals, group: FormGroup<ConsumptionItemFormData>): NutritionTotals {
         const sourceType = group.controls.sourceType.value;
         const amount = group.controls.amount.value ?? 0;
@@ -386,6 +435,16 @@ export class MealManageFacade {
         }
 
         return this.addRecipeNutritionTotals(totals, group.controls.recipe.value, amount);
+    }
+
+    private addItemNutritionTotalsFromValue(totals: NutritionTotals, item: ConsumptionItemFormValues): NutritionTotals {
+        const amount = item.amount ?? 0;
+
+        if (item.sourceType === ConsumptionSourceType.Product) {
+            return this.addProductNutritionTotals(totals, item.product, amount);
+        }
+
+        return this.addRecipeNutritionTotals(totals, item.recipe, amount);
     }
 
     private addProductNutritionTotals(totals: NutritionTotals, food: Product | null, amount: number): NutritionTotals {
@@ -464,6 +523,33 @@ export class MealManageFacade {
             alcohol,
             threshold: calorieMismatchThreshold,
         });
+    }
+
+    private buildCalorieMismatchWarningFromValue(
+        formValue: ConsumptionFormValues,
+        calorieMismatchThreshold: number,
+    ): CalorieMismatchWarning | null {
+        if (formValue.isNutritionAutoCalculated) {
+            return null;
+        }
+
+        return calculateCalorieMismatchWarning({
+            calories: this.getNumericValue(formValue.manualCalories),
+            proteins: this.getNumericValue(formValue.manualProteins),
+            fats: this.getNumericValue(formValue.manualFats),
+            carbs: this.getNumericValue(formValue.manualCarbs),
+            alcohol: this.getNumericValue(formValue.manualAlcohol),
+            threshold: calorieMismatchThreshold,
+        });
+    }
+
+    private getNumericValue(value: number | string | null | undefined): number {
+        if (value === null || value === undefined || value === '') {
+            return 0;
+        }
+
+        const numericValue = typeof value === 'string' ? Number(value.replace(',', '.').replaceAll(/[^\d.-]/g, '')) : Number(value);
+        return Number.isFinite(numericValue) ? Math.max(0, numericValue) : 0;
     }
 
     private roundTotals(totals: NutritionTotals): NutritionTotals {
