@@ -1,4 +1,3 @@
-import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { ActivityLevelOption, Gender, UiStyleOption } from '../../../../../shared/models/user.data';
@@ -20,14 +19,9 @@ export type UserFormValues = {
     activityLevel: ActivityLevelOption | null;
     stepGoal: number | null;
     profileImage: ImageSelection | null;
-    pushNotificationsEnabled?: boolean | null;
-    fastingPushNotificationsEnabled?: boolean | null;
-    socialPushNotificationsEnabled?: boolean | null;
 };
 
-export type UserFormData = FormGroupControls<UserFormValues>;
-
-type DietologistFormValues = {
+export type DietologistFormValues = {
     email: string;
     shareProfile: boolean;
     shareMeals: boolean;
@@ -39,7 +33,6 @@ type DietologistFormValues = {
     shareFasting: boolean;
 };
 
-export type DietologistFormData = FormGroupControls<DietologistFormValues>;
 export type DietologistPermissionControlName = Exclude<keyof DietologistFormValues, 'email'>;
 
 export type DietologistPermissionChange = {

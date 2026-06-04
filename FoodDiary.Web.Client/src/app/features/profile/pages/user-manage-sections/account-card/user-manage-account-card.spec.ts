@@ -1,4 +1,6 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
@@ -6,7 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { FrontendLoggerService } from '../../../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { Gender } from '../../../../../shared/models/user.data';
-import { createUserManageForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
+import { createUserManageFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageAccountCardComponent } from './user-manage-account-card';
 
 describe('UserManageAccountCardComponent', () => {
@@ -37,7 +39,10 @@ async function createComponentAsync(): Promise<ComponentFixture<UserManageAccoun
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageAccountCardComponent);
-    fixture.componentRef.setInput('userForm', createUserManageForm());
+    fixture.componentRef.setInput(
+        'userForm',
+        TestBed.runInInjectionContext(() => form(signal(createUserManageFormModel()))),
+    );
     fixture.componentRef.setInput('profileStatus', { key: 'USER_MANAGE.PROFILE_STATUS_SAVED', tone: 'success' });
     fixture.componentRef.setInput('passwordActionState', {
         buttonLabelKey: 'USER_MANAGE.CHANGE_PASSWORD',

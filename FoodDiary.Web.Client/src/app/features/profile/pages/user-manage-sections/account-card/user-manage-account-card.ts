@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -11,12 +11,12 @@ import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-ba
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import type { Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
-import type { PasswordActionState, ProfileStatusViewModel, UserFormData } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { PasswordActionState, ProfileStatusViewModel, UserFormValues } from '../../user-manage/user-manage-lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-account-card',
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiCardComponent,
@@ -31,7 +31,7 @@ import type { PasswordActionState, ProfileStatusViewModel, UserFormData } from '
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageAccountCardComponent {
-    public readonly userForm = input.required<FormGroup<UserFormData>>();
+    public readonly userForm = input.required<FieldTree<UserFormValues>>();
     public readonly profileStatus = input.required<ProfileStatusViewModel>();
     public readonly passwordActionState = input.required<PasswordActionState>();
     public readonly genderOptions = input.required<Array<FdUiSelectOption<Gender | null>>>();

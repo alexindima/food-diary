@@ -1,4 +1,3 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { formatDateInputValue } from '../../../../../shared/lib/local-date.utils';
@@ -13,7 +12,7 @@ import {
     isAppUiStyleName,
 } from '../../../../../theme/app-theme.config';
 import { ACTIVITY_LEVEL_OPTIONS, DEFAULT_DIETOLOGIST_PERMISSIONS, LANGUAGE_CODES } from './user-manage.config';
-import type { DietologistFormData, UserFormData, UserFormValues } from './user-manage.types';
+import type { DietologistFormValues, UserFormValues } from './user-manage.types';
 
 export type UserManageSelectOptions = {
     genderOptions: Array<FdUiSelectOption<Gender | null>>;
@@ -23,36 +22,29 @@ export type UserManageSelectOptions = {
     uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>>;
 };
 
-export function createUserManageForm(): FormGroup<UserFormData> {
-    return new FormGroup<UserFormData>({
-        email: new FormControl<string | null>({ value: '', disabled: true }),
-        username: new FormControl<string | null>(null),
-        firstName: new FormControl<string | null>(null),
-        lastName: new FormControl<string | null>(null),
-        birthDate: new FormControl<string | null>(null),
-        gender: new FormControl<Gender | null>(null),
-        language: new FormControl<string | null>(null),
-        theme: new FormControl<AppThemeName | null>(null),
-        uiStyle: new FormControl<AppUiStyleName | null>(null),
-        height: new FormControl<number | null>(null),
-        activityLevel: new FormControl<ActivityLevelOption | null>(null),
-        stepGoal: new FormControl<number | null>(null),
-        profileImage: new FormControl<ImageSelection | null>(null),
-    });
+export function createUserManageFormModel(): UserFormValues {
+    return {
+        email: '',
+        username: null,
+        firstName: null,
+        lastName: null,
+        birthDate: null,
+        gender: null,
+        language: null,
+        theme: null,
+        uiStyle: null,
+        height: null,
+        activityLevel: null,
+        stepGoal: null,
+        profileImage: null,
+    };
 }
 
-export function createDietologistForm(): FormGroup<DietologistFormData> {
-    return new FormGroup<DietologistFormData>({
-        email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-        shareProfile: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareProfile, { nonNullable: true }),
-        shareMeals: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareMeals, { nonNullable: true }),
-        shareStatistics: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareStatistics, { nonNullable: true }),
-        shareWeight: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareWeight, { nonNullable: true }),
-        shareWaist: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareWaist, { nonNullable: true }),
-        shareGoals: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareGoals, { nonNullable: true }),
-        shareHydration: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareHydration, { nonNullable: true }),
-        shareFasting: new FormControl<boolean>(DEFAULT_DIETOLOGIST_PERMISSIONS.shareFasting, { nonNullable: true }),
-    });
+export function createDietologistFormModel(): DietologistFormValues {
+    return {
+        email: '',
+        ...DEFAULT_DIETOLOGIST_PERMISSIONS,
+    };
 }
 
 export function buildUserManageSelectOptions(translate: (key: string) => string): UserManageSelectOptions {
@@ -83,7 +75,7 @@ export function buildUserManageSelectOptions(translate: (key: string) => string)
 export function mapUserToForm(user: User): Partial<UserFormValues> {
     return {
         email: user.email,
-        username: user.username,
+        username: toNullable(user.username),
         firstName: toNullable(user.firstName),
         lastName: toNullable(user.lastName),
         gender: normalizeGender(user.gender),
@@ -95,9 +87,6 @@ export function mapUserToForm(user: User): Partial<UserFormValues> {
         activityLevel: mapUserActivityLevel(user.activityLevel),
         stepGoal: toNullable(user.stepGoal),
         profileImage: mapUserProfileImage(user),
-        pushNotificationsEnabled: user.pushNotificationsEnabled,
-        fastingPushNotificationsEnabled: user.fastingPushNotificationsEnabled,
-        socialPushNotificationsEnabled: user.socialPushNotificationsEnabled,
     };
 }
 

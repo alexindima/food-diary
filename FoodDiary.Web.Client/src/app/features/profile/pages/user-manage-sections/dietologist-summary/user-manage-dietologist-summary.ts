@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
-import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import type { DietologistFormData } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { DietologistFormValues } from '../../user-manage/user-manage-lib/user-manage.types';
 import { formatUserManageDate } from '../../user-manage/user-manage-lib/user-manage-date.mapper';
 
 type DietologistSummaryAction = {
@@ -20,7 +20,7 @@ type DietologistSummaryAction = {
 
 @Component({
     selector: 'fd-user-manage-dietologist-summary',
-    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
+    imports: [FormField, TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './user-manage-dietologist-summary.html',
     styleUrl: '../../user-manage/user-manage.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +28,7 @@ type DietologistSummaryAction = {
 export class UserManageDietologistSummaryComponent {
     private readonly localizationService = inject(LocalizationService);
 
-    public readonly dietologistForm = input.required<FormGroup<DietologistFormData>>();
+    public readonly dietologistForm = input.required<FieldTree<DietologistFormValues>>();
     public readonly dietologistRelationship = input.required<DietologistRelationship | null>();
     public readonly dietologistInviteEmailError = input.required<string | null>();
     public readonly isSavingDietologist = input.required<boolean>();
@@ -94,7 +94,7 @@ export class UserManageDietologistSummaryComponent {
             variant: 'primary',
             icon: 'person_add',
             labelKey: 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION',
-            disabled: this.dietologistForm().invalid || this.isSavingDietologist(),
+            disabled: this.dietologistForm()().invalid() || this.isSavingDietologist(),
             action: 'invite',
         };
     });

@@ -8,9 +8,8 @@
     <fd-page-body>
         <form
             class="user-manage__form fd-stack fd-gap-card-profile"
-            [formGroup]="userForm"
             [attr.aria-busy]="isSurfaceBusy()"
-            (ngSubmit)="onSubmit()"
+            (submit)="onSubmit(); $event.preventDefault()"
         >
             <div class="user-manage__stack fd-stack fd-gap-card-profile">
                 <fd-user-manage-account-card

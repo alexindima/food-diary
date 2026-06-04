@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-dietologist-form.mapper';
-import { createDietologistForm } from './user-manage-form.mapper';
+import { getDietologistPermissions, mapDietologistRelationshipToForm } from './user-manage-dietologist-form.mapper';
 
 const RELATIONSHIP: DietologistRelationship = {
     invitationId: 'invitation-1',
@@ -27,27 +26,18 @@ const RELATIONSHIP: DietologistRelationship = {
 };
 
 describe('user manage dietologist form mapper', () => {
-    it('should sync accepted relationship into disabled form', () => {
-        const form = createDietologistForm();
+    it('should map accepted relationship into form model', () => {
+        const model = mapDietologistRelationshipToForm(RELATIONSHIP);
 
-        syncDietologistFormFromRelationship(form, RELATIONSHIP);
-
-        expect(form.controls.email.disabled).toBe(true);
-        expect(form.controls.email.getRawValue()).toBe(RELATIONSHIP.email);
-        expect(getDietologistPermissions(form)).toEqual(RELATIONSHIP.permissions);
-        expect(form.pristine).toBe(true);
-        expect(form.untouched).toBe(true);
+        expect(model.email).toBe(RELATIONSHIP.email);
+        expect(getDietologistPermissions(model)).toEqual(RELATIONSHIP.permissions);
     });
 
-    it('should reset empty relationship into invite defaults', () => {
-        const form = createDietologistForm();
-        syncDietologistFormFromRelationship(form, RELATIONSHIP);
+    it('should map empty relationship into invite defaults', () => {
+        const model = mapDietologistRelationshipToForm(null);
 
-        syncDietologistFormFromRelationship(form, null);
-
-        expect(form.controls.email.enabled).toBe(true);
-        expect(form.controls.email.value).toBe('');
-        expect(getDietologistPermissions(form)).toEqual({
+        expect(model.email).toBe('');
+        expect(getDietologistPermissions(model)).toEqual({
             shareProfile: true,
             shareMeals: true,
             shareStatistics: true,

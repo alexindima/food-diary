@@ -12,7 +12,7 @@ import {
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { disabled, email, type FieldTree, form, required, type ValidationError } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
@@ -20,16 +20,16 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     FD_VALIDATION_ERRORS,
     FdUiFormErrorComponent,
+    type FdValidationErrorConfig,
     type FdValidationErrors,
     getNumberProperty,
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { EMPTY, finalize, merge, type Observable } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
-import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -47,20 +47,19 @@ import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-
 import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage-lib/user-manage.config';
 import type {
     BillingViewModel,
-    DietologistFormData,
+    DietologistFormValues,
     DietologistPermissionChange,
     DietologistPermissionControlName,
     PasswordActionState,
     ProfileStatusViewModel,
-    UserFormData,
     UserFormValues,
 } from './user-manage-lib/user-manage.types';
 import { buildBillingView } from './user-manage-lib/user-manage-billing.mapper';
-import { getDietologistPermissions, syncDietologistFormFromRelationship } from './user-manage-lib/user-manage-dietologist-form.mapper';
+import { getDietologistPermissions, mapDietologistRelationshipToForm } from './user-manage-lib/user-manage-dietologist-form.mapper';
 import {
     buildUserManageSelectOptions,
-    createDietologistForm,
-    createUserManageForm,
+    createDietologistFormModel,
+    createUserManageFormModel,
     mapUserToForm,
 } from './user-manage-lib/user-manage-form.mapper';
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
@@ -81,7 +80,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 @Component({
     selector: 'fd-user-manage',
     imports: [
-        ReactiveFormsModule,
         TranslatePipe,
         FdUiFormErrorComponent,
         PageHeaderComponent,
@@ -123,8 +121,16 @@ export class UserManageComponent {
     protected languageOptions: Array<FdUiSelectOption<string | null>> = [];
     protected themeOptions: Array<FdUiSelectOption<AppThemeName | null>> = [];
     protected uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
-    protected userForm: FormGroup<UserFormData>;
-    protected dietologistForm: FormGroup<DietologistFormData>;
+    protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
+    protected readonly userForm = form(this.userFormModel, path => {
+        disabled(path.email, { when: () => true });
+    });
+    protected readonly dietologistFormModel = signal<DietologistFormValues>(createDietologistFormModel());
+    protected readonly dietologistForm = form(this.dietologistFormModel, path => {
+        required(path.email);
+        email(path.email);
+        disabled(path.email, { when: () => this.hasDietologistRelationship() });
+    });
     protected readonly globalError = this.facade.globalError;
     protected readonly dietologistRelationship = this.facade.dietologistRelationship;
     protected readonly dietologistError = signal<string | null>(null);
@@ -163,9 +169,6 @@ export class UserManageComponent {
     protected readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
 
     public constructor() {
-        this.userForm = createUserManageForm();
-        this.dietologistForm = createDietologistForm();
-
         this.buildSelectOptions();
         this.watchLanguageChanges();
         this.watchPasswordSetupIntent();
@@ -255,33 +258,27 @@ export class UserManageComponent {
     }
 
     private watchUserFormChanges(): void {
-        this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        effect(() => {
+            this.userFormModel();
             this.facade.clearGlobalError();
             this.queueUserAutosave();
-            this.updateProfileStatus();
-        });
-        this.userForm.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.updateProfileStatus();
         });
     }
 
     private watchDietologistFormChanges(): void {
-        this.dietologistForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        effect(() => {
+            this.dietologistFormModel();
             this.dietologistError.set(null);
             this.updateDietologistPermissionsState();
+            this.updateDietologistInviteEmailError();
         });
-        const dietologistFormEvents = (this.dietologistForm as { events?: Observable<unknown> }).events ?? EMPTY;
-        merge(dietologistFormEvents, this.dietologistForm.statusChanges, this.dietologistForm.valueChanges)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.updateDietologistInviteEmailError();
-            });
     }
 
     protected onSubmit(): void {
-        this.userForm.markAllAsTouched();
+        this.userForm().markAsTouched();
 
-        if (this.userForm.valid) {
+        if (this.userForm().valid()) {
             this.facade.saveProfileNow(this.buildUserUpdateDto());
         }
     }
@@ -303,17 +300,17 @@ export class UserManageComponent {
             return;
         }
 
-        this.dietologistForm.controls.email.markAsTouched();
+        this.dietologistForm.email().markAsTouched();
         this.updateDietologistInviteEmailError();
-        if (this.dietologistForm.invalid) {
+        if (this.dietologistForm().invalid()) {
             return;
         }
 
         this.isSavingDietologist.set(true);
         this.dietologistFacade
             .invite({
-                dietologistEmail: this.dietologistForm.controls.email.getRawValue(),
-                permissions: getDietologistPermissions(this.dietologistForm),
+                dietologistEmail: this.dietologistFormModel().email,
+                permissions: getDietologistPermissions(this.dietologistFormModel()),
             })
             .pipe(
                 finalize(() => {
@@ -336,8 +333,8 @@ export class UserManageComponent {
             return;
         }
 
-        const previousPermissions = getDietologistPermissions(this.dietologistForm);
-        this.dietologistForm.controls[controlName].setValue(nextValue);
+        const previousPermissions = getDietologistPermissions(this.dietologistFormModel());
+        this.dietologistForm[controlName]().value.set(nextValue);
         this.persistDietologistPermissions(previousPermissions);
     }
 
@@ -352,7 +349,7 @@ export class UserManageComponent {
 
         this.isSavingDietologist.set(true);
         this.dietologistFacade
-            .updatePermissions(getDietologistPermissions(this.dietologistForm))
+            .updatePermissions(getDietologistPermissions(this.dietologistFormModel()))
             .pipe(
                 finalize(() => {
                     this.isSavingDietologist.set(false);
@@ -365,10 +362,11 @@ export class UserManageComponent {
                 },
                 error: () => {
                     if (previousPermissions !== undefined) {
-                        this.dietologistForm.patchValue(previousPermissions, { emitEvent: false });
+                        this.dietologistForm().reset({
+                            ...this.dietologistFormModel(),
+                            ...previousPermissions,
+                        });
                         this.updateDietologistPermissionsState();
-                        this.dietologistForm.markAsPristine();
-                        this.dietologistForm.markAsUntouched();
                         this.cdr.markForCheck();
                     }
 
@@ -413,10 +411,10 @@ export class UserManageComponent {
         }
 
         if (nextValue) {
-            this.dietologistForm.controls.shareProfile.setValue(nextValue);
+            this.dietologistForm.shareProfile().value.set(nextValue);
             if (this.hasDietologistRelationship()) {
                 this.persistDietologistPermissions({
-                    ...getDietologistPermissions(this.dietologistForm),
+                    ...getDietologistPermissions(this.dietologistFormModel()),
                     shareProfile: !nextValue,
                 });
             }
@@ -437,8 +435,8 @@ export class UserManageComponent {
             .afterClosed()
             .subscribe(confirmed => {
                 if (confirmed === true) {
-                    const previousPermissions = getDietologistPermissions(this.dietologistForm);
-                    this.dietologistForm.controls.shareProfile.setValue(false);
+                    const previousPermissions = getDietologistPermissions(this.dietologistFormModel());
+                    this.dietologistForm.shareProfile().value.set(false);
                     if (this.hasDietologistRelationship()) {
                         this.persistDietologistPermissions(previousPermissions);
                     }
@@ -449,9 +447,7 @@ export class UserManageComponent {
     }
 
     private updateDietologistInviteEmailError(): void {
-        this.dietologistInviteEmailError.set(
-            resolveTranslatedControlError(this.dietologistForm.controls.email, this.validationErrors, this.translateService),
-        );
+        this.dietologistInviteEmailError.set(this.resolveTranslatedFieldError(this.dietologistForm.email));
     }
 
     private updateProfileStatus(): void {
@@ -462,8 +458,8 @@ export class UserManageComponent {
         return buildProfileStatus({
             globalError: this.globalError(),
             isSaving: this.isSavingProfile(),
-            isDirty: this.userForm.dirty,
-            isValid: this.userForm.valid,
+            isDirty: this.userForm().dirty(),
+            isValid: this.userForm().valid(),
         });
     }
 
@@ -507,14 +503,15 @@ export class UserManageComponent {
     }
 
     private applyUserData(userData: Partial<UserFormValues>): void {
-        this.userForm.patchValue(userData, { emitEvent: false });
-        this.userForm.markAsPristine();
-        this.userForm.markAsUntouched();
+        this.userForm().reset({
+            ...createUserManageFormModel(),
+            ...userData,
+        });
         this.updateProfileStatus();
     }
 
     private queueUserAutosave(): void {
-        if (!this.userForm.dirty || !this.userForm.valid) {
+        if (!this.userForm().dirty() || !this.userForm().valid()) {
             return;
         }
 
@@ -522,7 +519,7 @@ export class UserManageComponent {
     }
 
     private buildUserUpdateDto(): UpdateUserDto {
-        const formData = this.userForm.getRawValue();
+        const formData = this.userFormModel();
         return new UpdateUserDto({
             ...formData,
             profileImage: formData.profileImage,
@@ -570,13 +567,55 @@ export class UserManageComponent {
     }
 
     private syncDietologistFormFromRelationship(relationship: DietologistRelationship | null): void {
-        syncDietologistFormFromRelationship(this.dietologistForm, relationship);
-        this.updateDietologistPermissionsState();
+        const model = mapDietologistRelationshipToForm(relationship);
+        this.dietologistForm().reset(model);
+        this.dietologistPermissions.set(getDietologistPermissions(model));
         this.cdr.markForCheck();
     }
 
     private updateDietologistPermissionsState(): void {
-        this.dietologistPermissions.set(getDietologistPermissions(this.dietologistForm));
+        this.dietologistPermissions.set(getDietologistPermissions(this.dietologistFormModel()));
+    }
+
+    private resolveTranslatedFieldError(field: FieldTree<unknown>): string | null {
+        const state = field();
+        if (!state.invalid() || (!state.touched() && !state.dirty())) {
+            return null;
+        }
+
+        const error = state.errors()[0];
+        const key = this.mapValidationErrorKey(error);
+        const resolver = this.validationErrors?.[key];
+        if (resolver === undefined) {
+            return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+        }
+
+        const params = this.getValidationParams(error);
+        const result = resolver(params);
+        return this.translateValidationResult(result, params);
+    }
+
+    private mapValidationErrorKey(error: ValidationError): string {
+        return error.kind === 'minLength' ? 'minlength' : error.kind;
+    }
+
+    private getValidationParams(error: ValidationError): Record<string, unknown> {
+        if (error.kind === 'minLength') {
+            return { requiredLength: getNumberProperty(error, 'minLength') };
+        }
+
+        return {};
+    }
+
+    private translateValidationResult(result: FdValidationErrorConfig | string, params: Record<string, unknown>): string {
+        if (typeof result === 'string') {
+            return this.translateService.instant(result, params);
+        }
+
+        return this.translateService.instant(result.key, {
+            ...params,
+            ...result.params,
+        });
     }
 
     private setDietologistError(errorKey: string): void {

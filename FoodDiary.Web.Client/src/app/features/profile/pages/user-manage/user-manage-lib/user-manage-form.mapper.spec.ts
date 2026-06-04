@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { Gender, type User } from '../../../../../shared/models/user.data';
-import { buildUserManageSelectOptions, createDietologistForm, createUserManageForm, mapUserToForm } from './user-manage-form.mapper';
+import {
+    buildUserManageSelectOptions,
+    createDietologistFormModel,
+    createUserManageFormModel,
+    mapUserToForm,
+} from './user-manage-form.mapper';
 
 const USER: User = {
     id: 'user-1',
@@ -31,21 +36,20 @@ const USER: User = {
 
 describe('user manage form mapper', () => {
     it('should create user form with empty defaults', () => {
-        const form = createUserManageForm();
+        const model = createUserManageFormModel();
 
-        expect(form.controls.email.disabled).toBe(true);
-        expect(form.controls.email.value).toBe('');
-        expect(form.controls.username.value).toBeNull();
-        expect(form.controls.profileImage.value).toBeNull();
+        expect(model.email).toBe('');
+        expect(model.username).toBeNull();
+        expect(model.profileImage).toBeNull();
     });
 
     it('should create dietologist form with default shared permissions', () => {
-        const form = createDietologistForm();
+        const model = createDietologistFormModel();
 
-        expect(form.controls.email.value).toBe('');
-        expect(form.controls.shareProfile.value).toBe(true);
-        expect(form.controls.shareMeals.value).toBe(true);
-        expect(form.controls.shareFasting.value).toBe(true);
+        expect(model.email).toBe('');
+        expect(model.shareProfile).toBe(true);
+        expect(model.shareMeals).toBe(true);
+        expect(model.shareFasting).toBe(true);
     });
 
     it('should normalize legacy user values into form patch', () => {
@@ -66,9 +70,6 @@ describe('user manage form mapper', () => {
                 url: USER.profileImage,
                 assetId: USER.profileImageAssetId,
             },
-            pushNotificationsEnabled: USER.pushNotificationsEnabled,
-            fastingPushNotificationsEnabled: USER.fastingPushNotificationsEnabled,
-            socialPushNotificationsEnabled: USER.socialPushNotificationsEnabled,
         });
     });
 

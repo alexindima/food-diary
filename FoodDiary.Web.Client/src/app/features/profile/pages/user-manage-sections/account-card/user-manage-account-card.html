@@ -10,16 +10,16 @@
             </div>
         </div>
     </div>
-    <div class="user-manage__account fd-grid fd-gap-lg" [formGroup]="userForm()">
+    <div class="user-manage__account fd-grid fd-gap-lg">
         <div class="user-manage__avatar-block fd-stack fd-gap-sm fd-align-center">
             <div class="image-upload-field__label-block">
                 <div class="image-upload-field__label-title">{{ 'USER_MANAGE.AVATAR' | translate }}</div>
             </div>
             <fd-image-upload-field
                 class="user-manage__avatar"
-                formControlName="profileImage"
                 recommendedSize="512 x 512"
                 acceptedTypes="image/png,image/jpeg,image/webp"
+                [formField]="userForm().profileImage"
                 [description]="'USER_MANAGE.AVATAR_DESC' | translate"
                 [maxSizeMb]="5"
                 [cropEnabled]="true"
@@ -32,16 +32,16 @@
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                 <fd-ui-input
                     class="user-manage__account-row-field"
-                    formControlName="email"
                     type="email"
                     size="lg"
+                    [formField]="userForm().email"
                     [label]="'USER_MANAGE.EMAIL' | translate"
                     [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
                 />
                 <fd-ui-input
                     class="user-manage__account-row-field"
-                    formControlName="username"
                     size="lg"
+                    [formField]="userForm().username"
                     [label]="'USER_MANAGE.USERNAME' | translate"
                     [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
                 />
@@ -49,15 +49,15 @@
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                 <fd-ui-input
                     class="user-manage__account-row-field"
-                    formControlName="firstName"
                     size="lg"
+                    [formField]="userForm().firstName"
                     [label]="'USER_MANAGE.FIRST_NAME' | translate"
                     [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
                 />
                 <fd-ui-input
                     class="user-manage__account-row-field"
-                    formControlName="lastName"
                     size="lg"
+                    [formField]="userForm().lastName"
                     [label]="'USER_MANAGE.LAST_NAME' | translate"
                     [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
                 />
@@ -65,15 +65,15 @@
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                 <fd-ui-date-input
                     class="user-manage__account-row-field"
-                    formControlName="birthDate"
                     size="lg"
+                    [formField]="userForm().birthDate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                     [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
                 />
                 <fd-ui-select
                     class="user-manage__account-row-field"
-                    formControlName="gender"
                     size="lg"
+                    [formField]="userForm().gender"
                     [label]="'USER_MANAGE.GENDER' | translate"
                     [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
                     [options]="genderOptions()"
@@ -82,16 +82,16 @@
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                 <fd-ui-select
                     class="user-manage__account-row-field"
-                    formControlName="language"
                     size="lg"
+                    [formField]="userForm().language"
                     [label]="'USER_MANAGE.LANGUAGE' | translate"
                     [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
                     [options]="languageOptions()"
                 />
                 <fd-ui-select
                     class="user-manage__account-row-field"
-                    formControlName="theme"
                     size="lg"
+                    [formField]="userForm().theme"
                     [label]="'USER_MANAGE.THEME' | translate"
                     [placeholder]="'USER_MANAGE.THEME_PLACEHOLDER' | translate"
                     [options]="themeOptions()"
@@ -100,8 +100,8 @@
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                 <fd-ui-select
                     class="user-manage__account-row-field"
-                    formControlName="uiStyle"
                     size="lg"
+                    [formField]="userForm().uiStyle"
                     [label]="'USER_MANAGE.UI_STYLE' | translate"
                     [placeholder]="'USER_MANAGE.UI_STYLE_PLACEHOLDER' | translate"
                     [options]="uiStyleOptions()"

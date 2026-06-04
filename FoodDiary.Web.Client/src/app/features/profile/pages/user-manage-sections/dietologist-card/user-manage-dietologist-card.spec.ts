@@ -1,10 +1,12 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { email, form, required } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import type { DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
-import { createDietologistForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
+import { createDietologistFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageDietologistCardComponent } from './user-manage-dietologist-card';
 
 describe('UserManageDietologistCardComponent', () => {
@@ -33,7 +35,15 @@ async function createComponentAsync(): Promise<ComponentFixture<UserManageDietol
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageDietologistCardComponent);
-    fixture.componentRef.setInput('dietologistForm', createDietologistForm());
+    fixture.componentRef.setInput(
+        'dietologistForm',
+        TestBed.runInInjectionContext(() =>
+            form(signal(createDietologistFormModel()), path => {
+                required(path.email);
+                email(path.email);
+            }),
+        ),
+    );
     fixture.componentRef.setInput('dietologistRelationship', null);
     fixture.componentRef.setInput('dietologistPermissions', createPermissions());
     fixture.componentRef.setInput('dietologistError', null);

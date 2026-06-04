@@ -33,10 +33,10 @@ describe('UserManageComponent dietologist invite state', () => {
 
         expect(dietologistService.getRelationship).not.toHaveBeenCalled();
         expect(component['hasDietologistRelationship']()).toBe(false);
-        expect(component['dietologistForm'].controls.email.enabled).toBe(true);
-        expect(component['dietologistForm'].controls.shareProfile.value).toBe(true);
-        expect(component['dietologistForm'].controls.shareMeals.value).toBe(true);
-        expect(component['dietologistForm'].controls.shareFasting.value).toBe(true);
+        expect(component['dietologistForm'].email().disabled()).toBe(false);
+        expect(component['dietologistFormModel']().shareProfile).toBe(true);
+        expect(component['dietologistFormModel']().shareMeals).toBe(true);
+        expect(component['dietologistFormModel']().shareFasting).toBe(true);
         const host = fixture.nativeElement as HTMLElement;
         expect(host.textContent).toContain('USER_MANAGE.DIETOLOGIST_INVITE_ACTION');
     });
@@ -66,12 +66,12 @@ describe('UserManageComponent dietologist invite state', () => {
 
         expect(component['hasDietologistRelationship']()).toBe(true);
         expect(component['isDietologistPending']()).toBe(true);
-        expect(component['dietologistForm'].controls.email.disabled).toBe(true);
-        expect(component['dietologistForm'].controls.email.getRawValue()).toBe('diet@example.com');
-        expect(component['dietologistForm'].controls.shareProfile.value).toBe(true);
-        expect(component['dietologistForm'].controls.shareStatistics.value).toBe(false);
-        expect(component['dietologistForm'].controls.shareHydration.value).toBe(false);
-        expect(component['dietologistForm'].controls.shareFasting.value).toBe(true);
+        expect(component['dietologistForm'].email().disabled()).toBe(true);
+        expect(component['dietologistFormModel']().email).toBe('diet@example.com');
+        expect(component['dietologistFormModel']().shareProfile).toBe(true);
+        expect(component['dietologistFormModel']().shareStatistics).toBe(false);
+        expect(component['dietologistFormModel']().shareHydration).toBe(false);
+        expect(component['dietologistFormModel']().shareFasting).toBe(true);
         const host = fixture.nativeElement as HTMLElement;
         expect(host.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
         expect(host.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS');
@@ -85,7 +85,7 @@ describe('UserManageComponent dietologist profile sharing', () => {
         component['onDietologistProfileToggle'](false);
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
-        expect(component['dietologistForm'].controls.shareProfile.value).toBe(true);
+        expect(component['dietologistFormModel']().shareProfile).toBe(true);
     });
 
     it('disables profile sharing after confirmation', async () => {
@@ -94,7 +94,7 @@ describe('UserManageComponent dietologist profile sharing', () => {
         component['onDietologistProfileToggle'](false);
         fixture.detectChanges();
 
-        expect(component['dietologistForm'].controls.shareProfile.value).toBe(false);
+        expect(component['dietologistFormModel']().shareProfile).toBe(false);
     });
 });
 
@@ -218,8 +218,9 @@ describe('UserManageComponent profile autosave feedback', () => {
     it('queues profile autosave when editable user fields change', async () => {
         await createComponentAsync(null);
 
-        component['userForm'].controls.firstName.markAsDirty();
-        component['userForm'].controls.firstName.setValue('Alex');
+        component['userForm'].firstName().markAsDirty();
+        component['userForm'].firstName().value.set('Alex');
+        fixture.detectChanges();
 
         expect(facade.queueProfileAutosave).toHaveBeenCalledTimes(1);
         expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alex' }));
@@ -230,8 +231,9 @@ describe('UserManageComponent profile autosave feedback', () => {
 
         expect(component['profileStatus']().key).toBe('USER_MANAGE.PROFILE_STATUS_SAVED');
 
-        component['userForm'].controls.firstName.markAsDirty();
-        component['userForm'].controls.firstName.setValue('Alex');
+        component['userForm'].firstName().markAsDirty();
+        component['userForm'].firstName().value.set('Alex');
+        fixture.detectChanges();
         expect(component['profileStatus']().key).toBe('USER_MANAGE.PROFILE_STATUS_PENDING');
 
         facade.isSavingProfile.set(true);
@@ -262,10 +264,10 @@ describe('UserManageComponent profile normalization and intents', () => {
             isEmailConfirmed: true,
         });
 
-        expect(component['userForm'].controls.gender.value).toBe('F');
-        expect(component['userForm'].controls.language.value).toBe('en');
-        expect(component['userForm'].controls.theme.value).toBe('ocean');
-        expect(component['userForm'].controls.uiStyle.value).toBe('classic');
+        expect(component['userFormModel']().gender).toBe('F');
+        expect(component['userFormModel']().language).toBe('en');
+        expect(component['userFormModel']().theme).toBe('ocean');
+        expect(component['userFormModel']().uiStyle).toBe('classic');
     });
 
     it('opens set password dialog from notifications intent for google-only account', async () => {

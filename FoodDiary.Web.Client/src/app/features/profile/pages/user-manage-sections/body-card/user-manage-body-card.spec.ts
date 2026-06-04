@@ -1,8 +1,10 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { createUserManageForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
+import { createUserManageFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageBodyCardComponent } from './user-manage-body-card';
 
 describe('UserManageBodyCardComponent', () => {
@@ -20,7 +22,10 @@ async function createComponentAsync(): Promise<ComponentFixture<UserManageBodyCa
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageBodyCardComponent);
-    fixture.componentRef.setInput('userForm', createUserManageForm());
+    fixture.componentRef.setInput(
+        'userForm',
+        TestBed.runInInjectionContext(() => form(signal(createUserManageFormModel()))),
+    );
     fixture.componentRef.setInput('activityLevelOptions', [{ value: 'MODERATE', label: 'Moderate' }]);
     fixture.detectChanges();
     return fixture;

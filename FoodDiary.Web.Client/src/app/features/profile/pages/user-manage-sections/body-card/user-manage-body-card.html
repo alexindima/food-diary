@@ -5,17 +5,17 @@
             <div class="user-manage__card-title">{{ 'USER_MANAGE.BODY_SECTION' | translate }}</div>
         </div>
     </div>
-    <div class="user-manage__body fd-grid fd-gap-lg fd-align-start" [formGroup]="userForm()">
+    <div class="user-manage__body fd-grid fd-gap-lg fd-align-start">
         <fd-ui-input
-            formControlName="height"
             type="number"
             size="lg"
+            [formField]="userForm().height"
             [label]="'USER_MANAGE.HEIGHT' | translate"
             [placeholder]="'USER_MANAGE.HEIGHT_PLACEHOLDER' | translate"
         />
         <fd-ui-select
-            formControlName="activityLevel"
             size="lg"
+            [formField]="userForm().activityLevel"
             [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
             [placeholder]="'USER_MANAGE.SELECT_ACTIVITY_LEVEL' | translate"
             [options]="activityLevelOptions()"

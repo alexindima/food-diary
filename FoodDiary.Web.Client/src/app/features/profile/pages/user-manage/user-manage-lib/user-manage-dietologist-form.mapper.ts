@@ -1,43 +1,30 @@
-import type { FormGroup } from '@angular/forms';
-
 import type { DietologistPermissions, DietologistRelationship } from '../../../../../shared/models/dietologist.data';
 import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage.config';
-import type { DietologistFormData } from './user-manage.types';
+import type { DietologistFormValues } from './user-manage.types';
 
-export function syncDietologistFormFromRelationship(
-    form: FormGroup<DietologistFormData>,
-    relationship: DietologistRelationship | null,
-): void {
+export function mapDietologistRelationshipToForm(relationship: DietologistRelationship | null): DietologistFormValues {
     if (relationship !== null) {
-        form.patchValue({
+        return {
             email: relationship.email,
             ...relationship.permissions,
-        });
-        form.controls.email.disable({ emitEvent: false });
-    } else {
-        form.reset(
-            {
-                email: '',
-                ...DEFAULT_DIETOLOGIST_PERMISSIONS,
-            },
-            { emitEvent: false },
-        );
-        form.controls.email.enable({ emitEvent: false });
+        };
     }
 
-    form.markAsPristine();
-    form.markAsUntouched();
+    return {
+        email: '',
+        ...DEFAULT_DIETOLOGIST_PERMISSIONS,
+    };
 }
 
-export function getDietologistPermissions(form: FormGroup<DietologistFormData>): DietologistPermissions {
+export function getDietologistPermissions(value: DietologistFormValues): DietologistPermissions {
     return {
-        shareProfile: form.controls.shareProfile.getRawValue(),
-        shareMeals: form.controls.shareMeals.getRawValue(),
-        shareStatistics: form.controls.shareStatistics.getRawValue(),
-        shareWeight: form.controls.shareWeight.getRawValue(),
-        shareWaist: form.controls.shareWaist.getRawValue(),
-        shareGoals: form.controls.shareGoals.getRawValue(),
-        shareHydration: form.controls.shareHydration.getRawValue(),
-        shareFasting: form.controls.shareFasting.getRawValue(),
+        shareProfile: value.shareProfile,
+        shareMeals: value.shareMeals,
+        shareStatistics: value.shareStatistics,
+        shareWeight: value.shareWeight,
+        shareWaist: value.shareWaist,
+        shareGoals: value.shareGoals,
+        shareHydration: value.shareHydration,
+        shareFasting: value.shareFasting,
     };
 }

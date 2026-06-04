@@ -16,12 +16,12 @@
         }
     </div>
     @if (!isDietologistConnected()) {
-    <div class="user-manage__dietologist-summary-form fd-grid fd-gap-md" [formGroup]="dietologistForm()">
+    <div class="user-manage__dietologist-summary-form fd-grid fd-gap-md">
         <div class="user-manage__dietologist-email user-manage__dietologist-email--summary">
             <fd-ui-input
-                formControlName="email"
                 type="email"
                 size="lg"
+                [formField]="dietologistForm().email"
                 [label]="'USER_MANAGE.DIETOLOGIST_EMAIL' | translate"
                 [placeholder]="'USER_MANAGE.DIETOLOGIST_EMAIL_PLACEHOLDER' | translate"
                 [error]="dietologistInviteEmailError()"

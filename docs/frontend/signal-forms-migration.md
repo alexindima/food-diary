@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 37 forms.
-- Signal Forms files: 79.
-- Remaining legacy Reactive Forms surface: 79 files.
+- Migrated Signal Forms: 39 forms.
+- Signal Forms files: 91.
+- Remaining legacy Reactive Forms surface: 67 files.
 
 Tracker patterns:
 
@@ -105,6 +105,19 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.html`
 - `FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.ts`
 - `FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.html`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage.types.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-form.mapper.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-dietologist-form.mapper.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.html`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.html`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.html`
 
 ## Next Candidates
 

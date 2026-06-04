@@ -1,10 +1,12 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { email, form, required } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import { createDietologistForm } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
+import { createDietologistFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageDietologistSummaryComponent } from './user-manage-dietologist-summary';
 
 describe('UserManageDietologistSummaryComponent', () => {
@@ -92,7 +94,15 @@ async function createComponentAsync(
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageDietologistSummaryComponent);
-    fixture.componentRef.setInput('dietologistForm', createDietologistForm());
+    fixture.componentRef.setInput(
+        'dietologistForm',
+        TestBed.runInInjectionContext(() =>
+            form(signal(createDietologistFormModel()), path => {
+                required(path.email);
+                email(path.email);
+            }),
+        ),
+    );
     fixture.componentRef.setInput('dietologistRelationship', relationship);
     fixture.componentRef.setInput('dietologistInviteEmailError', null);
     fixture.componentRef.setInput('isSavingDietologist', false);

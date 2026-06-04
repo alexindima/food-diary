@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import type { DietologistPermissions, DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import type { DietologistFormData, DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { DietologistFormValues, DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
 import { UserManageDietologistPermissionsComponent } from '../dietologist-permissions/user-manage-dietologist-permissions';
 import { UserManageDietologistSummaryComponent } from '../dietologist-summary/user-manage-dietologist-summary';
 
 @Component({
     selector: 'fd-user-manage-dietologist-card',
     imports: [
-        ReactiveFormsModule,
         TranslatePipe,
         FdUiCardComponent,
         FdUiFormErrorComponent,
@@ -24,7 +23,7 @@ import { UserManageDietologistSummaryComponent } from '../dietologist-summary/us
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageDietologistCardComponent {
-    public readonly dietologistForm = input.required<FormGroup<DietologistFormData>>();
+    public readonly dietologistForm = input.required<FieldTree<DietologistFormValues>>();
     public readonly dietologistRelationship = input.required<DietologistRelationship | null>();
     public readonly dietologistPermissions = input.required<DietologistPermissions>();
     public readonly dietologistError = input.required<string | null>();
