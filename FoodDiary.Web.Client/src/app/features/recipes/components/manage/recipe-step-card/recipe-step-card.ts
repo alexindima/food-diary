@@ -14,6 +14,8 @@ import type { FormGroupControls } from '../../../../../shared/lib/common.data';
 import { resolveRecipeControlError } from '../recipe-manage-lib/recipe-form-error.utils';
 import type { IngredientFormValues, StepFormData } from '../recipe-manage-lib/recipe-manage.types';
 
+export type RecipeStepCardForm = FormGroup<StepFormData>;
+
 @Component({
     selector: 'fd-recipe-step-card',
     imports: [
@@ -36,7 +38,7 @@ export class RecipeStepCardComponent {
     private readonly formRevision = signal(0);
     private readonly currentLanguage = signal(this.getCurrentLanguage());
 
-    public readonly stepFormGroup = input.required<FormGroup<StepFormData>>();
+    public readonly stepForm = input.required<RecipeStepCardForm>();
     public readonly stepIndex = input.required<number>();
     public readonly isExpanded = input.required<boolean>();
     public readonly dragDisabled = input.required<boolean>();
@@ -55,7 +57,7 @@ export class RecipeStepCardComponent {
     protected readonly descriptionSummary = computed(() => {
         this.formRevision();
         this.currentLanguage();
-        const description = this.stepFormGroup().controls.description.value.trim();
+        const description = this.stepForm().controls.description.value.trim();
         if (description.length === 0) {
             return this.translateService.instant('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
         }
@@ -64,7 +66,7 @@ export class RecipeStepCardComponent {
     protected readonly titleDisplay = computed(() => {
         this.formRevision();
         this.currentLanguage();
-        const titleValue = this.stepFormGroup().controls.title.value;
+        const titleValue = this.stepForm().controls.title.value;
         const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
         if (trimmedTitle.length > 0) {
             return trimmedTitle;
@@ -74,7 +76,7 @@ export class RecipeStepCardComponent {
     protected readonly descriptionError = computed(() => {
         this.formRevision();
         this.currentLanguage();
-        return resolveRecipeControlError(this.stepFormGroup().controls.description, this.translateService);
+        return resolveRecipeControlError(this.stepForm().controls.description, this.translateService);
     });
     protected readonly expandedIcon = computed(() => (this.isExpanded() ? 'expand_less' : 'expand_more'));
     protected readonly isFirst = computed(() => this.stepIndex() === 0);
@@ -103,7 +105,7 @@ export class RecipeStepCardComponent {
         });
 
         effect(onCleanup => {
-            const form = this.stepFormGroup();
+            const form = this.stepForm();
             const bumpFormRevision = (): void => {
                 this.formRevision.update(revision => revision + 1);
             };
@@ -118,7 +120,7 @@ export class RecipeStepCardComponent {
     }
 
     protected get ingredients(): FormArray<FormGroup<FormGroupControls<IngredientFormValues>>> {
-        return this.stepFormGroup().controls.ingredients;
+        return this.stepForm().controls.ingredients;
     }
 
     protected toggleStepTitleEdit(): void {
@@ -156,7 +158,7 @@ export class RecipeStepCardComponent {
     }
 
     private commitStepTitle(): void {
-        const titleControl = this.stepFormGroup().controls.title;
+        const titleControl = this.stepForm().controls.title;
         const titleValue = titleControl.value;
         const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
         titleControl.setValue(trimmedTitle.length > 0 ? trimmedTitle : null);

@@ -74,7 +74,7 @@ function setupComponent(): {
 
     const fixture = TestBed.createComponent(RecipeStepCardComponent);
     const stepGroup = createRecipeStepGroup();
-    fixture.componentRef.setInput('stepFormGroup', stepGroup);
+    fixture.componentRef.setInput('stepForm', stepGroup);
     fixture.componentRef.setInput('stepIndex', 0);
     fixture.componentRef.setInput('isExpanded', true);
     fixture.componentRef.setInput('dragDisabled', false);

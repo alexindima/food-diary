@@ -1,3 +1,4 @@
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -21,7 +22,12 @@ import {
 import { RecipeNutritionFormManager } from '../recipe-manage-lib/recipe-nutrition-form.manager';
 import { RecipeStepFormManager } from '../recipe-manage-lib/recipe-step-form.manager';
 import { RecipeNutritionEditorComponent } from '../recipe-nutrition-editor/recipe-nutrition-editor';
-import { RecipeStepsListComponent, type StepIngredientEvent } from '../recipe-steps-list/recipe-steps-list';
+import {
+    type RecipeStepListItem,
+    RecipeStepsListComponent,
+    type StepDropEvent,
+    type StepIngredientEvent,
+} from '../recipe-steps-list/recipe-steps-list';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -52,6 +58,7 @@ export class RecipeManageComponent {
     public readonly recipe = input<Recipe | null>(null);
     protected globalError = this.recipeManageFacade.globalError;
     protected isSubmitting = this.recipeManageFacade.isSubmitting;
+    protected readonly stepsRenderVersion = signal(0);
 
     protected recipeForm: FormGroup<RecipeFormData> = createRecipeForm();
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue());
@@ -77,6 +84,14 @@ export class RecipeManageComponent {
             titleKey: isEdit ? 'RECIPE_MANAGE.EDIT_TITLE' : 'RECIPE_MANAGE.ADD_TITLE',
             submitLabelKey: isEdit ? 'RECIPE_MANAGE.SAVE_BUTTON' : 'RECIPE_MANAGE.ADD_BUTTON',
         };
+    });
+    protected readonly stepListItems = computed<readonly RecipeStepListItem[]>(() => {
+        this.stepsRenderVersion();
+        return this.steps.controls.map(stepForm => ({ form: stepForm }));
+    });
+    protected readonly stepsError = computed(() => {
+        this.stepsRenderVersion();
+        return this.steps.invalid && this.steps.touched ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY') : null;
     });
     protected readonly totalCalories: RecipeNutritionFormManager['totalCalories'];
     protected readonly totalFiber: RecipeNutritionFormManager['totalFiber'];
@@ -147,14 +162,17 @@ export class RecipeManageComponent {
 
     protected addStep(): void {
         this.stepFormManager.addStep();
+        this.bumpStepsRenderVersion();
     }
 
     protected removeStep(index: number): void {
         this.stepFormManager.removeStep(index);
+        this.bumpStepsRenderVersion();
     }
 
     protected addIngredientToStep(stepIndex: number): void {
         this.stepFormManager.addIngredientToStep(stepIndex);
+        this.bumpStepsRenderVersion();
     }
 
     protected toggleStepExpanded(index: number): void {
@@ -163,6 +181,14 @@ export class RecipeManageComponent {
 
     protected removeIngredientFromStep(event: StepIngredientEvent): void {
         this.stepFormManager.removeIngredientFromStep(event);
+        this.bumpStepsRenderVersion();
+    }
+
+    protected onStepDrop(event: StepDropEvent): void {
+        moveItemInArray(this.steps.controls, event.previousIndex, event.currentIndex);
+        this.steps.updateValueAndValidity();
+        this.steps.markAsDirty();
+        this.bumpStepsRenderVersion();
     }
 
     protected onProductSelectClick(event: StepIngredientEvent): void {
@@ -198,6 +224,7 @@ export class RecipeManageComponent {
         this.recipeSignalForm().markAsTouched();
         this.syncSignalManagedValuesToLegacyForm();
         this.markFormGroupTouched(this.recipeForm);
+        this.bumpStepsRenderVersion();
 
         if (this.nutritionFormManager.hasMacrosError()) {
             return;
@@ -254,6 +281,7 @@ export class RecipeManageComponent {
 
         this.stepFormManager.resetSteps();
         this.stepFormManager.populateRecipeSteps(recipeData);
+        this.bumpStepsRenderVersion();
 
         this.nutritionFormManager.updateNutrientSummary(recipeData);
         this.isFormReady = true;
@@ -263,6 +291,10 @@ export class RecipeManageComponent {
             this.nutritionFormManager.updateSummaryFromForm();
         }
         this.syncLegacyNutritionValuesToSignalForm();
+    }
+
+    private bumpStepsRenderVersion(): void {
+        this.stepsRenderVersion.update(version => version + 1);
     }
 
     private buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {

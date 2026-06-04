@@ -19,9 +19,11 @@
                 <fd-recipe-basic-info [form]="recipeSignalForm" />
 
                 <fd-recipe-steps-list
-                    [stepsFormArray]="steps"
+                    [steps]="stepListItems()"
                     [expandedSteps]="expandedStepsSet"
+                    [stepsError]="stepsError()"
                     (stepExpandedToggle)="toggleStepExpanded($event)"
+                    (stepDrop)="onStepDrop($event)"
                     (addStep)="addStep()"
                     (removeStep)="removeStep($event)"
                     (addIngredient)="addIngredientToStep($event)"
