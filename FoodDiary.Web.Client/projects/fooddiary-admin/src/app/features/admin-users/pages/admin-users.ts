@@ -2,7 +2,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { environment } from '../../../../environments/environment';
@@ -67,8 +67,8 @@ export class AdminUsersComponent {
             });
     }
 
-    protected onSearchChange(value: string | number | null): void {
-        this.search.set(value === null ? '' : String(value));
+    protected onSearchChange(value: FdUiInputValue): void {
+        this.search.set(fdUiCoerceInputTextValue(value));
         this.page.set(1);
         this.loadUsers();
     }

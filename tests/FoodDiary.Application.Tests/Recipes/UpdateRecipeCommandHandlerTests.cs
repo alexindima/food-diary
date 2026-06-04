@@ -1,9 +1,11 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
@@ -164,6 +166,185 @@ public class UpdateRecipeCommandHandlerTests {
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Theory]
+    [InlineData(100.0, null, 4.0, 20.0, 2.0, 0.0, "proteins")]
+    [InlineData(100.0, 10.0, null, 20.0, 2.0, 0.0, "fats")]
+    [InlineData(100.0, 10.0, 4.0, null, 2.0, 0.0, "carbs")]
+    [InlineData(100.0, 10.0, 4.0, 20.0, null, 0.0, "fiber")]
+    public async Task Handle_WithManualNutritionRequiredValueMissing_ReturnsValidationFailure(
+        double? calories,
+        double? proteins,
+        double? fats,
+        double? carbs,
+        double? fiber,
+        double? alcohol,
+        string expectedField) {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("manual-missing@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            UpdateCommand(
+                userId.Value,
+                recipeId.Value,
+                calculateNutritionAutomatically: false,
+                manualCalories: calories,
+                manualProteins: proteins,
+                manualFats: fats,
+                manualCarbs: carbs,
+                manualFiber: fiber,
+                manualAlcohol: alcohol),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains(expectedField, result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithNegativeManualNutrition_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("manual-negative@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            UpdateCommand(
+                userId.Value,
+                recipeId.Value,
+                calculateNutritionAutomatically: false,
+                manualCalories: 100,
+                manualProteins: 10,
+                manualFats: 4,
+                manualCarbs: 20,
+                manualFiber: 2,
+                manualAlcohol: -1),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Handle_WithMissingUserId_ReturnsInvalidToken() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("missing-user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(UpdateCommand(null, recipeId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Handle_WhenRecipeIsMissing_ReturnsNotAccessible() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("missing-recipe@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(UpdateCommand(userId.Value, RecipeId.New().Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Recipe.NotAccessible", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Handle_WithInvalidVisibility_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("bad-visibility@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: "secret"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Handle_WithBlankVisibility_DoesNotChangeRecipeVisibility() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2, visibility: Visibility.Private);
+        SetRecipeId(recipe, recipeId);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("blank-visibility@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: " "), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(Visibility.Private, recipe.Visibility);
+    }
+
+    [Fact]
+    public async Task Handle_WhenImageAssetAccessFails_ReturnsFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+            .WithFailure(Errors.Image.Forbidden());
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("image-fail@example.com", "hash")),
+            imageAccess,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            UpdateCommand(userId.Value, recipeId.Value, imageAssetId: ImageAssetId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+    }
+
     [Fact]
     public async Task Handle_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
@@ -212,6 +393,73 @@ public class UpdateRecipeCommandHandlerTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithEmptyStepImageAssetId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("empty-step-image@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            UpdateCommand(
+                userId.Value,
+                recipeId.Value,
+                steps: [
+                    new RecipeStepInput(
+                        Order: 1,
+                        Description: "Step",
+                        Title: null,
+                        ImageUrl: null,
+                        ImageAssetId: Guid.Empty,
+                        Ingredients: [])
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WhenStepImageAssetAccessFails_ReturnsFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("step-image-fail@example.com", "hash")),
+            new FailingNonNullImageAssetAccessService(Errors.Image.Forbidden()),
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            UpdateCommand(
+                userId.Value,
+                recipeId.Value,
+                steps: [
+                    new RecipeStepInput(
+                        Order: 1,
+                        Description: "Step",
+                        Title: null,
+                        ImageUrl: null,
+                        ImageAssetId: ImageAssetId.New().Value,
+                        Ingredients: [])
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
     [Fact]
@@ -364,6 +612,68 @@ public class UpdateRecipeCommandHandlerTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("itself", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithEmptyIngredientProductId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("empty-product@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            UpdateCommand(
+                userId.Value,
+                recipeId.Value,
+                steps: [
+                    new RecipeStepInput(
+                        Order: 1,
+                        Description: "Step",
+                        Title: null,
+                        ImageUrl: null,
+                        ImageAssetId: null,
+                        Ingredients: [new RecipeIngredientInput(ProductId: Guid.Empty, NestedRecipeId: null, Amount: 1)])
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithNestedRecipeIngredient_AddsNestedRecipeIngredient() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var nestedRecipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        SetRecipeId(recipe, recipeId);
+        recipe.AddStep(1, "Initial step");
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("nested-update@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            UpdateCommand(
+                userId.Value,
+                recipeId.Value,
+                steps: [CreateStepWithNestedRecipe(order: 1, "Updated step", nestedRecipeId.Value)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var ingredient = Assert.Single(Assert.Single(recipe.Steps).Ingredients);
+        Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
     }
 
     [Fact]
@@ -545,6 +855,47 @@ public class UpdateRecipeCommandHandlerTests {
             Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: nestedRecipeId, Amount: 1)]);
     }
 
+    private static UpdateRecipeCommand UpdateCommand(
+        Guid? userId,
+        Guid recipeId,
+        string? visibility = "Public",
+        Guid? imageAssetId = null,
+        bool calculateNutritionAutomatically = true,
+        double? manualCalories = null,
+        double? manualProteins = null,
+        double? manualFats = null,
+        double? manualCarbs = null,
+        double? manualFiber = null,
+        double? manualAlcohol = null,
+        IReadOnlyList<RecipeStepInput>? steps = null) {
+        return new UpdateRecipeCommand(
+            userId,
+            recipeId,
+            Name: "Soup",
+            Description: null,
+            ClearDescription: false,
+            Comment: null,
+            ClearComment: false,
+            Category: null,
+            ClearCategory: false,
+            ImageUrl: null,
+            ClearImageUrl: false,
+            ImageAssetId: imageAssetId,
+            ClearImageAssetId: false,
+            PrepTime: 10,
+            CookTime: 20,
+            Servings: 2,
+            Visibility: visibility,
+            CalculateNutritionAutomatically: calculateNutritionAutomatically,
+            ManualCalories: manualCalories,
+            ManualProteins: manualProteins,
+            ManualFats: manualFats,
+            ManualCarbs: manualCarbs,
+            ManualFiber: manualFiber,
+            ManualAlcohol: manualAlcohol,
+            Steps: steps ?? [CreateStep(order: 1, "Initial step")]);
+    }
+
     private static void SetRecipeId(Recipe recipe, RecipeId recipeId) {
         typeof(Recipe)
             .GetProperty(nameof(Recipe.Id))!
@@ -667,6 +1018,18 @@ public class UpdateRecipeCommandHandlerTests {
             int? maxPrepTime,
             string sortBy,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailingNonNullImageAssetAccessService(Error error) : IImageAssetAccessService {
+        public Task<Result<ImageAsset?>> ResolveOptionalAsync(
+            ImageAssetId? assetId,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(
+                assetId.HasValue
+                    ? Result.Failure<ImageAsset?>(error)
+                    : Result.Success<ImageAsset?>(null));
     }
 
     [ExcludeFromCodeCoverage]

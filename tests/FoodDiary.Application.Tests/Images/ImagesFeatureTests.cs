@@ -23,6 +23,28 @@ public class ImagesFeatureTests {
         Assert.Equal("Image.InvalidData", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData("", "image/jpeg", 100, "File name")]
+    [InlineData("photo.jpg", " ", 100, "Content type")]
+    [InlineData("photo.jpg", "image/jpeg", 0, "File size")]
+    public async Task GetImageUploadUrlCommandHandler_WithInvalidUploadMetadata_ReturnsFailure(
+        string fileName,
+        string contentType,
+        long fileSizeBytes,
+        string expectedMessage) {
+        var handler = new GetImageUploadUrlCommandHandler(
+            new FakeImageStorageService(),
+            new FakeImageAssetRepository());
+
+        var result = await handler.Handle(
+            new GetImageUploadUrlCommand(Guid.NewGuid(), fileName, contentType, fileSizeBytes),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains(expectedMessage, result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     [Fact]
     public async Task GetImageUploadUrlCommandHandler_WithValidRequest_PersistsAssetAndReturnsPresignedUrl() {
         var repository = new FakeImageAssetRepository();
@@ -163,6 +185,32 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WithEmptyAssetId_ReturnsInvalid() {
+        var service = new ImageAssetCleanupService(
+            new FakeImageAssetRepository(),
+            new FakeImageStorageService(),
+            NullLogger<ImageAssetCleanupService>.Instance);
+
+        var result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
+
+        Assert.False(result.Deleted);
+        Assert.Equal("invalid", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenAssetMissing_ReturnsNotFound() {
+        var service = new ImageAssetCleanupService(
+            new FakeImageAssetRepository(),
+            new FakeImageStorageService(),
+            NullLogger<ImageAssetCleanupService>.Instance);
+
+        var result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
+
+        Assert.False(result.Deleted);
+        Assert.Equal("not_found", result.ErrorCode);
+    }
+
+    [Fact]
     public async Task ImageAssetCleanupService_WhenStorageDeleteFails_ReturnsStorageErrorWithoutDeletingRepositoryAsset() {
         var repo = new FakeImageAssetRepository();
         var asset = ImageAsset.Create(UserId.New(), "images/fail.jpg", "https://cdn/fail.jpg");
@@ -179,6 +227,40 @@ public class ImagesFeatureTests {
         Assert.False(result.Deleted);
         Assert.Equal("storage_error", result.ErrorCode);
         Assert.NotNull(storedAsset);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_CleanupOrphans_WhenOneDeleteFails_ContinuesWithNextAsset() {
+        var repo = new FakeImageAssetRepository();
+        var failing = ImageAsset.Create(UserId.New(), "images/fail.jpg", "https://cdn/fail.jpg");
+        var removable = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
+        await repo.AddAsync(failing, CancellationToken.None);
+        await repo.AddAsync(removable, CancellationToken.None);
+        var service = new ImageAssetCleanupService(
+            repo,
+            new SelectivelyThrowingImageStorageService("images/fail.jpg"),
+            NullLogger<ImageAssetCleanupService>.Instance);
+
+        var removed = await service.CleanupOrphansAsync(
+            DateTime.UtcNow.AddYears(1),
+            10,
+            CancellationToken.None);
+
+        Assert.Equal(1, removed);
+        Assert.NotNull(await repo.GetByIdAsync(failing.Id, CancellationToken.None));
+        Assert.Null(await repo.GetByIdAsync(removable.Id, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ImageAssetAccessService_WhenAssetMissing_ReturnsNotFound() {
+        var service = new ImageAssetAccessService(new FakeImageAssetRepository(), new FakeImageStorageService());
+        var assetId = ImageAssetId.New();
+
+        var result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+        Assert.Contains(assetId.Value.ToString(), result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -277,6 +359,26 @@ public class ImagesFeatureTests {
             string objectKey,
             CancellationToken cancellationToken) =>
             Task.FromException<ImageObjectValidationResult>(new InvalidOperationException("Simulated storage failure."));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SelectivelyThrowingImageStorageService(string failingObjectKey) : IImageStorageService {
+        public Task<PresignedUpload> CreatePresignedUploadAsync(
+            UserId userId,
+            string fileName,
+            string contentType,
+            long fileSizeBytes,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
+            string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)
+                ? throw new InvalidOperationException("Simulated storage failure.")
+                : Task.CompletedTask;
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+            string objectKey,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(new ImageObjectValidationResult(true));
     }
 
     [ExcludeFromCodeCoverage]

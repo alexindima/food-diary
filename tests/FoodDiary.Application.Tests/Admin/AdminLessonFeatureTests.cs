@@ -163,6 +163,31 @@ public class AdminLessonFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminLessonHandler_WithInvalidDifficulty_ReturnsFailure() {
+        var lesson = NutritionLesson.Create("Title", "Content", null, "en",
+            LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
+        var repo = new InMemoryLessonRepository(lesson);
+        var handler = new UpdateAdminLessonCommandHandler(repo);
+
+        var result = await handler.Handle(
+            new UpdateAdminLessonCommand(
+                Id: lesson.Id.Value,
+                Title: "Title",
+                Content: "Content",
+                Summary: null,
+                Locale: "en",
+                Category: "NutritionBasics",
+                Difficulty: "Expert",
+                EstimatedReadMinutes: 5,
+                SortOrder: 0),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("difficulty", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task DeleteAdminLessonHandler_WhenLessonExists_Succeeds() {
         var lesson = NutritionLesson.Create("Title", "Content", null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);

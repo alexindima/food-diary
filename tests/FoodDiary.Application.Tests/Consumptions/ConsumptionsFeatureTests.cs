@@ -13,8 +13,10 @@ using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Products;
@@ -98,6 +100,26 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(40, result.Carbs, 2);
         Assert.Equal(4.8, result.Fiber, 2);
         Assert.Equal(0, result.Alcohol, 2);
+    }
+
+    [Fact]
+    public void MealNutritionCalculator_WhenRecipeItemIsMissingFromLookup_IgnoresRecipeItem() {
+        var userId = UserId.New();
+        var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
+
+        meal.AddRecipe(RecipeId.New(), 1);
+
+        var result = MealNutritionCalculator.Calculate(
+            meal,
+            new Dictionary<ProductId, Product>(),
+            new Dictionary<RecipeId, Recipe>());
+
+        Assert.Equal(0, result.Calories);
+        Assert.Equal(0, result.Proteins);
+        Assert.Equal(0, result.Fats);
+        Assert.Equal(0, result.Carbs);
+        Assert.Equal(0, result.Fiber);
+        Assert.Equal(0, result.Alcohol);
     }
 
     [Fact]
@@ -280,6 +302,61 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new CreateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(CreateConsumptionCommand(userId: null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-create-consumption@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new CreateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(CreateConsumptionCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
+        var user = User.Create("create-image-failure@example.com", "hash");
+        var imageAccess = new RecordingImageAssetAccessService()
+            .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
+        var handler = new CreateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            imageAccess);
+
+        var result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, imageAssetId: ImageAssetId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+    }
+
+    [Fact]
     public async Task CreateConsumptionCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new CreatingMealRepository();
@@ -394,6 +471,45 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenItemIdentifiersAreMissing_ReturnsValidationFailure() {
+        var user = User.Create("create-missing-item-id@example.com", "hash");
+        var handler = new CreateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(null, null, 150)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
+        var user = User.Create("create-empty-recipe-id@example.com", "hash");
+        var handler = new CreateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(null, Guid.Empty, 1)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task CreateConsumptionCommandHandler_WithInvalidAiItem_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new CreatingMealRepository();
@@ -431,6 +547,75 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenAiSessionImageAssetAccessFails_ReturnsFailure() {
+        var user = User.Create("create-session-image-failure@example.com", "hash");
+        var handler = new CreateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            new FailingNonNullImageAssetAccessService());
+
+        var result = await handler.Handle(
+            CreateConsumptionCommand(
+                user.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(imageAssetId: ImageAssetId.New().Value)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithEmptyAiSessionImageAssetId_ReturnsValidationFailure() {
+        var user = User.Create("create-empty-ai-image-id@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateConsumptionCommand(
+                user.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(imageAssetId: Guid.Empty)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenAiSessionNotesTooLong_ReturnsValidationFailure() {
+        var user = User.Create("create-long-ai-notes@example.com", "hash");
+        var handler = new CreateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateConsumptionCommand(
+                user.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(notes: new string('x', 2049))]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Notes", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1357,6 +1542,416 @@ public class ConsumptionsFeatureTests {
         Assert.False(repository.LastAddedMeal.IsNutritionAutoCalculated);
         Assert.Equal(430, repository.LastAddedMeal.TotalCalories);
         Assert.Equal(430, repository.LastAddedMeal.ManualCalories);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
+        var user = User.Create("update-image-failure@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var imageAccess = new RecordingImageAssetAccessService()
+            .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user, imageAccess: imageAccess);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, imageAssetId: ImageAssetId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var user = User.Create("update-missing-user@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(null, meal.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenSatietyInvalid_ReturnsValidationFailure() {
+        var user = User.Create("update-satiety-failure@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, preMealSatietyLevel: -1),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenItemIdentifiersAreMissing_ReturnsValidationFailure() {
+        var user = User.Create("update-missing-item-id@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(null, null, 150)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
+        var user = User.Create("update-empty-product-id@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(Guid.Empty, null, 150)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithRecipeItem_RegistersRecipeUsage() {
+        var user = User.Create("update-recipe-item@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var recentItems = new RecordingRecentItemRepository();
+        var handler = CreateUpdateHandler(repository, user, recentItems: recentItems);
+        var recipeId = RecipeId.New();
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(null, recipeId.Value, 1)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
+        Assert.Equal(recipeId, recentItems.LastRecipeIds.Single());
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithEmptyAiSessionImageAssetId_ReturnsValidationFailure() {
+        var user = User.Create("update-empty-ai-image-id@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(imageAssetId: Guid.Empty)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenAiSessionImageAssetAccessFails_ReturnsFailure() {
+        var user = User.Create("update-session-image-failure@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user, imageAccess: new FailingNonNullImageAssetAccessService());
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(imageAssetId: ImageAssetId.New().Value)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenAiSessionNotesTooLong_ReturnsValidationFailure() {
+        var user = User.Create("update-long-ai-notes@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(notes: new string('x', 2049))]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenManualNutritionInvalid_ReturnsValidationFailure() {
+        var user = User.Create("update-manual-nutrition-failure@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                isNutritionAutoCalculated: false,
+                manualCalories: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenAiItemInvalid_ReturnsValidationFailure() {
+        var user = User.Create("update-invalid-ai-item@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        var handler = CreateUpdateHandler(repository, user);
+
+        var result = await handler.Handle(
+            UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(items: [new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0)])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task RepeatMealCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new RepeatMealCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new RepeatMealCommand(null, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task RepeatMealCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-repeat-meal@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new RepeatMealCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task RepeatMealCommandHandler_WhenSourceMealMissing_ReturnsNotFound() {
+        var user = User.Create("repeat-missing-source@example.com", "hash");
+        var handler = new RepeatMealCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Consumption.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
+
+        var result = await handler.Handle(
+            new DeleteConsumptionCommand(null, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetConsumptionByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetConsumptionByIdQueryHandler(new CreatingMealRepository());
+
+        var result = await handler.Handle(
+            new GetConsumptionByIdQuery(null, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetConsumptionsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetConsumptionsOverviewQueryHandler(
+            new RecordingMealPageRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            new StubFavoriteMealRepository());
+
+        var result = await handler.Handle(
+            new GetConsumptionsOverviewQuery(null, 1, 10, null, null, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetConsumptionsOverviewQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-overview-consumptions@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetConsumptionsOverviewQueryHandler(
+            new RecordingMealPageRepository(),
+            new StubUserRepository(user),
+            new StubFavoriteMealRepository());
+
+        var result = await handler.Handle(
+            new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, null, null, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public void ConsumptionMappings_ToPagedResponse_MapsItemsAndPagination() {
+        var userId = UserId.New();
+        var meal = Meal.Create(userId, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+
+        var response = (Items: (IReadOnlyList<Meal>)[meal], TotalItems: 25).ToPagedResponse(page: 2, limit: 10);
+
+        Assert.Single(response.Data);
+        Assert.Equal(meal.Id.Value, response.Data[0].Id);
+        Assert.Equal(2, response.Page);
+        Assert.Equal(10, response.Limit);
+        Assert.Equal(3, response.TotalPages);
+        Assert.Equal(25, response.TotalItems);
+    }
+
+    private static CreateConsumptionCommand CreateConsumptionCommand(
+        Guid? userId,
+        Guid? imageAssetId = null,
+        IReadOnlyList<ConsumptionItemInput>? items = null,
+        IReadOnlyList<ConsumptionAiSessionInput>? aiSessions = null) =>
+        new(
+            userId,
+            new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+            MealType.Dinner.ToString(),
+            "Created",
+            null,
+            imageAssetId,
+            items ?? [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            aiSessions ?? [],
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            3,
+            4);
+
+    private static UpdateConsumptionCommand UpdateConsumptionCommand(
+        Guid? userId,
+        Guid consumptionId,
+        Guid? imageAssetId = null,
+        IReadOnlyList<ConsumptionItemInput>? items = null,
+        IReadOnlyList<ConsumptionAiSessionInput>? aiSessions = null,
+        bool isNutritionAutoCalculated = true,
+        double? manualCalories = 600,
+        int preMealSatietyLevel = 3) =>
+        new(
+            userId,
+            consumptionId,
+            new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+            MealType.Dinner.ToString(),
+            "Updated",
+            null,
+            imageAssetId,
+            items ?? [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            aiSessions ?? [],
+            isNutritionAutoCalculated,
+            manualCalories,
+            30,
+            20,
+            50,
+            5,
+            0,
+            preMealSatietyLevel,
+            4);
+
+    private static ConsumptionAiSessionInput ValidAiSession(
+        Guid? imageAssetId = null,
+        string? notes = null,
+        IReadOnlyList<ConsumptionAiItemInput>? items = null) =>
+        new(
+            imageAssetId,
+            "Text",
+            new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+            notes,
+            items ?? [new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)]);
+
+    private static UpdateConsumptionCommandHandler CreateUpdateHandler(
+        IMealRepository repository,
+        User user,
+        RecordingRecentItemRepository? recentItems = null,
+        IImageAssetAccessService? imageAccess = null) =>
+        new(
+            repository,
+            new NoopMealNutritionService(),
+            recentItems ?? new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            imageAccess ?? FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailingNonNullImageAssetAccessService : IImageAssetAccessService {
+        public Task<Result<ImageAsset?>> ResolveOptionalAsync(
+            ImageAssetId? assetId,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(
+                assetId.HasValue
+                    ? Result.Failure<ImageAsset?>(Errors.Image.Forbidden())
+                    : Result.Success<ImageAsset?>(null));
     }
 
     [ExcludeFromCodeCoverage]

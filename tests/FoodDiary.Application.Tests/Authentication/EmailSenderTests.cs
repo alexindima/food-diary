@@ -70,6 +70,27 @@ public sealed class EmailSenderTests {
     }
 
     [Fact]
+    public async Task SendTestEmail_WithBlankLanguage_UsesEnglishFallback() {
+        var transport = new RecordingEmailTransport();
+        var sender = new EmailSender(CreateOptions(), new StubEmailTemplateProvider(), transport);
+
+        await sender.SendTestEmailAsync(new TestEmailMessage("user@example.com", " "), CancellationToken.None);
+
+        Assert.Equal("FoodDiary test email", transport.Subject);
+        Assert.Contains("main email dispatch path is working", transport.Body, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SendTestEmail_WhenTransportFails_Rethrows() {
+        var sender = new EmailSender(CreateOptions(), new StubEmailTemplateProvider(), new ThrowingEmailTransport());
+
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sender.SendTestEmailAsync(new TestEmailMessage("user@example.com", "en"), CancellationToken.None));
+
+        Assert.Equal("transport failed", ex.Message);
+    }
+
+    [Fact]
     public async Task SendEmailVerification_WhenFrontendBaseUrlMissing_Throws() {
         var sender = new EmailSender(
             CreateOptions(frontendBaseUrl: ""),
@@ -133,6 +154,27 @@ public sealed class EmailSenderTests {
         Assert.Contains(transport.AlternateViewBodies, body => body.Contains("A user FD https://app.example/dietologist/accept?", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task SendDietologistInvitation_WhenFrontendBaseUrlMissing_Throws() {
+        var sender = new DietologistEmailSender(
+            CreateOptions(frontendBaseUrl: ""),
+            new StubEmailTemplateProvider(),
+            new RecordingEmailTransport());
+
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sender.SendDietologistInvitationAsync(
+                new DietologistInvitationMessage(
+                    "dietologist@example.com",
+                    Guid.NewGuid(),
+                    "token",
+                    "Alex",
+                    "Ivanov",
+                    "en"),
+                CancellationToken.None));
+
+        Assert.Equal("Email FrontendBaseUrl is not configured.", ex.Message);
+    }
+
     private static EmailOptions CreateOptions(
         string frontendBaseUrl = "https://app.example",
         string fromName = "FoodDiary",
@@ -182,5 +224,11 @@ public sealed class EmailSenderTests {
                 AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false));
             }
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingEmailTransport : IEmailTransport {
+        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) =>
+            throw new InvalidOperationException("transport failed");
     }
 }

@@ -53,6 +53,9 @@ public class DietologistAccessPolicyTests {
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Meals"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Statistics"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Weight"));
+        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Waist"));
+        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Goals"));
+        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Hydration"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Fasting"));
     }
 
@@ -73,6 +76,26 @@ public class DietologistAccessPolicyTests {
         var error = DietologistAccessPolicy.EnsurePermission(perms, "Hydration");
 
         Assert.NotNull(error);
+    }
+
+    [Theory]
+    [InlineData("Statistics")]
+    [InlineData("Weight")]
+    [InlineData("Waist")]
+    [InlineData("Goals")]
+    public void EnsurePermission_WhenSpecificPermissionDenied_ReturnsError(string category) {
+        var perms = category switch {
+            "Statistics" => new DietologistPermissionsModel(true, false, true, true, true, true, true, true),
+            "Weight" => new DietologistPermissionsModel(true, true, false, true, true, true, true, true),
+            "Waist" => new DietologistPermissionsModel(true, true, true, false, true, true, true, true),
+            "Goals" => new DietologistPermissionsModel(true, true, true, true, false, true, true, true),
+            _ => throw new ArgumentOutOfRangeException(nameof(category))
+        };
+
+        var error = DietologistAccessPolicy.EnsurePermission(perms, category);
+
+        Assert.NotNull(error);
+        Assert.Contains("PermissionDenied", error.Code, StringComparison.Ordinal);
     }
 
     [Fact]

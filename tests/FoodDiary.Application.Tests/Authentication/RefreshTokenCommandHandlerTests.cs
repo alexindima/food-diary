@@ -49,6 +49,72 @@ public sealed class RefreshTokenCommandHandlerTests {
     }
 
     [Fact]
+    public async Task Handle_WhenJwtValidationFails_ReturnsInvalidToken() {
+        var user = CreateUser("refresh@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
+        var hasher = new FakePasswordHasher();
+        var authTokenService = new FakeAuthenticationTokenService();
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, authTokenService);
+
+        var result = await handler.Handle(new RefreshTokenCommand("invalid-refresh-token"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
+    }
+
+    [Fact]
+    public async Task Handle_WhenUserIsMissing_ReturnsInvalidToken() {
+        var jwtUser = CreateUser("jwt@example.com");
+        var repositoryUser = CreateUser("other@example.com");
+        var repository = new InMemoryUserRepository(repositoryUser);
+        var jwt = new FakeJwtTokenGenerator(jwtUser.Id, jwtUser.Email);
+        var hasher = new FakePasswordHasher();
+        var authTokenService = new FakeAuthenticationTokenService();
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, authTokenService);
+
+        var result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
+    }
+
+    [Fact]
+    public async Task Handle_WhenStoredRefreshTokenIsMissing_ReturnsInvalidToken() {
+        var user = CreateUser("refresh@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
+        var hasher = new FakePasswordHasher();
+        var authTokenService = new FakeAuthenticationTokenService();
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, authTokenService);
+
+        var result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
+    }
+
+    [Fact]
+    public async Task Handle_WithFastStorageHash_RotatesTokens() {
+        var user = CreateUser("refresh-fast@example.com");
+        user.UpdateRefreshToken(SecurityTokenGenerator.HashForStorage("current-refresh-token"));
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
+        var hasher = new FakePasswordHasher();
+        var authTokenService = new FakeAuthenticationTokenService();
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, authTokenService);
+
+        var result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("new-access-token", result.Value.AccessToken);
+        Assert.Equal(1, authTokenService.IssueAndStoreCallCount);
+    }
+
+    [Fact]
     public async Task Handle_WithInactiveUser_ReturnsInvalidToken() {
         var user = CreateUser("refresh@example.com");
         user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");

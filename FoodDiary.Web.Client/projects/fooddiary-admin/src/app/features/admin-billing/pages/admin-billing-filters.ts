@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
 import type { AdminBillingTab } from '../models/admin-billing.models';
 
@@ -33,7 +33,7 @@ export class AdminBillingFiltersComponent {
         return event.target instanceof HTMLInputElement ? event.target.value : '';
     }
 
-    protected getControlTextValue(value: string | number | null): string {
-        return value === null ? '' : String(value);
+    protected getControlTextValue(value: FdUiInputValue): string {
+        return fdUiCoerceInputTextValue(value);
     }
 }

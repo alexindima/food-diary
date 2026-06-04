@@ -218,6 +218,23 @@ public class RecipeCommentsFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteRecipeComment_ByRecipeOwnerWithExistingRecipe_DeletesComment() {
+        var ownerId = UserId.New();
+        var recipe = Recipe.Create(ownerId, "Owned recipe", 1);
+        var comment = RecipeComment.Create(UserId.New(), recipe.Id, "Text");
+        var repo = new InMemoryRecipeCommentRepository();
+        repo.Seed(comment);
+
+        var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(recipe));
+        var result = await handler.Handle(
+            new DeleteRecipeCommentCommand(ownerId.Value, recipe.Id.Value, comment.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(await repo.GetByIdAsync(comment.Id));
+    }
+
+    [Fact]
     public async Task GetRecipeComments_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetRecipeCommentsQueryHandler(new InMemoryRecipeCommentRepository());
 

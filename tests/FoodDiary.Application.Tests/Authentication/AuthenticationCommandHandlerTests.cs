@@ -4,10 +4,12 @@ using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.Register;
 using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
@@ -52,6 +54,18 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
+        Assert.Equal(0, adminSsoService.CreateCodeCallCount);
+    }
+
+    [Fact]
+    public async Task AdminSsoStartHandler_WithMissingUser_ReturnsInvalidCredentials() {
+        var adminSsoService = new StubAdminSsoService();
+        var handler = new AdminSsoStartCommandHandler(adminSsoService, new StubUserRepository());
+
+        var result = await handler.Handle(new AdminSsoStartCommand(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
         Assert.Equal(0, adminSsoService.CreateCodeCallCount);
     }
 
@@ -167,6 +181,39 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal("access", result.Value.AccessToken);
+    }
+
+    [Fact]
+    public async Task LoginHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-login@example.com", "secret");
+        user.DeleteAccount(DateTime.UtcNow);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new LoginCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            tokenService);
+
+        var result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Null(tokenService.LastUser);
+    }
+
+    [Fact]
+    public async Task LoginHandler_WithValidCredentials_IssuesTokens() {
+        var user = User.Create("login@example.com", "secret");
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new LoginCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            tokenService);
+
+        var result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+        Assert.Equal(user, tokenService.LastUser);
     }
 
     [Fact]
@@ -405,6 +452,35 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("recently", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ResendEmailVerificationHandler_WithMissingUser_ReturnsInvalidToken() {
+        var handler = new ResendEmailVerificationCommandHandler(
+            new StubUserRepository(),
+            new StubPasswordHasher(),
+            new StubEmailSender(),
+            new StubDateTimeProvider(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<ResendEmailVerificationCommandHandler>.Instance);
+
+        var result = await handler.Handle(new ResendEmailVerificationCommand(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ResendEmailVerificationHandler_WhenPreviousSendIsOutsideCooldown_SendsMessage() {
+        var user = User.Create("cooldown-expired@example.com", "secret");
+        var nowUtc = new StubDateTimeProvider().UtcNow;
+        user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddMinutes(-5)));
+        var sender = new StubEmailSender();
+        var handler = CreateResendEmailVerificationHandler(user, sender);
+
+        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(sender.LastEmailVerification);
     }
 
     [Fact]
@@ -694,6 +770,34 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task TelegramBotAuthHandler_WhenTelegramUserIsNotLinked_ReturnsFailure() {
+        var handler = new TelegramBotAuthCommandHandler(
+            new StubUserRepository(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task TelegramBotAuthHandler_WithLinkedUser_IssuesTokens() {
+        var user = User.Create("telegram-bot@example.com", "secret");
+        user.LinkTelegram(123456);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new TelegramBotAuthCommandHandler(
+            new StubUserRepository(user),
+            tokenService);
+
+        var result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+        Assert.Equal(user, tokenService.LastUser);
+    }
+
+    [Fact]
     public async Task RestoreAccountHandler_WithDeletedUser_RestoresAndIssuesTokens() {
         var user = User.Create("deleted@example.com", "secret");
         user.DeleteAccount(DateTime.UtcNow.AddDays(-2));
@@ -710,6 +814,75 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.True(result.IsSuccess);
         Assert.True(user.IsActive);
         Assert.Null(user.DeletedAt);
+    }
+
+    [Fact]
+    public async Task RestoreAccountHandler_WithMissingUser_ReturnsInvalidCredentials() {
+        var handler = new RestoreAccountCommandHandler(
+            new StubUserRepository(),
+            new StubPasswordHasher(),
+            new StubAuthenticationTokenService(),
+            new StubDateTimeProvider());
+
+        var result = await handler.Handle(
+            new RestoreAccountCommand("missing@example.com", "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task RestoreAccountHandler_WithActiveUser_ReturnsAccountNotDeleted() {
+        var user = User.Create("active-restore@example.com", "secret");
+        var handler = new RestoreAccountCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubAuthenticationTokenService(),
+            new StubDateTimeProvider());
+
+        var result = await handler.Handle(
+            new RestoreAccountCommand(user.Email, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountNotDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GoogleLoginHandler_WhenCredentialValidationFails_ReturnsFailure() {
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new GoogleLoginCommandHandler(
+            new StubUserRepository(),
+            new StubNotificationRepository(),
+            new StubGoogleTokenValidator(
+                new GoogleIdentityPayload("google@example.com", "Alex", "User", "en"),
+                validateFailure: true),
+            new StubPasswordHasher(),
+            tokenService);
+
+        var result = await handler.Handle(new GoogleLoginCommand("bad-credential"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(tokenService.LastUser);
+    }
+
+    [Fact]
+    public async Task GoogleLoginHandler_WithPasswordAccount_DoesNotCreatePasswordSetupNotification() {
+        var user = User.Create("google-password@example.com", "secret", hasPassword: true);
+        var notificationRepository = new StubNotificationRepository();
+        var handler = new GoogleLoginCommandHandler(
+            new StubUserRepository(user),
+            notificationRepository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(user.Email, "Alex", "User", "en")),
+            new StubPasswordHasher(),
+            new StubAuthenticationTokenService());
+
+        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(notificationRepository.Notifications);
     }
 
     [Fact]
@@ -910,11 +1083,14 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload) : IGoogleTokenValidator {
+    private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload, bool validateFailure = false) : IGoogleTokenValidator {
         public Task<FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
             string credential,
             CancellationToken cancellationToken) =>
-            Task.FromResult(FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(payload));
+            Task.FromResult(validateFailure
+                ? FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Failure<GoogleIdentityPayload>(
+                    Errors.Validation.Invalid("credential", "Invalid Google credential."))
+                : FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(payload));
     }
 
     private static ResendEmailVerificationCommandHandler CreateResendEmailVerificationHandler(

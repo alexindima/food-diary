@@ -147,6 +147,51 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task CreateHydrationEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new CreateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(User.Create("hydration-create-empty@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new CreateHydrationEntryCommand(Guid.Empty, DateTime.UtcNow, 250),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateHydrationEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("hydration-create-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new CreateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 250),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateHydrationEntryCommandHandler_WithInvalidAmount_ReturnsValidationFailure() {
+        var user = User.Create("hydration-create-invalid@example.com", "hash");
+        var handler = new CreateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 0),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateHydrationEntryCommandHandler_WithUnspecifiedTimestamp_PreservesInstantAsUtc() {
         var user = User.Create("hydration-update@example.com", "hash");
         var entry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc), 250);
@@ -164,6 +209,100 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WithValidAmount_UpdatesEntry() {
+        var user = User.Create("hydration-update-amount@example.com", "hash");
+        var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow.AddHours(-1), 250);
+        var repository = new InMemoryHydrationEntryRepository(entry);
+        var handler = new UpdateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 750),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(750, result.Value.AmountMl);
+    }
+
+    [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new UpdateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(User.Create("hydration-update-empty@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow, 250),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("hydration-update-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
+        var handler = new UpdateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(entry),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+        var user = User.Create("hydration-update-missing@example.com", "hash");
+        var handler = new UpdateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(user));
+        var entryId = Guid.NewGuid();
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(user.Id.Value, entryId, DateTime.UtcNow, 500),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WithEntryFromOtherUser_ReturnsNotFound() {
+        var user = User.Create("hydration-update-owner@example.com", "hash");
+        var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
+        var handler = new UpdateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(entry),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WithInvalidAmount_ReturnsValidationFailure() {
+        var user = User.Create("hydration-update-invalid@example.com", "hash");
+        var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
+        var handler = new UpdateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(entry),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 0),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task DeleteHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
         var handler = new DeleteHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
@@ -176,6 +315,83 @@ public class HydrationFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("HydrationEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteHydrationEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new DeleteHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(User.Create("hydration-delete-empty@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new DeleteHydrationEntryCommand(Guid.Empty, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteHydrationEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("hydration-delete-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
+        var handler = new DeleteHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(entry),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteHydrationEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+        var user = User.Create("hydration-delete-missing@example.com", "hash");
+        var handler = new DeleteHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteHydrationEntryCommand(user.Id.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteHydrationEntryCommandHandler_WithEntryFromOtherUser_ReturnsNotFound() {
+        var user = User.Create("hydration-delete-owner@example.com", "hash");
+        var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
+        var handler = new DeleteHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(entry),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteHydrationEntryCommandHandler_WithOwnedEntry_DeletesEntry() {
+        var user = User.Create("hydration-delete-success@example.com", "hash");
+        var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
+        var repository = new InMemoryHydrationEntryRepository(entry);
+        var handler = new DeleteHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Same(entry, repository.DeletedEntry);
     }
 
     [Fact]
@@ -293,6 +509,7 @@ public class HydrationFeatureTests {
         private HydrationEntry? _entry = entry;
         private readonly List<HydrationEntry> _entries = entry is null ? [] : [entry];
         public HydrationEntry? AddedEntry { get; private set; }
+        public HydrationEntry? DeletedEntry { get; private set; }
         public DateTime? LastGetByDateDateUtc { get; private set; }
 
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
@@ -307,8 +524,12 @@ public class HydrationFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+        public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
+            DeletedEntry = entry;
+            _entry = null;
+            _entries.Remove(entry);
+            return Task.CompletedTask;
+        }
 
         public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult(_entry?.Id == id ? _entry : null);

@@ -11,6 +11,7 @@ import { FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS } from './fd-ui-input.tokens';
 
 let uniqueId = 0;
 export type FdUiInputAppearance = 'default' | 'auth' | 'search' | 'inline-edit';
+export type FdUiInputValue = string | number | null | undefined;
 export type FdUiInputAutocomplete =
     | 'off'
     | 'on'
@@ -26,6 +27,14 @@ export type FdUiInputAutocomplete =
     | 'postal-code'
     | 'country'
     | 'birthday';
+
+export function fdUiCoerceInputTextValue(value: FdUiInputValue): string {
+    return value === null || value === undefined ? '' : String(value);
+}
+
+export function fdUiCoerceInputNumberValue(value: FdUiInputValue): string | number {
+    return value ?? '';
+}
 
 @Component({
     selector: 'fd-ui-input',

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -15,6 +16,7 @@ using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -83,6 +85,52 @@ public class RecipesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteRecipeCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var repository = new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2));
+        var handler = new DeleteRecipeCommandHandler(repository, new RecordingCleanupService());
+
+        var result = await handler.Handle(
+            new DeleteRecipeCommand(Guid.Empty, RecipeId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task DeleteRecipeCommandHandler_WhenRecipeIsMissing_ReturnsNotAccessible() {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepository(Recipe.Create(userId, "Soup", servings: 2));
+        var handler = new DeleteRecipeCommandHandler(repository, new RecordingCleanupService());
+
+        var result = await handler.Handle(
+            new DeleteRecipeCommand(userId.Value, RecipeId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Recipe.NotAccessible", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
+    }
+
+    [Fact]
+    public async Task DeleteRecipeCommandHandler_WhenRecipeIsUsed_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipe = Recipe.Create(userId, "Used soup", servings: 2);
+        SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 0);
+        var repository = new SingleRecipeRepository(recipe);
+        var handler = new DeleteRecipeCommandHandler(repository, new RecordingCleanupService());
+
+        var result = await handler.Handle(
+            new DeleteRecipeCommand(userId.Value, recipe.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.DeleteCalled);
     }
 
     [Fact]
@@ -344,6 +392,192 @@ public class RecipesFeatureTests {
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Theory]
+    [InlineData(100.0, null, 4.0, 20.0, 2.0, 0.0, "proteins")]
+    [InlineData(100.0, 10.0, null, 20.0, 2.0, 0.0, "fats")]
+    [InlineData(100.0, 10.0, 4.0, null, 2.0, 0.0, "carbs")]
+    [InlineData(100.0, 10.0, 4.0, 20.0, null, 0.0, "fiber")]
+    public async Task CreateRecipeCommandHandler_WhenManualNutritionRequiredValueIsMissing_ReturnsValidationFailure(
+        double? calories,
+        double? proteins,
+        double? fats,
+        double? carbs,
+        double? fiber,
+        double? alcohol,
+        string expectedField) {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(User.Create("manual-missing@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            CreateRecipeCommand(
+                userId.Value,
+                calculateNutritionAutomatically: false,
+                manualCalories: calories,
+                manualProteins: proteins,
+                manualFats: fats,
+                manualCarbs: carbs,
+                manualFiber: fiber,
+                manualAlcohol: alcohol,
+                steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains(expectedField, result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WhenManualNutritionIsNegative_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(User.Create("manual-negative@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            CreateRecipeCommand(
+                userId.Value,
+                calculateNutritionAutomatically: false,
+                manualCalories: 100,
+                manualProteins: 10,
+                manualFats: -1,
+                manualCarbs: 20,
+                manualFiber: 2,
+                manualAlcohol: 0,
+                steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(User.Create("missing-user@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(CreateRecipeCommand(null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithInvalidVisibility_ReturnsValidationFailure() {
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(User.Create("bad-visibility@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(CreateRecipeCommand(UserId.New().Value, visibility: "secret"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
+        var imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+            .WithFailure(Errors.Image.Forbidden());
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(User.Create("image-fail@example.com", "hash")),
+            imageAccess,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            CreateRecipeCommand(UserId.New().Value, imageAssetId: ImageAssetId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WhenStepImageAssetAccessFails_ReturnsFailure() {
+        var stepImageAssetId = ImageAssetId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(User.Create("step-image-fail@example.com", "hash")),
+            new FailingNonNullImageAssetAccessService(Errors.Image.Forbidden()),
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            CreateRecipeCommand(
+                UserId.New().Value,
+                steps: [
+                    new RecipeStepInput(
+                        Order: 1,
+                        Description: "Step with image",
+                        Title: null,
+                        ImageUrl: null,
+                        ImageAssetId: stepImageAssetId.Value,
+                        Ingredients: [])
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithNestedRecipeIngredient_PersistsNestedIngredient() {
+        var user = User.Create("nested-create@example.com", "hash");
+        var nestedRecipeId = RecipeId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            CreateRecipeCommand(
+                user.Id.Value,
+                steps: [
+                    new RecipeStepInput(
+                        Order: 1,
+                        Description: "Use nested recipe",
+                        Title: null,
+                        ImageUrl: null,
+                        ImageAssetId: null,
+                        Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: nestedRecipeId.Value, Amount: 2)])
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var ingredient = Assert.Single(Assert.Single(repository.LastAddedRecipe!.Steps).Ingredients);
+        Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
+    }
+
     [Fact]
     public async Task CreateRecipeCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel() {
         var user = User.Create("create-recipe@example.com", "hash");
@@ -439,6 +673,33 @@ public class RecipesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetRecipeByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetRecipeByIdQuery(null, Guid.NewGuid(), false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetRecipeByIdQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-recipe-reader@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var recipe = Recipe.Create(user.Id, "Soup", servings: 1);
+        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepository(recipe), new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -564,6 +825,35 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task DuplicateRecipeCommandHandler_WhenDuplicatedRecipeCannotBeReloaded_ReturnsInvalidData() {
+        var user = User.Create("duplicate-reload-missing@example.com", "hash");
+        var original = Recipe.Create(user.Id, "Original Recipe", servings: 1);
+        var repository = new DuplicateReloadMissingRecipeRepository(original);
+        var handler = new DuplicateRecipeCommandHandler(repository);
+
+        var result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Recipe.InvalidData", result.Error.Code);
+        Assert.NotNull(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task GetRecipesOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetRecipesOverviewQueryHandler(
+            new OverviewRecipeRepository(),
+            new StubRecentItemRepository([]),
+            new StubFavoriteRecipeRepository([]));
+
+        var result = await handler.Handle(
+            new GetRecipesOverviewQuery(null, 1, 10, null, true, 10, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithoutSearch_ReturnsRecentFavoritesAndFavoriteFlags() {
         var user = User.Create("overview-recipes@example.com", "hash");
         var breakfast = Recipe.Create(
@@ -609,6 +899,26 @@ public class RecipesFeatureTests {
         Assert.True(result.Value.RecentItems[0].IsFavorite);
         Assert.Equal(favorite.Id.Value, result.Value.RecentItems[0].FavoriteRecipeId);
         Assert.True(result.Value.AllRecipes.Data.Single(x => x.Id == dinner.Id.Value).IsFavorite);
+    }
+
+    [Fact]
+    public async Task GetRecipesOverviewQueryHandler_WhenThereAreNoRecentRecipes_ReturnsEmptyRecentItems() {
+        var user = User.Create("overview-no-recents@example.com", "hash");
+        var recipe = Recipe.Create(user.Id, "No Recents Soup", servings: 1);
+        recipe.AddStep(1, "Cook");
+        var recentRepository = new StubRecentItemRepository([]);
+        var handler = new GetRecipesOverviewQueryHandler(
+            new OverviewRecipeRepository(pagedItems: [(recipe, 1)]),
+            recentRepository,
+            new StubFavoriteRecipeRepository([]));
+
+        var result = await handler.Handle(
+            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value.RecentItems);
+        Assert.Equal(1, recentRepository.GetRecentRecipesCallCount);
     }
 
     [Fact]
@@ -902,6 +1212,40 @@ public class RecipesFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
+    private static CreateRecipeCommand CreateRecipeCommand(
+        Guid? userId,
+        string visibility = "Private",
+        Guid? imageAssetId = null,
+        bool calculateNutritionAutomatically = true,
+        double? manualCalories = null,
+        double? manualProteins = null,
+        double? manualFats = null,
+        double? manualCarbs = null,
+        double? manualFiber = null,
+        double? manualAlcohol = null,
+        IReadOnlyList<RecipeStepInput>? steps = null) {
+        return new CreateRecipeCommand(
+            userId,
+            Name: "Soup",
+            Description: null,
+            Comment: null,
+            Category: null,
+            ImageUrl: null,
+            ImageAssetId: imageAssetId,
+            PrepTime: 10,
+            CookTime: 20,
+            Servings: 2,
+            Visibility: visibility,
+            CalculateNutritionAutomatically: calculateNutritionAutomatically,
+            ManualCalories: manualCalories,
+            ManualProteins: manualProteins,
+            ManualFats: manualFats,
+            ManualCarbs: manualCarbs,
+            ManualFiber: manualFiber,
+            ManualAlcohol: manualAlcohol,
+            Steps: steps ?? []);
+    }
+
     private static RecipeStepInput CreateRecipeCreateStep(int order, string description) {
         return new RecipeStepInput(
             Order: order,
@@ -920,6 +1264,18 @@ public class RecipesFeatureTests {
             ImageUrl: null,
             ImageAssetId: null,
             Ingredients: [new RecipeIngredientInput(ProductId: productId, NestedRecipeId: null, Amount: 100)]);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailingNonNullImageAssetAccessService(Error error) : IImageAssetAccessService {
+        public Task<Result<ImageAsset?>> ResolveOptionalAsync(
+            ImageAssetId? assetId,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(
+                assetId.HasValue
+                    ? Result.Failure<ImageAsset?>(error)
+                    : Result.Success<ImageAsset?>(null));
     }
 
     [ExcludeFromCodeCoverage]
@@ -975,6 +1331,53 @@ public class RecipesFeatureTests {
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DuplicateReloadMissingRecipeRepository(Recipe original) : IRecipeRepository {
+        public Recipe? LastAddedRecipe { get; private set; }
+
+        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
+            LastAddedRecipe = recipe;
+            return Task.FromResult(recipe);
+        }
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            bool includePublic,
+            int page,
+            int limit,
+            string? search,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Recipe?> GetByIdAsync(
+            RecipeId id,
+            UserId userId,
+            bool includePublic = true,
+            bool includeSteps = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<Recipe?>(id == original.Id && userId == original.UserId ? original : null);
+
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
             int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,

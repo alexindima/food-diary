@@ -1,4 +1,5 @@
 using System.Text.Json;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Users.Commands.UpdateUser;
@@ -173,6 +174,87 @@ public sealed class UpdateUserCommandHandlerTests {
         Assert.Equal("modern", user.UiStyle);
         Assert.Equal("modern", result.Value.UiStyle);
     }
+
+    [Fact]
+    public async Task Handle_WhenProfileImageAccessFails_ReturnsFailure() {
+        var user = User.Create("user@example.com", "hash");
+        var imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+            .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService(),
+            imageAccess);
+
+        var assetId = Guid.NewGuid();
+        var result = await handler.Handle(
+            CreateCommand(user.Id.Value, profileImageAssetId: assetId),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+        Assert.Equal([new ImageAssetId(assetId)], imageAccess.RequestedAssetIds);
+    }
+
+    [Fact]
+    public async Task Handle_WithIsActiveFalse_DeactivatesUser() {
+        var user = User.Create("active@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateCommand(user.Id.Value, isActive: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.False(user.IsActive);
+        Assert.False(result.Value.IsActive);
+    }
+
+    [Fact]
+    public async Task Handle_WithIsActiveTrue_KeepsUserActive() {
+        var user = User.Create("active-again@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateCommand(user.Id.Value, isActive: true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(user.IsActive);
+        Assert.True(result.Value.IsActive);
+    }
+
+    private static UpdateUserCommand CreateCommand(
+        Guid userId,
+        Guid? profileImageAssetId = null,
+        bool? isActive = null) =>
+        new(
+            UserId: userId,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: null,
+            Weight: null,
+            Height: null,
+            ActivityLevel: null,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: null,
+            Theme: null,
+            UiStyle: null,
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: profileImageAssetId,
+            DashboardLayout: null,
+            IsActive: isActive);
 
     [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {

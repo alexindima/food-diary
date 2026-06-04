@@ -168,6 +168,51 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task AnalyzeFoodImageAsync_WhenUserMissing_ReturnsNotFoundWithoutCallingClient() {
+        var client = new RecordingOpenAiFoodClient();
+        var userId = UserId.New();
+        var service = new OpenAiFoodService(
+            client,
+            new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
+            new StubUserRepository(returnNull: true),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            userId,
+            null,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+        Assert.Equal(0, client.AnalyzeFoodImageCalls);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageAsync_WhenOutputQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
+        var client = new RecordingOpenAiFoodClient();
+        var service = new OpenAiFoodService(
+            client,
+            new RecordingAiUsageRepository(new AiUsageTotals(0, 1_000_000)),
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            UserId.New(),
+            null,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
+        Assert.Equal(0, client.AnalyzeFoodImageCalls);
+    }
+
+    [Fact]
     public async Task AnalyzeFoodImageAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
         var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
         var client = new RecordingOpenAiFoodClient {
@@ -237,6 +282,23 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Single(result.Value.Items);
         Assert.Equal(1, client.ParseFoodTextCalls);
         Assert.Single(usageRepository.Items);
+    }
+
+    [Fact]
+    public async Task ParseFoodTextAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
+        var client = new RecordingOpenAiFoodClient();
+        var service = new OpenAiFoodService(
+            client,
+            new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
+            new StubUserRepository(),
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
+
+        var result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
+        Assert.Equal(0, client.ParseFoodTextCalls);
     }
 
     [Fact]

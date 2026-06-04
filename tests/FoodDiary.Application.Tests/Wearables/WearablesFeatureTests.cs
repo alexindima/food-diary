@@ -4,6 +4,8 @@ using FoodDiary.Application.Wearables.Commands.SyncWearableData;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
+using FoodDiary.Application.Wearables.Queries.GetWearableConnections;
+using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -231,6 +233,92 @@ public class WearablesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Contains("ProviderNotConfigured", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetWearableAuthUrl_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetWearableAuthUrlQueryHandler(
+            [new StubWearableClient(WearableProvider.Fitbit, null)],
+            new StubWearableOAuthStateService());
+
+        var result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.Empty, "Fitbit", "state"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWearableAuthUrl_WithInvalidProvider_ReturnsInvalidProvider() {
+        var handler = new GetWearableAuthUrlQueryHandler(
+            [new StubWearableClient(WearableProvider.Fitbit, null)],
+            new StubWearableOAuthStateService());
+
+        var result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.NewGuid(), "Unknown", "state"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.InvalidProvider", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWearableDailySummary_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetWearableDailySummaryQueryHandler(new InMemoryWearableSyncRepository());
+
+        var result = await handler.Handle(
+            new GetWearableDailySummaryQuery(Guid.Empty, DateTime.UtcNow.Date),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWearableDailySummary_WithEntries_ReturnsMappedSummary() {
+        var userId = UserId.New();
+        var date = new DateTime(2026, 5, 8, 0, 0, 0, DateTimeKind.Utc);
+        var repository = new InMemoryWearableSyncRepository();
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.Steps, date, 1000));
+        repository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.CaloriesBurned, date, 75));
+        var handler = new GetWearableDailySummaryQueryHandler(repository);
+
+        var result = await handler.Handle(new GetWearableDailySummaryQuery(userId.Value, date), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(date.Date, result.Value.Date);
+        Assert.Equal(1000, result.Value.Steps);
+        Assert.Equal(75, result.Value.CaloriesBurned);
+    }
+
+    [Fact]
+    public async Task GetWearableConnections_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetWearableConnectionsQueryHandler(new InMemoryWearableConnectionRepository());
+
+        var result = await handler.Handle(new GetWearableConnectionsQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWearableConnections_WithConnections_ReturnsModels() {
+        var userId = UserId.New();
+        var connection = WearableConnection.Create(
+            userId,
+            WearableProvider.Fitbit,
+            "external",
+            "access",
+            "refresh",
+            DateTime.UtcNow.AddHours(1));
+        var repository = new InMemoryWearableConnectionRepository();
+        repository.Seed(connection);
+        var handler = new GetWearableConnectionsQueryHandler(repository);
+
+        var result = await handler.Handle(new GetWearableConnectionsQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var model = Assert.Single(result.Value);
+        Assert.Equal("Fitbit", model.Provider);
+        Assert.Equal("external", model.ExternalUserId);
+        Assert.True(model.IsActive);
     }
 
     [Fact]

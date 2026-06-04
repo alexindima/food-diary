@@ -48,6 +48,16 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public void UserMappings_ToModel_WithInvalidDashboardLayoutJson_IgnoresLayout() {
+        var user = User.Create("invalid-layout@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{invalid-json"));
+
+        var model = user.ToModel();
+
+        Assert.Null(model.DashboardLayout);
+    }
+
+    [Fact]
     public void UserMappings_ToModelAndToAdminModel_MapProfilePreferencesGoalsAndRoles() {
         var user = CreateMappedUser();
 
@@ -102,6 +112,39 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task ChangePasswordHandler_WithWrongCurrentPassword_ReturnsInvalidPassword() {
+        var user = User.Create("wrong-password@example.com", "old-hash");
+        var handler = new ChangePasswordCommandHandler(
+            new SingleUserRepository(user),
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new ChangePasswordCommand(user.Id.Value, "wrong-password", "new-password"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.InvalidPassword", result.Error.Code);
+        Assert.Equal("old-hash", user.Password);
+    }
+
+    [Fact]
+    public async Task ChangePasswordHandler_WithValidCurrentPassword_UpdatesPassword() {
+        var user = User.Create("change-password@example.com", "old-password");
+        var repository = new SingleUserRepository(user);
+        var handler = new ChangePasswordCommandHandler(
+            repository,
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new ChangePasswordCommand(user.Id.Value, "old-password", "new-password"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("new-password", user.Password);
+        Assert.Same(user, repository.UpdatedUser);
+    }
+
+    [Fact]
     public async Task DeleteUserHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var user = User.Create("user@example.com", "hash");
         var handler = new DeleteUserCommandHandler(
@@ -129,6 +172,21 @@ public class UsersFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(deletedAtUtc, user.DeletedAt);
         Assert.False(user.IsActive);
+    }
+
+    [Fact]
+    public async Task DeleteUserHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("delete-access@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new DeleteUserCommandHandler(
+            new SingleUserRepository(user),
+            new FixedDateTimeProvider(DateTime.UtcNow),
+            new NullAuditLogger());
+
+        var result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -176,6 +234,37 @@ public class UsersFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.True(user.HasPassword);
         Assert.Equal("new-password", user.Password);
+    }
+
+    [Fact]
+    public async Task SetPasswordHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var user = User.Create("set-password-empty@example.com", "hash", hasPassword: false);
+        var handler = new SetPasswordCommandHandler(
+            new SingleUserRepository(user),
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new SetPasswordCommand(Guid.Empty, "new-password"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task SetPasswordHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("set-password-deleted@example.com", "hash", hasPassword: false);
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new SetPasswordCommandHandler(
+            new SingleUserRepository(user),
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new SetPasswordCommand(user.Id.Value, "new-password"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -332,6 +421,63 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task GetUserByIdHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetUserByIdQueryHandler(new SingleUserRepository(User.Create("query-empty@example.com", "hash")));
+
+        var result = await handler.Handle(new GetUserByIdQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateGoalsHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new UpdateGoalsCommandHandler(new SingleUserRepository(User.Create("goals-missing@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new UpdateGoalsCommand(
+                UserId: null,
+                DailyCalorieTarget: 2000,
+                ProteinTarget: null,
+                FatTarget: null,
+                CarbTarget: null,
+                FiberTarget: null,
+                WaterGoal: null,
+                DesiredWeight: null,
+                DesiredWaist: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateGoalsHandler_WithValidValues_UpdatesUserAndReturnsGoals() {
+        var user = User.Create("goals-success@example.com", "hash");
+        var repository = new SingleUserRepository(user);
+        var handler = new UpdateGoalsCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new UpdateGoalsCommand(
+                user.Id.Value,
+                DailyCalorieTarget: 2000,
+                ProteinTarget: 120,
+                FatTarget: 60,
+                CarbTarget: 220,
+                FiberTarget: 25,
+                WaterGoal: 2.2,
+                DesiredWeight: 72,
+                DesiredWaist: 78),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2000, result.Value.DailyCalorieTarget);
+        Assert.Equal(120, result.Value.ProteinTarget);
+        Assert.Equal(72, result.Value.DesiredWeight);
+        Assert.Same(user, repository.UpdatedUser);
+    }
+
+    [Fact]
     public async Task UpdateGoalsHandler_WithInvalidDesiredWeight_ReturnsValidationFailure() {
         var user = User.Create("goals-invalid-weight@example.com", "hash");
         var handler = new UpdateGoalsCommandHandler(new SingleUserRepository(user));
@@ -433,6 +579,35 @@ public class UsersFeatureTests {
         Assert.Equal("Pending", result.Value.DietologistRelationship.Status);
         Assert.True(result.Value.DietologistRelationship.Permissions.ShareProfile);
         Assert.True(result.Value.DietologistRelationship.Permissions.ShareFasting);
+    }
+
+    [Fact]
+    public async Task GetProfileOverviewHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var user = User.Create("overview-missing@example.com", "hash");
+        var handler = new GetProfileOverviewQueryHandler(
+            new SingleUserRepository(user),
+            new FixedWebPushSubscriptionRepository([]),
+            new FixedDietologistInvitationRepository(null));
+
+        var result = await handler.Handle(new GetProfileOverviewQuery(null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetProfileOverviewHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("overview-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetProfileOverviewQueryHandler(
+            new SingleUserRepository(user),
+            new FixedWebPushSubscriptionRepository([]),
+            new FixedDietologistInvitationRepository(null));
+
+        var result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -615,7 +790,12 @@ public class UsersFeatureTests {
 
         public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public User? UpdatedUser { get; private set; }
+
+        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) {
+            UpdatedUser = userToUpdate;
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

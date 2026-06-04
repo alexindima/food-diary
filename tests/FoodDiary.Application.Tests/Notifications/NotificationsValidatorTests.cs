@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 
@@ -84,6 +85,38 @@ public sealed class NotificationsValidatorTests {
 
         var result = await validator.TestValidateAsync(
             new UpdateNotificationPreferencesCommand(Guid.NewGuid(), true, true, false, 12, 18));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task ScheduleTestNotification_WithEmptyUserId_HasError() {
+        var validator = new ScheduleTestNotificationCommandValidator();
+
+        var result = await validator.TestValidateAsync(
+            new ScheduleTestNotificationCommand(null, 15, "test"));
+
+        result.ShouldHaveValidationErrorFor(command => command.UserId);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(3601)]
+    public async Task ScheduleTestNotification_WithInvalidDelay_HasError(int delaySeconds) {
+        var validator = new ScheduleTestNotificationCommandValidator();
+
+        var result = await validator.TestValidateAsync(
+            new ScheduleTestNotificationCommand(Guid.NewGuid(), delaySeconds, "test"));
+
+        result.ShouldHaveValidationErrorFor(command => command.DelaySeconds);
+    }
+
+    [Fact]
+    public async Task ScheduleTestNotification_WithValidInput_HasNoErrors() {
+        var validator = new ScheduleTestNotificationCommandValidator();
+
+        var result = await validator.TestValidateAsync(
+            new ScheduleTestNotificationCommand(Guid.NewGuid(), 60, "test"));
 
         result.ShouldNotHaveAnyValidationErrors();
     }

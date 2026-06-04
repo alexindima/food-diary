@@ -89,6 +89,18 @@ public class AiConsentTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
+    [Fact]
+    public async Task RevokeAiConsent_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new RevokeAiConsentCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
@@ -122,8 +122,8 @@ export class AdminMailInboxComponent {
             });
     }
 
-    protected updateLimit(value: string | number | null): void {
-        const parsed = Number.parseInt(value === null ? '' : String(value), 10);
+    protected updateLimit(value: FdUiInputValue): void {
+        const parsed = Number.parseInt(fdUiCoerceInputTextValue(value), 10);
         if (!Number.isFinite(parsed)) {
             return;
         }

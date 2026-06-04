@@ -387,6 +387,42 @@ public class CommonAbstractionsTests {
         Assert.DoesNotContain("=", token, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void SecurityTokenGenerator_NormalizeForSecureHashing_WithBlankToken_Throws(string? token) {
+        Assert.Throws<ArgumentException>(() => SecurityTokenGenerator.NormalizeForSecureHashing(token!));
+    }
+
+    [Fact]
+    public void SecurityTokenGenerator_VerifyFastStorageHash_WithMatchingToken_ReturnsTrue() {
+        var storedHash = SecurityTokenGenerator.HashForStorage(" refresh-token ");
+
+        var isValid = SecurityTokenGenerator.VerifyFastStorageHash("refresh-token", storedHash);
+
+        Assert.True(isValid);
+    }
+
+    [Fact]
+    public void SecurityTokenGenerator_VerifyFastStorageHash_WithMismatchedToken_ReturnsFalse() {
+        var storedHash = SecurityTokenGenerator.HashForStorage("refresh-token");
+
+        var isValid = SecurityTokenGenerator.VerifyFastStorageHash("other-token", storedHash);
+
+        Assert.False(isValid);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("legacy-hash")]
+    public void SecurityTokenGenerator_VerifyFastStorageHash_WithNonFastStorageHash_ReturnsFalse(string? storedHash) {
+        var isValid = SecurityTokenGenerator.VerifyFastStorageHash("refresh-token", storedHash!);
+
+        Assert.False(isValid);
+    }
+
     [Fact]
     public void SystemDateTimeProvider_ReturnsUtcTime_FromTimeProviderSystem() {
         var provider = new SystemDateTimeProvider();

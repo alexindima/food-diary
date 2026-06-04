@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
 import type { FastingCustomActionState } from '../fasting-controls.types';
 
@@ -71,7 +71,7 @@ export class FastingActiveExtendedControlsComponent {
     protected readonly reduceActionsDisabled = (): boolean => this.isReducing() || this.isExtending() || this.isEnding();
     protected readonly endDisabled = (): boolean => this.isEnding() || this.isReducing() || this.isExtending() || this.isUpdatingCycle();
 
-    protected normalizeNumericControlValue(value: string | number | null | undefined): string | number {
-        return value ?? '';
+    protected normalizeNumericControlValue(value: FdUiInputValue): string | number {
+        return fdUiCoerceInputNumberValue(value);
     }
 }

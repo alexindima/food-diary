@@ -4,7 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
 import { UsdaFoodSearchFacade } from '../../lib/usda-food-search.facade';
 import type { UsdaFood } from '../../models/usda.data';
@@ -33,8 +33,8 @@ export class UsdaFoodSearchDialogComponent {
         this.usdaFoodSearchFacade.updateSearchQuery(value);
     }
 
-    protected onSearchControlChange(value: string | number | null | undefined): void {
-        this.onSearchChange(value === null || value === undefined ? '' : String(value));
+    protected onSearchControlChange(value: FdUiInputValue): void {
+        this.onSearchChange(fdUiCoerceInputTextValue(value));
     }
 
     protected selectFood(food: UsdaFood): void {

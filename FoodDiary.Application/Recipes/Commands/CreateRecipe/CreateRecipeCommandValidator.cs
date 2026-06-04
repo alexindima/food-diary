@@ -56,6 +56,7 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
 
     private void ConfigureStepRules() {
         RuleFor(x => x.Steps)
+            .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Validation.Required")
             .WithMessage("Steps are required")

@@ -72,6 +72,35 @@ public sealed class UserLoginActivityFeatureTests {
     }
 
     [Fact]
+    public async Task GetAdminUserLoginEvents_WithBlankIpAddress_ReturnsNullMaskedIpAddress() {
+        var repository = new RecordingUserLoginEventRepository {
+            PagedItems = [
+                new UserLoginEventReadModel(
+                    Guid.NewGuid(),
+                    Guid.NewGuid(),
+                    "user@example.com",
+                    "password",
+                    "   ",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc))
+            ],
+            TotalItems = 1
+        };
+        var handler = new GetAdminUserLoginEventsQueryHandler(repository);
+
+        var result = await handler.Handle(
+            new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(Assert.Single(result.Value.Data).MaskedIpAddress);
+    }
+
+    [Fact]
     public async Task GetAdminUserLoginSummary_ReturnsRepositorySummary() {
         var fromUtc = new DateTime(2030, 3, 1, 0, 0, 0, DateTimeKind.Utc);
         var toUtc = new DateTime(2030, 3, 31, 23, 59, 59, DateTimeKind.Utc);

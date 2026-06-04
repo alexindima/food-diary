@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
@@ -145,24 +145,24 @@ export class RecipeStepCardComponent {
         this.addIngredient.emit();
     }
 
-    protected onStepTitleInput(value: string | number | null | undefined): void {
-        this.stepTitleChange.emit(value === null || value === undefined ? null : String(value));
+    protected onStepTitleInput(value: FdUiInputValue): void {
+        this.stepTitleChange.emit(value === null || value === undefined ? null : fdUiCoerceInputTextValue(value));
     }
 
     protected onStepImageChange(value: ImageSelection | null | undefined): void {
         this.stepImageChange.emit(value ?? null);
     }
 
-    protected onStepDescriptionInput(value: string | number | null | undefined): void {
-        this.stepDescriptionChange.emit(value === null || value === undefined ? '' : String(value));
+    protected onStepDescriptionInput(value: FdUiInputValue): void {
+        this.stepDescriptionChange.emit(fdUiCoerceInputTextValue(value));
     }
 
-    protected onIngredientAmountInput(ingredientIndex: number, value: string | number | null | undefined): void {
+    protected onIngredientAmountInput(ingredientIndex: number, value: FdUiInputValue): void {
         if (ingredientIndex < 0 || ingredientIndex >= this.ingredients.length) {
             return;
         }
 
-        const trimmedValue = value === null || value === undefined ? '' : String(value).trim();
+        const trimmedValue = fdUiCoerceInputTextValue(value).trim();
         const parsedValue = trimmedValue.length === 0 ? null : Number(trimmedValue);
         this.ingredientAmountChange.emit({
             ingredientIndex,

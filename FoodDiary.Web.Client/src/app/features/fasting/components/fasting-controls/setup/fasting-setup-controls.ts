@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
 import type { FastingMode, FastingProtocol } from '../../../models/fasting.data';
 import { FastingCyclicSetupControlsComponent } from '../cyclic-setup/fasting-cyclic-setup-controls';
@@ -48,7 +48,7 @@ export class FastingSetupControlsComponent {
     public readonly cyclicEatDayFastHoursChange = output<string | number>();
     public readonly startFasting = output();
 
-    protected normalizeNumericControlValue(value: string | number | null | undefined): string | number {
-        return value ?? '';
+    protected normalizeNumericControlValue(value: FdUiInputValue): string | number {
+        return fdUiCoerceInputNumberValue(value);
     }
 }

@@ -39,7 +39,31 @@ public class CreateRecipeCommandValidatorTests {
         Assert.True(result.IsValid);
     }
 
-    private static CreateRecipeCommand CreateCommand(Guid userId, IReadOnlyList<RecipeStepInput> steps) {
+    [Fact]
+    public async Task ValidateAsync_WithNullSteps_ReturnsValidationError() {
+        var validator = new CreateRecipeCommandValidator();
+        var command = CreateCommand(Guid.NewGuid(), null);
+
+        var result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps", StringComparison.Ordinal)
+            && string.Equals(e.ErrorCode, "Validation.Required", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithEmptySteps_ReturnsValidationError() {
+        var validator = new CreateRecipeCommandValidator();
+        var command = CreateCommand(Guid.NewGuid(), []);
+
+        var result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps", StringComparison.Ordinal)
+            && string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+    }
+
+    private static CreateRecipeCommand CreateCommand(Guid userId, IReadOnlyList<RecipeStepInput>? steps) {
         return new CreateRecipeCommand(
             userId,
             Name: "Soup",
@@ -59,7 +83,7 @@ public class CreateRecipeCommandValidatorTests {
             ManualCarbs: null,
             ManualFiber: null,
             ManualAlcohol: null,
-            Steps: steps);
+            Steps: steps!);
     }
 
     private static RecipeStepInput CreateStep(int order, string description) {

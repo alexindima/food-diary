@@ -72,10 +72,15 @@ public class MealPlansFeatureTests {
         var step = recipe.AddStep(1, "Cook chicken.");
         var ingredient = step.AddProductIngredient(product.Id, 100);
         SetProperty(ingredient, nameof(ingredient.Product), product);
+        step.AddProductIngredient(ProductId.New(), 50);
 
         var plan = MealPlan.CreateCurated("High protein", null, DietType.Balanced, 1, null);
-        var meal = plan.AddDay(1).AddMeal(MealType.Lunch, recipe.Id, servings: 3);
-        SetProperty(meal, nameof(meal.Recipe), recipe);
+        var day = plan.AddDay(1);
+        day.AddMeal(MealType.Breakfast, RecipeId.New(), servings: 1);
+        var lunch = day.AddMeal(MealType.Lunch, recipe.Id, servings: 3);
+        var dinner = day.AddMeal(MealType.Dinner, recipe.Id, servings: 1);
+        SetProperty(lunch, nameof(lunch.Recipe), recipe);
+        SetProperty(dinner, nameof(dinner.Recipe), recipe);
 
         var shoppingLists = new RecordingShoppingListRepository();
         var handler = new GenerateShoppingListCommandHandler(new StubMealPlanRepository(plan), shoppingLists);
@@ -88,9 +93,36 @@ public class MealPlansFeatureTests {
         var item = Assert.Single(result.Value.Items);
         Assert.Equal(product.Id.Value, item.ProductId);
         Assert.Equal("Chicken breast", item.Name);
-        Assert.Equal(150, item.Amount);
+        Assert.Equal(200, item.Amount);
         Assert.Equal(nameof(MeasurementUnit.G), item.Unit);
         Assert.Equal("Meat", item.Category);
+    }
+
+    [Fact]
+    public async Task GenerateShoppingList_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GenerateShoppingListCommandHandler(
+            new StubMealPlanRepository(null),
+            new RecordingShoppingListRepository());
+
+        var result = await handler.Handle(
+            new GenerateShoppingListCommand(Guid.Empty, Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GenerateShoppingList_WhenPlanMissing_ReturnsNotFound() {
+        var handler = new GenerateShoppingListCommandHandler(
+            new StubMealPlanRepository(null),
+            new RecordingShoppingListRepository());
+        var planId = Guid.NewGuid();
+
+        var result = await handler.Handle(new GenerateShoppingListCommand(Guid.NewGuid(), planId), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("MealPlan.NotFound", result.Error.Code);
     }
 
     [Fact]
@@ -119,6 +151,66 @@ public class MealPlansFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AdoptMealPlan_WithCuratedPlan_AddsAdoptedPlanAndReturnsSavedModel() {
+        var userId = UserId.New();
+        var curated = MealPlan.CreateCurated("Starter plan", null, DietType.Balanced, 1, null);
+        curated.AddDay(1).AddMeal(MealType.Breakfast, RecipeId.New(), servings: 1);
+        var repository = new StubMealPlanRepository(curated);
+        var handler = new AdoptMealPlanCommandHandler(repository);
+
+        var result = await handler.Handle(new AdoptMealPlanCommand(userId.Value, curated.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.AddedPlan);
+        Assert.Equal(userId, repository.AddedPlan.UserId);
+        Assert.Equal("Starter plan", result.Value.Name);
+        Assert.False(result.Value.IsCurated);
+    }
+
+    [Fact]
+    public async Task GetMealPlanById_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(null));
+
+        var result = await handler.Handle(new GetMealPlanByIdQuery(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetMealPlanById_WhenPlanMissing_ReturnsNotFound() {
+        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(null));
+        var planId = Guid.NewGuid();
+
+        var result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), planId), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("MealPlan.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetMealPlanById_WithCuratedPlan_ReturnsModel() {
+        var plan = MealPlan.CreateCurated("Curated", null, DietType.Balanced, 1, null);
+        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan));
+
+        var result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(plan.Id.Value, result.Value.Id);
+        Assert.Equal("Curated", result.Value.Name);
+    }
+
+    [Fact]
+    public async Task GetMealPlans_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetMealPlansQueryHandler(new StubMealPlanRepository(null));
+
+        var result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]
@@ -197,11 +289,15 @@ public class MealPlansFeatureTests {
         IReadOnlyList<MealPlan>? curatedPlans = null,
         IReadOnlyList<MealPlan>? userPlans = null) : IMealPlanRepository {
         public DietType? LastDietTypeFilter { get; private set; }
+        public MealPlan? AddedPlan { get; private set; }
 
         public Task<MealPlan?> GetByIdAsync(MealPlanId id, bool includeDays = false, CancellationToken ct = default) =>
-            Task.FromResult(plan);
+            Task.FromResult(AddedPlan?.Id == id ? AddedPlan : plan?.Id == id ? plan : null);
 
-        public Task<MealPlan> AddAsync(MealPlan p, CancellationToken ct = default) => Task.FromResult(p);
+        public Task<MealPlan> AddAsync(MealPlan p, CancellationToken ct = default) {
+            AddedPlan = p;
+            return Task.FromResult(p);
+        }
 
         public Task<IReadOnlyList<MealPlan>> GetCuratedAsync(DietType? dietType = null, CancellationToken ct = default) {
             LastDietTypeFilter = dietType;

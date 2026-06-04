@@ -119,12 +119,28 @@ public class UserAgentParserTests {
         Assert.Null(GetProperty<string?>(parsed, "BrowserVersion"));
     }
 
+    [Fact]
+    public void ExtractVersion_WithMissingMarker_ReturnsNull() {
+        var parserType = GetParserType();
+        var method = parserType.GetMethod("ExtractVersion", BindingFlags.Static | BindingFlags.NonPublic);
+        Assert.NotNull(method);
+
+        var version = method!.Invoke(null, ["Mozilla/5.0 CustomAgent", "Chrome/"]);
+
+        Assert.Null(version);
+    }
+
     private static object Parse(string? userAgent) {
-        var parserType = Type.GetType("FoodDiary.Application.Authentication.Services.UserAgents.UserAgentParser, FoodDiary.Application");
-        Assert.NotNull(parserType);
-        var method = parserType!.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        var parserType = GetParserType();
+        var method = parserType.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
         Assert.NotNull(method);
         return method!.Invoke(null, [userAgent])!;
+    }
+
+    private static Type GetParserType() {
+        var parserType = Type.GetType("FoodDiary.Application.Authentication.Services.UserAgents.UserAgentParser, FoodDiary.Application");
+        Assert.NotNull(parserType);
+        return parserType!;
     }
 
     private static TValue GetProperty<TValue>(object instance, string propertyName) {

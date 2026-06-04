@@ -4,6 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { fdUiCoerceInputTextValue, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { AdminModerationFacade } from '../lib/admin-moderation.facade';
@@ -80,7 +81,7 @@ export class AdminModerationActionDialogComponent {
         this.dialogRef.close({ confirmed: false });
     }
 
-    protected updateAdminNote(value: string | number | null): void {
-        this.adminNote.set(value === null ? '' : String(value));
+    protected updateAdminNote(value: FdUiInputValue): void {
+        this.adminNote.set(fdUiCoerceInputTextValue(value));
     }
 }

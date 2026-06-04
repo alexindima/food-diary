@@ -5,6 +5,7 @@ using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
@@ -29,6 +30,18 @@ public class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task GetCurrentShoppingListQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-current-shopping@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetCurrentShoppingListQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(new GetShoppingListByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
@@ -48,12 +61,66 @@ public class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task GetShoppingListByIdQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-shopping-by-id@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetShoppingListByIdQueryHandler_WhenListMissing_ReturnsNotFound() {
+        var user = User.Create("shopping-by-id-missing@example.com", "hash");
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
+        var shoppingListId = Guid.NewGuid();
+
+        var result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, shoppingListId), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("ShoppingList.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetShoppingListByIdQueryHandler_WithList_ReturnsModel() {
+        var user = User.Create("shopping-by-id-success@example.com", "hash");
+        var list = ShoppingList.Create(user.Id, "Weekly");
+        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
+        var handler = new GetShoppingListByIdQueryHandler(new SingleShoppingListRepository(list), new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, list.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("Weekly", result.Value.Name);
+        Assert.Single(result.Value.Items);
+    }
+
+    [Fact]
     public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(new GetShoppingListsQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetShoppingListsQueryHandler_WithLists_ReturnsSummaryModels() {
+        var user = User.Create("shopping-lists-success@example.com", "hash");
+        var list = ShoppingList.Create(user.Id, "Weekly");
+        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
+        var handler = new GetShoppingListsQueryHandler(new SingleShoppingListRepository(list), new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var summary = Assert.Single(result.Value);
+        Assert.Equal(list.Id.Value, summary.Id);
+        Assert.Equal("Weekly", summary.Name);
+        Assert.Equal(1, summary.ItemsCount);
     }
 
     [Fact]
@@ -64,6 +131,53 @@ public class ShoppingListsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ShoppingListId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteShoppingListCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
+
+        var result = await handler.Handle(new DeleteShoppingListCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteShoppingListCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-shopping-delete@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
+
+        var result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteShoppingListCommandHandler_WhenListMissing_ReturnsNotFound() {
+        var user = User.Create("shopping-delete-missing@example.com", "hash");
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
+        var shoppingListId = Guid.NewGuid();
+
+        var result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, shoppingListId), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("ShoppingList.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteShoppingListCommandHandler_WithList_DeletesList() {
+        var user = User.Create("shopping-delete-success@example.com", "hash");
+        var list = ShoppingList.Create(user.Id, "Weekly");
+        var repository = new SingleShoppingListRepository(list);
+        var handler = new DeleteShoppingListCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, list.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.DeleteCalled);
     }
 
     [Fact]
@@ -204,6 +318,27 @@ public class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateShoppingListCommandHandler_WithNameOnly_UpdatesWithoutReplacingItems() {
+        var user = User.Create("shopping-update-name-only@example.com", "hash");
+        var list = ShoppingList.Create(user.Id, "Old");
+        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
+        var repository = new SingleShoppingListRepository(list);
+        var handler = new UpdateShoppingListCommandHandler(
+            repository,
+            new ThrowingProductLookupService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
+        Assert.Equal("New", result.Value.Name);
+        Assert.Single(result.Value.Items);
+    }
+
+    [Fact]
     public async Task CreateShoppingListCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new CreateShoppingListCommandHandler(
             new RecordingShoppingListRepository(),
@@ -216,6 +351,21 @@ public class ShoppingListsFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateShoppingListCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-shopping-create@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new CreateShoppingListCommandHandler(
+            new RecordingShoppingListRepository(),
+            new ThrowingProductLookupService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(new CreateShoppingListCommand(user.Id.Value, "Weekly", []), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -314,6 +464,20 @@ public class ShoppingListsFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Contains("Unit", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithBlankUnit_CreatesCustomItemWithoutUnit() {
+        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+            [new ShoppingListItemInput(null, "Milk", 1, " ", null, false, null)],
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var item = Assert.Single(result.Value);
+        Assert.Null(item.Unit);
+        Assert.Equal("Milk", item.Name);
     }
 
     [Fact]
@@ -429,6 +593,20 @@ public class ShoppingListsFeatureTests {
         Assert.Equal(1, item.SortOrder);
     }
 
+    [Fact]
+    public void ShoppingListMappings_ToSummaryModel_MapsItemCount() {
+        var userId = UserId.New();
+        var list = ShoppingList.Create(userId, "Weekly");
+        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
+        list.AddItem("Apples", null, 2, MeasurementUnit.Pcs, "Fruit", true, 2);
+
+        var model = list.ToSummaryModel();
+
+        Assert.Equal(list.Id.Value, model.Id);
+        Assert.Equal("Weekly", model.Name);
+        Assert.Equal(2, model.ItemsCount);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class NoopShoppingListRepository : IShoppingListRepository {
         public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.FromResult(list);
@@ -489,6 +667,7 @@ public class ShoppingListsFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class SingleShoppingListRepository(ShoppingList list) : IShoppingListRepository {
         public bool UpdateCalled { get; private set; }
+        public bool DeleteCalled { get; private set; }
 
         public Task<ShoppingList> AddAsync(ShoppingList addedList, CancellationToken cancellationToken = default) =>
             Task.FromResult(addedList);
@@ -519,7 +698,10 @@ public class ShoppingListsFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task DeleteAsync(ShoppingList deletedList, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task DeleteAsync(ShoppingList deletedList, CancellationToken cancellationToken = default) {
+            DeleteCalled = true;
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

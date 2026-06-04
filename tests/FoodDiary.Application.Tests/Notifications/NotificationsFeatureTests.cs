@@ -7,6 +7,7 @@ using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
+using FoodDiary.Application.Notifications.Queries.GetWebPushConfiguration;
 using FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
@@ -269,6 +270,37 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateNotificationPreferences_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new UpdateNotificationPreferencesCommandHandler(
+            new SingleUserRepository(CreateUser()),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new UpdateNotificationPreferencesCommand(Guid.Empty, true, null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateNotificationPreferences_WhenUserDeleted_ReturnsFailure() {
+        var userId = UserId.New();
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new UpdateNotificationPreferencesCommandHandler(
+            new SingleUserRepository(CreateDeletedUser(userId)),
+            auditLogger);
+
+        var result = await handler.Handle(
+            new UpdateNotificationPreferencesCommand(userId.Value, true, null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Equal(string.Empty, auditLogger.Action);
+    }
+
+    [Fact]
     public async Task GetNotificationPreferences_WithDeletedUser_ReturnsAccountDeleted() {
         var user = CreateUser(email: "deleted-notifications@example.com");
         user.DeleteAccount(DateTime.UtcNow);
@@ -301,6 +333,20 @@ public class NotificationsFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetNotifications_WhenUserDeleted_ReturnsAccessFailure() {
+        var userId = UserId.New();
+        var handler = new GetNotificationsQueryHandler(
+            new InMemoryNotificationRepository(),
+            new SingleUserRepository(CreateDeletedUser(userId)),
+            new RecordingNotificationTextRenderer());
+
+        var result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -348,6 +394,45 @@ public class NotificationsFeatureTests {
         var item = Assert.Single(result.Value);
         Assert.Equal(active.Endpoint, item.Endpoint);
         Assert.Equal([expired.Endpoint], repository.DeletedEndpoints);
+    }
+
+    [Fact]
+    public async Task GetWebPushSubscriptions_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetWebPushSubscriptionsQueryHandler(
+            new InMemoryWebPushSubscriptionRepository(),
+            new SingleUserRepository(CreateUser()),
+            new FixedDateTimeProvider(DateTime.UtcNow));
+
+        var result = await handler.Handle(new GetWebPushSubscriptionsQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWebPushSubscriptions_WhenUserDeleted_ReturnsAccessFailure() {
+        var userId = UserId.New();
+        var handler = new GetWebPushSubscriptionsQueryHandler(
+            new InMemoryWebPushSubscriptionRepository(),
+            new SingleUserRepository(CreateDeletedUser(userId)),
+            new FixedDateTimeProvider(DateTime.UtcNow));
+
+        var result = await handler.Handle(new GetWebPushSubscriptionsQuery(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWebPushConfiguration_ReturnsClientConfiguration() {
+        var handler = new GetWebPushConfigurationQueryHandler(
+            new StaticWebPushConfigurationProvider(new WebPushClientConfiguration(true, "public-key")));
+
+        var result = await handler.Handle(new GetWebPushConfigurationQuery(), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(result.Value.Enabled);
+        Assert.Equal("public-key", result.Value.PublicKey);
     }
 
     [Fact]
@@ -401,6 +486,68 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertWebPushSubscription_WithEmptyUserId_ReturnsInvalidToken() {
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var handler = new UpsertWebPushSubscriptionCommandHandler(
+            repository,
+            new SingleUserRepository(CreateUser()),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                Guid.Empty,
+                "https://push.example.com/new",
+                "p256",
+                "auth",
+                null,
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Empty(repository.Subscriptions);
+    }
+
+    [Fact]
+    public async Task UpsertWebPushSubscription_WithExistingEndpoint_RefreshesSubscriptionAndWritesAuditLog() {
+        var user = CreateUser();
+        var subscription = WebPushSubscription.Create(
+            UserId.New(),
+            "https://push.example.com/existing",
+            "old-p256",
+            "old-auth",
+            null,
+            "ru",
+            "OldBrowser");
+        var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new UpsertWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+
+        var result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                user.Id.Value,
+                subscription.Endpoint,
+                "new-p256",
+                "new-auth",
+                DateTime.UtcNow.AddDays(1),
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(user.Id, subscription.UserId);
+        Assert.Equal("new-p256", subscription.P256Dh);
+        Assert.Equal("new-auth", subscription.Auth);
+        Assert.Equal("en", subscription.Locale);
+        Assert.Equal("Chrome", subscription.UserAgent);
+        Assert.Equal(1, repository.UpdateCallCount);
+        Assert.Equal("notifications.push-subscription.refreshed", auditLogger.Action);
+        Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
+        Assert.Contains("locale=en", auditLogger.Details, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task RemoveWebPushSubscription_WhenOwned_DeletesSubscriptionAndWritesAuditLog() {
         var user = CreateUser();
         var subscription = WebPushSubscription.Create(
@@ -420,6 +567,97 @@ public class NotificationsFeatureTests {
         Assert.Empty(repository.Subscriptions);
         Assert.Equal("notifications.push-subscription.disconnected", auditLogger.Action);
         Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task RemoveWebPushSubscription_WithEmptyUserId_ReturnsInvalidToken() {
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var handler = new RemoveWebPushSubscriptionCommandHandler(
+            repository,
+            new SingleUserRepository(CreateUser()),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new RemoveWebPushSubscriptionCommand(Guid.Empty, "https://push.example.com/remove"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Empty(repository.DeletedEndpoints);
+    }
+
+    [Fact]
+    public async Task RemoveWebPushSubscription_WhenUserDeleted_ReturnsAccessFailure() {
+        var userId = UserId.New();
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var handler = new RemoveWebPushSubscriptionCommandHandler(
+            repository,
+            new SingleUserRepository(CreateDeletedUser(userId)),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new RemoveWebPushSubscriptionCommand(userId.Value, "https://push.example.com/remove"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Empty(repository.DeletedEndpoints);
+    }
+
+    [Fact]
+    public async Task RemoveWebPushSubscription_WithBlankEndpoint_ReturnsSuccessWithoutLookup() {
+        var user = CreateUser();
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new RemoveWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+
+        var result = await handler.Handle(
+            new RemoveWebPushSubscriptionCommand(user.Id.Value, "   "),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(0, repository.EndpointLookupCount);
+        Assert.Equal(string.Empty, auditLogger.Action);
+    }
+
+    [Fact]
+    public async Task RemoveWebPushSubscription_WhenEndpointMissing_ReturnsSuccessWithoutDeleting() {
+        var user = CreateUser();
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var handler = new RemoveWebPushSubscriptionCommandHandler(
+            repository,
+            new SingleUserRepository(user),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new RemoveWebPushSubscriptionCommand(user.Id.Value, "https://push.example.com/missing"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(repository.DeletedEndpoints);
+    }
+
+    [Fact]
+    public async Task RemoveWebPushSubscription_WhenEndpointBelongsToAnotherUser_ReturnsSuccessWithoutDeleting() {
+        var user = CreateUser();
+        var subscription = WebPushSubscription.Create(
+            UserId.New(),
+            "https://push.example.com/other",
+            "p256",
+            "auth");
+        var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
+        var handler = new RemoveWebPushSubscriptionCommandHandler(
+            repository,
+            new SingleUserRepository(user),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new RemoveWebPushSubscriptionCommand(user.Id.Value, subscription.Endpoint),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(repository.Subscriptions);
+        Assert.Empty(repository.DeletedEndpoints);
     }
 
     [Fact]
@@ -463,6 +701,24 @@ public class NotificationsFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(scheduler.WasCalled);
+    }
+
+    [Fact]
+    public async Task ScheduleTestNotification_WithEmptyUserId_ReturnsInvalidToken() {
+        var scheduler = new RecordingNotificationTestScheduler(
+            new ScheduledNotificationData(NotificationTypes.FastingCompleted, 15, DateTime.UtcNow));
+        var handler = new ScheduleTestNotificationCommandHandler(
+            scheduler,
+            new SingleUserRepository(CreateUser()),
+            new RecordingAuditLogger());
+
+        var result = await handler.Handle(
+            new ScheduleTestNotificationCommand(Guid.Empty, 15, NotificationTypes.FastingCompleted),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(scheduler.WasCalled);
     }
 
@@ -598,12 +854,16 @@ public class NotificationsFeatureTests {
 
         public IReadOnlyList<WebPushSubscription> Subscriptions => _subscriptions;
         public List<string> DeletedEndpoints { get; } = [];
+        public int EndpointLookupCount { get; private set; }
+        public int UpdateCallCount { get; private set; }
 
         public Task<WebPushSubscription?> GetByEndpointAsync(
             string endpoint,
             bool asTracking = false,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<WebPushSubscription?>(_subscriptions.FirstOrDefault(subscription => string.Equals(subscription.Endpoint, endpoint, StringComparison.Ordinal)));
+            CancellationToken cancellationToken = default) {
+            EndpointLookupCount++;
+            return Task.FromResult<WebPushSubscription?>(_subscriptions.FirstOrDefault(subscription => string.Equals(subscription.Endpoint, endpoint, StringComparison.Ordinal)));
+        }
 
         public Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(
             UserId userId,
@@ -618,7 +878,10 @@ public class NotificationsFeatureTests {
             return Task.FromResult(subscription);
         }
 
-        public Task UpdateAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task UpdateAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
+            UpdateCallCount++;
+            return Task.CompletedTask;
+        }
 
         public Task DeleteAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
             DeletedEndpoints.Add(subscription.Endpoint);
@@ -656,6 +919,11 @@ public class NotificationsFeatureTests {
             Type = type;
             return Task.FromResult(scheduled);
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StaticWebPushConfigurationProvider(WebPushClientConfiguration configuration) : IWebPushConfigurationProvider {
+        public WebPushClientConfiguration GetClientConfiguration() => configuration;
     }
 
     [ExcludeFromCodeCoverage]
