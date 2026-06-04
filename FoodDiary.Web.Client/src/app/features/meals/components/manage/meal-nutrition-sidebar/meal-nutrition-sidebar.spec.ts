@@ -1,10 +1,11 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { form, required } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { NutritionControlNames } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
-import type { ConsumptionFormData, ConsumptionItemFormData, MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
+import type { MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
+import { createMealManageFormValue } from '../meal-manage-lib/meal-manage-form.mapper';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar';
 
 describe('MealNutritionSidebarComponent state', () => {
@@ -52,7 +53,6 @@ async function setupComponentAsync(
 
     const fixture = TestBed.createComponent(MealNutritionSidebarComponent);
     fixture.componentRef.setInput('consumptionForm', createConsumptionForm());
-    fixture.componentRef.setInput('nutritionControlNames', createNutritionControlNames());
     fixture.componentRef.setInput('macroBarState', createMacroBarState());
     fixture.componentRef.setInput('nutritionMode', options.nutritionMode ?? 'auto');
     fixture.componentRef.setInput('nutritionWarning', null);
@@ -68,35 +68,13 @@ async function setupComponentAsync(
     };
 }
 
-function createConsumptionForm(): FormGroup<ConsumptionFormData> {
-    return new FormGroup<ConsumptionFormData>({
-        imageUrl: new FormControl(null),
-        date: new FormControl('2026-04-05', { nonNullable: true, validators: Validators.required }),
-        time: new FormControl('10:30', { nonNullable: true, validators: Validators.required }),
-        mealType: new FormControl('BREAKFAST', { nonNullable: true, validators: Validators.required }),
-        comment: new FormControl(null),
-        items: new FormArray<FormGroup<ConsumptionItemFormData>>([]),
-        isNutritionAutoCalculated: new FormControl(true, { nonNullable: true }),
-        manualCalories: new FormControl(null),
-        manualProteins: new FormControl(null),
-        manualFats: new FormControl(null),
-        manualCarbs: new FormControl(null),
-        manualFiber: new FormControl(null),
-        manualAlcohol: new FormControl(null),
-        preMealSatietyLevel: new FormControl(null),
-        postMealSatietyLevel: new FormControl(null),
-    });
-}
-
-function createNutritionControlNames(): NutritionControlNames {
-    return {
-        calories: 'manualCalories',
-        proteins: 'manualProteins',
-        fats: 'manualFats',
-        carbs: 'manualCarbs',
-        fiber: 'manualFiber',
-        alcohol: 'manualAlcohol',
-    };
+function createConsumptionForm(): ReturnType<typeof form> {
+    return TestBed.runInInjectionContext(() =>
+        form(signal({ ...createMealManageFormValue(), date: '2026-04-05', time: '10:30', mealType: 'BREAKFAST' }), path => {
+            required(path.date);
+            required(path.time);
+        }),
+    );
 }
 
 function createMacroBarState(): MacroBarState {

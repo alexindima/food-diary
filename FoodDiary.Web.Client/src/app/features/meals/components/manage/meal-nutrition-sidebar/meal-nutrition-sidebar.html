@@ -11,8 +11,7 @@
         <div class="consumption-manage__nutrition fd-stack fd-gap-md">
             <fd-nutrition-editor
                 manualHintKey="CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT"
-                [formGroup]="consumptionForm()"
-                [controlNames]="nutritionControlNames()"
+                [form]="nutritionForm()"
                 [macroState]="macroBarState()"
                 [readonly]="isNutritionReadonly()"
                 [caloriesError]="caloriesError()"

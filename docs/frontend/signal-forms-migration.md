@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 46 forms.
-- Signal Forms files: 110.
-- Remaining legacy Reactive Forms surface: 45 files.
+- Migrated Signal Forms: 47 forms.
+- Signal Forms files: 112.
+- Remaining legacy Reactive Forms surface: 42 files.
 
 Tracker patterns:
 
@@ -143,6 +143,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.html`
 - `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.ts`
 - `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.html`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.html`
 
 ## Next Candidates
 
@@ -168,6 +170,6 @@ Tracker patterns:
 - `fd-ui-datetime-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - Product manage now keeps `ProductFormValues` as the signal model and passes mapped nutrition fields into the shared nutrition editor.
 - Meal manual item dialog uses a scalar Signal Form for amount while keeping the legacy meal item `FormGroup` as its outer adapter until meal manage is migrated.
-- Meal manage complex migration has started with value-based form factories, nutrition summary helpers, and a Signal Forms general-info block. The root remains hybrid until items/nutrition move off legacy forms.
+- Meal manage complex migration has started with value-based form factories, nutrition summary helpers, Signal Forms general-info and nutrition sidebar blocks. The root remains hybrid until items move off legacy forms.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

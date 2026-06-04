@@ -49,6 +49,7 @@ import type {
     MacroBarState,
     MealNutritionSummaryState,
     NutritionMode,
+    NutritionTotals,
 } from './meal-manage-lib/meal-manage.types';
 import {
     buildMealManageDto,
@@ -79,6 +80,20 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
+const SIGNAL_MANAGED_FORM_FIELDS = [
+    'date',
+    'time',
+    'mealType',
+    'comment',
+    'imageUrl',
+    'isNutritionAutoCalculated',
+    'manualCalories',
+    'manualProteins',
+    'manualFats',
+    'manualCarbs',
+    'manualFiber',
+    'manualAlcohol',
+] as const satisfies ReadonlyArray<keyof ConsumptionFormValues>;
 
 @Component({
     selector: 'fd-meal-manage-form',
@@ -106,15 +121,6 @@ export class MealManageFormComponent {
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly calorieMismatchThreshold = DEFAULT_CALORIE_MISMATCH_THRESHOLD;
-
-    protected readonly nutritionControlNames = {
-        calories: 'manualCalories',
-        proteins: 'manualProteins',
-        fats: 'manualFats',
-        carbs: 'manualCarbs',
-        fiber: 'manualFiber',
-        alcohol: 'manualAlcohol',
-    };
 
     public readonly consumption = input<Consumption | null>(null);
     protected readonly totalCalories = signal<number>(0);
@@ -252,6 +258,7 @@ export class MealManageFormComponent {
     private watchNutritionModeChanges(): void {
         this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(isAuto => {
             this.nutritionMode.set(isAuto ? 'auto' : 'manual');
+            this.patchConsumptionFormModel({ isNutritionAutoCalculated: isAuto });
             this.updateManualNutritionValidators(isAuto);
             if (!isAuto) {
                 this.populateManualNutritionFromCurrentSummary();
@@ -409,29 +416,36 @@ export class MealManageFormComponent {
         }
 
         this.nutritionMode.set(resolvedMode);
-        this.consumptionForm.controls.isNutritionAutoCalculated.setValue(resolvedMode === 'auto');
+        const isAuto = resolvedMode === 'auto';
+        this.patchConsumptionFormModel({ isNutritionAutoCalculated: isAuto });
+        this.syncSignalManagedValuesToLegacyForm(this.consumptionFormModel());
+        this.updateManualNutritionValidators(isAuto);
+        if (!isAuto) {
+            this.populateManualNutritionFromCurrentSummary();
+        }
+        this.updateSummary();
     }
 
     protected caloriesError(): string | null {
-        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+        if (this.consumptionFormModel().isNutritionAutoCalculated) {
             return null;
         }
 
-        return checkCaloriesError(this.consumptionForm.controls.manualCalories)
+        return checkCaloriesError(this.getSignalNutritionControlState('manualCalories'))
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
             : null;
     }
 
     protected macrosError(): string | null {
-        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+        if (this.consumptionFormModel().isNutritionAutoCalculated) {
             return null;
         }
 
         return checkMacrosError([
-            this.consumptionForm.controls.manualProteins,
-            this.consumptionForm.controls.manualFats,
-            this.consumptionForm.controls.manualCarbs,
-            this.consumptionForm.controls.manualAlcohol,
+            this.getSignalNutritionControlState('manualProteins'),
+            this.getSignalNutritionControlState('manualFats'),
+            this.getSignalNutritionControlState('manualCarbs'),
+            this.getSignalNutritionControlState('manualAlcohol'),
         ])
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
             : null;
@@ -600,6 +614,7 @@ export class MealManageFormComponent {
 
         if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
             this.mealManageFacade.syncManualNutritionFromTotals(this.consumptionForm, nutritionState.autoTotals);
+            this.patchManualNutritionFromTotals(nutritionState.autoTotals);
         }
     }
 
@@ -642,6 +657,7 @@ export class MealManageFormComponent {
             this.calorieMismatchThreshold,
         );
         this.mealManageFacade.syncManualNutritionFromTotals(this.consumptionForm, nutritionState.autoTotals);
+        this.patchManualNutritionFromTotals(nutritionState.autoTotals);
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {
@@ -650,6 +666,17 @@ export class MealManageFormComponent {
 
     private updateItemValidationRules(): void {
         this.mealManageFacade.updateItemValidationRules(this.consumptionForm.controls.items);
+    }
+
+    private patchManualNutritionFromTotals(totals: NutritionTotals): void {
+        this.patchConsumptionFormModel({
+            manualCalories: totals.calories,
+            manualProteins: totals.proteins,
+            manualFats: totals.fats,
+            manualCarbs: totals.carbs,
+            manualFiber: totals.fiber,
+            manualAlcohol: totals.alcohol,
+        });
     }
 
     private async addConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
@@ -665,7 +692,7 @@ export class MealManageFormComponent {
     private async handleSubmitResponseAsync(response: Consumption | null): Promise<void> {
         if (response !== null) {
             if (this.consumption() === null) {
-                this.consumptionForm.reset({
+                const resetValue = {
                     date: this.getDateInputValue(new Date()),
                     time: this.getTimeInputValue(new Date()),
                     mealType: resolveMealTypeByTime(new Date()),
@@ -679,12 +706,11 @@ export class MealManageFormComponent {
                     manualAlcohol: null,
                     preMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
                     postMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
-                });
+                };
+                this.consumptionForm.reset(resetValue);
                 this.consumptionFormModel.set({
                     ...createMealManageFormValue(),
-                    date: this.getDateInputValue(new Date()),
-                    time: this.getTimeInputValue(new Date()),
-                    mealType: resolveMealTypeByTime(new Date()),
+                    ...resetValue,
                 });
                 this.items.clear();
                 this.items.push(this.mealManageFacade.createConsumptionItem());
@@ -760,10 +786,15 @@ export class MealManageFormComponent {
     }
 
     private patchConsumptionFormModel(patch: Partial<ConsumptionFormValues>): void {
-        this.consumptionFormModel.update(value => ({
-            ...value,
-            ...this.pickSignalManagedFormValue(patch),
-        }));
+        const pickedPatch = this.pickSignalManagedFormValue(patch);
+        this.consumptionFormModel.update(value => {
+            const nextValue = {
+                ...value,
+                ...pickedPatch,
+            };
+
+            return this.hasSignalManagedValueChanges(value, nextValue) ? nextValue : value;
+        });
     }
 
     private syncSignalManagedValuesToLegacyForm(value: ConsumptionFormValues): void {
@@ -774,18 +805,40 @@ export class MealManageFormComponent {
                 mealType: value.mealType,
                 comment: value.comment,
                 imageUrl: value.imageUrl,
+                isNutritionAutoCalculated: value.isNutritionAutoCalculated,
+                manualCalories: value.manualCalories,
+                manualProteins: value.manualProteins,
+                manualFats: value.manualFats,
+                manualCarbs: value.manualCarbs,
+                manualFiber: value.manualFiber,
+                manualAlcohol: value.manualAlcohol,
             },
             { emitEvent: false },
         );
     }
 
     private pickSignalManagedFormValue(value: Partial<ConsumptionFormValues>): Partial<ConsumptionFormValues> {
+        return Object.fromEntries(
+            SIGNAL_MANAGED_FORM_FIELDS.filter(field => value[field] !== undefined).map(field => [field, value[field]]),
+        );
+    }
+
+    private hasSignalManagedValueChanges(currentValue: ConsumptionFormValues, nextValue: ConsumptionFormValues): boolean {
+        return SIGNAL_MANAGED_FORM_FIELDS.some(field => currentValue[field] !== nextValue[field]);
+    }
+
+    private getSignalNutritionControlState(
+        field: keyof Pick<ConsumptionFormValues, 'manualCalories' | 'manualProteins' | 'manualFats' | 'manualCarbs' | 'manualAlcohol'>,
+    ): {
+        value: number | null;
+        touched: boolean;
+        dirty: boolean;
+    } {
+        const state = this.consumptionSignalForm[field]();
         return {
-            ...(value.date !== undefined ? { date: value.date } : {}),
-            ...(value.time !== undefined ? { time: value.time } : {}),
-            ...(value.mealType !== undefined ? { mealType: value.mealType } : {}),
-            ...(value.comment !== undefined ? { comment: value.comment } : {}),
-            ...(value.imageUrl !== undefined ? { imageUrl: value.imageUrl } : {}),
+            value: state.value(),
+            touched: state.touched(),
+            dirty: state.dirty(),
         };
     }
 
