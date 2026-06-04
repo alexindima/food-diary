@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.Application.Users.Models;
 
+[ExcludeFromCodeCoverage]
 public sealed record GoalsModel(
     double? DailyCalorieTarget,
     double? ProteinTarget,

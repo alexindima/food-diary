@@ -3,6 +3,8 @@ using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.GoogleLogin;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Authentication.Commands.Register;
+using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
@@ -61,6 +63,121 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("admin-sso-code", result.Value.Code);
         Assert.Equal(1, adminSsoService.CreateCodeCallCount);
+    }
+
+    [Fact]
+    public async Task RegisterHandler_CreatesUserIssuesTokensAndSendsVerificationEmail() {
+        var sender = new StubEmailSender();
+        var tokens = new StubAuthenticationTokenService();
+        var handler = new RegisterCommandHandler(
+            new StubUserRepository(),
+            new StubPasswordHasher(),
+            sender,
+            new StubDateTimeProvider(),
+            tokens,
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<RegisterCommandHandler>.Instance);
+
+        var result = await handler.Handle(
+            new RegisterCommand("new@example.com", "secret", "ru", "https://client.test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+        Assert.Equal("refresh", result.Value.RefreshToken);
+        Assert.Equal("new@example.com", sender.LastEmailVerification?.ToEmail);
+        Assert.Equal("https://client.test", sender.LastEmailVerification?.ClientOrigin);
+        Assert.Equal("ru", tokens.LastUser?.Language);
+        Assert.NotNull(tokens.LastUser?.EmailConfirmationTokenHash);
+    }
+
+    [Fact]
+    public async Task RegisterHandler_WhenVerificationEmailFails_StillReturnsTokens() {
+        var handler = new RegisterCommandHandler(
+            new StubUserRepository(),
+            new StubPasswordHasher(),
+            new StubEmailSender(throwOnEmailVerification: true),
+            new StubDateTimeProvider(),
+            new StubAuthenticationTokenService(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<RegisterCommandHandler>.Instance);
+
+        var result = await handler.Handle(
+            new RegisterCommand("email-failure@example.com", "secret", null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("access", result.Value.AccessToken);
+    }
+
+    [Fact]
+    public async Task RequestPasswordResetHandler_WhenUserMissing_ReturnsSuccessWithoutSending() {
+        var sender = new StubEmailSender();
+        var handler = new RequestPasswordResetCommandHandler(
+            new StubUserRepository(),
+            new StubPasswordHasher(),
+            sender,
+            new StubDateTimeProvider(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+
+        var result = await handler.Handle(new RequestPasswordResetCommand("missing@example.com"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(sender.LastPasswordReset);
+    }
+
+    [Fact]
+    public async Task RequestPasswordResetHandler_WhenRequestIsInCooldown_ReturnsSuccessWithoutSending() {
+        var user = User.Create("cooldown-reset@example.com", "secret");
+        var nowUtc = new StubDateTimeProvider().UtcNow;
+        user.SetPasswordResetToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddSeconds(-30)));
+        var sender = new StubEmailSender();
+        var handler = new RequestPasswordResetCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            sender,
+            new StubDateTimeProvider(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+
+        var result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(sender.LastPasswordReset);
+    }
+
+    [Fact]
+    public async Task RequestPasswordResetHandler_WithActiveUser_UpdatesTokenAndSendsMessage() {
+        var user = User.Create("reset@example.com", "secret");
+        var sender = new StubEmailSender();
+        var handler = new RequestPasswordResetCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            sender,
+            new StubDateTimeProvider(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+
+        var result = await handler.Handle(
+            new RequestPasswordResetCommand(user.Email, "https://client.test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(user.PasswordResetTokenHash);
+        Assert.Equal(user.Email, sender.LastPasswordReset?.ToEmail);
+        Assert.Equal("https://client.test", sender.LastPasswordReset?.ClientOrigin);
+    }
+
+    [Fact]
+    public async Task RequestPasswordResetHandler_WhenEmailFails_StillReturnsSuccess() {
+        var user = User.Create("reset-email-fails@example.com", "secret");
+        var handler = new RequestPasswordResetCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubEmailSender(throwOnPasswordReset: true),
+            new StubDateTimeProvider(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+
+        var result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(user.PasswordResetTokenHash);
     }
 
     [Fact]
@@ -288,11 +405,15 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubAuthenticationTokenService : IAuthenticationTokenService {
+        public User? LastUser { get; private set; }
+
         public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
             User user,
             CancellationToken cancellationToken,
-            AuthenticationClientContext? clientContext = null) =>
-            Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
+            AuthenticationClientContext? clientContext = null) {
+            LastUser = user;
+            return Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
+        }
 
         public string IssueAccessToken(User user) => throw new NotSupportedException();
     }
@@ -342,8 +463,9 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubEmailSender(bool throwOnEmailVerification = false) : IEmailSender {
+    private sealed class StubEmailSender(bool throwOnEmailVerification = false, bool throwOnPasswordReset = false) : IEmailSender {
         public EmailVerificationMessage? LastEmailVerification { get; private set; }
+        public PasswordResetMessage? LastPasswordReset { get; private set; }
 
         public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) {
             if (throwOnEmailVerification) {
@@ -354,8 +476,14 @@ public sealed class AuthenticationCommandHandlerTests {
             return Task.CompletedTask;
         }
 
-        public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+        public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) {
+            if (throwOnPasswordReset) {
+                throw new InvalidOperationException("smtp failed");
+            }
+
+            LastPasswordReset = message;
+            return Task.CompletedTask;
+        }
 
         public Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();

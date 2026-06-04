@@ -193,6 +193,56 @@ public class HydrationFeatureTests {
         Assert.Contains("HydrationEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public async Task GetHydrationEntriesQueryHandler_WithInvalidUserId_ReturnsInvalidToken() {
+        var handler = new GetHydrationEntriesQueryHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(User.Create("hydration-entries@example.com", "hash")));
+
+        var result = await handler.Handle(new GetHydrationEntriesQuery(Guid.Empty, DateTime.UtcNow), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetHydrationEntriesQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-hydration-entries@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetHydrationEntriesQueryHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, DateTime.UtcNow), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetHydrationEntriesQueryHandler_NormalizesDateAndMapsEntries() {
+        var user = User.Create("hydration-entries-date@example.com", "hash");
+        var repository = new InMemoryHydrationEntryRepository();
+        var entry = await repository.AddAsync(HydrationEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
+            350));
+        await repository.AddAsync(HydrationEntry.Create(
+            UserId.New(),
+            new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
+            250));
+        var handler = new GetHydrationEntriesQueryHandler(repository, new StubUserRepository(user));
+        var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, dateOnly), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), repository.LastGetByDateDateUtc);
+        var model = Assert.Single(result.Value);
+        Assert.Equal(entry.Id.Value, model.Id);
+        Assert.Equal(350, model.AmountMl);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class RecordingHydrationEntryRepository : IHydrationEntryRepository {
         public DateTime? LastDailyTotalDateUtc { get; private set; }
@@ -241,11 +291,14 @@ public class HydrationFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null) : IHydrationEntryRepository {
         private HydrationEntry? _entry = entry;
+        private readonly List<HydrationEntry> _entries = entry is null ? [] : [entry];
         public HydrationEntry? AddedEntry { get; private set; }
+        public DateTime? LastGetByDateDateUtc { get; private set; }
 
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
             AddedEntry = entry;
             _entry = entry;
+            _entries.Add(entry);
             return Task.FromResult(entry);
         }
 
@@ -260,8 +313,13 @@ public class HydrationFeatureTests {
         public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult(_entry?.Id == id ? _entry : null);
 
-        public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<HydrationEntry>>([]);
+        public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
+            LastGetByDateDateUtc = dateUtc;
+            var entries = _entries
+                .Where(entry => entry.UserId == userId && entry.Timestamp.Date == dateUtc.Date)
+                .ToList();
+            return Task.FromResult<IReadOnlyList<HydrationEntry>>(entries);
+        }
 
         public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);

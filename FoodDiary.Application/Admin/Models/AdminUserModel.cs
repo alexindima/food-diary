@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.Application.Admin.Models;
 
+[ExcludeFromCodeCoverage]
 public sealed record AdminUserModel(
     Guid Id,
     string Email,

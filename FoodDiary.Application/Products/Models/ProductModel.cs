@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.Application.Products.Models;
 
+[ExcludeFromCodeCoverage]
 public sealed record ProductModel(
     Guid Id,
     string? Barcode,

@@ -8,6 +8,9 @@ using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.SetPassword;
+using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
+using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
+using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
@@ -191,6 +194,132 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateUserAppearanceHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(User.Create("user@example.com", "hash")));
+
+        var result = await handler.Handle(new UpdateUserAppearanceCommand(null, "dark", null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearanceHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("appearance-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearanceHandler_WithInvalidTheme_ReturnsValidationFailure() {
+        var user = User.Create("appearance-theme@example.com", "hash");
+        var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "invalid", null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("theme", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearanceHandler_WithInvalidUiStyle_ReturnsValidationFailure() {
+        var user = User.Create("appearance-style@example.com", "hash");
+        var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, null, "invalid"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("style", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearanceHandler_WithValidValues_UpdatesPreferences() {
+        var user = User.Create("appearance-success@example.com", "hash");
+        var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", "modern"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("dark", result.Value.Theme);
+        Assert.Equal("modern", result.Value.UiStyle);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWeightHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new UpdateDesiredWeightCommandHandler(new SingleUserRepository(User.Create("desired-weight@example.com", "hash")));
+
+        var result = await handler.Handle(new UpdateDesiredWeightCommand(null, 75), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWeightHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-desired-weight@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateDesiredWeightCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateDesiredWeightCommand(user.Id.Value, 75), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWeightHandler_WithValidValue_UpdatesUser() {
+        var user = User.Create("desired-weight-success@example.com", "hash");
+        var handler = new UpdateDesiredWeightCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateDesiredWeightCommand(user.Id.Value, 72.5), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(72.5, result.Value.DesiredWeight);
+        Assert.Equal(72.5, user.DesiredWeight);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWaistHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new UpdateDesiredWaistCommandHandler(new SingleUserRepository(User.Create("desired-waist@example.com", "hash")));
+
+        var result = await handler.Handle(new UpdateDesiredWaistCommand(Guid.Empty, 80), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWaistHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-desired-waist@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateDesiredWaistCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateDesiredWaistCommand(user.Id.Value, 80), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWaistHandler_WithValidValue_UpdatesUser() {
+        var user = User.Create("desired-waist-success@example.com", "hash");
+        var handler = new UpdateDesiredWaistCommandHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new UpdateDesiredWaistCommand(user.Id.Value, 78.5), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(78.5, result.Value.DesiredWaist);
+        Assert.Equal(78.5, user.DesiredWaist);
+    }
+
+    [Fact]
     public async Task GetUserByIdHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
@@ -323,11 +452,123 @@ public class UsersFeatureTests {
     }
 
     [Fact]
+    public async Task GetDesiredWeightHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(User.Create("desired-weight-query@example.com", "hash")));
+
+        var result = await handler.Handle(new GetDesiredWeightQuery(null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetDesiredWeightHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-desired-weight-query@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDesiredWeightQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetDesiredWeightHandler_ReturnsCurrentDesiredWeight() {
+        var user = User.Create("desired-weight-query-success@example.com", "hash");
+        user.UpdateDesiredWeight(74.5);
+        var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDesiredWeightQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(74.5, result.Value.DesiredWeight);
+    }
+
+    [Fact]
     public async Task GetUserGoalsQueryValidator_WithValidUserId_Passes() {
         var validator = new GetUserGoalsQueryValidator();
         var result = await validator.ValidateAsync(new GetUserGoalsQuery(Guid.NewGuid()));
 
         Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task GetDesiredWaistHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(User.Create("desired-waist-query@example.com", "hash")));
+
+        var result = await handler.Handle(new GetDesiredWaistQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetDesiredWaistHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-desired-waist-query@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDesiredWaistQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetDesiredWaistHandler_ReturnsCurrentDesiredWaist() {
+        var user = User.Create("desired-waist-query-success@example.com", "hash");
+        user.UpdateDesiredWaist(79.5);
+        var handler = new GetDesiredWaistQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetDesiredWaistQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(79.5, result.Value.DesiredWaist);
+    }
+
+    [Fact]
+    public async Task GetUserGoalsHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(User.Create("goals-query@example.com", "hash")));
+
+        var result = await handler.Handle(new GetUserGoalsQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetUserGoalsHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-goals-query@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetUserGoalsHandler_ReturnsCurrentGoals() {
+        var user = User.Create("goals-query-success@example.com", "hash");
+        user.UpdateGoals(new UserGoalUpdate(
+            DailyCalorieTarget: 2100,
+            ProteinTarget: 140,
+            FatTarget: 70,
+            CarbTarget: 220,
+            FiberTarget: 30,
+            WaterGoal: 2.1,
+            DesiredWeight: 73,
+            DesiredWaist: 78));
+        var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2100, result.Value.DailyCalorieTarget);
+        Assert.Equal(73, result.Value.DesiredWeight);
+        Assert.Equal(78, result.Value.DesiredWaist);
     }
 
     [ExcludeFromCodeCoverage]

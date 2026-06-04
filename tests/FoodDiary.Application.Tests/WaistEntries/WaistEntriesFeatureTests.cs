@@ -3,6 +3,7 @@ using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Domain.Entities.Tracking;
@@ -153,6 +154,66 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteWaistEntryCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new DeleteWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("delete-waist-missing-user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new DeleteWaistEntryCommand(null, WaistEntryId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteWaistEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("delete-waist-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new DeleteWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteWaistEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+        var user = User.Create("delete-waist-missing-entry@example.com", "hash");
+        var handler = new DeleteWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("WaistEntry.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteWaistEntryCommandHandler_WhenEntryExists_DeletesEntry() {
+        var user = User.Create("delete-waist-success@example.com", "hash");
+        var repository = new InMemoryWaistEntryRepository();
+        var entry = await repository.AddAsync(WaistEntry.Create(user.Id, DateTime.UtcNow.Date, 82));
+        var handler = new DeleteWaistEntryCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteWaistEntryCommand(user.Id.Value, entry.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(await repository.GetByIdAsync(entry.Id, user.Id));
+    }
+
+    [Fact]
     public async Task GetWaistEntriesQueryHandler_WithDateOnlyRange_PreservesRequestedCalendarDates() {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist-list-dateonly@example.com", "hash");
@@ -233,6 +294,49 @@ public class WaistEntriesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Null(repository.AddedEntry);
+    }
+
+    [Fact]
+    public async Task GetLatestWaistEntryQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetLatestWaistEntryQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("latest-waist@example.com", "hash")));
+
+        var result = await handler.Handle(new GetLatestWaistEntryQuery(null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetLatestWaistEntryQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-latest-waist@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetLatestWaistEntryQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetLatestWaistEntryQueryHandler_ReturnsMostRecentEntry() {
+        var user = User.Create("latest-waist-entry@example.com", "hash");
+        var repository = new InMemoryWaistEntryRepository();
+        await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc), 82));
+        var latest = await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), 81));
+        await repository.AddAsync(WaistEntry.Create(UserId.New(), new DateTime(2026, 5, 28, 0, 0, 0, DateTimeKind.Utc), 79));
+        var handler = new GetLatestWaistEntryQueryHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal(latest.Id.Value, result.Value.Id);
+        Assert.Equal(81, result.Value.Circumference);
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

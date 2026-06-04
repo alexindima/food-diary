@@ -86,6 +86,53 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task GetProductsQueryHandler_ReturnsPagedProductsAndAppliesProductTypeFilter() {
+        var user = User.Create("products-page@example.com", "hash");
+        var owned = Product.Create(
+            user.Id,
+            name: "Owned Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 120,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            productType: ProductType.Fruit,
+            visibility: Visibility.Private);
+        var supplement = Product.Create(
+            user.Id,
+            name: "Protein",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 30,
+            caloriesPerBase: 120,
+            proteinsPerBase: 24,
+            fatsPerBase: 2,
+            carbsPerBase: 4,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            productType: ProductType.Dairy,
+            visibility: Visibility.Private);
+        var repository = new OverviewProductRepository([(owned, 4), (supplement, 2)]);
+        var handler = new GetProductsQueryHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetProductsQuery(user.Id.Value, Page: 0, Limit: 0, Search: "ignored", IncludePublic: true, ProductTypes: ["fruit", "Fruit", "invalid"]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value.Page);
+        Assert.Equal(1, result.Value.Limit);
+        var item = Assert.Single(result.Value.Data);
+        Assert.Equal(owned.Id.Value, item.Id);
+        Assert.Equal(4, item.UsageCount);
+        Assert.True(item.IsOwnedByCurrentUser);
+    }
+
+    [Fact]
     public async Task CreateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
         var command = new CreateProductCommand(
@@ -921,6 +968,82 @@ public class ProductsFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(0, recentRepository.GetRecentProductsCallCount);
+    }
+
+    [Fact]
+    public async Task GetRecentProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetRecentProductsQueryHandler(new StubRecentItemRepository([]), new NoopProductRepository());
+
+        var result = await handler.Handle(new GetRecentProductsQuery(null, 10, true), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetRecentProductsQueryHandler_WhenNoRecentProducts_ReturnsEmptyList() {
+        var userId = UserId.New();
+        var recentRepository = new StubRecentItemRepository([]);
+        var handler = new GetRecentProductsQueryHandler(recentRepository, new NoopProductRepository());
+
+        var result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, true), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value);
+        Assert.Equal(1, recentRepository.GetRecentProductsCallCount);
+    }
+
+    [Fact]
+    public async Task GetRecentProductsQueryHandler_ReturnsProductsInRecentOrderAndSkipsMissingItems() {
+        var userId = UserId.New();
+        var owned = Product.Create(
+            userId,
+            name: "Owned Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 120,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var publicProduct = Product.Create(
+            UserId.New(),
+            name: "Public Yogurt",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 150,
+            caloriesPerBase: 73,
+            proteinsPerBase: 9.5,
+            fatsPerBase: 2.1,
+            carbsPerBase: 3.8,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Public);
+        var missingProductId = ProductId.New();
+        var repository = new OverviewProductRepository(
+            productsByIdWithUsage: new Dictionary<ProductId, (Product Product, int UsageCount)> {
+                [owned.Id] = (owned, 7),
+                [publicProduct.Id] = (publicProduct, 3),
+            });
+        var recentRepository = new StubRecentItemRepository([
+            new RecentProductUsage(publicProduct.Id, 3, DateTime.UtcNow),
+            new RecentProductUsage(missingProductId, 9, DateTime.UtcNow),
+            new RecentProductUsage(owned.Id, 7, DateTime.UtcNow)
+        ]);
+        var handler = new GetRecentProductsQueryHandler(recentRepository, repository);
+
+        var result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, true), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+        Assert.Equal([publicProduct.Id.Value, owned.Id.Value], result.Value.Select(x => x.Id).ToArray());
+        Assert.False(result.Value[0].IsOwnedByCurrentUser);
+        Assert.True(result.Value[1].IsOwnedByCurrentUser);
+        Assert.Equal(3, result.Value[0].UsageCount);
+        Assert.Equal(7, result.Value[1].UsageCount);
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.Application.Recipes.Models;
 
+[ExcludeFromCodeCoverage]
 public sealed record RecipeIngredientModel(
     Guid Id,
     double Amount,

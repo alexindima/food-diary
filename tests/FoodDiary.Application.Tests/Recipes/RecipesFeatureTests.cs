@@ -85,6 +85,53 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteRecipeCommandValidator_WithEmptyUserId_DoesNotCheckRepositoryAndReturnsInvalidToken() {
+        var validator = new DeleteRecipeCommandValidator(
+            new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2)));
+
+        var result = await validator.ValidateAsync(new DeleteRecipeCommand(Guid.Empty, RecipeId.New().Value));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task DeleteRecipeCommandValidator_WhenRecipeMissing_ReturnsNotFound() {
+        var userId = UserId.New();
+        var validator = new DeleteRecipeCommandValidator(
+            new SingleRecipeRepository(Recipe.Create(userId, "Soup", servings: 2)));
+
+        var result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, RecipeId.New().Value));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Recipe.NotFound", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task DeleteRecipeCommandValidator_WhenRecipeIsUsed_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipe = Recipe.Create(userId, "Used soup", servings: 2);
+        SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
+        var validator = new DeleteRecipeCommandValidator(new SingleRecipeRepository(recipe));
+
+        var result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task DeleteRecipeCommandValidator_WhenRecipeIsUnused_HasNoErrors() {
+        var userId = UserId.New();
+        var recipe = Recipe.Create(userId, "Unused soup", servings: 2);
+        var validator = new DeleteRecipeCommandValidator(new SingleRecipeRepository(recipe));
+
+        var result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
     public async Task UpdateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-update-recipe@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
@@ -464,6 +511,70 @@ public class RecipesFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(0, recentRepository.GetRecentRecipesCallCount);
+    }
+
+    [Fact]
+    public async Task GetRecentRecipesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetRecentRecipesQueryHandler(new StubRecentItemRepository([]), new SingleRecipeRepositoryForCreate());
+
+        var result = await handler.Handle(new GetRecentRecipesQuery(null, 10, true), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetRecentRecipesQueryHandler_WhenNoRecentRecipes_ReturnsEmptyList() {
+        var userId = UserId.New();
+        var recentRepository = new StubRecentItemRepository([]);
+        var handler = new GetRecentRecipesQueryHandler(recentRepository, new SingleRecipeRepositoryForCreate());
+
+        var result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, true), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value);
+        Assert.Equal(1, recentRepository.GetRecentRecipesCallCount);
+    }
+
+    [Fact]
+    public async Task GetRecentRecipesQueryHandler_ReturnsRecipesInRecentOrderAndSkipsMissingItems() {
+        var userId = UserId.New();
+        var owned = Recipe.Create(
+            userId,
+            "Owned Soup",
+            servings: 2,
+            category: "Lunch",
+            visibility: Visibility.Private);
+        owned.AddStep(1, "Cook soup");
+        var publicRecipe = Recipe.Create(
+            UserId.New(),
+            "Public Pancakes",
+            servings: 3,
+            category: "Breakfast",
+            visibility: Visibility.Public);
+        publicRecipe.AddStep(1, "Cook pancakes");
+        var missingRecipeId = RecipeId.New();
+        var repository = new OverviewRecipeRepository(
+            recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {
+                [owned.Id] = (owned, 5),
+                [publicRecipe.Id] = (publicRecipe, 2),
+            });
+        var recentRepository = new StubRecentItemRepository([
+            new RecentRecipeUsage(publicRecipe.Id, 2, DateTime.UtcNow),
+            new RecentRecipeUsage(missingRecipeId, 9, DateTime.UtcNow),
+            new RecentRecipeUsage(owned.Id, 5, DateTime.UtcNow)
+        ]);
+        var handler = new GetRecentRecipesQueryHandler(recentRepository, repository);
+
+        var result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, true), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+        Assert.Equal([publicRecipe.Id.Value, owned.Id.Value], result.Value.Select(x => x.Id).ToArray());
+        Assert.False(result.Value[0].IsOwnedByCurrentUser);
+        Assert.True(result.Value[1].IsOwnedByCurrentUser);
+        Assert.Equal(2, result.Value[0].UsageCount);
+        Assert.Equal(5, result.Value[1].UsageCount);
     }
 
     [Fact]

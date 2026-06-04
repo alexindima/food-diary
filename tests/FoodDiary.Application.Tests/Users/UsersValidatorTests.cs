@@ -1,10 +1,12 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
+using FoodDiary.Application.Users.Commands.SetPassword;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
 using FoodDiary.Application.Users.Commands.UpdateUser;
+using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetUserById;
@@ -106,6 +108,54 @@ public class UsersValidatorTests {
         var v = new UpdateUserCommandValidator();
         var result = await v.TestValidateAsync(new UpdateUserCommand(Guid.NewGuid(), null, null, null, null, null, -1, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
         result.ShouldHaveValidationErrorFor(c => c.Weight);
+    }
+
+    [Fact]
+    public async Task SetPassword_WithNullUserId_HasError() {
+        var result = await new SetPasswordCommandValidator().TestValidateAsync(
+            new SetPasswordCommand(null, "new-password"));
+
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task SetPassword_WithShortPassword_HasError() {
+        var result = await new SetPasswordCommandValidator().TestValidateAsync(
+            new SetPasswordCommand(Guid.NewGuid(), "12345"));
+
+        result.ShouldHaveValidationErrorFor(c => c.NewPassword);
+    }
+
+    [Fact]
+    public async Task SetPassword_WithValidCommand_HasNoErrors() {
+        var result = await new SetPasswordCommandValidator().TestValidateAsync(
+            new SetPasswordCommand(Guid.NewGuid(), "new-password"));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearance_WithNullUserId_HasError() {
+        var result = await new UpdateUserAppearanceCommandValidator().TestValidateAsync(
+            new UpdateUserAppearanceCommand(null, "dark", null));
+
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearance_WithNoAppearanceFields_HasError() {
+        var result = await new UpdateUserAppearanceCommandValidator().TestValidateAsync(
+            new UpdateUserAppearanceCommand(Guid.NewGuid(), null, null));
+
+        result.ShouldHaveValidationErrorFor(c => c);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearance_WithThemeOnly_HasNoErrors() {
+        var result = await new UpdateUserAppearanceCommandValidator().TestValidateAsync(
+            new UpdateUserAppearanceCommand(Guid.NewGuid(), "dark", null));
+
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     // â”€â”€ UpdateGoals â”€â”€

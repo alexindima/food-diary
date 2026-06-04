@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.Application.Consumptions.Models;
 
+[ExcludeFromCodeCoverage]
 public sealed record ConsumptionItemModel(
     Guid Id,
     Guid ConsumptionId,

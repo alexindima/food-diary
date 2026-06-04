@@ -1,5 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
+using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
@@ -157,6 +158,33 @@ public class AdminValidatorTests {
     public async Task ImportAdminLessons_WithValidLesson_HasNoErrors() {
         var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
             new ImportAdminLessonsCommand(1, [ValidLesson()]));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task SendAdminEmailTemplateTest_WithInvalidEmail_HasError() {
+        var result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
+            new SendAdminEmailTemplateTestCommand("not-email", "welcome", "Subject", "<p>Hi</p>", "Hi"));
+
+        result.ShouldHaveValidationErrorFor(c => c.ToEmail);
+    }
+
+    [Fact]
+    public async Task SendAdminEmailTemplateTest_WithEmptyTemplateFields_HasErrors() {
+        var result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
+            new SendAdminEmailTemplateTestCommand("admin@example.com", "", "", "", ""));
+
+        result.ShouldHaveValidationErrorFor(c => c.Key);
+        result.ShouldHaveValidationErrorFor(c => c.Subject);
+        result.ShouldHaveValidationErrorFor(c => c.HtmlBody);
+        result.ShouldHaveValidationErrorFor(c => c.TextBody);
+    }
+
+    [Fact]
+    public async Task SendAdminEmailTemplateTest_WithValidData_HasNoErrors() {
+        var result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
+            new SendAdminEmailTemplateTestCommand("admin@example.com", "welcome", "Subject", "<p>Hi</p>", "Hi"));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
