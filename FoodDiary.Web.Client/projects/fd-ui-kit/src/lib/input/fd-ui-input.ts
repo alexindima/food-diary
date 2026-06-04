@@ -1,6 +1,6 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal } from '@angular/core';
 import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -63,6 +63,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
     public readonly appearance = input<FdUiInputAppearance>('default');
+    public readonly controlValue = model<string | number | null>();
 
     public readonly suffixButtonClicked = output();
 
@@ -75,6 +76,13 @@ export class FdUiInputComponent implements ControlValueAccessor {
     private autofillSyncTimers: Array<ReturnType<typeof setTimeout>> = [];
 
     public constructor() {
+        effect(() => {
+            const value = this.controlValue();
+            if (value !== undefined) {
+                this.internalValue.set(value ?? '');
+            }
+        });
+
         afterNextRender(() => {
             this.monitorAutofill();
             this.syncNativeValue();
@@ -139,6 +147,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
         }
 
         this.internalValue.set(value);
+        this.controlValue.set(value);
         this.onChange(value);
     }
 

@@ -8,6 +8,7 @@ import {
     type ElementRef,
     inject,
     input,
+    model,
     output,
     viewChild,
 } from '@angular/core';
@@ -91,6 +92,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly resizeQuality = input<number>(DEFAULT_RESIZE_QUALITY);
     public readonly deleteOnClear = input<boolean>(false);
     public readonly initialSelection = input<ImageSelection | null>(null);
+    public readonly controlValue = model<ImageSelection | null>();
     public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'hidden'>('default');
 
     public readonly imageChanged = output<ImageSelection | null>();
@@ -122,6 +124,13 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     public constructor() {
         effect(() => {
+            const value = this.controlValue();
+            if (value !== undefined) {
+                this.selection = value ?? { url: null, assetId: null };
+                this.cdr.markForCheck();
+                return;
+            }
+
             const initial = this.initialSelection();
             if (this.hasInitialSelection(initial)) {
                 this.selection = {
@@ -201,6 +210,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.error = null;
         this.onChange(this.selection);
         this.onTouched();
+        this.controlValue.set(this.selection);
         this.imageChanged.emit(this.selection);
         this.isCropping = false;
         this.clearCropState();
@@ -465,6 +475,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
                     this.selection = selection;
                     this.onChange(selection);
                     this.onTouched();
+                    this.controlValue.set(selection);
                     this.imageChanged.emit(selection);
                     this.cdr.markForCheck();
                 },

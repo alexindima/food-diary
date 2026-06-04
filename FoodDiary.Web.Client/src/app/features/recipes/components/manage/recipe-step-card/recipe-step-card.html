@@ -1,4 +1,4 @@
-<ng-container [formGroup]="stepForm()">
+<ng-container>
     <fd-ui-card class="recipe-step-card" tone="editor-gradient" density="relaxed">
         <div class="recipe-step-card__header fd-row fd-justify-between fd-gap-md">
             <div class="recipe-step-card__header-left fd-row fd-gap-xs">
@@ -12,9 +12,10 @@
                 <fd-ui-input
                     class="recipe-step-card__title-input"
                     appearance="inline-edit"
-                    formControlName="title"
+                    [controlValue]="stepForm().controls.title.value"
                     [placeholder]="titleDisplay()"
-                    (blur)="onStepTitleBlur()"
+                    (controlValueChange)="onStepTitleInput($event)"
+                    (focusout)="onStepTitleBlur()"
                 />
                 } @else {
                 <span class="recipe-step-card__title fd-ui-action-text"> {{ titleDisplay() }} </span>
@@ -59,37 +60,37 @@
                 <fd-image-upload-field
                     class="recipe-step-card__image-upload"
                     appearance="step"
-                    formControlName="imageUrl"
                     recommendedSize="512 x 512"
                     acceptedTypes="image/png,image/jpeg,image/webp"
+                    [controlValue]="stepForm().controls.imageUrl.value"
                     [description]="'RECIPE_MANAGE.STEP_IMAGE_HINT' | translate"
                     [maxSizeMb]="10"
                     [cropEnabled]="true"
                     [cropSize]="512"
                     [cropAspectRatio]="1"
+                    (controlValueChange)="onStepImageChange($event)"
                 />
             </div>
             <div class="recipe-step-card__description">
                 <fd-ui-textarea
-                    formControlName="description"
+                    [controlValue]="stepForm().controls.description.value"
                     [rows]="3"
                     [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
                     [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
                     [error]="descriptionError()"
+                    (controlValueChange)="onStepDescriptionInput($event)"
                 />
             </div>
         </div>
 
-        <div class="recipe-step-card__ingredients fd-stack fd-gap-md" formArrayName="ingredients">
+        <div class="recipe-step-card__ingredients fd-stack fd-gap-md">
             <div class="recipe-step-card__subtitle fd-ui-caption">{{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}</div>
             @for (row of ingredientRows(); track row.index) {
-            <div class="recipe-ingredient fd-row fd-gap-md" [formGroupName]="row.index">
-                <input type="hidden" formControlName="food" />
-                <input type="hidden" formControlName="nestedRecipeId" />
+            <div class="recipe-ingredient fd-row fd-gap-md">
                 <fd-ui-input
                     class="recipe-ingredient__name"
-                    formControlName="foodName"
                     size="lg"
+                    [controlValue]="ingredients.controls[row.index]?.controls.foodName.value ?? ''"
                     [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
                     [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
                     [readonly]="true"
@@ -101,12 +102,13 @@
 
                 <div class="recipe-ingredient__amount fd-row fd-align-start fd-gap-sm">
                     <fd-ui-input
-                        formControlName="amount"
                         size="lg"
                         type="number"
+                        [controlValue]="ingredients.controls[row.index]?.controls.amount.value"
                         [step]="0.01"
                         [label]="row.amountLabel"
                         [error]="row.amountError"
+                        (controlValueChange)="onIngredientAmountInput(row.index, $event)"
                     />
                     <fd-ui-button
                         type="button"

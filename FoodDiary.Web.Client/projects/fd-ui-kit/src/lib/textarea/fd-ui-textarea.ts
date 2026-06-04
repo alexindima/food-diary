@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, model, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -32,6 +32,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     public readonly maxLength = input<number>();
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
+    public readonly controlValue = model<string | number | null>();
 
     protected readonly internalValue = signal('');
     protected readonly disabled = signal(false);
@@ -39,6 +40,15 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
 
     private onChange: (value: string) => void = () => {};
     private onTouched: () => void = () => {};
+
+    public constructor() {
+        effect(() => {
+            const value = this.controlValue();
+            if (value !== undefined) {
+                this.internalValue.set(value === null ? '' : String(value));
+            }
+        });
+    }
 
     protected readonly sizeClass = computed(() => `fd-ui-textarea--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
@@ -76,6 +86,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
         }
 
         this.internalValue.set(value);
+        this.controlValue.set(value);
         this.onChange(value);
     }
 

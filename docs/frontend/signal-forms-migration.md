@@ -9,7 +9,7 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 - Baseline date: 2026-06-04.
 - Migrated Signal Forms: 51 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 13 files.
+- Remaining legacy Reactive Forms surface: 11 files.
 
 Tracker patterns:
 
@@ -172,6 +172,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/recipes/lib/non-empty-array.validator.spec.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.spec.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html`
 
 ## Next Candidates
 
@@ -210,5 +212,6 @@ Tracker patterns:
 - Error utility specs now use structural control-state doubles instead of Angular `FormControl`, keeping actual Reactive Forms usage visible in adapters/managers.
 - `fd-ui-form-error` now accepts a minimal structural control state, and validator specs use plain control doubles instead of Angular `FormControl`/`FormGroup`.
 - Recipe manage facade now uses value-level and structural nutrition/selection contracts; the root recipe adapter still owns the legacy steps `FormArray`.
+- Recipe step card now uses explicit `controlValue` model bindings instead of `ReactiveFormsModule` directives; `fd-ui-input`, `fd-ui-textarea`, and `fd-image-upload-field` keep CVA compatibility while exposing neutral controlled-value APIs.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.
