@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { type AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -17,7 +16,8 @@ import {
     createEmptyProductSnapshot,
 } from '../../models/meal.data';
 import { MealManageFormComponent } from './meal-manage-form';
-import type { ConsumptionItemFormData, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
+import type { MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
+import { createConsumptionItemGroup, createMealConsumptionItemsRule } from './meal-manage-lib/meal-manage-form.mapper';
 
 const PRODUCT_AMOUNT = 150;
 const TOTAL_CALORIES = 300;
@@ -94,7 +94,6 @@ describe('MealManageFormComponent submit behavior', () => {
             product: { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
             amount: PRODUCT_AMOUNT,
         });
-        clearValidators(component['consumptionForm']);
         component['consumptionForm'].updateValueAndValidity();
         expect(component['consumptionForm'].valid).toBe(true);
 
@@ -140,7 +139,6 @@ describe('MealManageFormComponent submit behavior', () => {
             product: { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
             amount: PRODUCT_AMOUNT,
         });
-        clearValidators(component['consumptionForm']);
         component['consumptionForm'].updateValueAndValidity();
 
         component['onSubmit']();
@@ -299,8 +297,8 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         configureItemType: vi.fn(),
         convertRecipeGramsToServings: vi.fn((_recipe, amount: number) => amount),
         convertRecipeServingsToGrams: vi.fn((_recipe, amount: number) => amount),
-        createConsumptionItem: vi.fn(createConsumptionItemGroup),
-        createItemsRule: vi.fn(() => Validators.nullValidator),
+        createConsumptionItem: vi.fn(() => createConsumptionItemGroup()),
+        createItemsRule: vi.fn(() => createMealConsumptionItemsRule(() => [{ items: [] }])),
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         getManualNutritionTotals: vi.fn().mockReturnValue(EMPTY_TOTALS),
         openEditAiPhotoSessionDialogAsync: vi.fn().mockResolvedValue(null),
@@ -314,15 +312,6 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         updateItemRules: vi.fn(),
         updateManualNutritionRules: vi.fn(),
     };
-}
-
-function createConsumptionItemGroup(): FormGroup<ConsumptionItemFormData> {
-    return new FormGroup<ConsumptionItemFormData>({
-        sourceType: new FormControl(ConsumptionSourceType.Product, { nonNullable: true }),
-        product: new FormControl(null),
-        recipe: new FormControl(null),
-        amount: new FormControl(null),
-    });
 }
 
 function createNutritionSummaryState(): MealNutritionSummaryState {
@@ -357,17 +346,4 @@ function createConsumption(overrides: Partial<Consumption> = {}): Consumption {
         items: [],
         ...overrides,
     };
-}
-
-function clearValidators(control: AbstractControl): void {
-    control.clearValidators();
-    control.clearAsyncValidators();
-
-    if (control instanceof FormGroup || control instanceof FormArray) {
-        Object.values(control.controls).forEach(child => {
-            clearValidators(child);
-        });
-    }
-
-    control.updateValueAndValidity({ emitEvent: false });
 }

@@ -1,4 +1,3 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
@@ -9,11 +8,13 @@ import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
 } from '../../../models/meal.data';
-import type { ConsumptionFormValues, ConsumptionItemFormData, ConsumptionItemFormValues, NutritionTotals } from './meal-manage.types';
+import type { ConsumptionFormValues, ConsumptionItemFormValues, NutritionTotals } from './meal-manage.types';
 import {
     buildMealManageDto,
     buildMealManageFormPatchValue,
+    createConsumptionItemGroup,
     createConsumptionItemValue,
+    createMealConsumptionItemsRule,
     createMealManageForm,
     createMealManageFormValue,
     getConsumptionItemInitialAmount,
@@ -56,8 +57,8 @@ describe('meal manage form creation', () => {
     it('should create form with fixed date, time and one item', () => {
         const form = createMealManageForm(
             {
-                createItem: () => createItemGroup(createProductItem()),
-                createItemsRule: () => Validators.required,
+                createItem: () => createConsumptionItemGroup(product, null, PRODUCT_AMOUNT, ConsumptionSourceType.Product),
+                createItemsRule: () => createMealConsumptionItemsRule(() => []),
             },
             FIXED_DATE,
         );
@@ -236,15 +237,6 @@ function createProductItem(): ConsumptionItemFormValues {
         recipe: null,
         amount: PRODUCT_AMOUNT,
     };
-}
-
-function createItemGroup(value: ConsumptionItemFormValues): FormGroup<ConsumptionItemFormData> {
-    return new FormGroup<ConsumptionItemFormData>({
-        sourceType: new FormControl(value.sourceType, { nonNullable: true }),
-        product: new FormControl(value.product),
-        recipe: new FormControl(value.recipe),
-        amount: new FormControl(value.amount),
-    });
 }
 
 function createDtoCallbacks(): Parameters<typeof buildMealManageDto>[1] {
