@@ -5,7 +5,7 @@ installCssParseWarningFilter();
 installCssParseStderrFilter();
 
 function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): void {
-    const current = globalThis[storageName];
+    const current = getOwnGlobalValue(storageName);
     if (isStorageLike(current)) {
         return;
     }
@@ -23,6 +23,15 @@ function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): 
             configurable: true,
         });
     }
+}
+
+function getOwnGlobalValue(propertyName: string): unknown {
+    const descriptor = Object.getOwnPropertyDescriptor(globalThis, propertyName);
+    if (descriptor === undefined || !('value' in descriptor)) {
+        return undefined;
+    }
+
+    return descriptor.value as unknown;
 }
 
 function isStorageLike(value: unknown): value is Storage {

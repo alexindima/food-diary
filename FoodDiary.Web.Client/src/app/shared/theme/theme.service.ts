@@ -36,7 +36,7 @@ export class ThemeService {
     private readonly document = inject(DOCUMENT);
     private readonly themeStorageKey = 'fd_theme';
     private readonly uiStyleStorageKey = 'fd_ui_style';
-    private readonly localStorageRef = typeof localStorage === 'undefined' ? null : localStorage;
+    private readonly localStorageRef = this.getLocalStorage();
     private readonly themeState = signal<AppThemeName>(DEFAULT_APP_THEME);
     private readonly uiStyleState = signal<AppUiStyleName>(DEFAULT_APP_UI_STYLE);
 
@@ -170,6 +170,14 @@ export class ThemeService {
         const metaThemeColor = this.document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
         if (metaThemeColor !== null) {
             metaThemeColor.content = color;
+        }
+    }
+
+    private getLocalStorage(): Storage | null {
+        try {
+            return this.document.defaultView?.localStorage ?? null;
+        } catch {
+            return null;
         }
     }
 }
