@@ -7,7 +7,7 @@
         (back)="onCancelAsync()"
     />
 
-    <form class="consumption-manage__form fd-stack fd-gap-lg" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
+    <form class="consumption-manage__form fd-stack fd-gap-lg" (submit)="onSubmit(); $event.preventDefault()">
         @let generalErrors = generalFieldErrors();
         <div class="consumption-manage__grid fd-grid fd-gap-xl">
             <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">

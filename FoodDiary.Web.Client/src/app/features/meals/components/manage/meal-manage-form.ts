@@ -12,7 +12,7 @@ import {
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { type FieldTree, form, required, type ValidationError } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -105,7 +105,6 @@ const SIGNAL_MANAGED_FORM_FIELDS = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [
-        ReactiveFormsModule,
         TranslatePipe,
         ManageHeaderComponent,
         FdPageContainerDirective,

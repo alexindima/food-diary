@@ -9,7 +9,7 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 - Baseline date: 2026-06-04.
 - Migrated Signal Forms: 51 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 23 files.
+- Remaining legacy Reactive Forms surface: 21 files.
 
 Tracker patterns:
 
@@ -161,6 +161,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.html`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.spec.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.html`
 
 ## Next Candidates
 
@@ -187,9 +189,11 @@ Tracker patterns:
 - Product manage now keeps `ProductFormValues` as the signal model and passes mapped nutrition fields into the shared nutrition editor.
 - Meal manual item dialog uses a scalar Signal Form for amount and now accepts/returns plain item values. `meal-manage-form` remains the legacy adapter for its items `FormArray`.
 - Meal manage complex migration has started with value-based form factories, nutrition summary helpers, Signal Forms general-info and nutrition sidebar blocks. The root remains hybrid until items move off legacy forms.
+- Meal manage root template no longer uses `[formGroup]`/`ngSubmit`; submit is handled through native `submit` while the TS adapter still owns the legacy item form array.
 - Meal items list no longer needs a template `[formGroup]` and now renders value/error state from the parent adapter.
 - Meal items section/list now render value/error state instead of receiving the legacy items `FormArray`; `meal-manage-form` remains the adapter until item editing moves to Signal Forms.
 - Recipe manage complex migration has started with Signal Forms basic-info/nutrition fields. The root remains hybrid while step editing and step managers stay on legacy forms.
+- Recipe manage root template no longer uses `[formGroup]`/`ngSubmit`; submit is handled through native `submit` while the TS adapter still owns legacy step editing.
 - Recipe nutrition editor now consumes Signal Forms fields. `recipe-manage` remains the adapter for the legacy nutrition manager until the manager itself is migrated.
 - Shared nutrition editor is now Signal Forms only; the legacy `FormGroup`/`controlNames` fallback was removed after all consumers moved to `[form]`.
 - Recipe steps list now renders step-card state and emits reorder events instead of receiving the legacy steps `FormArray`; `recipe-manage` remains the adapter for step mutation.

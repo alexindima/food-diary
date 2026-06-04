@@ -1,7 +1,7 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { form, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -32,7 +32,6 @@ import {
 @Component({
     selector: 'fd-recipe-manage',
     imports: [
-        ReactiveFormsModule,
         TranslatePipe,
         FdUiButtonComponent,
         ManageHeaderComponent,
