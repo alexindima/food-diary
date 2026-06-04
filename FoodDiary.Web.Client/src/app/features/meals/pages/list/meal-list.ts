@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { form } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { debounceTime, EMPTY, type Observable, switchMap } from 'rxjs';
+import { debounceTime, EMPTY, type Observable, skip, switchMap } from 'rxjs';
 
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
@@ -14,7 +14,6 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { APP_FILTER_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from '../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
@@ -36,7 +35,6 @@ import { MealListFavoritesComponent } from './meal-list-sections/meal-list-favor
     styleUrls: ['./meal-list.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -60,7 +58,10 @@ export class MealListComponent {
     private readonly filterDebounceMs = inject(APP_FILTER_DEBOUNCE_MS);
     private readonly languageVersion = signal(0);
 
-    protected searchForm: FormGroup<SearchFormGroup>;
+    protected readonly searchModel = signal<SearchFormValues>({
+        dateRange: null,
+    });
+    protected readonly searchForm = form(this.searchModel);
     protected readonly consumptionData = this.mealListFacade.consumptionData;
     protected readonly errorKey = this.mealListFacade.errorKey;
     protected readonly favorites = this.mealListFacade.favorites;
@@ -83,7 +84,7 @@ export class MealListComponent {
     protected readonly isFavoritesOpen = signal(false);
     protected readonly isMobileView = this.viewportService.isMobile;
     protected readonly hasDateFilter = computed(() => {
-        const dateRange = this.searchForm.controls.dateRange.value;
+        const dateRange = this.searchModel().dateRange;
         return (dateRange?.start !== null && dateRange?.start !== undefined) || (dateRange?.end !== null && dateRange?.end !== undefined);
     });
     protected readonly emptyState = computed<MealListEmptyState | null>(() => {
@@ -98,17 +99,14 @@ export class MealListComponent {
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
-        this.searchForm = new FormGroup<SearchFormGroup>({
-            dateRange: new FormControl<FdUiDateRangeValue | null>(null),
-        });
-
         this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
 
-        this.searchForm.valueChanges
+        toObservable(computed(() => this.searchModel().dateRange))
             .pipe(
+                skip(1),
                 takeUntilDestroyed(this.destroyRef),
                 debounceTime(this.filterDebounceMs),
                 switchMap(() => this.loadConsumptions(1)),
@@ -232,7 +230,7 @@ export class MealListComponent {
     }
 
     protected openFilters(): void {
-        const currentDateRange = this.searchForm.controls.dateRange.value;
+        const currentDateRange = this.searchModel().dateRange;
 
         this.fdDialogService
             .open<MealListFiltersDialogComponent, { dateRange: FdUiDateRangeValue | null }, MealListFiltersDialogResult | null>(
@@ -264,7 +262,7 @@ export class MealListComponent {
             return;
         }
 
-        this.searchForm.controls.dateRange.setValue(nextDateRange);
+        this.searchForm.dateRange().value.set(nextDateRange);
     }
 
     private hasSameDateRange(left: FdUiDateRangeValue | null, right: FdUiDateRangeValue | null): boolean {
@@ -289,7 +287,7 @@ export class MealListComponent {
     }
 
     private get dateRange(): FdUiDateRangeValue | null {
-        return this.searchForm.controls.dateRange.value;
+        return this.searchModel().dateRange;
     }
 
     private groupByDate(items: Meal[]): MealDateGroupView[] {
@@ -320,5 +318,3 @@ export class MealListComponent {
 type SearchFormValues = {
     dateRange: FdUiDateRangeValue | null;
 };
-
-type SearchFormGroup = FormGroupControls<SearchFormValues>;

@@ -1,9 +1,10 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { type FieldTree, form, required } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { ShoppingListItemFormGroup } from '../../lib/shopping-list-form.types';
+import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import type { ShoppingListItem } from '../../models/shopping-list.data';
 import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel';
 
@@ -18,13 +19,19 @@ const CHECKED_ITEM: ShoppingListItem = {
     sortOrder: 1,
 };
 
-function createItemForm(): FormGroup<ShoppingListItemFormGroup> {
-    return new FormGroup<ShoppingListItemFormGroup>({
-        name: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        amount: new FormControl<number | null>(null),
-        unit: new FormControl(null),
-        category: new FormControl<string | null>(null),
+function createItemForm(): FieldTree<ShoppingListItemFormModel> {
+    const model = signal<ShoppingListItemFormModel>({
+        name: '',
+        amount: null,
+        unit: null,
+        category: null,
     });
+
+    return TestBed.runInInjectionContext(() =>
+        form(model, path => {
+            required(path.name);
+        }),
+    );
 }
 
 async function setupItemsPanelAsync(items: ShoppingListItem[] = [CHECKED_ITEM]): Promise<{

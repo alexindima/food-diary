@@ -31,8 +31,8 @@
             </div>
             } @else {
             <fd-shopping-list-manage-controls
-                [listSelectControl]="listSelectControl"
-                [listNameControl]="listNameControl"
+                [listSelectField]="listSelectForm.id"
+                [listNameField]="listNameForm.name"
                 [lists]="lists()"
                 [isLoading]="isLoading()"
                 [canDeleteList]="canDeleteList()"
@@ -47,8 +47,8 @@
         @if (isMobileView()) {
         <div fdPageHeaderExtra class="shopping-list__mobile-manage" [class.shopping-list__mobile-manage--open]="isMobileManageVisible()">
             <fd-shopping-list-manage-controls
-                [listSelectControl]="listSelectControl"
-                [listNameControl]="listNameControl"
+                [listSelectField]="listSelectForm.id"
+                [listNameField]="listNameForm.name"
                 [lists]="lists()"
                 [isLoading]="isLoading()"
                 [canDeleteList]="canDeleteList()"

@@ -1,8 +1,7 @@
-import type { FormGroupControls } from '../../../shared/lib/common.data';
 import type { MeasurementUnit } from '../../products/models/product.data';
 import type { ShoppingListItem } from '../models/shopping-list.data';
 
-type ShoppingListItemFormValues = {
+export type ShoppingListItemFormModel = {
     name: string;
     amount: number | null;
     unit: MeasurementUnit | null;
@@ -12,5 +11,3 @@ type ShoppingListItemFormValues = {
 export type ShoppingListItemViewModel = {
     meta: string;
 } & ShoppingListItem;
-
-export type ShoppingListItemFormGroup = FormGroupControls<ShoppingListItemFormValues>;

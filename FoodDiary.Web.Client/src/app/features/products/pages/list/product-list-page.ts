@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -29,7 +29,7 @@ import type { Product } from '../../models/product.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ProductListFacade],
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,

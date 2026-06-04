@@ -69,12 +69,12 @@
         </ng-container>
         @if (!isMobileView()) {
         <div fdPageHeaderExtra class="recipe-list__desktop-search">
-            <form class="recipe-list__search-form recipe-list__search-form--desktop" [formGroup]="searchForm">
+            <form class="recipe-list__search-form recipe-list__search-form--desktop">
                 <fd-ui-input
                     class="recipe-list__search-input"
-                    formControlName="search"
                     prefixIcon="search"
                     suffixButtonIcon="close"
+                    [formField]="searchForm.search"
                     [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
                     [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
                     [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
@@ -84,12 +84,12 @@
         </div>
         } @else {
         <div fdPageHeaderExtra class="recipe-list__mobile-search" [class.recipe-list__mobile-search--open]="isMobileSearchVisible()">
-            <form class="recipe-list__search-form recipe-list__search-form--mobile" [formGroup]="searchForm">
+            <form class="recipe-list__search-form recipe-list__search-form--mobile">
                 <fd-ui-input
                     class="recipe-list__search-input"
-                    formControlName="search"
                     prefixIcon="search"
                     suffixButtonIcon="close"
+                    [formField]="searchForm.search"
                     [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
                     [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
                     [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"

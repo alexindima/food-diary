@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -9,14 +10,14 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 
-import type { ShoppingListItemFormGroup } from '../../lib/shopping-list-form.types';
+import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { buildShoppingListItemViewModels, buildShoppingListUnitOptions } from '../../lib/shopping-list-item.mapper';
 import type { ShoppingListItem } from '../../models/shopping-list.data';
 
 @Component({
     selector: 'fd-shopping-list-items-panel',
     imports: [
-        ReactiveFormsModule,
+        FormField,
         FormsModule,
         TranslatePipe,
         FdUiHintDirective,
@@ -35,7 +36,7 @@ export class ShoppingListItemsPanelComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly activeLang = signal(this.translateService.getCurrentLang());
 
-    public readonly itemForm = input.required<FormGroup<ShoppingListItemFormGroup>>();
+    public readonly itemForm = input.required<FieldTree<ShoppingListItemFormModel>>();
     public readonly items = input.required<readonly ShoppingListItem[]>();
     protected readonly unitOptions = computed(() => {
         this.activeLang();
@@ -45,6 +46,7 @@ export class ShoppingListItemsPanelComponent {
         this.activeLang();
         return buildShoppingListItemViewModels(this.items(), key => this.translateService.instant(key));
     });
+    protected readonly isItemFormInvalid = computed(() => this.itemForm()().invalid());
 
     public readonly itemAdd = output();
     public readonly itemRemove = output<string>();

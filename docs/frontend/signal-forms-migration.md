@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 9 forms.
-- Signal Forms files: 18.
-- Remaining legacy Reactive Forms surface: 148 files.
+- Migrated Signal Forms: 15 forms.
+- Signal Forms files: 34.
+- Remaining legacy Reactive Forms surface: 129 files.
 
 Tracker patterns:
 
@@ -36,6 +36,22 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.html`
 - `FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.ts`
 - `FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.html`
+- `FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html`
+- `FoodDiary.Web.Client/src/app/features/products/pages/list/product-list-page.ts`
+- `FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.ts`
+- `FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.html`
+- `FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html`
+- `FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.ts`
+- `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts`
+- `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html`
+- `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.ts`
+- `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html`
+- `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.ts`
+- `FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html`
+- `FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-form.types.ts`
 
 ## Next Candidates
 

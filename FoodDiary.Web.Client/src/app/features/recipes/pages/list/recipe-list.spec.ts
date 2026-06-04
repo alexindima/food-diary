@@ -53,10 +53,11 @@ describe('RecipeListComponent initial loading and filters', () => {
         expect(facade.loadInitialOverview).toHaveBeenCalledWith(1, PAGE_SIZE, null, false);
     });
 
-    it('reloads recipes when only-mine filter changes', () => {
+    it('reloads recipes when only-mine filter changes', async () => {
         const { component } = setupComponent();
 
-        component['searchForm'].controls.onlyMine.setValue(true);
+        component['searchForm'].onlyMine().value.set(true);
+        await flushPromisesAsync();
 
         expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, null, true);
     });
@@ -66,7 +67,7 @@ describe('RecipeListComponent initial loading and filters', () => {
 
         component['openFilters']();
 
-        expect(component['searchForm'].controls.onlyMine.value).toBe(true);
+        expect(component['searchModel']().onlyMine).toBe(true);
     });
 });
 

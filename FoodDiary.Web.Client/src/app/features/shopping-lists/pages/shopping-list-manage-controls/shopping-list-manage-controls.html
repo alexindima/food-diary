@@ -1,14 +1,14 @@
 <div class="shopping-list__header-actions" [class.shopping-list__header-actions--mobile]="isMobile()">
     <fd-ui-select
         class="shopping-list__list-select"
-        [formControl]="listSelectControl()"
+        [formField]="listSelectField()"
         [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
         [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
         [options]="listOptions()"
     />
     <fd-ui-input
         class="shopping-list__name-input"
-        [formControl]="listNameControl()"
+        [formField]="listNameField()"
         [label]="'SHOPPING_LIST.NAME_LABEL' | translate"
         [placeholder]="'SHOPPING_LIST.NAME_PLACEHOLDER' | translate"
     />

@@ -114,15 +114,19 @@ describe('ShoppingListPageComponent form and item actions', () => {
         const { component, facade } = await setupShoppingListPageAsync();
 
         expect(facade.initialize).toHaveBeenCalledOnce();
-        expect(component['listSelectControl'].value).toBe(FIRST_LIST_ID);
-        expect(component['listNameControl'].value).toBe(SHOPPING_LIST.name);
+        expect(component['listSelectModel']().id).toBe(FIRST_LIST_ID);
+        expect(component['listNameModel']().name).toBe(SHOPPING_LIST.name);
     });
 
     it('delegates list select and name changes to facade', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
+        await flushSignalEffectsAsync();
+        facade.selectList.mockClear();
+        facade.setListName.mockClear();
 
-        component['listSelectControl'].setValue(SECOND_LIST_ID);
-        component['listNameControl'].setValue('Weekend');
+        component['listSelectForm'].id().value.set(SECOND_LIST_ID);
+        component['listNameForm'].name().value.set('Weekend');
+        await flushSignalEffectsAsync();
 
         expect(facade.selectList).toHaveBeenCalledWith(SECOND_LIST_ID);
         expect(facade.setListName).toHaveBeenCalledWith('Weekend');
@@ -130,7 +134,7 @@ describe('ShoppingListPageComponent form and item actions', () => {
 
     it('adds trimmed item draft and resets form', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
-        component['itemForm'].setValue({
+        component['itemFormModel'].set({
             name: ' Milk ',
             amount: 2,
             unit: MeasurementUnit.ML,
@@ -145,13 +149,13 @@ describe('ShoppingListPageComponent form and item actions', () => {
             unit: MeasurementUnit.ML,
             category: 'Dairy',
         });
-        expect(component['itemForm'].controls.name.value).toBe('');
-        expect(component['itemForm'].controls.amount.value).toBeNull();
+        expect(component['itemFormModel']().name).toBe('');
+        expect(component['itemFormModel']().amount).toBeNull();
     });
 
     it('does not add invalid or blank items', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
-        component['itemForm'].setValue({ name: '   ', amount: null, unit: null, category: null });
+        component['itemFormModel'].set({ name: '   ', amount: null, unit: null, category: null });
 
         component['addItem']();
 
@@ -230,3 +234,9 @@ describe('ShoppingListPageComponent list management', () => {
         expect(facade.createNewList).toHaveBeenCalledOnce();
     });
 });
+
+async function flushSignalEffectsAsync(): Promise<void> {
+    await new Promise(resolve => {
+        setTimeout(resolve, 0);
+    });
+}

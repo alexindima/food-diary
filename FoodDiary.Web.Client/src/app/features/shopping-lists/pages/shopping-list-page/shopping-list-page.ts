@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { form, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
+import { skip } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -15,9 +16,8 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
-import type { MeasurementUnit } from '../../../products/models/product.data';
 import { ShoppingListFacade } from '../../lib/shopping-list.facade';
-import type { ShoppingListItemFormGroup } from '../../lib/shopping-list-form.types';
+import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { ShoppingListItemsPanelComponent } from '../shopping-list-items-panel/shopping-list-items-panel';
 import { ShoppingListManageControlsComponent } from '../shopping-list-manage-controls/shopping-list-manage-controls';
 
@@ -59,41 +59,50 @@ export class ShoppingListPageComponent {
     protected readonly canClearList = computed(
         () => this.lists().length === 1 && this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
-    protected readonly listSelectControl = new FormControl<string | null>(null);
-    protected readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
-    protected readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
+    protected readonly listSelectModel = signal<{ id: string | null }>({ id: null });
+    protected readonly listNameModel = signal({ name: '' });
+    protected readonly itemFormModel = signal<ShoppingListItemFormModel>({
+        name: '',
+        amount: null,
+        unit: null,
+        category: null,
+    });
+    protected readonly listSelectForm = form(this.listSelectModel);
+    protected readonly listNameForm = form(this.listNameModel, path => {
+        required(path.name);
+    });
+    protected readonly itemForm = form(this.itemFormModel, path => {
+        required(path.name);
+    });
 
     private readonly isMobileManageOpen = signal(false);
 
     public constructor() {
-        this.itemForm = new FormGroup<ShoppingListItemFormGroup>({
-            name: new FormControl('', { nonNullable: true, validators: Validators.required }),
-            amount: new FormControl<number | null>(null),
-            unit: new FormControl<MeasurementUnit | null>(null),
-            category: new FormControl<string | null>(null),
-        });
+        toObservable(computed(() => this.listNameModel().name))
+            .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => {
+                this.facade.setListName(value);
+            });
 
-        this.listNameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-            this.facade.setListName(value);
-        });
-
-        this.listSelectControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => {
-            if (id !== null && id.length > 0) {
-                this.facade.selectList(id);
-            }
-        });
+        toObservable(computed(() => this.listSelectModel().id))
+            .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
+            .subscribe(id => {
+                if (id !== null && id.length > 0) {
+                    this.facade.selectList(id);
+                }
+            });
 
         effect(() => {
             const selectedId = this.facade.selectedListId();
-            if (this.listSelectControl.value !== selectedId) {
-                this.listSelectControl.setValue(selectedId, { emitEvent: false });
+            if (this.listSelectModel().id !== selectedId) {
+                this.listSelectModel.set({ id: selectedId });
             }
         });
 
         effect(() => {
             const name = this.facade.listName();
-            if (this.listNameControl.value !== name) {
-                this.listNameControl.setValue(name, { emitEvent: false });
+            if (this.listNameModel().name !== name) {
+                this.listNameModel.set({ name });
             }
         });
 
@@ -107,24 +116,25 @@ export class ShoppingListPageComponent {
     }
 
     protected addItem(): void {
-        this.itemForm.markAllAsTouched();
-        if (this.itemForm.invalid) {
+        this.itemForm().markAsTouched();
+        if (this.itemForm().invalid()) {
             return;
         }
 
-        const name = this.itemForm.controls.name.value.trim();
+        const value = this.itemFormModel();
+        const name = value.name.trim();
         if (name.length === 0) {
             return;
         }
 
         this.facade.addItem({
             name,
-            amount: this.itemForm.controls.amount.value,
-            unit: this.itemForm.controls.unit.value ?? null,
-            category: this.itemForm.controls.category.value?.trim() ?? null,
+            amount: value.amount,
+            unit: value.unit ?? null,
+            category: value.category?.trim() ?? null,
         });
 
-        this.itemForm.reset({
+        this.itemFormModel.set({
             name: '',
             amount: null,
             unit: null,

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { type FormControl, ReactiveFormsModule } from '@angular/forms';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -10,14 +10,14 @@ import type { ShoppingListSummary } from '../../models/shopping-list.data';
 
 @Component({
     selector: 'fd-shopping-list-manage-controls',
-    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent],
+    imports: [FormField, TranslatePipe, FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent],
     templateUrl: './shopping-list-manage-controls.html',
     styleUrl: '../shopping-list-page/shopping-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingListManageControlsComponent {
-    public readonly listSelectControl = input.required<FormControl<string | null>>();
-    public readonly listNameControl = input.required<FormControl<string>>();
+    public readonly listSelectField = input.required<FieldTree<string | null>>();
+    public readonly listNameField = input.required<FieldTree<string>>();
     public readonly lists = input.required<readonly ShoppingListSummary[]>();
     public readonly isLoading = input.required<boolean>();
     public readonly canDeleteList = input.required<boolean>();

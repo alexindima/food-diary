@@ -69,13 +69,13 @@
         </ng-container>
         @if (!isMobileView()) {
         <div fdPageHeaderExtra class="product-list__desktop-search">
-            <form class="product-list__search-form product-list__search-form--desktop" [formGroup]="searchForm">
+            <form class="product-list__search-form product-list__search-form--desktop">
                 <fd-ui-input
                     class="product-list__search-input"
-                    formControlName="search"
                     size="md"
                     prefixIcon="search"
                     suffixButtonIcon="qr_code_scanner"
+                    [formField]="searchForm.search"
                     [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
                     [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
                     [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
@@ -85,13 +85,13 @@
         </div>
         } @else {
         <div fdPageHeaderExtra class="product-list__mobile-search" [class.product-list__mobile-search--open]="isMobileSearchVisible()">
-            <form class="product-list__search-form product-list__search-form--mobile" [formGroup]="searchForm">
+            <form class="product-list__search-form product-list__search-form--mobile">
                 <fd-ui-input
                     class="product-list__search-input"
-                    formControlName="search"
                     size="md"
                     prefixIcon="search"
                     suffixButtonIcon="qr_code_scanner"
+                    [formField]="searchForm.search"
                     [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
                     [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
                     [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"

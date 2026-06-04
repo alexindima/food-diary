@@ -1,28 +1,28 @@
 <div class="shopping-list__panel">
-    <form class="shopping-list__add-form" [formGroup]="itemForm()" (ngSubmit)="itemAdd.emit()">
+    <form class="shopping-list__add-form" (ngSubmit)="itemAdd.emit()">
         <fd-ui-input
-            formControlName="name"
+            [formField]="itemForm().name"
             [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
             [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
         />
         <fd-ui-input
-            formControlName="amount"
             type="number"
+            [formField]="itemForm().amount"
             [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
             [placeholder]="'SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER' | translate"
         />
         <fd-ui-select
-            formControlName="unit"
+            [formField]="itemForm().unit"
             [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate"
             [placeholder]="'SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER' | translate"
             [options]="unitOptions()"
         />
         <fd-ui-input
-            formControlName="category"
+            [formField]="itemForm().category"
             [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate"
             [placeholder]="'SHOPPING_LIST.ADD_ITEM_CATEGORY_PLACEHOLDER' | translate"
         />
-        <fd-ui-button type="submit" variant="secondary" fill="outline" icon="add" [disabled]="itemForm().invalid">
+        <fd-ui-button type="submit" variant="secondary" fill="outline" icon="add" [disabled]="isItemFormInvalid()">
             {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}
         </fd-ui-button>
     </form>

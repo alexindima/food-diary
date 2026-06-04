@@ -1,13 +1,25 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { form } from '@angular/forms/signals';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, map, type Observable, of, switchMap, take, tap } from 'rxjs';
+import {
+    catchError,
+    debounceTime,
+    distinctUntilChanged,
+    EMPTY,
+    finalize,
+    map,
+    type Observable,
+    of,
+    skip,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
@@ -41,10 +53,11 @@ export class ProductListFacade {
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
 
     public readonly pageSize = PRODUCT_LIST_PAGE_SIZE;
-    public readonly searchForm = new FormGroup<ProductSearchFormGroup>({
-        search: new FormControl<string | null>(null),
-        onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
+    public readonly searchModel = signal<ProductSearchFormValues>({
+        search: null,
+        onlyMine: false,
     });
+    public readonly searchForm = form(this.searchModel);
     public readonly productData = new PagedData<Product>();
     public currentPageIndex = 0;
     public readonly recentProducts = signal<Product[]>([]);
@@ -54,8 +67,8 @@ export class ProductListFacade {
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
-    public readonly searchValue = signal<string | null>(null);
-    public readonly onlyMineFilter = signal(false);
+    public readonly searchValue = computed(() => this.searchModel().search);
+    public readonly onlyMineFilter = computed(() => this.searchModel().onlyMine);
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasSearchValue = computed(() => (this.searchValue()?.trim().length ?? 0) > 0);
     public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts().length > 0);
@@ -122,7 +135,7 @@ export class ProductListFacade {
 
     public onPageChange(pageIndex: number): void {
         this.currentPageIndex = pageIndex;
-        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
+        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
     }
 
     public onAddProductClick(): void {
@@ -138,14 +151,13 @@ export class ProductListFacade {
             .pipe(take(1))
             .subscribe(barcode => {
                 if (barcode !== null && barcode !== undefined && barcode.length > 0) {
-                    this.searchForm.controls.search.setValue(barcode);
+                    this.searchForm.search().value.set(barcode);
                 }
             });
     }
 
     public toggleOnlyMine(): void {
-        const control = this.searchForm.controls.onlyMine;
-        control.setValue(!control.value);
+        this.searchForm.onlyMine().value.set(!this.onlyMineFilter());
     }
 
     public toggleMobileSearch(): void {
@@ -153,7 +165,7 @@ export class ProductListFacade {
     }
 
     public openFilters(): void {
-        const currentOnlyMine = this.searchForm.controls.onlyMine.value;
+        const currentOnlyMine = this.onlyMineFilter();
         const currentTypes = this.selectedProductTypes();
 
         this.fdDialogService
@@ -191,11 +203,11 @@ export class ProductListFacade {
                     }
 
                     if (onlyMineChanged) {
-                        this.searchForm.controls.onlyMine.setValue(result.onlyMine);
+                        this.searchForm.onlyMine().value.set(result.onlyMine);
                         return EMPTY;
                     }
 
-                    return this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value);
+                    return this.loadProducts(1, this.pageSize, this.searchValue());
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -233,7 +245,7 @@ export class ProductListFacade {
     public loadInitialOverview(): Observable<void> {
         this.productData.setLoading(true);
         this.offProducts.set([]);
-        this.searchOpenFoodFacts(this.searchForm.controls.search.value);
+        this.searchOpenFoodFacts(this.searchValue());
 
         return this.productService
             .queryOverview({
@@ -362,22 +374,20 @@ export class ProductListFacade {
     }
 
     public reloadCurrentPage(): void {
-        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
+        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
     }
 
     public deleteProductAndReload(productId: string): Observable<void> {
         this.productData.setLoading(true);
         return this.productService
             .deleteById(productId)
-            .pipe(switchMap(() => this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value)));
+            .pipe(switchMap(() => this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue())));
     }
 
     private bindSearch(): void {
-        this.searchForm.controls.search.valueChanges
+        toObservable(this.searchValue)
             .pipe(
-                tap(value => {
-                    this.searchValue.set(value);
-                }),
+                skip(1),
                 debounceTime(this.searchDebounceMs),
                 distinctUntilChanged(),
                 switchMap(value => this.loadProducts(1, this.pageSize, value)),
@@ -385,13 +395,11 @@ export class ProductListFacade {
             )
             .subscribe();
 
-        this.searchForm.controls.onlyMine.valueChanges
+        toObservable(this.onlyMineFilter)
             .pipe(
+                skip(1),
                 distinctUntilChanged(),
-                tap(value => {
-                    this.onlyMineFilter.set(value);
-                }),
-                switchMap(() => this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value)),
+                switchMap(() => this.loadProducts(1, this.pageSize, this.searchValue())),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
@@ -491,5 +499,3 @@ type ProductSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
 };
-
-type ProductSearchFormGroup = FormGroupControls<ProductSearchFormValues>;

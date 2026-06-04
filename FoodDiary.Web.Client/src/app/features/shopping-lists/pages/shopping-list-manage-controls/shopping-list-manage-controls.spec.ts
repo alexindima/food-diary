@@ -1,5 +1,6 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -19,9 +20,13 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
         imports: [ShoppingListManageControlsComponent, TranslateModule.forRoot()],
     }).compileComponents();
 
+    const listSelectModel = signal({ id: 'list-1' });
+    const listNameModel = signal({ name: 'Groceries' });
+    const listSelectForm = TestBed.runInInjectionContext(() => form(listSelectModel));
+    const listNameForm = TestBed.runInInjectionContext(() => form(listNameModel));
     const fixture = TestBed.createComponent(ShoppingListManageControlsComponent);
-    fixture.componentRef.setInput('listSelectControl', new FormControl<string | null>('list-1'));
-    fixture.componentRef.setInput('listNameControl', new FormControl<string>('Groceries', { nonNullable: true }));
+    fixture.componentRef.setInput('listSelectField', listSelectForm.id);
+    fixture.componentRef.setInput('listNameField', listNameForm.name);
     fixture.componentRef.setInput('lists', lists);
     fixture.componentRef.setInput('isLoading', false);
     fixture.componentRef.setInput('canDeleteList', true);

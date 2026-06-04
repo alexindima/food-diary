@@ -23,7 +23,7 @@ import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, Produ
 import { ProductListFacade } from './product-list.facade';
 
 const ZERO_DEBOUNCE_MS = 0;
-const DEBOUNCE_FLUSH_MS = 1;
+const DEBOUNCE_FLUSH_MS = 20;
 const PRODUCT_CALORIES = 120;
 const PRODUCT_PROTEINS = 12;
 const PRODUCT_FATS = 4;
@@ -138,9 +138,10 @@ describe('ProductListFacade overview', () => {
 
 describe('ProductListFacade search and filters', () => {
     it('loads searched products and Open Food Facts suggestions', async () => {
+        await flushDebounceAsync();
         productService.query.mockClear();
 
-        facade.searchForm.controls.search.setValue('banana');
+        facade.searchForm.search().value.set('banana');
         await flushDebounceAsync();
 
         expect(productService.query).toHaveBeenCalledWith(1, PRODUCT_LIST_PAGE_SIZE, expect.objectContaining({ search: 'banana' }), true);
@@ -151,24 +152,27 @@ describe('ProductListFacade search and filters', () => {
         expect(facade.offProducts()).toEqual([createOpenFoodFactsProduct()]);
     });
 
-    it('reloads products without public items when only-mine filter is enabled', () => {
+    it('reloads products without public items when only-mine filter is enabled', async () => {
+        await flushDebounceAsync();
         productService.query.mockClear();
 
         facade.toggleOnlyMine();
+        await flushDebounceAsync();
 
         expect(facade.onlyMineFilter()).toBe(true);
         expect(productService.query).toHaveBeenCalledWith(1, PRODUCT_LIST_PAGE_SIZE, expect.anything(), false);
     });
 
     it('ignores stale Open Food Facts responses from previous searches', async () => {
+        await flushDebounceAsync();
         productService.query.mockClear();
         const firstSearch = new Subject<OpenFoodFactsProduct[]>();
         const secondSearch = new Subject<OpenFoodFactsProduct[]>();
         openFoodFactsService.search.mockReturnValueOnce(firstSearch.asObservable()).mockReturnValueOnce(secondSearch.asObservable());
 
-        facade.searchForm.controls.search.setValue('banana');
+        facade.searchForm.search().value.set('banana');
         await flushDebounceAsync();
-        facade.searchForm.controls.search.setValue('apple');
+        facade.searchForm.search().value.set('apple');
         await flushDebounceAsync();
 
         firstSearch.next([createOpenFoodFactsProduct({ barcode: 'stale', name: 'Stale banana' })]);
@@ -216,7 +220,7 @@ describe('ProductListFacade actions', () => {
 
         facade.openBarcodeScanner();
 
-        expect(facade.searchForm.controls.search.value).toBe('4600000000000');
+        expect(facade.searchModel().search).toBe('4600000000000');
     });
 
     it('adds selected product to quick meal draft', () => {
@@ -229,9 +233,11 @@ describe('ProductListFacade actions', () => {
 });
 
 async function flushDebounceAsync(): Promise<void> {
+    await Promise.resolve();
     await new Promise(resolve => {
         setTimeout(resolve, DEBOUNCE_FLUSH_MS);
     });
+    await Promise.resolve();
 }
 
 function createPage(data: Product[]): PageOf<Product> {

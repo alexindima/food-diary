@@ -1,6 +1,5 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
@@ -125,11 +124,14 @@ function readProductItems(component: ProductListDialogComponent): ProductSelectI
 }
 
 function createProductListFacadeMock(): ProductListFacadeMock {
+    const searchModel = signal({
+        search: null as string | null,
+        onlyMine: false,
+    });
+
     return {
-        searchForm: new FormGroup({
-            search: new FormControl<string | null>(null),
-            onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
-        }),
+        searchModel,
+        searchForm: {},
         productData: new PagedData<Product>(),
         favorites: signal<FavoriteProduct[]>([]),
         favoriteTotalCount: signal(0),
@@ -137,6 +139,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         favoriteLoadingIds: signal<ReadonlySet<string>>(new Set<string>()),
         isFavoritesLoadingMore: signal(false),
         errorKey: signal<string | null>(null),
+        searchValue: signal<string | null>(null),
         onlyMineFilter: signal(false),
         isMobileView: signal(false),
         recentProductItems: signal([]),

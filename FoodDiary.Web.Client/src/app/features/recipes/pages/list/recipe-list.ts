@@ -9,22 +9,21 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, skip, switchMap } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
@@ -46,7 +45,7 @@ import type { RecipeCardViewModel } from './recipe-list.types';
     styleUrls: ['./recipe-list.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,
@@ -95,58 +94,49 @@ export class RecipeListComponent {
         })),
     );
     protected readonly hasVisibleRecipes = computed(() => this.recipeListFacade.hasVisibleRecipes());
-    protected readonly hasActiveFilters = computed(() => this.recipeListFacade.hasActiveFilters(this.searchForm.controls.onlyMine.value));
+    protected readonly hasActiveFilters = computed(() => this.recipeListFacade.hasActiveFilters(this.searchModel().onlyMine));
     protected readonly isEmptyState = computed(
-        () =>
-            !this.hasVisibleRecipes() &&
-            !this.recipeListFacade.hasSearch(this.searchForm.controls.search.value) &&
-            !this.hasActiveFilters(),
+        () => !this.hasVisibleRecipes() && !this.recipeListFacade.hasSearch(this.searchModel().search) && !this.hasActiveFilters(),
     );
     protected readonly allRecipesSectionLabelKey = computed(() => this.recipeListFacade.allRecipesSectionLabelKey());
     protected readonly emptyState = computed<RecipeListEmptyState>(() => (this.isEmptyState() ? 'empty' : 'no-results'));
     protected readonly isMobileSearchVisible = computed(
-        () => this.isMobileSearchOpen() || this.recipeListFacade.hasSearch(this.searchForm.controls.search.value),
+        () => this.isMobileSearchOpen() || this.recipeListFacade.hasSearch(this.searchModel().search),
     );
     protected readonly pageIndex = computed(() => this.currentPageIndex());
     private readonly isMobileSearchOpen = signal(false);
-    protected searchForm: FormGroup<RecipeSearchFormGroup>;
+    protected readonly searchModel = signal<RecipeSearchFormValues>({
+        search: null,
+        onlyMine: false,
+    });
+    protected readonly searchForm = form(this.searchModel);
     protected readonly isDeleting = this.recipeListFacade.isDeleting;
     protected readonly favoriteLoadingIds = this.recipeListFacade.favoriteLoadingIds;
 
     public constructor() {
-        this.searchForm = new FormGroup<RecipeSearchFormGroup>({
-            search: new FormControl<string | null>(null),
-            onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
-        });
-
         effect(() => {
             if (!this.isMobileView()) {
                 this.isMobileSearchOpen.set(false);
             }
         });
 
-        this.recipeListFacade
-            .loadInitialOverview(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
-            .subscribe();
+        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine).subscribe();
 
-        this.searchForm.controls.search.valueChanges
+        toObservable(computed(() => this.searchModel().search))
             .pipe(
+                skip(1),
                 debounceTime(this.searchDebounceMs),
-                switchMap(value => this.recipeListFacade.loadRecipes(1, this.pageSize, value, this.searchForm.controls.onlyMine.value)),
+                switchMap(value => this.recipeListFacade.loadRecipes(1, this.pageSize, value, this.searchModel().onlyMine)),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
 
-        this.searchForm.controls.onlyMine.valueChanges
+        toObservable(computed(() => this.searchModel().onlyMine))
             .pipe(
+                skip(1),
                 distinctUntilChanged(),
                 switchMap(() =>
-                    this.recipeListFacade.loadRecipes(
-                        1,
-                        this.pageSize,
-                        this.searchForm.controls.search.value,
-                        this.searchForm.controls.onlyMine.value,
-                    ),
+                    this.recipeListFacade.loadRecipes(1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine),
                 ),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -158,9 +148,7 @@ export class RecipeListComponent {
     }
 
     protected retryLoad(): void {
-        this.recipeListFacade
-            .loadInitialOverview(1, this.pageSize, this.searchForm.controls.search.value, this.searchForm.controls.onlyMine.value)
-            .subscribe();
+        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine).subscribe();
     }
 
     protected async onAddRecipeClickAsync(): Promise<void> {
@@ -194,8 +182,8 @@ export class RecipeListComponent {
                 void this.recipeListFacade.handleDetailActionAsync(
                     actionResult,
                     recipe,
-                    this.searchForm.controls.search.value,
-                    this.searchForm.controls.onlyMine.value,
+                    this.searchModel().search,
+                    this.searchModel().onlyMine,
                 );
             });
     }
@@ -204,12 +192,7 @@ export class RecipeListComponent {
         this.scrollToTop();
         this.currentPageIndex.set(pageIndex);
         this.recipeListFacade
-            .loadRecipes(
-                this.currentPageIndex() + 1,
-                this.pageSize,
-                this.searchForm.controls.search.value,
-                this.searchForm.controls.onlyMine.value,
-            )
+            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine)
             .subscribe();
     }
 
@@ -218,7 +201,7 @@ export class RecipeListComponent {
     }
 
     protected openFilters(): void {
-        const currentOnlyMine = this.searchForm.controls.onlyMine.value;
+        const currentOnlyMine = this.searchModel().onlyMine;
         this.fdDialogService
             .open<RecipeListFiltersDialogComponent, { onlyMine: boolean }, RecipeListFiltersDialogResult | null>(
                 RecipeListFiltersDialogComponent,
@@ -233,12 +216,12 @@ export class RecipeListComponent {
                     return;
                 }
 
-                this.searchForm.controls.onlyMine.setValue(result.onlyMine);
+                this.searchForm.onlyMine().value.set(result.onlyMine);
             });
     }
 
     protected clearSearch(): void {
-        this.searchForm.controls.search.setValue('');
+        this.searchForm.search().value.set('');
     }
 
     protected onAddToMeal(recipe: Recipe): void {
@@ -289,12 +272,7 @@ export class RecipeListComponent {
 
     private reloadCurrentPage(): void {
         this.recipeListFacade
-            .loadRecipes(
-                this.currentPageIndex() + 1,
-                this.pageSize,
-                this.searchForm.controls.search.value,
-                this.searchForm.controls.onlyMine.value,
-            )
+            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine)
             .subscribe();
     }
 }
@@ -303,5 +281,3 @@ type RecipeSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
 };
-
-type RecipeSearchFormGroup = FormGroupControls<RecipeSearchFormValues>;

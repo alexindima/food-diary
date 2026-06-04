@@ -333,7 +333,7 @@ function registerRangeTests(context: TestContext): void {
             const start = new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5);
             const end = new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6);
 
-            context.component()['searchForm'].controls.dateRange.setValue({ start, end });
+            context.component()['searchForm'].dateRange().value.set({ start, end });
             context.mockMealService.query.mockClear();
 
             context.component()['loadConsumptions'](1).subscribe();
