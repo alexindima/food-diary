@@ -4,38 +4,31 @@ import {
     createEmptyLoginFieldErrors,
     createEmptyPasswordResetFieldErrors,
     createEmptyRegisterFieldErrors,
-    createLoginForm,
-    createPasswordResetForm,
-    createRegisterForm,
+    createLoginFormModel,
+    createPasswordResetFormModel,
+    createRegisterFormModel,
 } from './auth-form.factory';
 
 describe('auth form factory', () => {
-    it('should create login form with required email and password validators', () => {
-        const form = createLoginForm();
-
-        form.controls.email.setValue('');
-        form.controls.password.setValue('');
-
-        expect(form.controls.email.hasError('required')).toBe(true);
-        expect(form.controls.password.hasError('required')).toBe(true);
-        expect(form.controls.rememberMe.value).toBe(false);
+    it('should create login form model defaults', () => {
+        expect(createLoginFormModel()).toEqual({
+            email: '',
+            password: '',
+            rememberMe: false,
+        });
     });
 
-    it('should create register form with password confirmation validator', () => {
-        const form = createRegisterForm();
-
-        form.controls.password.setValue('password1');
-        form.controls.confirmPassword.setValue('password2');
-
-        expect(form.controls.confirmPassword.hasError('matchField')).toBe(true);
+    it('should create register form model defaults', () => {
+        expect(createRegisterFormModel()).toEqual({
+            email: '',
+            password: '',
+            confirmPassword: '',
+            agreeTerms: false,
+        });
     });
 
-    it('should create password reset form with email validator', () => {
-        const form = createPasswordResetForm();
-
-        form.controls.email.setValue('invalid');
-
-        expect(form.controls.email.hasError('email')).toBe(true);
+    it('should create password reset form model defaults', () => {
+        expect(createPasswordResetFormModel()).toEqual({ email: '' });
     });
 
     it('should create empty field error maps', () => {

@@ -1,8 +1,10 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createEmptyRegisterFieldErrors, createRegisterForm } from '../auth-lib/auth-form.factory';
+import { createEmptyRegisterFieldErrors, createRegisterFormModel } from '../auth-lib/auth-form.factory';
 import { AuthRegisterFormComponent } from './auth-register-form';
 
 type AuthRegisterFormTestContext = {
@@ -16,7 +18,11 @@ function createComponent(): AuthRegisterFormTestContext {
     });
 
     const fixture = TestBed.createComponent(AuthRegisterFormComponent);
-    fixture.componentRef.setInput('form', createRegisterForm());
+    const model = signal(createRegisterFormModel());
+    fixture.componentRef.setInput(
+        'form',
+        TestBed.runInInjectionContext(() => form(model)),
+    );
     fixture.componentRef.setInput('errors', createEmptyRegisterFieldErrors());
     fixture.componentRef.setInput('globalError', null);
     fixture.componentRef.setInput('isSubmitting', false);
@@ -41,8 +47,8 @@ describe('AuthRegisterFormComponent', () => {
         component['registerSubmit'].subscribe(submitSpy);
 
         const root = fixture.nativeElement as HTMLElement;
-        const form = root.querySelector('form') as HTMLFormElement;
-        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        const formElement = root.querySelector('form') as HTMLFormElement;
+        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
         expect(submitSpy).toHaveBeenCalledTimes(1);
     });

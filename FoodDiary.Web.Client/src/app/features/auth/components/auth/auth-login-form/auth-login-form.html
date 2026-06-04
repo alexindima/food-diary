@@ -1,19 +1,18 @@
 <form
     #loginFormElement
     class="auth__form fd-stack fd-gap-md"
-    [formGroup]="form()"
     [attr.aria-busy]="isSubmitting() || isRestoring()"
-    (ngSubmit)="loginSubmit.emit()"
+    (submit)="loginSubmit.emit(); $event.preventDefault()"
     (input)="loginNativeInput.emit()"
 >
     @let loginErrors = errors();
     <div class="auth__field fd-stack fd-gap-xs">
         <fd-ui-input
             appearance="auth"
-            formControlName="email"
             type="email"
             autocomplete="username"
             id="auth-login-email"
+            [formField]="form().email"
             [label]="'AUTH.LOGIN.EMAIL' | translate"
             [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
             [error]="loginErrors.email"
@@ -23,16 +22,16 @@
     <div class="auth__field fd-stack fd-gap-xs">
         <fd-ui-input
             appearance="auth"
-            formControlName="password"
             type="password"
             autocomplete="current-password"
+            [formField]="form().password"
             [label]="'AUTH.LOGIN.PASSWORD' | translate"
             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
             [error]="loginErrors.password"
         />
     </div>
 
-    <fd-ui-checkbox formControlName="rememberMe" [label]="'AUTH.LOGIN.REMEMBER_ME' | translate" />
+    <fd-ui-checkbox [formField]="form().rememberMe" [label]="'AUTH.LOGIN.REMEMBER_ME' | translate" />
 
     <fd-ui-button class="auth__link" type="button" variant="secondary" fill="text" (click)="passwordResetOpen.emit()">
         {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
@@ -57,7 +56,7 @@
             size="lg"
             variant="secondary"
             fill="outline"
-            [disabled]="form().invalid || isRestoring() || isSubmitting()"
+            [disabled]="form()().invalid() || isRestoring() || isSubmitting()"
             [loading]="isRestoring()"
             [fullWidth]="true"
             (click)="restoreSubmit.emit()"

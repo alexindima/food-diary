@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 32 forms.
-- Signal Forms files: 65.
-- Remaining legacy Reactive Forms surface: 93 files.
+- Migrated Signal Forms: 35 forms.
+- Signal Forms files: 75.
+- Remaining legacy Reactive Forms surface: 83 files.
 
 Tracker patterns:
 
@@ -88,6 +88,19 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-lib/product-ai-recognition.helpers.ts`
 - `FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result/product-ai-recognition-result.ts`
 - `FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result/product-ai-recognition-result.html`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.html`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth.types.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-form.factory.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-form.manager.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.html`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-form/auth-register-form.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-form/auth-register-form.html`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.html`
 
 ## Next Candidates
 

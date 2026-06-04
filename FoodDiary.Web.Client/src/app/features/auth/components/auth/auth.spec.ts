@@ -96,14 +96,14 @@ beforeEach(() => {
 describe('AuthComponent tabs', () => {
     it('should reset transient auth state and navigate when mode changes', async () => {
         const { component, routerSpy } = createComponent();
-        component['loginForm'].controls.email.setValue('user@example.com');
+        component['loginModel'].update(value => ({ ...value, email: 'user@example.com' }));
         component['showPasswordReset'].set(true);
         component['passwordResetSent'].set(true);
 
         await component['onTabChangeAsync']('register');
 
         expect(component['authMode']).toBe('register');
-        expect(component['loginForm'].controls.email.value).toBe('');
+        expect(component['loginModel']().email).toBe('');
         expect(component['showPasswordReset']()).toBe(false);
         expect(component['passwordResetSent']()).toBe(false);
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/'], { queryParams: { auth: 'register' } });
@@ -114,8 +114,7 @@ describe('AuthComponent login', () => {
     it('should show invalid credentials error and hide restore action', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.login.mockReturnValue(of('invalidCredentials'));
-        component['loginForm'].controls.email.setValue('user@example.com');
-        component['loginForm'].controls.password.setValue('password123');
+        component['loginModel'].set({ email: 'user@example.com', password: 'password123', rememberMe: false });
 
         component['onLoginSubmit']();
 
@@ -127,8 +126,7 @@ describe('AuthComponent login', () => {
     it('should show restore action when login returns deleted account', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.login.mockReturnValue(of('accountDeleted'));
-        component['loginForm'].controls.email.setValue('deleted@example.com');
-        component['loginForm'].controls.password.setValue('password123');
+        component['loginModel'].set({ email: 'deleted@example.com', password: 'password123', rememberMe: false });
 
         component['onLoginSubmit']();
 
@@ -140,8 +138,7 @@ describe('AuthComponent login', () => {
     it('should restore deleted account and complete navigation on success', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.restoreAccount.mockReturnValue(of(true));
-        component['loginForm'].controls.email.setValue('deleted@example.com');
-        component['loginForm'].controls.password.setValue('password123');
+        component['loginModel'].set({ email: 'deleted@example.com', password: 'password123', rememberMe: false });
 
         component['onRestoreSubmit']();
 
@@ -155,20 +152,20 @@ describe('AuthComponent register', () => {
     it('should not show register field errors while typing before blur or submit', () => {
         const { component, formManager } = createComponent('register');
 
-        component['registerForm'].controls.password.setValue('abc');
-        component['registerForm'].controls.password.markAsDirty();
+        component['registerModel'].update(value => ({ ...value, password: 'abc' }));
+        component['registerForm'].password().markAsDirty();
         formManager.updateFieldErrors();
 
-        expect(component['registerForm'].controls.password.dirty).toBe(true);
-        expect(component['registerForm'].controls.password.touched).toBe(false);
+        expect(component['registerForm'].password().dirty()).toBe(true);
+        expect(component['registerForm'].password().touched()).toBe(false);
         expect(component['registerFieldErrors']().password).toBeNull();
     });
 
     it('should show register field errors after blur', () => {
         const { component, formManager } = createComponent('register');
 
-        component['registerForm'].controls.password.setValue('abc');
-        component['registerForm'].controls.password.markAsTouched();
+        component['registerModel'].update(value => ({ ...value, password: 'abc' }));
+        component['registerForm'].password().markAsTouched();
         formManager.updateFieldErrors();
 
         expect(component['registerFieldErrors']().password).toContain('FORM_ERRORS.PASSWORD.MIN_LENGTH');
@@ -179,7 +176,7 @@ describe('AuthComponent register', () => {
 
         component['onRegisterSubmit']();
 
-        expect(component['registerForm'].controls.email.touched).toBe(true);
+        expect(component['registerForm'].email().touched()).toBe(true);
         expect(component['registerFieldErrors']().email).toContain('FORM_ERRORS.REQUIRED');
         expect(authFlowFacadeSpy.register).not.toHaveBeenCalled();
     });
@@ -187,24 +184,28 @@ describe('AuthComponent register', () => {
     it('should mark email as existing when register returns conflict', () => {
         const { authFlowFacadeSpy, component } = createComponent('register');
         authFlowFacadeSpy.register.mockReturnValue(of('emailExists'));
-        component['registerForm'].controls.email.setValue('taken@example.com');
-        component['registerForm'].controls.password.setValue('password123');
-        component['registerForm'].controls.confirmPassword.setValue('password123');
-        component['registerForm'].controls.agreeTerms.setValue(true);
+        component['registerModel'].set({
+            email: 'taken@example.com',
+            password: 'password123',
+            confirmPassword: 'password123',
+            agreeTerms: true,
+        });
 
         component['onRegisterSubmit']();
 
-        expect(component['registerForm'].controls.email.hasError('userExists')).toBe(true);
+        expect(component['registerForm'].email().getError('userExists')).toBeDefined();
         expect(component['isSubmitting']()).toBe(false);
     });
 
     it('should show deleted-account error when register returns accountDeleted', () => {
         const { authFlowFacadeSpy, component } = createComponent('register');
         authFlowFacadeSpy.register.mockReturnValue(of('accountDeleted'));
-        component['registerForm'].controls.email.setValue('deleted@example.com');
-        component['registerForm'].controls.password.setValue('password123');
-        component['registerForm'].controls.confirmPassword.setValue('password123');
-        component['registerForm'].controls.agreeTerms.setValue(true);
+        component['registerModel'].set({
+            email: 'deleted@example.com',
+            password: 'password123',
+            confirmPassword: 'password123',
+            agreeTerms: true,
+        });
 
         component['onRegisterSubmit']();
 
@@ -216,19 +217,19 @@ describe('AuthComponent register', () => {
 describe('AuthComponent password reset', () => {
     it('should copy login email when opening password reset form', () => {
         const { component } = createComponent();
-        component['loginForm'].controls.email.setValue('user@example.com');
+        component['loginModel'].update(value => ({ ...value, email: 'user@example.com' }));
 
         component['onPasswordResetOpen']();
 
         expect(component['showPasswordReset']()).toBe(true);
-        expect(component['passwordResetForm'].controls.email.value).toBe('user@example.com');
+        expect(component['passwordResetModel']().email).toBe('user@example.com');
     });
 
     it('should mark reset as sent and start cooldown after successful request', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of(true));
         component['onPasswordResetOpen']();
-        component['passwordResetForm'].controls.email.setValue('user@example.com');
+        component['passwordResetModel'].set({ email: 'user@example.com' });
 
         component['onPasswordResetSubmit']();
 
@@ -241,7 +242,7 @@ describe('AuthComponent password reset', () => {
     it('should not submit password reset during cooldown', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         component['onPasswordResetOpen']();
-        component['passwordResetForm'].controls.email.setValue('user@example.com');
+        component['passwordResetModel'].set({ email: 'user@example.com' });
         component['passwordResetCooldownSeconds'].set(1);
 
         component['onPasswordResetSubmit']();

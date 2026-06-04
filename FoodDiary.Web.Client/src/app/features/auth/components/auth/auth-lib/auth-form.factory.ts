@@ -1,46 +1,33 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { matchFieldValidator } from '../../../../../shared/forms/match-field.validator';
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../../lib/auth.constants';
 import type {
     LoginFieldErrors,
-    LoginFormGroup,
+    LoginFormValues,
     PasswordResetFieldErrors,
-    PasswordResetFormGroup,
+    PasswordResetFormValues,
     RegisterFieldErrors,
-    RegisterFormGroup,
+    RegisterFormValues,
 } from './auth.types';
 
-export function createLoginForm(): FormGroup<LoginFormGroup> {
-    return new FormGroup<LoginFormGroup>({
-        email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-        password: new FormControl<string>('', {
-            nonNullable: true,
-            validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
-        }),
-        rememberMe: new FormControl<boolean>(false, { nonNullable: true }),
-    });
+export function createLoginFormModel(): LoginFormValues {
+    return {
+        email: '',
+        password: '',
+        rememberMe: false,
+    };
 }
 
-export function createRegisterForm(): FormGroup<RegisterFormGroup> {
-    return new FormGroup<RegisterFormGroup>({
-        email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-        password: new FormControl<string>('', {
-            nonNullable: true,
-            validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
-        }),
-        confirmPassword: new FormControl<string>('', {
-            nonNullable: true,
-            validators: [Validators.required, matchFieldValidator('password')],
-        }),
-        agreeTerms: new FormControl<boolean>(false, { nonNullable: true, validators: Validators.requiredTrue }),
-    });
+export function createRegisterFormModel(): RegisterFormValues {
+    return {
+        email: '',
+        password: '',
+        confirmPassword: '',
+        agreeTerms: false,
+    };
 }
 
-export function createPasswordResetForm(): FormGroup<PasswordResetFormGroup> {
-    return new FormGroup<PasswordResetFormGroup>({
-        email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-    });
+export function createPasswordResetFormModel(): PasswordResetFormValues {
+    return {
+        email: '',
+    };
 }
 
 export function createEmptyLoginFieldErrors(): LoginFieldErrors {

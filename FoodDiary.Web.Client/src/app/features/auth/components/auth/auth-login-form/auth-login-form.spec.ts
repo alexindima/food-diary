@@ -1,8 +1,10 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createEmptyLoginFieldErrors, createLoginForm } from '../auth-lib/auth-form.factory';
+import { createEmptyLoginFieldErrors, createLoginFormModel } from '../auth-lib/auth-form.factory';
 import { AuthLoginFormComponent } from './auth-login-form';
 
 type AuthLoginFormTestContext = {
@@ -16,7 +18,11 @@ function createComponent(): AuthLoginFormTestContext {
     });
 
     const fixture = TestBed.createComponent(AuthLoginFormComponent);
-    fixture.componentRef.setInput('form', createLoginForm());
+    const model = signal(createLoginFormModel());
+    fixture.componentRef.setInput(
+        'form',
+        TestBed.runInInjectionContext(() => form(model)),
+    );
     fixture.componentRef.setInput('errors', createEmptyLoginFieldErrors());
     fixture.componentRef.setInput('globalError', null);
     fixture.componentRef.setInput('isSubmitting', false);
@@ -48,15 +54,13 @@ describe('AuthLoginFormComponent', () => {
         component['loginNativeInput'].subscribe(inputSpy);
         component['passwordResetOpen'].subscribe(resetOpenSpy);
         component['restoreSubmit'].subscribe(restoreSpy);
-        component['form']().controls.email.setValue('user@example.com');
-        component['form']().controls.password.setValue('password123');
         fixture.componentRef.setInput('showRestoreAction', true);
         fixture.detectChanges();
 
         const root = fixture.nativeElement as HTMLElement;
-        const form = root.querySelector('form') as HTMLFormElement;
-        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-        form.dispatchEvent(new Event('input', { bubbles: true }));
+        const formElement = root.querySelector('form') as HTMLFormElement;
+        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        formElement.dispatchEvent(new Event('input', { bubbles: true }));
 
         const buttons = Array.from(root.querySelectorAll('button'));
         const lastButton = buttons.at(-1);

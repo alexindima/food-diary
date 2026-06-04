@@ -13,7 +13,6 @@ import {
     viewChild,
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -75,6 +74,9 @@ export class AuthComponent {
     protected readonly loginForm = this.formManager.loginForm;
     protected readonly registerForm = this.formManager.registerForm;
     protected readonly passwordResetForm = this.formManager.passwordResetForm;
+    protected readonly loginModel = this.formManager.loginModel;
+    protected readonly registerModel = this.formManager.registerModel;
+    protected readonly passwordResetModel = this.formManager.passwordResetModel;
     protected readonly globalError = signal<string | null>(null);
     protected readonly isSubmitting = signal<boolean>(false);
     protected readonly googleReady = this.googleManager.ready;
@@ -109,16 +111,19 @@ export class AuthComponent {
     }
 
     private subscribeFormChanges(): void {
-        this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        effect(() => {
+            this.loginModel();
             this.clearGlobalError();
             this.updateLoginAutofillState();
             this.cdr.markForCheck();
         });
-        this.registerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        effect(() => {
+            this.registerModel();
             this.clearGlobalError();
             this.cdr.markForCheck();
         });
-        this.passwordResetForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        effect(() => {
+            this.passwordResetModel();
             this.clearGlobalError();
             this.cdr.markForCheck();
         });
@@ -172,8 +177,8 @@ export class AuthComponent {
     protected onLoginSubmit(): void {
         this.syncLoginNativeValues();
 
-        if (!this.loginForm.valid || this.isSubmitting()) {
-            this.loginForm.markAllAsTouched();
+        if (this.loginForm().invalid() || this.isSubmitting()) {
+            this.loginForm().markAsTouched();
             this.formManager.updateFieldErrors();
             this.cdr.markForCheck();
             return;
@@ -181,7 +186,7 @@ export class AuthComponent {
 
         this.isSubmitting.set(true);
 
-        this.authFlowFacade.login(this.loginForm.value).subscribe(result => {
+        this.authFlowFacade.login(this.loginModel()).subscribe(result => {
             this.isSubmitting.set(false);
             if (result === 'success') {
                 this.completeAuthenticatedNavigationAndClose();
@@ -203,14 +208,14 @@ export class AuthComponent {
     }
 
     protected onRestoreSubmit(): void {
-        if (!this.loginForm.valid || this.isRestoring()) {
+        if (this.loginForm().invalid() || this.isRestoring()) {
             return;
         }
 
-        const rememberMe = this.loginForm.controls.rememberMe.value;
+        const rememberMe = this.loginModel().rememberMe;
         this.isRestoring.set(true);
 
-        this.authFlowFacade.restoreAccount(this.loginForm.value, rememberMe).subscribe(success => {
+        this.authFlowFacade.restoreAccount(this.loginModel(), rememberMe).subscribe(success => {
             this.isRestoring.set(false);
             if (success) {
                 this.completeAuthenticatedNavigationAndClose();
@@ -222,8 +227,8 @@ export class AuthComponent {
     }
 
     protected onRegisterSubmit(): void {
-        if (!this.registerForm.valid || this.isSubmitting()) {
-            this.registerForm.markAllAsTouched();
+        if (this.registerForm().invalid() || this.isSubmitting()) {
+            this.registerForm().markAsTouched();
             this.formManager.updateFieldErrors();
             this.cdr.markForCheck();
             return;
@@ -231,7 +236,7 @@ export class AuthComponent {
 
         this.isSubmitting.set(true);
 
-        this.authFlowFacade.register(this.registerForm.value).subscribe(result => {
+        this.authFlowFacade.register(this.registerModel()).subscribe(result => {
             this.isSubmitting.set(false);
             if (result === 'success') {
                 void this.navigationService.navigateToEmailVerificationPendingAsync();
@@ -253,7 +258,7 @@ export class AuthComponent {
 
     private onGoogleCredential(credential: string): void {
         this.isSubmitting.set(true);
-        const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
+        const rememberMe = this.authMode === 'login' ? this.loginModel().rememberMe : false;
         const request: GoogleLoginRequest = { credential, rememberMe: Boolean(rememberMe) };
         this.authFlowFacade.loginWithGoogle(request).subscribe(success => {
             this.isSubmitting.set(false);
@@ -271,8 +276,8 @@ export class AuthComponent {
             return;
         }
         this.clearGlobalError();
-        this.passwordResetForm.reset({
-            email: this.loginForm.controls.email.value,
+        this.passwordResetForm().reset({
+            email: this.loginModel().email,
         });
         this.passwordResetSent.set(false);
         this.showPasswordReset.set(true);
@@ -285,8 +290,8 @@ export class AuthComponent {
     }
 
     protected onPasswordResetSubmit(): void {
-        if (!this.passwordResetForm.valid || this.isPasswordResetting()) {
-            this.passwordResetForm.markAllAsTouched();
+        if (this.passwordResetForm().invalid() || this.isPasswordResetting()) {
+            this.passwordResetForm().markAsTouched();
             this.formManager.updateFieldErrors();
             this.cdr.markForCheck();
             return;
@@ -297,7 +302,7 @@ export class AuthComponent {
 
         this.isPasswordResetting.set(true);
 
-        this.authFlowFacade.requestPasswordReset(this.passwordResetForm.value).subscribe(success => {
+        this.authFlowFacade.requestPasswordReset(this.passwordResetModel()).subscribe(success => {
             this.isPasswordResetting.set(false);
             if (success) {
                 this.passwordResetSent.set(true);
@@ -386,10 +391,7 @@ export class AuthComponent {
 
     private handleRegisterResult(result: AuthRegisterResult): void {
         if (result === 'emailExists') {
-            const emailField = this.registerForm.controls.email;
-            emailField.updateValueAndValidity();
-            emailField.setErrors({ userExists: true });
-            this.formManager.updateFieldErrors();
+            this.formManager.setRegisterEmailExistsError();
         } else if (result === 'accountDeleted') {
             this.setGlobalError('AUTH.REGISTER.ACCOUNT_DELETED');
         } else {
@@ -415,13 +417,11 @@ export class AuthComponent {
 
         const fields = getLoginAutofillFieldValues(form);
 
-        this.loginForm.patchValue(
-            {
-                email: fields.email.length > 0 ? fields.email : this.loginForm.controls.email.value,
-                password: fields.password.length > 0 ? fields.password : this.loginForm.controls.password.value,
-            },
-            { emitEvent: true },
-        );
+        this.loginModel.update(value => ({
+            ...value,
+            email: fields.email.length > 0 ? fields.email : value.email,
+            password: fields.password.length > 0 ? fields.password : value.password,
+        }));
     }
 
     private startLoginAutofillDetection(): void {
