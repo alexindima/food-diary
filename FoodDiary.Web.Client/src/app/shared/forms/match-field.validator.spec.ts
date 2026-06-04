@@ -1,46 +1,65 @@
-import { FormControl, FormGroup } from '@angular/forms';
 import { describe, expect, it } from 'vitest';
 
 import { matchFieldValidator } from './match-field.validator';
 
+type MatchFieldControl = Parameters<ReturnType<typeof matchFieldValidator>>[0];
+
+type ParentControlState = {
+    get: (name: string) => { value: unknown } | null;
+};
+
+function createControlState(value: unknown, parent: ParentControlState | null = null): MatchFieldControl {
+    const control = Object.create(null) as MatchFieldControl;
+    Object.defineProperties(control, {
+        parent: { value: parent },
+        value: { value },
+    });
+
+    return control;
+}
+
+function createParentState(fields: Record<string, unknown>): ParentControlState {
+    return {
+        get: (name: string): { value: unknown } | null => {
+            if (!Object.hasOwn(fields, name)) {
+                return null;
+            }
+
+            return { value: fields[name] };
+        },
+    };
+}
+
 describe('matchFieldValidator', () => {
     it('should return null when fields match', () => {
-        const group = new FormGroup({
-            password: new FormControl('secret'),
-            confirmPassword: new FormControl('secret', matchFieldValidator('password')),
-        });
+        const validator = matchFieldValidator('password');
+        const control = createControlState('secret', createParentState({ password: 'secret' }));
 
-        const result = group.controls.confirmPassword.errors;
+        const result = validator(control);
         expect(result).toBeNull();
     });
 
     it("should return error when fields don't match", () => {
-        const group = new FormGroup({
-            password: new FormControl('secret'),
-            confirmPassword: new FormControl('different', matchFieldValidator('password')),
-        });
+        const validator = matchFieldValidator('password');
+        const control = createControlState('different', createParentState({ password: 'secret' }));
 
-        group.controls.confirmPassword.updateValueAndValidity();
-        const result = group.controls.confirmPassword.errors;
+        const result = validator(control);
         expect(result).toEqual({ matchField: true });
     });
 
     it('should handle null parent', () => {
-        const control = new FormControl('value');
         const validator = matchFieldValidator('other');
+        const control = createControlState('value');
 
-        // Control without a parent group
         const result = validator(control);
         expect(result).toBeNull();
     });
 
     it('should handle missing control', () => {
-        const group = new FormGroup({
-            confirmPassword: new FormControl('value', matchFieldValidator('nonExistent')),
-        });
+        const validator = matchFieldValidator('nonExistent');
+        const control = createControlState('value', createParentState({}));
 
-        group.controls.confirmPassword.updateValueAndValidity();
-        const result = group.controls.confirmPassword.errors;
+        const result = validator(control);
         expect(result).toEqual({ matchField: true });
     });
 });

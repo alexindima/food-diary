@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
-import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, type FdValidationErrors, getNumberProperty } from './fd-ui-form-error';
+import {
+    FD_VALIDATION_ERRORS,
+    FdUiFormErrorComponent,
+    type FdUiFormErrorControlState,
+    type FdValidationErrors,
+    getNumberProperty,
+} from './fd-ui-form-error';
 
 const REQUIRED_LENGTH = 8;
 
@@ -14,8 +20,30 @@ const REQUIRED_LENGTH = 8;
 })
 class TestHostComponent {
     public error: string | null = 'FORM_ERRORS.UNKNOWN';
-    public control: FormControl<string> | null = null;
+    public control: TestControlState | null = null;
     public showOnDirty = false;
+}
+
+type TestControlState = FdUiFormErrorControlState & {
+    emitChange: () => void;
+};
+
+function createControlState(overrides: Partial<FdUiFormErrorControlState> = {}): TestControlState {
+    const changes = new Subject<void>();
+
+    return {
+        dirty: false,
+        emitChange: (): void => {
+            changes.next();
+        },
+        errors: null,
+        events: changes.asObservable(),
+        invalid: false,
+        statusChanges: changes.asObservable(),
+        touched: false,
+        valueChanges: changes.asObservable(),
+        ...overrides,
+    };
 }
 
 function host(fixture: ComponentFixture<TestHostComponent>): HTMLElement {
@@ -77,7 +105,10 @@ function registerDirectErrorTests(): void {
 function registerControlErrorTests(): void {
     describe('control error', () => {
         it('renders configured control error after touch', async () => {
-            const control = new FormControl('', { nonNullable: true, validators: Validators.required });
+            const control = createControlState({
+                errors: { required: true },
+                invalid: true,
+            });
             const fixture = await createComponentAsync(component => {
                 component.error = null;
                 component.control = control;
@@ -85,8 +116,8 @@ function registerControlErrorTests(): void {
 
             expect(host(fixture).querySelector('.fd-ui-form-error__text')).toBeNull();
 
-            control.markAsTouched();
-            control.updateValueAndValidity();
+            control.touched = true;
+            control.emitChange();
             fixture.detectChanges();
 
             const errorText = requireElement(fixture, '.fd-ui-form-error__text');
@@ -94,15 +125,17 @@ function registerControlErrorTests(): void {
         });
 
         it('renders configured control error when dirty is enabled', async () => {
-            const control = new FormControl('', { nonNullable: true, validators: Validators.email });
+            const control = createControlState({
+                dirty: true,
+                errors: { email: true },
+                invalid: true,
+            });
             const fixture = await createComponentAsync(component => {
                 component.error = null;
                 component.control = control;
                 component.showOnDirty = true;
             });
 
-            control.setValue('not-an-email');
-            control.markAsDirty();
             fixture.detectChanges();
 
             const errorText = requireElement(fixture, '.fd-ui-form-error__text');
@@ -110,9 +143,11 @@ function registerControlErrorTests(): void {
         });
 
         it('renders unknown message for unmapped control error', async () => {
-            const control = new FormControl('', { nonNullable: true });
-            control.setErrors({ custom: true });
-            control.markAsTouched();
+            const control = createControlState({
+                errors: { custom: true },
+                invalid: true,
+                touched: true,
+            });
             const fixture = await createComponentAsync(component => {
                 component.error = null;
                 component.control = control;
@@ -133,9 +168,11 @@ function registerControlErrorTests(): void {
                 })
                 .compileComponents();
             const fixture = TestBed.createComponent(TestHostComponent);
-            const control = new FormControl('', { nonNullable: true });
-            control.setErrors({ server: { reason: 'duplicate' } });
-            control.markAsTouched();
+            const control = createControlState({
+                errors: { server: { reason: 'duplicate' } },
+                invalid: true,
+                touched: true,
+            });
             fixture.componentInstance.error = null;
             fixture.componentInstance.control = control;
             fixture.detectChanges();

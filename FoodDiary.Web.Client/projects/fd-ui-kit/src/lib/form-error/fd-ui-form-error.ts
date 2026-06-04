@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, InjectionToken, input, signal } from '@angular/core';
-import type { AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { merge } from 'rxjs';
+import { merge, type Observable } from 'rxjs';
 
 export type FdValidationErrorConfig = {
     key: string;
@@ -9,6 +8,16 @@ export type FdValidationErrorConfig = {
 };
 
 export type FdValidationErrors = Record<string, (error?: unknown) => FdValidationErrorConfig | string>;
+
+export type FdUiFormErrorControlState = {
+    dirty: boolean;
+    errors: Record<string, unknown> | null;
+    events: Observable<unknown>;
+    invalid: boolean;
+    statusChanges: Observable<unknown>;
+    touched: boolean;
+    valueChanges: Observable<unknown>;
+};
 
 export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_VALIDATION_ERRORS', {
     providedIn: 'root',
@@ -46,7 +55,7 @@ export class FdUiFormErrorComponent {
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly controlVersion = signal(0);
 
-    public readonly control = input<AbstractControl | null>();
+    public readonly control = input<FdUiFormErrorControlState | null>();
     public readonly error = input<string | null>();
     public readonly context = input<Record<string, unknown>>();
     public readonly showOnDirty = input(false);
@@ -84,7 +93,7 @@ export class FdUiFormErrorComponent {
         return this.resolveControlMessage(control);
     });
 
-    private resolveControlMessage(control: AbstractControl): string | null {
+    private resolveControlMessage(control: FdUiFormErrorControlState): string | null {
         const shouldShow = control.touched || (this.showOnDirty() && control.dirty);
         if (!control.invalid || !shouldShow) {
             return null;

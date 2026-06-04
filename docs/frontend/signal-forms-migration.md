@@ -9,7 +9,7 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 - Baseline date: 2026-06-04.
 - Migrated Signal Forms: 51 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 18 files.
+- Remaining legacy Reactive Forms surface: 15 files.
 
 Tracker patterns:
 
@@ -166,6 +166,10 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/shared/lib/validation-error.utils.spec.ts`
 - `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-lib/meal-manage-view.utils.spec.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-form-error.utils.spec.ts`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.spec.ts`
+- `FoodDiary.Web.Client/src/app/shared/forms/match-field.validator.spec.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/lib/non-empty-array.validator.spec.ts`
 
 ## Next Candidates
 
@@ -202,5 +206,6 @@ Tracker patterns:
 - Recipe steps list now renders step-card state and emits reorder events instead of receiving the legacy steps `FormArray`; `recipe-manage` remains the adapter for step mutation.
 - `fd-ui-input` and `fd-ui-textarea` host integration specs now use Signal Forms `[formField]`, including declarative disabled-state checks.
 - Error utility specs now use structural control-state doubles instead of Angular `FormControl`, keeping actual Reactive Forms usage visible in adapters/managers.
+- `fd-ui-form-error` now accepts a minimal structural control state, and validator specs use plain control doubles instead of Angular `FormControl`/`FormGroup`.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.
