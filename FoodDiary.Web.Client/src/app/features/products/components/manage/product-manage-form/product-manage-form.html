@@ -7,16 +7,11 @@
         (back)="onCancelAsync()"
     />
 
-    <form
-        class="product-manage__form fd-stack fd-gap-lg"
-        [formGroup]="productForm"
-        [attr.aria-busy]="isSubmitting() || isDeleting()"
-        (ngSubmit)="onSubmitAsync()"
-    >
+    <form class="product-manage__form fd-stack fd-gap-lg" [attr.aria-busy]="isSubmitting() || isDeleting()" (ngSubmit)="onSubmitAsync()">
         <div class="product-manage__grid fd-grid fd-gap-xl">
             <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
                 <fd-product-basic-info
-                    [formGroup]="productForm"
+                    [form]="productForm"
                     [nameOptions]="nameSearch.options()"
                     [isNameSearchLoading]="nameSearch.isLoading()"
                     (openBarcodeScanner)="openBarcodeScanner()"
@@ -29,7 +24,7 @@
             <div class="product-manage__column product-manage__column--secondary fd-stack fd-gap-xl">
                 <div class="product-manage__sticky-stack fd-stack fd-gap-lg">
                     <fd-product-nutrition-editor
-                        [formGroup]="productForm"
+                        [form]="productForm"
                         [nutritionMode]="nutritionMode"
                         (nutritionModeChange)="onNutritionModeChange($event)"
                         (openAiRecognition)="openAiRecognitionDialog()"
@@ -67,7 +62,7 @@
                                 appearance="brand-action"
                                 [icon]="manageHeaderState().submitIcon"
                                 [fullWidth]="true"
-                                [disabled]="productForm.invalid || isSubmitting() || isDeleting()"
+                                [disabled]="productForm().invalid() || isSubmitting() || isDeleting()"
                                 [loading]="isSubmitting()"
                             >
                                 {{ manageHeaderState().submitLabelKey | translate }}

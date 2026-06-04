@@ -1,13 +1,11 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { getControlNumericValue } from '../../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
-import { PRODUCT_MIN_AMOUNT, PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../../lib/product-manage.constants';
+import { PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../../lib/product-manage.constants';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../lib/product-type.utils';
 import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
-import type { NutritionMode, ProductFormData, ProductFormValues } from './product-manage-form.types';
+import type { NutritionMode, ProductFormValues } from './product-manage-form.types';
 
 export type NutritionValues = {
     caloriesPerBase: number | null;
@@ -38,80 +36,72 @@ export const PRODUCT_NUTRITION_FIELDS: readonly NutritionField[] = [
     'alcoholPerBase',
 ];
 
-export function createProductForm(): FormGroup<ProductFormData> {
-    return new FormGroup<ProductFormData>({
-        name: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        barcode: new FormControl(null),
-        brand: new FormControl(null),
-        productType: new FormControl<ProductType>(ProductType.Unknown, { nonNullable: true }),
-        description: new FormControl(null),
-        comment: new FormControl(null),
-        imageUrl: new FormControl<ImageSelection | null>(null),
-        baseAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, {
-            nonNullable: true,
-            validators: [Validators.required, Validators.min(PRODUCT_MIN_AMOUNT)],
-        }),
-        defaultPortionAmount: new FormControl(DEFAULT_NUTRITION_BASE_AMOUNT, {
-            nonNullable: true,
-            validators: [Validators.required, Validators.min(PRODUCT_MIN_AMOUNT)],
-        }),
-        baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true, validators: Validators.required }),
-        caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
-        proteinsPerBase: new FormControl(null, [Validators.min(0)]),
-        fatsPerBase: new FormControl(null, [Validators.min(0)]),
-        carbsPerBase: new FormControl(null, [Validators.min(0)]),
-        fiberPerBase: new FormControl(null, [Validators.min(0)]),
-        alcoholPerBase: new FormControl(null, [Validators.min(0)]),
-        visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
-        usdaFdcId: new FormControl<number | null>(null),
-    });
+export function createProductForm(): ProductFormValues {
+    return {
+        name: '',
+        barcode: null,
+        brand: null,
+        productType: ProductType.Unknown,
+        description: null,
+        comment: null,
+        imageUrl: null,
+        baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+        defaultPortionAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+        baseUnit: MeasurementUnit.G,
+        caloriesPerBase: null,
+        proteinsPerBase: null,
+        fatsPerBase: null,
+        carbsPerBase: null,
+        fiberPerBase: null,
+        alcoholPerBase: null,
+        visibility: ProductVisibility.Private,
+        usdaFdcId: null,
+    };
 }
 
 export function getDefaultProductBaseAmount(unit: MeasurementUnit): number {
     return unit === MeasurementUnit.PCS ? 1 : DEFAULT_NUTRITION_BASE_AMOUNT;
 }
 
-export function getProductControlNumberValue(control: FormControl<number | string | null>): number {
-    return getControlNumericValue(control);
+export function getProductControlNumberValue(value: number | string | null): number {
+    return getControlNumericValue({ value });
 }
 
-export function buildProductData(form: FormGroup<ProductFormData>, nutritionMode: NutritionMode): CreateProductRequest {
-    const controls = form.controls;
-    const baseAmount = getDefaultProductBaseAmount(controls.baseUnit.value);
-    const defaultPortionAmount = getProductControlNumberValue(controls.defaultPortionAmount);
+export function buildProductData(values: ProductFormValues, nutritionMode: NutritionMode): CreateProductRequest {
+    const baseAmount = getDefaultProductBaseAmount(values.baseUnit);
+    const defaultPortionAmount = getProductControlNumberValue(values.defaultPortionAmount);
     const normalizeFactor = nutritionMode === 'portion' && defaultPortionAmount > 0 ? baseAmount / defaultPortionAmount : 1;
-    const nutritionValues = getNormalizedNutritionValues(form, normalizeFactor);
-    const imageSelection = controls.imageUrl.value;
-    const productType = controls.productType.value;
+    const nutritionValues = getNormalizedNutritionValues(values, normalizeFactor);
+    const imageSelection = values.imageUrl;
+    const productType = values.productType;
 
     return {
-        name: controls.name.value,
-        barcode: controls.barcode.value,
-        brand: controls.brand.value,
+        name: values.name,
+        barcode: values.barcode,
+        brand: values.brand,
         productType,
         category: productType,
-        description: controls.description.value,
-        comment: controls.comment.value,
+        description: values.description,
+        comment: values.comment,
         imageUrl: imageSelection?.url ?? null,
         imageAssetId: imageSelection?.assetId ?? null,
         baseAmount,
         defaultPortionAmount,
-        baseUnit: controls.baseUnit.value,
+        baseUnit: values.baseUnit,
         ...nutritionValues,
-        visibility: controls.visibility.value,
+        visibility: values.visibility,
     };
 }
 
-export function buildConvertedNutritionPatch(form: FormGroup<ProductFormData>, factor: number): Partial<ProductFormValues> {
+export function buildConvertedNutritionPatch(values: ProductFormValues, factor: number): Partial<ProductFormValues> {
     const patch: Partial<ProductFormValues> = {};
     PRODUCT_NUTRITION_FIELDS.forEach(field => {
-        const control = form.controls[field];
-        const rawValue = control.value;
+        const rawValue = values[field];
         if (rawValue === null) {
             return;
         }
 
-        patch[field] = roundProductNutrientValue(getProductControlNumberValue(control) * factor);
+        patch[field] = roundProductNutrientValue(getProductControlNumberValue(rawValue) * factor);
     });
 
     return patch;
@@ -156,14 +146,14 @@ export function buildProductFormPatch(product: Product): Partial<ProductFormValu
     };
 }
 
-export function buildAiResultPatch(form: FormGroup<ProductFormData>, result: ProductAiRecognitionResult): Partial<ProductFormValues> {
+export function buildAiResultPatch(values: ProductFormValues, result: ProductAiRecognitionResult): Partial<ProductFormValues> {
     const targetBaseAmount = getDefaultProductBaseAmount(result.baseUnit);
     const portionAmount = result.baseAmount > 0 ? result.baseAmount : targetBaseAmount;
 
     return {
-        name: result.name.length > 0 ? result.name : form.controls.name.value,
-        description: result.description ?? form.controls.description.value,
-        imageUrl: result.image ?? form.controls.imageUrl.value,
+        name: result.name.length > 0 ? result.name : values.name,
+        description: result.description ?? values.description,
+        imageUrl: result.image ?? values.imageUrl,
         baseAmount: targetBaseAmount,
         baseUnit: result.baseUnit,
         caloriesPerBase: roundNullableProductNutrientValue(result.caloriesPerBase),
@@ -207,14 +197,14 @@ export function roundProductNutrientValue(value: number): number {
     return Math.round(value * PRODUCT_NUTRIENT_ROUNDING_FACTOR) / PRODUCT_NUTRIENT_ROUNDING_FACTOR;
 }
 
-function getNormalizedNutritionValues(form: FormGroup<ProductFormData>, normalizeFactor: number): ProductNutritionValues {
+function getNormalizedNutritionValues(values: ProductFormValues, normalizeFactor: number): ProductNutritionValues {
     return {
-        caloriesPerBase: roundProductNutrientValue(getProductControlNumberValue(form.controls.caloriesPerBase) * normalizeFactor),
-        proteinsPerBase: roundProductNutrientValue(getProductControlNumberValue(form.controls.proteinsPerBase) * normalizeFactor),
-        fatsPerBase: roundProductNutrientValue(getProductControlNumberValue(form.controls.fatsPerBase) * normalizeFactor),
-        carbsPerBase: roundProductNutrientValue(getProductControlNumberValue(form.controls.carbsPerBase) * normalizeFactor),
-        fiberPerBase: roundProductNutrientValue(getProductControlNumberValue(form.controls.fiberPerBase) * normalizeFactor),
-        alcoholPerBase: roundProductNutrientValue(getProductControlNumberValue(form.controls.alcoholPerBase) * normalizeFactor),
+        caloriesPerBase: roundProductNutrientValue(getProductControlNumberValue(values.caloriesPerBase) * normalizeFactor),
+        proteinsPerBase: roundProductNutrientValue(getProductControlNumberValue(values.proteinsPerBase) * normalizeFactor),
+        fatsPerBase: roundProductNutrientValue(getProductControlNumberValue(values.fatsPerBase) * normalizeFactor),
+        carbsPerBase: roundProductNutrientValue(getProductControlNumberValue(values.carbsPerBase) * normalizeFactor),
+        fiberPerBase: roundProductNutrientValue(getProductControlNumberValue(values.fiberPerBase) * normalizeFactor),
+        alcoholPerBase: roundProductNutrientValue(getProductControlNumberValue(values.alcoholPerBase) * normalizeFactor),
     };
 }
 

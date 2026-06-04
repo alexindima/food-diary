@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
-import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiAutocompleteComponent, type FdUiAutocompleteOption } from 'fd-ui-kit/autocomplete/fd-ui-autocomplete';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -7,11 +8,11 @@ import { getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import { EMPTY, merge, type Observable } from 'rxjs';
+import { EMPTY, type Observable } from 'rxjs';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
-import type { ProductFormData } from '../product-manage-lib/product-manage-form.types';
+import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import type { ProductNameAutocompleteOption, ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 
 const ERROR_FIELDS = ['name', 'productType', 'defaultPortionAmount', 'baseUnit', 'visibility'] as const;
@@ -24,7 +25,7 @@ type FieldErrors = Record<ErrorField, string | null>;
     styleUrls: ['./product-basic-info.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
+        FormField,
         TranslatePipe,
         FdUiAutocompleteComponent,
         FdUiInputComponent,
@@ -36,8 +37,9 @@ type FieldErrors = Record<ErrorField, string | null>;
 })
 export class ProductBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
 
-    public readonly formGroup = input.required<FormGroup<ProductFormData>>();
+    public readonly form = input.required<FieldTree<ProductFormValues>>();
     public readonly nameOptions = input.required<ProductNameAutocompleteOption[]>();
     public readonly isNameSearchLoading = input.required<boolean>();
     protected readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
@@ -53,38 +55,17 @@ export class ProductBasicInfoComponent {
     protected readonly displayNameValue = (value: string | null): string => value ?? '';
 
     public constructor() {
-        effect(onCleanup => {
-            const form = this.formGroup();
-            const formEvents = (form as { events?: Observable<unknown> }).events ?? EMPTY;
-            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-            const refresh = (): void => {
-                this.fieldErrors.set(this.buildFieldErrors());
-            };
-
-            refresh();
-            const subscription = merge(formEvents, form.statusChanges, form.valueChanges, languageChanges).subscribe(() => {
-                refresh();
-            });
-            onCleanup(() => {
-                subscription.unsubscribe();
-            });
+        effect(() => {
+            this.fieldErrors.set(this.buildFieldErrors());
         });
 
-        effect(onCleanup => {
-            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-            const refresh = (): void => {
-                this.buildUnitOptions();
-                this.buildProductTypeOptions();
-                this.buildVisibilityOptions();
-            };
+        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+        languageChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.refreshTranslatedState();
+        });
 
-            refresh();
-            const subscription = languageChanges.subscribe(() => {
-                refresh();
-            });
-            onCleanup(() => {
-                subscription.unsubscribe();
-            });
+        effect(() => {
+            this.refreshTranslatedState();
         });
     }
 
@@ -143,23 +124,21 @@ export class ProductBasicInfoComponent {
     }
 
     private getControlError(controlName: ErrorField): string | null {
-        const control = this.formGroup().controls[controlName];
+        const control = this.form()[controlName]();
 
-        if (!control.touched && !control.dirty) {
+        if (!control.touched() && !control.dirty()) {
             return null;
         }
 
-        const errors = control.errors;
-
-        if (errors === null) {
+        if (!control.invalid()) {
             return null;
         }
 
-        if (errors['required'] !== undefined) {
+        if (control.getError('required') !== undefined) {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        const min = getNumberProperty(errors['min'], 'min');
+        const min = getNumberProperty(control.getError('min'), 'min');
         if (min !== undefined) {
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
                 min,
@@ -167,5 +146,12 @@ export class ProductBasicInfoComponent {
         }
 
         return null;
+    }
+
+    private refreshTranslatedState(): void {
+        this.buildUnitOptions();
+        this.buildProductTypeOptions();
+        this.buildVisibilityOptions();
+        this.fieldErrors.set(this.buildFieldErrors());
     }
 }

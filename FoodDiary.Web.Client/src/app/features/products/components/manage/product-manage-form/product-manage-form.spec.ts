@@ -11,6 +11,7 @@ import { ProductService } from '../../../api/product.service';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import { MeasurementUnit, type Product, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
+import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import { ProductManageFormComponent } from './product-manage-form';
 
 const PRODUCT: Product = {
@@ -138,13 +139,13 @@ describe('ProductManageFormComponent product inputs', () => {
 
         fixture.componentRef.setInput('product', PRODUCT);
         fixture.detectChanges();
-        expect(component['productForm'].controls.name.value).toBe(PRODUCT.name);
+        expect(productValues(component).name).toBe(PRODUCT.name);
 
         fixture.componentRef.setInput('product', SECOND_PRODUCT);
         fixture.detectChanges();
 
-        expect(component['productForm'].controls.name.value).toBe(SECOND_PRODUCT.name);
-        expect(component['productForm'].controls.caloriesPerBase.value).toBe(SECOND_PRODUCT.caloriesPerBase);
+        expect(productValues(component).name).toBe(SECOND_PRODUCT.name);
+        expect(productValues(component).caloriesPerBase).toBe(SECOND_PRODUCT.caloriesPerBase);
     });
 
     it('should repopulate the form when the product input is refreshed with the same id', async () => {
@@ -156,8 +157,8 @@ describe('ProductManageFormComponent product inputs', () => {
         fixture.componentRef.setInput('product', SAME_ID_UPDATED_PRODUCT);
         fixture.detectChanges();
 
-        expect(component['productForm'].controls.name.value).toBe(SAME_ID_UPDATED_PRODUCT.name);
-        expect(component['productForm'].controls.caloriesPerBase.value).toBe(SAME_ID_UPDATED_PRODUCT.caloriesPerBase);
+        expect(productValues(component).name).toBe(SAME_ID_UPDATED_PRODUCT.name);
+        expect(productValues(component).caloriesPerBase).toBe(SAME_ID_UPDATED_PRODUCT.caloriesPerBase);
     });
 
     it('should not apply add prefill over an edit product', async () => {
@@ -167,8 +168,8 @@ describe('ProductManageFormComponent product inputs', () => {
         fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode, offProduct: OFF_PRODUCT });
         fixture.detectChanges();
 
-        expect(component['productForm'].controls.name.value).toBe(PRODUCT.name);
-        expect(component['productForm'].controls.barcode.value).toBe(PRODUCT.barcode);
+        expect(productValues(component).name).toBe(PRODUCT.name);
+        expect(productValues(component).barcode).toBe(PRODUCT.barcode);
     });
 });
 
@@ -180,11 +181,11 @@ describe('ProductManageFormComponent prefill behavior', () => {
 
         fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode });
         fixture.detectChanges();
-        component['productForm'].controls.barcode.setValue('changed-barcode');
+        component['productForm'].barcode().value.set('changed-barcode');
         lookupResult$.next(OFF_PRODUCT);
 
-        expect(component['productForm'].controls.name.value).toBe('');
-        expect(component['productForm'].controls.brand.value).toBeNull();
+        expect(productValues(component).name).toBe('');
+        expect(productValues(component).brand).toBeNull();
     });
 
     it('should apply barcode scanner result and look up Open Food Facts', async () => {
@@ -193,7 +194,7 @@ describe('ProductManageFormComponent prefill behavior', () => {
 
         component['openBarcodeScanner']();
 
-        expect(component['productForm'].controls.barcode.value).toBe(OFF_PRODUCT.barcode);
+        expect(productValues(component).barcode).toBe(OFF_PRODUCT.barcode);
         expect(externalFoodFacade.searchByBarcode).toHaveBeenCalledWith(OFF_PRODUCT.barcode);
     });
 });
@@ -202,7 +203,7 @@ describe('ProductManageFormComponent USDA behavior', () => {
     it('should clear stale nutrition values before applying USDA detail', async () => {
         const { component } = await setupComponentAsync();
 
-        component['productForm'].patchValue({
+        patchProductForm(component, {
             caloriesPerBase: 500,
             proteinsPerBase: 50,
             fatsPerBase: 20,
@@ -213,13 +214,13 @@ describe('ProductManageFormComponent USDA behavior', () => {
 
         component['onNameSuggestionSelected'](USDA_SUGGESTION);
 
-        expect(component['productForm'].controls.name.value).toBe('USDA detail');
-        expect(component['productForm'].controls.caloriesPerBase.value).toBeNull();
-        expect(component['productForm'].controls.proteinsPerBase.value).toBe(EXPECTED_ROUNDED_USDA_PROTEIN);
-        expect(component['productForm'].controls.fatsPerBase.value).toBeNull();
-        expect(component['productForm'].controls.carbsPerBase.value).toBeNull();
-        expect(component['productForm'].controls.fiberPerBase.value).toBeNull();
-        expect(component['productForm'].controls.alcoholPerBase.value).toBeNull();
+        expect(productValues(component).name).toBe('USDA detail');
+        expect(productValues(component).caloriesPerBase).toBeNull();
+        expect(productValues(component).proteinsPerBase).toBe(EXPECTED_ROUNDED_USDA_PROTEIN);
+        expect(productValues(component).fatsPerBase).toBeNull();
+        expect(productValues(component).carbsPerBase).toBeNull();
+        expect(productValues(component).fiberPerBase).toBeNull();
+        expect(productValues(component).alcoholPerBase).toBeNull();
     });
 
     it('should ignore stale USDA detail response when a later USDA suggestion is selected', async () => {
@@ -233,8 +234,8 @@ describe('ProductManageFormComponent USDA behavior', () => {
         firstDetail$.next(createUsdaFoodDetail(USDA_FDC_ID, 'Old USDA detail'));
         secondDetail$.next(createUsdaFoodDetail(SECOND_USDA_FDC_ID, 'Fresh USDA detail'));
 
-        expect(component['productForm'].controls.name.value).toBe('Fresh USDA detail');
-        expect(component['productForm'].controls.usdaFdcId.value).toBe(SECOND_USDA_FDC_ID);
+        expect(productValues(component).name).toBe('Fresh USDA detail');
+        expect(productValues(component).usdaFdcId).toBe(SECOND_USDA_FDC_ID);
     });
 });
 
@@ -314,7 +315,7 @@ describe('ProductManageFormComponent cancel delete and nutrition behavior', () =
         });
         fixture.componentRef.setInput('mode', 'dialog');
         fixture.detectChanges();
-        component['productForm'].markAsDirty();
+        component['productForm']().markAsDirty();
 
         await component['onCancelAsync']();
 
@@ -326,7 +327,7 @@ describe('ProductManageFormComponent cancel delete and nutrition behavior', () =
     it('should stay on page when dirty cancel confirmation is rejected', async () => {
         const { component, productManageFacade, navigationService } = await setupComponentAsync();
         productManageFacade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
-        component['productForm'].markAsDirty();
+        component['productForm']().markAsDirty();
 
         await component['onCancelAsync']();
 
@@ -349,7 +350,7 @@ describe('ProductManageFormComponent cancel delete and nutrition behavior', () =
 
     it('should convert nutrition values when switching between base and portion modes', async () => {
         const { component } = await setupComponentAsync();
-        component['productForm'].patchValue({
+        patchProductForm(component, {
             baseAmount: 100,
             defaultPortionAmount: PORTION_AMOUNT,
             caloriesPerBase: BASE_CALORIES,
@@ -357,11 +358,11 @@ describe('ProductManageFormComponent cancel delete and nutrition behavior', () =
 
         component['onNutritionModeChange']('portion');
         expect(component['nutritionMode']).toBe('portion');
-        expect(component['productForm'].controls.caloriesPerBase.value).toBe(PORTION_CALORIES);
+        expect(productValues(component).caloriesPerBase).toBe(PORTION_CALORIES);
 
         component['onNutritionModeChange']('base');
         expect(component['nutritionMode']).toBe('base');
-        expect(component['productForm'].controls.caloriesPerBase.value).toBe(BASE_CALORIES);
+        expect(productValues(component).caloriesPerBase).toBe(BASE_CALORIES);
     });
 });
 
@@ -430,11 +431,19 @@ function createProductExternalFoodFacadeMock(): ProductExternalFoodFacadeMock {
 }
 
 function fillValidProductForm(component: ProductManageFormComponent): void {
-    component['productForm'].patchValue({
+    patchProductForm(component, {
         name: 'Valid product',
         caloriesPerBase: 100,
         proteinsPerBase: 10,
     });
+}
+
+function productValues(component: ProductManageFormComponent): ProductFormValues {
+    return component['productFormModel']();
+}
+
+function patchProductForm(component: ProductManageFormComponent, patch: Partial<ProductFormValues>): void {
+    component['patchProductForm'](patch);
 }
 
 function createUsdaFoodDetail(fdcId: number, description: string): UsdaFoodDetail {

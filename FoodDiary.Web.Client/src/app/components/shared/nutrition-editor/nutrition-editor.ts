@@ -38,6 +38,11 @@ export type NutritionFormModel = {
     alcohol: number | null;
 };
 
+export type NutritionEditorSignalForm = Pick<
+    FieldTree<NutritionFormModel>,
+    'calories' | 'proteins' | 'fats' | 'carbs' | 'fiber' | 'alcohol'
+>;
+
 @Component({
     selector: 'fd-nutrition-editor',
     imports: [CommonModule, FormField, ReactiveFormsModule, TranslatePipe, FdUiNutrientInputComponent],
@@ -46,7 +51,7 @@ export type NutritionFormModel = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NutritionEditorComponent {
-    public readonly form = input<FieldTree<NutritionFormModel> | null>(null);
+    public readonly form = input<NutritionEditorSignalForm | null>(null);
     public readonly formGroup = input<FormGroup | null>(null);
     public readonly controlNames = input<NutritionControlNames | null>(null);
     public readonly macroState = input.required<NutritionMacroState>();

@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 43 forms.
-- Signal Forms files: 101.
-- Remaining legacy Reactive Forms surface: 56 files.
+- Migrated Signal Forms: 44 forms.
+- Signal Forms files: 107.
+- Remaining legacy Reactive Forms surface: 49 files.
 
 Tracker patterns:
 
@@ -131,6 +131,14 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail-nutrition.mapper.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-lib/product-manage-form.types.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-lib/product-manage-form.mapper.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.html`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.ts`
+- `FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.html`
 
 ## Next Candidates
 
@@ -154,5 +162,6 @@ Tracker patterns:
 - `fd-ui-date-input` is adapted for Signal Forms CVA binding; keep internal control state away from public/protected `value` fields so Angular does not treat CVA components as Signal Forms custom controls accidentally.
 - `fd-ui-date-range-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - `fd-ui-datetime-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
+- Product manage now keeps `ProductFormValues` as the signal model and passes mapped nutrition fields into the shared nutrition editor.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

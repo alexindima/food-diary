@@ -10,9 +10,10 @@ import {
     input,
     output,
     signal,
+    untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { form, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -43,6 +44,7 @@ import {
     buildSourceProductPrefillPatch,
     buildUsdaFoodDetailPrefillPatch,
 } from '../../../lib/manage/product-nutrition-prefill.mapper';
+import { PRODUCT_MIN_AMOUNT } from '../../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import type { Product } from '../../../models/product.data';
@@ -58,7 +60,7 @@ import {
 } from '../product-manage-lib/product-manage-form.mapper';
 import type {
     NutritionMode,
-    ProductFormData,
+    ProductFormValues,
     ProductManageMode,
     ProductManagePrefill,
 } from '../product-manage-lib/product-manage-form.types';
@@ -83,7 +85,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER, ProductNameSearchFacade],
     imports: [
-        ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -115,17 +116,41 @@ export class ProductManageFormComponent {
     protected readonly isDeleting = signal(false);
     protected readonly isSubmitting = signal(false);
 
-    protected productForm: FormGroup<ProductFormData>;
+    protected readonly productFormModel = signal<ProductFormValues>(createProductForm());
+    protected readonly productForm = form(this.productFormModel, path => {
+        required(path.name);
+        required(path.baseAmount);
+        min(path.baseAmount, PRODUCT_MIN_AMOUNT);
+        required(path.defaultPortionAmount);
+        min(path.defaultPortionAmount, PRODUCT_MIN_AMOUNT);
+        required(path.baseUnit);
+        required(path.caloriesPerBase);
+        min(path.caloriesPerBase, 0);
+        min(path.proteinsPerBase, 0);
+        min(path.fatsPerBase, 0);
+        min(path.carbsPerBase, 0);
+        min(path.fiberPerBase, 0);
+        min(path.alcoholPerBase, 0);
+        required(path.visibility);
+    });
     protected nutritionMode: NutritionMode = 'base';
+    private previousBaseUnit = this.productFormModel().baseUnit;
 
     public constructor() {
-        this.productForm = createProductForm();
         this.bindFormEffects();
     }
 
     private bindFormEffects(): void {
-        this.productForm.controls.baseUnit.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(unit => {
-            this.productForm.controls.baseAmount.setValue(getDefaultProductBaseAmount(unit));
+        effect(() => {
+            const unit = this.productFormModel().baseUnit;
+            if (unit === this.previousBaseUnit) {
+                return;
+            }
+
+            this.previousBaseUnit = unit;
+            untracked(() => {
+                this.patchProductForm({ baseAmount: getDefaultProductBaseAmount(unit) });
+            });
         });
 
         effect(() => {
@@ -143,14 +168,15 @@ export class ProductManageFormComponent {
             this.populatedProduct = null;
             this.applyPrefillIfNeeded(this.prefill());
         });
-        this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        effect(() => {
+            this.productFormModel();
             this.clearGlobalError();
         });
     }
 
     private applyPrefillIfNeeded(prefill: ProductManagePrefill | null): void {
         const key = this.getPrefillKey(prefill);
-        if (key === null || key === this.appliedPrefillKey || this.productForm.dirty) {
+        if (key === null || key === this.appliedPrefillKey || this.productForm().dirty()) {
             return;
         }
 
@@ -173,7 +199,7 @@ export class ProductManageFormComponent {
             return;
         }
 
-        this.productForm.controls.barcode.setValue(barcode);
+        this.productForm.barcode().value.set(barcode);
         this.lookupOpenFoodFacts(barcode);
     }
 
@@ -211,7 +237,7 @@ export class ProductManageFormComponent {
             .afterClosed()
             .subscribe(barcode => {
                 if (barcode !== null && barcode !== undefined && barcode.length > 0) {
-                    this.productForm.controls.barcode.setValue(barcode);
+                    this.productForm.barcode().value.set(barcode);
                     this.lookupOpenFoodFacts(barcode);
                 }
             });
@@ -226,20 +252,20 @@ export class ProductManageFormComponent {
             .searchByBarcode(barcode)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(offProduct => {
-                if (offProduct === null || this.product() !== null || this.productForm.controls.barcode.value !== barcode) {
+                if (offProduct === null || this.product() !== null || this.productFormModel().barcode !== barcode) {
                     return;
                 }
 
-                this.productForm.patchValue(buildOpenFoodFactsLookupPatch(this.productForm.getRawValue(), offProduct));
+                this.patchProductForm(buildOpenFoodFactsLookupPatch(this.productFormModel(), offProduct));
             });
     }
 
     private prefillFromOffProduct(offProduct: OpenFoodFactsProduct | ProductNameSuggestion): void {
-        this.productForm.patchValue(buildSourceProductPrefillPatch(offProduct));
+        this.patchProductForm(buildSourceProductPrefillPatch(offProduct));
     }
 
     private prefillFromUsdaFoodDetail(detail: UsdaFoodDetail): void {
-        this.productForm.patchValue(buildUsdaFoodDetailPrefillPatch(detail));
+        this.patchProductForm(buildUsdaFoodDetailPrefillPatch(detail));
     }
 
     protected openAiRecognitionDialog(): void {
@@ -253,7 +279,7 @@ export class ProductManageFormComponent {
                 {
                     size: 'lg',
                     data: {
-                        initialDescription: this.productForm.controls.description.value ?? null,
+                        initialDescription: this.productFormModel().description ?? null,
                     },
                 },
             )
@@ -318,16 +344,17 @@ export class ProductManageFormComponent {
             return null;
         }
 
-        this.productForm.markAllAsTouched();
+        this.productForm().markAsTouched();
 
-        if (this.hasMacrosError() || !this.productForm.valid) {
+        if (this.hasMacrosError() || this.productForm().invalid()) {
             return null;
         }
 
         this.isSubmitting.set(true);
-        const productData = buildProductData(this.productForm, this.nutritionMode);
+        const currentValues = this.productFormModel();
+        const productData = buildProductData(currentValues, this.nutritionMode);
         const product = this.product() ?? null;
-        const nextUsdaFdcId = this.productForm.controls.usdaFdcId.value;
+        const nextUsdaFdcId = currentValues.usdaFdcId;
         const previousUsdaFdcId = product?.usdaFdcId ?? null;
 
         try {
@@ -350,8 +377,9 @@ export class ProductManageFormComponent {
             return;
         }
 
-        const baseAmount = getDefaultProductBaseAmount(this.productForm.controls.baseUnit.value);
-        const portionAmount = getProductControlNumberValue(this.productForm.controls.defaultPortionAmount);
+        const values = this.productFormModel();
+        const baseAmount = getDefaultProductBaseAmount(values.baseUnit);
+        const portionAmount = getProductControlNumberValue(values.defaultPortionAmount);
 
         if (portionAmount > 0) {
             const factor = resolvedMode === 'portion' ? portionAmount / baseAmount : baseAmount / portionAmount;
@@ -372,13 +400,13 @@ export class ProductManageFormComponent {
                 return;
             }
 
-            this.productForm.patchValue({
+            this.patchProductForm({
                 name: suggestion.name,
                 barcode: null,
                 brand: null,
                 usdaFdcId: fdcId,
             });
-            this.productForm.patchValue(buildResetNutritionPatch());
+            this.patchProductForm(buildResetNutritionPatch());
             this.nameSearch.setSelectedSuggestion(suggestion);
             const requestId = ++this.usdaDetailRequestId;
             this.externalFoodFacade
@@ -388,7 +416,7 @@ export class ProductManageFormComponent {
                     takeUntilDestroyed(this.destroyRef),
                 )
                 .subscribe(detail => {
-                    if (detail !== null && requestId === this.usdaDetailRequestId && this.productForm.controls.usdaFdcId.value === fdcId) {
+                    if (detail !== null && requestId === this.usdaDetailRequestId && this.productFormModel().usdaFdcId === fdcId) {
                         this.prefillFromUsdaFoodDetail(detail);
                     }
                 });
@@ -396,36 +424,36 @@ export class ProductManageFormComponent {
         }
 
         this.prefillFromOffProduct(suggestion);
-        this.productForm.controls.usdaFdcId.setValue(null);
+        this.productForm.usdaFdcId().value.set(null);
         this.nameSearch.setSelectedSuggestion(suggestion);
     }
 
     private hasMacrosError(): boolean {
         const controls = [
-            this.productForm.controls.proteinsPerBase,
-            this.productForm.controls.fatsPerBase,
-            this.productForm.controls.carbsPerBase,
-            this.productForm.controls.alcoholPerBase,
+            this.getNutritionControlState('proteinsPerBase'),
+            this.getNutritionControlState('fatsPerBase'),
+            this.getNutritionControlState('carbsPerBase'),
+            this.getNutritionControlState('alcoholPerBase'),
         ];
 
         return checkMacrosError(controls);
     }
 
     private convertNutritionControls(factor: number): void {
-        const patch = buildConvertedNutritionPatch(this.productForm, factor);
+        const patch = buildConvertedNutritionPatch(this.productFormModel(), factor);
 
         if (Object.keys(patch).length > 0) {
-            this.productForm.patchValue(patch);
+            this.patchProductForm(patch);
         }
     }
 
     private populateForm(product: Product): void {
-        this.productForm.patchValue(buildProductFormPatch(product));
+        this.patchProductForm(buildProductFormPatch(product));
         this.nutritionMode = 'base';
     }
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
-        this.productForm.patchValue(buildAiResultPatch(this.productForm, result));
+        this.patchProductForm(buildAiResultPatch(this.productFormModel(), result));
         this.nutritionMode = 'portion';
     }
 
@@ -477,7 +505,7 @@ export class ProductManageFormComponent {
     }
 
     private hasUnsavedChanges(): boolean {
-        return this.productForm.dirty;
+        return this.productForm().dirty();
     }
 
     private async confirmDiscardChangesAsync(): Promise<boolean> {
@@ -496,6 +524,28 @@ export class ProductManageFormComponent {
 
     private shouldSkipSubmitConfirmDialog(): boolean {
         return this.mode() === 'dialog';
+    }
+
+    private patchProductForm(patch: Partial<ProductFormValues>): void {
+        this.productFormModel.update(values => ({
+            ...values,
+            ...patch,
+        }));
+    }
+
+    private getNutritionControlState(
+        field: keyof Pick<ProductFormValues, 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'alcoholPerBase'>,
+    ): {
+        value: number | null;
+        touched: boolean;
+        dirty: boolean;
+    } {
+        const state = this.productForm[field]();
+        return {
+            value: this.productFormModel()[field],
+            touched: state.touched(),
+            dirty: state.dirty(),
+        };
     }
 }
 

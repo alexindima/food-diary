@@ -26,8 +26,7 @@
             </fd-ui-button>
         </div>
         <fd-nutrition-editor
-            [formGroup]="formGroup()"
-            [controlNames]="nutritionControlNames"
+            [form]="nutritionForm()"
             [macroState]="macroBarState()"
             [caloriesError]="caloriesError()"
             [macrosError]="macrosError()"

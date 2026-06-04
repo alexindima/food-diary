@@ -1,10 +1,14 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { type FieldTree, form, min, required } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { PRODUCT_MIN_AMOUNT } from '../../../lib/product-manage.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
 import { createProductForm } from '../product-manage-lib/product-manage-form.mapper';
+import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import type { ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 import { ProductBasicInfoComponent } from './product-basic-info';
 
@@ -60,23 +64,23 @@ describe('ProductBasicInfoComponent options', () => {
 
 describe('ProductBasicInfoComponent field errors', () => {
     it('returns required error only after the control becomes touched or dirty', () => {
-        const form = createProductForm();
-        setRequiredInputs(form);
+        const productForm = createProductSignalForm();
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
         expect(component['fieldErrors']().name).toBeNull();
 
-        form.controls.name.markAsTouched();
-        form.controls.name.updateValueAndValidity();
+        productForm.name().markAsTouched();
+        fixture.detectChanges();
 
         expect(component['fieldErrors']().name).toBe('FORM_ERRORS.REQUIRED');
     });
 
     it('returns min amount error with validator metadata', () => {
-        const form = createProductForm();
-        form.controls.defaultPortionAmount.setValue(INVALID_AMOUNT);
-        form.controls.defaultPortionAmount.markAsTouched();
-        setRequiredInputs(form);
+        const productForm = createProductSignalForm(createProductForm());
+        productForm.defaultPortionAmount().value.set(INVALID_AMOUNT);
+        productForm.defaultPortionAmount().markAsTouched();
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
         expect(component['fieldErrors']().defaultPortionAmount).toBe('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO:0.001');
@@ -126,8 +130,22 @@ describe('ProductBasicInfoComponent name suggestions', () => {
     });
 });
 
-function setRequiredInputs(form = createProductForm()): void {
-    fixture.componentRef.setInput('formGroup', form);
+function setRequiredInputs(productForm = createProductSignalForm()): void {
+    fixture.componentRef.setInput('form', productForm);
     fixture.componentRef.setInput('nameOptions', []);
     fixture.componentRef.setInput('isNameSearchLoading', false);
+}
+
+function createProductSignalForm(model = createProductForm()): FieldTree<ProductFormValues> {
+    const formModel = signal(model);
+    return TestBed.runInInjectionContext(() =>
+        form(formModel, path => {
+            required(path.name);
+            required(path.defaultPortionAmount);
+            min(path.defaultPortionAmount, PRODUCT_MIN_AMOUNT);
+            required(path.productType);
+            required(path.baseUnit);
+            required(path.visibility);
+        }),
+    );
 }

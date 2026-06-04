@@ -47,12 +47,12 @@ describe('product manage form creation', () => {
     it('should create form with default base values', () => {
         const form = createProductForm();
 
-        expect(form.controls.name.value).toBe('');
-        expect(form.controls.baseAmount.value).toBe(DEFAULT_BASE_AMOUNT);
-        expect(form.controls.defaultPortionAmount.value).toBe(DEFAULT_BASE_AMOUNT);
-        expect(form.controls.baseUnit.value).toBe(MeasurementUnit.G);
-        expect(form.controls.productType.value).toBe(ProductType.Unknown);
-        expect(form.controls.visibility.value).toBe(ProductVisibility.Private);
+        expect(form.name).toBe('');
+        expect(form.baseAmount).toBe(DEFAULT_BASE_AMOUNT);
+        expect(form.defaultPortionAmount).toBe(DEFAULT_BASE_AMOUNT);
+        expect(form.baseUnit).toBe(MeasurementUnit.G);
+        expect(form.productType).toBe(ProductType.Unknown);
+        expect(form.visibility).toBe(ProductVisibility.Private);
     });
 
     it('should resolve default base amount by unit', () => {
@@ -68,8 +68,8 @@ describe('product manage request mapping', () => {
             url: 'https://example.test/image.png',
             assetId: 'asset-42',
         };
-        const form = createProductForm();
-        form.patchValue({
+        const form = {
+            ...createProductForm(),
             name: 'Portion product',
             barcode: '123',
             brand: 'Brand',
@@ -86,7 +86,7 @@ describe('product manage request mapping', () => {
             fiberPerBase: 1,
             alcoholPerBase: 0.5,
             visibility: ProductVisibility.Public,
-        });
+        };
 
         expect(buildProductData(form, 'portion')).toEqual({
             name: 'Portion product',
@@ -140,15 +140,15 @@ describe('product manage request mapping', () => {
 
 describe('product manage nutrition mapping', () => {
     it('should convert only filled nutrition controls when nutrition mode changes', () => {
-        const form = createProductForm();
-        form.patchValue({
+        const form = {
+            ...createProductForm(),
             caloriesPerBase: 111.11,
             proteinsPerBase: null,
             fatsPerBase: 3.33,
             carbsPerBase: 4.44,
             fiberPerBase: null,
             alcoholPerBase: 0.55,
-        });
+        };
 
         expect(buildConvertedNutritionPatch(form, 2)).toEqual({
             caloriesPerBase: 222.2,
@@ -159,13 +159,13 @@ describe('product manage nutrition mapping', () => {
     });
 
     it('should build AI result patch while preserving existing optional values when AI leaves them empty', () => {
-        const form = createProductForm();
         const image: ImageSelection = { url: 'https://example.test/current.png', assetId: 'current-asset' };
-        form.patchValue({
+        const form = {
+            ...createProductForm(),
             name: 'Existing name',
             description: 'Existing description',
             imageUrl: image,
-        });
+        };
         const aiResult: ProductAiRecognitionResult = {
             name: '',
             description: null,

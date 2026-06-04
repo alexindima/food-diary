@@ -1,24 +1,28 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
-import { type FormControl, type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
-import { EMPTY, merge, type Observable } from 'rxjs';
+import { EMPTY, type Observable } from 'rxjs';
 
-import type { NutritionMacroState, NutritionMismatchWarning } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
-import { type NutritionControlNames, NutritionEditorComponent } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import {
+    NutritionEditorComponent,
+    type NutritionEditorSignalForm,
+    type NutritionMacroState,
+    type NutritionMismatchWarning,
+} from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import {
     calculateCalorieMismatchWarning,
     calculateMacroBarState,
     checkCaloriesError,
     checkMacrosError,
-    getControlNumericValue,
 } from '../../../../../shared/lib/nutrition-form.utils';
 import { MeasurementUnit } from '../../../models/product.data';
-import type { NutritionMode, ProductFormData } from '../product-manage-lib/product-manage-form.types';
+import type { NutritionMode, ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 
 @Component({
     selector: 'fd-product-nutrition-editor',
@@ -26,7 +30,6 @@ import type { NutritionMode, ProductFormData } from '../product-manage-lib/produ
     styleUrls: ['./product-nutrition-editor.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
         TranslatePipe,
         FdUiHintDirective,
         FdUiCardComponent,
@@ -37,76 +40,63 @@ import type { NutritionMode, ProductFormData } from '../product-manage-lib/produ
 })
 export class ProductNutritionEditorComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
 
-    public readonly formGroup = input.required<FormGroup<ProductFormData>>();
+    public readonly form = input.required<FieldTree<ProductFormValues>>();
     public readonly nutritionMode = input.required<NutritionMode>();
     protected readonly macroBarState = signal<NutritionMacroState>({ isEmpty: true, segments: [] });
     protected readonly nutritionWarning = signal<NutritionMismatchWarning | null>(null);
     protected readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
-    protected readonly nutritionControlNames: NutritionControlNames = {
-        calories: 'caloriesPerBase',
-        proteins: 'proteinsPerBase',
-        fats: 'fatsPerBase',
-        carbs: 'carbsPerBase',
-        fiber: 'fiberPerBase',
-        alcohol: 'alcoholPerBase',
-    };
+    protected readonly nutritionForm = computed<NutritionEditorSignalForm>(() => {
+        const form = this.form();
+        return {
+            calories: form.caloriesPerBase,
+            proteins: form.proteinsPerBase,
+            fats: form.fatsPerBase,
+            carbs: form.carbsPerBase,
+            fiber: form.fiberPerBase,
+            alcohol: form.alcoholPerBase,
+        };
+    });
 
     public readonly nutritionModeChange = output<string>();
     public readonly openAiRecognition = output();
 
     public constructor() {
-        effect(onCleanup => {
-            const form = this.formGroup();
-            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-            const refresh = (): void => {
-                this.buildNutritionModeOptions();
-            };
-
-            refresh();
-            const subscription = merge(form.controls.baseUnit.valueChanges, languageChanges).subscribe(() => {
-                refresh();
-            });
-            onCleanup(() => {
-                subscription.unsubscribe();
-            });
+        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
+        languageChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.buildNutritionModeOptions();
         });
 
-        effect(onCleanup => {
-            const form = this.formGroup();
-            const refresh = (): void => {
-                this.updateCalorieWarning();
-                this.updateMacroDistribution();
-            };
+        effect(() => {
+            this.form().baseUnit().value();
+            this.buildNutritionModeOptions();
+        });
 
-            refresh();
-            const subscription = form.valueChanges.subscribe(() => {
-                refresh();
-            });
-            onCleanup(() => {
-                subscription.unsubscribe();
-            });
+        effect(() => {
+            this.updateCalorieWarning();
+            this.updateMacroDistribution();
         });
     }
 
     protected caloriesError(): string | null {
-        const control = this.formGroup().controls.caloriesPerBase;
+        const control = this.getControlState('caloriesPerBase');
         return checkCaloriesError(control) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED') : null;
     }
 
     protected macrosError(): string | null {
         const controls = [
-            this.formGroup().controls.proteinsPerBase,
-            this.formGroup().controls.fatsPerBase,
-            this.formGroup().controls.carbsPerBase,
-            this.formGroup().controls.alcoholPerBase,
+            this.getControlState('proteinsPerBase'),
+            this.getControlState('fatsPerBase'),
+            this.getControlState('carbsPerBase'),
+            this.getControlState('alcoholPerBase'),
         ];
 
         return checkMacrosError(controls) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED') : null;
     }
 
     private buildNutritionModeOptions(): void {
-        const baseUnit = this.formGroup().controls.baseUnit.value;
+        const baseUnit = this.form().baseUnit().value();
         const amount = this.getDefaultBaseAmount(baseUnit);
         const unitLabel = this.getUnitLabel(baseUnit);
 
@@ -137,12 +127,12 @@ export class ProductNutritionEditorComponent {
     }
 
     private updateCalorieWarning(): void {
-        const form = this.formGroup();
-        const calories = this.getNumberValue(form.controls.caloriesPerBase);
-        const proteins = this.getNumberValue(form.controls.proteinsPerBase);
-        const fats = this.getNumberValue(form.controls.fatsPerBase);
-        const carbs = this.getNumberValue(form.controls.carbsPerBase);
-        const alcohol = this.getNumberValue(form.controls.alcoholPerBase);
+        const form = this.form();
+        const calories = this.getNumberValue(form.caloriesPerBase().value());
+        const proteins = this.getNumberValue(form.proteinsPerBase().value());
+        const fats = this.getNumberValue(form.fatsPerBase().value());
+        const carbs = this.getNumberValue(form.carbsPerBase().value());
+        const alcohol = this.getNumberValue(form.alcoholPerBase().value());
         this.nutritionWarning.set(
             calculateCalorieMismatchWarning({
                 calories,
@@ -156,14 +146,34 @@ export class ProductNutritionEditorComponent {
     }
 
     private updateMacroDistribution(): void {
-        const form = this.formGroup();
-        const proteins = this.getNumberValue(form.controls.proteinsPerBase);
-        const fats = this.getNumberValue(form.controls.fatsPerBase);
-        const carbs = this.getNumberValue(form.controls.carbsPerBase);
+        const form = this.form();
+        const proteins = this.getNumberValue(form.proteinsPerBase().value());
+        const fats = this.getNumberValue(form.fatsPerBase().value());
+        const carbs = this.getNumberValue(form.carbsPerBase().value());
         this.macroBarState.set(calculateMacroBarState(proteins, fats, carbs));
     }
 
-    private getNumberValue(control: FormControl<number | string | null>): number {
-        return getControlNumericValue(control);
+    private getNumberValue(value: number | string | null): number {
+        if (value === null || value === '') {
+            return 0;
+        }
+
+        const normalized = typeof value === 'string' ? Number(value.replace(',', '.').replaceAll(/[^\d.-]/g, '')) : Number(value);
+        return Number.isFinite(normalized) ? Math.max(0, normalized) : 0;
+    }
+
+    private getControlState(
+        field: keyof Pick<ProductFormValues, 'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'alcoholPerBase'>,
+    ): {
+        value: number | null;
+        touched: boolean;
+        dirty: boolean;
+    } {
+        const state = this.form()[field]();
+        return {
+            value: state.value(),
+            touched: state.touched(),
+            dirty: state.dirty(),
+        };
     }
 }

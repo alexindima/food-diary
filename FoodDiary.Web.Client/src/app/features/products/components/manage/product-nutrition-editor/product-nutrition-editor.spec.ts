@@ -1,4 +1,6 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { type FieldTree, form, min, required } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -6,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { MeasurementUnit } from '../../../models/product.data';
 import { createProductForm } from '../product-manage-lib/product-manage-form.mapper';
+import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import { ProductNutritionEditorComponent } from './product-nutrition-editor';
 
 const PIECE_BASE_AMOUNT = 1;
@@ -45,8 +48,8 @@ beforeEach(() => {
 
 describe('ProductNutritionEditorComponent options', () => {
     it('builds base and portion mode options from current base unit', () => {
-        const form = createProductForm();
-        setRequiredInputs(form);
+        const productForm = createProductSignalForm();
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
         expect(component['nutritionModeOptions']()).toEqual([
@@ -62,11 +65,12 @@ describe('ProductNutritionEditorComponent options', () => {
     });
 
     it('updates base amount label when base unit changes to pieces', () => {
-        const form = createProductForm();
-        setRequiredInputs(form);
+        const productForm = createProductSignalForm();
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
-        form.controls.baseUnit.setValue(MeasurementUnit.PCS);
+        productForm.baseUnit().value.set(MeasurementUnit.PCS);
+        fixture.detectChanges();
 
         expect(component['nutritionModeOptions']()[0]).toEqual({
             value: 'base',
@@ -77,14 +81,14 @@ describe('ProductNutritionEditorComponent options', () => {
 
 describe('ProductNutritionEditorComponent nutrition signals', () => {
     it('calculates macro distribution and calorie mismatch warning from form values', () => {
-        const form = createProductForm();
-        form.patchValue({
+        const productForm = createProductSignalForm({
+            ...createProductForm(),
             caloriesPerBase: PRODUCT_CALORIES,
             proteinsPerBase: PRODUCT_PROTEINS,
             fatsPerBase: PRODUCT_FATS,
             carbsPerBase: PRODUCT_CARBS,
         });
-        setRequiredInputs(form);
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
         expect(component['macroBarState']().isEmpty).toBe(false);
@@ -96,13 +100,14 @@ describe('ProductNutritionEditorComponent nutrition signals', () => {
     });
 
     it('updates macro distribution when nutrition values change', () => {
-        const form = createProductForm();
-        setRequiredInputs(form);
+        const productForm = createProductSignalForm();
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
         expect(component['macroBarState']().isEmpty).toBe(true);
 
-        form.controls.proteinsPerBase.setValue(PRODUCT_PROTEINS);
+        productForm.proteinsPerBase().value.set(PRODUCT_PROTEINS);
+        fixture.detectChanges();
 
         expect(component['macroBarState']()).toEqual({
             isEmpty: false,
@@ -113,30 +118,44 @@ describe('ProductNutritionEditorComponent nutrition signals', () => {
 
 describe('ProductNutritionEditorComponent validation messages', () => {
     it('returns calories required error when calories control is invalid and touched', () => {
-        const form = createProductForm();
-        setRequiredInputs(form);
+        const productForm = createProductSignalForm();
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
-        form.controls.caloriesPerBase.markAsTouched();
+        productForm.caloriesPerBase().markAsTouched();
 
         expect(component['caloriesError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED');
     });
 
     it('returns macros required error when macro controls are empty and touched', () => {
-        const form = createProductForm();
-        setRequiredInputs(form);
+        const productForm = createProductSignalForm();
+        setRequiredInputs(productForm);
         fixture.detectChanges();
 
-        form.controls.proteinsPerBase.markAsTouched();
-        form.controls.fatsPerBase.markAsTouched();
-        form.controls.carbsPerBase.markAsTouched();
-        form.controls.alcoholPerBase.markAsTouched();
+        productForm.proteinsPerBase().markAsTouched();
+        productForm.fatsPerBase().markAsTouched();
+        productForm.carbsPerBase().markAsTouched();
+        productForm.alcoholPerBase().markAsTouched();
 
         expect(component['macrosError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
     });
 });
 
-function setRequiredInputs(form = createProductForm()): void {
-    fixture.componentRef.setInput('formGroup', form);
+function setRequiredInputs(productForm = createProductSignalForm()): void {
+    fixture.componentRef.setInput('form', productForm);
     fixture.componentRef.setInput('nutritionMode', 'base');
+}
+
+function createProductSignalForm(model = createProductForm()): FieldTree<ProductFormValues> {
+    const formModel = signal(model);
+    return TestBed.runInInjectionContext(() =>
+        form(formModel, path => {
+            required(path.caloriesPerBase);
+            min(path.caloriesPerBase, 0);
+            min(path.proteinsPerBase, 0);
+            min(path.fatsPerBase, 0);
+            min(path.carbsPerBase, 0);
+            min(path.alcoholPerBase, 0);
+        }),
+    );
 }
