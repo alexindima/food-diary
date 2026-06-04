@@ -1,5 +1,7 @@
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
+using FoodDiary.MailRelay.Domain.Common;
 using FoodDiary.MailRelay.Domain.Emails;
+using System.Runtime.CompilerServices;
 
 namespace FoodDiary.MailRelay.Tests;
 
@@ -103,5 +105,73 @@ public sealed class MailRelayDomainTests {
         Assert.Equal(message.HtmlBody, request.HtmlBody);
         Assert.Equal(message.TextBody, request.TextBody);
         Assert.Equal(message.CorrelationId, request.CorrelationId);
+    }
+
+    [Fact]
+    public void QueuedEmailId_ToString_ReturnsWrappedGuid() {
+        var value = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var id = new QueuedEmailId(value);
+
+        Assert.Equal(value.ToString(), id.ToString());
+    }
+
+    [Fact]
+    public void Entity_Equals_ReturnsExpectedResultsForCommonCases() {
+        var id = Guid.NewGuid();
+        var entity = new TestEntity(id);
+
+        Assert.True(entity.Equals((object)entity));
+        Assert.False(entity.Equals(null));
+        Assert.False(entity.Equals(new DifferentTestEntity(id)));
+        Assert.False(new TestEntity().Equals(new TestEntity()));
+        Assert.True(entity == new TestEntity(id));
+        Assert.False(entity != new TestEntity(id));
+    }
+
+    [Fact]
+    public void Entity_GetHashCode_CachesPersistedIdentityHashAndUsesRuntimeHashForTransientEntities() {
+        var persisted = new TestEntity(Guid.NewGuid());
+        var first = persisted.GetHashCode();
+
+        var second = persisted.GetHashCode();
+        var transient = new TestEntity();
+
+        Assert.Equal(first, second);
+        Assert.Equal(RuntimeHelpers.GetHashCode(transient), transient.GetHashCode());
+    }
+
+    [Fact]
+    public void AggregateRoot_TracksAndClearsDomainEvents() {
+        var aggregate = new TestAggregate(Guid.NewGuid());
+        var domainEvent = new TestDomainEvent();
+
+        aggregate.Record(domainEvent);
+        aggregate.ClearDomainEvents();
+
+        Assert.Empty(aggregate.DomainEvents);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestEntity : Entity<Guid> {
+        public TestEntity() {
+        }
+
+        public TestEntity(Guid id) : base(id) {
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DifferentTestEntity(Guid id) : Entity<Guid>(id);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestAggregate(Guid id) : AggregateRoot<Guid>(id) {
+        public void Record(IDomainEvent domainEvent) {
+            RaiseDomainEvent(domainEvent);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record TestDomainEvent : IDomainEvent {
+        public DateTimeOffset OccurredOnUtc { get; } = DateTimeOffset.UtcNow;
     }
 }

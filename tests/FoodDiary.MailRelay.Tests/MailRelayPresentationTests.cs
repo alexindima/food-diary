@@ -39,6 +39,51 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
+    public void ResultExtensions_WhenResultIsSuccessful_ReturnExpectedActionResults() {
+        var controller = new TestController();
+        var ok = Result<int>.Success(42).ToOkActionResult(controller, static value => new { Value = value });
+        var created = Result<int>.Success(42).ToCreatedActionResult(
+            controller,
+            static value => $"/messages/{value}",
+            static value => new { Value = value });
+        var accepted = Result<int>.Success(42).ToAcceptedActionResult(
+            controller,
+            static value => $"/messages/{value}",
+            static value => new { Value = value });
+        var noContent = Result.Success().ToNoContentActionResult(controller);
+        var okObject = Result.Success().ToOkActionResult(controller, new { Status = "ok" });
+
+        Assert.IsType<OkObjectResult>(ok);
+        Assert.IsType<CreatedResult>(created);
+        Assert.IsType<AcceptedResult>(accepted);
+        Assert.IsType<NoContentResult>(noContent);
+        Assert.IsType<OkObjectResult>(okObject);
+    }
+
+    [Fact]
+    public void ResultExtensions_WhenResultFails_ReturnErrorActionResults() {
+        var controller = new TestController();
+        var error = new MailRelayError("code", "message", ErrorKind.Conflict);
+
+        var ok = Result<int>.Failure(error).ToOkActionResult(controller, static value => new { Value = value });
+        var created = Result<int>.Failure(error).ToCreatedActionResult(
+            controller,
+            static value => $"/messages/{value}",
+            static value => new { Value = value });
+        var accepted = Result<int>.Failure(error).ToAcceptedActionResult(
+            controller,
+            static value => $"/messages/{value}",
+            static value => new { Value = value });
+        var noContent = Result.Failure(error).ToNoContentActionResult(controller);
+        var okObject = Result.Failure(error).ToOkActionResult(controller, new { Status = "ok" });
+
+        Assert.All([ok, created, accepted, noContent, okObject], result => {
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(StatusCodes.Status409Conflict, objectResult.StatusCode);
+        });
+    }
+
+    [Fact]
     public void ToCamelCasePath_MapsValidationPaths() {
         Assert.Equal("request.email", MailRelayApiErrorDetailsMapper.ToCamelCasePath("Request.Email"));
         Assert.Equal("request", MailRelayApiErrorDetailsMapper.ToCamelCasePath(""));
@@ -126,4 +171,15 @@ public sealed class MailRelayPresentationTests {
             [],
             new Dictionary<string, object?>(StringComparer.Ordinal),
             controller);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestController : ControllerBase {
+        public TestController() {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext {
+                    TraceIdentifier = "trace"
+                }
+            };
+        }
+    }
 }
