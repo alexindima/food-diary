@@ -1,20 +1,14 @@
 import type { Recipe } from '../../../models/recipe.data';
-import type { StepFormValues } from './recipe-manage.types';
+import type { IngredientFormValues, StepFormValues } from './recipe-manage.types';
 import {
-    createRecipeIngredientGroup,
-    createRecipeStepGroup,
+    createRecipeIngredientValue,
+    createRecipeStepValue,
     mapRecipeStepToFormValue,
     type RecipeIngredientMappingLabels,
 } from './recipe-manage-form.mapper';
 
-type RecipeStepGroup = ReturnType<typeof createRecipeStepGroup>;
-type RecipeIngredientGroup = ReturnType<typeof createRecipeIngredientGroup>;
-type RecipeStepsArray = {
-    length: number;
-    at: (index: number) => RecipeStepGroup;
-    push: (step: RecipeStepGroup) => void;
-    removeAt: (index: number) => void;
-};
+type RecipeStepsReader = () => readonly StepFormValues[];
+type RecipeStepsWriter = (steps: StepFormValues[]) => void;
 
 export type RecipeStepIngredientIndex = {
     stepIndex: number;
@@ -25,17 +19,19 @@ export class RecipeStepFormManager {
     public readonly expandedSteps = new Set<number>();
 
     public constructor(
-        private readonly steps: RecipeStepsArray,
+        private readonly getSteps: RecipeStepsReader,
+        private readonly setSteps: RecipeStepsWriter,
         private readonly resolveLabels: () => RecipeIngredientMappingLabels,
     ) {}
 
     public addStep(step?: StepFormValues): void {
-        this.steps.push(createRecipeStepGroup(step));
-        this.expandedSteps.add(this.steps.length - 1);
+        const steps = [...this.getSteps(), createRecipeStepValue(step)];
+        this.setSteps(steps);
+        this.expandedSteps.add(steps.length - 1);
     }
 
     public removeStep(index: number): void {
-        this.steps.removeAt(index);
+        this.setSteps(this.getSteps().filter((_step, currentIndex) => currentIndex !== index));
         const nextExpanded = new Set<number>();
         this.expandedSteps.forEach(stepIndex => {
             if (stepIndex === index) {
@@ -48,15 +44,31 @@ export class RecipeStepFormManager {
     }
 
     public addIngredientToStep(stepIndex: number): void {
-        this.steps.at(stepIndex).controls.ingredients.push(createRecipeIngredientGroup());
+        this.updateStep(stepIndex, step => ({
+            ...step,
+            ingredients: [...step.ingredients, createRecipeIngredientValue()],
+        }));
     }
 
     public removeIngredientFromStep({ stepIndex, ingredientIndex }: RecipeStepIngredientIndex): void {
-        this.steps.at(stepIndex).controls.ingredients.removeAt(ingredientIndex);
+        this.updateStep(stepIndex, step => ({
+            ...step,
+            ingredients: step.ingredients.filter((_ingredient, currentIndex) => currentIndex !== ingredientIndex),
+        }));
     }
 
-    public getIngredientGroup({ stepIndex, ingredientIndex }: RecipeStepIngredientIndex): RecipeIngredientGroup {
-        return this.steps.at(stepIndex).controls.ingredients.at(ingredientIndex);
+    public patchIngredient({ stepIndex, ingredientIndex }: RecipeStepIngredientIndex, patch: Partial<IngredientFormValues>): void {
+        this.updateStep(stepIndex, step => ({
+            ...step,
+            ingredients: step.ingredients.map((ingredient, currentIndex) =>
+                currentIndex === ingredientIndex
+                    ? {
+                          ...ingredient,
+                          ...patch,
+                      }
+                    : ingredient,
+            ),
+        }));
     }
 
     public toggleStepExpanded(index: number): void {
@@ -69,9 +81,7 @@ export class RecipeStepFormManager {
     }
 
     public resetSteps(): void {
-        while (this.steps.length > 0) {
-            this.steps.removeAt(0);
-        }
+        this.setSteps([]);
         this.expandedSteps.clear();
     }
 
@@ -84,5 +94,9 @@ export class RecipeStepFormManager {
         recipe.steps.forEach(step => {
             this.addStep(mapRecipeStepToFormValue(step, this.resolveLabels()));
         });
+    }
+
+    private updateStep(index: number, update: (step: StepFormValues) => StepFormValues): void {
+        this.setSteps(this.getSteps().map((step, currentIndex) => (currentIndex === index ? update(step) : step)));
     }
 }

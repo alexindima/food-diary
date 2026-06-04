@@ -1,5 +1,4 @@
 import { signal } from '@angular/core';
-import { type ValidatorFn, Validators } from '@angular/forms';
 
 import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
 import type { NutrientData } from '../../../../../shared/models/charts.data';
@@ -12,8 +11,6 @@ type RecipeNutritionControl<T> = {
     touched: boolean;
     value: T;
     setValue: (value: T) => void;
-    setValidators: (validators: ValidatorFn[]) => void;
-    updateValueAndValidity: (options?: { emitEvent?: boolean }) => void;
 };
 
 type RecipeNutritionFormState = {
@@ -60,7 +57,6 @@ export class RecipeNutritionFormManager {
     public initialize(): void {
         this.nutritionMode.set(this.form.controls.calculateNutritionAutomatically.value ? 'auto' : 'manual');
         this.recalculateNutrientsFromForm();
-        this.updateManualNutritionValidators(this.form.controls.calculateNutritionAutomatically.value);
     }
 
     public handleAutoCalculationChange(isAuto: boolean): void {
@@ -68,7 +64,6 @@ export class RecipeNutritionFormManager {
         if (!isAuto) {
             this.patchManualNutritionFromCurrentSummary();
         }
-        this.updateManualNutritionValidators(isAuto);
         this.updateSummaryFromForm();
     }
 
@@ -180,17 +175,6 @@ export class RecipeNutritionFormManager {
         }
     }
 
-    private updateManualNutritionValidators(isAuto: boolean): void {
-        const caloriesValidators = isAuto ? [Validators.min(0)] : [Validators.required, Validators.min(0)];
-        this.form.controls.manualCalories.setValidators(caloriesValidators);
-        this.form.controls.manualCalories.updateValueAndValidity({ emitEvent: false });
-
-        this.getOptionalManualNutritionControls().forEach(control => {
-            control.setValidators([Validators.min(0)]);
-            control.updateValueAndValidity({ emitEvent: false });
-        });
-    }
-
     private fromRecipeTotal(value: number | null | undefined): number {
         return this.operations.fromRecipeTotal(value, this.nutritionScaleMode, this.getServingsValue());
     }
@@ -213,15 +197,5 @@ export class RecipeNutritionFormManager {
         });
 
         this.form.patchValue(patch, { emitEvent: false });
-    }
-
-    private getOptionalManualNutritionControls(): Array<RecipeNutritionControl<number | null>> {
-        return [
-            this.form.controls.manualProteins,
-            this.form.controls.manualFats,
-            this.form.controls.manualCarbs,
-            this.form.controls.manualFiber,
-            this.form.controls.manualAlcohol,
-        ];
     }
 }

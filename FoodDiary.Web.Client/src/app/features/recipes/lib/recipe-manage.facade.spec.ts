@@ -10,12 +10,7 @@ import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import { type Recipe, RecipeVisibility } from '../models/recipe.data';
-import {
-    type RecipeIngredientNutritionState,
-    type RecipeIngredientSelectionTarget,
-    RecipeManageFacade,
-    type RecipeStepsNutritionState,
-} from './recipe-manage.facade';
+import { type RecipeIngredientSelectionTarget, RecipeManageFacade, type RecipeStepsNutritionState } from './recipe-manage.facade';
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 150;
 const APPLE_CALORIES = 52;
@@ -277,26 +272,19 @@ function createIngredientSelectionTarget(): TestIngredientSelectionTarget {
 }
 
 function createStepsNutritionState(steps: ReadonlyArray<readonly TestIngredientNutritionInput[]>): RecipeStepsNutritionState {
-    return {
-        controls: steps.map(ingredients => ({
-            controls: {
-                ingredients: {
-                    controls: ingredients.map(createIngredientNutritionState),
-                },
-            },
+    return steps.map(ingredients => ({
+        title: null,
+        imageUrl: null,
+        description: 'Step',
+        ingredients: ingredients.map(input => ({
+            amount: input.amount,
+            food: input.food,
+            foodName: input.food?.name ?? input.nestedRecipe?.name ?? null,
+            nestedRecipe: input.nestedRecipe,
+            nestedRecipeId: input.nestedRecipe?.id ?? null,
+            nestedRecipeName: input.nestedRecipe?.name ?? null,
         })),
-        length: steps.length,
-    };
-}
-
-function createIngredientNutritionState(input: TestIngredientNutritionInput): RecipeIngredientNutritionState {
-    return {
-        controls: {
-            amount: { value: input.amount },
-            food: { value: input.food },
-            nestedRecipe: { value: input.nestedRecipe },
-        },
-    };
+    }));
 }
 
 function createNutritionProduct(): NonNullable<IngredientFormValues['food']> {

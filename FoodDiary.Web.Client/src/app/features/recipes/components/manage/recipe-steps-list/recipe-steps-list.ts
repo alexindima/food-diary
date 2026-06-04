@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
-import { RecipeStepCardComponent, type RecipeStepCardForm } from '../recipe-step-card/recipe-step-card';
+import { RecipeStepCardComponent, type RecipeStepCardState } from '../recipe-step-card/recipe-step-card';
 
 export type StepIngredientEvent = {
     stepIndex: number;
@@ -16,7 +16,7 @@ export type StepDropEvent = {
 };
 
 export type RecipeStepListItem = {
-    form: RecipeStepCardForm;
+    state: RecipeStepCardState;
 };
 
 @Component({
@@ -38,6 +38,10 @@ export class RecipeStepsListComponent {
     public readonly addIngredient = output<number>();
     public readonly removeIngredient = output<StepIngredientEvent>();
     public readonly selectProduct = output<StepIngredientEvent>();
+    public readonly stepTitleChange = output<StepFieldEvent<string | null>>();
+    public readonly stepImageChange = output<StepFieldEvent<RecipeStepCardState['imageUrl']['value']>>();
+    public readonly stepDescriptionChange = output<StepFieldEvent<string>>();
+    public readonly ingredientAmountChange = output<StepIngredientAmountEvent>();
 
     protected isStepExpanded(index: number): boolean {
         return this.expandedSteps().has(index);
@@ -77,4 +81,29 @@ export class RecipeStepsListComponent {
     protected onSelectProduct(stepIndex: number, ingredientIndex: number): void {
         this.selectProduct.emit({ stepIndex, ingredientIndex });
     }
+
+    protected onStepTitleChange(stepIndex: number, value: string | null): void {
+        this.stepTitleChange.emit({ stepIndex, value });
+    }
+
+    protected onStepImageChange(stepIndex: number, value: RecipeStepCardState['imageUrl']['value']): void {
+        this.stepImageChange.emit({ stepIndex, value });
+    }
+
+    protected onStepDescriptionChange(stepIndex: number, value: string): void {
+        this.stepDescriptionChange.emit({ stepIndex, value });
+    }
+
+    protected onIngredientAmountChange(stepIndex: number, event: { ingredientIndex: number; amount: number | null }): void {
+        this.ingredientAmountChange.emit({ stepIndex, ingredientIndex: event.ingredientIndex, amount: event.amount });
+    }
 }
+
+export type StepFieldEvent<T> = {
+    stepIndex: number;
+    value: T;
+};
+
+export type StepIngredientAmountEvent = StepIngredientEvent & {
+    amount: number | null;
+};

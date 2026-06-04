@@ -77,7 +77,7 @@ describe('RecipeManageComponent form population', () => {
         const { component } = await setupComponentAsync();
 
         expect(component['steps'].length).toBe(1);
-        expect(component['steps'].at(0).controls.ingredients.length).toBe(1);
+        expect(component['steps'][0]?.ingredients.length).toBe(1);
     });
 
     it('should repopulate the form when recipe input is refreshed with the same id', async () => {
@@ -87,13 +87,13 @@ describe('RecipeManageComponent form population', () => {
 
         fixture.componentRef.setInput('recipe', recipe);
         fixture.detectChanges();
-        expect(component['recipeForm'].controls.name.value).toBe('Initial recipe');
+        expect(component['recipeFormModel']().name).toBe('Initial recipe');
 
         fixture.componentRef.setInput('recipe', updatedRecipe);
         fixture.detectChanges();
 
-        expect(component['recipeForm'].controls.name.value).toBe(UPDATED_RECIPE_NAME);
-        expect(component['recipeForm'].controls.cookTime.value).toBe(UPDATED_COOK_TIME);
+        expect(component['recipeFormModel']().name).toBe(UPDATED_RECIPE_NAME);
+        expect(component['recipeFormModel']().cookTime).toBe(UPDATED_COOK_TIME);
     });
 });
 
@@ -120,7 +120,7 @@ describe('RecipeManageComponent submission', () => {
         fixture.componentRef.setInput('recipe', createRecipe());
         fixture.detectChanges();
         patchRecipeBasicValues(component, { name: UPDATED_RECIPE_NAME });
-        component['steps'].at(0).controls.ingredients.at(0).patchValue({
+        patchFirstIngredient(component, {
             food: createProduct(),
             foodName: 'Product',
             amount: PRODUCT_DEFAULT_AMOUNT,
@@ -178,9 +178,9 @@ describe('RecipeManageComponent nutrition state', () => {
         component['onNutritionModeChange']('manual');
 
         expect(component['nutritionMode']()).toBe('manual');
-        expect(component['recipeForm'].controls.calculateNutritionAutomatically.value).toBe(false);
-        expect(component['recipeForm'].controls.manualCalories.value).toBe(SUMMARY_CALORIES);
-        expect(component['recipeForm'].controls.manualProteins.value).toBe(SUMMARY_PROTEINS);
+        expect(component['recipeFormModel']().calculateNutritionAutomatically).toBe(false);
+        expect(component['recipeFormModel']().manualCalories).toBe(SUMMARY_CALORIES);
+        expect(component['recipeFormModel']().manualProteins).toBe(SUMMARY_PROTEINS);
     });
 
     it('should convert manual nutrition values when switching between recipe and portion scale', async () => {
@@ -190,13 +190,13 @@ describe('RecipeManageComponent nutrition state', () => {
         component['onNutritionScaleModeChange']('portion');
 
         expect(component['nutritionScaleMode']).toBe('portion');
-        expect(component['recipeForm'].controls.manualCalories.value).toBe(MANUAL_CALORIES / DEFAULT_SERVINGS);
-        expect(component['recipeForm'].controls.manualProteins.value).toBe(MANUAL_PROTEINS / DEFAULT_SERVINGS);
+        expect(component['recipeFormModel']().manualCalories).toBe(MANUAL_CALORIES / DEFAULT_SERVINGS);
+        expect(component['recipeFormModel']().manualProteins).toBe(MANUAL_PROTEINS / DEFAULT_SERVINGS);
 
         component['onNutritionScaleModeChange']('recipe');
 
         expect(component['nutritionScaleMode']).toBe('recipe');
-        expect(component['recipeForm'].controls.manualCalories.value).toBe(MANUAL_CALORIES);
+        expect(component['recipeFormModel']().manualCalories).toBe(MANUAL_CALORIES);
         expect(facade.roundNutritionValue).toHaveBeenCalled();
     });
 });
@@ -219,11 +219,11 @@ describe('RecipeManageComponent steps and ingredients', () => {
         const { component } = await setupComponentAsync();
 
         component['addIngredientToStep'](0);
-        expect(component['steps'].at(0).controls.ingredients.length).toBe(DEFAULT_SERVINGS);
+        expect(component['steps'][0]?.ingredients.length).toBe(DEFAULT_SERVINGS);
 
         component['removeIngredientFromStep']({ stepIndex: 0, ingredientIndex: 1 });
 
-        expect(component['steps'].at(0).controls.ingredients.length).toBe(1);
+        expect(component['steps'][0]?.ingredients.length).toBe(1);
     });
 
     it('should apply selected product to an ingredient and recalculate automatic summary', async () => {
@@ -245,7 +245,7 @@ describe('RecipeManageComponent steps and ingredients', () => {
         expect(facade.openItemSelectionDialog).toHaveBeenCalledTimes(1);
         expect(facade.applyItemSelection).toHaveBeenCalledTimes(1);
         expect(facade.calculateAutoSummary).toHaveBeenCalled();
-        expect(component['steps'].at(0).controls.ingredients.at(0).controls.foodName.value).toBe(selectedProduct.name);
+        expect(component['steps'][0]?.ingredients[0]?.foodName).toBe(selectedProduct.name);
     });
 });
 
@@ -310,10 +310,10 @@ function patchValidRecipeBase(component: RecipeManageComponent): void {
         cookTime: DEFAULT_COOK_TIME,
         servings: DEFAULT_SERVINGS,
     });
-    component['steps'].at(0).patchValue({
+    patchFirstStep(component, {
         description: 'Cook',
     });
-    component['steps'].at(0).controls.ingredients.at(0).patchValue({
+    patchFirstIngredient(component, {
         food: createProduct(),
         foodName: 'Product',
         amount: PRODUCT_DEFAULT_AMOUNT,
@@ -359,7 +359,41 @@ function patchRecipeSignalAndLegacyValues(component: RecipeManageComponent, valu
         ...current,
         ...value,
     }));
-    component['recipeForm'].patchValue(value);
+}
+
+function patchFirstStep(component: RecipeManageComponent, value: Partial<RecipeFormValues['steps'][number]>): void {
+    component['recipeFormModel'].update(current => ({
+        ...current,
+        steps: current.steps.map((step, index) =>
+            index === 0
+                ? {
+                      ...step,
+                      ...value,
+                  }
+                : step,
+        ),
+    }));
+}
+
+function patchFirstIngredient(component: RecipeManageComponent, value: Partial<IngredientFormValues>): void {
+    component['recipeFormModel'].update(current => ({
+        ...current,
+        steps: current.steps.map((step, stepIndex) =>
+            stepIndex === 0
+                ? {
+                      ...step,
+                      ingredients: step.ingredients.map((ingredient, ingredientIndex) =>
+                          ingredientIndex === 0
+                              ? {
+                                    ...ingredient,
+                                    ...value,
+                                }
+                              : ingredient,
+                      ),
+                  }
+                : step,
+        ),
+    }));
 }
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {

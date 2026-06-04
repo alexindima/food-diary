@@ -12,7 +12,7 @@ import type {
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constants';
 import { RecipeService } from '../api/recipe.service';
-import type { IngredientFormValues, NutritionScaleMode } from '../components/manage/recipe-manage-lib/recipe-manage.types';
+import type { IngredientFormValues, NutritionScaleMode, StepFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import type { Recipe, RecipeDto } from '../models/recipe.data';
 
 export type RecipeNutritionSummary = {
@@ -28,30 +28,7 @@ export type RecipeIngredientSelectionTarget = {
     patchValue: (value: Partial<IngredientFormValues>) => void;
 };
 
-export type RecipeControlValue<T> = {
-    value: T;
-};
-
-export type RecipeIngredientNutritionState = {
-    controls: {
-        amount: RecipeControlValue<number | null>;
-        food: RecipeControlValue<IngredientFormValues['food']>;
-        nestedRecipe: RecipeControlValue<IngredientFormValues['nestedRecipe']>;
-    };
-};
-
-export type RecipeStepNutritionState = {
-    controls: {
-        ingredients: {
-            controls: readonly RecipeIngredientNutritionState[];
-        };
-    };
-};
-
-export type RecipeStepsNutritionState = {
-    controls: readonly RecipeStepNutritionState[];
-    length: number;
-};
+export type RecipeStepsNutritionState = readonly StepFormValues[];
 
 @Service()
 export class RecipeManageFacade {
@@ -150,11 +127,11 @@ export class RecipeManageFacade {
             alcohol += summary.alcohol;
         };
 
-        stepsArray.controls.forEach(stepGroup => {
-            stepGroup.controls.ingredients.controls.forEach(ingredientGroup => {
-                const food = ingredientGroup.controls.food.value;
-                const nestedRecipe = ingredientGroup.controls.nestedRecipe.value;
-                const amount = ingredientGroup.controls.amount.value;
+        stepsArray.forEach(step => {
+            step.ingredients.forEach(ingredient => {
+                const food = ingredient.food;
+                const nestedRecipe = ingredient.nestedRecipe;
+                const amount = ingredient.amount;
 
                 if (amount === null || amount <= 0) {
                     return;

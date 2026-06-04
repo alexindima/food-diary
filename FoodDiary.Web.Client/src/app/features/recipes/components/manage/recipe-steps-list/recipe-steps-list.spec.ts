@@ -2,8 +2,9 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createRecipeStepGroup } from '../recipe-manage-lib/recipe-manage-form.mapper';
-import { RecipeStepsListComponent } from './recipe-steps-list';
+import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import { createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
+import { type RecipeStepListItem, RecipeStepsListComponent } from './recipe-steps-list';
 
 describe('RecipeStepsListComponent', () => {
     it('checks expanded state from readonly expanded steps input', () => {
@@ -64,10 +65,26 @@ function setupComponent(expandedSteps: ReadonlySet<number>): {
     });
 
     const fixture = TestBed.createComponent(RecipeStepsListComponent);
-    fixture.componentRef.setInput('steps', [{ form: createRecipeStepGroup() }, { form: createRecipeStepGroup() }]);
+    fixture.componentRef.setInput('steps', [createRecipeStepListItem(), createRecipeStepListItem()]);
     fixture.componentRef.setInput('expandedSteps', expandedSteps);
     fixture.componentRef.setInput('stepsError', null);
     fixture.detectChanges();
 
     return { component: fixture.componentInstance, fixture };
+}
+
+function createRecipeStepListItem(step: StepFormValues = createRecipeStepValue()): RecipeStepListItem {
+    return {
+        state: {
+            title: { value: step.title, error: null },
+            imageUrl: { value: step.imageUrl, error: null },
+            description: { value: step.description, error: null },
+            ingredients: step.ingredients.map(ingredient => ({
+                amount: { value: ingredient.amount, error: null },
+                food: ingredient.food,
+                foodName: { value: ingredient.foodName, error: null },
+                nestedRecipeId: ingredient.nestedRecipeId,
+            })),
+        },
+    };
 }

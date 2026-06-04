@@ -6,9 +6,9 @@ import type { NutritionScaleMode, RecipeFormValues } from './recipe-manage.types
 import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
-    createRecipeForm,
-    createRecipeIngredientGroup,
-    createRecipeStepGroup,
+    createRecipeFormValue,
+    createRecipeIngredientValue,
+    createRecipeStepValue,
     hasNoRecipeNutritionTotals,
     mapRecipeStepToFormValue,
     normalizeRecipeVisibility,
@@ -51,27 +51,27 @@ const RECIPE: Recipe = {
 };
 
 describe('recipe manage form creation', () => {
-    it('should create form with one empty steps array and default values', () => {
-        const form = createRecipeForm();
+    it('should create form value with empty steps array and default values', () => {
+        const form = createRecipeFormValue();
 
-        expect(form.controls.name.value).toBe('');
-        expect(form.controls.servings.value).toBe(1);
-        expect(form.controls.visibility.value).toBe(RecipeVisibility.Public);
-        expect(form.controls.calculateNutritionAutomatically.value).toBe(true);
-        expect(form.controls.steps.length).toBe(0);
+        expect(form.name).toBe('');
+        expect(form.servings).toBe(1);
+        expect(form.visibility).toBe(RecipeVisibility.Public);
+        expect(form.calculateNutritionAutomatically).toBe(true);
+        expect(form.steps.length).toBe(0);
     });
 
-    it('should create a step group with one empty ingredient when no values are provided', () => {
-        const step = createRecipeStepGroup();
+    it('should create a step value with one empty ingredient when no values are provided', () => {
+        const step = createRecipeStepValue();
 
-        expect(step.controls.title.value).toBeNull();
-        expect(step.controls.description.value).toBe('');
-        expect(step.controls.ingredients.length).toBe(1);
-        expect(step.controls.ingredients.at(0).controls.foodName.value).toBeNull();
+        expect(step.title).toBeNull();
+        expect(step.description).toBe('');
+        expect(step.ingredients.length).toBe(1);
+        expect(step.ingredients[0]?.foodName).toBeNull();
     });
 
-    it('should create ingredient group from selected product defaults', () => {
-        const ingredient = createRecipeIngredientGroup({
+    it('should create ingredient value from selected product defaults', () => {
+        const ingredient = createRecipeIngredientValue({
             food: {
                 id: 'product-1',
                 name: 'Product',
@@ -99,8 +99,8 @@ describe('recipe manage form creation', () => {
             },
         });
 
-        expect(ingredient.controls.foodName.value).toBe('Product');
-        expect(ingredient.controls.amount.value).toBeNull();
+        expect(ingredient.foodName).toBe('Product');
+        expect(ingredient.amount).toBeNull();
     });
 });
 
@@ -146,7 +146,7 @@ describe('recipe manage DTO mapping', () => {
 
     it('should null manual nutrition totals when automatic calculation is enabled', () => {
         const formValue: RecipeFormValues = {
-            ...createRecipeForm().getRawValue(),
+            ...createRecipeFormValue(),
             name: 'Auto recipe',
             cookTime: 10,
             calculateNutritionAutomatically: true,

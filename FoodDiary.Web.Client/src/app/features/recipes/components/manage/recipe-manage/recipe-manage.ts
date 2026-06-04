@@ -1,6 +1,5 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { form, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,13 +9,13 @@ import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-c
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { Recipe, RecipeDto } from '../../../models/recipe.data';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info';
-import type { NutritionScaleMode, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
-    createRecipeForm,
     createRecipeFormValue,
     hasNoRecipeNutritionTotals,
+    RECIPE_MIN_INGREDIENT_AMOUNT,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionFormManager } from '../recipe-manage-lib/recipe-nutrition-form.manager';
 import { RecipeStepFormManager } from '../recipe-manage-lib/recipe-step-form.manager';
@@ -25,6 +24,8 @@ import {
     type RecipeStepListItem,
     RecipeStepsListComponent,
     type StepDropEvent,
+    type StepFieldEvent,
+    type StepIngredientAmountEvent,
     type StepIngredientEvent,
 } from '../recipe-steps-list/recipe-steps-list';
 
@@ -46,7 +47,6 @@ import {
 })
 export class RecipeManageComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly stepFormManager: RecipeStepFormManager;
     private readonly nutritionFormManager: RecipeNutritionFormManager;
     private lastRecipe: Recipe | null = null;
@@ -56,9 +56,8 @@ export class RecipeManageComponent {
     public readonly recipe = input<Recipe | null>(null);
     protected globalError = this.recipeManageFacade.globalError;
     protected isSubmitting = this.recipeManageFacade.isSubmitting;
-    protected readonly stepsRenderVersion = signal(0);
+    protected readonly stepsTouched = signal(false);
 
-    protected recipeForm = createRecipeForm();
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue());
     protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
         required(path.name);
@@ -84,12 +83,11 @@ export class RecipeManageComponent {
         };
     });
     protected readonly stepListItems = computed<readonly RecipeStepListItem[]>(() => {
-        this.stepsRenderVersion();
-        return this.steps.controls.map(stepForm => ({ form: stepForm }));
+        const touched = this.stepsTouched();
+        return this.steps.map(step => ({ state: this.createStepCardState(step, touched) }));
     });
     protected readonly stepsError = computed(() => {
-        this.stepsRenderVersion();
-        return this.steps.invalid && this.steps.touched ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY') : null;
+        return this.stepsTouched() && this.steps.length === 0 ? this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY') : null;
     });
     protected readonly totalCalories: RecipeNutritionFormManager['totalCalories'];
     protected readonly totalFiber: RecipeNutritionFormManager['totalFiber'];
@@ -100,11 +98,17 @@ export class RecipeManageComponent {
     private isFormReady = true;
 
     public constructor() {
-        this.stepFormManager = new RecipeStepFormManager(this.recipeForm.controls.steps, () => ({
-            selectIngredient: this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT'),
-            unknownProduct: this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
-        }));
-        this.nutritionFormManager = new RecipeNutritionFormManager(this.recipeForm, {
+        this.stepFormManager = new RecipeStepFormManager(
+            () => this.steps,
+            steps => {
+                this.patchRecipeFormModel({ steps });
+            },
+            () => ({
+                selectIngredient: this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT'),
+                unknownProduct: this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
+            }),
+        );
+        this.nutritionFormManager = new RecipeNutritionFormManager(this.createNutritionFormAdapter(), {
             calculateAutoSummary: (steps): RecipeNutritionSummary => this.recipeManageFacade.calculateAutoSummary(steps),
             fromRecipeTotal: (value, scaleMode, servings): number => this.recipeManageFacade.fromRecipeTotal(value, scaleMode, servings),
             getSummaryFromRecipe: (recipeData, fallback): RecipeNutritionSummary =>
@@ -119,19 +123,8 @@ export class RecipeManageComponent {
         this.nutritionMode = this.nutritionFormManager.nutritionMode;
 
         this.addStep();
-        this.syncSignalManagedValuesToLegacyForm();
-        this.setupFormValueChangeTracking();
         this.watchSignalFormModelChanges();
         this.nutritionFormManager.initialize();
-        this.syncLegacyNutritionValuesToSignalForm();
-
-        this.recipeForm.controls.calculateNutritionAutomatically.valueChanges.pipe(takeUntilDestroyed()).subscribe(isAuto => {
-            if (!this.isFormReady) {
-                return;
-            }
-            this.nutritionFormManager.handleAutoCalculationChange(isAuto);
-            this.syncLegacyNutritionValuesToSignalForm();
-        });
         effect(() => {
             const recipe = this.recipe();
             untracked(() => {
@@ -148,8 +141,8 @@ export class RecipeManageComponent {
         });
     }
 
-    protected get steps(): RecipeLegacyStepsControl {
-        return this.recipeForm.controls.steps;
+    protected get steps(): readonly StepFormValues[] {
+        return this.recipeFormModel().steps;
     }
 
     protected get expandedStepsSet(): Set<number> {
@@ -160,17 +153,19 @@ export class RecipeManageComponent {
 
     protected addStep(): void {
         this.stepFormManager.addStep();
-        this.bumpStepsRenderVersion();
+        this.updateSummaryFromCurrentForm();
     }
 
     protected removeStep(index: number): void {
         this.stepFormManager.removeStep(index);
-        this.bumpStepsRenderVersion();
+        this.stepsTouched.set(true);
+        this.updateSummaryFromCurrentForm();
     }
 
     protected addIngredientToStep(stepIndex: number): void {
         this.stepFormManager.addIngredientToStep(stepIndex);
-        this.bumpStepsRenderVersion();
+        this.stepsTouched.set(true);
+        this.updateSummaryFromCurrentForm();
     }
 
     protected toggleStepExpanded(index: number): void {
@@ -179,14 +174,16 @@ export class RecipeManageComponent {
 
     protected removeIngredientFromStep(event: StepIngredientEvent): void {
         this.stepFormManager.removeIngredientFromStep(event);
-        this.bumpStepsRenderVersion();
+        this.stepsTouched.set(true);
+        this.updateSummaryFromCurrentForm();
     }
 
     protected onStepDrop(event: StepDropEvent): void {
-        moveItemInArray(this.steps.controls, event.previousIndex, event.currentIndex);
-        this.steps.updateValueAndValidity();
-        this.steps.markAsDirty();
-        this.bumpStepsRenderVersion();
+        const steps = [...this.steps];
+        moveItemInArray(steps, event.previousIndex, event.currentIndex);
+        this.patchRecipeFormModel({ steps });
+        this.stepsTouched.set(true);
+        this.updateSummaryFromCurrentForm();
     }
 
     protected onProductSelectClick(event: StepIngredientEvent): void {
@@ -195,40 +192,64 @@ export class RecipeManageComponent {
             if (selection === null) {
                 return;
             }
-            const foodGroup = this.stepFormManager.getIngredientGroup({ stepIndex, ingredientIndex });
-            this.recipeManageFacade.applyItemSelection(foodGroup, selection);
-            if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                this.nutritionFormManager.recalculateNutrientsFromForm();
-                this.syncLegacyNutritionValuesToSignalForm();
-            }
+            this.recipeManageFacade.applyItemSelection(
+                {
+                    patchValue: value => {
+                        this.stepFormManager.patchIngredient({ stepIndex, ingredientIndex }, value);
+                    },
+                },
+                selection,
+            );
+            this.stepsTouched.set(true);
+            this.updateSummaryFromCurrentForm();
         });
+    }
+
+    protected onStepTitleChange(event: StepFieldEvent<string | null>): void {
+        this.patchStep(event.stepIndex, { title: event.value });
+    }
+
+    protected onStepImageChange(event: StepFieldEvent<StepFormValues['imageUrl']>): void {
+        this.patchStep(event.stepIndex, { imageUrl: event.value });
+    }
+
+    protected onStepDescriptionChange(event: StepFieldEvent<string>): void {
+        this.patchStep(event.stepIndex, { description: event.value });
+    }
+
+    protected onIngredientAmountChange(event: StepIngredientAmountEvent): void {
+        this.stepFormManager.patchIngredient(
+            { stepIndex: event.stepIndex, ingredientIndex: event.ingredientIndex },
+            { amount: event.amount },
+        );
+        this.stepsTouched.set(true);
+        this.updateSummaryFromCurrentForm();
     }
 
     // -- Nutrition mode --
 
     protected onNutritionModeChange(nextMode: string): void {
         this.nutritionFormManager.onNutritionModeChange(nextMode);
-        this.syncLegacyNutritionValuesToSignalForm();
+        this.nutritionFormManager.handleAutoCalculationChange(this.recipeFormModel().calculateNutritionAutomatically);
+        this.updateSummaryFromCurrentForm();
     }
 
     protected onNutritionScaleModeChange(nextMode: string): void {
         this.nutritionFormManager.onNutritionScaleModeChange(nextMode);
-        this.syncLegacyNutritionValuesToSignalForm();
+        this.updateSummaryFromCurrentForm();
     }
 
     // -- Form submission --
 
     protected onSubmit(): void {
         this.recipeSignalForm().markAsTouched();
-        this.syncSignalManagedValuesToLegacyForm();
-        this.markControlTreeTouched(this.recipeForm);
-        this.bumpStepsRenderVersion();
+        this.stepsTouched.set(true);
 
         if (this.nutritionFormManager.hasMacrosError()) {
             return;
         }
 
-        if (this.recipeSignalForm().invalid() || !this.recipeForm.valid) {
+        if (this.recipeSignalForm().invalid() || !this.areStepsValid()) {
             this.recipeManageFacade.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
@@ -249,34 +270,8 @@ export class RecipeManageComponent {
         await this.recipeManageFacade.cancelManageAsync();
     }
 
-    private markControlTreeTouched(control: RecipeLegacyMarkableControl): void {
-        const children = this.getControlChildren(control);
-        if (children.length > 0) {
-            children.forEach(child => {
-                this.markControlTreeTouched(child);
-            });
-            control.updateValueAndValidity();
-            return;
-        }
-
-        control.markAllAsTouched();
-        control.updateValueAndValidity();
-    }
-
-    private getControlChildren(control: RecipeLegacyMarkableControl): RecipeLegacyMarkableControl[] {
-        if (!this.hasChildControls(control)) {
-            return [];
-        }
-
-        return Array.isArray(control.controls) ? control.controls : Object.values(control.controls);
-    }
-
-    private hasChildControls(control: RecipeLegacyMarkableControl): control is RecipeLegacyControlContainer {
-        return 'controls' in control;
-    }
-
     private prepareRecipeDto(): RecipeDto {
-        const formValue = this.recipeForm.getRawValue();
+        const formValue = this.recipeFormModel();
 
         return buildRecipeDto(
             formValue,
@@ -289,12 +284,11 @@ export class RecipeManageComponent {
     private populateForm(recipeData: Recipe): void {
         this.isFormReady = false;
         const formPatchValue = this.buildRecipeFormPatchValue(recipeData);
-        this.recipeForm.patchValue(formPatchValue);
         this.patchRecipeFormModel(formPatchValue);
 
         this.stepFormManager.resetSteps();
         this.stepFormManager.populateRecipeSteps(recipeData);
-        this.bumpStepsRenderVersion();
+        this.stepsTouched.set(false);
 
         this.nutritionFormManager.updateNutrientSummary(recipeData);
         this.isFormReady = true;
@@ -303,11 +297,6 @@ export class RecipeManageComponent {
         } else {
             this.nutritionFormManager.updateSummaryFromForm();
         }
-        this.syncLegacyNutritionValuesToSignalForm();
-    }
-
-    private bumpStepsRenderVersion(): void {
-        this.stepsRenderVersion.update(version => version + 1);
     }
 
     private buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
@@ -320,48 +309,31 @@ export class RecipeManageComponent {
 
     // -- Nutrition calculation --
 
-    private setupFormValueChangeTracking(): void {
-        this.recipeForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            if (!this.isFormReady) {
-                return;
-            }
-            this.nutritionFormManager.updateSummaryFromForm();
-        });
-
-        this.recipeForm.controls.steps.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            if (!this.isFormReady) {
-                return;
-            }
-            if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                this.nutritionFormManager.recalculateNutrientsFromForm();
-                this.syncLegacyNutritionValuesToSignalForm();
-            }
-        });
-    }
-
     private watchSignalFormModelChanges(): void {
         effect(() => {
-            const value = this.pickSignalManagedFormValue(this.recipeFormModel());
+            this.recipeFormModel();
 
             untracked(() => {
                 if (!this.isFormReady) {
                     return;
                 }
 
-                this.recipeForm.patchValue(value, { emitEvent: false });
-                this.nutritionFormManager.updateSummaryFromForm();
-                this.syncLegacyNutritionValuesToSignalForm();
+                this.updateSummaryFromCurrentForm();
             });
         });
     }
 
-    private syncSignalManagedValuesToLegacyForm(): void {
-        this.recipeForm.patchValue(this.pickSignalManagedFormValue(this.recipeFormModel()), { emitEvent: false });
+    private updateSummaryFromCurrentForm(): void {
+        if (!this.isFormReady) {
+            return;
+        }
+
+        this.nutritionFormManager.updateSummaryFromForm();
     }
 
     private patchRecipeFormModel(value: Partial<RecipeFormValues>): void {
         this.recipeFormModel.update(current => {
-            const changedValue = this.pickChangedSignalManagedFormValue(current, {
+            const changedValue = this.pickChangedRecipeFormValue(current, {
                 ...current,
                 ...value,
             });
@@ -374,46 +346,141 @@ export class RecipeManageComponent {
         });
     }
 
-    private pickChangedSignalManagedFormValue(current: RecipeFormValues, next: RecipeFormValues): Partial<RecipeFormValues> {
-        const nextSignalValue = this.pickSignalManagedFormValue(next);
-        return Object.fromEntries(
-            recipeSignalManagedFields
-                .filter(field => current[field] !== nextSignalValue[field])
-                .map(field => [field, nextSignalValue[field]]),
-        );
+    private pickChangedRecipeFormValue(current: RecipeFormValues, next: RecipeFormValues): Partial<RecipeFormValues> {
+        return Object.fromEntries(recipeFormFields.filter(field => current[field] !== next[field]).map(field => [field, next[field]]));
     }
 
-    private pickSignalManagedFormValue(value: RecipeFormValues): Pick<RecipeFormValues, RecipeSignalManagedField> {
+    private createNutritionFormAdapter(): RecipeNutritionFormAdapter {
+        const getSteps = (): readonly StepFormValues[] => this.recipeFormModel().steps;
         return {
-            name: value.name,
-            description: value.description,
-            comment: value.comment,
-            category: value.category,
-            imageUrl: value.imageUrl,
-            prepTime: value.prepTime,
-            cookTime: value.cookTime,
-            servings: value.servings,
-            visibility: value.visibility,
-            calculateNutritionAutomatically: value.calculateNutritionAutomatically,
-            manualCalories: value.manualCalories,
-            manualProteins: value.manualProteins,
-            manualFats: value.manualFats,
-            manualCarbs: value.manualCarbs,
-            manualFiber: value.manualFiber,
-            manualAlcohol: value.manualAlcohol,
+            controls: {
+                calculateNutritionAutomatically: this.createNutritionControl('calculateNutritionAutomatically'),
+                manualAlcohol: this.createNutritionControl('manualAlcohol'),
+                manualCalories: this.createNutritionControl('manualCalories'),
+                manualCarbs: this.createNutritionControl('manualCarbs'),
+                manualFats: this.createNutritionControl('manualFats'),
+                manualFiber: this.createNutritionControl('manualFiber'),
+                manualProteins: this.createNutritionControl('manualProteins'),
+                servings: this.createNutritionControl('servings'),
+                get steps(): readonly StepFormValues[] {
+                    return getSteps();
+                },
+            },
+            patchValue: (value): void => {
+                this.patchRecipeFormModel(value);
+            },
         };
     }
 
-    private syncLegacyNutritionValuesToSignalForm(): void {
+    private createNutritionControl<Field extends RecipeNutritionField>(field: Field): RecipeNutritionValueControl<RecipeFormValues[Field]> {
+        const getFieldState = (): RecipeSignalFieldState => this.recipeSignalForm[field]();
+        const getValue = (): RecipeFormValues[Field] => this.recipeFormModel()[field];
+        const setValue = (value: RecipeFormValues[Field]): void => {
+            this.patchRecipeFormModel({ [field]: value });
+        };
+        return {
+            get dirty(): boolean {
+                return getFieldState().dirty();
+            },
+            get touched(): boolean {
+                return getFieldState().touched();
+            },
+            get value(): RecipeFormValues[Field] {
+                return getValue();
+            },
+            setValue,
+        };
+    }
+
+    private createStepCardState(step: StepFormValues, touched: boolean): RecipeStepListItem['state'] {
+        return {
+            title: {
+                value: step.title,
+                error: null,
+            },
+            imageUrl: {
+                value: step.imageUrl,
+                error: null,
+            },
+            description: {
+                value: step.description,
+                error: touched && step.description.trim().length === 0 ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
+            },
+            ingredients: step.ingredients.map(ingredient => this.createIngredientCardState(ingredient, touched)),
+        };
+    }
+
+    private createIngredientCardState(
+        ingredient: IngredientFormValues,
+        touched: boolean,
+    ): RecipeStepListItem['state']['ingredients'][number] {
+        const hasFoodName = ingredient.foodName !== null && ingredient.foodName.trim().length > 0;
+        return {
+            amount: {
+                value: ingredient.amount,
+                error: this.getIngredientAmountError(ingredient, touched),
+            },
+            food: ingredient.food,
+            foodName: {
+                value: ingredient.foodName,
+                error: touched && !hasFoodName ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
+            },
+            nestedRecipeId: ingredient.nestedRecipeId,
+        };
+    }
+
+    private getIngredientAmountError(ingredient: IngredientFormValues, touched: boolean): string | null {
+        if (!touched) {
+            return null;
+        }
+
+        if (ingredient.amount === null) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+
+        if (ingredient.amount < RECIPE_MIN_INGREDIENT_AMOUNT) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
+                min: RECIPE_MIN_INGREDIENT_AMOUNT,
+            });
+        }
+
+        return null;
+    }
+
+    protected areStepsValid(): boolean {
+        return this.steps.length > 0 && this.steps.every(step => this.isStepValid(step));
+    }
+
+    private isStepValid(step: StepFormValues): boolean {
+        return (
+            step.description.trim().length > 0 &&
+            step.ingredients.length > 0 &&
+            step.ingredients.every(ingredient => this.isIngredientValid(ingredient))
+        );
+    }
+
+    private isIngredientValid(ingredient: IngredientFormValues): boolean {
+        return (
+            ingredient.foodName !== null &&
+            ingredient.foodName.trim().length > 0 &&
+            ingredient.amount !== null &&
+            ingredient.amount >= RECIPE_MIN_INGREDIENT_AMOUNT
+        );
+    }
+
+    private patchStep(stepIndex: number, patch: Partial<StepFormValues>): void {
         this.patchRecipeFormModel({
-            calculateNutritionAutomatically: this.recipeForm.controls.calculateNutritionAutomatically.value,
-            manualCalories: this.recipeForm.controls.manualCalories.value,
-            manualProteins: this.recipeForm.controls.manualProteins.value,
-            manualFats: this.recipeForm.controls.manualFats.value,
-            manualCarbs: this.recipeForm.controls.manualCarbs.value,
-            manualFiber: this.recipeForm.controls.manualFiber.value,
-            manualAlcohol: this.recipeForm.controls.manualAlcohol.value,
+            steps: this.steps.map((step, currentIndex) =>
+                currentIndex === stepIndex
+                    ? {
+                          ...step,
+                          ...patch,
+                      }
+                    : step,
+            ),
         });
+        this.stepsTouched.set(true);
+        this.updateSummaryFromCurrentForm();
     }
 
     protected get nutritionScaleMode(): NutritionScaleMode {
@@ -421,7 +488,7 @@ export class RecipeManageComponent {
     }
 }
 
-type RecipeSignalManagedField =
+type RecipeFormField =
     | 'name'
     | 'description'
     | 'comment'
@@ -437,9 +504,10 @@ type RecipeSignalManagedField =
     | 'manualFats'
     | 'manualCarbs'
     | 'manualFiber'
-    | 'manualAlcohol';
+    | 'manualAlcohol'
+    | 'steps';
 
-const recipeSignalManagedFields = [
+const recipeFormFields = [
     'name',
     'description',
     'comment',
@@ -456,19 +524,47 @@ const recipeSignalManagedFields = [
     'manualCarbs',
     'manualFiber',
     'manualAlcohol',
-] as const satisfies readonly RecipeSignalManagedField[];
+    'steps',
+] as const satisfies readonly RecipeFormField[];
 
 type RecipeManageHeaderState = {
     titleKey: string;
     submitLabelKey: string;
 };
 
-type RecipeLegacyForm = ReturnType<typeof createRecipeForm>;
-type RecipeLegacyStepsControl = RecipeLegacyForm['controls']['steps'];
-type RecipeLegacyMarkableControl = {
-    markAllAsTouched: () => void;
-    updateValueAndValidity: () => void;
+type RecipeNutritionField =
+    | 'calculateNutritionAutomatically'
+    | 'manualAlcohol'
+    | 'manualCalories'
+    | 'manualCarbs'
+    | 'manualFats'
+    | 'manualFiber'
+    | 'manualProteins'
+    | 'servings';
+
+type RecipeNutritionValueControl<T> = {
+    readonly dirty: boolean;
+    readonly touched: boolean;
+    readonly value: T;
+    setValue: (value: T) => void;
 };
-type RecipeLegacyControlContainer = RecipeLegacyMarkableControl & {
-    controls: RecipeLegacyMarkableControl[] | Record<string, RecipeLegacyMarkableControl>;
+
+type RecipeSignalFieldState = {
+    dirty: () => boolean;
+    touched: () => boolean;
+};
+
+type RecipeNutritionFormAdapter = {
+    controls: {
+        calculateNutritionAutomatically: RecipeNutritionValueControl<boolean>;
+        manualAlcohol: RecipeNutritionValueControl<number | null>;
+        manualCalories: RecipeNutritionValueControl<number | null>;
+        manualCarbs: RecipeNutritionValueControl<number | null>;
+        manualFats: RecipeNutritionValueControl<number | null>;
+        manualFiber: RecipeNutritionValueControl<number | null>;
+        manualProteins: RecipeNutritionValueControl<number | null>;
+        servings: RecipeNutritionValueControl<number>;
+        readonly steps: readonly StepFormValues[];
+    };
+    patchValue: (value: Partial<RecipeFormValues>, options?: { emitEvent?: boolean }) => void;
 };

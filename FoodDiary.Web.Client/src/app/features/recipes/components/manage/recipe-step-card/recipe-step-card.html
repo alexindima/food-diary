@@ -12,7 +12,7 @@
                 <fd-ui-input
                     class="recipe-step-card__title-input"
                     appearance="inline-edit"
-                    [controlValue]="stepForm().controls.title.value"
+                    [controlValue]="step().title.value"
                     [placeholder]="titleDisplay()"
                     (controlValueChange)="onStepTitleInput($event)"
                     (focusout)="onStepTitleBlur()"
@@ -62,7 +62,7 @@
                     appearance="step"
                     recommendedSize="512 x 512"
                     acceptedTypes="image/png,image/jpeg,image/webp"
-                    [controlValue]="stepForm().controls.imageUrl.value"
+                    [controlValue]="step().imageUrl.value"
                     [description]="'RECIPE_MANAGE.STEP_IMAGE_HINT' | translate"
                     [maxSizeMb]="10"
                     [cropEnabled]="true"
@@ -73,7 +73,7 @@
             </div>
             <div class="recipe-step-card__description">
                 <fd-ui-textarea
-                    [controlValue]="stepForm().controls.description.value"
+                    [controlValue]="step().description.value"
                     [rows]="3"
                     [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
                     [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
@@ -90,7 +90,7 @@
                 <fd-ui-input
                     class="recipe-ingredient__name"
                     size="lg"
-                    [controlValue]="ingredients.controls[row.index]?.controls.foodName.value ?? ''"
+                    [controlValue]="ingredients[row.index]?.foodName.value ?? ''"
                     [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
                     [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
                     [readonly]="true"
@@ -104,7 +104,7 @@
                     <fd-ui-input
                         size="lg"
                         type="number"
-                        [controlValue]="ingredients.controls[row.index]?.controls.amount.value"
+                        [controlValue]="ingredients[row.index]?.amount.value"
                         [step]="0.01"
                         [label]="row.amountLabel"
                         [error]="row.amountError"

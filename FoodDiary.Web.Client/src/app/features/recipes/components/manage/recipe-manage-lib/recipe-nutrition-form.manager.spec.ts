@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
-import { createRecipeForm } from './recipe-manage-form.mapper';
+import type { RecipeFormValues } from './recipe-manage.types';
+import { createRecipeFormValue } from './recipe-manage-form.mapper';
 import { RecipeNutritionFormManager, type RecipeNutritionFormOperations } from './recipe-nutrition-form.manager';
 
 const SUMMARY: RecipeNutritionSummary = {
@@ -27,7 +28,7 @@ const ROUNDING_FACTOR = 10;
 
 describe('RecipeNutritionFormManager initialization', () => {
     it('initializes auto mode from form and syncs manual controls with auto summary', () => {
-        const form = createRecipeForm();
+        const form = createRecipeFormState();
         const operations = createOperations({ calculateAutoSummary: vi.fn().mockReturnValue(SUMMARY) });
         const manager = new RecipeNutritionFormManager(form, operations);
 
@@ -45,7 +46,7 @@ describe('RecipeNutritionFormManager initialization', () => {
     });
 
     it('copies current summary into manual controls when auto calculation is disabled', () => {
-        const form = createRecipeForm();
+        const form = createRecipeFormState();
         const manager = new RecipeNutritionFormManager(form, createOperations());
         manager.recalculateNutrientsFromForm();
 
@@ -54,13 +55,12 @@ describe('RecipeNutritionFormManager initialization', () => {
         expect(manager.nutritionMode()).toBe('manual');
         expect(form.controls.manualCalories.value).toBe(SUMMARY.calories);
         expect(form.controls.manualFiber.value).toBe(SUMMARY.fiber);
-        expect(form.controls.manualCalories.hasError('required')).toBe(false);
     });
 });
 
 describe('RecipeNutritionFormManager manual mode', () => {
     it('converts manual nutrition between recipe and portion scale', () => {
-        const form = createRecipeForm();
+        const form = createRecipeFormState();
         form.patchValue({
             calculateNutritionAutomatically: false,
             servings: SERVINGS_COUNT,
@@ -89,7 +89,7 @@ describe('RecipeNutritionFormManager manual mode', () => {
     });
 
     it('detects empty manual macro values as a macro error', () => {
-        const form = createRecipeForm();
+        const form = createRecipeFormState();
         form.patchValue({
             calculateNutritionAutomatically: false,
             manualCalories: MANUAL_CALORIES,
@@ -109,7 +109,7 @@ describe('RecipeNutritionFormManager manual mode', () => {
     });
 
     it('normalizes invalid servings to one', () => {
-        const form = createRecipeForm();
+        const form = createRecipeFormState();
         form.controls.servings.setValue(0);
         const manager = new RecipeNutritionFormManager(form, createOperations());
 
@@ -119,7 +119,7 @@ describe('RecipeNutritionFormManager manual mode', () => {
 
 describe('RecipeNutritionFormManager summary updates', () => {
     it('uses recipe summary with current state as fallback', () => {
-        const form = createRecipeForm();
+        const form = createRecipeFormState();
         const getSummaryFromRecipe = vi.fn((_recipe: Recipe | null, fallback: RecipeNutritionSummary) => ({
             ...fallback,
             calories: UPDATED_CALORIES,
@@ -157,6 +157,79 @@ function createOperations(overrides: Partial<RecipeNutritionFormOperations> = {}
         ...overrides,
     };
 }
+
+function createRecipeFormState(): TestRecipeNutritionFormState {
+    let value = createRecipeFormValue();
+    const createControl = <Field extends keyof RecipeFormValues>(field: Field): TestRecipeNutritionControl<RecipeFormValues[Field]> => {
+        let dirty = false;
+        return {
+            get dirty(): boolean {
+                return dirty;
+            },
+            get touched(): boolean {
+                return dirty;
+            },
+            get value(): RecipeFormValues[Field] {
+                return value[field];
+            },
+            markAsDirty(): void {
+                dirty = true;
+            },
+            setValue(nextValue: RecipeFormValues[Field]): void {
+                value = {
+                    ...value,
+                    [field]: nextValue,
+                };
+                dirty = true;
+            },
+        };
+    };
+
+    return {
+        controls: {
+            calculateNutritionAutomatically: createControl('calculateNutritionAutomatically'),
+            manualAlcohol: createControl('manualAlcohol'),
+            manualCalories: createControl('manualCalories'),
+            manualCarbs: createControl('manualCarbs'),
+            manualFats: createControl('manualFats'),
+            manualFiber: createControl('manualFiber'),
+            manualProteins: createControl('manualProteins'),
+            servings: createControl('servings'),
+            get steps(): RecipeFormValues['steps'] {
+                return value.steps;
+            },
+        },
+        patchValue(patch: Partial<RecipeFormValues>): void {
+            value = {
+                ...value,
+                ...patch,
+            };
+        },
+    };
+}
+
+type TestRecipeNutritionControl<T> = {
+    readonly dirty: boolean;
+    readonly touched: boolean;
+    readonly value: T;
+    markAsDirty: () => void;
+    setValue: (value: T) => void;
+};
+
+type TestRecipeNutritionFormState = {
+    controls: {
+        calculateNutritionAutomatically: TestRecipeNutritionControl<boolean>;
+        manualAlcohol: TestRecipeNutritionControl<number | null>;
+        manualCalories: TestRecipeNutritionControl<number | null>;
+        manualCarbs: TestRecipeNutritionControl<number | null>;
+        manualFats: TestRecipeNutritionControl<number | null>;
+        manualFiber: TestRecipeNutritionControl<number | null>;
+        manualProteins: TestRecipeNutritionControl<number | null>;
+        servings: TestRecipeNutritionControl<number>;
+        readonly steps: RecipeFormValues['steps'];
+    };
+    patchValue: (value: Partial<RecipeFormValues>) => void;
+};
 
 function createRecipe(): Recipe {
     return {

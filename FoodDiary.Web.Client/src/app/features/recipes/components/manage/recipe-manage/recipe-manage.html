@@ -29,6 +29,10 @@
                     (addIngredient)="addIngredientToStep($event)"
                     (removeIngredient)="removeIngredientFromStep($event)"
                     (selectProduct)="onProductSelectClick($event)"
+                    (stepTitleChange)="onStepTitleChange($event)"
+                    (stepImageChange)="onStepImageChange($event)"
+                    (stepDescriptionChange)="onStepDescriptionChange($event)"
+                    (ingredientAmountChange)="onIngredientAmountChange($event)"
                 />
             </div>
 
@@ -60,7 +64,7 @@
                                 appearance="brand-action"
                                 icon="save"
                                 [fullWidth]="true"
-                                [disabled]="recipeSignalForm().invalid() || recipeForm.invalid || isSubmitting()"
+                                [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting()"
                                 [loading]="isSubmitting()"
                             >
                                 {{ manageHeaderState().submitLabelKey | translate }}

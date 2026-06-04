@@ -1,5 +1,5 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -10,39 +10,25 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
-import { resolveRecipeControlError } from '../recipe-manage-lib/recipe-form-error.utils';
-import type { IngredientFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import type { IngredientFormValues, StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 
-export type RecipeStepCardControl<T> = {
-    dirty: boolean;
-    errors: Record<string, unknown> | null;
-    touched: boolean;
+export type RecipeStepCardField<T> = {
+    error: string | null;
     value: T;
-    markAsTouched: () => void;
-    setValue: (value: T) => void;
 };
 
-export type RecipeStepCardForm = {
-    controls: {
-        description: RecipeStepCardControl<string>;
-        imageUrl: RecipeStepCardControl<ImageSelection | null>;
-        ingredients: {
-            controls: readonly RecipeStepIngredientForm[];
-            length: number;
-        };
-        title: RecipeStepCardControl<string | null>;
-    };
-    statusChanges: { subscribe: (callback: () => void) => { unsubscribe: () => void } };
-    valueChanges: { subscribe: (callback: () => void) => { unsubscribe: () => void } };
+export type RecipeStepCardState = {
+    description: RecipeStepCardField<StepFormValues['description']>;
+    imageUrl: RecipeStepCardField<StepFormValues['imageUrl']>;
+    ingredients: readonly RecipeStepIngredientState[];
+    title: RecipeStepCardField<StepFormValues['title']>;
 };
 
-type RecipeStepIngredientForm = {
-    controls: {
-        amount: RecipeStepCardControl<number | null>;
-        food: RecipeStepCardControl<IngredientFormValues['food']>;
-        foodName: RecipeStepCardControl<IngredientFormValues['foodName']>;
-        nestedRecipeId: RecipeStepCardControl<IngredientFormValues['nestedRecipeId']>;
-    };
+export type RecipeStepIngredientState = {
+    amount: RecipeStepCardField<IngredientFormValues['amount']>;
+    food: IngredientFormValues['food'];
+    foodName: RecipeStepCardField<IngredientFormValues['foodName']>;
+    nestedRecipeId: IngredientFormValues['nestedRecipeId'];
 };
 
 @Component({
@@ -63,10 +49,9 @@ type RecipeStepIngredientForm = {
 })
 export class RecipeStepCardComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly formRevision = signal(0);
     private readonly currentLanguage = signal(this.getCurrentLanguage());
 
-    public readonly stepForm = input.required<RecipeStepCardForm>();
+    public readonly step = input.required<RecipeStepCardState>();
     public readonly stepIndex = input.required<number>();
     public readonly isExpanded = input.required<boolean>();
     public readonly dragDisabled = input.required<boolean>();
@@ -76,25 +61,24 @@ export class RecipeStepCardComponent {
     public readonly addIngredient = output();
     public readonly removeIngredient = output<number>();
     public readonly selectProduct = output<number>();
+    public readonly stepTitleChange = output<string | null>();
+    public readonly stepImageChange = output<ImageSelection | null>();
+    public readonly stepDescriptionChange = output<string>();
+    public readonly ingredientAmountChange = output<{ ingredientIndex: number; amount: number | null }>();
 
     protected readonly isStepTitleEditing = signal(false);
-    protected readonly ingredientsCount = computed(() => {
-        this.formRevision();
-        return this.ingredients.length;
-    });
+    protected readonly ingredientsCount = computed(() => this.ingredients.length);
     protected readonly descriptionSummary = computed(() => {
-        this.formRevision();
         this.currentLanguage();
-        const description = this.stepForm().controls.description.value.trim();
+        const description = this.step().description.value.trim();
         if (description.length === 0) {
             return this.translateService.instant('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
         }
         return description;
     });
     protected readonly titleDisplay = computed(() => {
-        this.formRevision();
         this.currentLanguage();
-        const titleValue = this.stepForm().controls.title.value;
+        const titleValue = this.step().title.value;
         const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
         if (trimmedTitle.length > 0) {
             return trimmedTitle;
@@ -102,27 +86,25 @@ export class RecipeStepCardComponent {
         return this.translateService.instant('RECIPE_MANAGE.STEP_TITLE', { index: this.stepIndex() + 1 });
     });
     protected readonly descriptionError = computed(() => {
-        this.formRevision();
         this.currentLanguage();
-        return resolveRecipeControlError(this.stepForm().controls.description, this.translateService);
+        return this.step().description.error;
     });
     protected readonly expandedIcon = computed(() => (this.isExpanded() ? 'expand_less' : 'expand_more'));
     protected readonly isFirst = computed(() => this.stepIndex() === 0);
     protected readonly ingredientRows = computed<RecipeIngredientRowView[]>(() => {
-        this.formRevision();
         this.currentLanguage();
 
-        return this.ingredients.controls.map((ingredient, index) => {
-            const food = ingredient.controls.food.value;
-            const nestedRecipeId = ingredient.controls.nestedRecipeId.value;
+        return this.ingredients.map((ingredient, index) => {
+            const food = ingredient.food;
+            const nestedRecipeId = ingredient.nestedRecipeId;
             const unitKey = food?.baseUnit !== undefined ? `PRODUCT_AMOUNT_UNITS.${food.baseUnit}` : null;
 
             return {
                 index,
                 prefixIcon: nestedRecipeId !== null && nestedRecipeId.length > 0 ? 'menu_book' : food !== null ? 'restaurant' : 'search',
                 amountLabel: this.resolveIngredientAmountLabel(nestedRecipeId !== null && nestedRecipeId.length > 0, unitKey),
-                foodNameError: resolveRecipeControlError(ingredient.controls.foodName, this.translateService),
-                amountError: resolveRecipeControlError(ingredient.controls.amount, this.translateService),
+                foodNameError: ingredient.foodName.error,
+                amountError: ingredient.amount.error,
             };
         });
     });
@@ -131,24 +113,10 @@ export class RecipeStepCardComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
             this.currentLanguage.set(this.getCurrentLanguage());
         });
-
-        effect(onCleanup => {
-            const form = this.stepForm();
-            const bumpFormRevision = (): void => {
-                this.formRevision.update(revision => revision + 1);
-            };
-            const valueSubscription = form.valueChanges.subscribe(bumpFormRevision);
-            const statusSubscription = form.statusChanges.subscribe(bumpFormRevision);
-
-            onCleanup(() => {
-                valueSubscription.unsubscribe();
-                statusSubscription.unsubscribe();
-            });
-        });
     }
 
-    protected get ingredients(): RecipeStepCardForm['controls']['ingredients'] {
-        return this.stepForm().controls.ingredients;
+    protected get ingredients(): readonly RecipeStepIngredientState[] {
+        return this.step().ingredients;
     }
 
     protected toggleStepTitleEdit(): void {
@@ -178,31 +146,28 @@ export class RecipeStepCardComponent {
     }
 
     protected onStepTitleInput(value: string | number | null | undefined): void {
-        this.stepForm().controls.title.setValue(value === null || value === undefined ? null : String(value));
+        this.stepTitleChange.emit(value === null || value === undefined ? null : String(value));
     }
 
     protected onStepImageChange(value: ImageSelection | null | undefined): void {
-        const control = this.stepForm().controls.imageUrl;
-        control.setValue(value ?? null);
-        control.markAsTouched();
+        this.stepImageChange.emit(value ?? null);
     }
 
     protected onStepDescriptionInput(value: string | number | null | undefined): void {
-        const control = this.stepForm().controls.description;
-        control.setValue(value === null || value === undefined ? '' : String(value));
-        control.markAsTouched();
+        this.stepDescriptionChange.emit(value === null || value === undefined ? '' : String(value));
     }
 
     protected onIngredientAmountInput(ingredientIndex: number, value: string | number | null | undefined): void {
-        const control = this.ingredients.controls.at(ingredientIndex)?.controls.amount;
-        if (control === undefined) {
+        if (ingredientIndex < 0 || ingredientIndex >= this.ingredients.length) {
             return;
         }
 
         const trimmedValue = value === null || value === undefined ? '' : String(value).trim();
         const parsedValue = trimmedValue.length === 0 ? null : Number(trimmedValue);
-        control.setValue(parsedValue !== null && Number.isFinite(parsedValue) ? parsedValue : null);
-        control.markAsTouched();
+        this.ingredientAmountChange.emit({
+            ingredientIndex,
+            amount: parsedValue !== null && Number.isFinite(parsedValue) ? parsedValue : null,
+        });
     }
 
     protected onRemoveStep(): void {
@@ -214,11 +179,9 @@ export class RecipeStepCardComponent {
     }
 
     private commitStepTitle(): void {
-        const titleControl = this.stepForm().controls.title;
-        const titleValue = titleControl.value;
+        const titleValue = this.step().title.value;
         const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
-        titleControl.setValue(trimmedTitle.length > 0 ? trimmedTitle : null);
-        titleControl.markAsTouched();
+        this.stepTitleChange.emit(trimmedTitle.length > 0 ? trimmedTitle : null);
     }
 
     private resolveIngredientAmountLabel(isNestedRecipe: boolean, unitKey: string | null): string {

@@ -1,27 +1,7 @@
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
-import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
-import { nonEmptyArrayValidator } from '../../../lib/non-empty-array.validator';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../models/recipe.data';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
-
-type IsTuple<T> = T extends [infer _A, ...infer _B] | [] ? true : false;
-
-type LegacyFormGroupControls<T> = {
-    [K in keyof T]: T[K] extends Array<infer U>
-        ? IsTuple<T[K]> extends true
-            ? FormControl<T[K]>
-            : FormArray<FormGroup<LegacyFormGroupControls<U>>>
-        : T[K] extends object
-          ? FormGroup<LegacyFormGroupControls<T[K]>>
-          : FormControl<T[K]>;
-};
-
-export type RecipeFormData = LegacyFormGroupControls<RecipeFormValues>;
-export type StepFormData = LegacyFormGroupControls<StepFormValues>;
-export type IngredientFormData = LegacyFormGroupControls<IngredientFormValues>;
 
 export const RECIPE_LONG_TEXT_MAX_LENGTH = 1_000;
 export const RECIPE_STEP_TITLE_MAX_LENGTH = 120;
@@ -41,65 +21,52 @@ type RecipeIngredientGroupInput = {
     nestedRecipeName?: string | null;
 };
 
-export function createRecipeForm(): FormGroup<RecipeFormData> {
-    return new FormGroup<RecipeFormData>({
-        name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        description: new FormControl('', [Validators.maxLength(RECIPE_LONG_TEXT_MAX_LENGTH)]),
-        comment: new FormControl<string | null>(null, [Validators.maxLength(RECIPE_LONG_TEXT_MAX_LENGTH)]),
-        category: new FormControl<string | null>(null),
-        imageUrl: new FormControl<ImageSelection | null>(null),
-        prepTime: new FormControl<number | null>(0, [Validators.min(0)]),
-        cookTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
-        servings: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
-        visibility: new FormControl<RecipeVisibility>(RecipeVisibility.Public, { nonNullable: true }),
-        calculateNutritionAutomatically: new FormControl<boolean>(true, { nonNullable: true }),
-        manualCalories: new FormControl<number | null>(null, [Validators.min(0)]),
-        manualProteins: new FormControl<number | null>(null, [Validators.min(0)]),
-        manualFats: new FormControl<number | null>(null, [Validators.min(0)]),
-        manualCarbs: new FormControl<number | null>(null, [Validators.min(0)]),
-        manualFiber: new FormControl<number | null>(null, [Validators.min(0)]),
-        manualAlcohol: new FormControl<number | null>(null, [Validators.min(0)]),
-        steps: new FormArray<FormGroup<StepFormData>>([], nonEmptyArrayValidator()),
-    });
-}
-
 export function createRecipeFormValue(): RecipeFormValues {
-    return createRecipeForm().getRawValue();
+    return {
+        name: '',
+        description: '',
+        comment: null,
+        category: null,
+        imageUrl: null,
+        prepTime: 0,
+        cookTime: null,
+        servings: 1,
+        visibility: RecipeVisibility.Public,
+        calculateNutritionAutomatically: true,
+        manualCalories: null,
+        manualProteins: null,
+        manualFats: null,
+        manualCarbs: null,
+        manualFiber: null,
+        manualAlcohol: null,
+        steps: [],
+    };
 }
 
-export function createRecipeStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
-    const ingredientValues =
-        step !== undefined && step.ingredients.length > 0
-            ? step.ingredients
-            : [{ food: null, amount: null, foodName: null, nestedRecipe: null, nestedRecipeId: null, nestedRecipeName: null }];
+export function createRecipeStepValue(step?: StepFormValues): StepFormValues {
+    const ingredientValues = step !== undefined && step.ingredients.length > 0 ? step.ingredients : [createRecipeIngredientValue()];
 
-    return new FormGroup<StepFormData>({
-        title: new FormControl(step?.title ?? null, [Validators.maxLength(RECIPE_STEP_TITLE_MAX_LENGTH)]),
-        imageUrl: new FormControl<ImageSelection | null>(step?.imageUrl ?? null),
-        description: new FormControl(step?.description ?? '', {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
-        ingredients: new FormArray<FormGroup<IngredientFormData>>(
-            ingredientValues.map(ingredient => createRecipeIngredientGroup(ingredient)),
-            nonEmptyArrayValidator(),
-        ),
-    });
+    return {
+        title: step?.title ?? null,
+        imageUrl: step?.imageUrl ?? null,
+        description: step?.description ?? '',
+        ingredients: ingredientValues.map(ingredient => createRecipeIngredientValue(ingredient)),
+    };
 }
 
-export function createRecipeIngredientGroup(input: RecipeIngredientGroupInput = {}): FormGroup<IngredientFormData> {
+export function createRecipeIngredientValue(input: RecipeIngredientGroupInput = {}): IngredientFormValues {
     const food = input.food ?? null;
     const nestedRecipe = input.nestedRecipe ?? null;
     const nestedRecipeName = input.nestedRecipeName ?? null;
 
-    return new FormGroup<IngredientFormData>({
-        food: new FormControl(food),
-        amount: new FormControl(input.amount ?? null, [Validators.required, Validators.min(RECIPE_MIN_INGREDIENT_AMOUNT)]),
-        foodName: new FormControl<string | null>(resolveIngredientFoodName(food, nestedRecipe, nestedRecipeName), [Validators.required]),
-        nestedRecipe: new FormControl(nestedRecipe),
-        nestedRecipeId: new FormControl<string | null>(input.nestedRecipeId ?? null),
-        nestedRecipeName: new FormControl<string | null>(nestedRecipeName),
-    });
+    return {
+        food,
+        amount: input.amount ?? null,
+        foodName: resolveIngredientFoodName(food, nestedRecipe, nestedRecipeName),
+        nestedRecipe,
+        nestedRecipeId: input.nestedRecipeId ?? null,
+        nestedRecipeName,
+    };
 }
 
 function resolveIngredientFoodName(food: Product | null, nestedRecipe: Recipe | null, nestedRecipeName: string | null): string | null {
