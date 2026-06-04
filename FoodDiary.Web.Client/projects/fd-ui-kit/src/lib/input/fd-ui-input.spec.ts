@@ -1,16 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { disabled, form, FormField } from '@angular/forms/signals';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiInputComponent } from './fd-ui-input';
 
 @Component({
-    template: '<fd-ui-input [formControl]="ctrl" />',
-    imports: [FdUiInputComponent, ReactiveFormsModule],
+    template: '<fd-ui-input [formField]="inputForm.value" />',
+    imports: [FdUiInputComponent, FormField],
 })
 class TestHostComponent {
-    public ctrl = new FormControl('');
+    public readonly formModel = signal({
+        isDisabled: false,
+        value: '',
+    });
+    public readonly inputForm = form(this.formModel, path => {
+        disabled(path.value, { when: context => context.valueOf(path.isDisabled) });
+    });
 }
 
 type InputTestContext = {
@@ -307,47 +313,53 @@ describe('FdUiInputComponent attributes', () => {
 });
 
 describe('FdUiInputComponent with TestHost', () => {
-    it('should write value from FormControl', async () => {
+    it('should write value from Signal Form field', async () => {
         const { hostComponent, hostFixture, input } = await setupInputHostAsync();
-        hostComponent['ctrl'].setValue('from form');
+        hostComponent['formModel'].update(value => ({
+            ...value,
+            value: 'from form',
+        }));
         hostFixture.detectChanges();
 
         expect(input().value).toBe('from form');
     });
 
-    it('should propagate input value to FormControl', async () => {
+    it('should propagate input value to Signal Form field', async () => {
         const { hostComponent, hostFixture, input } = await setupInputHostAsync();
         const inputEl = input();
         inputEl.value = 'typed';
         inputEl.dispatchEvent(new Event('input'));
         hostFixture.detectChanges();
 
-        expect(hostComponent['ctrl'].value).toBe('typed');
+        expect(hostComponent['formModel']().value).toBe('typed');
     });
 
-    it('should sync native autofilled value to FormControl on focus', async () => {
+    it('should sync native autofilled value to Signal Form field on focus', async () => {
         const { hostComponent, hostFixture, input } = await setupInputHostAsync();
         const inputEl = input();
         inputEl.value = 'autofilled@example.com';
         inputEl.dispatchEvent(new Event('focus'));
         hostFixture.detectChanges();
 
-        expect(hostComponent['ctrl'].value).toBe('autofilled@example.com');
+        expect(hostComponent['formModel']().value).toBe('autofilled@example.com');
     });
 
     it('should mark control as touched on blur', async () => {
         const { hostComponent, hostFixture, input } = await setupInputHostAsync();
-        expect(hostComponent['ctrl'].touched).toBe(false);
+        expect(hostComponent['inputForm'].value().touched()).toBe(false);
 
         input().dispatchEvent(new Event('blur'));
         hostFixture.detectChanges();
 
-        expect(hostComponent['ctrl'].touched).toBe(true);
+        expect(hostComponent['inputForm'].value().touched()).toBe(true);
     });
 
-    it('should disable input when FormControl is disabled', async () => {
+    it('should disable input when Signal Form field is disabled', async () => {
         const { hostComponent, hostFixture, input } = await setupInputHostAsync();
-        hostComponent['ctrl'].disable();
+        hostComponent['formModel'].update(value => ({
+            ...value,
+            isDisabled: true,
+        }));
         hostFixture.detectChanges();
 
         expect(input().disabled).toBe(true);

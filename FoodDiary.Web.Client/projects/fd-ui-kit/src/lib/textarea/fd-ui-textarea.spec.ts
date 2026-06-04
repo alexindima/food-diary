@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { disabled, form, FormField } from '@angular/forms/signals';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiTextareaComponent } from './fd-ui-textarea';
@@ -9,11 +9,17 @@ const NUMERIC_VALUE = 42;
 const TEXTAREA_ROWS = 8;
 
 @Component({
-    template: '<fd-ui-textarea [formControl]="ctrl" />',
-    imports: [FdUiTextareaComponent, ReactiveFormsModule],
+    template: '<fd-ui-textarea [formField]="textareaForm.value" />',
+    imports: [FdUiTextareaComponent, FormField],
 })
 class TestHostComponent {
-    public ctrl = new FormControl('');
+    public readonly formModel = signal({
+        isDisabled: false,
+        value: '',
+    });
+    public readonly textareaForm = form(this.formModel, path => {
+        disabled(path.value, { when: context => context.valueOf(path.isDisabled) });
+    });
 }
 
 type TextareaTestContext = {
@@ -240,37 +246,43 @@ describe('FdUiTextareaComponent attributes', () => {
 });
 
 describe('FdUiTextareaComponent with TestHost', () => {
-    it('should write value from FormControl', async () => {
+    it('should write value from Signal Form field', async () => {
         const { hostComponent, hostFixture, textarea } = await setupTextareaHostAsync();
-        hostComponent['ctrl'].setValue('form value');
+        hostComponent['formModel'].update(value => ({
+            ...value,
+            value: 'form value',
+        }));
         hostFixture.detectChanges();
 
         expect(textarea().value).toBe('form value');
     });
 
-    it('should propagate input value to FormControl', async () => {
+    it('should propagate input value to Signal Form field', async () => {
         const { hostComponent, hostFixture, textarea } = await setupTextareaHostAsync();
         const textareaEl = textarea();
         textareaEl.value = 'typed';
         textareaEl.dispatchEvent(new Event('input'));
         hostFixture.detectChanges();
 
-        expect(hostComponent['ctrl'].value).toBe('typed');
+        expect(hostComponent['formModel']().value).toBe('typed');
     });
 
     it('should mark control as touched on blur', async () => {
         const { hostComponent, hostFixture, textarea } = await setupTextareaHostAsync();
-        expect(hostComponent['ctrl'].touched).toBe(false);
+        expect(hostComponent['textareaForm'].value().touched()).toBe(false);
 
         textarea().dispatchEvent(new Event('blur'));
         hostFixture.detectChanges();
 
-        expect(hostComponent['ctrl'].touched).toBe(true);
+        expect(hostComponent['textareaForm'].value().touched()).toBe(true);
     });
 
-    it('should disable textarea when FormControl is disabled', async () => {
+    it('should disable textarea when Signal Form field is disabled', async () => {
         const { hostComponent, hostFixture, textarea } = await setupTextareaHostAsync();
-        hostComponent['ctrl'].disable();
+        hostComponent['formModel'].update(value => ({
+            ...value,
+            isDisabled: true,
+        }));
         hostFixture.detectChanges();
 
         expect(textarea().disabled).toBe(true);

@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 49 forms.
-- Signal Forms files: 119.
-- Remaining legacy Reactive Forms surface: 30 files.
+- Migrated Signal Forms: 51 forms.
+- Signal Forms files: 121.
+- Remaining legacy Reactive Forms surface: 28 files.
 
 Tracker patterns:
 
@@ -149,6 +149,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-basic-info/recipe-basic-info.html`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.html`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.spec.ts`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.spec.ts`
 
 ## Next Candidates
 
@@ -179,5 +181,6 @@ Tracker patterns:
 - Recipe manage complex migration has started with Signal Forms basic-info fields. The root remains hybrid while nutrition and steps stay on legacy forms.
 - Recipe nutrition editor now consumes Signal Forms fields. `recipe-manage` remains the adapter for the legacy nutrition manager until the manager itself is migrated.
 - Shared nutrition editor is now Signal Forms only; the legacy `FormGroup`/`controlNames` fallback was removed after all consumers moved to `[form]`.
+- `fd-ui-input` and `fd-ui-textarea` host integration specs now use Signal Forms `[formField]`, including declarative disabled-state checks.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.
