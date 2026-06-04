@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, type FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { form, FormField, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -9,7 +9,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
-import { firstValueFrom, merge } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import type {
@@ -21,13 +21,11 @@ import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { MealManageFacade } from '../../../lib/manage/meal-manage.facade';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormData } from '../meal-manage-lib/meal-manage.types';
-import { resolveMealManageControlError } from '../meal-manage-lib/meal-manage-view.utils';
 
 const MIN_AMOUNT = 0.01;
 
 export type MealManualItemDialogData = {
-    group: FormGroup<ConsumptionItemFormData>;
+    group: ReturnType<MealManageFacade['createConsumptionItem']>;
 };
 
 @Component({
@@ -36,7 +34,7 @@ export type MealManualItemDialogData = {
     styleUrls: ['./meal-manual-item-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
+        FormField,
         FormsModule,
         TranslatePipe,
         FdUiButtonComponent,
@@ -52,14 +50,14 @@ export class MealManualItemDialogComponent {
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly amountValidationVersion = signal(0);
 
     protected readonly sourceType = signal(this.data.group.controls.sourceType.value);
     protected readonly product = signal<Product | null>(this.data.group.controls.product.value);
     protected readonly recipe = signal<Recipe | null>(this.data.group.controls.recipe.value);
-    protected readonly amount = new FormControl<number | null>(this.data.group.controls.amount.value, {
-        validators: [Validators.required, Validators.min(MIN_AMOUNT)],
+    protected readonly amountModel = signal<number | null>(this.data.group.controls.amount.value);
+    protected readonly amount = form(this.amountModel, path => {
+        required(path);
+        min(path, MIN_AMOUNT);
     });
 
     protected readonly itemSourceName = computed(() => this.recipe()?.name ?? this.product()?.name ?? '');
@@ -85,17 +83,21 @@ export class MealManualItemDialogComponent {
     );
 
     protected readonly amountError = computed(() => {
-        this.amountValidationVersion();
-        return resolveMealManageControlError(this.amount, this.translateService, MIN_AMOUNT);
-    });
+        const state = this.amount();
+        if (!state.invalid() || !state.touched()) {
+            return null;
+        }
 
-    public constructor() {
-        merge(this.amount.statusChanges, this.amount.valueChanges)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.refreshAmountValidation();
-            });
-    }
+        if (state.getError('required') !== undefined) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+
+        if (state.getError('min') !== undefined) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min: MIN_AMOUNT });
+        }
+
+        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    });
 
     protected async chooseItemAsync(): Promise<void> {
         const initialTab = this.sourceType() === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product';
@@ -116,34 +118,29 @@ export class MealManualItemDialogComponent {
             this.sourceType.set(ConsumptionSourceType.Product);
             this.product.set(selection.product);
             this.recipe.set(null);
-            this.amount.setValue(this.resolveProductAmount(selection.product));
-            this.amount.markAsUntouched();
-            this.refreshAmountValidation();
+            this.amount().value.set(this.resolveProductAmount(selection.product));
             return;
         }
 
         this.sourceType.set(ConsumptionSourceType.Recipe);
         this.recipe.set(selection.recipe);
         this.product.set(null);
-        this.amount.setValue(1);
-        this.amount.markAsUntouched();
-        this.refreshAmountValidation();
+        this.amount().value.set(1);
         this.recipeWeight.loadServingWeight(selection.recipe).subscribe(servingWeight => {
             if (servingWeight !== null && servingWeight > 0) {
-                this.amount.setValue(servingWeight);
+                this.amount().value.set(servingWeight);
             }
         });
     }
 
     protected save(): void {
-        this.amount.markAsTouched();
-        this.refreshAmountValidation();
+        this.amount().markAsTouched();
 
         if (this.product() === null && this.recipe() === null) {
             return;
         }
 
-        if (this.amount.invalid) {
+        if (this.amount().invalid()) {
             return;
         }
 
@@ -151,7 +148,7 @@ export class MealManualItemDialogComponent {
             sourceType: this.sourceType(),
             product: this.product(),
             recipe: this.recipe(),
-            amount: this.amount.value,
+            amount: this.amountModel(),
         });
         this.mealManageFacade.configureItemType(this.data.group, this.sourceType());
         this.dialogRef.close(true);
@@ -171,9 +168,5 @@ export class MealManualItemDialogComponent {
         }
 
         return 1;
-    }
-
-    private refreshAmountValidation(): void {
-        this.amountValidationVersion.update(version => version + 1);
     }
 }

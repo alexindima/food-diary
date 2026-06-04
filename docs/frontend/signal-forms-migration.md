@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 44 forms.
-- Signal Forms files: 107.
-- Remaining legacy Reactive Forms surface: 49 files.
+- Migrated Signal Forms: 45 forms.
+- Signal Forms files: 109.
+- Remaining legacy Reactive Forms surface: 47 files.
 
 Tracker patterns:
 
@@ -139,6 +139,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html`
 - `FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.ts`
 - `FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.html`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.ts`
+- `FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.html`
 
 ## Next Candidates
 
@@ -163,5 +165,6 @@ Tracker patterns:
 - `fd-ui-date-range-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - `fd-ui-datetime-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - Product manage now keeps `ProductFormValues` as the signal model and passes mapped nutrition fields into the shared nutrition editor.
+- Meal manual item dialog uses a scalar Signal Form for amount while keeping the legacy meal item `FormGroup` as its outer adapter until meal manage is migrated.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

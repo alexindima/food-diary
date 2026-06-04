@@ -37,7 +37,7 @@ describe('MealManualItemDialogComponent selection', () => {
 
         expect(component['product']()).toBe(product);
         expect(component['recipe']()).toBeNull();
-        expect(component['amount'].value).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
+        expect(component['amountModel']()).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
         expect(component['sourceType']()).toBe(ConsumptionSourceType.Product);
     });
 
@@ -50,7 +50,7 @@ describe('MealManualItemDialogComponent selection', () => {
 
         expect(component['recipe']()).toBe(recipe);
         expect(component['product']()).toBeNull();
-        expect(component['amount'].value).toBe(RECIPE_SERVING_WEIGHT);
+        expect(component['amountModel']()).toBe(RECIPE_SERVING_WEIGHT);
         expect(component['sourceType']()).toBe(ConsumptionSourceType.Recipe);
     });
 });
