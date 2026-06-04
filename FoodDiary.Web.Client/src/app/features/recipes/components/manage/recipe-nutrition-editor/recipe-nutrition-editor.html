@@ -9,8 +9,7 @@
     <div class="recipe-manage__nutrition fd-stack fd-gap-md">
         <fd-nutrition-editor
             manualHintKey="RECIPE_MANAGE.MANUAL_NUTRITION_HINT"
-            [formGroup]="formGroup()"
-            [controlNames]="nutritionControlNames"
+            [form]="nutritionForm()"
             [macroState]="macroBarState()"
             [readonly]="isNutritionReadonly()"
             [caloriesError]="caloriesError()"

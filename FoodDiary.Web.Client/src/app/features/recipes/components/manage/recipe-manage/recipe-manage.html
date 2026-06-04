@@ -33,7 +33,8 @@
             <div class="recipe-manage__column recipe-manage__column--secondary fd-stack">
                 <div class="recipe-manage__sticky-stack fd-stack fd-gap-lg">
                     <fd-recipe-nutrition-editor
-                        [formGroup]="recipeForm"
+                        [form]="recipeSignalForm"
+                        [nutritionMode]="nutritionMode()"
                         [nutritionScaleMode]="nutritionScaleMode"
                         (nutritionModeChange)="onNutritionModeChange($event)"
                         (nutritionScaleModeChange)="onNutritionScaleModeChange($event)"

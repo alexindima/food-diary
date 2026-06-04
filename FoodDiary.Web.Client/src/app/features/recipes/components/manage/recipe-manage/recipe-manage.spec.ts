@@ -8,7 +8,7 @@ import type { ItemSelection } from '../../../../../shared/dialogs/item-select-di
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
-import type { IngredientFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import type { IngredientFormValues, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { RecipeManageComponent } from './recipe-manage';
 
 const RECIPE_ID = 'recipe-1';
@@ -151,7 +151,7 @@ describe('RecipeManageComponent submission', () => {
         const { component, facade } = await setupComponentAsync();
         patchValidRecipeBase(component);
         component['onNutritionModeChange']('manual');
-        component['recipeForm'].controls.manualCalories.setValue(MANUAL_CALORIES);
+        patchRecipeNutritionValues(component, { manualCalories: MANUAL_CALORIES });
 
         component['onSubmit']();
 
@@ -324,17 +324,13 @@ function patchRecipeBasicValues(
     component: RecipeManageComponent,
     value: Partial<{ name: string; cookTime: number; servings: number }>,
 ): void {
-    component['recipeFormModel'].update(current => ({
-        ...current,
-        ...value,
-    }));
-    component['recipeForm'].patchValue(value);
+    patchRecipeSignalAndLegacyValues(component, value);
 }
 
 function patchValidManualRecipe(component: RecipeManageComponent): void {
     patchValidRecipeBase(component);
     component['onNutritionModeChange']('manual');
-    component['recipeForm'].patchValue({
+    patchRecipeNutritionValues(component, {
         manualCalories: MANUAL_CALORIES,
         manualProteins: MANUAL_PROTEINS,
         manualFats: MANUAL_FATS,
@@ -342,6 +338,28 @@ function patchValidManualRecipe(component: RecipeManageComponent): void {
         manualFiber: MANUAL_FIBER,
         manualAlcohol: SUMMARY_ALCOHOL,
     });
+}
+
+function patchRecipeNutritionValues(
+    component: RecipeManageComponent,
+    value: Partial<{
+        manualCalories: number;
+        manualProteins: number;
+        manualFats: number;
+        manualCarbs: number;
+        manualFiber: number;
+        manualAlcohol: number;
+    }>,
+): void {
+    patchRecipeSignalAndLegacyValues(component, value);
+}
+
+function patchRecipeSignalAndLegacyValues(component: RecipeManageComponent, value: Partial<RecipeFormValues>): void {
+    component['recipeFormModel'].update(current => ({
+        ...current,
+        ...value,
+    }));
+    component['recipeForm'].patchValue(value);
 }
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {

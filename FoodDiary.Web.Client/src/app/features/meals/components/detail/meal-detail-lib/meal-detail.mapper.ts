@@ -1,10 +1,6 @@
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale';
 
-import type {
-    NutritionControlNames,
-    NutritionFormModel,
-    NutritionMacroState,
-} from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
@@ -24,7 +20,6 @@ export type MealDetailViewModel = {
     postMealSatietyMeta: MealSatietyMeta;
     itemPreview: MealDetailItemPreview[];
     macroBlocks: MealMacroBlock[];
-    nutritionControlNames: NutritionControlNames;
     nutritionModel: NutritionFormModel;
     macroBarState: NutritionMacroState;
 };
@@ -53,14 +48,6 @@ export function buildMealDetailViewModel(meal: Meal, translate: (key: string) =>
         postMealSatietyMeta: buildSatietyMeta('after', meal.postMealSatietyLevel, translate),
         itemPreview: buildItemPreview(meal, translate),
         macroBlocks: buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, datasetValues),
-        nutritionControlNames: {
-            calories: 'calories',
-            proteins: 'proteins',
-            fats: 'fats',
-            carbs: 'carbs',
-            fiber: 'fiber',
-            alcohol: 'alcohol',
-        },
         nutritionModel: buildNutritionModel({ calories, proteins, fats, carbs, fiber, alcohol }),
         macroBarState: buildMacroBarState(datasetValues),
     };

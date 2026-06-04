@@ -1,8 +1,4 @@
-import type {
-    NutritionControlNames,
-    NutritionFormModel,
-    NutritionMacroState,
-} from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
@@ -29,7 +25,6 @@ export type RecipeDetailViewModel = {
     macroBlocks: MacroBlock[];
     macroSummaryBlocks: MacroBlock[];
     ingredientPreview: IngredientPreviewItem[];
-    nutritionControlNames: NutritionControlNames;
     nutritionModel: NutritionFormModel;
     macroBarState: NutritionMacroState;
     totalTime: number | null;
@@ -58,14 +53,6 @@ export function buildRecipeDetailViewModel(recipe: Recipe, unknownIngredientName
         macroBlocks,
         macroSummaryBlocks: macroBlocks.slice(0, RECIPE_DETAIL_MACRO_SUMMARY_LIMIT),
         ingredientPreview: buildIngredientPreview(recipe, unknownIngredientName),
-        nutritionControlNames: {
-            calories: 'calories',
-            proteins: 'proteins',
-            fats: 'fats',
-            carbs: 'carbs',
-            fiber: 'fiber',
-            alcohol: 'alcohol',
-        },
         nutritionModel: buildNutritionModel({ calories, proteins, fats, carbs, fiber, alcohol }),
         macroBarState: calculateMacroBarState(proteins, fats, carbs),
         totalTime: calculateTotalPreparationTime(recipe),

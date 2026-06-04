@@ -1,18 +1,10 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { type NutritionControlNames, NutritionEditorComponent } from './nutrition-editor';
-
-const CONTROL_NAMES: NutritionControlNames = {
-    calories: 'calories',
-    proteins: 'proteins',
-    fats: 'fats',
-    carbs: 'carbs',
-    fiber: 'fiber',
-    alcohol: 'alcohol',
-};
+import { NutritionEditorComponent, type NutritionFormModel } from './nutrition-editor';
 
 type NutritionEditorTestContext = {
     fixture: ComponentFixture<NutritionEditorComponent>;
@@ -25,18 +17,23 @@ async function setupNutritionEditorAsync(): Promise<NutritionEditorTestContext> 
     }).compileComponents();
 
     const fixture = TestBed.createComponent(NutritionEditorComponent);
-    fixture.componentRef.setInput(
-        'formGroup',
-        new FormGroup({
-            calories: new FormControl(0),
-            proteins: new FormControl(0),
-            fats: new FormControl(0),
-            carbs: new FormControl(0),
-            fiber: new FormControl(0),
-            alcohol: new FormControl(0),
-        }),
-    );
-    fixture.componentRef.setInput('controlNames', CONTROL_NAMES);
+    const formModel = signal<NutritionFormModel>({
+        calories: 0,
+        proteins: 0,
+        fats: 0,
+        carbs: 0,
+        fiber: 0,
+        alcohol: 0,
+    });
+    const nutritionForm = TestBed.runInInjectionContext(() => form(formModel));
+    fixture.componentRef.setInput('form', {
+        calories: nutritionForm.calories,
+        proteins: nutritionForm.proteins,
+        fats: nutritionForm.fats,
+        carbs: nutritionForm.carbs,
+        fiber: nutritionForm.fiber,
+        alcohol: nutritionForm.alcohol,
+    });
     fixture.componentRef.setInput('macroState', {
         isEmpty: true,
         segments: [],

@@ -1,15 +1,18 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { Validators } from '@angular/forms';
+import { form, min } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
-import { createRecipeForm } from '../recipe-manage-lib/recipe-manage-form.mapper';
+import type { NutritionMode, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import { createRecipeFormValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionEditorComponent } from './recipe-nutrition-editor';
 
 type RecipeNutritionEditorSetup = {
     component: RecipeNutritionEditorComponent;
     fixture: ComponentFixture<RecipeNutritionEditorComponent>;
-    form: ReturnType<typeof createRecipeForm>;
+    formModel: ReturnType<typeof signal<RecipeFormValues>>;
+    recipeForm: ReturnType<typeof form<RecipeFormValues>>;
 };
 
 describe('RecipeNutritionEditorComponent', () => {
@@ -24,13 +27,10 @@ describe('RecipeNutritionEditorComponent', () => {
     });
 
     it('should expose manual validation errors when manual nutrition is incomplete', async () => {
-        const { component, form, fixture } = await setupComponentAsync();
+        const { component, recipeForm, fixture } = await setupComponentAsync('manual');
 
-        form.controls.calculateNutritionAutomatically.setValue(false);
-        form.controls.manualCalories.setValidators([Validators.required, Validators.min(0)]);
-        form.controls.manualCalories.markAsTouched();
-        form.controls.manualCalories.updateValueAndValidity();
-        form.controls.manualProteins.markAsTouched();
+        recipeForm.manualCalories().markAsTouched();
+        recipeForm.manualProteins().markAsTouched();
         fixture.detectChanges();
 
         expect(component['isNutritionReadonly']()).toBe(false);
@@ -40,9 +40,14 @@ describe('RecipeNutritionEditorComponent', () => {
     });
 
     it('should calculate macro state from summary data supplied by the parent', async () => {
-        const { component, form, fixture } = await setupComponentAsync();
+        const { component, formModel, fixture } = await setupComponentAsync();
 
-        form.patchValue({ manualProteins: 10, manualFats: 5, manualCarbs: 35 });
+        formModel.update(value => ({
+            ...value,
+            manualProteins: 10,
+            manualFats: 5,
+            manualCarbs: 35,
+        }));
         fixture.detectChanges();
 
         expect(component['macroBarState']()).toEqual({
@@ -68,24 +73,40 @@ describe('RecipeNutritionEditorComponent', () => {
     });
 });
 
-async function setupComponentAsync(): Promise<RecipeNutritionEditorSetup> {
+async function setupComponentAsync(nutritionMode: NutritionMode = 'auto'): Promise<RecipeNutritionEditorSetup> {
     await TestBed.configureTestingModule({
         imports: [RecipeNutritionEditorComponent, TranslateModule.forRoot()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(RecipeNutritionEditorComponent);
-    const form = createRecipeForm();
-    setRequiredInputs(fixture, form);
+    const formModel = signal(createRecipeFormValue());
+    const recipeForm = TestBed.runInInjectionContext(() =>
+        form(formModel, path => {
+            min(path.manualCalories, 0);
+            min(path.manualProteins, 0);
+            min(path.manualFats, 0);
+            min(path.manualCarbs, 0);
+            min(path.manualFiber, 0);
+            min(path.manualAlcohol, 0);
+        }),
+    );
+    setRequiredInputs(fixture, recipeForm, nutritionMode);
     fixture.detectChanges();
 
     return {
         component: fixture.componentInstance,
         fixture,
-        form,
+        formModel,
+        recipeForm,
     };
 }
 
-function setRequiredInputs(fixture: ComponentFixture<RecipeNutritionEditorComponent>, form: ReturnType<typeof createRecipeForm>): void {
-    fixture.componentRef.setInput('formGroup', form);
+function setRequiredInputs(
+    fixture: ComponentFixture<RecipeNutritionEditorComponent>,
+    formTree: ReturnType<typeof form<RecipeFormValues>>,
+    nutritionMode: NutritionMode,
+): void {
+    fixture.componentRef.setInput('form', formTree);
+    fixture.componentRef.setInput('nutritionMode', nutritionMode);
     fixture.componentRef.setInput('nutritionScaleMode', 'recipe');
 }

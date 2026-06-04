@@ -63,6 +63,12 @@ export class RecipeManageComponent {
         required(path.servings);
         min(path.servings, 1);
         required(path.visibility);
+        min(path.manualCalories, 0);
+        min(path.manualProteins, 0);
+        min(path.manualFats, 0);
+        min(path.manualCarbs, 0);
+        min(path.manualFiber, 0);
+        min(path.manualAlcohol, 0);
     });
     protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;
@@ -104,12 +110,14 @@ export class RecipeManageComponent {
         this.setupFormValueChangeTracking();
         this.watchSignalFormModelChanges();
         this.nutritionFormManager.initialize();
+        this.syncLegacyNutritionValuesToSignalForm();
 
         this.recipeForm.controls.calculateNutritionAutomatically.valueChanges.pipe(takeUntilDestroyed()).subscribe(isAuto => {
             if (!this.isFormReady) {
                 return;
             }
             this.nutritionFormManager.handleAutoCalculationChange(isAuto);
+            this.syncLegacyNutritionValuesToSignalForm();
         });
         effect(() => {
             const recipe = this.recipe();
@@ -167,6 +175,7 @@ export class RecipeManageComponent {
             this.recipeManageFacade.applyItemSelection(foodGroup, selection);
             if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
                 this.nutritionFormManager.recalculateNutrientsFromForm();
+                this.syncLegacyNutritionValuesToSignalForm();
             }
         });
     }
@@ -175,10 +184,12 @@ export class RecipeManageComponent {
 
     protected onNutritionModeChange(nextMode: string): void {
         this.nutritionFormManager.onNutritionModeChange(nextMode);
+        this.syncLegacyNutritionValuesToSignalForm();
     }
 
     protected onNutritionScaleModeChange(nextMode: string): void {
         this.nutritionFormManager.onNutritionScaleModeChange(nextMode);
+        this.syncLegacyNutritionValuesToSignalForm();
     }
 
     // -- Form submission --
@@ -251,6 +262,7 @@ export class RecipeManageComponent {
         } else {
             this.nutritionFormManager.updateSummaryFromForm();
         }
+        this.syncLegacyNutritionValuesToSignalForm();
     }
 
     private buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
@@ -277,6 +289,7 @@ export class RecipeManageComponent {
             }
             if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
                 this.nutritionFormManager.recalculateNutrientsFromForm();
+                this.syncLegacyNutritionValuesToSignalForm();
             }
         });
     }
@@ -292,6 +305,7 @@ export class RecipeManageComponent {
 
                 this.recipeForm.patchValue(value, { emitEvent: false });
                 this.nutritionFormManager.updateSummaryFromForm();
+                this.syncLegacyNutritionValuesToSignalForm();
             });
         });
     }
@@ -301,13 +315,27 @@ export class RecipeManageComponent {
     }
 
     private patchRecipeFormModel(value: Partial<RecipeFormValues>): void {
-        this.recipeFormModel.update(current => ({
-            ...current,
-            ...this.pickSignalManagedFormValue({
+        this.recipeFormModel.update(current => {
+            const changedValue = this.pickChangedSignalManagedFormValue(current, {
                 ...current,
                 ...value,
-            }),
-        }));
+            });
+            return Object.keys(changedValue).length === 0
+                ? current
+                : {
+                      ...current,
+                      ...changedValue,
+                  };
+        });
+    }
+
+    private pickChangedSignalManagedFormValue(current: RecipeFormValues, next: RecipeFormValues): Partial<RecipeFormValues> {
+        const nextSignalValue = this.pickSignalManagedFormValue(next);
+        return Object.fromEntries(
+            recipeSignalManagedFields
+                .filter(field => current[field] !== nextSignalValue[field])
+                .map(field => [field, nextSignalValue[field]]),
+        );
     }
 
     private pickSignalManagedFormValue(value: RecipeFormValues): Pick<RecipeFormValues, RecipeSignalManagedField> {
@@ -321,7 +349,26 @@ export class RecipeManageComponent {
             cookTime: value.cookTime,
             servings: value.servings,
             visibility: value.visibility,
+            calculateNutritionAutomatically: value.calculateNutritionAutomatically,
+            manualCalories: value.manualCalories,
+            manualProteins: value.manualProteins,
+            manualFats: value.manualFats,
+            manualCarbs: value.manualCarbs,
+            manualFiber: value.manualFiber,
+            manualAlcohol: value.manualAlcohol,
         };
+    }
+
+    private syncLegacyNutritionValuesToSignalForm(): void {
+        this.patchRecipeFormModel({
+            calculateNutritionAutomatically: this.recipeForm.controls.calculateNutritionAutomatically.value,
+            manualCalories: this.recipeForm.controls.manualCalories.value,
+            manualProteins: this.recipeForm.controls.manualProteins.value,
+            manualFats: this.recipeForm.controls.manualFats.value,
+            manualCarbs: this.recipeForm.controls.manualCarbs.value,
+            manualFiber: this.recipeForm.controls.manualFiber.value,
+            manualAlcohol: this.recipeForm.controls.manualAlcohol.value,
+        });
     }
 
     protected get nutritionScaleMode(): NutritionScaleMode {
@@ -338,7 +385,33 @@ type RecipeSignalManagedField =
     | 'prepTime'
     | 'cookTime'
     | 'servings'
-    | 'visibility';
+    | 'visibility'
+    | 'calculateNutritionAutomatically'
+    | 'manualCalories'
+    | 'manualProteins'
+    | 'manualFats'
+    | 'manualCarbs'
+    | 'manualFiber'
+    | 'manualAlcohol';
+
+const recipeSignalManagedFields = [
+    'name',
+    'description',
+    'comment',
+    'category',
+    'imageUrl',
+    'prepTime',
+    'cookTime',
+    'servings',
+    'visibility',
+    'calculateNutritionAutomatically',
+    'manualCalories',
+    'manualProteins',
+    'manualFats',
+    'manualCarbs',
+    'manualFiber',
+    'manualAlcohol',
+] as const satisfies readonly RecipeSignalManagedField[];
 
 type RecipeManageHeaderState = {
     titleKey: string;
