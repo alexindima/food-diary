@@ -367,6 +367,62 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateProductCommandHandler_WithAllUpdateSections_AppliesChangesAndCleansOldAsset() {
+        var user = User.Create("update-product-all@example.com", "hash");
+        var oldAssetId = ImageAssetId.New();
+        var newAssetId = ImageAssetId.New();
+        var product = Product.Create(
+            user.Id,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            barcode: "111",
+            brand: "Old brand",
+            productType: ProductType.Fruit,
+            category: "Fruit",
+            description: "Old description",
+            comment: "Old comment",
+            imageUrl: "https://cdn.example/old.jpg",
+            imageAssetId: oldAssetId,
+            visibility: Visibility.Private);
+        var repository = new SingleProductRepository(product);
+        var cleanup = new RecordingCleanupService();
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            cleanup,
+            new StubUserRepository(user),
+            new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+                .WithAsset(newAssetId, "https://cdn.example/new.jpg"));
+
+        var result = await handler.Handle(
+            CreateFullProductUpdateCommand(user.Id.Value, product.Id.Value, newAssetId.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
+        Assert.Equal("Updated apple", result.Value.Name);
+        Assert.Equal("222", result.Value.Barcode);
+        Assert.Null(result.Value.Brand);
+        Assert.Null(result.Value.Category);
+        Assert.Equal("Fresh description", result.Value.Description);
+        Assert.Null(result.Value.Comment);
+        Assert.Equal(newAssetId.Value, result.Value.ImageAssetId);
+        Assert.Equal("https://cdn.example/new.jpg", result.Value.ImageUrl);
+        Assert.Equal(nameof(MeasurementUnit.Pcs), result.Value.BaseUnit);
+        Assert.Equal(2, result.Value.DefaultPortionAmount);
+        Assert.Equal(80, result.Value.CaloriesPerBase);
+        Assert.Equal(nameof(Visibility.Public), result.Value.Visibility);
+        Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
+    }
+
+    [Fact]
     public async Task UpdateProductCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var product = Product.Create(
@@ -1330,4 +1386,38 @@ public class ProductsFeatureTests {
             FiberPerBase: null,
             AlcoholPerBase: null,
             Visibility: visibility);
+
+    private static UpdateProductCommand CreateFullProductUpdateCommand(
+        Guid userId,
+        Guid productId,
+        Guid imageAssetId) =>
+        new(
+            userId,
+            productId,
+            Barcode: "222",
+            ClearBarcode: false,
+            Name: "Updated apple",
+            Brand: null,
+            ClearBrand: true,
+            ProductType: nameof(ProductType.Dairy),
+            Category: null,
+            ClearCategory: true,
+            Description: "Fresh description",
+            ClearDescription: false,
+            Comment: null,
+            ClearComment: true,
+            ImageUrl: "https://ignored.example/manual.jpg",
+            ClearImageUrl: false,
+            ImageAssetId: imageAssetId,
+            ClearImageAssetId: false,
+            BaseUnit: nameof(MeasurementUnit.Pcs),
+            BaseAmount: 1,
+            DefaultPortionAmount: 2,
+            CaloriesPerBase: 80,
+            ProteinsPerBase: 1.1,
+            FatsPerBase: 0.5,
+            CarbsPerBase: 20,
+            FiberPerBase: 3,
+            AlcoholPerBase: 0,
+            Visibility: nameof(Visibility.Public));
 }

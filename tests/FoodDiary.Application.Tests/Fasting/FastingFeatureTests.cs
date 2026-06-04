@@ -524,6 +524,72 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new UpdateCurrentFastingCheckInCommandHandler(
+            new InMemoryFastingOccurrenceRepository(),
+            new InMemoryFastingCheckInRepository(),
+            new StubUserRepository(null),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new UpdateCurrentFastingCheckInCommand(null, 3, 3, 3, ["good"], "steady"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WhenNoActiveSession_ReturnsFailure() {
+        var user = CreateUser(UserId.New());
+        var checkInRepo = new InMemoryFastingCheckInRepository();
+        var handler = new UpdateCurrentFastingCheckInCommandHandler(
+            new InMemoryFastingOccurrenceRepository(),
+            checkInRepo,
+            new StubUserRepository(user),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new UpdateCurrentFastingCheckInCommand(user.Id.Value, 3, 3, 3, ["good"], "steady"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.NoActiveSession", result.Error.Code);
+        Assert.Empty(checkInRepo.Stored);
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithActiveSession_AddsCheckInAndUpdatesSession() {
+        var user = CreateUser(UserId.New());
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddHours(-1));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
+        AttachNavigation(occurrence, plan, user);
+        var checkInRepo = new InMemoryFastingCheckInRepository();
+        var unitOfWork = new StubUnitOfWork();
+        var handler = new UpdateCurrentFastingCheckInCommandHandler(
+            new InMemoryFastingOccurrenceRepository(current: occurrence),
+            checkInRepo,
+            new StubUserRepository(user),
+            new FixedDateTimeProvider(),
+            unitOfWork);
+
+        var result = await handler.Handle(
+            new UpdateCurrentFastingCheckInCommand(user.Id.Value, 4, 5, 3, ["tired", "focused"], "steady"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(FixedNow, occurrence.CheckInAtUtc);
+        Assert.Single(checkInRepo.Stored);
+        Assert.Equal(1, unitOfWork.SaveChangesCallCount);
+        Assert.Equal(4, result.Value.HungerLevel);
+        Assert.Equal(5, result.Value.EnergyLevel);
+        Assert.Equal(["tired", "focused"], result.Value.Symptoms);
+        Assert.Single(result.Value.CheckIns);
+    }
+
+    [Fact]
     public async Task SkipCyclicDay_WhenActiveFastDay_CreatesEatDayOccurrence() {
         var userId = UserId.New();
         var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
@@ -1401,7 +1467,12 @@ public class FastingFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubUnitOfWork : IUnitOfWork {
         public bool HasPendingChanges => false;
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public int SaveChangesCallCount { get; private set; }
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default) {
+            SaveChangesCallCount++;
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]
