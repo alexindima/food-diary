@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 35 forms.
-- Signal Forms files: 75.
-- Remaining legacy Reactive Forms surface: 83 files.
+- Migrated Signal Forms: 37 forms.
+- Signal Forms files: 79.
+- Remaining legacy Reactive Forms surface: 79 files.
 
 Tracker patterns:
 
@@ -101,6 +101,10 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html`
 - `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.ts`
 - `FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.html`
+- `FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.ts`
+- `FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.html`
+- `FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.ts`
+- `FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.html`
 
 ## Next Candidates
 

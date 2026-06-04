@@ -72,8 +72,8 @@ function createComponent(queryParams: Record<string, string> = DEFAULT_QUERY_PAR
 }
 
 function setValidPassword(component: PasswordResetComponent): void {
-    component['form'].controls.password.setValue('newPassword123');
-    component['form'].controls.confirmPassword.setValue('newPassword123');
+    component['form'].password().value.set('newPassword123');
+    component['form'].confirmPassword().value.set('newPassword123');
 }
 
 describe('PasswordResetComponent', () => {
@@ -86,39 +86,39 @@ describe('PasswordResetComponent', () => {
 describe('PasswordResetComponent form validation', () => {
     it('should initialize form with password and confirmPassword fields', () => {
         const { component } = createComponent();
-        expect(component['form'].contains('password')).toBe(true);
-        expect(component['form'].contains('confirmPassword')).toBe(true);
+        expect(component['form'].password).toBeDefined();
+        expect(component['form'].confirmPassword).toBeDefined();
     });
 
     it('should validate required password', () => {
         const { component } = createComponent();
-        const control = component['form'].controls.password;
-        control.setValue('');
-        control.markAsTouched();
-        expect(control.hasError('required')).toBe(true);
+        const control = component['form'].password;
+        control().value.set('');
+        control().markAsTouched();
+        expect(control().getError('required')).toBeDefined();
     });
 
     it('should validate password minimum length', () => {
         const { component } = createComponent();
-        const control = component['form'].controls.password;
-        control.setValue('abc');
-        control.markAsTouched();
-        expect(control.hasError('minlength')).toBe(true);
+        const control = component['form'].password;
+        control().value.set('abc');
+        control().markAsTouched();
+        expect(control().getError('minLength')).toBeDefined();
 
-        control.setValue('abcdef');
-        expect(control.hasError('minlength')).toBe(false);
+        control().value.set('abcdef');
+        expect(control().getError('minLength')).toBeUndefined();
     });
 
     it('should validate password confirmation match', () => {
         const { component } = createComponent();
-        component['form'].controls.password.setValue('validPass1');
-        component['form'].controls.confirmPassword.setValue('differentPass');
-        component['form'].controls.confirmPassword.markAsTouched();
+        component['form'].password().value.set('validPass1');
+        component['form'].confirmPassword().value.set('differentPass');
+        component['form'].confirmPassword().markAsTouched();
 
-        expect(component['form'].controls.confirmPassword.hasError('matchField')).toBe(true);
+        expect(component['form'].confirmPassword().getError('matchField')).toBeDefined();
 
-        component['form'].controls.confirmPassword.setValue('validPass1');
-        expect(component['form'].controls.confirmPassword.hasError('matchField')).toBe(false);
+        component['form'].confirmPassword().value.set('validPass1');
+        expect(component['form'].confirmPassword().getError('matchField')).toBeUndefined();
     });
 });
 
@@ -176,7 +176,7 @@ describe('PasswordResetComponent invalid states', () => {
 
     it('should not submit when form is invalid', () => {
         const { authServiceSpy, component } = createComponent();
-        component['form'].controls.password.setValue('');
+        component['form'].password().value.set('');
         component['onSubmit']();
         expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
     });

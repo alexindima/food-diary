@@ -1,20 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { type FieldTree, form, FormField, minLength, required, validate, type ValidationError } from '@angular/forms/signals';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error';
+import { type FdValidationErrorConfig, type FdValidationErrors, getNumberProperty } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
-import { EMPTY, merge, type Observable } from 'rxjs';
 
-import { matchFieldValidator } from '../../../../shared/forms/match-field.validator';
-import type { FormGroupControls } from '../../../../shared/lib/common.data';
 import { UserFacade } from '../../../../shared/lib/user.facade';
-import { resolveTranslatedControlError } from '../../../../shared/lib/validation-error.utils';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../auth/lib/auth.constants';
 
@@ -25,7 +20,7 @@ export type ChangePasswordDialogData = {
 const ERROR_FIELDS = ['currentPassword', 'newPassword', 'confirmPassword'] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
-const CHANGE_PASSWORD_VALIDATION_ERRORS: FdValidationErrors = {
+const CHANGE_PASSWORD_VALIDATION_ERRORS: Partial<FdValidationErrors> = {
     required: () => 'FORM_ERRORS.REQUIRED',
     minlength: (error?: unknown) => ({
         key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
@@ -39,36 +34,29 @@ const CHANGE_PASSWORD_VALIDATION_ERRORS: FdValidationErrors = {
     templateUrl: './change-password-dialog.html',
     styleUrls: ['./change-password-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ReactiveFormsModule,
-        TranslateModule,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-        FdUiInputComponent,
-        FdUiButtonComponent,
-    ],
+    imports: [FormField, TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiInputComponent, FdUiButtonComponent],
 })
 export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);
     private readonly userFacade = inject(UserFacade);
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly data = inject<ChangePasswordDialogData | null>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     protected readonly hasPassword = this.data.hasPassword ?? true;
 
-    protected readonly form = new FormGroup<ChangePasswordFormData>({
-        currentPassword: new FormControl<string>('', {
-            nonNullable: true,
-            validators: this.hasPassword ? [Validators.required] : [],
-        }),
-        newPassword: new FormControl<string>('', {
-            nonNullable: true,
-            validators: [Validators.required, Validators.minLength(AUTH_PASSWORD_MIN_LENGTH)],
-        }),
-        confirmPassword: new FormControl<string>('', {
-            nonNullable: true,
-            validators: [Validators.required, matchFieldValidator('newPassword')],
-        }),
+    protected readonly formModel = signal<ChangePasswordFormValues>({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+    });
+    protected readonly form = form(this.formModel, path => {
+        if (this.hasPassword) {
+            required(path.currentPassword);
+        }
+
+        required(path.newPassword);
+        minLength(path.newPassword, AUTH_PASSWORD_MIN_LENGTH);
+        required(path.confirmPassword);
+        validate(path.confirmPassword, ({ value }) => (value() === this.formModel().newPassword ? undefined : { kind: 'matchField' }));
     });
 
     protected readonly passwordError = signal<string | null>(null);
@@ -80,13 +68,11 @@ export class ChangePasswordDialogComponent {
     }));
 
     public constructor() {
-        const formEvents = (this.form as { events?: Observable<unknown> }).events ?? EMPTY;
-        merge(formEvents, this.form.statusChanges, this.form.valueChanges, this.translateService.onLangChange)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.updateFieldErrors();
-            });
-        this.updateFieldErrors();
+        effect(() => {
+            this.formModel();
+            this.translateService.onLangChange;
+            this.updateFieldErrors();
+        });
     }
 
     protected onCancel(): void {
@@ -98,15 +84,15 @@ export class ChangePasswordDialogComponent {
     }
 
     protected onSubmit(): void {
-        this.form.markAllAsTouched();
+        this.form().markAsTouched();
         this.updateFieldErrors();
-        if (this.form.invalid || this.isSubmitting()) {
+        if (this.form().invalid() || this.isSubmitting()) {
             return;
         }
 
-        const value = this.form.value;
-        const currentPassword = value.currentPassword?.trim() ?? '';
-        const newPassword = value.newPassword?.trim() ?? '';
+        const value = this.formModel();
+        const currentPassword = value.currentPassword.trim();
+        const newPassword = value.newPassword.trim();
 
         this.isSubmitting.set(true);
         this.passwordError.set(null);
@@ -144,14 +130,51 @@ export class ChangePasswordDialogComponent {
     private updateFieldErrors(): void {
         this.fieldErrors.set(
             ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
-                errors[field] = resolveTranslatedControlError(
-                    this.form.controls[field],
-                    CHANGE_PASSWORD_VALIDATION_ERRORS,
-                    this.translateService,
-                );
+                errors[field] = this.resolveTranslatedFieldError(this.form[field]);
                 return errors;
             }, this.createEmptyFieldErrors()),
         );
+    }
+
+    private resolveTranslatedFieldError(field: FieldTree<unknown>): string | null {
+        const state = field();
+        if (!state.invalid() || (!state.touched() && !state.dirty())) {
+            return null;
+        }
+
+        const error = state.errors()[0];
+        const key = this.mapValidationErrorKey(error);
+        const resolver = CHANGE_PASSWORD_VALIDATION_ERRORS[key];
+        if (resolver === undefined) {
+            return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+        }
+
+        const params = this.getValidationParams(error);
+        const result = resolver(params);
+        return this.translateValidationResult(result, params);
+    }
+
+    private mapValidationErrorKey(error: ValidationError): string {
+        return error.kind === 'minLength' ? 'minlength' : error.kind;
+    }
+
+    private getValidationParams(error: ValidationError): Record<string, unknown> {
+        if (error.kind === 'minLength') {
+            return { requiredLength: getNumberProperty(error, 'minLength') };
+        }
+
+        return {};
+    }
+
+    private translateValidationResult(result: FdValidationErrorConfig | string, params: Record<string, unknown>): string {
+        if (typeof result === 'string') {
+            return this.translateService.instant(result, params);
+        }
+
+        return this.translateService.instant(result.key, {
+            ...params,
+            ...result.params,
+        });
     }
 
     private createEmptyFieldErrors(): FieldErrors {
@@ -168,5 +191,3 @@ type ChangePasswordFormValues = {
     newPassword: string;
     confirmPassword: string;
 };
-
-type ChangePasswordFormData = FormGroupControls<ChangePasswordFormValues>;
