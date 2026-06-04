@@ -1,7 +1,6 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormGroup } from '@angular/forms';
 import { form, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -11,7 +10,7 @@ import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-c
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { Recipe, RecipeDto } from '../../../models/recipe.data';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info';
-import type { NutritionScaleMode, RecipeFormData, RecipeFormValues, StepFormData } from '../recipe-manage-lib/recipe-manage.types';
+import type { NutritionScaleMode, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
@@ -59,7 +58,7 @@ export class RecipeManageComponent {
     protected isSubmitting = this.recipeManageFacade.isSubmitting;
     protected readonly stepsRenderVersion = signal(0);
 
-    protected recipeForm: FormGroup<RecipeFormData> = createRecipeForm();
+    protected recipeForm = createRecipeForm();
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue());
     protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
         required(path.name);
@@ -149,7 +148,7 @@ export class RecipeManageComponent {
         });
     }
 
-    protected get steps(): FormArray<FormGroup<StepFormData>> {
+    protected get steps(): RecipeLegacyStepsControl {
         return this.recipeForm.controls.steps;
     }
 
@@ -222,7 +221,7 @@ export class RecipeManageComponent {
     protected onSubmit(): void {
         this.recipeSignalForm().markAsTouched();
         this.syncSignalManagedValuesToLegacyForm();
-        this.markFormGroupTouched(this.recipeForm);
+        this.markControlTreeTouched(this.recipeForm);
         this.bumpStepsRenderVersion();
 
         if (this.nutritionFormManager.hasMacrosError()) {
@@ -250,15 +249,30 @@ export class RecipeManageComponent {
         await this.recipeManageFacade.cancelManageAsync();
     }
 
-    private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
-        Object.values(formGroup.controls).forEach(control => {
-            if (control instanceof FormGroup || control instanceof FormArray) {
-                this.markFormGroupTouched(control);
-            } else {
-                control.markAllAsTouched();
-                control.updateValueAndValidity();
-            }
-        });
+    private markControlTreeTouched(control: RecipeLegacyMarkableControl): void {
+        const children = this.getControlChildren(control);
+        if (children.length > 0) {
+            children.forEach(child => {
+                this.markControlTreeTouched(child);
+            });
+            control.updateValueAndValidity();
+            return;
+        }
+
+        control.markAllAsTouched();
+        control.updateValueAndValidity();
+    }
+
+    private getControlChildren(control: RecipeLegacyMarkableControl): RecipeLegacyMarkableControl[] {
+        if (!this.hasChildControls(control)) {
+            return [];
+        }
+
+        return Array.isArray(control.controls) ? control.controls : Object.values(control.controls);
+    }
+
+    private hasChildControls(control: RecipeLegacyMarkableControl): control is RecipeLegacyControlContainer {
+        return 'controls' in control;
     }
 
     private prepareRecipeDto(): RecipeDto {
@@ -447,4 +461,14 @@ const recipeSignalManagedFields = [
 type RecipeManageHeaderState = {
     titleKey: string;
     submitLabelKey: string;
+};
+
+type RecipeLegacyForm = ReturnType<typeof createRecipeForm>;
+type RecipeLegacyStepsControl = RecipeLegacyForm['controls']['steps'];
+type RecipeLegacyMarkableControl = {
+    markAllAsTouched: () => void;
+    updateValueAndValidity: () => void;
+};
+type RecipeLegacyControlContainer = RecipeLegacyMarkableControl & {
+    controls: RecipeLegacyMarkableControl[] | Record<string, RecipeLegacyMarkableControl>;
 };
