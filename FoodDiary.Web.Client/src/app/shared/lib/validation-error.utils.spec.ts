@@ -1,9 +1,8 @@
-import { FormControl, Validators } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
 import type { FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { resolveTranslatedControlError } from './validation-error.utils';
+import { resolveTranslatedControlError, type TranslatedControlErrorState } from './validation-error.utils';
 
 const MIN_LENGTH = 5;
 const OVERRIDDEN_MIN_LENGTH = 8;
@@ -22,20 +21,28 @@ describe('resolveTranslatedControlError', () => {
     });
 
     it('should return null for valid control', () => {
-        const control = new FormControl('value', Validators.required);
+        const control = createControlState({ invalid: false });
 
         expect(resolveTranslatedControlError(control, {}, translateService)).toBeNull();
     });
 
     it('should not show error before control is touched or dirty', () => {
-        const control = new FormControl('', Validators.required);
+        const control = createControlState({
+            errors: { required: true },
+            invalid: true,
+        });
 
         expect(resolveTranslatedControlError(control, { required: () => 'FORM_ERRORS.REQUIRED' }, translateService)).toBeNull();
     });
 
     it('should translate string validation result with control params', () => {
-        const control = new FormControl('abc', Validators.minLength(MIN_LENGTH));
-        control.markAsTouched();
+        const control = createControlState({
+            errors: {
+                minlength: { requiredLength: MIN_LENGTH },
+            },
+            invalid: true,
+            touched: true,
+        });
         const validationErrors: FdValidationErrors = {
             minlength: () => 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
         };
@@ -47,8 +54,13 @@ describe('resolveTranslatedControlError', () => {
     });
 
     it('should merge params from object validation result', () => {
-        const control = new FormControl('abc', Validators.minLength(MIN_LENGTH));
-        control.markAsDirty();
+        const control = createControlState({
+            dirty: true,
+            errors: {
+                minlength: { requiredLength: MIN_LENGTH },
+            },
+            invalid: true,
+        });
         const validationErrors: FdValidationErrors = {
             minlength: () => ({
                 key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
@@ -65,8 +77,13 @@ describe('resolveTranslatedControlError', () => {
     });
 
     it('should allow callers to suppress dirty-only errors', () => {
-        const control = new FormControl('abc', Validators.minLength(MIN_LENGTH));
-        control.markAsDirty();
+        const control = createControlState({
+            dirty: true,
+            errors: {
+                minlength: { requiredLength: MIN_LENGTH },
+            },
+            invalid: true,
+        });
 
         const result = resolveTranslatedControlError(control, { minlength: () => 'FORM_ERRORS.PASSWORD.MIN_LENGTH' }, translateService, {
             showOnDirty: false,
@@ -76,9 +93,22 @@ describe('resolveTranslatedControlError', () => {
     });
 
     it('should return unknown error when no resolver matches', () => {
-        const control = new FormControl('', Validators.required);
-        control.markAsTouched();
+        const control = createControlState({
+            errors: { required: true },
+            invalid: true,
+            touched: true,
+        });
 
         expect(resolveTranslatedControlError(control, {}, translateService)).toBe('FORM_ERRORS.UNKNOWN:{}');
     });
 });
+
+function createControlState(overrides: Partial<TranslatedControlErrorState> = {}): TranslatedControlErrorState {
+    return {
+        dirty: false,
+        errors: null,
+        invalid: false,
+        touched: false,
+        ...overrides,
+    };
+}

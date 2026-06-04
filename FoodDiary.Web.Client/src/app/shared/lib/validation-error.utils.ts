@@ -1,9 +1,15 @@
-import type { AbstractControl } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
 import type { FdValidationErrorConfig, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
+export type TranslatedControlErrorState = {
+    dirty: boolean;
+    errors: Record<string, unknown> | null;
+    invalid: boolean;
+    touched: boolean;
+};
+
 export function resolveTranslatedControlError(
-    control: AbstractControl | null,
+    control: TranslatedControlErrorState | null,
     validationErrors: FdValidationErrors | null | undefined,
     translateService: TranslateService,
     options: { showOnDirty?: boolean } = {},
@@ -37,7 +43,7 @@ export function resolveTranslatedControlError(
     return translateService.instant('FORM_ERRORS.UNKNOWN');
 }
 
-function shouldShowControlError(control: AbstractControl, showOnDirty: boolean): boolean {
+function shouldShowControlError(control: TranslatedControlErrorState, showOnDirty: boolean): boolean {
     return control.touched || (showOnDirty && control.dirty);
 }
 

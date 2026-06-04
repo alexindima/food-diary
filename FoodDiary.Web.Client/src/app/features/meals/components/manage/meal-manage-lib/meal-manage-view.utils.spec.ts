@@ -1,4 +1,3 @@
-import { FormControl, Validators } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -9,6 +8,7 @@ import {
     formatMealManageAmount,
     formatMealManageMacro,
     getAiSessionTotals,
+    type MealManageControlErrorState,
     resolveMealManageControlError,
 } from './meal-manage-view.utils';
 
@@ -61,22 +61,37 @@ describe('meal manage view totals', () => {
 
 describe('meal manage control errors', () => {
     it('should resolve required and min errors only after touch', () => {
-        const requiredControl = new FormControl<string | null>(null, Validators.required);
+        const requiredControl = createControlState({
+            errors: { required: true },
+            invalid: true,
+        });
 
         expect(resolveMealManageControlError(requiredControl, translateService)).toBeNull();
 
-        requiredControl.markAsTouched();
-        requiredControl.updateValueAndValidity();
+        requiredControl.touched = true;
 
         expect(resolveMealManageControlError(requiredControl, translateService)).toBe('FORM_ERRORS.REQUIRED');
 
-        const minControl = new FormControl(0, Validators.min(1));
-        minControl.markAsTouched();
-        minControl.updateValueAndValidity();
+        const minControl = createControlState({
+            errors: { min: { min: 1 } },
+            invalid: true,
+            touched: true,
+        });
 
         expect(resolveMealManageControlError(minControl, translateService)).toBe('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO:1');
     });
 });
+
+function createControlState(overrides: Partial<MealManageControlErrorState> = {}): MealManageControlErrorState {
+    const state: MealManageControlErrorState = {
+        errors: null,
+        getError: errorCode => state.errors?.[errorCode] ?? null,
+        invalid: false,
+        touched: false,
+        ...overrides,
+    };
+    return state;
+}
 
 function createAiItem(values: {
     calories: number;

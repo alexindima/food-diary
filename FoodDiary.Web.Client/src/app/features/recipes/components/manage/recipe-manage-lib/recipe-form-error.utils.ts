@@ -1,12 +1,16 @@
-import type { AbstractControl } from '@angular/forms';
-
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
+
+export type RecipeControlErrorState = {
+    dirty: boolean;
+    errors: Record<string, unknown> | null;
+    touched: boolean;
+};
 
 type InstantTranslator = {
     instant: (key: string, interpolateParams?: object) => string;
 };
 
-export function resolveRecipeControlError(control: AbstractControl | null, translateService: InstantTranslator): string | null {
+export function resolveRecipeControlError(control: RecipeControlErrorState | null, translateService: InstantTranslator): string | null {
     if (control === null) {
         return null;
     }

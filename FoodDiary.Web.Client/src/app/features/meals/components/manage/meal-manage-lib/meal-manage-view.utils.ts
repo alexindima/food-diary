@@ -1,4 +1,3 @@
-import type { AbstractControl } from '@angular/forms';
 import type { TranslateService } from '@ngx-translate/core';
 
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
@@ -6,6 +5,13 @@ import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '
 import type { NutritionTotals } from './meal-manage.types';
 
 const FRACTION_EPSILON = 0.01;
+
+export type MealManageControlErrorState = {
+    errors: Record<string, unknown> | null;
+    getError: (errorCode: string) => unknown;
+    invalid: boolean;
+    touched: boolean;
+};
 
 const AI_UNIT_TRANSLATION_KEYS: Record<string, string> = {
     g: 'GENERAL.UNITS.G',
@@ -75,7 +81,7 @@ export function getAiSessionTotals(session: ConsumptionAiSessionManageDto): Nutr
 }
 
 export function resolveMealManageControlError(
-    control: AbstractControl | null,
+    control: MealManageControlErrorState | null,
     translateService: TranslateService,
     minFallback = 0,
 ): string | null {
