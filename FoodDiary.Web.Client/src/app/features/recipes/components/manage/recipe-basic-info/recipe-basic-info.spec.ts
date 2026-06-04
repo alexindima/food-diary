@@ -1,9 +1,12 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { form, required } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { RecipeVisibility } from '../../../models/recipe.data';
-import { createRecipeForm } from '../recipe-manage-lib/recipe-manage-form.mapper';
+import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import { createRecipeFormValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeBasicInfoComponent } from './recipe-basic-info';
 
 describe('RecipeBasicInfoComponent', () => {
@@ -17,10 +20,9 @@ describe('RecipeBasicInfoComponent', () => {
     });
 
     it('resolves field errors from provided form group', () => {
-        const { component, form, fixture } = setupComponent();
-        form.controls.name.markAsTouched();
-        form.controls.name.setValue('');
-        form.controls.name.updateValueAndValidity();
+        const { component, recipeForm, fixture } = setupComponent();
+        recipeForm.name().value.set('');
+        recipeForm.name().markAsTouched();
         fixture.detectChanges();
 
         expect(component['fieldErrors']().name).toBe('FORM_ERRORS.REQUIRED');
@@ -30,16 +32,22 @@ describe('RecipeBasicInfoComponent', () => {
 function setupComponent(): {
     component: RecipeBasicInfoComponent;
     fixture: ComponentFixture<RecipeBasicInfoComponent>;
-    form: ReturnType<typeof createRecipeForm>;
+    formModel: ReturnType<typeof signal<RecipeFormValues>>;
+    recipeForm: ReturnType<typeof form<RecipeFormValues>>;
 } {
     TestBed.configureTestingModule({
         imports: [RecipeBasicInfoComponent, TranslateModule.forRoot()],
     });
 
     const fixture = TestBed.createComponent(RecipeBasicInfoComponent);
-    const form = createRecipeForm();
-    fixture.componentRef.setInput('formGroup', form);
+    const formModel = signal(createRecipeFormValue());
+    const recipeForm = TestBed.runInInjectionContext(() =>
+        form(formModel, path => {
+            required(path.name);
+        }),
+    );
+    fixture.componentRef.setInput('form', recipeForm);
     fixture.detectChanges();
 
-    return { component: fixture.componentInstance, fixture, form };
+    return { component: fixture.componentInstance, fixture, formModel, recipeForm };
 }

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { form, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
@@ -14,6 +15,7 @@ import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
     createRecipeForm,
+    createRecipeFormValue,
     hasNoRecipeNutritionTotals,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionFormManager } from '../recipe-manage-lib/recipe-nutrition-form.manager';
@@ -51,7 +53,17 @@ export class RecipeManageComponent {
     protected globalError = this.recipeManageFacade.globalError;
     protected isSubmitting = this.recipeManageFacade.isSubmitting;
 
-    protected recipeForm: FormGroup<RecipeFormData>;
+    protected recipeForm: FormGroup<RecipeFormData> = createRecipeForm();
+    protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue());
+    protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
+        required(path.name);
+        min(path.prepTime, 0);
+        required(path.cookTime);
+        min(path.cookTime, 1);
+        required(path.servings);
+        min(path.servings, 1);
+        required(path.visibility);
+    });
     protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;
 
@@ -69,7 +81,6 @@ export class RecipeManageComponent {
     private isFormReady = true;
 
     public constructor() {
-        this.recipeForm = createRecipeForm();
         this.stepFormManager = new RecipeStepFormManager(this.recipeForm.controls.steps, () => ({
             selectIngredient: this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT'),
             unknownProduct: this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
@@ -89,7 +100,9 @@ export class RecipeManageComponent {
         this.nutritionMode = this.nutritionFormManager.nutritionMode;
 
         this.addStep();
+        this.syncSignalManagedValuesToLegacyForm();
         this.setupFormValueChangeTracking();
+        this.watchSignalFormModelChanges();
         this.nutritionFormManager.initialize();
 
         this.recipeForm.controls.calculateNutritionAutomatically.valueChanges.pipe(takeUntilDestroyed()).subscribe(isAuto => {
@@ -171,13 +184,15 @@ export class RecipeManageComponent {
     // -- Form submission --
 
     protected onSubmit(): void {
+        this.recipeSignalForm().markAsTouched();
+        this.syncSignalManagedValuesToLegacyForm();
         this.markFormGroupTouched(this.recipeForm);
 
         if (this.nutritionFormManager.hasMacrosError()) {
             return;
         }
 
-        if (!this.recipeForm.valid) {
+        if (this.recipeSignalForm().invalid() || !this.recipeForm.valid) {
             this.recipeManageFacade.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
@@ -222,7 +237,9 @@ export class RecipeManageComponent {
 
     private populateForm(recipeData: Recipe): void {
         this.isFormReady = false;
-        this.recipeForm.patchValue(this.buildRecipeFormPatchValue(recipeData));
+        const formPatchValue = this.buildRecipeFormPatchValue(recipeData);
+        this.recipeForm.patchValue(formPatchValue);
+        this.patchRecipeFormModel(formPatchValue);
 
         this.stepFormManager.resetSteps();
         this.stepFormManager.populateRecipeSteps(recipeData);
@@ -264,10 +281,64 @@ export class RecipeManageComponent {
         });
     }
 
+    private watchSignalFormModelChanges(): void {
+        effect(() => {
+            const value = this.pickSignalManagedFormValue(this.recipeFormModel());
+
+            untracked(() => {
+                if (!this.isFormReady) {
+                    return;
+                }
+
+                this.recipeForm.patchValue(value, { emitEvent: false });
+                this.nutritionFormManager.updateSummaryFromForm();
+            });
+        });
+    }
+
+    private syncSignalManagedValuesToLegacyForm(): void {
+        this.recipeForm.patchValue(this.pickSignalManagedFormValue(this.recipeFormModel()), { emitEvent: false });
+    }
+
+    private patchRecipeFormModel(value: Partial<RecipeFormValues>): void {
+        this.recipeFormModel.update(current => ({
+            ...current,
+            ...this.pickSignalManagedFormValue({
+                ...current,
+                ...value,
+            }),
+        }));
+    }
+
+    private pickSignalManagedFormValue(value: RecipeFormValues): Pick<RecipeFormValues, RecipeSignalManagedField> {
+        return {
+            name: value.name,
+            description: value.description,
+            comment: value.comment,
+            category: value.category,
+            imageUrl: value.imageUrl,
+            prepTime: value.prepTime,
+            cookTime: value.cookTime,
+            servings: value.servings,
+            visibility: value.visibility,
+        };
+    }
+
     protected get nutritionScaleMode(): NutritionScaleMode {
         return this.nutritionFormManager.nutritionScaleMode;
     }
 }
+
+type RecipeSignalManagedField =
+    | 'name'
+    | 'description'
+    | 'comment'
+    | 'category'
+    | 'imageUrl'
+    | 'prepTime'
+    | 'cookTime'
+    | 'servings'
+    | 'visibility';
 
 type RecipeManageHeaderState = {
     titleKey: string;

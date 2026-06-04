@@ -16,7 +16,7 @@
 
         <div class="recipe-manage__grid fd-grid fd-gap-lg">
             <div class="recipe-manage__column recipe-manage__column--primary fd-stack">
-                <fd-recipe-basic-info [formGroup]="recipeForm" />
+                <fd-recipe-basic-info [form]="recipeSignalForm" />
 
                 <fd-recipe-steps-list
                     [stepsFormArray]="steps"
@@ -57,7 +57,7 @@
                                 appearance="brand-action"
                                 icon="save"
                                 [fullWidth]="true"
-                                [disabled]="recipeForm.invalid || isSubmitting()"
+                                [disabled]="recipeSignalForm().invalid() || recipeForm.invalid || isSubmitting()"
                                 [loading]="isSubmitting()"
                             >
                                 {{ manageHeaderState().submitLabelKey | translate }}

@@ -55,6 +55,10 @@ export function createRecipeForm(): FormGroup<RecipeFormData> {
     });
 }
 
+export function createRecipeFormValue(): RecipeFormValues {
+    return createRecipeForm().getRawValue();
+}
+
 export function createRecipeStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
     const ingredientValues =
         step !== undefined && step.ingredients.length > 0

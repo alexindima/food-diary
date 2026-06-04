@@ -119,7 +119,7 @@ describe('RecipeManageComponent submission', () => {
         const { component, facade, fixture } = await setupComponentAsync();
         fixture.componentRef.setInput('recipe', createRecipe());
         fixture.detectChanges();
-        component['recipeForm'].controls.name.setValue(UPDATED_RECIPE_NAME);
+        patchRecipeBasicValues(component, { name: UPDATED_RECIPE_NAME });
         component['steps'].at(0).controls.ingredients.at(0).patchValue({
             food: createProduct(),
             foodName: 'Product',
@@ -305,7 +305,7 @@ function createRecipeManageFacadeMock(overrides: Partial<RecipeManageFacadeMock>
 }
 
 function patchValidRecipeBase(component: RecipeManageComponent): void {
-    component['recipeForm'].patchValue({
+    patchRecipeBasicValues(component, {
         name: 'Manual recipe',
         cookTime: DEFAULT_COOK_TIME,
         servings: DEFAULT_SERVINGS,
@@ -318,6 +318,17 @@ function patchValidRecipeBase(component: RecipeManageComponent): void {
         foodName: 'Product',
         amount: PRODUCT_DEFAULT_AMOUNT,
     });
+}
+
+function patchRecipeBasicValues(
+    component: RecipeManageComponent,
+    value: Partial<{ name: string; cookTime: number; servings: number }>,
+): void {
+    component['recipeFormModel'].update(current => ({
+        ...current,
+        ...value,
+    }));
+    component['recipeForm'].patchValue(value);
 }
 
 function patchValidManualRecipe(component: RecipeManageComponent): void {
