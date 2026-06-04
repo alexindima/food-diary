@@ -9,7 +9,7 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 - Baseline date: 2026-06-04.
 - Migrated Signal Forms: 51 forms.
 - Signal Forms files: 121.
-- Remaining legacy Reactive Forms surface: 11 files.
+- Remaining legacy Reactive Forms surface: 9 files.
 
 Tracker patterns:
 
@@ -174,6 +174,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.spec.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts`
 - `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-nutrition-form.manager.ts`
+- `FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-step-form.manager.ts`
 
 ## Next Candidates
 
@@ -213,5 +215,7 @@ Tracker patterns:
 - `fd-ui-form-error` now accepts a minimal structural control state, and validator specs use plain control doubles instead of Angular `FormControl`/`FormGroup`.
 - Recipe manage facade now uses value-level and structural nutrition/selection contracts; the root recipe adapter still owns the legacy steps `FormArray`.
 - Recipe step card now uses explicit `controlValue` model bindings instead of `ReactiveFormsModule` directives; `fd-ui-input`, `fd-ui-textarea`, and `fd-image-upload-field` keep CVA compatibility while exposing neutral controlled-value APIs.
+- Recipe nutrition manager now depends on structural form operations instead of `FormGroup`/`FormControl` types; the root recipe adapter still supplies the legacy form instance.
+- Recipe step manager now depends on structural step-array operations instead of `FormArray`/`FormGroup` types; the root recipe adapter still owns the concrete legacy array.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

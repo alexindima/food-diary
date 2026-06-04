@@ -1,14 +1,38 @@
 import { signal } from '@angular/core';
-import { type FormControl, type FormGroup, Validators } from '@angular/forms';
+import { type ValidatorFn, Validators } from '@angular/forms';
 
 import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
 import type { NutrientData } from '../../../../../shared/models/charts.data';
-import type { RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
+import type { RecipeNutritionSummary, RecipeStepsNutritionState } from '../../../lib/recipe-manage.facade';
 import type { Recipe } from '../../../models/recipe.data';
-import type { NutritionMode, NutritionScaleMode, RecipeFormData, RecipeFormValues } from './recipe-manage.types';
+import type { NutritionMode, NutritionScaleMode, RecipeFormValues } from './recipe-manage.types';
+
+type RecipeNutritionControl<T> = {
+    dirty: boolean;
+    touched: boolean;
+    value: T;
+    setValue: (value: T) => void;
+    setValidators: (validators: ValidatorFn[]) => void;
+    updateValueAndValidity: (options?: { emitEvent?: boolean }) => void;
+};
+
+type RecipeNutritionFormState = {
+    controls: {
+        calculateNutritionAutomatically: RecipeNutritionControl<boolean>;
+        manualAlcohol: RecipeNutritionControl<number | null>;
+        manualCalories: RecipeNutritionControl<number | null>;
+        manualCarbs: RecipeNutritionControl<number | null>;
+        manualFats: RecipeNutritionControl<number | null>;
+        manualFiber: RecipeNutritionControl<number | null>;
+        manualProteins: RecipeNutritionControl<number | null>;
+        servings: RecipeNutritionControl<number>;
+        steps: RecipeStepsNutritionState;
+    };
+    patchValue: (value: Partial<RecipeFormValues>, options?: { emitEvent?: boolean }) => void;
+};
 
 export type RecipeNutritionFormOperations = {
-    calculateAutoSummary: (steps: FormGroup<RecipeFormData>['controls']['steps']) => RecipeNutritionSummary;
+    calculateAutoSummary: (steps: RecipeStepsNutritionState) => RecipeNutritionSummary;
     fromRecipeTotal: (value: number | null | undefined, scaleMode: NutritionScaleMode, servings: number) => number;
     getSummaryFromRecipe: (recipeData: Recipe | null, fallback: RecipeNutritionSummary) => RecipeNutritionSummary;
     roundNutritionValue: (value: number) => number;
@@ -29,7 +53,7 @@ export class RecipeNutritionFormManager {
     public nutritionScaleMode: NutritionScaleMode = 'recipe';
 
     public constructor(
-        private readonly form: FormGroup<RecipeFormData>,
+        private readonly form: RecipeNutritionFormState,
         private readonly operations: RecipeNutritionFormOperations,
     ) {}
 
@@ -191,7 +215,7 @@ export class RecipeNutritionFormManager {
         this.form.patchValue(patch, { emitEvent: false });
     }
 
-    private getOptionalManualNutritionControls(): Array<FormControl<number | null>> {
+    private getOptionalManualNutritionControls(): Array<RecipeNutritionControl<number | null>> {
         return [
             this.form.controls.manualProteins,
             this.form.controls.manualFats,

@@ -1,13 +1,20 @@
-import type { FormArray, FormGroup } from '@angular/forms';
-
 import type { Recipe } from '../../../models/recipe.data';
-import type { IngredientFormData, StepFormData, StepFormValues } from './recipe-manage.types';
+import type { StepFormValues } from './recipe-manage.types';
 import {
     createRecipeIngredientGroup,
     createRecipeStepGroup,
     mapRecipeStepToFormValue,
     type RecipeIngredientMappingLabels,
 } from './recipe-manage-form.mapper';
+
+type RecipeStepGroup = ReturnType<typeof createRecipeStepGroup>;
+type RecipeIngredientGroup = ReturnType<typeof createRecipeIngredientGroup>;
+type RecipeStepsArray = {
+    length: number;
+    at: (index: number) => RecipeStepGroup;
+    push: (step: RecipeStepGroup) => void;
+    removeAt: (index: number) => void;
+};
 
 export type RecipeStepIngredientIndex = {
     stepIndex: number;
@@ -18,7 +25,7 @@ export class RecipeStepFormManager {
     public readonly expandedSteps = new Set<number>();
 
     public constructor(
-        private readonly steps: FormArray<FormGroup<StepFormData>>,
+        private readonly steps: RecipeStepsArray,
         private readonly resolveLabels: () => RecipeIngredientMappingLabels,
     ) {}
 
@@ -48,7 +55,7 @@ export class RecipeStepFormManager {
         this.steps.at(stepIndex).controls.ingredients.removeAt(ingredientIndex);
     }
 
-    public getIngredientGroup({ stepIndex, ingredientIndex }: RecipeStepIngredientIndex): FormGroup<IngredientFormData> {
+    public getIngredientGroup({ stepIndex, ingredientIndex }: RecipeStepIngredientIndex): RecipeIngredientGroup {
         return this.steps.at(stepIndex).controls.ingredients.at(ingredientIndex);
     }
 
