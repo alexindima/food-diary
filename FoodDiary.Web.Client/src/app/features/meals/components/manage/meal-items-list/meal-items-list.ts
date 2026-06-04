@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FormArray, type FormGroup, ReactiveFormsModule } from '@angular/forms';
+import type { FormArray, FormGroup } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -23,15 +23,7 @@ import {
     templateUrl: './meal-items-list.html',
     styleUrls: ['../meal-manage-form.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ReactiveFormsModule,
-        TranslatePipe,
-        FdUiHintDirective,
-        FdUiCardComponent,
-        FdUiButtonComponent,
-        FdUiFormErrorComponent,
-        FdUiIconComponent,
-    ],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiCardComponent, FdUiButtonComponent, FdUiFormErrorComponent, FdUiIconComponent],
 })
 export class MealItemsListComponent {
     private readonly translateService = inject(TranslateService);
@@ -50,14 +42,13 @@ export class MealItemsListComponent {
         this.activeLang();
 
         return this.formArray()
-            .controls.map((group, index) => ({ group, index }))
+            .controls.map((_group, index) => ({ index }))
             .filter(({ index }) => this.hasManualItem(index))
-            .map(({ group, index }) => {
+            .map(({ index }) => {
                 const totals = this.getManualItemTotals(index);
 
                 return {
                     index,
-                    group,
                     imageUrl: this.getManualItemImageUrl(index),
                     icon: this.getItemSourceIcon(index),
                     sourceName: this.getItemSourceName(index),
@@ -238,7 +229,6 @@ export class MealItemsListComponent {
 
 type ManualItemRowViewModel = {
     index: number;
-    group: FormGroup<ConsumptionItemFormData>;
     imageUrl: string | null;
     icon: string;
     sourceName: string;

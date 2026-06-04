@@ -9,7 +9,7 @@
         @if (manualItemRows().length === 0 && !hasExternalItems()) {
         <p class="consumption-manage__items-empty fd-ui-body-sm">{{ 'CONSUMPTION_MANAGE.ITEMS_EMPTY' | translate }}</p>
         } @for (item of manualItemRows(); track item.index) {
-        <div class="consumption-manage__ai-summary consumption-manage__manual-summary fd-stack fd-gap-md" [formGroup]="item.group">
+        <div class="consumption-manage__ai-summary consumption-manage__manual-summary fd-stack fd-gap-md">
             <div class="consumption-manage__ai-summary-header fd-row fd-gap-sm fd-justify-between fd-align-start">
                 <div class="consumption-manage__ai-summary-image fd-center">
                     @if (item.imageUrl) {
