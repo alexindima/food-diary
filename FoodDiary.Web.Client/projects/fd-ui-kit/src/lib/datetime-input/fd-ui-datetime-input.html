@@ -12,7 +12,7 @@
             <div class="fd-ui-datetime-input__segment fd-ui-datetime-input__segment--date">
                 <fd-ui-date-input
                     [id]="`${id()}-date`"
-                    [formControl]="dateControl"
+                    [formField]="dateForm"
                     [placeholder]="shouldFloatLabel() ? '' : (placeholder() ?? '')"
                     [size]="size()"
                 />

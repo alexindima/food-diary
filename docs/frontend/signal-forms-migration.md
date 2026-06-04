@@ -7,9 +7,9 @@ The official Angular docs currently still mark most Signal Forms APIs as experim
 ## Current Status
 
 - Baseline date: 2026-06-04.
-- Migrated Signal Forms: 42 forms.
-- Signal Forms files: 96.
-- Remaining legacy Reactive Forms surface: 58 files.
+- Migrated Signal Forms: 43 forms.
+- Signal Forms files: 101.
+- Remaining legacy Reactive Forms surface: 56 files.
 
 Tracker patterns:
 
@@ -63,6 +63,8 @@ Tracker patterns:
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.html`
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.ts`
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.html`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts`
+- `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.html`
 - `FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.ts`
 - `FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html`
 - `FoodDiary.Web.Client/src/app/features/statistics/lib/statistics.facade.ts`
@@ -151,5 +153,6 @@ Tracker patterns:
 - Prefer declarative `disabled(path.field, { when: () => condition })` for disabled Signal Forms fields.
 - `fd-ui-date-input` is adapted for Signal Forms CVA binding; keep internal control state away from public/protected `value` fields so Angular does not treat CVA components as Signal Forms custom controls accidentally.
 - `fd-ui-date-range-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
+- `fd-ui-datetime-input` is adapted for Signal Forms internally while keeping CVA compatibility for legacy consumers.
 - Keep custom array-style checkbox state explicit until a stable local pattern exists; `[formField]` does not cover multiple checkbox arrays directly.
 - Update this file after each batch with migrated and remaining counts.

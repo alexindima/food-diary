@@ -1,7 +1,7 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, effect, ElementRef, inject, input, signal } from '@angular/core';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { disabled as disabledRule, form, FormField } from '@angular/forms/signals';
 
 import { fdUiFormatDateInputValue, fdUiFormatTimeInputValue, fdUiPadDatePart, fdUiParseLocalDateTime } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
@@ -19,7 +19,7 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-datetime-input',
-    imports: [CommonModule, ReactiveFormsModule, FdUiDateInputComponent, FdUiIconComponent],
+    imports: [CommonModule, FormField, FdUiDateInputComponent, FdUiIconComponent],
     templateUrl: './fd-ui-datetime-input.html',
     styleUrls: ['./fd-ui-datetime-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,8 +39,10 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
 
-    protected readonly dateControl = new FormControl<string | null>(null);
-    protected readonly dateValue = signal<string | null>(null);
+    protected readonly dateModel = signal<string | null>(null);
+    protected readonly dateForm = form(this.dateModel, path => {
+        disabledRule(path, { when: () => this.disabled() });
+    });
     protected readonly timeValue = signal('');
     protected readonly disabled = signal(false);
     protected readonly isFocused = signal(false);
@@ -51,51 +53,57 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         return error !== null && error !== undefined && error.trim().length > 0;
     });
     protected readonly shouldFloatLabel = computed(
-        () => this.isFocused() || this.dateValue() !== null || this.timeValue().trim().length > 0,
+        () => this.isFocused() || this.dateModel() !== null || this.timeValue().trim().length > 0,
     );
     protected readonly hostClass = computed(
         () =>
             `fd-ui-datetime-input ${this.sizeClass()}${this.hasError() ? ' fd-ui-datetime-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-datetime-input--floating' : ''}`,
     );
 
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly cdr = inject(ChangeDetectorRef);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly document = inject(DOCUMENT);
 
     private onChange: (value: string | null) => void = () => {};
     private onTouched: () => void = () => {};
     private lastValidTime = DEFAULT_TIME_VALUE;
+    private skippedModelUpdate: { value: string | null } | null = null;
 
     public constructor() {
-        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-            this.dateValue.set(value);
+        effect(() => {
+            const value = this.dateModel();
+            if (value === this.skippedModelUpdate?.value) {
+                this.skippedModelUpdate = null;
+                return;
+            }
+
             this.emitValue();
         });
     }
 
     public writeValue(value: string | Date | null): void {
         if (value === null || value === '') {
-            this.dateControl.setValue(null, { emitEvent: false });
-            this.dateValue.set(null);
+            this.setDateValue(null);
             this.timeValue.set('');
             this.lastValidTime = DEFAULT_TIME_VALUE;
+            this.cdr.markForCheck();
             return;
         }
 
         const parsed = fdUiParseLocalDateTime(value);
         if (parsed === null) {
-            this.dateControl.setValue(null, { emitEvent: false });
-            this.dateValue.set(null);
+            this.setDateValue(null);
             this.timeValue.set('');
+            this.cdr.markForCheck();
             return;
         }
 
         const isoDate = fdUiFormatDateInputValue(parsed);
 
-        this.dateControl.setValue(isoDate, { emitEvent: false });
-        this.dateValue.set(isoDate);
+        this.setDateValue(isoDate);
         this.timeValue.set(fdUiFormatTimeInputValue(parsed));
         this.lastValidTime = this.timeValue();
+        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: string | null) => void): void {
@@ -108,11 +116,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled.set(isDisabled);
-        if (isDisabled) {
-            this.dateControl.disable({ emitEvent: false });
-        } else {
-            this.dateControl.enable({ emitEvent: false });
-        }
+        this.cdr.markForCheck();
     }
 
     protected onTimeInput(value: string): void {
@@ -173,7 +177,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     }
 
     private emitValue(): void {
-        const date = this.dateControl.value;
+        const date = this.dateModel();
         if (date === null || date.length === 0) {
             this.onChange(null);
             return;
@@ -201,5 +205,10 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         }
 
         return { hours, minutes };
+    }
+
+    private setDateValue(value: string | null): void {
+        this.skippedModelUpdate = { value };
+        this.dateModel.set(value);
     }
 }
