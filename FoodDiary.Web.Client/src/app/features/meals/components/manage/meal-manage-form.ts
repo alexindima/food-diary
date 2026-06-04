@@ -12,7 +12,6 @@ import {
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormGroup } from '@angular/forms';
 import { type FieldTree, form, required, type ValidationError } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -44,9 +43,7 @@ import type { MealItemsListItemState } from './meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
 import type {
     CalorieMismatchWarning,
-    ConsumptionFormData,
     ConsumptionFormValues,
-    ConsumptionItemFormData,
     ConsumptionItemFormValues,
     MacroBarState,
     MealNutritionSummaryState,
@@ -184,7 +181,7 @@ export class MealManageFormComponent {
             : null;
     });
 
-    protected consumptionForm: FormGroup<ConsumptionFormData>;
+    protected consumptionForm: MealLegacyForm;
     protected mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
@@ -217,7 +214,7 @@ export class MealManageFormComponent {
         this.watchFormChanges();
     }
 
-    private createConsumptionForm(): FormGroup<ConsumptionFormData> {
+    private createConsumptionForm(): MealLegacyForm {
         return createMealManageForm({
             createItem: () => this.mealManageFacade.createConsumptionItem(),
             createItemsValidator: () => this.mealManageFacade.createItemsValidator(() => this.aiSessions()),
@@ -345,7 +342,7 @@ export class MealManageFormComponent {
         await this.navigationService.navigateToConsumptionListAsync();
     }
 
-    protected get items(): FormArray<FormGroup<ConsumptionItemFormData>> {
+    protected get items(): MealLegacyItemsControl {
         return this.consumptionForm.controls.items;
     }
 
@@ -520,7 +517,7 @@ export class MealManageFormComponent {
         this.syncSignalManagedValuesToLegacyForm(this.consumptionFormModel());
         this.consumptionSignalForm().markAsTouched();
         this.updateGeneralFieldErrors();
-        this.markFormGroupTouched(this.consumptionForm);
+        this.markControlTreeTouched(this.consumptionForm);
         this.bumpItemsRenderVersion();
 
         if (this.macrosError() !== null) {
@@ -583,17 +580,31 @@ export class MealManageFormComponent {
         this.selectedMealType.set(mealType);
     }
 
-    private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
-        Object.values(formGroup.controls).forEach(control => {
-            if (control instanceof FormGroup || control instanceof FormArray) {
-                this.markFormGroupTouched(control);
-            } else {
-                control.markAllAsTouched();
-                control.updateValueAndValidity();
-            }
-        });
+    private markControlTreeTouched(control: MealLegacyMarkableControl): void {
+        const children = this.getControlChildren(control);
+        if (children.length > 0) {
+            children.forEach(child => {
+                this.markControlTreeTouched(child);
+            });
+            control.updateValueAndValidity();
+            control.markAllAsTouched();
+            return;
+        }
 
-        formGroup.markAllAsTouched();
+        control.markAllAsTouched();
+        control.updateValueAndValidity();
+    }
+
+    private getControlChildren(control: MealLegacyMarkableControl): MealLegacyMarkableControl[] {
+        if (!this.hasChildControls(control)) {
+            return [];
+        }
+
+        return Array.isArray(control.controls) ? control.controls : Object.values(control.controls);
+    }
+
+    private hasChildControls(control: MealLegacyMarkableControl): control is MealLegacyControlContainer {
+        return 'controls' in control;
     }
 
     private populateForm(consumption: Consumption): void {
@@ -899,3 +910,13 @@ export class MealManageFormComponent {
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
 }
+
+type MealLegacyForm = ReturnType<typeof createMealManageForm>;
+type MealLegacyItemsControl = MealLegacyForm['controls']['items'];
+type MealLegacyMarkableControl = {
+    markAllAsTouched: () => void;
+    updateValueAndValidity: () => void;
+};
+type MealLegacyControlContainer = MealLegacyMarkableControl & {
+    controls: MealLegacyMarkableControl[] | Record<string, MealLegacyMarkableControl>;
+};
