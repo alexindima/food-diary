@@ -106,6 +106,34 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWaistSummariesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetWaistSummariesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("waist-summary-missing-user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetWaistSummariesQuery(null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWaistSummariesQueryHandler_WithNonPositiveQuantization_ReturnsValidationError() {
+        var handler = new GetWaistSummariesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("waist-summary-invalid-step@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetWaistSummariesQueryHandler_WithDateOnlyValues_PreservesRequestedCalendarDates() {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist-summary@example.com", "hash");
@@ -120,6 +148,29 @@ public class WaistEntriesFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateFrom);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateTo);
+    }
+
+    [Fact]
+    public async Task GetWaistSummariesQueryHandler_WhenFinalBucketIsShorter_ReturnsRoundedAverage() {
+        var repository = new InMemoryWaistEntryRepository();
+        var user = User.Create("waist-summary-average@example.com", "hash");
+        await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 81.23));
+        await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 82.78));
+        var handler = new GetWaistSummariesQueryHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetWaistSummariesQuery(
+                user.Id.Value,
+                new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc),
+                7),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var summary = Assert.Single(result.Value);
+        Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), summary.StartDate);
+        Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), summary.EndDate);
+        Assert.Equal(82, summary.AverageCircumference);
     }
 
     [Fact]
@@ -231,6 +282,52 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWaistEntriesQueryHandler_WithEntries_ReturnsMappedEntries() {
+        var repository = new InMemoryWaistEntryRepository();
+        var user = User.Create("waist-list-mapped@example.com", "hash");
+        var older = await repository.AddAsync(WaistEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+            82));
+        var newer = await repository.AddAsync(WaistEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc),
+            81));
+        await repository.AddAsync(WaistEntry.Create(UserId.New(), newer.Date.AddDays(1), 79));
+        var handler = new GetWaistEntriesQueryHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetWaistEntriesQuery(user.Id.Value, null, null, 10, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Collection(
+            result.Value,
+            entry => {
+                Assert.Equal(newer.Id.Value, entry.Id);
+                Assert.Equal(81, entry.Circumference);
+            },
+            entry => {
+                Assert.Equal(older.Id.Value, entry.Id);
+                Assert.Equal(82, entry.Circumference);
+            });
+    }
+
+    [Fact]
+    public async Task GetWaistEntriesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetWaistEntriesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("waist-list-missing-user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetWaistEntriesQuery(null, null, null, 10, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
         var handler = new UpdateWaistEntryCommandHandler(
             new InMemoryWaistEntryRepository(),
@@ -243,6 +340,73 @@ public class WaistEntriesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WaistEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateWaistEntryCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new UpdateWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("waist-update-missing-user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new UpdateWaistEntryCommand(null, WaistEntryId.New().Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateWaistEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("waist-update-deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateWaistEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+        var user = User.Create("waist-update-missing-entry@example.com", "hash");
+        var handler = new UpdateWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("WaistEntry.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateWaistEntryCommandHandler_WhenAnotherEntryExistsForDate_ReturnsAlreadyExists() {
+        var user = User.Create("waist-update-duplicate@example.com", "hash");
+        var repository = new InMemoryWaistEntryRepository();
+        var entry = await repository.AddAsync(WaistEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 26, 0, 0, 0, DateTimeKind.Utc),
+            82));
+        var duplicate = await repository.AddAsync(WaistEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
+            81));
+        var handler = new UpdateWaistEntryCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateWaistEntryCommand(user.Id.Value, entry.Id.Value, duplicate.Date, 80),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("WaistEntry.AlreadyExists", result.Error.Code);
     }
 
     [Fact]

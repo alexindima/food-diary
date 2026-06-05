@@ -105,6 +105,25 @@ public class ImagesFeatureTests {
         Assert.Equal("Image.StorageError", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData("invalid", "Image.InvalidData")]
+    [InlineData("not_found", "Image.NotFound")]
+    [InlineData("in_use", "Image.InUse")]
+    [InlineData("storage_error", "Image.StorageError")]
+    [InlineData("unexpected", "Image.InvalidData")]
+    public async Task DeleteImageAssetCommandHandler_WhenCleanupFails_MapsErrorCode(string cleanupErrorCode, string expectedErrorCode) {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/a.jpg", "https://cdn/a.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+
+        var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService(cleanupErrorCode));
+        var result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(expectedErrorCode, result.Error.Code);
+    }
+
     [Fact]
     public async Task DeleteImageAssetCommandHandler_WithEmptyAssetId_ReturnsInvalidDataFailure() {
         var handler = new DeleteImageAssetCommandHandler(
@@ -164,6 +183,22 @@ public class ImagesFeatureTests {
         Assert.Equal(1, removed);
         Assert.Null(await repository.GetByIdAsync(removable.Id, CancellationToken.None));
         Assert.NotNull(await repository.GetByIdAsync(inUse.Id, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_CleanupOrphans_WithLocalCutoff_NormalizesToUtc() {
+        var repository = new FakeImageAssetRepository();
+        var service = new ImageAssetCleanupService(
+            repository,
+            new FakeImageStorageService(),
+            NullLogger<ImageAssetCleanupService>.Instance);
+        var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
+
+        var removed = await service.CleanupOrphansAsync(localCutoff, 10, CancellationToken.None);
+
+        Assert.Equal(0, removed);
+        Assert.Equal(localCutoff.ToUniversalTime(), repository.LastUnusedOlderThanUtc);
+        Assert.Equal(DateTimeKind.Utc, repository.LastUnusedOlderThanUtc!.Value.Kind);
     }
 
     [Fact]
@@ -386,6 +421,7 @@ public class ImagesFeatureTests {
         private readonly Dictionary<ImageAssetId, ImageAsset> _assets = [];
         public HashSet<ImageAssetId> InUseIds { get; } = [];
         public int Count => _assets.Count;
+        public DateTime? LastUnusedOlderThanUtc { get; private set; }
 
         public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
             _assets[asset.Id] = asset;
@@ -409,6 +445,7 @@ public class ImagesFeatureTests {
             DateTime olderThanUtc,
             int batchSize,
             CancellationToken cancellationToken = default) {
+            LastUnusedOlderThanUtc = olderThanUtc;
             var result = _assets.Values
                 .Where(a => a.CreatedOnUtc <= olderThanUtc && !InUseIds.Contains(a.Id))
                 .Take(batchSize)

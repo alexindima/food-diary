@@ -70,8 +70,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         var failureMethod = typeof(Result)
             .GetMethod(nameof(Result.Failure), 1, [typeof(Error)]);
 
-        if (failureMethod is null) throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
-        var genericFailureMethod = failureMethod.MakeGenericMethod(valueType);
+        var genericFailureMethod = failureMethod!.MakeGenericMethod(valueType);
         return (TResponse)genericFailureMethod.Invoke(null, [error])!;
     }
 }

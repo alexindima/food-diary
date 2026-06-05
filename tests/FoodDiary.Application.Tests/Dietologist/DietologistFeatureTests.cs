@@ -1880,6 +1880,22 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task GetClientGoals_WhenDietologistHasNoRelationshipWithClient_ReturnsAccessDenied() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var userRepo = new InMemoryUserRepository();
+        userRepo.Seed(CreateUser(dietologistId, "diet-no-relationship@example.com"));
+        userRepo.Seed(CreateUser(clientId, "client-no-relationship@example.com"));
+        var handler = new GetClientGoalsQueryHandler(new InMemoryInvitationRepository(), userRepo);
+
+        var result = await handler.Handle(
+            new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetClientGoals_WhenGoalsDenied_ReturnsFailure() {
         var dietologistId = UserId.New();
         var clientId = UserId.New();

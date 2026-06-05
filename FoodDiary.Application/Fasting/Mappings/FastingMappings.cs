@@ -125,7 +125,6 @@ public static class FastingMappings {
 
     private static FastingOccurrenceKind ResolveOccurrenceKind(FastingProtocol protocol) => ResolvePlanType(protocol) switch {
         FastingPlanType.Intermittent => FastingOccurrenceKind.FastingWindow,
-        FastingPlanType.Cyclic => FastingOccurrenceKind.FastDay,
         _ => FastingOccurrenceKind.FastDay
     };
 

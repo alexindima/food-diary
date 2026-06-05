@@ -231,6 +231,117 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("create-product-deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var repository = new NoopProductRepository();
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateProductCommand(user.Id.Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Null(repository.LastAddedProduct);
+    }
+
+    [Fact]
+    public async Task CreateProductCommandHandler_WithInvalidBaseUnit_ReturnsValidationFailure() {
+        var user = User.Create("create-product-invalid-unit@example.com", "hash");
+        var repository = new NoopProductRepository();
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateProductCommand(user.Id.Value, baseUnit: "Cup"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.LastAddedProduct);
+    }
+
+    [Fact]
+    public async Task CreateProductCommandHandler_WithInvalidVisibility_ReturnsValidationFailure() {
+        var user = User.Create("create-product-invalid-visibility@example.com", "hash");
+        var repository = new NoopProductRepository();
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateProductCommand(user.Id.Value, visibility: "Shared"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.LastAddedProduct);
+    }
+
+    [Fact]
+    public async Task CreateProductCommandHandler_WithUndefinedNumericProductType_ReturnsValidationFailure() {
+        var user = User.Create("create-product-undefined-type@example.com", "hash");
+        var repository = new NoopProductRepository();
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateProductCommand(user.Id.Value, productType: "999"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.LastAddedProduct);
+    }
+
+    [Fact]
+    public async Task DeleteProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new DeleteProductCommandHandler(
+            new NoopProductRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(User.Create("delete-product-invalid-token@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new DeleteProductCommand(null, ProductId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteProductCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("delete-product-deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var repository = new NoopProductRepository();
+        var handler = new DeleteProductCommandHandler(
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteProductCommandHandler_WhenProductMissing_ReturnsNotAccessible() {
+        var user = User.Create("delete-product-missing@example.com", "hash");
+        var repository = new NoopProductRepository();
+        var handler = new DeleteProductCommandHandler(
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Product.NotAccessible", result.Error.Code);
+    }
+
+    [Fact]
     public async Task DeleteProductCommandHandler_WhenCleanupFails_StillDeletesProductAndReturnsSuccess() {
         var userId = UserId.New();
         var assetId = ImageAssetId.New();
@@ -291,6 +402,36 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task GetProductByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetProductByIdQueryHandler(
+            new NoopProductRepository(),
+            new StubUserRepository(User.Create("product-by-id-invalid-token@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetProductByIdQuery(null, ProductId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetProductByIdQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("product-by-id-deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetProductByIdQueryHandler(
+            new NoopProductRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetProductByIdQuery(user.Id.Value, ProductId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task DuplicateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
 
@@ -301,6 +442,30 @@ public class ProductsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DuplicateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
+
+        var result = await handler.Handle(
+            new DuplicateProductCommand(null, ProductId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DuplicateProductCommandHandler_WhenOriginalMissing_ReturnsNotFound() {
+        var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
+
+        var result = await handler.Handle(
+            new DuplicateProductCommand(Guid.NewGuid(), ProductId.New().Value),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Product.NotFound", result.Error.Code);
     }
 
     [Fact]
@@ -1027,6 +1192,104 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task GetProductsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetProductsOverviewQueryHandler(
+            new OverviewProductRepository(),
+            new StubRecentItemRepository([]),
+            new StubFavoriteProductRepository([]));
+
+        var result = await handler.Handle(
+            new GetProductsOverviewQuery(null, 1, 10, null, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetProductsOverviewQueryHandler_WhenNoRecentProducts_ReturnsEmptyRecentItems() {
+        var user = User.Create("overview-empty-recents@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 120,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var recentRepository = new StubRecentItemRepository([]);
+        var handler = new GetProductsOverviewQueryHandler(
+            new OverviewProductRepository(pagedItems: [(product, 1)]),
+            recentRepository,
+            new StubFavoriteProductRepository([]));
+
+        var result = await handler.Handle(
+            new GetProductsOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value.RecentItems);
+        Assert.Equal(1, recentRepository.GetRecentProductsCallCount);
+    }
+
+    [Fact]
+    public async Task GetProductsOverviewQueryHandler_WithProductTypes_FiltersDistinctValidTypes() {
+        var user = User.Create("overview-product-types@example.com", "hash");
+        var dairy = Product.Create(
+            user.Id,
+            name: "Greek Yogurt",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 150,
+            caloriesPerBase: 73,
+            proteinsPerBase: 9.5,
+            fatsPerBase: 2.1,
+            carbsPerBase: 3.8,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private,
+            productType: ProductType.Dairy);
+        var fruit = Product.Create(
+            user.Id,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 120,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private,
+            productType: ProductType.Fruit);
+        var handler = new GetProductsOverviewQueryHandler(
+            new OverviewProductRepository(pagedItems: [(dairy, 3), (fruit, 2)]),
+            new StubRecentItemRepository([]),
+            new StubFavoriteProductRepository([]));
+
+        var result = await handler.Handle(
+            new GetProductsOverviewQuery(
+                user.Id.Value,
+                Page: 1,
+                Limit: 10,
+                Search: null,
+                IncludePublic: true,
+                ProductTypes: ["dairy", "Dairy", "not-a-type"]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var item = Assert.Single(result.Value.AllProducts.Data);
+        Assert.Equal(dairy.Id.Value, item.Id);
+        Assert.Equal(ProductType.Dairy.ToString(), item.ProductType);
+    }
+
+    [Fact]
     public async Task GetRecentProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecentProductsQueryHandler(new StubRecentItemRepository([]), new NoopProductRepository());
 
@@ -1349,6 +1612,33 @@ public class ProductsFeatureTests {
             .GetField("_recipeIngredients", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
             .SetValue(product, recipeIngredients);
     }
+
+    private static CreateProductCommand CreateProductCommand(
+        Guid? userId,
+        string productType = "Other",
+        string baseUnit = "G",
+        string visibility = "Private") =>
+        new(
+            userId,
+            Barcode: null,
+            Name: "Apple",
+            Brand: null,
+            ProductType: productType,
+            Category: null,
+            Description: null,
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            BaseUnit: baseUnit,
+            BaseAmount: 100,
+            DefaultPortionAmount: 100,
+            CaloriesPerBase: 52,
+            ProteinsPerBase: 0.3,
+            FatsPerBase: 0.2,
+            CarbsPerBase: 14,
+            FiberPerBase: 2.4,
+            AlcoholPerBase: 0,
+            Visibility: visibility);
 
     private static UpdateProductCommand CreateUpdateProductCommand(
         Guid? userId,

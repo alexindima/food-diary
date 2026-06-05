@@ -548,6 +548,35 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateRecipeCommandHandler_WithEmptyNestedRecipeId_ReturnsValidationFailure() {
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(
+            repository,
+            new StubUserRepository(User.Create("empty-nested-recipe@example.com", "hash")),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        var result = await handler.Handle(
+            CreateRecipeCommand(
+                UserId.New().Value,
+                steps: [
+                    new RecipeStepInput(
+                        Order: 1,
+                        Description: "Use nested recipe",
+                        Title: null,
+                        ImageUrl: null,
+                        ImageAssetId: null,
+                        Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: Guid.Empty, Amount: 1)])
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
     public async Task CreateRecipeCommandHandler_WithNestedRecipeIngredient_PersistsNestedIngredient() {
         var user = User.Create("nested-create@example.com", "hash");
         var nestedRecipeId = RecipeId.New();
@@ -800,6 +829,23 @@ public class RecipesFeatureTests {
         Assert.Single(repository.LastAddedRecipe.Steps);
         Assert.Equal(2, repository.LastAddedRecipe.Steps.Single().Ingredients.Count);
         Assert.True(result.Value.IsOwnedByCurrentUser);
+    }
+
+    [Fact]
+    public async Task DuplicateRecipeCommandHandler_WithUnorderedSteps_CopiesStepsInStepNumberOrder() {
+        var user = User.Create("duplicate-ordered-steps@example.com", "hash");
+        var original = Recipe.Create(user.Id, "Ordered Recipe", servings: 1);
+        original.AddStep(3, "Third");
+        original.AddStep(1, "First");
+        original.AddStep(2, "Second");
+        var repository = new SingleRecipeRepository(original);
+        var handler = new DuplicateRecipeCommandHandler(repository);
+
+        var result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.LastAddedRecipe);
+        Assert.Equal([1, 2, 3], repository.LastAddedRecipe.Steps.Select(step => step.StepNumber).ToArray());
     }
 
     [Fact]

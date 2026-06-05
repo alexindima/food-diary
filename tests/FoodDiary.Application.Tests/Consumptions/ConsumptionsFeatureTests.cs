@@ -1433,6 +1433,32 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task GetConsumptionsQueryHandler_WithMeals_ReturnsMappedFavoriteFlags() {
+        var user = User.Create("paged-consumptions@example.com", "hash");
+        var lunch = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        lunch.ApplyNutrition(new MealNutritionUpdate(420, 24, 14, 44, 5, 0, true));
+        var dinner = Meal.Create(user.Id, new DateTime(2026, 3, 26, 19, 0, 0, DateTimeKind.Utc), MealType.Dinner);
+        dinner.ApplyNutrition(new MealNutritionUpdate(610, 38, 20, 58, 7, 0, true));
+        var favorite = FavoriteMeal.Create(user.Id, dinner.Id, "Evening favorite");
+        SetFavoriteMealNavigation(favorite, dinner);
+        var handler = new GetConsumptionsQueryHandler(
+            new RecordingMealPageRepository([lunch, dinner], totalItems: 2),
+            new StubUserRepository(user),
+            new StubFavoriteMealRepository([favorite]));
+
+        var result = await handler.Handle(
+            new GetConsumptionsQuery(user.Id.Value, 1, 10, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Data.Count);
+        Assert.False(result.Value.Data.Single(item => item.Id == lunch.Id.Value).IsFavorite);
+        var favoriteMeal = result.Value.Data.Single(item => item.Id == dinner.Id.Value);
+        Assert.True(favoriteMeal.IsFavorite);
+        Assert.Equal(favorite.Id.Value, favoriteMeal.FavoriteMealId);
+    }
+
+    [Fact]
     public async Task GetConsumptionsOverviewQueryHandler_ReturnsFavoritePreviewAndFavoriteFlags() {
         var user = User.Create("overview-consumptions@example.com", "hash");
         var breakfast = Meal.Create(user.Id, new DateTime(2026, 3, 26, 8, 0, 0, DateTimeKind.Utc), MealType.Breakfast);

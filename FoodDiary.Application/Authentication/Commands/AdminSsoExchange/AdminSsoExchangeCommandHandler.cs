@@ -33,9 +33,6 @@ public sealed class AdminSsoExchangeCommandHandler(
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(accessError);
         }
-        if (user is null) {
-            return Result.Failure<AuthenticationModel>(Errors.User.NotFound());
-        }
 
         if (!IsAdmin(user)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoForbidden);

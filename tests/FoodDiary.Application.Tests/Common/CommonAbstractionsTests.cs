@@ -373,6 +373,18 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
+    public async Task ValidationBehavior_ForUnsupportedResultType_Throws() {
+        var validator = new UnsupportedResultCommandValidator();
+        var behavior = new ValidationBehavior<UnsupportedResultCommand, TestResult>([validator]);
+        var command = new UnsupportedResultCommand("");
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            behavior.Handle(command, _ => Task.FromResult(new TestResult(true, Error.None)), CancellationToken.None));
+
+        Assert.Contains(nameof(TestResult), exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void SecurityTokenGenerator_WithInvalidLength_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => SecurityTokenGenerator.GenerateUrlSafeToken(0));
     }
@@ -451,6 +463,9 @@ public class CommonAbstractionsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record NonGenericCommand(string Value) : ICommand<Result>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed record UnsupportedResultCommand(string Value) : ICommand<TestResult>;
 
     [ExcludeFromCodeCoverage]
     private sealed class TestResult(bool isSuccess, Error error) : Result(isSuccess, error);
@@ -555,6 +570,16 @@ public class CommonAbstractionsTests {
     [ExcludeFromCodeCoverage]
     private sealed class NonGenericCommandValidator : AbstractValidator<NonGenericCommand> {
         public NonGenericCommandValidator() {
+            RuleFor(x => x.Value)
+                .NotEmpty()
+                .WithErrorCode("Validation.Required")
+                .WithMessage("value is required");
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class UnsupportedResultCommandValidator : AbstractValidator<UnsupportedResultCommand> {
+        public UnsupportedResultCommandValidator() {
             RuleFor(x => x.Value)
                 .NotEmpty()
                 .WithErrorCode("Validation.Required")

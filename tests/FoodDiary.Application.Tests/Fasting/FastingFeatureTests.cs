@@ -153,6 +153,50 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task StartFasting_WithBlankIntermittentProtocol_ReturnsInvalidProtocol() {
+        var user = CreateUser(UserId.New());
+        var planRepo = new InMemoryFastingPlanRepository();
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
+        var handler = new StartFastingCommandHandler(
+            planRepo,
+            occurrenceRepo,
+            new StubUserRepository(user),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new StartFastingCommand(user.Id.Value, "   ", "Intermittent", null, null, null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidProtocol", result.Error.Code);
+        Assert.Empty(planRepo.StoredPlans);
+        Assert.Empty(occurrenceRepo.StoredOccurrences);
+    }
+
+    [Fact]
+    public async Task StartFasting_WithExplicitIntermittentInvalidProtocol_ReturnsInvalidProtocol() {
+        var user = CreateUser(UserId.New());
+        var planRepo = new InMemoryFastingPlanRepository();
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
+        var handler = new StartFastingCommandHandler(
+            planRepo,
+            occurrenceRepo,
+            new StubUserRepository(user),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new StartFastingCommand(user.Id.Value, "not-a-protocol", "Intermittent", null, null, null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidProtocol", result.Error.Code);
+        Assert.Empty(planRepo.StoredPlans);
+        Assert.Empty(occurrenceRepo.StoredOccurrences);
+    }
+
+    [Fact]
     public async Task StartFasting_WithInvalidPlanType_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
         var planRepo = new InMemoryFastingPlanRepository();
@@ -749,6 +793,24 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task ExtendActiveFasting_WhenOccurrenceHasNoTarget_ReturnsNoActiveSession() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, targetHours: null);
+        var handler = new ExtendActiveFastingCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new InMemoryFastingOccurrenceRepository(current: occurrence),
+            CreateUserRepository(userId),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("NoActiveSession", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task ExtendActiveFasting_WithDeletedUser_ReturnsAccountDeleted() {
         var user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
@@ -943,6 +1005,25 @@ public class FastingFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Reduced fasting hours", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ReduceActiveFastingTarget_WhenOccurrenceHasNoTarget_ReturnsNoActiveSession() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, targetHours: null);
+        var handler = new ReduceActiveFastingTargetCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new InMemoryFastingOccurrenceRepository(current: occurrence),
+            CreateUserRepository(userId),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("NoActiveSession", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1199,6 +1280,26 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task SkipCyclicDay_WhenOccurrenceCannotBeSkipped_ReturnsInvalidCyclicAction() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        occurrence.Complete(FixedNow.AddHours(1));
+        var handler = new SkipCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new PassthroughCurrentFastingOccurrenceRepository(occurrence),
+            CreateUserRepository(userId),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
+        Assert.Contains("cannot be skipped", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task PostponeCyclicDay_WhenActiveFastDay_CreatesEatDayOccurrence() {
         var userId = UserId.New();
         var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
@@ -1384,6 +1485,45 @@ public class FastingFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task PostponeCyclicDay_WhenOccurrenceCannotBePostponed_ReturnsInvalidCyclicAction() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        occurrence.Complete(FixedNow.AddHours(1));
+        var handler = new PostponeCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new PassthroughCurrentFastingOccurrenceRepository(occurrence),
+            CreateUserRepository(userId),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
+        Assert.Contains("cannot be postponed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task PostponeCyclicDay_WithUnspecifiedClock_ReturnsLaterDateRequired() {
+        var userId = UserId.New();
+        var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        var handler = new PostponeCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new InMemoryFastingOccurrenceRepository(current: occurrence),
+            CreateUserRepository(userId),
+            new UnspecifiedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
+        Assert.Contains("later date", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -1706,6 +1846,25 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task GetFastingHistory_WhenNoOccurrences_ReturnsEmptyPage() {
+        var userId = UserId.New();
+        var handler = new GetFastingHistoryQueryHandler(
+            new FastingAnalyticsService(
+                new InMemoryFastingOccurrenceRepository(),
+                new InMemoryFastingCheckInRepository()),
+            CreateUserRepository(userId));
+
+        var result = await handler.Handle(
+            new GetFastingHistoryQuery(userId.Value, FixedNow.AddDays(-7), FixedNow, 1, 10),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value.Data);
+        Assert.Equal(0, result.Value.TotalItems);
+        Assert.Equal(0, result.Value.TotalPages);
+    }
+
+    [Fact]
     public async Task GetFastingHistory_WithUnspecifiedDateRange_NormalizesDatesToUtc() {
         var userId = UserId.New();
         var analytics = new RecordingFastingAnalyticsService();
@@ -1989,12 +2148,70 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task TryCreateNotificationAsync_WithUnsupportedNotificationType_Throws() {
+        var user = User.Create("fasting-unsupported-notification@example.com", "hash");
+        var plan = FastingPlan.CreateCyclic(user.Id, fastDays: 1, eatDays: 1, eatDayFastHours: 16, eatDayEatingWindowHours: 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(),
+            new InMemoryFastingCheckInRepository(),
+            new InMemorySchedulerNotificationRepository(),
+            new RecordingNotificationPusher(),
+            new RecordingWebPushNotificationSender(),
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+        var method = typeof(FastingNotificationScheduler).GetMethod(
+            "TryCreateNotificationAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(method);
+
+        var task = (Task<int>)method!.Invoke(
+            scheduler,
+            [
+                occurrence,
+                plan,
+                "unsupported",
+                "unsupported-reference",
+                new HashSet<Guid>(),
+                CancellationToken.None
+            ])!;
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => task);
+        Assert.Contains("Unsupported fasting notification type", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task ProcessDueNotificationsAsync_WhenPlanIsPaused_SkipsOccurrence() {
         var user = User.Create("fasting-paused-plan@example.com", "hash");
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddDays(-1));
         plan.Pause();
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-40), 1, 36);
         AttachNavigation(occurrence, plan, user);
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(occurrence),
+            new InMemoryFastingCheckInRepository(),
+            notificationRepo,
+            notificationPusher,
+            webPushSender,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(0, created);
+        Assert.Empty(notificationRepo.Stored);
+        Assert.Empty(webPushSender.Sent);
+        Assert.Empty(notificationPusher.ChangedUsers);
+    }
+
+    [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenOccurrenceHasNoPlan_SkipsOccurrence() {
+        var user = User.Create("fasting-missing-plan@example.com", "hash");
+        var occurrence = FastingOccurrence.Create(FastingPlanId.New(), user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-40), 1, 36);
+        SetPrivateProperty(occurrence, nameof(FastingOccurrence.User), user);
         var notificationRepo = new InMemorySchedulerNotificationRepository();
         var notificationPusher = new RecordingNotificationPusher();
         var webPushSender = new RecordingWebPushNotificationSender();
@@ -2466,6 +2683,46 @@ public class FastingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class PassthroughCurrentFastingOccurrenceRepository(FastingOccurrence current) : IFastingOccurrenceRepository {
+        public List<FastingOccurrence> StoredOccurrences { get; } = [current];
+
+        public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) =>
+            Task.FromResult<FastingOccurrence?>(current);
+
+        public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<FastingOccurrence>>(StoredOccurrences);
+
+        public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(
+            UserId userId,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task AddAsync(FastingOccurrence occurrence, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken ct = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class InMemoryFastingCheckInRepository(params FastingCheckIn[] seed) : IFastingCheckInRepository {
         private readonly List<FastingCheckIn> _stored = [.. seed];
         public IReadOnlyList<FastingCheckIn> Stored => _stored;
@@ -2611,6 +2868,11 @@ public class FastingFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => FixedNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class UnspecifiedDateTimeProvider : IDateTimeProvider {
+        public DateTime UtcNow => DateTime.SpecifyKind(FixedNow, DateTimeKind.Unspecified);
     }
 
     private static void AttachNavigation(FastingOccurrence occurrence, FastingPlan plan, User user) {

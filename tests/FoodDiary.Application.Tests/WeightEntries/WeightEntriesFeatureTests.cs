@@ -106,6 +106,34 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task GetWeightSummariesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetWeightSummariesQueryHandler(
+            new InMemoryWeightEntryRepository(),
+            new StubUserRepository(User.Create("weight-summary-missing-user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetWeightSummariesQuery(null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWeightSummariesQueryHandler_WithNonPositiveQuantization_ReturnsValidationError() {
+        var handler = new GetWeightSummariesQueryHandler(
+            new InMemoryWeightEntryRepository(),
+            new StubUserRepository(User.Create("weight-summary-invalid-step@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetWeightSummariesQueryHandler_WithDateOnlyValues_PreservesRequestedCalendarDates() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight-summary@example.com", "hash");
@@ -120,6 +148,29 @@ public class WeightEntriesFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateFrom);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateTo);
+    }
+
+    [Fact]
+    public async Task GetWeightSummariesQueryHandler_WhenFinalBucketIsShorter_ReturnsRoundedAverage() {
+        var repository = new InMemoryWeightEntryRepository();
+        var user = User.Create("weight-summary-average@example.com", "hash");
+        await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 80.23));
+        await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 81.78));
+        var handler = new GetWeightSummariesQueryHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetWeightSummariesQuery(
+                user.Id.Value,
+                new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc),
+                7),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var summary = Assert.Single(result.Value);
+        Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), summary.StartDate);
+        Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), summary.EndDate);
+        Assert.Equal(81, summary.AverageWeight);
     }
 
     [Fact]
@@ -167,6 +218,38 @@ public class WeightEntriesFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateFrom);
         Assert.Equal(new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateTo);
+    }
+
+    [Fact]
+    public async Task GetWeightEntriesQueryHandler_WithEntries_ReturnsMappedEntries() {
+        var repository = new InMemoryWeightEntryRepository();
+        var user = User.Create("weight-list-mapped@example.com", "hash");
+        var older = await repository.AddAsync(WeightEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+            82));
+        var newer = await repository.AddAsync(WeightEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc),
+            81));
+        await repository.AddAsync(WeightEntry.Create(UserId.New(), newer.Date.AddDays(1), 79));
+        var handler = new GetWeightEntriesQueryHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetWeightEntriesQuery(user.Id.Value, null, null, 10, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Collection(
+            result.Value,
+            entry => {
+                Assert.Equal(newer.Id.Value, entry.Id);
+                Assert.Equal(81, entry.Weight);
+            },
+            entry => {
+                Assert.Equal(older.Id.Value, entry.Id);
+                Assert.Equal(82, entry.Weight);
+            });
     }
 
     [Fact]
@@ -261,6 +344,73 @@ public class WeightEntriesFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(expectedDate, repository.LastGetByDateDate);
         Assert.Equal(expectedDate, entry.Date);
+    }
+
+    [Fact]
+    public async Task UpdateWeightEntryCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new UpdateWeightEntryCommandHandler(
+            new InMemoryWeightEntryRepository(),
+            new StubUserRepository(User.Create("weight-update-missing-user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new UpdateWeightEntryCommand(null, WeightEntryId.New().Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateWeightEntryCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("weight-update-deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateWeightEntryCommandHandler(
+            new InMemoryWeightEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateWeightEntryCommandHandler_WhenEntryMissing_ReturnsNotFound() {
+        var user = User.Create("weight-update-missing-entry@example.com", "hash");
+        var handler = new UpdateWeightEntryCommandHandler(
+            new InMemoryWeightEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("WeightEntry.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateWeightEntryCommandHandler_WhenAnotherEntryExistsForDate_ReturnsAlreadyExists() {
+        var user = User.Create("weight-update-duplicate@example.com", "hash");
+        var repository = new InMemoryWeightEntryRepository();
+        var entry = await repository.AddAsync(WeightEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 26, 0, 0, 0, DateTimeKind.Utc),
+            82));
+        var duplicate = await repository.AddAsync(WeightEntry.Create(
+            user.Id,
+            new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
+            81));
+        var handler = new UpdateWeightEntryCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateWeightEntryCommand(user.Id.Value, entry.Id.Value, duplicate.Date, 80),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("WeightEntry.AlreadyExists", result.Error.Code);
     }
 
     [Fact]

@@ -251,14 +251,10 @@ public sealed class ProcessBillingWebhookCommandHandler(
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId)) {
-            return await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
-                provider,
-                webhookEvent.ExternalCustomerId,
-                cancellationToken).ConfigureAwait(false);
-        }
-
-        return null;
+        return await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
+            provider,
+            webhookEvent.ExternalCustomerId!,
+            cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<User?> ResolveUserAsync(

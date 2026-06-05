@@ -112,22 +112,14 @@ public sealed class PostponeCyclicDayCommandHandler(
         var overallCycleDay = ((Math.Max(1, current.SequenceNumber) - 1) % totalCycleDays) + 1;
         var cycleStartSequence = current.SequenceNumber - (overallCycleDay - 1);
 
-        if (current.Kind == FastingOccurrenceKind.FastDay && nextKind == FastingOccurrenceKind.FastDay) {
-            return current.SequenceNumber + 1;
+        if (current.Kind == FastingOccurrenceKind.FastDay) {
+            return nextKind == FastingOccurrenceKind.FastDay
+                ? current.SequenceNumber + 1
+                : cycleStartSequence + fastDays;
         }
 
-        if (current.Kind == FastingOccurrenceKind.FastDay && nextKind == FastingOccurrenceKind.EatDay) {
-            return cycleStartSequence + fastDays;
-        }
-
-        if (current.Kind == FastingOccurrenceKind.EatDay && nextKind == FastingOccurrenceKind.EatDay) {
-            return current.SequenceNumber + 1;
-        }
-
-        if (current.Kind == FastingOccurrenceKind.EatDay && nextKind == FastingOccurrenceKind.FastDay) {
-            return cycleStartSequence + totalCycleDays;
-        }
-
-        return current.SequenceNumber + 1;
+        return nextKind == FastingOccurrenceKind.EatDay
+            ? current.SequenceNumber + 1
+            : cycleStartSequence + totalCycleDays;
     }
 }

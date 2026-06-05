@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Behaviors;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -49,6 +50,35 @@ public class BehaviorTests {
                 CancellationToken.None));
     }
 
+    [Fact]
+    public async Task UnitOfWorkBehavior_WhenPendingChanges_SavesAfterHandler() {
+        var unitOfWork = new FakeUnitOfWork(hasPendingChanges: true);
+        var behavior = new UnitOfWorkBehavior<TestCommand, Result<string>>(unitOfWork);
+
+        var result = await behavior.Handle(
+            new TestCommand(),
+            ct => Task.FromResult(Result.Success("saved")),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("saved", result.Value);
+        Assert.Equal(1, unitOfWork.SaveCount);
+    }
+
     [ExcludeFromCodeCoverage]
     private record TestQuery : IQuery<Result<string>>;
+
+    [ExcludeFromCodeCoverage]
+    private record TestCommand : ICommand<Result<string>>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FakeUnitOfWork(bool hasPendingChanges) : IUnitOfWork {
+        public int SaveCount { get; private set; }
+        public bool HasPendingChanges => hasPendingChanges;
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default) {
+            SaveCount++;
+            return Task.CompletedTask;
+        }
+    }
 }

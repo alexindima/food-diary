@@ -53,6 +53,20 @@ public class WaistEntriesValidatorTests {
     }
 
     [Fact]
+    public async Task GetLatestWaist_WithEmptyUserId_HasError() {
+        var result = await new GetLatestWaistEntryQueryValidator().TestValidateAsync(
+            new GetLatestWaistEntryQuery(Guid.Empty));
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task GetLatestWaist_WithValidUserId_NoErrors() {
+        var result = await new GetLatestWaistEntryQueryValidator().TestValidateAsync(
+            new GetLatestWaistEntryQuery(Guid.NewGuid()));
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
     public async Task GetWaistEntries_WithZeroLimit_HasError() {
         var result = await new GetWaistEntriesQueryValidator().TestValidateAsync(
             new GetWaistEntriesQuery(Guid.NewGuid(), null, null, 0, false));

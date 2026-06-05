@@ -1,14 +1,51 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
+using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
 
 namespace FoodDiary.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public class AdminValidatorTests {
+    [Fact]
+    public async Task StartAdminImpersonation_WithEmptyActorUserId_HasError() {
+        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+            new StartAdminImpersonationCommand(Guid.Empty, Guid.NewGuid(), "Valid support reason", null, null));
+
+        result.ShouldHaveValidationErrorFor(command => command.ActorUserId);
+    }
+
+    [Fact]
+    public async Task StartAdminImpersonation_WithEmptyTargetUserId_HasError() {
+        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.Empty, "Valid support reason", null, null));
+
+        result.ShouldHaveValidationErrorFor(command => command.TargetUserId);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("short")]
+    public async Task StartAdminImpersonation_WithInvalidReason_HasError(string reason) {
+        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), reason, null, null));
+
+        result.ShouldHaveValidationErrorFor(command => command.Reason);
+    }
+
+    [Fact]
+    public async Task StartAdminImpersonation_WithValidData_NoErrors() {
+        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), "Investigating support ticket", null, null));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
     // â”€â”€ UpdateAdminUser (Guid UserId, bool? IsActive, bool? IsEmailConfirmed, IReadOnlyList<string>? Roles, string? Language, long? AiInputTokenLimit, long? AiOutputTokenLimit) â”€â”€
 
     [Fact]
@@ -96,6 +133,40 @@ public class AdminValidatorTests {
     public async Task GetAdminAiUsage_WithNullDates_NoErrors() {
         var result = await new GetAdminAiUsageSummaryQueryValidator().TestValidateAsync(
             new GetAdminAiUsageSummaryQuery(null, null));
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(201)]
+    public async Task GetAdminMailInboxMessages_WithInvalidLimit_HasError(int limit) {
+        var result = await new GetAdminMailInboxMessagesQueryValidator().TestValidateAsync(
+            new GetAdminMailInboxMessagesQuery(limit));
+
+        result.ShouldHaveValidationErrorFor(query => query.Limit);
+    }
+
+    [Fact]
+    public async Task GetAdminMailInboxMessages_WithValidLimit_NoErrors() {
+        var result = await new GetAdminMailInboxMessagesQueryValidator().TestValidateAsync(
+            new GetAdminMailInboxMessagesQuery(50));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task GetAdminMailInboxMessageDetails_WithEmptyId_HasError() {
+        var result = await new GetAdminMailInboxMessageDetailsQueryValidator().TestValidateAsync(
+            new GetAdminMailInboxMessageDetailsQuery(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(query => query.Id);
+    }
+
+    [Fact]
+    public async Task GetAdminMailInboxMessageDetails_WithValidId_NoErrors() {
+        var result = await new GetAdminMailInboxMessageDetailsQueryValidator().TestValidateAsync(
+            new GetAdminMailInboxMessageDetailsQuery(Guid.NewGuid()));
+
         result.ShouldNotHaveAnyValidationErrors();
     }
 

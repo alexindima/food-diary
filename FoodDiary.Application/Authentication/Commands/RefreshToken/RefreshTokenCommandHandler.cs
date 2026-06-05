@@ -39,23 +39,21 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
-        if (user is null) {
+
+        var currentUser = user!;
+        if (currentUser.RefreshToken is null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        if (user.RefreshToken is null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
-        }
-
-        var isRefreshTokenValid = SecurityTokenGenerator.IsFastStorageHash(user.RefreshToken)
-            ? SecurityTokenGenerator.VerifyFastStorageHash(command.RefreshToken, user.RefreshToken)
-            : _passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken), user.RefreshToken);
+        var isRefreshTokenValid = SecurityTokenGenerator.IsFastStorageHash(currentUser.RefreshToken)
+            ? SecurityTokenGenerator.VerifyFastStorageHash(command.RefreshToken, currentUser.RefreshToken)
+            : _passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken), currentUser.RefreshToken);
 
         if (!isRefreshTokenValid) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken).ConfigureAwait(false);
-        return Result.Success(user.ToAuthenticationModel(tokens));
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
 }

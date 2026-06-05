@@ -93,8 +93,6 @@ public class StartFastingCommandHandler(
             };
         } catch (ArgumentOutOfRangeException) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
-        } catch (ArgumentException) {
-            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
     }
 

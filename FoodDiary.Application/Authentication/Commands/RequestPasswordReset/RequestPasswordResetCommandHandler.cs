@@ -24,13 +24,11 @@ public sealed class RequestPasswordResetCommandHandler(
         if (!AuthenticationUserAccessPolicy.CanRequestPasswordReset(user)) {
             return Result.Success();
         }
-        if (user is null) {
-            return Result.Success();
-        }
 
+        var currentUser = user!;
         var nowUtc = dateTimeProvider.UtcNow;
-        if (user.PasswordResetSentAtUtc.HasValue &&
-            nowUtc - user.PasswordResetSentAtUtc.Value < Cooldown) {
+        if (currentUser.PasswordResetSentAtUtc.HasValue &&
+            nowUtc - currentUser.PasswordResetSentAtUtc.Value < Cooldown) {
             logger.LogInformation("Password reset request throttled by cooldown.");
             return Result.Success();
         }
@@ -39,15 +37,15 @@ public sealed class RequestPasswordResetCommandHandler(
         var tokenHash = passwordHasher.Hash(token);
         var expiresAtUtc = nowUtc.Add(TokenLifetime);
 
-        user.SetPasswordResetToken(new UserTokenIssue(
+        currentUser.SetPasswordResetToken(new UserTokenIssue(
             TokenHash: tokenHash,
             ExpiresAtUtc: expiresAtUtc,
             IssuedAtUtc: nowUtc));
-        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         try {
             await emailSender.SendPasswordResetAsync(
-                new PasswordResetMessage(user.Email, user.Id.Value.ToString(), token, user.Language, command.ClientOrigin),
+                new PasswordResetMessage(currentUser.Email, currentUser.Id.Value.ToString(), token, currentUser.Language, command.ClientOrigin),
                 cancellationToken).ConfigureAwait(false);
             logger.LogInformation("Password reset email dispatch completed.");
         } catch (Exception ex) {

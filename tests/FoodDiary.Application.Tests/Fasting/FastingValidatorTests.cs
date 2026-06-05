@@ -75,6 +75,14 @@ public class FastingValidatorTests {
     }
 
     [Fact]
+    public async Task SkipCyclicDay_WithEmptyUserId_HasError() {
+        var validator = new SkipCyclicDayCommandValidator();
+        var result = await validator.TestValidateAsync(new SkipCyclicDayCommand(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
     public async Task PostponeCyclicDay_WithEmptyUserId_HasError() {
         var validator = new PostponeCyclicDayCommandValidator();
         var result = await validator.TestValidateAsync(new PostponeCyclicDayCommand(Guid.Empty));

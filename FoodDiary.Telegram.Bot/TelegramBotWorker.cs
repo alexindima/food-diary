@@ -37,11 +37,19 @@ public sealed class TelegramBotWorker(
             receiverOptions,
             cancellationToken: stoppingToken);
 
-        try {
-            await Task.Delay(Timeout.Infinite, stoppingToken).ConfigureAwait(false);
-        } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
-            logger.LogInformation("Telegram bot stopping.");
+        await WaitForStopAsync(stoppingToken).ConfigureAwait(false);
+        logger.LogInformation("Telegram bot stopping.");
+    }
+
+    private static async Task WaitForStopAsync(CancellationToken stoppingToken) {
+        if (stoppingToken.IsCancellationRequested) {
+            return;
         }
+
+        var stopped = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var registration = stoppingToken.Register(static state =>
+            ((TaskCompletionSource)state!).TrySetResult(), stopped);
+        await stopped.Task.ConfigureAwait(false);
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient tBotClient, Update update, CancellationToken cancellationToken) {

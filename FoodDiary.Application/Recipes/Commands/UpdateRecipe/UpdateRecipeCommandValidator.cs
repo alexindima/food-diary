@@ -104,7 +104,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .WithMessage("Recipe must contain at least one step");
 
         RuleFor(x => x.Steps)
-            .Must(HaveUniqueEffectiveStepOrder)
+            .Must(static steps => HaveUniqueEffectiveStepOrder(steps!))
             .When(x => x.Steps is { Count: > 0 })
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Step order values must be unique");
@@ -200,11 +200,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
     private static bool HasManualNutrition(UpdateRecipeCommand command) =>
         command is { ManualCalories: not null, ManualProteins: not null, ManualFats: not null, ManualCarbs: not null, ManualFiber: not null };
 
-    private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput>? steps) {
-        if (steps is null || steps.Count == 0) {
-            return true;
-        }
-
+    private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput> steps) {
         var orders = new HashSet<int>();
         for (var index = 0; index < steps.Count; index++) {
             var step = steps[index];

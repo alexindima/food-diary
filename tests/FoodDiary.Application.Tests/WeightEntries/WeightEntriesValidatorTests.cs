@@ -53,6 +53,20 @@ public class WeightEntriesValidatorTests {
     }
 
     [Fact]
+    public async Task GetLatestWeight_WithEmptyUserId_HasError() {
+        var result = await new GetLatestWeightEntryQueryValidator().TestValidateAsync(
+            new GetLatestWeightEntryQuery(Guid.Empty));
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task GetLatestWeight_WithValidUserId_NoErrors() {
+        var result = await new GetLatestWeightEntryQueryValidator().TestValidateAsync(
+            new GetLatestWeightEntryQuery(Guid.NewGuid()));
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
     public async Task GetWeightEntries_WithZeroLimit_HasError() {
         var result = await new GetWeightEntriesQueryValidator().TestValidateAsync(
             new GetWeightEntriesQuery(Guid.NewGuid(), null, null, 0, false));

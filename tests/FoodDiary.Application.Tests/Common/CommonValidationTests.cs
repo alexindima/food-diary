@@ -168,4 +168,16 @@ public class CommonValidationTests {
         Assert.Equal(new DateTime(2026, 6, 4, 0, 0, 0, DateTimeKind.Utc), start);
         Assert.Equal(new DateTime(2026, 6, 5, 0, 0, 0, DateTimeKind.Utc).AddTicks(-1), end);
     }
+
+    [Fact]
+    public void UtcDateNormalizer_LocalFallbackMethods_WithLocalValue_UseUniversalDateBoundaries() {
+        var value = DateTime.SpecifyKind(new DateTime(2026, 6, 4, 23, 30, 0), DateTimeKind.Local);
+        var utcDate = value.ToUniversalTime().Date;
+
+        var start = UtcDateNormalizer.NormalizeDateUsingLocalFallback(value);
+        var end = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(value);
+
+        Assert.Equal(DateTime.SpecifyKind(utcDate, DateTimeKind.Utc), start);
+        Assert.Equal(DateTime.SpecifyKind(utcDate.AddDays(1).AddTicks(-1), DateTimeKind.Utc), end);
+    }
 }

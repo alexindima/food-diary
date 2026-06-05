@@ -87,10 +87,8 @@ public sealed class SkipCyclicDayCommandHandler(
         var overallCycleDay = ((Math.Max(1, current.SequenceNumber) - 1) % totalCycleDays) + 1;
         var cycleStartSequence = current.SequenceNumber - (overallCycleDay - 1);
 
-        return nextKind switch {
-            FastingOccurrenceKind.FastDay => cycleStartSequence + totalCycleDays,
-            FastingOccurrenceKind.EatDay => cycleStartSequence + fastDays,
-            _ => current.SequenceNumber + 1,
-        };
+        return nextKind == FastingOccurrenceKind.FastDay
+            ? cycleStartSequence + totalCycleDays
+            : cycleStartSequence + fastDays;
     }
 }

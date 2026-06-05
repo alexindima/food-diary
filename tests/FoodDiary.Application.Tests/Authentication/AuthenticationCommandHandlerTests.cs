@@ -110,6 +110,24 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task AdminSsoExchangeHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-admin-sso@example.com", "secret");
+        user.ReplaceRoles([Role.Create(RoleNames.Admin)]);
+        user.DeleteAccount(DateTime.UtcNow);
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new AdminSsoExchangeCommandHandler(
+            new StubAdminSsoService(user.Id),
+            new DirectUserByIdRepository(user),
+            tokenService);
+
+        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Null(tokenService.LastUser);
+    }
+
+    [Fact]
     public async Task AdminSsoExchangeHandler_WithNonAdminUser_ReturnsForbidden() {
         var user = User.Create("client@example.com", "secret");
         var handler = new AdminSsoExchangeCommandHandler(
@@ -869,6 +887,27 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task GoogleLoginHandler_WithDeletedExistingUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-google@example.com", "secret", hasPassword: false);
+        user.DeleteAccount(DateTime.UtcNow);
+        var tokenService = new StubAuthenticationTokenService();
+        var notificationRepository = new StubNotificationRepository();
+        var handler = new GoogleLoginCommandHandler(
+            new StubUserRepository(user),
+            notificationRepository,
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(user.Email, "Alex", "User", "en")),
+            new StubPasswordHasher(),
+            tokenService);
+
+        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Null(tokenService.LastUser);
+        Assert.Empty(notificationRepository.Notifications);
+    }
+
+    [Fact]
     public async Task GoogleLoginHandler_WithPasswordAccount_DoesNotCreatePasswordSetupNotification() {
         var user = User.Create("google-password@example.com", "secret", hasPassword: true);
         var notificationRepository = new StubNotificationRepository();
@@ -961,6 +1000,21 @@ public sealed class AuthenticationCommandHandlerTests {
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => Task.FromResult(userToAdd);
+        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DirectUserByIdRepository(User? user = null) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user?.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 

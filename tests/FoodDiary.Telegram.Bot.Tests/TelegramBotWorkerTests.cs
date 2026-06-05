@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
@@ -46,6 +47,18 @@ public sealed class TelegramBotWorkerTests {
         await InvokeExecuteAsync(worker, cts.Token);
 
         Assert.Contains(botClient.Requests, request => string.Equals(request.GetType().Name, "GetMeRequest", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenStoppingTokenCancelsDelay_LogsStopping() {
+        var botClient = new RecordingTelegramBotClient();
+        var logger = new RecordingLogger<TelegramBotWorker>();
+        var worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions(), logger);
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(20));
+
+        await InvokeExecuteAsync(worker, cts.Token);
+
+        Assert.Contains(logger.Messages, message => string.Equals(message, "Telegram bot stopping.", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -372,11 +385,12 @@ public sealed class TelegramBotWorkerTests {
     private static TelegramBotWorker CreateWorker(
         ITelegramBotClient botClient,
         IHttpClientFactory httpClientFactory,
-        TelegramBotOptions options) =>
+        TelegramBotOptions options,
+        ILogger<TelegramBotWorker>? logger = null) =>
         new(
             botClient,
             Options.Create(options),
-            NullLogger<TelegramBotWorker>.Instance,
+            logger ?? NullLogger<TelegramBotWorker>.Instance,
             httpClientFactory);
 
     private static Update CreateMessageUpdate(string text, long telegramUserId) =>
@@ -455,6 +469,23 @@ public sealed class TelegramBotWorkerTests {
 
     private static TValue GetPropertyValue<TValue>(object instance, string propertyName) =>
         (TValue)instance.GetType().GetProperty(propertyName)!.GetValue(instance)!;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger<T> : ILogger<T> {
+        public List<string> Messages { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) {
+            Messages.Add(formatter(state, exception));
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingTelegramBotClient : ITelegramBotClient {

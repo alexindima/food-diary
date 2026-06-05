@@ -10,6 +10,7 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
@@ -17,6 +18,9 @@ using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
 using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
+using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
+using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
+using FoodDiary.Application.Admin.Queries.GetAdminUser;
 using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
@@ -952,6 +956,23 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
+        var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", true);
+        var handler = new GetAdminAiPromptsQueryHandler(new InMemoryAiPromptTemplateRepository(template));
+
+        var result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var model = Assert.Single(result.Value);
+        Assert.Equal(template.Id.Value, model.Id);
+        Assert.Equal("meal_summary", model.Key);
+        Assert.Equal("en", model.Locale);
+        Assert.Equal("Prompt text", model.PromptText);
+        Assert.Equal(1, model.Version);
+        Assert.True(model.IsActive);
+    }
+
+    [Fact]
     public async Task GetAdminAiUsageSummaryQueryValidator_WithInvalidRange_Fails() {
         var validator = new GetAdminAiUsageSummaryQueryValidator();
 
@@ -974,6 +995,23 @@ public class AdminFeatureTests {
                 To: new DateOnly(2026, 2, 10)));
 
         Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task GetAdminAiUsageSummaryQueryHandler_WithInvertedRange_ReturnsValidationFailure() {
+        var repository = new RecordingAiUsageRepository();
+        var handler = new GetAdminAiUsageSummaryQueryHandler(
+            repository,
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
+
+        var result = await handler.Handle(
+            new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 4, 1), new DateOnly(2026, 3, 1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Equal(default, repository.LastFromUtc);
+        Assert.Equal(default, repository.LastToUtc);
     }
 
     [Fact]
@@ -1018,6 +1056,94 @@ public class AdminFeatureTests {
         var user = Assert.Single(result.Value.ByUser);
         Assert.Equal(userId.Value, user.Id);
         Assert.Equal("user@example.com", user.Email);
+    }
+
+    [Fact]
+    public async Task GetAdminUserQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        var handler = new GetAdminUserQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]));
+
+        var result = await handler.Handle(new GetAdminUserQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetAdminUserQueryHandler_WhenUserMissing_ReturnsNotFound() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        var handler = new GetAdminUserQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]));
+
+        var result = await handler.Handle(new GetAdminUserQuery(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("User.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetAdminUserQueryHandler_WithExistingUser_ReturnsAdminModel() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        var handler = new GetAdminUserQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]));
+
+        var result = await handler.Handle(new GetAdminUserQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(user.Id.Value, result.Value.Id);
+        Assert.Equal("admin@example.com", result.Value.Email);
+        Assert.Contains(RoleNames.Admin, result.Value.Roles);
+    }
+
+    [Fact]
+    public async Task GetAdminMailInboxMessagesQueryHandler_ReturnsReaderMessages() {
+        var message = new AdminMailInboxMessageSummaryModel(
+            Guid.NewGuid(),
+            "sender@example.com",
+            ["recipient@example.com"],
+            "Subject",
+            "Received",
+            DateTimeOffset.UtcNow);
+        var reader = new RecordingAdminMailInboxReader { Messages = [message] };
+        var handler = new GetAdminMailInboxMessagesQueryHandler(reader);
+
+        var result = await handler.Handle(new GetAdminMailInboxMessagesQuery(25), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(message, Assert.Single(result.Value));
+        Assert.Equal(25, reader.LastLimit);
+    }
+
+    [Fact]
+    public async Task GetAdminMailInboxMessageDetailsQueryHandler_WhenMessageMissing_ReturnsNotFound() {
+        var messageId = Guid.NewGuid();
+        var handler = new GetAdminMailInboxMessageDetailsQueryHandler(new RecordingAdminMailInboxReader());
+
+        var result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(messageId), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("MailInbox.MessageNotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetAdminMailInboxMessageDetailsQueryHandler_WithExistingMessage_ReturnsDetails() {
+        var message = new AdminMailInboxMessageDetailsModel(
+            Guid.NewGuid(),
+            "mail-message-id",
+            "sender@example.com",
+            ["recipient@example.com"],
+            "Subject",
+            "Text",
+            "<p>Text</p>",
+            "raw",
+            "Received",
+            DateTimeOffset.UtcNow);
+        var reader = new RecordingAdminMailInboxReader { Message = message };
+        var handler = new GetAdminMailInboxMessageDetailsQueryHandler(reader);
+
+        var result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(message.Id), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(message, result.Value);
+        Assert.Equal(message.Id, reader.LastMessageId);
     }
 
     [Fact]
@@ -1508,6 +1634,28 @@ public class AdminFeatureTests {
         public Task UpdateAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
             UpdateCallCount++;
             return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingAdminMailInboxReader : IAdminMailInboxReader {
+        public IReadOnlyList<AdminMailInboxMessageSummaryModel> Messages { get; init; } = [];
+        public AdminMailInboxMessageDetailsModel? Message { get; init; }
+        public int LastLimit { get; private set; }
+        public Guid LastMessageId { get; private set; }
+
+        public Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(
+            int limit,
+            CancellationToken cancellationToken) {
+            LastLimit = limit;
+            return Task.FromResult(Messages);
+        }
+
+        public Task<AdminMailInboxMessageDetailsModel?> GetMessageAsync(
+            Guid id,
+            CancellationToken cancellationToken) {
+            LastMessageId = id;
+            return Task.FromResult(Message is not null && Message.Id == id ? Message : null);
         }
     }
 

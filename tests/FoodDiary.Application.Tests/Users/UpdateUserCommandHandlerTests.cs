@@ -136,6 +136,69 @@ public sealed class UpdateUserCommandHandlerTests {
     }
 
     [Fact]
+    public async Task Handle_WithMissingUserId_ReturnsInvalidToken() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(CreateCommand(null), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Handle_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("not-activity", null, null, null, null, "ActivityLevel")]
+    [InlineData(null, "not-language", null, null, null, "Language")]
+    [InlineData(null, null, "not-theme", null, null, "Theme")]
+    [InlineData(null, null, null, "not-ui-style", null, "UiStyle")]
+    [InlineData(null, null, null, null, "not-gender", "Gender")]
+    public async Task Handle_WithInvalidPreferences_ReturnsValidationFailure(
+        string? activityLevel,
+        string? language,
+        string? theme,
+        string? uiStyle,
+        string? gender,
+        string expectedField) {
+        var user = User.Create("preferences-user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        var result = await handler.Handle(
+            CreateCommand(
+                user.Id.Value,
+                activityLevel: activityLevel,
+                language: language,
+                theme: theme,
+                uiStyle: uiStyle,
+                gender: gender),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains(expectedField, result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task Handle_WithTheme_UpdatesUserTheme() {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
@@ -230,24 +293,29 @@ public sealed class UpdateUserCommandHandlerTests {
     }
 
     private static UpdateUserCommand CreateCommand(
-        Guid userId,
+        Guid? userId,
         Guid? profileImageAssetId = null,
-        bool? isActive = null) =>
+        bool? isActive = null,
+        string? activityLevel = null,
+        string? language = null,
+        string? theme = null,
+        string? uiStyle = null,
+        string? gender = null) =>
         new(
             UserId: userId,
             Username: null,
             FirstName: null,
             LastName: null,
             BirthDate: null,
-            Gender: null,
+            Gender: gender,
             Weight: null,
             Height: null,
-            ActivityLevel: null,
+            ActivityLevel: activityLevel,
             StepGoal: null,
             HydrationGoal: null,
-            Language: null,
-            Theme: null,
-            UiStyle: null,
+            Language: language,
+            Theme: theme,
+            UiStyle: uiStyle,
             PushNotificationsEnabled: null,
             FastingPushNotificationsEnabled: null,
             SocialPushNotificationsEnabled: null,

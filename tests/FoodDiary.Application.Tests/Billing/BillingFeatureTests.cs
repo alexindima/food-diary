@@ -30,6 +30,14 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task CreateCheckoutSessionValidator_WithBlankProvider_ReturnsSuccess() {
+        var result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
+            new CreateCheckoutSessionCommand(Guid.NewGuid(), "monthly", " "));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
     public async Task CreateCheckoutSession_WithRequestedProvider_CreatesPendingSubscriptionAndCheckoutPayment() {
         var user = User.Create("buyer@example.com", "hash");
         var userRepository = new FakeUserRepository(user);
@@ -335,6 +343,155 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task ProcessBillingWebhook_WhenProviderIsUnknown_ReturnsInvalidProvider() {
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(BillingProviderNames.Paddle),
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new RecordingBillingPaymentRepository(),
+            new RecordingBillingWebhookEventRepository());
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand("unknown", "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.InvalidProvider", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenProviderRejectsWebhook_ReturnsProviderError() {
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(
+                BillingProviderNames.YooKassa,
+                webhookError: Errors.Billing.WebhookValidationFailed("bad signature")),
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new RecordingBillingPaymentRepository(),
+            new RecordingBillingWebhookEventRepository());
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", "bad"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenProviderIgnoresWebhook_ReturnsSuccessWithoutMutation() {
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(BillingProviderNames.YooKassa),
+            new FakeUserRepository(),
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(subscriptionRepository.Subscriptions);
+        Assert.Empty(paymentRepository.Payments);
+        Assert.Empty(webhookEventRepository.Events);
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenSubscriptionAlreadyHandledEvent_ReturnsSuccessWithoutMutation() {
+        var user = User.Create("subscription-duplicate-event@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_duplicate_subscription",
+            "pay_duplicate_subscription",
+            "pm_duplicate_subscription",
+            "active",
+            Now.AddMonths(-1),
+            Now.AddMonths(1),
+            "evt_duplicate_subscription",
+            Now.AddMonths(-1));
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(
+                BillingProviderNames.YooKassa,
+                webhookEvent: new BillingWebhookEventModel(
+                    "evt_duplicate_subscription",
+                    "payment.succeeded",
+                    "customer_duplicate_subscription",
+                    "pay_duplicate_subscription",
+                    "pm_duplicate_subscription",
+                    "price_monthly",
+                    "monthly",
+                    "active",
+                    Now,
+                    Now.AddMonths(1),
+                    false,
+                    null,
+                    null,
+                    null,
+                    7.99m,
+                    "USD",
+                    null,
+                    user.Id.Value)),
+            new FakeUserRepository(user),
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(paymentRepository.Payments);
+        Assert.Empty(webhookEventRepository.Events);
+        Assert.Equal(0, subscriptionRepository.UpdateCount);
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenUserCannotBeResolved_ReturnsValidationFailure() {
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(
+                BillingProviderNames.YooKassa,
+                webhookEvent: new BillingWebhookEventModel(
+                    "evt_missing_user",
+                    "payment.succeeded",
+                    "customer_missing_user",
+                    "pay_missing_user",
+                    "pm_missing_user",
+                    "price_monthly",
+                    "monthly",
+                    "active",
+                    Now,
+                    Now.AddMonths(1),
+                    false,
+                    null,
+                    null,
+                    null,
+                    7.99m,
+                    "USD",
+                    null,
+                    null)),
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new RecordingBillingPaymentRepository(),
+            new RecordingBillingWebhookEventRepository());
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+    }
+
+    [Fact]
     public async Task ProcessBillingWebhook_WhenConcurrentDuplicateInsertDetected_ReturnsSuccessWithoutMutation() {
         var user = User.Create("premium@example.com", "hash");
         var userRepository = new FakeUserRepository(user);
@@ -380,6 +537,103 @@ public sealed class BillingFeatureTests {
         Assert.Empty(paymentRepository.Payments);
         Assert.Empty(webhookEventRepository.Events);
         Assert.Equal(0, userRepository.UpdateCount);
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenConcurrentDuplicatePaymentDetected_ReturnsSuccess() {
+        var user = User.Create("duplicate-payment@example.com", "hash");
+        var paymentRepository = new RecordingBillingPaymentRepository {
+            ThrowAlreadyExistsOnAdd = true
+        };
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(
+                BillingProviderNames.YooKassa,
+                webhookEvent: new BillingWebhookEventModel(
+                    "evt_duplicate_payment",
+                    "payment.succeeded",
+                    "customer_duplicate_payment",
+                    "pay_duplicate_payment",
+                    "pm_duplicate_payment",
+                    "price_monthly",
+                    "monthly",
+                    "active",
+                    Now,
+                    Now.AddMonths(1),
+                    false,
+                    null,
+                    null,
+                    null,
+                    7.99m,
+                    "USD",
+                    null,
+                    user.Id.Value)),
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(),
+            paymentRepository,
+            webhookEventRepository);
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(paymentRepository.Payments);
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenWebhookPaymentAlreadyExists_DoesNotAddDuplicatePayment() {
+        var user = User.Create("existing-webhook-payment@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_existing_webhook_payment",
+            "sub_existing_webhook_payment",
+            "pm_existing_webhook_payment",
+            "active",
+            Now,
+            Now.AddMonths(1),
+            "evt_previous_webhook_payment",
+            Now);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var existingPayment = BillingPayment.Create(
+            user.Id,
+            subscription.Id,
+            BillingProviderNames.YooKassa,
+            "sub_existing_webhook_payment",
+            "customer_existing_webhook_payment",
+            "sub_existing_webhook_payment",
+            "pm_existing_webhook_payment",
+            "price_monthly",
+            "monthly",
+            "active",
+            BillingPaymentKinds.Webhook,
+            7.99m,
+            "USD",
+            Now,
+            Now.AddMonths(1),
+            "evt_existing_payment_record",
+            null);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        paymentRepository.Payments.Add(existingPayment);
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(
+                BillingProviderNames.YooKassa,
+                webhookEvent: CreateWebhookPaymentEvent(user, "evt_existing_webhook_payment", "sub_existing_webhook_payment")),
+            new FakeUserRepository(user),
+            subscriptionRepository,
+            paymentRepository,
+            webhookEventRepository);
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(paymentRepository.Payments);
+        Assert.Same(existingPayment, paymentRepository.Payments[0]);
+        Assert.Single(webhookEventRepository.Events);
     }
 
     [Fact]
@@ -594,6 +848,59 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task ProcessBillingWebhook_ForDeletedBillingManagedUser_DisablesManagedPremiumFlag() {
+        var user = User.Create("deleted-managed-premium@example.com", "hash");
+        user.DeleteAccount(Now.AddDays(-1));
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_deleted_managed",
+            "pay_deleted_managed_initial",
+            "pm_deleted_managed",
+            "active",
+            Now.AddMonths(-1),
+            Now.AddMonths(1),
+            "evt_deleted_managed_initial",
+            Now.AddMonths(-1));
+        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(
+                BillingProviderNames.YooKassa,
+                webhookEvent: new BillingWebhookEventModel(
+                    "evt_deleted_managed_canceled",
+                    "subscription.canceled",
+                    "customer_deleted_managed",
+                    "pay_deleted_managed_canceled",
+                    "pm_deleted_managed",
+                    "price_monthly",
+                    "monthly",
+                    "canceled",
+                    Now.AddMonths(-1),
+                    Now,
+                    false,
+                    Now,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    user.Id.Value)),
+            new FakeUserRepository(user),
+            subscriptionRepository,
+            new RecordingBillingPaymentRepository(),
+            new RecordingBillingWebhookEventRepository());
+
+        var result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.False(subscription.PremiumRoleManagedByBilling);
+        Assert.Equal(2, subscriptionRepository.UpdateCount);
+    }
+
+    [Fact]
     public async Task BillingRenewalService_ForDueSubscription_UpdatesSubscriptionAddsPaymentAndKeepsPremiumRole() {
         var user = CreatePremiumUser("premium@example.com");
         var subscription = CreateSubscriptionSnapshot(
@@ -639,6 +946,93 @@ public sealed class BillingFeatureTests {
         Assert.Equal("pm_renewal", payment.ExternalPaymentMethodId);
         Assert.Equal(7.99m, payment.Amount);
         Assert.True(user.HasRole(RoleNames.Premium));
+    }
+
+    [Fact]
+    public async Task BillingRenewalService_WhenRenewalPaymentAlreadyExists_ReturnsRenewed() {
+        var user = CreatePremiumUser("renewal-duplicate-payment@example.com");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_renewal_duplicate",
+            "pay_initial_duplicate",
+            "pm_renewal_duplicate",
+            "active",
+            Now.AddMonths(-1),
+            Now.AddMinutes(-1),
+            "evt_initial_duplicate",
+            Now.AddMonths(-1));
+        var paymentRepository = new RecordingBillingPaymentRepository {
+            ThrowAlreadyExistsOnAdd = true
+        };
+        var service = CreateRenewalService(
+            new InMemoryBillingSubscriptionRepository(subscription),
+            paymentRepository,
+            new FakeUserRepository(user),
+            new FakeRecurringBillingGateway(
+                BillingProviderNames.YooKassa,
+                CreateRenewalPayment(
+                    "pay_renewed_duplicate",
+                    "pm_renewal_duplicate",
+                    "evt_renewed_duplicate")));
+
+        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+
+        Assert.Equal(1, result.Processed);
+        Assert.Equal(1, result.Renewed);
+        Assert.Equal(0, result.Failed);
+        Assert.Empty(paymentRepository.Payments);
+    }
+
+    [Fact]
+    public async Task BillingRenewalService_WhenRenewalPaymentExists_SkipsAddingPayment() {
+        var user = CreatePremiumUser("renewal-existing-payment@example.com");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_renewal_existing",
+            "pay_initial_existing",
+            "pm_renewal_existing",
+            "active",
+            Now.AddMonths(-1),
+            Now.AddMinutes(-1),
+            "evt_initial_existing",
+            Now.AddMonths(-1));
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        paymentRepository.Payments.Add(BillingPayment.Create(
+            subscription.UserId,
+            subscription.Id,
+            BillingProviderNames.YooKassa,
+            "pay_renewed_existing",
+            subscription.ExternalCustomerId,
+            "pay_initial_existing",
+            "pm_renewal_existing",
+            "price_monthly",
+            "monthly",
+            "active",
+            BillingPaymentKinds.Renewal,
+            7.99m,
+            "USD",
+            Now.AddMonths(-1),
+            Now,
+            "evt_existing_payment",
+            null));
+        var service = CreateRenewalService(
+            new InMemoryBillingSubscriptionRepository(subscription),
+            paymentRepository,
+            new FakeUserRepository(user),
+            new FakeRecurringBillingGateway(
+                BillingProviderNames.YooKassa,
+                CreateRenewalPayment(
+                    "pay_renewed_existing",
+                    "pm_renewal_existing",
+                    "evt_renewed_existing")));
+
+        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+
+        Assert.Equal(1, result.Processed);
+        Assert.Equal(1, result.Renewed);
+        Assert.Single(paymentRepository.Payments);
     }
 
     [Fact]
@@ -823,6 +1217,43 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public void BillingAccessService_WithBlankStatus_DoesNotGrantPremiumAccess() {
+        var service = new BillingAccessService(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FixedDateTimeProvider(Now));
+
+        var shouldHavePremium = service.ShouldHavePremiumAccess(" ", Now.AddDays(1));
+
+        Assert.False(shouldHavePremium);
+    }
+
+    [Theory]
+    [InlineData("trialing", 1, true)]
+    [InlineData("trialing", -1, false)]
+    [InlineData("active", null, true)]
+    [InlineData("past_due", null, true)]
+    [InlineData("past_due", 1, true)]
+    [InlineData("past_due", -1, false)]
+    [InlineData("canceled", 1, false)]
+    public void BillingAccessService_ShouldHavePremiumAccess_CoversStatusBranches(
+        string status,
+        int? periodEndOffsetDays,
+        bool expected) {
+        var service = new BillingAccessService(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FixedDateTimeProvider(Now));
+        var periodEnd = periodEndOffsetDays.HasValue
+            ? Now.AddDays(periodEndOffsetDays.Value)
+            : (DateTime?)null;
+
+        var shouldHavePremium = service.ShouldHavePremiumAccess(status, periodEnd);
+
+        Assert.Equal(expected, shouldHavePremium);
+    }
+
+    [Fact]
     public async Task GetBillingOverview_WithExistingSubscription_ReturnsBillingTimelineAndRenewalState() {
         var premiumRole = Role.Create(RoleNames.Premium);
         var user = User.Create("premium@example.com", "hash");
@@ -907,6 +1338,103 @@ public sealed class BillingFeatureTests {
         Assert.Null(result.Value.CurrentPeriodStartUtc);
         Assert.Null(result.Value.CurrentPeriodEndUtc);
         Assert.True(result.Value.CanStartPremiumTrial);
+    }
+
+    [Fact]
+    public async Task GetBillingOverview_WithInvalidUserId_ReturnsInvalidToken() {
+        var handler = new GetBillingOverviewQueryHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new GetBillingOverviewQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetBillingOverview_WhenUserIsMissing_ReturnsInvalidToken() {
+        var handler = new GetBillingOverviewQueryHandler(
+            new FakeUserRepository(),
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new GetBillingOverviewQuery(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetBillingOverview_WithBlankSubscriptionStatus_DoesNotGrantPaidPremium() {
+        var user = User.Create("blank-status-overview@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            "customer_blank_status",
+            "sub_blank_status",
+            "pm_blank_status",
+            "active",
+            Now.AddDays(-1),
+            Now.AddDays(1),
+            "evt_blank_status",
+            Now);
+        SetPrivateProperty(subscription, nameof(BillingSubscription.Status), " ");
+        var handler = new GetBillingOverviewQueryHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.False(result.Value.IsPremium);
+        Assert.Equal(" ", result.Value.SubscriptionStatus);
+        Assert.True(result.Value.CanStartPremiumTrial);
+    }
+
+    [Theory]
+    [InlineData("trialing", 1, true, false)]
+    [InlineData("past_due", null, true, false)]
+    [InlineData("past_due", -1, false, true)]
+    [InlineData("canceled", 1, false, true)]
+    public async Task GetBillingOverview_WithPaidSubscriptionStatuses_ReportsPremiumState(
+        string status,
+        int? periodEndOffsetDays,
+        bool expectedPremium,
+        bool expectedCanStartTrial) {
+        var user = User.Create($"overview-status-{status}-{periodEndOffsetDays ?? 0}@example.com", "hash");
+        var periodEnd = periodEndOffsetDays.HasValue ? Now.AddDays(periodEndOffsetDays.Value) : Now.AddDays(1);
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            $"customer_overview_{status}_{periodEndOffsetDays ?? 0}",
+            $"sub_overview_{status}_{periodEndOffsetDays ?? 0}",
+            $"pm_overview_{status}_{periodEndOffsetDays ?? 0}",
+            status,
+            Now.AddDays(-1),
+            periodEnd,
+            $"evt_overview_{status}_{periodEndOffsetDays ?? 0}",
+            Now);
+        if (!periodEndOffsetDays.HasValue) {
+            SetPrivateProperty(subscription, nameof(BillingSubscription.CurrentPeriodEndUtc), (DateTime?)null);
+        }
+
+        var handler = new GetBillingOverviewQueryHandler(
+            new FakeUserRepository(user),
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(expectedPremium, result.Value.IsPremium);
+        Assert.Equal(expectedCanStartTrial, result.Value.CanStartPremiumTrial);
     }
 
     [Fact]
@@ -1116,6 +1644,66 @@ public sealed class BillingFeatureTests {
         Assert.Equal(0, userRepository.UpdateCount);
     }
 
+    [Theory]
+    [InlineData("trialing", -1)]
+    [InlineData("past_due", -1)]
+    [InlineData("canceled", 1)]
+    public async Task StartPremiumTrial_WithInactivePaidSubscription_AllowsTrial(string status, int periodEndOffsetDays) {
+        var user = User.Create($"trial-inactive-{status}@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            $"customer_trial_inactive_{status}",
+            $"sub_trial_inactive_{status}",
+            $"pm_trial_inactive_{status}",
+            status,
+            Now.AddDays(-2),
+            Now.AddDays(periodEndOffsetDays),
+            $"evt_trial_inactive_{status}",
+            Now);
+        var userRepository = new FakeUserRepository(user);
+        var handler = new StartPremiumTrialCommandHandler(
+            userRepository,
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(result.Value.PremiumTrialActive);
+        Assert.Equal(1, userRepository.UpdateCount);
+    }
+
+    [Fact]
+    public async Task StartPremiumTrial_WithBlankSubscriptionStatus_AllowsTrial() {
+        var user = User.Create("trial-blank-status@example.com", "hash");
+        var subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            "customer_trial_blank",
+            "sub_trial_blank",
+            "pm_trial_blank",
+            "active",
+            Now.AddDays(-1),
+            Now.AddDays(1),
+            "evt_trial_blank",
+            Now);
+        SetPrivateProperty(subscription, nameof(BillingSubscription.Status), " ");
+        var userRepository = new FakeUserRepository(user);
+        var handler = new StartPremiumTrialCommandHandler(
+            userRepository,
+            new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(result.Value.PremiumTrialActive);
+        Assert.Equal(1, userRepository.UpdateCount);
+    }
+
     private static ProcessBillingWebhookCommandHandler CreateWebhookHandler(
         IBillingProviderGateway gateway,
         FakeUserRepository userRepository,
@@ -1195,6 +1783,27 @@ public sealed class BillingFeatureTests {
             "USD",
             metadataJson);
 
+    private static BillingWebhookEventModel CreateWebhookPaymentEvent(User user, string eventId, string externalSubscriptionId) =>
+        new(
+            eventId,
+            "payment.succeeded",
+            "customer_existing_webhook_payment",
+            externalSubscriptionId,
+            "pm_existing_webhook_payment",
+            "price_monthly",
+            "monthly",
+            "active",
+            Now,
+            Now.AddMonths(1),
+            false,
+            null,
+            null,
+            null,
+            7.99m,
+            "USD",
+            null,
+            user.Id.Value);
+
     private static BillingRenewalService CreateRenewalService(
         InMemoryBillingSubscriptionRepository subscriptionRepository,
         RecordingBillingPaymentRepository paymentRepository,
@@ -1208,6 +1817,12 @@ public sealed class BillingFeatureTests {
             [renewalGateway],
             new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
             new FixedDateTimeProvider(Now));
+
+    private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
+        var property = typeof(TTarget).GetProperty(propertyName);
+        Assert.NotNull(property);
+        property!.SetValue(target, value);
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeUserRepository(params User[] users) : IUserRepository {
@@ -1337,6 +1952,7 @@ public sealed class BillingFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingBillingPaymentRepository : IBillingPaymentRepository {
         public List<BillingPayment> Payments { get; } = [];
+        public bool ThrowAlreadyExistsOnAdd { get; init; }
 
         public Task<BillingPayment?> GetByExternalPaymentIdAsync(
             string provider,
@@ -1347,6 +1963,10 @@ public sealed class BillingFeatureTests {
                 string.Equals(payment.ExternalPaymentId, externalPaymentId, StringComparison.Ordinal)));
 
         public Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
+            if (ThrowAlreadyExistsOnAdd) {
+                throw new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
+            }
+
             Payments.Add(payment);
             return Task.FromResult(payment);
         }
@@ -1403,7 +2023,8 @@ public sealed class BillingFeatureTests {
         BillingWebhookEventModel? webhookEvent = null,
         BillingPortalSessionModel? portalSession = null,
         Error? checkoutError = null,
-        Error? portalError = null)
+        Error? portalError = null,
+        Error? webhookError = null)
         : IBillingProviderGateway {
         public string Provider { get; } = provider;
 
@@ -1436,8 +2057,13 @@ public sealed class BillingFeatureTests {
         public Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
             string payload,
             string signatureHeader,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Result.Success<BillingWebhookEventModel?>(webhookEvent));
+            CancellationToken cancellationToken = default) {
+            if (webhookError is not null) {
+                return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(webhookError));
+            }
+
+            return Task.FromResult(Result.Success<BillingWebhookEventModel?>(webhookEvent));
+        }
     }
 
     [ExcludeFromCodeCoverage]

@@ -65,6 +65,18 @@ public class UsersValidatorTests {
     // â”€â”€ UpdateDesiredWaist â”€â”€
 
     [Fact]
+    public async Task DeleteUser_WithEmptyUserId_HasError() {
+        var result = await new DeleteUserCommandValidator().TestValidateAsync(new DeleteUserCommand(Guid.Empty));
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task DeleteUser_WithValidUserId_HasNoErrors() {
+        var result = await new DeleteUserCommandValidator().TestValidateAsync(new DeleteUserCommand(Guid.NewGuid()));
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
     public async Task UpdateDesiredWaist_WithNullUserId_HasError() {
         var v = new UpdateDesiredWaistCommandValidator();
         var result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(null, 80));

@@ -35,11 +35,9 @@ public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerif
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
         }
-        if (user is null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
-        }
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
-        return Result.Success(user.ToAuthenticationModel(tokens));
+        var currentUser = user!;
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
 }
