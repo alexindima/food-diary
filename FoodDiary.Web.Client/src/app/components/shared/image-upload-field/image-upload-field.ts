@@ -1,7 +1,6 @@
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     effect,
@@ -10,6 +9,7 @@ import {
     input,
     model,
     output,
+    signal,
     viewChild,
 } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
@@ -66,7 +66,6 @@ type CropInteraction = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageUploadFieldComponent implements FormValueControl<ImageSelection | null> {
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly imageUploadFacade = inject(ImageUploadFacade);
     private readonly translateService = inject(TranslateService);
     private readonly logger = inject(FrontendLoggerService);
@@ -98,15 +97,15 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected readonly cropTitleId = createImageUploadId('image-upload-crop-title');
     protected readonly cropSubtitleId = createImageUploadId('image-upload-crop-subtitle');
 
-    protected selection: ImageSelection = { url: null, assetId: null };
-    protected isDragging = false;
-    protected isUploading = false;
-    protected error: string | null = null;
-    protected isCropping = false;
+    protected readonly selection = signal<ImageSelection>({ url: null, assetId: null });
+    protected readonly isDragging = signal(false);
+    protected readonly isUploading = signal(false);
+    protected readonly error = signal<string | null>(null);
+    protected readonly isCropping = signal(false);
 
-    protected cropPreviewUrl: string | null = null;
-    protected cropImageBounds: CropRect | null = null;
-    protected cropSelection: CropRect | null = null;
+    protected readonly cropPreviewUrl = signal<string | null>(null);
+    protected readonly cropImageBounds = signal<CropRect | null>(null);
+    protected readonly cropSelection = signal<CropRect | null>(null);
     private originalFile: File | null = null;
     private cropImageElement: HTMLImageElement | null = null;
     private cropInteraction: CropInteraction | null = null;
@@ -117,19 +116,18 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         effect(() => {
             const value = this.value();
             if (value !== null) {
-                this.selection = value;
-                this.cdr.markForCheck();
+                this.selection.set(value);
                 return;
             }
 
             const initial = this.initialSelection();
             if (this.hasInitialSelection(initial)) {
-                this.selection = {
+                const selection = {
                     url: initial.url ?? null,
                     assetId: initial.assetId ?? null,
                 };
-                this.imageChanged.emit(this.selection);
-                this.cdr.markForCheck();
+                this.selection.set(selection);
+                this.imageChanged.emit(selection);
             }
         });
     }
@@ -154,10 +152,10 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected onDrop(event: DragEvent): void {
         event.preventDefault();
         event.stopPropagation();
-        if (this.disabled() || this.isUploading) {
+        if (this.disabled() || this.isUploading()) {
             return;
         }
-        this.isDragging = false;
+        this.isDragging.set(false);
         const file = event.dataTransfer?.files[0];
         if (file !== undefined) {
             this.handleIncomingFile(file);
@@ -166,27 +164,27 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     protected onDragOver(event: DragEvent): void {
         event.preventDefault();
-        if (this.disabled() || this.isUploading) {
+        if (this.disabled() || this.isUploading()) {
             return;
         }
-        this.isDragging = true;
+        this.isDragging.set(true);
     }
 
     protected onDragLeave(event: DragEvent): void {
         event.preventDefault();
-        this.isDragging = false;
+        this.isDragging.set(false);
     }
 
     protected clearImage(): void {
-        const assetId = this.selection.assetId;
-        this.selection = { url: null, assetId: null };
-        this.error = null;
-        this.value.set(this.selection);
+        const assetId = this.selection().assetId;
+        const selection: ImageSelection = { url: null, assetId: null };
+        this.selection.set(selection);
+        this.error.set(null);
+        this.value.set(selection);
         this.touched.set(true);
-        this.imageChanged.emit(this.selection);
-        this.isCropping = false;
+        this.imageChanged.emit(selection);
+        this.isCropping.set(false);
         this.clearCropState();
-        this.cdr.markForCheck();
 
         if (this.deleteOnClear() && assetId !== null) {
             this.imageUploadFacade.deleteAsset(assetId).subscribe({
@@ -203,7 +201,9 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onCropPointerDown(event: PointerEvent, mode: CropInteractionMode): void {
-        if (this.cropSelection === null || this.cropImageBounds === null) {
+        const selection = this.cropSelection();
+        const bounds = this.cropImageBounds();
+        if (selection === null || bounds === null) {
             return;
         }
 
@@ -216,13 +216,13 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             pointerId: event.pointerId,
             startX: event.clientX,
             startY: event.clientY,
-            startRect: { ...this.cropSelection },
+            startRect: { ...selection },
         };
     }
 
     protected onCropPointerMove(event: PointerEvent): void {
         const interaction = this.cropInteraction;
-        const bounds = this.cropImageBounds;
+        const bounds = this.cropImageBounds();
         if (bounds === null || event.pointerId !== interaction?.pointerId) {
             return;
         }
@@ -230,7 +230,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         event.preventDefault();
         const dx = event.clientX - interaction.startX;
         const dy = event.clientY - interaction.startY;
-        this.cropSelection =
+        this.cropSelection.set(
             interaction.mode === 'move'
                 ? moveCropSelection(interaction.startRect, bounds, dx, dy)
                 : resizeCropSelection({
@@ -241,8 +241,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                       dy,
                       aspectRatio: this.cropAspectRatio(),
                       minSize: MIN_CROP_SELECTION_SIZE,
-                  });
-        this.cdr.markForCheck();
+                  }),
+        );
     }
 
     protected onCropPointerUp(event: PointerEvent): void {
@@ -255,7 +255,9 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onCropKeydown(event: KeyboardEvent): void {
-        if (this.cropSelection === null || this.cropImageBounds === null) {
+        const selection = this.cropSelection();
+        const bounds = this.cropImageBounds();
+        if (selection === null || bounds === null) {
             return;
         }
 
@@ -272,14 +274,12 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         }
 
         event.preventDefault();
-        this.cropSelection = moveCropSelection(this.cropSelection, this.cropImageBounds, delta.dx, delta.dy);
-        this.cdr.markForCheck();
+        this.cropSelection.set(moveCropSelection(selection, bounds, delta.dx, delta.dy));
     }
 
     protected cancelCrop(): void {
-        this.isCropping = false;
+        this.isCropping.set(false);
         this.clearCropState();
-        this.cdr.markForCheck();
     }
 
     protected confirmCrop(): void {
@@ -291,7 +291,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onZoneClick(fileInput: HTMLInputElement): void {
-        if (this.disabled() || this.isUploading || this.selection.url !== null) {
+        if (this.disabled() || this.isUploading() || this.selection().url !== null) {
             return;
         }
         fileInput.click();
@@ -307,14 +307,13 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     private async handleIncomingFileAsync(file: File): Promise<void> {
-        if (this.disabled() || this.isUploading) {
+        if (this.disabled() || this.isUploading()) {
             return;
         }
 
-        this.error = null;
+        this.error.set(null);
         if (!file.type.startsWith('image/')) {
-            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES');
-            this.cdr.markForCheck();
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES'));
             return;
         }
 
@@ -401,33 +400,32 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         this.originalFile = file;
         const reader = new FileReader();
         reader.onload = (): void => {
-            this.cropPreviewUrl = typeof reader.result === 'string' ? reader.result : null;
-            this.isCropping = this.cropPreviewUrl !== null;
-            this.cdr.markForCheck();
+            const previewUrl = typeof reader.result === 'string' ? reader.result : null;
+            this.cropPreviewUrl.set(previewUrl);
+            this.isCropping.set(previewUrl !== null);
         };
         reader.onerror = (): void => {
-            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.READ_FAILED');
-            this.cdr.markForCheck();
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.READ_FAILED'));
         };
         reader.readAsDataURL(file);
     }
 
     private uploadFile(file: File): void {
-        if (this.disabled() || this.isUploading) {
+        if (this.disabled() || this.isUploading()) {
             return;
         }
 
-        this.error = null;
+        this.error.set(null);
         if (file.size > getMaxImageUploadBytes(this.maxSizeMb())) {
-            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
-                maxSizeMb: this.maxSizeMb(),
-            });
-            this.cdr.markForCheck();
+            this.error.set(
+                this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
+                    maxSizeMb: this.maxSizeMb(),
+                }),
+            );
             return;
         }
 
-        this.isUploading = true;
-        this.cdr.markForCheck();
+        this.isUploading.set(true);
 
         this.imageUploadFacade
             .requestUploadUrl(file)
@@ -438,27 +436,26 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                         .pipe(map(() => ({ url: presign.fileUrl, assetId: presign.assetId }))),
                 ),
                 finalize(() => {
-                    this.isUploading = false;
-                    this.cdr.markForCheck();
+                    this.isUploading.set(false);
                 }),
             )
             .subscribe({
                 next: selection => {
-                    this.selection = selection;
+                    this.selection.set(selection);
                     this.value.set(selection);
                     this.touched.set(true);
                     this.imageChanged.emit(selection);
-                    this.cdr.markForCheck();
                 },
                 error: () => {
-                    this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED');
-                    this.cdr.markForCheck();
+                    this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED'));
                 },
             });
     }
 
     private confirmCropInternal(): void {
-        if (this.cropImageElement === null || this.cropSelection === null || this.cropImageBounds === null) {
+        const selection = this.cropSelection();
+        const bounds = this.cropImageBounds();
+        if (this.cropImageElement === null || selection === null || bounds === null) {
             return;
         }
 
@@ -466,34 +463,31 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         const canvas = createCroppedCanvas({
             ownerDocument: this.document,
             image: this.cropImageElement,
-            selection: this.cropSelection,
-            bounds: this.cropImageBounds,
+            selection,
+            bounds,
             fixedSize,
             fillBackground: this.originalFile?.type === 'image/jpeg',
         });
         if (canvas === null) {
-            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
-            this.cdr.markForCheck();
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED'));
             return;
         }
 
         const resizedCanvas = this.resizeCropCanvasIfNeeded(canvas, fixedSize);
         if (resizedCanvas === null) {
-            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
-            this.cdr.markForCheck();
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED'));
             return;
         }
 
         resizedCanvas.toBlob((blob: Blob | null) => {
             if (blob === null) {
-                this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
-                this.cdr.markForCheck();
+                this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED'));
                 return;
             }
 
             const fileName = this.originalFile?.name ?? 'avatar.png';
             const croppedFile = new File([blob], fileName, { type: this.originalFile?.type ?? 'image/png' });
-            this.isCropping = false;
+            this.isCropping.set(false);
             this.clearCropState();
             this.uploadFile(croppedFile);
         }, this.originalFile?.type ?? 'image/png');
@@ -516,9 +510,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
 
-        this.cropImageBounds = bounds;
-        this.cropSelection = createInitialCropSelection(bounds, this.cropAspectRatio());
-        this.cdr.markForCheck();
+        this.cropImageBounds.set(bounds);
+        this.cropSelection.set(createInitialCropSelection(bounds, this.cropAspectRatio()));
     }
 
     private resizeCropCanvasIfNeeded(canvas: HTMLCanvasElement, fixedSize: number | null): HTMLCanvasElement | null {
@@ -535,13 +528,13 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     private clearCropState(): void {
-        if (this.cropPreviewUrl !== null) {
-            this.cropPreviewUrl = null;
+        if (this.cropPreviewUrl() !== null) {
+            this.cropPreviewUrl.set(null);
         }
         this.originalFile = null;
         this.cropImageElement = null;
-        this.cropImageBounds = null;
-        this.cropSelection = null;
+        this.cropImageBounds.set(null);
+        this.cropSelection.set(null);
         this.cropInteraction = null;
     }
 }

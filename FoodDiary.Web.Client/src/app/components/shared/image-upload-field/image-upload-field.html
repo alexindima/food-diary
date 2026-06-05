@@ -4,12 +4,12 @@
         role="button"
         tabindex="0"
         [attr.aria-label]="'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate"
-        [attr.aria-disabled]="disabled() || isUploading"
-        [attr.aria-busy]="isUploading"
-        [attr.aria-describedby]="error ? errorId : null"
-        [class.image-upload-field__dropzone--dragging]="isDragging"
-        [class.image-upload-field__dropzone--uploading]="isUploading"
-        [class.image-upload-field__dropzone--has-image]="!!selection.url"
+        [attr.aria-disabled]="disabled() || isUploading()"
+        [attr.aria-busy]="isUploading()"
+        [attr.aria-describedby]="error() ? errorId : null"
+        [class.image-upload-field__dropzone--dragging]="isDragging()"
+        [class.image-upload-field__dropzone--uploading]="isUploading()"
+        [class.image-upload-field__dropzone--has-image]="!!selection().url"
         (click)="onZoneClick(fileInput)"
         (keydown.enter)="onZoneClick(fileInput)"
         (keydown.space)="onZoneClick(fileInput); $event.preventDefault()"
@@ -20,16 +20,16 @@
             type="file"
             hidden
             [accept]="acceptedTypes()"
-            [disabled]="disabled() || isUploading"
+            [disabled]="disabled() || isUploading()"
             (change)="onFileSelected($event)"
         />
 
-        @if (selection.url) {
+        @if (selection().url; as previewUrl) {
         <img
             class="image-upload-field__preview"
             width="512"
             height="512"
-            [ngSrc]="selection.url"
+            [ngSrc]="previewUrl"
             [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
         />
         <div class="image-upload-field__control">
@@ -68,15 +68,15 @@
                 {{ 'IMAGE_UPLOAD_FIELD.RECOMMENDED' | translate: { size: recommendedSize() } }}
             </div>
         </div>
-        } @if (isUploading) {
+        } @if (isUploading()) {
         <div class="image-upload-field__overlay fd-place-center fd-ui-action-text" role="status" aria-live="polite">
             {{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}
         </div>
         }
     </div>
-    @if (error) {
-    <span class="image-upload-field__error fd-ui-error-text" role="alert" [id]="errorId">{{ error }}</span>
-    } @defer (when isCropping && cropPreviewUrl) { @if (isCropping && cropPreviewUrl) {
+    @if (error()) {
+    <span class="image-upload-field__error fd-ui-error-text" role="alert" [id]="errorId">{{ error() }}</span>
+    } @defer (when isCropping() && cropPreviewUrl()) { @if (isCropping() && cropPreviewUrl()) {
     <div class="image-upload-field__cropper-backdrop fd-place-center" aria-hidden="true"></div>
     <div
         class="image-upload-field__cropper fd-stack fd-gap-md"
@@ -105,20 +105,20 @@
                 class="image-upload-field__cropper-image"
                 width="512"
                 height="512"
-                [src]="cropPreviewUrl"
+                [src]="cropPreviewUrl()"
                 [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
                 (load)="onCropImageLoaded(cropImage)"
             />
-            @if (cropImageBounds && cropSelection) {
+            @if (cropImageBounds() && cropSelection()) {
             <div
                 class="image-upload-field__crop-selection"
                 role="group"
                 tabindex="0"
                 [attr.aria-label]="'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate"
-                [style.left.px]="cropSelection.x"
-                [style.top.px]="cropSelection.y"
-                [style.width.px]="cropSelection.width"
-                [style.height.px]="cropSelection.height"
+                [style.left.px]="cropSelection()?.x"
+                [style.top.px]="cropSelection()?.y"
+                [style.width.px]="cropSelection()?.width"
+                [style.height.px]="cropSelection()?.height"
                 (keydown)="onCropKeydown($event)"
                 (pointerdown)="onCropPointerDown($event, 'move')"
             >

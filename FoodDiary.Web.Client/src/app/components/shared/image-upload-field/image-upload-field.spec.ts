@@ -59,7 +59,7 @@ describe('ImageUploadFieldComponent control value', () => {
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
-        expect(component['selection']).toEqual({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        expect(component['selection']()).toEqual({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
         expect(component.disabled()).toBe(true);
     });
 });
@@ -73,7 +73,7 @@ describe('ImageUploadFieldComponent upload', () => {
         component['handleIncomingFile'](new File(['text'], 'notes.txt', { type: 'text/plain' }));
         await fixture.whenStable();
 
-        expect(component['error']).toBe('Only images');
+        expect(component['error']()).toBe('Only images');
         expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
     });
 
@@ -87,7 +87,7 @@ describe('ImageUploadFieldComponent upload', () => {
         await fixture.whenStable();
 
         expect(imageUploadService.requestUploadUrl).toHaveBeenCalledOnce();
-        expect(component['selection']).toEqual({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
+        expect(component['selection']()).toEqual({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
         expect(changeSpy).toHaveBeenCalledWith({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
     });
 
@@ -100,7 +100,7 @@ describe('ImageUploadFieldComponent upload', () => {
         component['handleIncomingFile'](new File(['image-data'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
-        expect(component['error']).toBe('Too large');
+        expect(component['error']()).toBe('Too large');
         expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
     });
 
@@ -113,8 +113,8 @@ describe('ImageUploadFieldComponent upload', () => {
         component['handleIncomingFile'](new File(['image'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
-        expect(component['error']).toBe('Upload failed');
-        expect(component['isUploading']).toBe(false);
+        expect(component['error']()).toBe('Upload failed');
+        expect(component['isUploading']()).toBe(false);
     });
 });
 
@@ -127,7 +127,7 @@ describe('ImageUploadFieldComponent clearing', () => {
 
         component['clearImage']();
 
-        expect(component['selection']).toEqual({ url: null, assetId: null });
+        expect(component['selection']()).toEqual({ url: null, assetId: null });
         expect(component.value()).toEqual({ url: null, assetId: null });
         expect(component.touched()).toBe(true);
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
@@ -142,7 +142,7 @@ describe('ImageUploadFieldComponent clearing', () => {
 
         component['clearImage']();
 
-        expect(component['selection']).toEqual({ url: null, assetId: null });
+        expect(component['selection']()).toEqual({ url: null, assetId: null });
         expect(logger.warn).toHaveBeenCalledWith('Failed to delete orphan image asset', expect.any(Error));
     });
 });
@@ -171,10 +171,10 @@ describe('ImageUploadFieldComponent interactions', () => {
         fixture.detectChanges();
 
         component['onDragOver']({ preventDefault } as unknown as DragEvent);
-        expect(component['isDragging']).toBe(true);
+        expect(component['isDragging']()).toBe(true);
 
         component['onDragLeave']({ preventDefault } as unknown as DragEvent);
-        expect(component['isDragging']).toBe(false);
+        expect(component['isDragging']()).toBe(false);
     });
 
     it('ignores drop and dragover while disabled', async () => {
@@ -192,7 +192,7 @@ describe('ImageUploadFieldComponent interactions', () => {
             dataTransfer: { files: [new File(['image'], 'photo.png', { type: 'image/png' })] },
         } as unknown as DragEvent);
 
-        expect(component['isDragging']).toBe(false);
+        expect(component['isDragging']()).toBe(false);
         expect(imageUploadService.requestUploadUrl).not.toHaveBeenCalled();
         expect(preventDefault).toHaveBeenCalled();
         expect(stopPropagation).toHaveBeenCalled();
@@ -201,14 +201,14 @@ describe('ImageUploadFieldComponent interactions', () => {
     it('moves crop selection with keyboard arrows and ignores unrelated keys', async () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
         const preventDefault = vi.fn();
-        component['cropImageBounds'] = { x: 0, y: 0, width: 100, height: 100 };
-        component['cropSelection'] = { x: 10, y: 10, width: 40, height: 40 };
+        component['cropImageBounds'].set({ x: 0, y: 0, width: 100, height: 100 });
+        component['cropSelection'].set({ x: 10, y: 10, width: 40, height: 40 });
         fixture.detectChanges();
 
         component['onCropKeydown']({ key: 'ArrowRight', shiftKey: true, preventDefault } as unknown as KeyboardEvent);
-        expect(component['cropSelection'].x).toBe(CROP_SHIFTED_X);
+        expect(component['cropSelection']()?.x).toBe(CROP_SHIFTED_X);
 
         component['onCropKeydown']({ key: 'Enter', shiftKey: false, preventDefault } as unknown as KeyboardEvent);
-        expect(component['cropSelection'].x).toBe(CROP_SHIFTED_X);
+        expect(component['cropSelection']()?.x).toBe(CROP_SHIFTED_X);
     });
 });
