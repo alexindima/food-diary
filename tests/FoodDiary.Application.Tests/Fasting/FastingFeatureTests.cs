@@ -218,6 +218,50 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task StartFasting_WithUndefinedNumericPlanType_ReturnsFailure() {
+        var user = CreateUser(UserId.New());
+        var planRepo = new InMemoryFastingPlanRepository();
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
+        var handler = new StartFastingCommandHandler(
+            planRepo,
+            occurrenceRepo,
+            new StubUserRepository(user),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new StartFastingCommand(user.Id.Value, "F16_8", "999", null, null, null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidProtocol", result.Error.Code);
+        Assert.Empty(planRepo.StoredPlans);
+        Assert.Empty(occurrenceRepo.StoredOccurrences);
+    }
+
+    [Fact]
+    public async Task StartFasting_WithExtendedPlanTypeAndInvalidProtocol_ReturnsInvalidProtocol() {
+        var user = CreateUser(UserId.New());
+        var planRepo = new InMemoryFastingPlanRepository();
+        var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
+        var handler = new StartFastingCommandHandler(
+            planRepo,
+            occurrenceRepo,
+            new StubUserRepository(user),
+            new FixedDateTimeProvider(),
+            new StubUnitOfWork());
+
+        var result = await handler.Handle(
+            new StartFastingCommand(user.Id.Value, "not-a-protocol", "Extended", null, null, null, null, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidProtocol", result.Error.Code);
+        Assert.Empty(planRepo.StoredPlans);
+        Assert.Empty(occurrenceRepo.StoredOccurrences);
+    }
+
+    [Fact]
     public async Task StartFasting_WithDeletedUser_ReturnsAccountDeleted() {
         var user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);

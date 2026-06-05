@@ -142,6 +142,37 @@ public sealed class DmarcReportParserTests {
     }
 
     [Fact]
+    public void TryParse_WhenZipContainsInvalidXmlBeforeValidReport_ReturnsPreview() {
+        var rawMime = CreateRawMessage(CreateZipAttachment(
+            ("invalid.xml", "<not-feedback />"),
+            ("report.xml", CreateDmarcXml())));
+        var parser = new DmarcReportParser();
+
+        var report = parser.TryParse(rawMime);
+
+        Assert.NotNull(report);
+        Assert.Equal("google.com", report.OrganizationName);
+    }
+
+    [Fact]
+    public void TryParse_WhenGzipAttachmentIsInvalidBeforeValidXmlReport_ReturnsPreview() {
+        var rawMime = CreateRawMessage(
+            CreateGzipAttachment("<not-feedback />"),
+            new MimePart("application", "xml") {
+                FileName = "report.xml",
+                Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(CreateDmarcXml()))),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64
+            });
+        var parser = new DmarcReportParser();
+
+        var report = parser.TryParse(rawMime);
+
+        Assert.NotNull(report);
+        Assert.Equal("fooddiary.club", report.Domain);
+    }
+
+    [Fact]
     public void TryParse_WhenZipXmlEntryIsTooLarge_ReturnsNull() {
         var rawMime = CreateRawMessage(CreateZipAttachment("report.xml", new string('a', 2 * 1024 * 1024 + 1)));
         var parser = new DmarcReportParser();
@@ -255,12 +286,18 @@ public sealed class DmarcReportParserTests {
     }
 
     private static MimePart CreateZipAttachment(string entryName, string payload) {
+        return CreateZipAttachment((entryName, payload));
+    }
+
+    private static MimePart CreateZipAttachment(params (string EntryName, string Payload)[] entries) {
         using var compressed = new MemoryStream();
         using (var archive = new ZipArchive(compressed, ZipArchiveMode.Create, leaveOpen: true)) {
-            var entry = archive.CreateEntry(entryName);
-            using var entryStream = entry.Open();
-            using var writer = new StreamWriter(entryStream, Encoding.UTF8);
-            writer.Write(payload);
+            foreach (var (entryName, payload) in entries) {
+                var entry = archive.CreateEntry(entryName);
+                using var entryStream = entry.Open();
+                using var writer = new StreamWriter(entryStream, Encoding.UTF8);
+                writer.Write(payload);
+            }
         }
 
         return new MimePart("application", "zip") {
@@ -286,7 +323,7 @@ public sealed class DmarcReportParserTests {
         };
     }
 
-    private static string CreateRawMessage(MimePart attachment) {
+    private static string CreateRawMessage(params MimePart[] attachments) {
         var message = new MimeMessage();
         message.From.Add(MailboxAddress.Parse("reports@example.com"));
         message.To.Add(MailboxAddress.Parse("dmarc@fooddiary.club"));
@@ -295,7 +332,9 @@ public sealed class DmarcReportParserTests {
         var builder = new BodyBuilder {
             TextBody = "DMARC aggregate report"
         };
-        builder.Attachments.Add(attachment);
+        foreach (var attachment in attachments) {
+            builder.Attachments.Add(attachment);
+        }
         message.Body = builder.ToMessageBody();
 
         using var stream = new MemoryStream();

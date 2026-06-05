@@ -1,3 +1,5 @@
+using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using Microsoft.AspNetCore.Http;
@@ -292,10 +294,76 @@ public sealed class AuthHttpMappingsTests {
         Assert.Equal(request.ClientOrigin, command.ClientOrigin);
     }
 
+    [Fact]
+    public void AuthenticationModel_ToHttpResponse_MapsTokensAndUser() {
+        var userId = Guid.NewGuid();
+        var model = new AuthenticationModel(
+            "access-token",
+            "refresh-token",
+            CreateUserModel(userId));
+
+        var response = model.ToHttpResponse();
+
+        Assert.Equal("access-token", response.AccessToken);
+        Assert.Equal("refresh-token", response.RefreshToken);
+        Assert.Equal(userId, response.User.Id);
+        Assert.Equal("alex@example.com", response.User.Email);
+    }
+
+    [Fact]
+    public void AdminSsoStartModel_ToHttpResponse_MapsCodeAndExpiration() {
+        var expiresAtUtc = DateTime.UtcNow.AddMinutes(5);
+        var model = new AdminSsoStartModel("sso-code", expiresAtUtc);
+
+        var response = model.ToHttpResponse();
+
+        Assert.Equal("sso-code", response.Code);
+        Assert.Equal(expiresAtUtc, response.ExpiresAtUtc);
+    }
+
     private static HttpContext CreateHttpContext(string ipAddress, string userAgent) {
         var httpContext = new DefaultHttpContext();
         httpContext.Connection.RemoteIpAddress = IPAddress.Parse(ipAddress);
         httpContext.Request.Headers.UserAgent = userAgent;
         return httpContext;
     }
+
+    private static UserModel CreateUserModel(Guid id) =>
+        new(
+            id,
+            "alex@example.com",
+            HasPassword: true,
+            Username: "alex",
+            FirstName: "Alex",
+            LastName: "Doe",
+            BirthDate: null,
+            Gender: null,
+            Weight: null,
+            DesiredWeight: null,
+            DesiredWaist: null,
+            Height: null,
+            ActivityLevel: "Sedentary",
+            DailyCalorieTarget: null,
+            ProteinTarget: null,
+            FatTarget: null,
+            CarbTarget: null,
+            FiberTarget: null,
+            StepGoal: null,
+            WaterGoal: null,
+            HydrationGoal: null,
+            Language: "en",
+            Theme: "default",
+            UiStyle: "default",
+            PushNotificationsEnabled: false,
+            FastingPushNotificationsEnabled: false,
+            SocialPushNotificationsEnabled: false,
+            FastingCheckInReminderHours: 8,
+            FastingCheckInFollowUpReminderHours: 2,
+            ProfileImage: null,
+            ProfileImageAssetId: null,
+            DashboardLayout: null,
+            IsActive: true,
+            IsEmailConfirmed: true,
+            LastLoginAtUtc: null,
+            AiConsentAcceptedAt: null);
 }

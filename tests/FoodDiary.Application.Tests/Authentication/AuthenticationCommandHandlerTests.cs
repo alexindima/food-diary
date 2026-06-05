@@ -414,11 +414,32 @@ public sealed class AuthenticationCommandHandlerTests {
         var user = User.Create("verify@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
         user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.UtcNow.AddHours(1), dateTimeProvider.UtcNow));
+        var notifier = new StubEmailVerificationNotifier();
         var handler = new VerifyEmailCommandHandler(
             new StubUserRepository(user),
             new StubPasswordHasher(),
             dateTimeProvider,
-            new StubEmailVerificationNotifier());
+            notifier);
+
+        var result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "token"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(user.IsEmailConfirmed);
+        Assert.Equal(user.Id.Value, notifier.LastUserId);
+    }
+
+    [Fact]
+    public async Task VerifyEmailHandler_WhenNotifierFails_StillReturnsSuccess() {
+        var user = User.Create("verify-notifier-fails@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.UtcNow.AddHours(1), dateTimeProvider.UtcNow));
+        var handler = new VerifyEmailCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            dateTimeProvider,
+            new StubEmailVerificationNotifier(throwOnNotify: true));
 
         var result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
@@ -1084,9 +1105,17 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubEmailVerificationNotifier : IEmailVerificationNotifier {
-        public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+    private sealed class StubEmailVerificationNotifier(bool throwOnNotify = false) : IEmailVerificationNotifier {
+        public Guid? LastUserId { get; private set; }
+
+        public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) {
+            if (throwOnNotify) {
+                throw new InvalidOperationException("notification failed");
+            }
+
+            LastUserId = userId;
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

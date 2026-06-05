@@ -9,6 +9,78 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class RecipeHttpMappingsTests {
     [Fact]
+    public void GetRecipesHttpQuery_ToQuery_MapsAllFields() {
+        var userId = Guid.NewGuid();
+        var request = new GetRecipesHttpQuery(
+            Page: 2,
+            Limit: 25,
+            Search: "soup",
+            IncludePublic: false);
+
+        var query = request.ToQuery(userId);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(2, query.Page);
+        Assert.Equal(25, query.Limit);
+        Assert.Equal("soup", query.Search);
+        Assert.False(query.IncludePublic);
+    }
+
+    [Fact]
+    public void GetRecipesOverviewHttpQuery_ToQuery_NormalizesPagingAndLimits() {
+        var userId = Guid.NewGuid();
+        var request = new GetRecipesOverviewHttpQuery(
+            Page: 0,
+            Limit: 500,
+            RecentLimit: 0,
+            FavoriteLimit: 100,
+            Search: "  salad  ",
+            IncludePublic: true);
+
+        var query = request.ToQuery(userId);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(1, query.Page);
+        Assert.Equal(100, query.Limit);
+        Assert.Equal("salad", query.Search);
+        Assert.True(query.IncludePublic);
+        Assert.Equal(1, query.RecentLimit);
+        Assert.Equal(50, query.FavoriteLimit);
+    }
+
+    [Fact]
+    public void RecipeQueries_MapIdsAndExploreOptions() {
+        var userId = Guid.NewGuid();
+        var recipeId = Guid.NewGuid();
+        var recent = new GetRecentRecipesHttpQuery(Limit: 500, IncludePublic: false);
+        var explore = new ExploreRecipesHttpQuery(
+            Page: 3,
+            Limit: 15,
+            Search: "protein",
+            Category: "breakfast",
+            MaxPrepTime: 20,
+            SortBy: "popular");
+
+        var recentQuery = recent.ToQuery(userId);
+        var byIdQuery = recipeId.ToQuery(userId, includePublic: true);
+        var exploreQuery = explore.ToExploreQuery(userId);
+
+        Assert.Equal(userId, recentQuery.UserId);
+        Assert.Equal(50, recentQuery.Limit);
+        Assert.False(recentQuery.IncludePublic);
+        Assert.Equal(userId, byIdQuery.UserId);
+        Assert.Equal(recipeId, byIdQuery.RecipeId);
+        Assert.True(byIdQuery.IncludePublic);
+        Assert.Equal(userId, exploreQuery.UserId);
+        Assert.Equal(3, exploreQuery.Page);
+        Assert.Equal(15, exploreQuery.Limit);
+        Assert.Equal("protein", exploreQuery.Search);
+        Assert.Equal("breakfast", exploreQuery.Category);
+        Assert.Equal(20, exploreQuery.MaxPrepTime);
+        Assert.Equal("popular", exploreQuery.SortBy);
+    }
+
+    [Fact]
     public void CreateRecipeRequest_ToCommand_MapsAllFieldsAndSteps() {
         var userId = Guid.NewGuid();
         var imageAssetId = Guid.NewGuid();

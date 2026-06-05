@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
+using FoodDiary.Presentation.Api.Services;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -393,6 +394,69 @@ public sealed class AdminHttpMappingsTests {
         Assert.Equal("invoice", paymentResponse.Kind);
         Assert.Equal("invoice.paid", webhookResponse.EventType);
         Assert.Equal("processed", webhookResponse.Status);
+    }
+
+    [Fact]
+    public void FastingTelemetrySummarySnapshot_ToHttpResponse_MapsSummaryAndPresets() {
+        var generatedAtUtc = DateTime.UtcNow;
+        var lastCheckInAtUtc = generatedAtUtc.AddMinutes(-10);
+        var lastEventAtUtc = generatedAtUtc.AddMinutes(-5);
+        var summary = new FastingTelemetrySummarySnapshot(
+            WindowHours: 168,
+            GeneratedAtUtc: generatedAtUtc,
+            StartedSessions: 10,
+            CompletedSessions: 7,
+            SavedCheckIns: 5,
+            ReminderPresetSelections: 4,
+            ReminderTimingSaves: 3,
+            PresetReminderTimingSaves: 2,
+            ManualReminderTimingSaves: 1,
+            CompletionRatePercent: 70,
+            CheckInRatePercent: 50,
+            AverageCompletedDurationHours: 18.5,
+            LastCheckInAtUtc: lastCheckInAtUtc,
+            LastEventAtUtc: lastEventAtUtc,
+            TopPresets: [
+                new FastingTelemetryPresetSnapshot(
+                    PresetId: "morning",
+                    SelectionCount: 4,
+                    TimingSaveCount: 3,
+                    FirstReminderHours: 8,
+                    FollowUpReminderHours: 2,
+                    StartedSessions: 6,
+                    CompletedSessions: 5,
+                    SavedCheckIns: 4,
+                    CompletionRatePercent: 83.3,
+                    CheckInRatePercent: 66.7)
+            ]);
+
+        var response = summary.ToHttpResponse();
+
+        Assert.Equal(168, response.WindowHours);
+        Assert.Equal(generatedAtUtc, response.GeneratedAtUtc);
+        Assert.Equal(10, response.StartedSessions);
+        Assert.Equal(7, response.CompletedSessions);
+        Assert.Equal(5, response.SavedCheckIns);
+        Assert.Equal(4, response.ReminderPresetSelections);
+        Assert.Equal(3, response.ReminderTimingSaves);
+        Assert.Equal(2, response.PresetReminderTimingSaves);
+        Assert.Equal(1, response.ManualReminderTimingSaves);
+        Assert.Equal(70, response.CompletionRatePercent);
+        Assert.Equal(50, response.CheckInRatePercent);
+        Assert.Equal(18.5, response.AverageCompletedDurationHours);
+        Assert.Equal(lastCheckInAtUtc, response.LastCheckInAtUtc);
+        Assert.Equal(lastEventAtUtc, response.LastEventAtUtc);
+        var preset = Assert.Single(response.TopPresets);
+        Assert.Equal("morning", preset.PresetId);
+        Assert.Equal(4, preset.SelectionCount);
+        Assert.Equal(3, preset.TimingSaveCount);
+        Assert.Equal(8, preset.FirstReminderHours);
+        Assert.Equal(2, preset.FollowUpReminderHours);
+        Assert.Equal(6, preset.StartedSessions);
+        Assert.Equal(5, preset.CompletedSessions);
+        Assert.Equal(4, preset.SavedCheckIns);
+        Assert.Equal(83.3, preset.CompletionRatePercent);
+        Assert.Equal(66.7, preset.CheckInRatePercent);
     }
 
     [Fact]

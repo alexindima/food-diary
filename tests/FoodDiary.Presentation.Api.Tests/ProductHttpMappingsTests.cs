@@ -9,6 +9,145 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ProductHttpMappingsTests {
     [Fact]
+    public void SearchProductSuggestionsQuery_MapsSearchAndLimit() {
+        var query = ProductHttpMappings.ToSuggestionsQuery("apple", 7);
+
+        Assert.Equal("apple", query.Search);
+        Assert.Equal(7, query.Limit);
+    }
+
+    [Fact]
+    public void ProductCommands_MapProductAndUserIds() {
+        var userId = Guid.NewGuid();
+        var productId = Guid.NewGuid();
+
+        var deleteCommand = productId.ToDeleteCommand(userId);
+        var duplicateCommand = productId.ToDuplicateCommand(userId);
+
+        Assert.Equal(userId, deleteCommand.UserId);
+        Assert.Equal(productId, deleteCommand.ProductId);
+        Assert.Equal(userId, duplicateCommand.UserId);
+        Assert.Equal(productId, duplicateCommand.ProductId);
+    }
+
+    [Fact]
+    public void ProductSearchSuggestions_ToHttpResponse_MapsAllFields() {
+        var model = new ProductSearchSuggestionModel(
+            Source: "usda",
+            Name: "Apple",
+            Brand: "Farm",
+            Category: "Fruit",
+            Barcode: "123",
+            UsdaFdcId: 456,
+            ImageUrl: "https://cdn.example/apple.png",
+            CaloriesPer100G: 52,
+            ProteinsPer100G: 0.3,
+            FatsPer100G: 0.2,
+            CarbsPer100G: 14,
+            FiberPer100G: 2.4);
+
+        var response = new[] { model }.ToHttpResponse();
+
+        var item = Assert.Single(response);
+        Assert.Equal(model.Source, item.Source);
+        Assert.Equal(model.Name, item.Name);
+        Assert.Equal(model.Brand, item.Brand);
+        Assert.Equal(model.Category, item.Category);
+        Assert.Equal(model.Barcode, item.Barcode);
+        Assert.Equal(model.UsdaFdcId, item.UsdaFdcId);
+        Assert.Equal(model.ImageUrl, item.ImageUrl);
+        Assert.Equal(model.CaloriesPer100G, item.CaloriesPer100G);
+        Assert.Equal(model.ProteinsPer100G, item.ProteinsPer100G);
+        Assert.Equal(model.FatsPer100G, item.FatsPer100G);
+        Assert.Equal(model.CarbsPer100G, item.CarbsPer100G);
+        Assert.Equal(model.FiberPer100G, item.FiberPer100G);
+    }
+
+    [Fact]
+    public void GetProductsHttpQuery_ToQuery_NormalizesPagingSearchAndProductTypes() {
+        var userId = Guid.NewGuid();
+        var request = new GetProductsHttpQuery(
+            Page: 0,
+            Limit: 500,
+            Search: "  yogurt  ",
+            IncludePublic: true,
+            ProductTypes: "Food, food, Drink");
+
+        var query = request.ToQuery(userId);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(1, query.Page);
+        Assert.Equal(100, query.Limit);
+        Assert.Equal("yogurt", query.Search);
+        Assert.True(query.IncludePublic);
+        Assert.Equal(["Food", "Drink"], query.ProductTypes);
+    }
+
+    [Fact]
+    public void GetProductsHttpQuery_ToQuery_UsesNullSearchAndProductTypesForBlankValues() {
+        var request = new GetProductsHttpQuery(
+            Page: 2,
+            Limit: 20,
+            Search: " ",
+            IncludePublic: false,
+            ProductTypes: " ");
+
+        var query = request.ToQuery(Guid.NewGuid());
+
+        Assert.Equal(2, query.Page);
+        Assert.Equal(20, query.Limit);
+        Assert.Null(query.Search);
+        Assert.Null(query.ProductTypes);
+    }
+
+    [Fact]
+    public void GetProductsOverviewHttpQuery_ToQuery_NormalizesLimits() {
+        var userId = Guid.NewGuid();
+        var request = new GetProductsOverviewHttpQuery(
+            Page: -5,
+            Limit: 0,
+            Search: "  bar  ",
+            IncludePublic: true,
+            RecentLimit: 100,
+            FavoriteLimit: 0,
+            ProductTypes: "Custom,Food");
+
+        var query = request.ToQuery(userId);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(1, query.Page);
+        Assert.Equal(1, query.Limit);
+        Assert.Equal("bar", query.Search);
+        Assert.True(query.IncludePublic);
+        Assert.Equal(50, query.RecentLimit);
+        Assert.Equal(1, query.FavoriteLimit);
+        Assert.Equal(["Custom", "Food"], query.ProductTypes);
+    }
+
+    [Fact]
+    public void GetRecentProductsHttpQuery_ToQuery_ClampsLimit() {
+        var userId = Guid.NewGuid();
+        var request = new GetRecentProductsHttpQuery(Limit: 500, IncludePublic: true);
+
+        var query = request.ToQuery(userId);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(50, query.Limit);
+        Assert.True(query.IncludePublic);
+    }
+
+    [Fact]
+    public void ProductId_ToQuery_MapsUserAndProductIds() {
+        var userId = Guid.NewGuid();
+        var productId = Guid.NewGuid();
+
+        var query = productId.ToQuery(userId);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(productId, query.ProductId);
+    }
+
+    [Fact]
     public void CreateProductRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         var imageAssetId = Guid.NewGuid();

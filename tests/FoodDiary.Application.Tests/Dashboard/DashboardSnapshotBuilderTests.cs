@@ -9,6 +9,8 @@ using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Application.WeightEntries.Models;
@@ -255,6 +257,181 @@ public sealed class DashboardSnapshotBuilderTests {
         Assert.Equal(100, sender.LastConsumptionsQuery.Limit);
     }
 
+    [Fact]
+    public async Task BuildAsync_WhenStatisticsQueryFails_ReturnsFailure() {
+        var user = User.Create("dashboard-statistics-failure@example.com", "hash");
+        var sender = new ConfigurableDashboardSender {
+            FirstStatisticsError = Errors.Validation.Invalid("statistics", "Statistics failed.")
+        };
+        var builder = CreateBuilder(user, sender);
+
+        var result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Single(sender.StatisticsQueries);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenWeeklyStatisticsQueryFails_ReturnsFailure() {
+        var user = User.Create("dashboard-weekly-statistics-failure@example.com", "hash");
+        var date = new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        var sender = new ConfigurableDashboardSender {
+            SecondStatisticsError = Errors.Validation.Invalid("weeklyStatistics", "Weekly statistics failed.")
+        };
+        var builder = CreateBuilder(user, sender);
+
+        var result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true), date),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Equal(2, sender.StatisticsQueries.Count);
+        Assert.Equal(date.Date.AddDays(-6), sender.StatisticsQueries[1].DateFrom);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenMealsSectionFails_ReturnsFailure() {
+        var user = User.Create("dashboard-meals-failure@example.com", "hash");
+        var sender = new ConfigurableDashboardSender {
+            MealsError = Errors.Validation.Invalid("meals", "Meals failed.")
+        };
+        var builder = CreateBuilder(user, sender);
+
+        var result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true, includeMeals: true)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.NotNull(sender.LastConsumptionsQuery);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithHydrationTotals_ReturnsSummedHydration() {
+        var user = User.Create("dashboard-hydration@example.com", "hash");
+        user.UpdateGoals(waterGoal: 1800);
+        var date = new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        var builder = CreateBuilder(
+            user,
+            new ConfigurableDashboardSender(),
+            new StubHydrationEntryRepository([
+                (date.Date, 500),
+                (date.Date.AddDays(1), 700)
+            ]));
+
+        var result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeHydration: true), date, date.AddDays(1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value.Hydration);
+        Assert.Equal(1200, result.Value.Hydration!.TotalMl);
+        Assert.Equal(3600, result.Value.Hydration.GoalMl);
+    }
+
+    private static DashboardSnapshotBuilder CreateBuilder(
+        User user,
+        ISender sender,
+        IHydrationEntryRepository? hydrationEntryRepository = null) =>
+        new(
+            sender,
+            new AccessibleUserRepository(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            hydrationEntryRepository ?? new StubHydrationEntryRepository(),
+            new StubFastingOccurrenceRepository(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+    private static DashboardSnapshotRequest CreateRequest(
+        Guid userId,
+        DashboardSnapshotSections sections,
+        DateTime? date = null,
+        DateTime? dateTo = null) =>
+        new(
+            userId,
+            date ?? new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+            dateTo,
+            "en",
+            TrendDays: 7,
+            Page: 1,
+            PageSize: 10,
+            Sections: sections);
+
+    private static DashboardSnapshotSections Sections(
+        bool includeStatistics = false,
+        bool includeMeals = false,
+        bool includeHydration = false) =>
+        new(
+            IncludeStatistics: includeStatistics,
+            IncludeMeals: includeMeals,
+            IncludeWeight: false,
+            IncludeWaist: false,
+            IncludeHydration: includeHydration,
+            IncludeFasting: false,
+            IncludeAdvice: false,
+            IncludeLayout: false,
+            IncludeExercise: false,
+            IncludeTdee: false,
+            IncludeCycle: false);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ConfigurableDashboardSender : ISender {
+        public Error? FirstStatisticsError { get; init; }
+        public Error? SecondStatisticsError { get; init; }
+        public Error? MealsError { get; init; }
+        public List<GetStatisticsQuery> StatisticsQueries { get; } = [];
+        public GetConsumptionsQuery? LastConsumptionsQuery { get; private set; }
+
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
+            if (request is GetStatisticsQuery statisticsQuery) {
+                StatisticsQueries.Add(statisticsQuery);
+                var error = StatisticsQueries.Count == 1 ? FirstStatisticsError : SecondStatisticsError;
+                return error is not null
+                    ? Task.FromResult((TResponse)(object)Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(error))
+                    : Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<AggregatedStatisticsModel>>([
+                        new AggregatedStatisticsModel(
+                            statisticsQuery.DateFrom,
+                            statisticsQuery.DateTo,
+                            TotalCalories: 1800,
+                            AverageProteins: 100,
+                            AverageFats: 60,
+                            AverageCarbs: 200,
+                            AverageFiber: 25)
+                    ]));
+            }
+
+            if (request is GetConsumptionsQuery consumptionsQuery) {
+                LastConsumptionsQuery = consumptionsQuery;
+                if (MealsError is not null) {
+                    return Task.FromResult((TResponse)(object)Result.Failure<PagedResponse<ConsumptionModel>>(MealsError));
+                }
+
+                var response = new PagedResponse<ConsumptionModel>([], consumptionsQuery.Page, consumptionsQuery.Limit, 0, 0);
+                return Task.FromResult((TResponse)(object)Result.Success(response));
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class EmptyTrendSender : ISender {
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
@@ -448,7 +625,7 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubHydrationEntryRepository : IHydrationEntryRepository {
+    private sealed class StubHydrationEntryRepository(IReadOnlyList<(DateTime Date, int TotalMl)>? totals = null) : IHydrationEntryRepository {
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -460,7 +637,7 @@ public sealed class DashboardSnapshotBuilderTests {
             DateTime dateFrom,
             DateTime dateTo,
             CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+            Task.FromResult(totals ?? []);
     }
 
     [ExcludeFromCodeCoverage]

@@ -135,6 +135,28 @@ public sealed class ConsumptionHttpMappingsTests {
     }
 
     [Fact]
+    public void GetConsumptionsOverviewHttpQuery_ToQuery_NormalizesPagingAndFavoriteLimit() {
+        var userId = Guid.NewGuid();
+        var from = DateTime.UtcNow.AddDays(-30);
+        var to = DateTime.UtcNow;
+        var httpQuery = new GetConsumptionsOverviewHttpQuery(
+            Page: 0,
+            Limit: 500,
+            DateFrom: from,
+            DateTo: to,
+            FavoriteLimit: 0);
+
+        var query = httpQuery.ToQuery(userId);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(1, query.Page);
+        Assert.Equal(100, query.Limit);
+        Assert.Equal(from, query.DateFrom);
+        Assert.Equal(to, query.DateTo);
+        Assert.Equal(1, query.FavoriteLimit);
+    }
+
+    [Fact]
     public void ConsumptionId_ToQuery_MapsIds() {
         var userId = Guid.NewGuid();
         var consumptionId = Guid.NewGuid();

@@ -136,4 +136,74 @@ public sealed class NotificationHttpMappingsTests {
         Assert.Equal(subscription.CreatedOnUtc, response.CreatedAtUtc);
         Assert.Equal(subscription.ModifiedOnUtc, response.UpdatedAtUtc);
     }
+
+    [Fact]
+    public void WebPushCommandsAndQueries_MapAllFields() {
+        var userId = Guid.NewGuid();
+        var expiration = DateTime.UtcNow.AddDays(7);
+        var upsert = new UpsertWebPushSubscriptionHttpRequest(
+            "https://push.example.com/subscriptions/123",
+            expiration,
+            new UpsertWebPushSubscriptionKeysHttpRequest("p256dh", "auth"),
+            "ru",
+            "Firefox").ToCommand(userId);
+        var remove = new RemoveWebPushSubscriptionHttpRequest("https://push.example.com/subscriptions/123")
+            .ToCommand(userId);
+        var scheduled = new ScheduleTestNotificationHttpRequest(30, "fasting.completed").ToCommand(userId);
+
+        Assert.NotNull(NotificationHttpMappings.ToWebPushConfigurationQuery());
+        Assert.Equal(userId, userId.ToWebPushSubscriptionsQuery().UserId);
+        Assert.Equal(userId, upsert.UserId);
+        Assert.Equal("https://push.example.com/subscriptions/123", upsert.Endpoint);
+        Assert.Equal("p256dh", upsert.P256Dh);
+        Assert.Equal("auth", upsert.Auth);
+        Assert.Equal(expiration, upsert.ExpirationTimeUtc);
+        Assert.Equal("ru", upsert.Locale);
+        Assert.Equal("Firefox", upsert.UserAgent);
+        Assert.Equal(userId, remove.UserId);
+        Assert.Equal("https://push.example.com/subscriptions/123", remove.Endpoint);
+        Assert.Equal(userId, scheduled.UserId);
+        Assert.Equal(30, scheduled.DelaySeconds);
+        Assert.Equal("fasting.completed", scheduled.Type);
+    }
+
+    [Fact]
+    public void WebPushSubscriptionModel_ToHttpResponse_MapsAllFields() {
+        var createdAtUtc = DateTime.UtcNow.AddDays(-1);
+        var updatedAtUtc = DateTime.UtcNow;
+        var model = new WebPushSubscriptionModel(
+            "not-a-uri",
+            "not-a-uri",
+            null,
+            "en",
+            "Chrome",
+            createdAtUtc,
+            updatedAtUtc);
+
+        var response = model.ToHttpResponse();
+
+        Assert.Equal("not-a-uri", response.Endpoint);
+        Assert.Equal("not-a-uri", response.EndpointHost);
+        Assert.Null(response.ExpirationTimeUtc);
+        Assert.Equal("en", response.Locale);
+        Assert.Equal("Chrome", response.UserAgent);
+        Assert.Equal(createdAtUtc, response.CreatedAtUtc);
+        Assert.Equal(updatedAtUtc, response.UpdatedAtUtc);
+    }
+
+    [Fact]
+    public void ScheduledAndConfigurationModels_ToHttpResponse_MapAllFields() {
+        var scheduledAtUtc = DateTime.UtcNow.AddMinutes(1);
+        var scheduled = new ScheduledNotificationModel("fasting.completed", 45, scheduledAtUtc);
+        var configuration = new WebPushConfigurationModel(true, "public-key");
+
+        var scheduledResponse = scheduled.ToHttpResponse();
+        var configurationResponse = configuration.ToHttpResponse();
+
+        Assert.Equal("fasting.completed", scheduledResponse.Type);
+        Assert.Equal(45, scheduledResponse.DelaySeconds);
+        Assert.Equal(scheduledAtUtc, scheduledResponse.ScheduledAtUtc);
+        Assert.True(configurationResponse.Enabled);
+        Assert.Equal("public-key", configurationResponse.PublicKey);
+    }
 }
