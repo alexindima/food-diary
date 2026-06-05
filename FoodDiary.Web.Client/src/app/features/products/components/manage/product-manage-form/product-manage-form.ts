@@ -1,29 +1,12 @@
 import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    effect,
-    type FactoryProvider,
-    inject,
-    input,
-    output,
-    signal,
-    untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    FD_VALIDATION_ERRORS,
-    FdUiFormErrorComponent,
-    type FdValidationErrors,
-    getNumberProperty,
-} from 'fd-ui-kit/form-error/fd-ui-form-error';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { catchError, firstValueFrom, of } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner';
@@ -31,6 +14,7 @@ import type { ConfirmDeleteDialogData } from '../../../../../components/shared/c
 import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header';
 import { NavigationService } from '../../../../../services/navigation.service';
 import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
+import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
@@ -67,23 +51,12 @@ import type {
 import type { ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 import { ProductNutritionEditorComponent } from '../product-nutrition-editor/product-nutrition-editor';
 
-export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: FD_VALIDATION_ERRORS,
-    useFactory: (): FdValidationErrors => ({
-        required: () => 'FORM_ERRORS.REQUIRED',
-        min: (error?: unknown) => ({
-            key: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO',
-            params: { min: getNumberProperty(error, 'min') },
-        }),
-    }),
-};
-
 @Component({
     selector: 'fd-product-manage-form',
     templateUrl: './product-manage-form.html',
     styleUrls: ['./product-manage-form.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [VALIDATION_ERRORS_PROVIDER, ProductNameSearchFacade],
+    providers: [ProductNameSearchFacade],
     imports: [
         TranslatePipe,
         FdUiHintDirective,
@@ -199,7 +172,7 @@ export class ProductManageFormComponent {
             return;
         }
 
-        this.productForm.barcode().value.set(barcode);
+        this.patchProductForm({ barcode });
         this.lookupOpenFoodFacts(barcode);
     }
 
@@ -237,10 +210,15 @@ export class ProductManageFormComponent {
             .afterClosed()
             .subscribe(barcode => {
                 if (barcode !== null && barcode !== undefined && barcode.length > 0) {
-                    this.productForm.barcode().value.set(barcode);
+                    this.setBarcodeFromUserAction(barcode);
                     this.lookupOpenFoodFacts(barcode);
                 }
             });
+    }
+
+    private setBarcodeFromUserAction(barcode: string): void {
+        this.productForm.barcode().value.set(barcode);
+        this.productForm.barcode().markAsDirty();
     }
 
     private lookupOpenFoodFacts(barcode: string): void {
@@ -527,10 +505,7 @@ export class ProductManageFormComponent {
     }
 
     private patchProductForm(patch: Partial<ProductFormValues>): void {
-        this.productFormModel.update(values => ({
-            ...values,
-            ...patch,
-        }));
+        patchSignalFormModel(this.productFormModel, patch);
     }
 
     private getNutritionControlState(

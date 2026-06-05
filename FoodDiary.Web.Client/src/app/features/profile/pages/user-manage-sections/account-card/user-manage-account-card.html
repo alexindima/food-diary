@@ -34,9 +34,10 @@
                     class="user-manage__account-row-field"
                     type="email"
                     size="lg"
-                    [formField]="userForm().email"
+                    [value]="userForm().email().value()"
                     [label]="'USER_MANAGE.EMAIL' | translate"
                     [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
+                    [readonly]="true"
                 />
                 <fd-ui-input
                     class="user-manage__account-row-field"

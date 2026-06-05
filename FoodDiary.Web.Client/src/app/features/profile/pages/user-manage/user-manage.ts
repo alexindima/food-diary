@@ -1,18 +1,7 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    computed,
-    DestroyRef,
-    effect,
-    type FactoryProvider,
-    inject,
-    PLATFORM_ID,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, email, type FieldTree, form, required, type ValidationError } from '@angular/forms/signals';
+import { disabled, email, form, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
@@ -20,9 +9,8 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     FD_VALIDATION_ERRORS,
     FdUiFormErrorComponent,
-    type FdValidationErrorConfig,
     type FdValidationErrors,
-    getNumberProperty,
+    resolveSignalFormFieldError,
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -65,18 +53,6 @@ import {
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
 import { buildProfileStatus } from './user-manage-lib/user-manage-profile-status.mapper';
 
-export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: FD_VALIDATION_ERRORS,
-    useFactory: (): FdValidationErrors => ({
-        required: () => 'FORM_ERRORS.REQUIRED',
-        email: () => 'FORM_ERRORS.EMAIL',
-        minlength: (error?: unknown) => ({
-            key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
-            params: { requiredLength: getNumberProperty(error, 'requiredLength') },
-        }),
-    }),
-};
-
 @Component({
     selector: 'fd-user-manage',
     imports: [
@@ -94,7 +70,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     ],
     templateUrl: './user-manage.html',
     styleUrl: './user-manage.scss',
-    providers: [VALIDATION_ERRORS_PROVIDER, ProfileManageFacade, UserManageNotificationsFacade],
+    providers: [ProfileManageFacade, UserManageNotificationsFacade],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComponent {
@@ -105,7 +81,6 @@ export class UserManageComponent {
     private readonly facade = inject(ProfileManageFacade);
     protected readonly notifications = inject(UserManageNotificationsFacade);
     private readonly dialogService = inject(FdUiDialogService);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly dietologistFacade = inject(DietologistFacade);
     private readonly billingFacade = inject(PremiumBillingFacade);
     private readonly toastService = inject(FdUiToastService);
@@ -122,9 +97,7 @@ export class UserManageComponent {
     protected themeOptions: Array<FdUiSelectOption<AppThemeName | null>> = [];
     protected uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
     protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
-    protected readonly userForm = form(this.userFormModel, path => {
-        disabled(path.email, { when: () => true });
-    });
+    protected readonly userForm = form(this.userFormModel);
     protected readonly dietologistFormModel = signal<DietologistFormValues>(createDietologistFormModel());
     protected readonly dietologistForm = form(this.dietologistFormModel, path => {
         required(path.email);
@@ -277,10 +250,7 @@ export class UserManageComponent {
 
     protected onSubmit(): void {
         this.userForm().markAsTouched();
-
-        if (this.userForm().valid()) {
-            this.facade.saveProfileNow(this.buildUserUpdateDto());
-        }
+        this.facade.saveProfileNow(this.buildUserUpdateDto());
     }
 
     protected openChangePasswordDialog(): void {
@@ -367,7 +337,6 @@ export class UserManageComponent {
                             ...previousPermissions,
                         });
                         this.updateDietologistPermissionsState();
-                        this.cdr.markForCheck();
                     }
 
                     this.setDietologistError('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
@@ -396,8 +365,6 @@ export class UserManageComponent {
                     if (confirmed === true) {
                         this.executeDietologistRevoke();
                     }
-
-                    this.cdr.markForCheck();
                 });
             return;
         }
@@ -418,7 +385,6 @@ export class UserManageComponent {
                     shareProfile: !nextValue,
                 });
             }
-            this.cdr.markForCheck();
             return;
         }
 
@@ -441,13 +407,13 @@ export class UserManageComponent {
                         this.persistDietologistPermissions(previousPermissions);
                     }
                 }
-
-                this.cdr.markForCheck();
             });
     }
 
     private updateDietologistInviteEmailError(): void {
-        this.dietologistInviteEmailError.set(this.resolveTranslatedFieldError(this.dietologistForm.email));
+        this.dietologistInviteEmailError.set(
+            resolveSignalFormFieldError(this.dietologistForm.email, this.validationErrors, this.translateService),
+        );
     }
 
     private updateProfileStatus(): void {
@@ -459,7 +425,7 @@ export class UserManageComponent {
             globalError: this.globalError(),
             isSaving: this.isSavingProfile(),
             isDirty: this.userForm().dirty(),
-            isValid: this.userForm().valid(),
+            isValid: true,
         });
     }
 
@@ -511,7 +477,7 @@ export class UserManageComponent {
     }
 
     private queueUserAutosave(): void {
-        if (!this.userForm().dirty() || !this.userForm().valid()) {
+        if (!this.userForm().dirty()) {
             return;
         }
 
@@ -570,52 +536,10 @@ export class UserManageComponent {
         const model = mapDietologistRelationshipToForm(relationship);
         this.dietologistForm().reset(model);
         this.dietologistPermissions.set(getDietologistPermissions(model));
-        this.cdr.markForCheck();
     }
 
     private updateDietologistPermissionsState(): void {
         this.dietologistPermissions.set(getDietologistPermissions(this.dietologistFormModel()));
-    }
-
-    private resolveTranslatedFieldError(field: FieldTree<unknown>): string | null {
-        const state = field();
-        if (!state.invalid() || (!state.touched() && !state.dirty())) {
-            return null;
-        }
-
-        const error = state.errors()[0];
-        const key = this.mapValidationErrorKey(error);
-        const resolver = this.validationErrors?.[key];
-        if (resolver === undefined) {
-            return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-        }
-
-        const params = this.getValidationParams(error);
-        const result = resolver(params);
-        return this.translateValidationResult(result, params);
-    }
-
-    private mapValidationErrorKey(error: ValidationError): string {
-        return error.kind === 'minLength' ? 'minlength' : error.kind;
-    }
-
-    private getValidationParams(error: ValidationError): Record<string, unknown> {
-        if (error.kind === 'minLength') {
-            return { requiredLength: getNumberProperty(error, 'minLength') };
-        }
-
-        return {};
-    }
-
-    private translateValidationResult(result: FdValidationErrorConfig | string, params: Record<string, unknown>): string {
-        if (typeof result === 'string') {
-            return this.translateService.instant(result, params);
-        }
-
-        return this.translateService.instant(result.key, {
-            ...params,
-            ...result.params,
-        });
     }
 
     private setDietologistError(errorKey: string): void {

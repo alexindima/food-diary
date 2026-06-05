@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FieldTree, form, FormField, minLength, required, validate, type ValidationError } from '@angular/forms/signals';
+import { form, FormField, minLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -9,15 +9,13 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import {
     FD_VALIDATION_ERRORS,
     FdUiFormErrorComponent,
-    type FdValidationErrorConfig,
     type FdValidationErrors,
-    getNumberProperty,
+    resolveSignalFormFieldError,
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { AUTH_VALIDATION_ERRORS_PROVIDER } from '../../components/auth/auth-lib/auth-validation-errors.provider';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
@@ -31,7 +29,6 @@ type FieldErrors = Record<ErrorField, string | null>;
     imports: [CommonModule, FormField, TranslateModule, FdUiCardComponent, FdUiInputComponent, FdUiButtonComponent, FdUiFormErrorComponent],
     templateUrl: './password-reset.html',
     styleUrl: './password-reset.scss',
-    providers: [AUTH_VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordResetComponent {
@@ -46,7 +43,16 @@ export class PasswordResetComponent {
     protected readonly isSubmitting = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly token = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
-    protected readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    private readonly languageVersion = signal(0);
+    protected readonly fieldErrors = computed<FieldErrors>(() => {
+        this.languageVersion();
+        this.formModel();
+
+        return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
+            errors[field] = resolveSignalFormFieldError(this.form[field], this.validationErrors, this.translateService);
+            return errors;
+        }, this.createEmptyFieldErrors());
+    });
     protected readonly formModel = signal<PasswordResetFormValues>({
         password: '',
         confirmPassword: '',
@@ -60,16 +66,13 @@ export class PasswordResetComponent {
 
     public constructor() {
         this.resolveToken();
-        effect(() => {
-            this.formModel();
-            this.translateService.onLangChange;
-            this.updateFieldErrors();
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
         });
     }
 
     protected onSubmit(): void {
         this.form().markAsTouched();
-        this.updateFieldErrors();
         if (this.state() !== 'ready' || this.form().invalid() || this.isSubmitting()) {
             return;
         }
@@ -108,56 +111,6 @@ export class PasswordResetComponent {
 
     protected onBackToLogin(): void {
         void this.navigationService.navigateToAuthAsync('login');
-    }
-
-    private updateFieldErrors(): void {
-        this.fieldErrors.set(
-            ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
-                errors[field] = this.resolveTranslatedFieldError(this.form[field]);
-                return errors;
-            }, this.createEmptyFieldErrors()),
-        );
-    }
-
-    private resolveTranslatedFieldError(field: FieldTree<unknown>): string | null {
-        const state = field();
-        if (!state.invalid() || (!state.touched() && !state.dirty())) {
-            return null;
-        }
-
-        const error = state.errors()[0];
-        const key = this.mapValidationErrorKey(error);
-        const resolver = this.validationErrors?.[key];
-        if (resolver === undefined) {
-            return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-        }
-
-        const params = this.getValidationParams(error);
-        const result = resolver(params);
-        return this.translateValidationResult(result, params);
-    }
-
-    private mapValidationErrorKey(error: ValidationError): string {
-        return error.kind === 'minLength' ? 'minlength' : error.kind;
-    }
-
-    private getValidationParams(error: ValidationError): Record<string, unknown> {
-        if (error.kind === 'minLength') {
-            return { requiredLength: getNumberProperty(error, 'minLength') };
-        }
-
-        return {};
-    }
-
-    private translateValidationResult(result: FdValidationErrorConfig | string, params: Record<string, unknown>): string {
-        if (typeof result === 'string') {
-            return this.translateService.instant(result, params);
-        }
-
-        return this.translateService.instant(result.key, {
-            ...params,
-            ...result.params,
-        });
     }
 
     private createEmptyFieldErrors(): FieldErrors {

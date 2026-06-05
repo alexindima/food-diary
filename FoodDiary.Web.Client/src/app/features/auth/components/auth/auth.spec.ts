@@ -11,7 +11,6 @@ import { AuthComponent } from './auth';
 import { AuthFlowFacade } from './auth-lib/auth-flow.facade';
 import { AuthFormManager } from './auth-lib/auth-form.manager';
 import { AuthGoogleManager } from './auth-lib/auth-google.manager';
-import { AUTH_VALIDATION_ERRORS_PROVIDER } from './auth-lib/auth-validation-errors.provider';
 
 type AuthComponentTestContext = {
     authFlowFacadeSpy: {
@@ -74,7 +73,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
     TestBed.overrideComponent(AuthComponent, {
         set: {
             template: '',
-            providers: [AUTH_VALIDATION_ERRORS_PROVIDER, AuthFormManager, { provide: AuthGoogleManager, useValue: googleManagerSpy }],
+            providers: [AuthFormManager, { provide: AuthGoogleManager, useValue: googleManagerSpy }],
         },
     });
 

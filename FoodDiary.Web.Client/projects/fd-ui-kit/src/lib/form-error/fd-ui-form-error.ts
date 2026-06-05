@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, InjectionToken, input, signal } from '@angular/core';
+import type { ValidationError } from '@angular/forms/signals';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { merge, type Observable } from 'rxjs';
 
@@ -29,6 +30,11 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
             key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
             params: { requiredLength: getNumberProperty(error, 'requiredLength') },
         }),
+        nonEmptyArray: (): string => 'FORM_ERRORS.NON_EMPTY_ARRAY',
+        min: (error?: unknown): FdValidationErrorConfig => ({
+            key: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO',
+            params: { min: getNumberProperty(error, 'min') },
+        }),
         userExists: (): string => 'FORM_ERRORS.USER_EXISTS',
         matchField: (): string => 'FORM_ERRORS.PASSWORD.MATCH',
     }),
@@ -42,6 +48,84 @@ export const getNumberProperty = (value: unknown, property: string): number | un
     const propertyValue: unknown = Object.getOwnPropertyDescriptor(value, property)?.value;
     return typeof propertyValue === 'number' ? propertyValue : undefined;
 };
+
+export type FdSignalFormErrorOptions = {
+    showOnDirty?: boolean;
+};
+
+export type FdSignalFormFieldState = {
+    dirty: () => boolean;
+    errors: () => ValidationError[];
+    invalid: () => boolean;
+    touched: () => boolean;
+};
+
+export type FdSignalFormField = () => FdSignalFormFieldState;
+
+export function resolveSignalFormFieldError(
+    field: FdSignalFormField,
+    validationErrors: Partial<FdValidationErrors> | null | undefined,
+    translateService: TranslateService,
+    options: FdSignalFormErrorOptions = {},
+): string | null {
+    const state = field();
+    if (!state.invalid() || (!state.touched() && !((options.showOnDirty ?? true) && state.dirty()))) {
+        return null;
+    }
+
+    const error = state.errors()[0];
+    const key = mapSignalValidationErrorKey(error);
+    const resolver = validationErrors?.[key];
+    if (resolver === undefined) {
+        return translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
+    const params = getSignalValidationParams(error);
+    const result = resolver(params);
+    return translateValidationResult(result, params, translateService);
+}
+
+export function mapSignalValidationErrorKey(error: ValidationError): string {
+    return error.kind === 'minLength' ? 'minlength' : error.kind;
+}
+
+export function getSignalValidationParams(error: ValidationError): Record<string, unknown> {
+    if (error.kind === 'minLength') {
+        return { requiredLength: getNumberProperty(error, 'minLength') };
+    }
+
+    if (error.kind === 'maxLength') {
+        return { requiredLength: getNumberProperty(error, 'maxLength') };
+    }
+
+    return isRecord(error) ? error : {};
+}
+
+function translateValidationResult(
+    result: FdValidationErrorConfig | string,
+    controlParams: Record<string, unknown>,
+    translateService: TranslateService,
+    context: Record<string, unknown> = {},
+): string {
+    if (typeof result === 'string') {
+        return translateMessage(result, translateService, { ...controlParams, ...context });
+    }
+
+    return translateMessage(result.key, translateService, {
+        ...controlParams,
+        ...result.params,
+        ...context,
+    });
+}
+
+function translateMessage(key: string, translateService: TranslateService, params?: Record<string, unknown>): string {
+    const translated: unknown = translateService.instant(key, params);
+    return typeof translated === 'string' ? translated : key;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
 
 @Component({
     selector: 'fd-ui-form-error',
@@ -123,16 +207,7 @@ export class FdUiFormErrorComponent {
     }
 
     private translateValidationResult(result: FdValidationErrorConfig | string, controlParams: Record<string, unknown>): string {
-        const context = this.context() ?? {};
-        if (typeof result === 'string') {
-            return this.translateMessage(result, { ...controlParams, ...context });
-        }
-
-        return this.translateMessage(result.key, {
-            ...controlParams,
-            ...result.params,
-            ...context,
-        });
+        return translateValidationResult(result, controlParams, this.translate, this.context() ?? {});
     }
 
     private translateMessage(key: string, params?: Record<string, unknown>): string {

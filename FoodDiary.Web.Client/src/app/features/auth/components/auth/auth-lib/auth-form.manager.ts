@@ -1,12 +1,8 @@
-import { effect, inject, Service, signal } from '@angular/core';
-import { email, type FieldTree, form, minLength, required, validate, type ValidationError } from '@angular/forms/signals';
+import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { email, type FieldTree, form, minLength, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import {
-    FD_VALIDATION_ERRORS,
-    type FdValidationErrorConfig,
-    type FdValidationErrors,
-    getNumberProperty,
-} from 'fd-ui-kit/form-error/fd-ui-form-error';
+import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../lib/auth.constants';
 import type { LoginFieldErrors, PasswordResetFieldErrors, RegisterFieldErrors } from './auth.types';
@@ -23,8 +19,11 @@ import {
 @Service()
 export class AuthFormManager {
     private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly registerEmailExists = signal(false);
+    private readonly fieldErrorsVersion = signal(0);
+    private readonly languageVersion = signal(0);
 
     public readonly loginModel = signal(createLoginFormModel());
     public readonly registerModel = signal(createRegisterFormModel());
@@ -49,21 +48,45 @@ export class AuthFormManager {
         required(path.email);
         email(path.email);
     });
-    public readonly loginFieldErrors = signal<LoginFieldErrors>(createEmptyLoginFieldErrors());
-    public readonly registerFieldErrors = signal<RegisterFieldErrors>(createEmptyRegisterFieldErrors());
-    public readonly passwordResetFieldErrors = signal<PasswordResetFieldErrors>(createEmptyPasswordResetFieldErrors());
+    public readonly loginFieldErrors = computed<LoginFieldErrors>(() => {
+        this.fieldErrorsVersion();
+        this.languageVersion();
+        this.loginModel();
+
+        return LOGIN_ERROR_FIELDS.reduce<LoginFieldErrors>((errors, field) => {
+            errors[field] = this.resolveFieldError(this.loginForm[field], { showOnDirty: false });
+            return errors;
+        }, createEmptyLoginFieldErrors());
+    });
+    public readonly registerFieldErrors = computed<RegisterFieldErrors>(() => {
+        this.fieldErrorsVersion();
+        this.languageVersion();
+        this.registerModel();
+
+        return REGISTER_ERROR_FIELDS.reduce<RegisterFieldErrors>((errors, field) => {
+            errors[field] = this.resolveFieldError(this.registerForm[field], { showOnDirty: false });
+            return errors;
+        }, createEmptyRegisterFieldErrors());
+    });
+    public readonly passwordResetFieldErrors = computed<PasswordResetFieldErrors>(() => {
+        this.fieldErrorsVersion();
+        this.languageVersion();
+        this.passwordResetModel();
+
+        return PASSWORD_RESET_ERROR_FIELDS.reduce<PasswordResetFieldErrors>((errors, field) => {
+            errors[field] = this.resolveFieldError(this.passwordResetForm[field], { showOnDirty: false });
+            return errors;
+        }, createEmptyPasswordResetFieldErrors());
+    });
 
     public constructor() {
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.languageVersion.update(version => version + 1);
+        });
+
         effect(() => {
             this.registerModel().email;
             this.registerEmailExists.set(false);
-        });
-        effect(() => {
-            this.loginModel();
-            this.registerModel();
-            this.passwordResetModel();
-            this.translateService.onLangChange;
-            this.updateFieldErrors();
         });
     }
 
@@ -81,68 +104,10 @@ export class AuthFormManager {
     }
 
     public updateFieldErrors(): void {
-        this.loginFieldErrors.set(
-            LOGIN_ERROR_FIELDS.reduce<LoginFieldErrors>((errors, field) => {
-                errors[field] = this.resolveTranslatedFieldError(this.loginForm[field], { showOnDirty: false });
-                return errors;
-            }, createEmptyLoginFieldErrors()),
-        );
-        this.registerFieldErrors.set(
-            REGISTER_ERROR_FIELDS.reduce<RegisterFieldErrors>((errors, field) => {
-                errors[field] = this.resolveTranslatedFieldError(this.registerForm[field], { showOnDirty: false });
-                return errors;
-            }, createEmptyRegisterFieldErrors()),
-        );
-        this.passwordResetFieldErrors.set(
-            PASSWORD_RESET_ERROR_FIELDS.reduce<PasswordResetFieldErrors>((errors, field) => {
-                errors[field] = this.resolveTranslatedFieldError(this.passwordResetForm[field], { showOnDirty: false });
-                return errors;
-            }, createEmptyPasswordResetFieldErrors()),
-        );
+        this.fieldErrorsVersion.update(version => version + 1);
     }
 
-    private resolveTranslatedFieldError(field: FieldTree<unknown>, options: { showOnDirty?: boolean } = {}): string | null {
-        const state = field();
-        if (!state.invalid()) {
-            return null;
-        }
-
-        if (!state.touched() && !((options.showOnDirty ?? true) && state.dirty())) {
-            return null;
-        }
-
-        const error = state.errors()[0];
-        const key = this.mapValidationErrorKey(error);
-        const resolver = this.validationErrors?.[key];
-        if (resolver === undefined) {
-            return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-        }
-
-        const params = this.getValidationParams(error);
-        const result = resolver(params);
-        return this.translateValidationResult(result, params);
-    }
-
-    private mapValidationErrorKey(error: ValidationError): string {
-        return error.kind === 'minLength' ? 'minlength' : error.kind;
-    }
-
-    private getValidationParams(error: ValidationError): Record<string, unknown> {
-        if (error.kind === 'minLength') {
-            return { requiredLength: getNumberProperty(error, 'minLength') };
-        }
-
-        return {};
-    }
-
-    private translateValidationResult(result: FdValidationErrorConfig | string, params: Record<string, unknown>): string {
-        if (typeof result === 'string') {
-            return this.translateService.instant(result, params);
-        }
-
-        return this.translateService.instant(result.key, {
-            ...params,
-            ...result.params,
-        });
+    private resolveFieldError<T>(field: FieldTree<T>, options: { showOnDirty?: boolean } = {}): string | null {
+        return resolveSignalFormFieldError(field, this.validationErrors, this.translateService, options);
     }
 }

@@ -186,7 +186,6 @@ export const Overview: Story = {
 };
 
 export const PageBootstrap: Story = {
-    name: 'Page Bootstrap',
     args: {
         pageTitle: 'Page Bootstrap',
         intro: 'Rules for first-load page states and section hydration.',
@@ -239,7 +238,6 @@ export const SuccessAndDestructiveActions: Story = {
 };
 
 export const DefaultScreenPatterns: Story = {
-    name: 'Default Screen Patterns',
     args: {
         pageTitle: 'Default Screen Patterns',
         intro: 'Baseline expectations for list pages, form pages, dashboard pages, and settings pages.',

@@ -188,6 +188,16 @@ describe('ProductManageFormComponent prefill behavior', () => {
         expect(productValues(component).brand).toBeNull();
     });
 
+    it('should not mark the form dirty when applying route barcode prefill', async () => {
+        const { component, fixture } = await setupComponentAsync();
+
+        fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode });
+        fixture.detectChanges();
+
+        expect(productValues(component).barcode).toBe(OFF_PRODUCT.barcode);
+        expect(component['productForm']().dirty()).toBe(false);
+    });
+
     it('should apply barcode scanner result and look up Open Food Facts', async () => {
         const { component, dialogService, externalFoodFacade } = await setupComponentAsync();
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(OFF_PRODUCT.barcode) });
@@ -195,6 +205,7 @@ describe('ProductManageFormComponent prefill behavior', () => {
         component['openBarcodeScanner']();
 
         expect(productValues(component).barcode).toBe(OFF_PRODUCT.barcode);
+        expect(component['productForm'].barcode().dirty()).toBe(true);
         expect(externalFoodFacade.searchByBarcode).toHaveBeenCalledWith(OFF_PRODUCT.barcode);
     });
 });

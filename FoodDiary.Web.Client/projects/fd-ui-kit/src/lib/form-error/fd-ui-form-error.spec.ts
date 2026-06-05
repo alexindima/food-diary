@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import type { FieldTree, ValidationError } from '@angular/forms/signals';
 import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
@@ -10,6 +12,7 @@ import {
     type FdUiFormErrorControlState,
     type FdValidationErrors,
     getNumberProperty,
+    resolveSignalFormFieldError,
 } from './fd-ui-form-error';
 
 const REQUIRED_LENGTH = 8;
@@ -73,6 +76,7 @@ async function createComponentAsync(configure?: (component: TestHostComponent) =
 describe('FdUiFormErrorComponent', () => {
     registerDirectErrorTests();
     registerControlErrorTests();
+    registerSignalFormErrorTests();
 });
 
 function registerDirectErrorTests(): void {
@@ -100,6 +104,24 @@ function registerDirectErrorTests(): void {
             expect(getNumberProperty('error', 'requiredLength')).toBeUndefined();
         });
     });
+}
+
+function createSignalField(
+    error: ValidationError,
+    overrides: {
+        dirty?: boolean;
+        invalid?: boolean;
+        touched?: boolean;
+    } = {},
+): FieldTree<string> {
+    const state = {
+        dirty: (): boolean => overrides.dirty ?? false,
+        errors: (): ValidationError[] => [error],
+        invalid: (): boolean => overrides.invalid ?? true,
+        touched: (): boolean => overrides.touched ?? true,
+    };
+
+    return (() => state) as unknown as FieldTree<string>;
 }
 
 function registerControlErrorTests(): void {
@@ -179,6 +201,53 @@ function registerControlErrorTests(): void {
 
             const errorText = requireElement(fixture, '.fd-ui-form-error__text');
             expect(errorText.textContent.trim()).toBe('FORM_ERRORS.SERVER');
+        });
+    });
+}
+
+function registerSignalFormErrorTests(): void {
+    describe('signal form error resolver', () => {
+        it('maps Signal Forms minLength errors to the legacy minlength resolver key and params', async () => {
+            await TestBed.configureTestingModule({
+                imports: [TranslateModule.forRoot()],
+            }).compileComponents();
+            const translate = TestBed.inject(TranslateService);
+            const validationErrors: FdValidationErrors = {
+                minlength: error => ({
+                    key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
+                    params: { requiredLength: getNumberProperty(error, 'requiredLength') },
+                }),
+            };
+            const error: ValidationError = Object.assign({ kind: 'minLength' }, { minLength: REQUIRED_LENGTH });
+            const field = createSignalField(error);
+
+            expect(resolveSignalFormFieldError(field, validationErrors, translate)).toBe('FORM_ERRORS.PASSWORD.MIN_LENGTH');
+        });
+
+        it('respects showOnDirty when resolving Signal Forms errors', async () => {
+            await TestBed.configureTestingModule({
+                imports: [TranslateModule.forRoot()],
+            }).compileComponents();
+            const translate = TestBed.inject(TranslateService);
+            const validationErrors: FdValidationErrors = {
+                required: () => 'FORM_ERRORS.REQUIRED',
+            };
+            const error: ValidationError = { kind: 'required' };
+            const field = createSignalField(error, { dirty: true, touched: false });
+
+            expect(resolveSignalFormFieldError(field, validationErrors, translate, { showOnDirty: false })).toBeNull();
+            expect(resolveSignalFormFieldError(field, validationErrors, translate)).toBe('FORM_ERRORS.REQUIRED');
+        });
+
+        it('returns unknown for unmapped Signal Forms errors', async () => {
+            await TestBed.configureTestingModule({
+                imports: [TranslateModule.forRoot()],
+            }).compileComponents();
+            const translate = TestBed.inject(TranslateService);
+            const error: ValidationError = { kind: 'custom' };
+            const field = createSignalField(error);
+
+            expect(resolveSignalFormFieldError(field, {}, translate)).toBe('FORM_ERRORS.UNKNOWN');
         });
     });
 }

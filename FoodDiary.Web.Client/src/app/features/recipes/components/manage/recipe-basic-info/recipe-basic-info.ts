@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
-import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 
@@ -34,23 +34,27 @@ type FieldErrors = Record<ErrorField, string | null>;
 export class RecipeBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
+    private readonly languageVersion = signal(0);
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
-    protected readonly visibilitySelectOptions = signal<Array<FdUiSelectOption<RecipeVisibility>>>([]);
-    protected readonly fieldErrors = signal<FieldErrors>(this.createEmptyFieldErrors());
+    protected readonly visibilitySelectOptions = computed<Array<FdUiSelectOption<RecipeVisibility>>>(() => {
+        this.languageVersion();
+
+        return Object.values(RecipeVisibility).map(option => ({
+            value: option,
+            label: this.translateService.instant(`RECIPE_VISIBILITY.${option}`),
+        }));
+    });
+    protected readonly fieldErrors = computed<FieldErrors>(() => {
+        this.languageVersion();
+
+        return this.buildFieldErrors();
+    });
 
     public constructor() {
-        effect(() => {
-            this.trackErrorDependencies();
-            this.fieldErrors.set(this.buildFieldErrors());
-        });
-
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.refreshTranslatedState();
-        });
-
-        effect(() => {
-            this.refreshTranslatedState();
+            this.languageVersion.update(version => version + 1);
         });
     }
 
@@ -74,53 +78,6 @@ export class RecipeBasicInfoComponent {
     }
 
     private getControlError(controlName: ErrorField): string | null {
-        const state = this.form()[controlName]();
-
-        if (!state.touched() && !state.dirty()) {
-            return null;
-        }
-
-        if (!state.invalid()) {
-            return null;
-        }
-
-        const errors = state.errors();
-        if (errors.some(error => error.kind === 'required')) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        if (errors.some(error => error.kind === 'min')) {
-            const min = getNumberProperty(state.getError('min'), 'min') ?? 0;
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-        }
-
-        if (errors.some(error => error.kind === 'maxLength')) {
-            return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    }
-
-    private buildVisibilityOptions(): void {
-        this.visibilitySelectOptions.set(
-            Object.values(RecipeVisibility).map(option => ({
-                value: option,
-                label: this.translateService.instant(`RECIPE_VISIBILITY.${option}`),
-            })),
-        );
-    }
-
-    private refreshTranslatedState(): void {
-        this.buildVisibilityOptions();
-        this.fieldErrors.set(this.buildFieldErrors());
-    }
-
-    private trackErrorDependencies(): void {
-        ERROR_FIELDS.forEach(field => {
-            const state = this.form()[field]();
-            state.errors();
-            state.touched();
-            state.dirty();
-        });
+        return resolveSignalFormFieldError(this.form()[controlName], this.validationErrors, this.translateService);
     }
 }

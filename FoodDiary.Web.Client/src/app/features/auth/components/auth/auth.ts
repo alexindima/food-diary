@@ -12,7 +12,6 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -31,7 +30,6 @@ import { AUTH_TABS } from './auth-lib/auth-form.config';
 import { AuthFormManager } from './auth-lib/auth-form.manager';
 import { AuthGoogleManager } from './auth-lib/auth-google.manager';
 import { getLoginAutofillFieldValues, hasCompleteLoginAutofill } from './auth-lib/auth-login-autofill.utils';
-import { AUTH_VALIDATION_ERRORS_PROVIDER } from './auth-lib/auth-validation-errors.provider';
 import { AuthLoginFormComponent } from './auth-login-form/auth-login-form';
 import { AuthPasswordResetFormComponent } from './auth-password-reset-form/auth-password-reset-form';
 import { AuthRegisterFormComponent } from './auth-register-form/auth-register-form';
@@ -40,7 +38,7 @@ import { AuthRegisterFormComponent } from './auth-register-form/auth-register-fo
     selector: 'fd-auth',
     templateUrl: './auth.html',
     styleUrls: ['./auth.scss'],
-    providers: [AUTH_VALIDATION_ERRORS_PROVIDER, AuthFormManager, AuthGoogleManager],
+    providers: [AuthFormManager, AuthGoogleManager],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, FdUiTabsComponent, AuthLoginFormComponent, AuthPasswordResetFormComponent, AuthRegisterFormComponent],
 })
@@ -57,7 +55,6 @@ export class AuthComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
@@ -115,17 +112,14 @@ export class AuthComponent {
             this.loginModel();
             this.clearGlobalError();
             this.updateLoginAutofillState();
-            this.cdr.markForCheck();
         });
         effect(() => {
             this.registerModel();
             this.clearGlobalError();
-            this.cdr.markForCheck();
         });
         effect(() => {
             this.passwordResetModel();
             this.clearGlobalError();
-            this.cdr.markForCheck();
         });
     }
 
@@ -180,7 +174,6 @@ export class AuthComponent {
         if (this.loginForm().invalid() || this.isSubmitting()) {
             this.loginForm().markAsTouched();
             this.formManager.updateFieldErrors();
-            this.cdr.markForCheck();
             return;
         }
 
@@ -230,7 +223,6 @@ export class AuthComponent {
         if (this.registerForm().invalid() || this.isSubmitting()) {
             this.registerForm().markAsTouched();
             this.formManager.updateFieldErrors();
-            this.cdr.markForCheck();
             return;
         }
 
@@ -293,7 +285,6 @@ export class AuthComponent {
         if (this.passwordResetForm().invalid() || this.isPasswordResetting()) {
             this.passwordResetForm().markAsTouched();
             this.formManager.updateFieldErrors();
-            this.cdr.markForCheck();
             return;
         }
         if (this.passwordResetCooldownSeconds() > 0) {
@@ -453,6 +444,5 @@ export class AuthComponent {
         }
 
         this.loginAutofillDetected.set(hasAutofill);
-        this.cdr.markForCheck();
     }
 }

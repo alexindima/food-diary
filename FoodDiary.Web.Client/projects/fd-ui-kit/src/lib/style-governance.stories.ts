@@ -233,7 +233,6 @@ export const ComponentScss: Story = {
 };
 
 export const ReviewChecklist: Story = {
-    name: 'Review Checklist',
     args: {
         pageTitle: 'Style Review Checklist',
         intro: 'Use this checklist before merging frontend style changes.',
