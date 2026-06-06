@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;

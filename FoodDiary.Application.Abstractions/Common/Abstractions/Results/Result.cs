@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public class Result {
     public bool IsSuccess { get; }

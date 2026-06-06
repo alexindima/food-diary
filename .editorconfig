@@ -91,13 +91,6 @@ dotnet_diagnostic.CA1716.severity = none
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1859.severity = none
 
-# Keep established public/common API names without weakening MA0049 for new code.
-[**/Result/Result.cs]
-dotnet_diagnostic.MA0049.severity = suggestion
-
-[Shared/FoodDiary.Mediator/Mediator.cs]
-dotnet_diagnostic.MA0049.severity = suggestion
-
 [FoodDiary.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 # Domain value objects are not interop contracts; keep layout attributes out of business code.

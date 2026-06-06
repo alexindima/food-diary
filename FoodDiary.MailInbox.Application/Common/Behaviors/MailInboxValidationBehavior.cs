@@ -1,9 +1,9 @@
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.MailInbox.Application.Common.Result;
+using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.Mediator;
-using MailInboxResult = FoodDiary.MailInbox.Application.Common.Result.Result;
+using MailInboxResult = FoodDiary.MailInbox.Application.Common.Results.Result;
 
 namespace FoodDiary.MailInbox.Application.Common.Behaviors;
 

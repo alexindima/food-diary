@@ -1,4 +1,4 @@
-namespace FoodDiary.MailInbox.Application.Common.Result;
+namespace FoodDiary.MailInbox.Application.Common.Results;
 
 public class Result {
     protected Result(bool isSuccess, MailInboxError? error) {

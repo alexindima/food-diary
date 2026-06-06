@@ -1,6 +1,6 @@
-namespace FoodDiary.MailInbox.Application.Common.Result;
+namespace FoodDiary.MailRelay.Application.Common.Results;
 
-public sealed record MailInboxError(
+public sealed record MailRelayError(
     string Code,
     string Message,
     ErrorKind Kind = ErrorKind.Internal,

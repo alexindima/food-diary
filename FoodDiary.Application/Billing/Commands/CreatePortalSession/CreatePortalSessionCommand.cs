@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 namespace FoodDiary.Application.Billing.Commands.CreatePortalSession;
 

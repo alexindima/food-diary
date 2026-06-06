@@ -1,4 +1,4 @@
-using FoodDiary.MailInbox.Application.Common.Result;
+using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Presentation.Extensions;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Mvc;

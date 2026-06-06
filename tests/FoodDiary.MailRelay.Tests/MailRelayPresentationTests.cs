@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.MailRelay.Application.Common.Result;
+using FoodDiary.MailRelay.Application.Common.Results;
 using FoodDiary.MailRelay.Application.Options;
 using FoodDiary.MailRelay.Presentation.Extensions;
 using FoodDiary.MailRelay.Presentation.Features.Email;

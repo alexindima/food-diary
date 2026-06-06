@@ -1,5 +1,5 @@
 global using FoodDiary.MailRelay.Application.Abstractions;
-global using FoodDiary.MailRelay.Application.Common.Result;
+global using FoodDiary.MailRelay.Application.Common.Results;
 global using FoodDiary.MailRelay.Application.DeliveryEvents.Services;
 global using FoodDiary.MailRelay.Application.Emails.Models;
 global using FoodDiary.MailRelay.Application.Emails.Services;

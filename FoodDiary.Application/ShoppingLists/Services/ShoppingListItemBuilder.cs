@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Domain.Entities.Products;

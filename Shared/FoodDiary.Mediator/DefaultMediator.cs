@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Mediator;
 
-internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
+internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMediator {
     public Task<TResponse> Send<TResponse>(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default) {
@@ -122,7 +122,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         object request,
         Type responseType,
         CancellationToken cancellationToken) {
-        MethodInfo method = typeof(Mediator)
+        MethodInfo method = typeof(DefaultMediator)
             .GetMethods(BindingFlags.Instance | BindingFlags.Public)
             .Single(static method =>
                 string.Equals(method.Name, nameof(Send), StringComparison.Ordinal) &&

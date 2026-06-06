@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Common.Validation;

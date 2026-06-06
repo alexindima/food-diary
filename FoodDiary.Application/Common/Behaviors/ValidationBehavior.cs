@@ -1,7 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Common.Behaviors;

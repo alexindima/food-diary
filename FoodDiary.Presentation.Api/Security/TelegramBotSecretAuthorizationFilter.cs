@@ -28,7 +28,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
             TrackFailure(activity, "Authentication.TelegramBotNotConfigured");
             context.Result = CreateErrorResult(
                 context,
-                FoodDiary.Application.Abstractions.Common.Abstractions.Result.Errors.Authentication.TelegramBotNotConfigured);
+                FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotNotConfigured);
             return Task.CompletedTask;
         }
 
@@ -48,13 +48,13 @@ public sealed class TelegramBotSecretAuthorizationFilter(
         TrackFailure(activity, "Authentication.TelegramBotInvalidSecret");
         context.Result = CreateErrorResult(
             context,
-            FoodDiary.Application.Abstractions.Common.Abstractions.Result.Errors.Authentication.TelegramBotInvalidSecret);
+            FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotInvalidSecret);
         return Task.CompletedTask;
     }
 
     private static ObjectResult CreateErrorResult(
         AuthorizationFilterContext context,
-        FoodDiary.Application.Abstractions.Common.Abstractions.Result.Error error) =>
+        FoodDiary.Application.Abstractions.Common.Abstractions.Results.Error error) =>
         new(new ApiErrorHttpResponse(
             error.Code,
             error.Message,

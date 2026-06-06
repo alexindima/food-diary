@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Claims;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Extensions;

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Asp.Versioning;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Mediator;

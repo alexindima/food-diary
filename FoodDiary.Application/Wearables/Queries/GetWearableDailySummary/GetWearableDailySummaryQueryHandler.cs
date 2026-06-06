@@ -1,5 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Wearables.Commands.SyncWearableData;
 using FoodDiary.Application.Abstractions.Wearables.Common;

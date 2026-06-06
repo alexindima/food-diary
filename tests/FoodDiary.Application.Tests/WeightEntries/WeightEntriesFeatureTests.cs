@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.WeightEntries.Models;
 
 namespace FoodDiary.Application.Tests.WeightEntries;

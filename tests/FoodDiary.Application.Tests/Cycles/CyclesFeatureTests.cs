@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 namespace FoodDiary.Application.Tests.Cycles;
 

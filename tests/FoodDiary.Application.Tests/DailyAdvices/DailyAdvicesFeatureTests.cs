@@ -1,6 +1,6 @@
 using System.Reflection;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Models;

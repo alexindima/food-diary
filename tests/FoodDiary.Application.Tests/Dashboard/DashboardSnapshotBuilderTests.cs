@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;

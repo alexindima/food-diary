@@ -1,4 +1,4 @@
-namespace FoodDiary.MailInbox.Application.Common.Result;
+namespace FoodDiary.MailInbox.Application.Common.Results;
 
 public static class MailInboxErrors {
     public static MailInboxError MessageNotFound(Guid id) =>

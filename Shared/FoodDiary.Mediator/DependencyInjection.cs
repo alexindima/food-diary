@@ -10,7 +10,7 @@ public static class DependencyInjection {
         var configuration = new MediatorServiceConfiguration();
         configure(configuration);
 
-        services.AddScoped<IMediator, Mediator>();
+        services.AddScoped<IMediator, DefaultMediator>();
         services.AddScoped<ISender>(static provider => provider.GetRequiredService<IMediator>());
         services.AddScoped<IPublisher>(static provider => provider.GetRequiredService<IMediator>());
 

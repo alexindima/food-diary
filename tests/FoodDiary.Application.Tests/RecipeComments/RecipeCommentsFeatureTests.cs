@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Application.Common.Models;
 

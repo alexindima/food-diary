@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static class ErrorKindResolver {
     private static readonly IReadOnlyDictionary<string, ErrorKind> ExactMappings = new Dictionary<string, ErrorKind>(StringComparer.Ordinal) {

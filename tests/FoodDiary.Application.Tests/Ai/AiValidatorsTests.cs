@@ -3,7 +3,7 @@ using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Application.Ai.Commands.ParseFoodText;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;

@@ -14,7 +14,7 @@ using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
@@ -1151,33 +1151,33 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAuthValidator(bool validateFailure = false) : ITelegramAuthValidator {
-        public FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<TelegramInitData> ValidateInitData(string initData) =>
+        public FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result<TelegramInitData> ValidateInitData(string initData) =>
             validateFailure
-                ? FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Failure<TelegramInitData>(
+                ? FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("initData", "Invalid Telegram init data."))
-                : FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(
+                : FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Success(
                     new TelegramInitData(123456, "alex", "Alex", "User", null, "en", DateTime.UtcNow));
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramLoginWidgetValidator(bool validateFailure = false) : ITelegramLoginWidgetValidator {
-        public FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) =>
+        public FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) =>
             validateFailure
-                ? FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Failure<TelegramInitData>(
+                ? FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("hash", "Invalid Telegram login widget hash."))
-                : FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(
+                : FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Success(
                     new TelegramInitData(data.Id, data.Username, data.FirstName, data.LastName, data.PhotoUrl, null, DateTime.UtcNow));
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload, bool validateFailure = false) : IGoogleTokenValidator {
-        public Task<FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
+        public Task<FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
             string credential,
             CancellationToken cancellationToken) =>
             Task.FromResult(validateFailure
-                ? FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Failure<GoogleIdentityPayload>(
+                ? FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Failure<GoogleIdentityPayload>(
                     Errors.Validation.Invalid("credential", "Invalid Google credential."))
-                : FoodDiary.Application.Abstractions.Common.Abstractions.Result.Result.Success(payload));
+                : FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Success(payload));
     }
 
     private static ResendEmailVerificationCommandHandler CreateResendEmailVerificationHandler(

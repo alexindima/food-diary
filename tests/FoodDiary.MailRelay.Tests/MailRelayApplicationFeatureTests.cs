@@ -1,5 +1,5 @@
 using FoodDiary.MailRelay.Application.Abstractions;
-using FoodDiary.MailRelay.Application.Common.Result;
+using FoodDiary.MailRelay.Application.Common.Results;
 using FoodDiary.MailRelay.Application.DeliveryEvents.Services;
 using FoodDiary.MailRelay.Application.Emails.Commands;
 using FoodDiary.MailRelay.Application.Emails.Models;

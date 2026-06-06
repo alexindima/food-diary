@@ -3,7 +3,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;

@@ -1,5 +1,5 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Abstractions.Exercises.Common;

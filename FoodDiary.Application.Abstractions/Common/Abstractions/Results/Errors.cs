@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 public static class Errors {
     public static class Product {

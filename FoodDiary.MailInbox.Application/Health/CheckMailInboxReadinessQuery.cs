@@ -1,4 +1,4 @@
-using FoodDiary.MailInbox.Application.Common.Result;
+using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.MailInbox.Application.Health;

@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using FoodDiary.MailInbox.Application;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
-using FoodDiary.MailInbox.Application.Common.Result;
+using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Application.Health;
 using FoodDiary.MailInbox.Application.Messages.Commands;
 using FoodDiary.MailInbox.Application.Messages.Models;

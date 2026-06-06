@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.ContentReports.Models;
 
 namespace FoodDiary.Application.Tests.ContentReports;

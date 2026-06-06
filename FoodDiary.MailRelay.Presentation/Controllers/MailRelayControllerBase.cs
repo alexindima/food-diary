@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Application.Common.Result;
+using FoodDiary.MailRelay.Application.Common.Results;
 using FoodDiary.MailRelay.Presentation.Extensions;
 using FoodDiary.MailRelay.Presentation.Responses;
 using FoodDiary.Mediator;

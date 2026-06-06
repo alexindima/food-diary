@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Application.Common.Result;
+using FoodDiary.MailRelay.Application.Common.Results;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.MailRelay.Presentation.Controllers;

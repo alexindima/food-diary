@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.MailInbox.Application.Common.Result;
+using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Application.Health;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Application.Messages.Queries;

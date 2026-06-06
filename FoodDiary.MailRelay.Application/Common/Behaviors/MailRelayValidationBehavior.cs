@@ -2,7 +2,7 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Mediator;
-using MailRelayResult = FoodDiary.MailRelay.Application.Common.Result.Result;
+using MailRelayResult = FoodDiary.MailRelay.Application.Common.Results.Result;
 
 namespace FoodDiary.MailRelay.Application.Common.Behaviors;
 

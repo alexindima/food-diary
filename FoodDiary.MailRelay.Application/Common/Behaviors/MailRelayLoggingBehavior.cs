@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
-using MailRelayResult = FoodDiary.MailRelay.Application.Common.Result.Result;
+using MailRelayResult = FoodDiary.MailRelay.Application.Common.Results.Result;
 
 namespace FoodDiary.MailRelay.Application.Common.Behaviors;
 

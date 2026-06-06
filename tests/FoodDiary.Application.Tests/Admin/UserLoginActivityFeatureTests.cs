@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;

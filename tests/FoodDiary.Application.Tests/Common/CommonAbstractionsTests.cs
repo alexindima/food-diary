@@ -8,7 +8,7 @@ using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Services;
 using FoodDiary.Domain.Entities.Products;

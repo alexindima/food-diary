@@ -1,4 +1,4 @@
-using FoodDiary.MailRelay.Application.Common.Result;
+using FoodDiary.MailRelay.Application.Common.Results;
 using FoodDiary.MailRelay.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

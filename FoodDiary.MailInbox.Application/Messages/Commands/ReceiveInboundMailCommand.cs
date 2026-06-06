@@ -1,4 +1,4 @@
-using FoodDiary.MailInbox.Application.Common.Result;
+using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.Mediator;
 

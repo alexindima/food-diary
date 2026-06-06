@@ -1,4 +1,4 @@
-namespace FoodDiary.MailRelay.Application.Common.Result;
+namespace FoodDiary.MailRelay.Application.Common.Results;
 
 public enum ErrorKind {
     Validation = 0,

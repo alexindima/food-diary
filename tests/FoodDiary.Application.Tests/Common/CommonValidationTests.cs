@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;

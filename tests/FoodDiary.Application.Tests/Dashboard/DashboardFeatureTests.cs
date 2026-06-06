@@ -1,6 +1,6 @@
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.Dashboard.Models;

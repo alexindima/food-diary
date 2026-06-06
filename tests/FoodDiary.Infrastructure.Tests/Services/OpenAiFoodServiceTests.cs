@@ -2,7 +2,7 @@ using System.Diagnostics.Metrics;
 using System.Net;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services.OpenAi;
 using Microsoft.Extensions.Logging.Abstractions;
