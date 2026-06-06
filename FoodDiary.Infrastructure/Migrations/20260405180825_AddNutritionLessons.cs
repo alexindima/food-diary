@@ -22,7 +22,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     EstimatedReadMinutes = table.Column<int>(type: "integer", nullable: false),
                     SortOrder = table.Column<int>(type: "integer", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_NutritionLessons", x => x.Id);
@@ -36,7 +36,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     LessonId = table.Column<Guid>(type: "uuid", nullable: false),
                     ReadAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UserLessonProgress", x => x.Id);

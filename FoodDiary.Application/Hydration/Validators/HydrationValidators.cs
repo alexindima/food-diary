@@ -9,7 +9,7 @@ public static class HydrationValidators {
         return amountMl switch {
             <= 0 => Result.Failure(Errors.Validation.Invalid(nameof(amountMl), "Amount must be positive")),
             > MaxSingleEntryMl => Result.Failure(Errors.Validation.Invalid(nameof(amountMl), $"Amount must be <= {MaxSingleEntryMl} ml")),
-            _ => Result.Success()
+            _ => Result.Success(),
         };
     }
 }

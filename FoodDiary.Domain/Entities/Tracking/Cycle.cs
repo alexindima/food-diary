@@ -38,7 +38,7 @@ public sealed class Cycle : AggregateRoot<CycleId> {
             StartDate = NormalizeDate(startDate),
             AverageLength = NormalizeAverageLength(averageLength),
             LutealLength = NormalizeLutealLength(lutealLength),
-            Notes = NormalizeNotes(notes)
+            Notes = NormalizeNotes(notes),
         };
 
         cycle.SetCreated();

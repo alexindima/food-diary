@@ -19,7 +19,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Value = table.Column<double>(type: "double precision", nullable: false),
                     Unit = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     AgeGroup = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
-                    Gender = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false)
+                    Gender = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_DailyReferenceValues", x => x.Id);

@@ -19,7 +19,7 @@ public sealed class TelegramBotWorkerTests {
     public async Task StartAsync_WhenTokenIsMissing_DoesNotCallTelegramApi() {
         var botClient = new RecordingTelegramBotClient();
         TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), new TelegramBotOptions {
-            Token = ""
+            Token = "",
         });
 
         await worker.StartAsync(CancellationToken.None);
@@ -68,8 +68,8 @@ public sealed class TelegramBotWorkerTests {
             MeResponse = new User {
                 Id = 456,
                 IsBot = true,
-                FirstName = "FoodDiary"
-            }
+                FirstName = "FoodDiary",
+            },
         };
         TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
         using var cts = new CancellationTokenSource();
@@ -127,9 +127,9 @@ public sealed class TelegramBotWorkerTests {
                 Date = DateTime.UtcNow,
                 Chat = new Chat {
                     Id = 123,
-                    Type = ChatType.Private
-                }
-            }
+                    Type = ChatType.Private,
+                },
+            },
         });
 
         Assert.Empty(botClient.Requests);
@@ -147,9 +147,9 @@ public sealed class TelegramBotWorkerTests {
                 Date = DateTime.UtcNow,
                 Chat = new Chat {
                     Id = 123,
-                    Type = ChatType.Private
-                }
-            }
+                    Type = ChatType.Private,
+                },
+            },
         });
 
         Assert.Empty(botClient.Requests);
@@ -178,7 +178,7 @@ public sealed class TelegramBotWorkerTests {
             Token = "telegram-token",
             WebAppUrl = "",
             ApiBaseUrl = "https://api.example.test/",
-            ApiSecret = "telegram-api-secret-123"
+            ApiSecret = "telegram-api-secret-123",
         });
 
         await InvokeHandleUpdateAsync(worker, botClient, CreateMessageUpdate("/start", telegramUserId: 100));
@@ -209,8 +209,8 @@ public sealed class TelegramBotWorkerTests {
         var httpFactory = new RecordingHttpClientFactory(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(new {
                 accessToken = "access-token",
-                refreshToken = "refresh-token"
-            })
+                refreshToken = "refresh-token",
+            }),
         });
         TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions());
 
@@ -286,8 +286,8 @@ public sealed class TelegramBotWorkerTests {
             new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = JsonContent.Create(new {
                     accessToken = "access-token",
-                    refreshToken = "refresh-token"
-                })
+                    refreshToken = "refresh-token",
+                }),
             },
             new HttpResponseMessage(HttpStatusCode.Created));
         TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions());
@@ -307,8 +307,8 @@ public sealed class TelegramBotWorkerTests {
             new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = JsonContent.Create(new {
                     accessToken = "access-token",
-                    refreshToken = "refresh-token"
-                })
+                    refreshToken = "refresh-token",
+                }),
             },
             new HttpResponseMessage(HttpStatusCode.InternalServerError));
         TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions());
@@ -325,7 +325,7 @@ public sealed class TelegramBotWorkerTests {
         TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), httpFactory, new TelegramBotOptions {
             Token = "telegram-token",
             ApiBaseUrl = "not-a-url",
-            ApiSecret = ""
+            ApiSecret = "",
         });
 
         string? token = await InvokeTryGetAccessTokenAsync(worker, telegramUserId: 100);
@@ -337,7 +337,7 @@ public sealed class TelegramBotWorkerTests {
     [Fact]
     public async Task TryGetAccessTokenAsync_WhenResponsePayloadIsNull_ReturnsNull() {
         var httpFactory = new RecordingHttpClientFactory(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = new StringContent("null")
+            Content = new StringContent("null"),
         });
         TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), httpFactory, CreateOptions());
 
@@ -352,7 +352,7 @@ public sealed class TelegramBotWorkerTests {
         TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), httpFactory, new TelegramBotOptions {
             Token = "telegram-token",
             ApiBaseUrl = "not-a-url",
-            ApiSecret = "telegram-api-secret-123"
+            ApiSecret = "telegram-api-secret-123",
         });
 
         bool success = await InvokeCreateHydrationAsync(worker, accessToken: "access-token", amountMl: 250);
@@ -380,7 +380,7 @@ public sealed class TelegramBotWorkerTests {
             Token = "telegram-token",
             WebAppUrl = "https://app.example.test/",
             ApiBaseUrl = "https://api.example.test/",
-            ApiSecret = "telegram-api-secret-123"
+            ApiSecret = "telegram-api-secret-123",
         };
 
     private static TelegramBotWorker CreateWorker(
@@ -403,13 +403,13 @@ public sealed class TelegramBotWorkerTests {
                 Date = DateTime.UtcNow,
                 From = new User {
                     Id = telegramUserId,
-                    FirstName = "Alex"
+                    FirstName = "Alex",
                 },
                 Chat = new Chat {
                     Id = 123,
-                    Type = ChatType.Private
-                }
-            }
+                    Type = ChatType.Private,
+                },
+            },
         };
 
     private static Update CreateCallbackUpdate(string data) =>
@@ -420,9 +420,9 @@ public sealed class TelegramBotWorkerTests {
                 Data = data,
                 From = new User {
                     Id = 100,
-                    FirstName = "Alex"
-                }
-            }
+                    FirstName = "Alex",
+                },
+            },
         };
 
     private static Task InvokeHandleUpdateAsync(
@@ -496,7 +496,7 @@ public sealed class TelegramBotWorkerTests {
             Id = 123,
             IsBot = true,
             FirstName = "FoodDiary",
-            Username = "fooddiary_bot"
+            Username = "fooddiary_bot",
         };
 
         public bool LocalBotServer => false;
@@ -529,11 +529,11 @@ public sealed class TelegramBotWorkerTests {
                     Date = DateTime.UtcNow,
                     Chat = new Chat {
                         Id = 123,
-                        Type = ChatType.Private
-                    }
+                        Type = ChatType.Private,
+                    },
                 },
                 "AnswerCallbackQueryRequest" => true,
-                _ => throw new NotSupportedException(request.GetType().FullName)
+                _ => throw new NotSupportedException(request.GetType().FullName),
             };
 
             return Task.FromResult((TResponse)response);

@@ -29,7 +29,7 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
         var entry = new HydrationEntry(HydrationEntryId.New()) {
             UserId = userId,
             Timestamp = normalizedTimestamp,
-            AmountMl = normalizedAmountMl
+            AmountMl = normalizedAmountMl,
         };
 
         entry.SetCreated();
@@ -63,7 +63,7 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     private static DateTime Normalize(DateTime value) {
         DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
+            _ => value.ToUniversalTime(),
         };
         return utc;
     }

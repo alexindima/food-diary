@@ -206,7 +206,7 @@ public sealed class UserHttpMappingsTests {
                     Locale: "ru",
                     UserAgent: "Firefox",
                     CreatedAtUtc: subscriptionCreatedAtUtc,
-                    UpdatedAtUtc: subscriptionCreatedAtUtc.AddHours(1))
+                    UpdatedAtUtc: subscriptionCreatedAtUtc.AddHours(1)),
             ],
             new DietologistRelationshipModel(
                 relationshipId,

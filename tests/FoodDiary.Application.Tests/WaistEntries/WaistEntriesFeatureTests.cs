@@ -509,7 +509,7 @@ public class WaistEntriesFeatureTests {
     private static DateTime NormalizeUtcDate(DateTime value) {
         DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
+            _ => value.ToUniversalTime(),
         };
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);

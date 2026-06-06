@@ -26,9 +26,9 @@ public sealed class UserLoginActivityFeatureTests {
                     "125.0.0.0",
                     "Windows",
                     "Desktop",
-                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc))
+                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
             ],
-            TotalItems = 42
+            TotalItems = 42,
         };
         var handler = new GetAdminUserLoginEventsQueryHandler(repository);
 
@@ -60,9 +60,9 @@ public sealed class UserLoginActivityFeatureTests {
                     null,
                     null,
                     null,
-                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc))
+                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
             ],
-            TotalItems = 1
+            TotalItems = 1,
         };
         var handler = new GetAdminUserLoginEventsQueryHandler(repository);
 
@@ -89,9 +89,9 @@ public sealed class UserLoginActivityFeatureTests {
                     null,
                     null,
                     null,
-                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc))
+                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
             ],
-            TotalItems = 1
+            TotalItems = 1,
         };
         var handler = new GetAdminUserLoginEventsQueryHandler(repository);
 
@@ -110,8 +110,8 @@ public sealed class UserLoginActivityFeatureTests {
         var lastSeenAtUtc = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
         var repository = new RecordingUserLoginEventRepository {
             SummaryItems = [
-                new UserLoginDeviceSummaryModel("device:Desktop", 7, lastSeenAtUtc)
-            ]
+                new UserLoginDeviceSummaryModel("device:Desktop", 7, lastSeenAtUtc),
+            ],
         };
         var handler = new GetAdminUserLoginSummaryQueryHandler(repository);
 

@@ -18,7 +18,7 @@ public sealed class MailRelayClient(HttpClient httpClient, IOptions<MailRelayCli
         }
 
         using var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/email/send") {
-            Content = JsonContent.Create(request, options: JsonOptions)
+            Content = JsonContent.Create(request, options: JsonOptions),
         };
 
         if (!string.IsNullOrWhiteSpace(_options.ApiKey)) {

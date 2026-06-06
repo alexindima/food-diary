@@ -36,7 +36,7 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
         await _container.StartAsync().ConfigureAwait(false);
 
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(_container.GetConnectionString()) {
-            Database = $"fooddiary_api_test_{Guid.NewGuid():N}"
+            Database = $"fooddiary_api_test_{Guid.NewGuid():N}",
         };
 
         await CreateDatabaseAsync(connectionStringBuilder.Database).ConfigureAwait(false);

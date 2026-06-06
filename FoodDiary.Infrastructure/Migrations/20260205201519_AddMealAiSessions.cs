@@ -18,7 +18,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     RecognizedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Notes = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_MealAiSessions", x => x.Id);
@@ -45,7 +45,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Fiber = table.Column<double>(type: "double precision", nullable: false),
                     Alcohol = table.Column<double>(type: "double precision", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_MealAiItems", x => x.Id);

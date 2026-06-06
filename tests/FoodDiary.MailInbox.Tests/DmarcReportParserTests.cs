@@ -60,7 +60,7 @@ public sealed class DmarcReportParserTests {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(CreateDmarcXml()))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         });
         var parser = new DmarcReportParser();
 
@@ -77,7 +77,7 @@ public sealed class DmarcReportParserTests {
         string rawMime = CreateRawMessage(new MimePart(mediaType, mediaSubtype) {
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(CreateDmarcXml()))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         });
         var parser = new DmarcReportParser();
 
@@ -123,7 +123,7 @@ public sealed class DmarcReportParserTests {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(new byte[5 * 1024 * 1024 + 1])),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         });
         var parser = new DmarcReportParser();
 
@@ -163,7 +163,7 @@ public sealed class DmarcReportParserTests {
                 FileName = "report.xml",
                 Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(CreateDmarcXml()))),
                 ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-                ContentTransferEncoding = ContentEncoding.Base64
+                ContentTransferEncoding = ContentEncoding.Base64,
             });
         var parser = new DmarcReportParser();
 
@@ -189,7 +189,7 @@ public sealed class DmarcReportParserTests {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes("<not-feedback />"))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         });
         var parser = new DmarcReportParser();
 
@@ -219,7 +219,7 @@ public sealed class DmarcReportParserTests {
                 </feedback>
                 """))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         });
         var parser = new DmarcReportParser();
 
@@ -260,7 +260,7 @@ public sealed class DmarcReportParserTests {
                 <feedback><report_metadata><org_name>&xxe;</org_name></report_metadata></feedback>
                 """))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         });
         var parser = new DmarcReportParser();
 
@@ -305,7 +305,7 @@ public sealed class DmarcReportParserTests {
             FileName = "fooddiary.club.zip",
             Content = new MimeContent(new MemoryStream(compressed.ToArray())),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         };
     }
 
@@ -320,7 +320,7 @@ public sealed class DmarcReportParserTests {
             FileName = "fooddiary.club.xml.gz",
             Content = new MimeContent(new MemoryStream(compressed.ToArray())),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-            ContentTransferEncoding = ContentEncoding.Base64
+            ContentTransferEncoding = ContentEncoding.Base64,
         };
     }
 
@@ -331,7 +331,7 @@ public sealed class DmarcReportParserTests {
         message.Subject = "Report Domain: fooddiary.club";
 
         var builder = new BodyBuilder {
-            TextBody = "DMARC aggregate report"
+            TextBody = "DMARC aggregate report",
         };
         foreach (MimePart attachment in attachments) {
             builder.Attachments.Add(attachment);

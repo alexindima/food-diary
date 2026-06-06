@@ -17,7 +17,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     RecipeId = table.Column<Guid>(type: "uuid", nullable: false),
                     Text = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_RecipeComments", x => x.Id);

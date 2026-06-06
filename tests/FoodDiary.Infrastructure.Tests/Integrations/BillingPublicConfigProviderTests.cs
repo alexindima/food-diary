@@ -73,7 +73,7 @@ public sealed class BillingPublicConfigProviderTests {
             PremiumYearlyPriceId = "price-year",
             SuccessUrl = "https://example.com/success",
             CancelUrl = "https://example.com/cancel",
-            PortalReturnUrl = "https://example.com/portal"
+            PortalReturnUrl = "https://example.com/portal",
         };
     }
 
@@ -83,7 +83,7 @@ public sealed class BillingPublicConfigProviderTests {
             ClientSideToken = clientSideToken,
             PremiumMonthlyPriceId = "pri_month",
             PremiumYearlyPriceId = "pri_year",
-            CheckoutUrl = "https://checkout.paddle.com"
+            CheckoutUrl = "https://checkout.paddle.com",
         };
     }
 
@@ -94,7 +94,7 @@ public sealed class BillingPublicConfigProviderTests {
             PremiumMonthlyAmount = "199.00",
             PremiumYearlyAmount = "1990.00",
             Currency = "RUB",
-            ReturnUrl = "https://example.com/return"
+            ReturnUrl = "https://example.com/return",
         };
     }
 }

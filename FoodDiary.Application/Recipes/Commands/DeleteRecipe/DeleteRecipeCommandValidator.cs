@@ -48,7 +48,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
         if (recipe is null) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe not found or you do not have permission to delete it") {
-                ErrorCode = "Recipe.NotFound"
+                ErrorCode = "Recipe.NotFound",
             });
             return;
         }
@@ -57,7 +57,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
         if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe is already used and cannot be deleted") {
-                ErrorCode = "Validation.Invalid"
+                ErrorCode = "Validation.Invalid",
             });
         }
     }

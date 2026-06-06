@@ -263,7 +263,7 @@ internal sealed partial class DiaryPdfGenerator {
         report.Texts.CarbsTitle,
         report.Texts.FiberTitle,
         report.Texts.SatietyColumn,
-        report.Texts.CommentColumn
+        report.Texts.CommentColumn,
     ];
 
     private static string[] GetMealTableValues(Meal meal, DiaryReportData report) => [
@@ -276,7 +276,7 @@ internal sealed partial class DiaryPdfGenerator {
         FormatNumber(EffectiveCarbs(meal), 1, report.Culture),
         FormatNumber(EffectiveFiber(meal), 1, report.Culture),
         string.Create(CultureInfo.InvariantCulture, $"{meal.PreMealSatietyLevel}/{meal.PostMealSatietyLevel}"),
-        string.IsNullOrWhiteSpace(meal.Comment) ? "" : Truncate(meal.Comment, 90)
+        string.IsNullOrWhiteSpace(meal.Comment) ? "" : Truncate(meal.Comment, 90),
     ];
 
     private static void ComposeMealItemsList(IContainer container, DiaryReportData report, Meal meal) {

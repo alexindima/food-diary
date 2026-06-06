@@ -30,7 +30,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CyclicAnchorDateUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CyclicNextPhaseDateUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_FastingPlans", x => x.Id);
@@ -58,7 +58,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     AddedTargetHours = table.Column<int>(type: "integer", nullable: false),
                     Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_FastingOccurrences", x => x.Id);

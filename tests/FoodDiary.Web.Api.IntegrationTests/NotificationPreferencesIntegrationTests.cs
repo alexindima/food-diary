@@ -76,7 +76,7 @@ public sealed class NotificationPreferencesIntegrationTests(TestAuthApiWebApplic
         Assert.Equal("push.example.com", subscription.EndpointHost);
 
         HttpResponseMessage deleteResponse = await client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, "/api/v1/notifications/push/subscription") {
-            Content = JsonContent.Create(new RemoveWebPushSubscriptionPayload(subscription.Endpoint))
+            Content = JsonContent.Create(new RemoveWebPushSubscriptionPayload(subscription.Endpoint)),
         });
 
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);

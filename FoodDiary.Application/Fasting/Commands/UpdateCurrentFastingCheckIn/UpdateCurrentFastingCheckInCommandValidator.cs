@@ -9,7 +9,7 @@ public class UpdateCurrentFastingCheckInCommandValidator : AbstractValidator<Upd
         "irritability",
         "dizziness",
         "cravings",
-        "good"
+        "good",
     ];
 
     public UpdateCurrentFastingCheckInCommandValidator() {

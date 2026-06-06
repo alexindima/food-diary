@@ -416,7 +416,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             ManualFats = nutrition.Fats,
             ManualCarbs = nutrition.Carbs,
             ManualFiber = nutrition.Fiber,
-            ManualAlcohol = nutrition.Alcohol
+            ManualAlcohol = nutrition.Alcohol,
         };
         ApplyNutritionState(state);
     }
@@ -428,7 +428,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             TotalFats = nutrition.Fats,
             TotalCarbs = nutrition.Carbs,
             TotalFiber = nutrition.Fiber,
-            TotalAlcohol = nutrition.Alcohol
+            TotalAlcohol = nutrition.Alcohol,
         };
         ApplyNutritionState(state);
     }
@@ -516,7 +516,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         return value switch {
             null => null,
             < 0 => throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative."),
-            _ => value.Value
+            _ => value.Value,
         };
     }
 

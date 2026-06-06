@@ -230,7 +230,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             token switch {
                 "current-refresh-token" => (userId, email, false, RefreshSessionId),
                 "remember-refresh-token" => (userId, email, true, RefreshSessionId),
-                _ => null
+                _ => null,
             };
     }
 

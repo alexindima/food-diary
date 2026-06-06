@@ -96,7 +96,7 @@ public static class DependencyInjection {
                 RegionEndpoint = regionEndpoint,
                 AuthenticationRegion = regionEndpoint.SystemName,
                 ServiceURL = string.IsNullOrWhiteSpace(s3Options.ServiceUrl) ? null : s3Options.ServiceUrl,
-                ForcePathStyle = !string.IsNullOrWhiteSpace(s3Options.ServiceUrl)
+                ForcePathStyle = !string.IsNullOrWhiteSpace(s3Options.ServiceUrl),
             };
             return new AmazonS3Client(credentials, config);
         });

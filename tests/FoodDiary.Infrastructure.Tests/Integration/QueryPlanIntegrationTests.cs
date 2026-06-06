@@ -264,7 +264,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             QueryPlanTable.Products => "ANALYZE \"Products\"",
             QueryPlanTable.Recipes => "ANALYZE \"Recipes\"",
             QueryPlanTable.Meals => "ANALYZE \"Meals\"",
-            _ => throw new ArgumentOutOfRangeException(nameof(table), table, "Unsupported table for query-plan analysis.")
+            _ => throw new ArgumentOutOfRangeException(nameof(table), table, "Unsupported table for query-plan analysis."),
         };
 
         await context.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
@@ -309,6 +309,6 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     private enum QueryPlanTable {
         Products = 0,
         Recipes = 1,
-        Meals = 2
+        Meals = 2,
     }
 }

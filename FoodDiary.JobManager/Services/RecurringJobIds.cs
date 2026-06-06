@@ -10,6 +10,6 @@ public static class RecurringJobIds {
         ImageAssetsCleanup,
         NotificationsCleanup,
         UsersCleanup,
-        BillingRenewal
+        BillingRenewal,
     ];
 }

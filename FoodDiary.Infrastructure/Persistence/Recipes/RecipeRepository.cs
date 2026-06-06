@@ -49,7 +49,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             .Take(pageSize)
             .Select(r => new {
                 Recipe = r,
-                UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count
+                UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count,
             })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
@@ -158,7 +158,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
                 : r.UserId == userId))
             .Select(r => new {
                 Recipe = r,
-                UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count
+                UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count,
             })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 

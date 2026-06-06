@@ -42,7 +42,7 @@ public sealed class ImageAssetCleanupService(
 
         DateTime normalizedOlderThanUtc = olderThanUtc.Kind switch {
             DateTimeKind.Utc => olderThanUtc,
-            _ => olderThanUtc.ToUniversalTime()
+            _ => olderThanUtc.ToUniversalTime(),
         };
 
         IReadOnlyList<ImageAsset> candidates = await imageAssetRepository.GetUnusedOlderThanAsync(normalizedOlderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);

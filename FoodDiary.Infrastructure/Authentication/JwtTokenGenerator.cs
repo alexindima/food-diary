@@ -92,7 +92,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
                 ValidateAudience = true,
                 ValidAudience = _audience,
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
             }, out SecurityToken? validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
@@ -127,7 +127,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         var claims = new List<Claim> {
             new(ClaimTypes.NameIdentifier, userId.Value.ToString()),
             new(ClaimTypes.Email, email),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
         if (impersonation is not null) {

@@ -26,7 +26,7 @@ public sealed class BillingRenewalService(
 
     private enum RenewalOutcome {
         Renewed = 0,
-        Failed = 1
+        Failed = 1,
     }
 
     public async Task<BillingRenewalRunResult> RenewDueSubscriptionsAsync(

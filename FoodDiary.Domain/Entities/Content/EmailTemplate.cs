@@ -39,7 +39,7 @@ public sealed class EmailTemplate : Entity<Guid> {
             Subject = normalizedSubject,
             HtmlBody = normalizedHtmlBody,
             TextBody = normalizedTextBody,
-            IsActive = isActive
+            IsActive = isActive,
         };
         template.SetCreated();
         return template;

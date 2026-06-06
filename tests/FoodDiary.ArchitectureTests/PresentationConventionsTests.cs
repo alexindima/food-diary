@@ -37,7 +37,7 @@ public class PresentationConventionsTests {
         string[] scopedDirectories = new[] {
             Path.Combine(presentationRoot, "Features"),
             Path.Combine(presentationRoot, "Hubs"),
-            Path.Combine(presentationRoot, "Controllers")
+            Path.Combine(presentationRoot, "Controllers"),
         };
 
         string[] violations = SourceScanner.FindLinePatternViolations(
@@ -57,7 +57,7 @@ public class PresentationConventionsTests {
             "Conflict(",
             "NotFound(",
             "Forbid(",
-            "StatusCode("
+            "StatusCode(",
         };
 
         string[] violations = SourceScanner.FindLinePatternViolations(featuresPath, bannedPatterns);

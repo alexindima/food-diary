@@ -95,7 +95,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         var product = new Product {
             Id = ProductId.New(),
             UserId = userId,
-            Visibility = visibility
+            Visibility = visibility,
         };
         product.ApplyIdentityState(new ProductIdentityState(
             normalizedName,

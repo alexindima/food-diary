@@ -101,7 +101,7 @@ public sealed class DmarcReportParser {
                 new XmlReaderSettings {
                     DtdProcessing = DtdProcessing.Prohibit,
                     MaxCharactersInDocument = MaxDmarcXmlCharacters,
-                    XmlResolver = null
+                    XmlResolver = null,
                 });
             document = XDocument.Load(reader);
         } catch (Exception) {

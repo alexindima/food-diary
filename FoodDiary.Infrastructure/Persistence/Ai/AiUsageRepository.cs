@@ -59,7 +59,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 Date = group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
-                Output = group.Sum(x => x.OutputTokens)
+                Output = group.Sum(x => x.OutputTokens),
             })
             .OrderBy(x => x.Date)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -82,7 +82,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 Key = group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
-                Output = group.Sum(x => x.OutputTokens)
+                Output = group.Sum(x => x.OutputTokens),
             })
             .OrderByDescending(x => x.Total)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -101,7 +101,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 Key = group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
-                Output = group.Sum(x => x.OutputTokens)
+                Output = group.Sum(x => x.OutputTokens),
             })
             .OrderByDescending(x => x.Total)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -126,7 +126,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 group.Key.Email,
                 Total = group.Sum(x => x.usage.TotalTokens),
                 Input = group.Sum(x => x.usage.InputTokens),
-                Output = group.Sum(x => x.usage.OutputTokens)
+                Output = group.Sum(x => x.usage.OutputTokens),
             })
             .OrderByDescending(x => x.Total)
             .ToListAsync(cancellationToken).ConfigureAwait(false);

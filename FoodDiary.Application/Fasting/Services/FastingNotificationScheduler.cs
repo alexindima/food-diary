@@ -45,7 +45,7 @@ public sealed class FastingNotificationScheduler(
             createdCount += plan.Type switch {
                 FastingPlanType.Intermittent => await ProcessIntermittentNotificationsAsync(occurrence, plan, now, usersToPush, cancellationToken).ConfigureAwait(false),
                 _ => await ProcessCompletionNotificationAsync(occurrence, plan, now, usersToPush, cancellationToken)
-.ConfigureAwait(false)
+.ConfigureAwait(false),
             };
         }
 
@@ -235,7 +235,7 @@ public sealed class FastingNotificationScheduler(
                 plan.Type.ToString(),
                 occurrence.Kind.ToString(),
                 referenceId),
-            _ => throw new InvalidOperationException($"Unsupported fasting notification type '{notificationType}'.")
+            _ => throw new InvalidOperationException($"Unsupported fasting notification type '{notificationType}'."),
         };
 
         await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);

@@ -121,7 +121,7 @@ public sealed class DashboardHttpMappingsTests {
                         date,
                         IsPeriod: true,
                         new DailySymptomsModel(1, 2, 3, 4, 5, 6, 7),
-                        Notes: "day notes")
+                        Notes: "day notes"),
                 ],
                 new CyclePredictionsModel(date.AddDays(18), date.AddDays(4), date.AddDays(15))));
 

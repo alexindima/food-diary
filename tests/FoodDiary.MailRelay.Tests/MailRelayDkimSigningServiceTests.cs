@@ -25,7 +25,7 @@ public sealed class MailRelayDkimSigningServiceTests {
             Enabled = true,
             Domain = "example.com",
             Selector = "mail",
-            PrivateKeyPem = rsa.ExportPkcs8PrivateKeyPem()
+            PrivateKeyPem = rsa.ExportPkcs8PrivateKeyPem(),
         }));
         MimeMessage message = CreateMessage();
 

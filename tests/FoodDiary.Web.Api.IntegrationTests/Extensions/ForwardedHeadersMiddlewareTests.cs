@@ -12,7 +12,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
         ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             ForwardLimit = 1,
-            KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") }
+            KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") },
         });
 
         var httpContext = new DefaultHttpContext();
@@ -32,7 +32,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
         ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             ForwardLimit = 1,
-            KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") }
+            KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") },
         });
 
         var httpContext = new DefaultHttpContext();
@@ -52,7 +52,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
         var setup = new ForwardedHeadersOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiForwardedHeadersOptions {
             ForwardLimit = 2,
             KnownProxies = ["10.0.0.10"],
-            KnownNetworks = ["10.0.0.0/24", "2001:db8::/32"]
+            KnownNetworks = ["10.0.0.0/24", "2001:db8::/32"],
         }));
         var options = new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions();
 

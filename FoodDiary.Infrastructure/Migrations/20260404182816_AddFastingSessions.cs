@@ -23,7 +23,7 @@ public partial class AddFastingSessions : Migration {
                 Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                 xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
             constraints: table => {
                 table.PrimaryKey("PK_FastingSessions", x => x.Id);

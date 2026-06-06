@@ -41,7 +41,7 @@ public sealed class UserLoginEvent : Entity<Guid> {
             BrowserVersion = NormalizeOptionalText(browserVersion, 64),
             OperatingSystem = NormalizeOptionalText(operatingSystem, 64),
             DeviceType = NormalizeOptionalText(deviceType, 32),
-            LoggedInAtUtc = NormalizeUtcTimestamp(loggedInAtUtc, nameof(loggedInAtUtc))
+            LoggedInAtUtc = NormalizeUtcTimestamp(loggedInAtUtc, nameof(loggedInAtUtc)),
         };
         loginEvent.SetCreated(loginEvent.LoggedInAtUtc);
         return loginEvent;

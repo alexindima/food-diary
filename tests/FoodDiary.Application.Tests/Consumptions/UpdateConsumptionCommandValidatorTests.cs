@@ -34,7 +34,7 @@ public class UpdateConsumptionCommandValidatorTests {
         UpdateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                new ConsumptionAiItemInput("Apple", null, 0, "g", 100, 10, 5, 20, 3, 0)
+                new ConsumptionAiItemInput("Apple", null, 0, "g", 100, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);

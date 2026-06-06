@@ -62,7 +62,7 @@ public sealed class RabbitMqMailRelayBroker(
         var retryArguments = new Dictionary<string, object?>(StringComparer.Ordinal) {
             ["x-message-ttl"] = _brokerOptions.RetryDelayMilliseconds,
             ["x-dead-letter-exchange"] = _brokerOptions.OutboundExchangeName,
-            ["x-dead-letter-routing-key"] = _brokerOptions.OutboundRoutingKey
+            ["x-dead-letter-routing-key"] = _brokerOptions.OutboundRoutingKey,
         };
 
         await channel.QueueDeclareAsync(
@@ -127,7 +127,7 @@ public sealed class RabbitMqMailRelayBroker(
                 var properties = new BasicProperties {
                     Persistent = true,
                     ContentType = "text/plain",
-                    MessageId = emailId.ToString("D")
+                    MessageId = emailId.ToString("D"),
                 };
 
                 await channel.BasicPublishAsync(
@@ -147,7 +147,7 @@ public sealed class RabbitMqMailRelayBroker(
             Port = _brokerOptions.Port,
             UserName = _brokerOptions.UserName,
             Password = _brokerOptions.Password,
-            VirtualHost = _brokerOptions.VirtualHost
+            VirtualHost = _brokerOptions.VirtualHost,
         };
     }
 }

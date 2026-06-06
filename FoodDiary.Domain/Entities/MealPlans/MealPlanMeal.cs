@@ -30,7 +30,7 @@ public sealed class MealPlanMeal : Entity<MealPlanMealId> {
             MealPlanDayId = dayId,
             MealType = mealType,
             RecipeId = recipeId,
-            Servings = servings
+            Servings = servings,
         };
         meal.SetCreated();
         return meal;

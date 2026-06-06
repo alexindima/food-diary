@@ -15,7 +15,7 @@ public sealed class MailInboxSmtpOptions {
         "admin@fooddiary.club",
         "dmarc@fooddiary.club",
         "feedback@fooddiary.club",
-        "support@fooddiary.club"
+        "support@fooddiary.club",
     ];
 
     public static bool HasValidConfiguration(MailInboxSmtpOptions options) {

@@ -176,7 +176,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
         if (product is null) {
             context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to modify it") {
-                ErrorCode = "Product.NotFound"
+                ErrorCode = "Product.NotFound",
             });
             return;
         }
@@ -185,7 +185,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.ProductId),
                 "Product is already used in consumptions or recipes and cannot be updated") {
-                ErrorCode = "Validation.Invalid"
+                ErrorCode = "Validation.Invalid",
             });
         }
     }

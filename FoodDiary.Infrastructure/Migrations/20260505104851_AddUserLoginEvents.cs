@@ -23,7 +23,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     DeviceType = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: true),
                     LoggedInAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UserLoginEvents", x => x.Id);

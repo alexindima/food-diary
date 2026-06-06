@@ -19,7 +19,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     LutealLength = table.Column<int>(type: "integer", nullable: false, defaultValue: 14),
                     Notes = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_Cycles", x => x.Id);
@@ -47,7 +47,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Libido = table.Column<int>(type: "integer", nullable: false),
                     Notes = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_CycleDays", x => x.Id);

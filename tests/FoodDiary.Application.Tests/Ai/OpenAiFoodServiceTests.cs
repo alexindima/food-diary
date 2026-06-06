@@ -102,7 +102,7 @@ public sealed class OpenAiFoodServiceTests {
     public async Task CalculateNutritionAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
         var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
         var client = new RecordingOpenAiFoodClient {
-            CalculateNutritionResult = Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(Errors.Ai.EmptyItems())
+            CalculateNutritionResult = Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(Errors.Ai.EmptyItems()),
         };
         var service = new OpenAiFoodService(
             client,
@@ -216,7 +216,7 @@ public sealed class OpenAiFoodServiceTests {
     public async Task AnalyzeFoodImageAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
         var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
         var client = new RecordingOpenAiFoodClient {
-            AnalyzeFoodImageResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.Forbidden())
+            AnalyzeFoodImageResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.Forbidden()),
         };
         var service = new OpenAiFoodService(
             client,
@@ -245,7 +245,7 @@ public sealed class OpenAiFoodServiceTests {
                 CreateVisionModel(),
                 "vision",
                 "test-model",
-                Usage: null))
+                Usage: null)),
         };
         var service = new OpenAiFoodService(
             client,
@@ -305,7 +305,7 @@ public sealed class OpenAiFoodServiceTests {
     public async Task ParseFoodTextAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
         var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
         var client = new RecordingOpenAiFoodClient {
-            ParseFoodTextResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.EmptyItems())
+            ParseFoodTextResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.EmptyItems()),
         };
         var service = new OpenAiFoodService(
             client,
@@ -323,7 +323,7 @@ public sealed class OpenAiFoodServiceTests {
 
     private static FoodVisionModel CreateVisionModel() =>
         new([
-            new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)
+            new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m),
         ]);
 
     [ExcludeFromCodeCoverage]

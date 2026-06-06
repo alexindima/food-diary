@@ -20,7 +20,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     OutputTokens = table.Column<int>(type: "integer", nullable: false),
                     TotalTokens = table.Column<int>(type: "integer", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_AiUsages", x => x.Id);

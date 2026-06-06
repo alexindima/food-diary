@@ -501,7 +501,7 @@ public sealed class BillingFeatureTests {
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
         var paymentRepository = new RecordingBillingPaymentRepository();
         var webhookEventRepository = new RecordingBillingWebhookEventRepository {
-            ThrowAlreadyProcessedOnAdd = true
+            ThrowAlreadyProcessedOnAdd = true,
         };
         var gateway = new FakeBillingProviderGateway(
             BillingProviderNames.YooKassa,
@@ -546,7 +546,7 @@ public sealed class BillingFeatureTests {
     public async Task ProcessBillingWebhook_WhenConcurrentDuplicatePaymentDetected_ReturnsSuccess() {
         var user = User.Create("duplicate-payment@example.com", "hash");
         var paymentRepository = new RecordingBillingPaymentRepository {
-            ThrowAlreadyExistsOnAdd = true
+            ThrowAlreadyExistsOnAdd = true,
         };
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
@@ -966,7 +966,7 @@ public sealed class BillingFeatureTests {
             "evt_initial_duplicate",
             Now.AddMonths(-1));
         var paymentRepository = new RecordingBillingPaymentRepository {
-            ThrowAlreadyExistsOnAdd = true
+            ThrowAlreadyExistsOnAdd = true,
         };
         BillingRenewalService service = CreateRenewalService(
             new InMemoryBillingSubscriptionRepository(subscription),

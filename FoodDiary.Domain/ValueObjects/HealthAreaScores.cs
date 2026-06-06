@@ -74,7 +74,7 @@ public readonly record struct HealthAreaScores(
             >= 50 => HealthAreaGrade.Good,
             >= 25 => HealthAreaGrade.Fair,
             > 0 => HealthAreaGrade.Low,
-            _ => HealthAreaGrade.Unknown
+            _ => HealthAreaGrade.Unknown,
         };
 
         return new HealthAreaScore(score, grade);

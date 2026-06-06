@@ -14,7 +14,7 @@ public class CreateRecipeCommandValidatorTests {
             Guid.NewGuid(),
             [
                 CreateStep(order: 1, "Step 1"),
-                CreateStep(order: 1, "Step 2 duplicate")
+                CreateStep(order: 1, "Step 2 duplicate"),
             ]);
 
         ValidationResult result = await validator.ValidateAsync(command);
@@ -32,7 +32,7 @@ public class CreateRecipeCommandValidatorTests {
             Guid.NewGuid(),
             [
                 CreateStep(order: 0, "Step uses index fallback to 1"),
-                CreateStep(order: 2, "Explicit step 2")
+                CreateStep(order: 2, "Explicit step 2"),
             ]);
 
         ValidationResult result = await validator.ValidateAsync(command);

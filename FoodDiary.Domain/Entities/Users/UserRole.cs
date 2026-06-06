@@ -31,7 +31,7 @@ public sealed class UserRole {
 
         var userRole = new UserRole(user.Id, role.Id) {
             User = user,
-            Role = role
+            Role = role,
         };
 
         return userRole;

@@ -35,7 +35,7 @@ public sealed class MailRelayWebApplicationFactory(
                 ["MailRelayQueue:MaxAttempts"] = "3",
                 ["MailRelayQueue:BaseRetryDelaySeconds"] = "1",
                 ["MailRelayQueue:MaxRetryDelaySeconds"] = "2",
-                ["MailRelayQueue:LockTimeoutSeconds"] = "30"
+                ["MailRelayQueue:LockTimeoutSeconds"] = "30",
             });
         });
 

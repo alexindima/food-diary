@@ -6,7 +6,7 @@ public static class UserExtensions {
     private static readonly string[] UserIdClaimTypes = [
         ClaimTypes.NameIdentifier,
         "nameid",
-        "sub"
+        "sub",
     ];
 
     public static Guid? GetUserGuid(this ClaimsPrincipal user) {

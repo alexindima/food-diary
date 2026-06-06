@@ -31,7 +31,7 @@ public static class MailgunWebhookHttpMappings {
                 string.Equals(request.EventData.Severity, "permanent", StringComparison.OrdinalIgnoreCase) ? "hard" : "soft",
                 request.EventData.Id,
                 request.EventData.Reason),
-            _ => null
+            _ => null,
         };
 
         if (deliveryEvent is not null) {

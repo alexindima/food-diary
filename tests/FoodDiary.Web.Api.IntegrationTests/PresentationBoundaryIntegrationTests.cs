@@ -165,7 +165,7 @@ public sealed class PresentationBoundaryIntegrationTests(
                         Category: "NutritionBasics",
                         Difficulty: "Beginner",
                         EstimatedReadMinutes: 3,
-                        SortOrder: 10)
+                        SortOrder: 10),
                 ]));
         using var importJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 
@@ -554,7 +554,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/users/preferences/appearance",
             "/api/v{version}/users/overview",
             "/api/v{version}/weight-entries",
-            "/api/v{version}/waist-entries"
+            "/api/v{version}/waist-entries",
         };
 
         JsonElement paths = root.GetProperty("paths");
@@ -568,7 +568,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             endpoints);
 
         return JsonSerializer.Serialize(snapshot, new JsonSerializerOptions {
-            WriteIndented = true
+            WriteIndented = true,
         });
     }
 
@@ -600,7 +600,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/admin/email-templates",
             "/api/v{version}/admin/email-templates/test",
             "/api/v{version}/admin/email-templates/{key}/{locale}",
-            "/api/v{version}/admin/ai-usage/summary"
+            "/api/v{version}/admin/ai-usage/summary",
         };
 
         JsonElement paths = root.GetProperty("paths");
@@ -614,7 +614,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             endpoints);
 
         return JsonSerializer.Serialize(snapshot, new JsonSerializerOptions {
-            WriteIndented = true
+            WriteIndented = true,
         });
     }
 
@@ -630,7 +630,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             endpoints);
 
         return JsonSerializer.Serialize(snapshot, new JsonSerializerOptions {
-            WriteIndented = true
+            WriteIndented = true,
         });
     }
 

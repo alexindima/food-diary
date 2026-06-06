@@ -26,7 +26,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
         var list = new ShoppingList {
             Id = ShoppingListId.New(),
             UserId = userId,
-            Name = normalizedName
+            Name = normalizedName,
         };
         list.SetCreated();
         return list;

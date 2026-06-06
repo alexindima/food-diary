@@ -14,14 +14,14 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessagesAsync_SendsApiKeyHeader() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = JsonContent.Create(Array.Empty<InboundMailMessageSummaryResponse>())
+            Content = JsonContent.Create(Array.Empty<InboundMailMessageSummaryResponse>()),
         });
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://inbox.example.test")
+            BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions {
             BaseUrl = "https://inbox.example.test",
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
 
         IReadOnlyList<InboundMailMessageSummaryResponse> messages = await client.GetMessagesAsync(10, CancellationToken.None);
@@ -43,10 +43,10 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessagesAsync_WhenResponseIsInvalidJson_ThrowsInvalidOperationException() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = new StringContent("{")
+            Content = new StringContent("{"),
         });
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://inbox.example.test")
+            BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
@@ -60,10 +60,10 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessagesAsync_WhenPayloadIsNull_ThrowsInvalidOperationException() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = new StringContent("null")
+            Content = new StringContent("null"),
         });
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://inbox.example.test")
+            BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
@@ -77,7 +77,7 @@ public sealed class MailInboxClientTests {
     public async Task GetMessageAsync_WhenNotFound_ReturnsNull() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.NotFound));
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://inbox.example.test")
+            BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
@@ -89,10 +89,10 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessageAsync_WhenResponseIsInvalidJson_ThrowsInvalidOperationException() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = new StringContent("{")
+            Content = new StringContent("{"),
         });
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://inbox.example.test")
+            BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
@@ -117,10 +117,10 @@ public sealed class MailInboxClientTests {
             "Received",
             DateTimeOffset.UtcNow);
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = JsonContent.Create(expected)
+            Content = JsonContent.Create(expected),
         });
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://inbox.example.test")
+            BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
@@ -137,10 +137,10 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessageAsync_WhenPayloadIsNull_ThrowsInvalidOperationException() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = new StringContent("null")
+            Content = new StringContent("null"),
         });
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://inbox.example.test")
+            BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
@@ -177,7 +177,7 @@ public sealed class MailInboxClientTests {
     [InlineData("", false)]
     public void MailInboxClientOptions_HasValidBaseUrl_ReturnsExpectedResult(string baseUrl, bool expected) {
         var options = new MailInboxClientOptions {
-            BaseUrl = baseUrl
+            BaseUrl = baseUrl,
         };
 
         Assert.Equal(expected, MailInboxClientOptions.HasValidBaseUrl(options));

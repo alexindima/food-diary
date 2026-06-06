@@ -40,7 +40,7 @@ public sealed class DeleteImageAssetCommandHandler(
             "not_found" => Result.Failure(Errors.Image.NotFound(request.AssetId)),
             "in_use" => Result.Failure(Errors.Image.InUse()),
             "storage_error" => Result.Failure(Errors.Image.StorageError()),
-            _ => Result.Failure(Errors.Image.InvalidData("Failed to delete image asset."))
+            _ => Result.Failure(Errors.Image.InvalidData("Failed to delete image asset.")),
         };
     }
 }

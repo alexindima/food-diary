@@ -67,7 +67,7 @@ public sealed class EmailSenderTests {
                 FrontendBaseUrl = "https://fooddiary.club",
                 AllowedFrontendBaseUrls = ["https://fooddiary.club", "https://дневникеды.рф"],
                 VerificationPath = "/verify-email",
-                PasswordResetPath = "/reset-password"
+                PasswordResetPath = "/reset-password",
             });
 
         await sender.SendPasswordResetAsync(
@@ -88,7 +88,7 @@ public sealed class EmailSenderTests {
                 FrontendBaseUrl = "https://fooddiary.club",
                 AllowedFrontendBaseUrls = ["https://fooddiary.club", "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"],
                 VerificationPath = "/verify-email",
-                PasswordResetPath = "/reset-password"
+                PasswordResetPath = "/reset-password",
             });
 
         await sender.SendEmailVerificationAsync(
@@ -106,7 +106,7 @@ public sealed class EmailSenderTests {
                 FromName = "FoodDiary",
                 FrontendBaseUrl = "https://app.example.com",
                 VerificationPath = "/verify-email",
-                PasswordResetPath = "/reset-password"
+                PasswordResetPath = "/reset-password",
             },
             new StubEmailTemplateProvider(),
             transport);

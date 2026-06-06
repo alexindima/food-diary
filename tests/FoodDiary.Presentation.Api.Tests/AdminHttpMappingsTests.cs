@@ -289,7 +289,7 @@ public sealed class AdminHttpMappingsTests {
                     Category: "nutrition",
                     Difficulty: "beginner",
                     EstimatedReadMinutes: 4,
-                    SortOrder: 10)
+                    SortOrder: 10),
             ]);
 
         ImportAdminLessonsCommand command = request.ToImportCommand();
@@ -447,7 +447,7 @@ public sealed class AdminHttpMappingsTests {
                     CompletedSessions: 5,
                     SavedCheckIns: 4,
                     CompletionRatePercent: 83.3,
-                    CheckInRatePercent: 66.7)
+                    CheckInRatePercent: 66.7),
             ]);
 
         FastingTelemetrySummaryHttpResponse response = summary.ToHttpResponse();

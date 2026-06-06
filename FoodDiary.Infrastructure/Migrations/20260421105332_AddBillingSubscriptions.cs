@@ -29,7 +29,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     LastWebhookEventId = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     LastSyncedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_BillingSubscriptions", x => x.Id);

@@ -59,7 +59,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             UserAccountStatusFilter.Active => filteredQuery.Where(u => u.IsActive && u.DeletedAt == null),
             UserAccountStatusFilter.Inactive => filteredQuery.Where(u => !u.IsActive && u.DeletedAt == null),
             UserAccountStatusFilter.Deleted => filteredQuery.Where(u => u.DeletedAt != null),
-            _ => filteredQuery
+            _ => filteredQuery,
         };
 
         if (!string.IsNullOrWhiteSpace(search)) {
@@ -101,7 +101,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             .Select(group => new {
                 TotalUsers = group.Count(),
                 ActiveUsers = group.Count(u => u.IsActive && u.DeletedAt == null),
-                DeletedUsers = group.Count(u => u.DeletedAt != null)
+                DeletedUsers = group.Count(u => u.DeletedAt != null),
             })
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 

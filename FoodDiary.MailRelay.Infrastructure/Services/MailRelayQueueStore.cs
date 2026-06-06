@@ -938,7 +938,7 @@ public sealed class MailRelayQueueStore(
         value switch {
             DateTimeOffset dateTimeOffset => dateTimeOffset.ToUniversalTime(),
             DateTime dateTime => new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)),
-            _ => throw new InvalidOperationException($"Unexpected timestamp value type: {value.GetType().FullName}.")
+            _ => throw new InvalidOperationException($"Unexpected timestamp value type: {value.GetType().FullName}."),
         };
 
     private static string? NormalizeEmail(string? email) {

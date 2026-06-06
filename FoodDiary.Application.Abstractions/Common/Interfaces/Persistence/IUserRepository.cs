@@ -3,13 +3,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
-public enum UserAccountStatusFilter {
-    All = 0,
-    Active = 1,
-    Inactive = 2,
-    Deleted = 3,
-}
-
 public interface IUserRepository {
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
     Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default);

@@ -37,7 +37,7 @@ public class GetRecipesQueryHandler(
         var recipes = items.Select(item => new {
             item.Recipe,
             item.UsageCount,
-            IsOwner = item.Recipe.UserId == userId
+            IsOwner = item.Recipe.UserId == userId,
         }).ToList();
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);

@@ -188,7 +188,7 @@ public static class ApiServiceCollectionExtensions {
             OnMessageReceived = context => {
                 ExtractSignalRAccessToken(context);
                 return Task.CompletedTask;
-            }
+            },
         };
     }
 
@@ -238,7 +238,7 @@ public static class ApiServiceCollectionExtensions {
                 Description = "JWT Authorization header using the Bearer scheme.",
             });
             options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
-                [new OpenApiSecuritySchemeReference("Bearer", document, null)] = []
+                [new OpenApiSecuritySchemeReference("Bearer", document, null)] = [],
             });
         });
 

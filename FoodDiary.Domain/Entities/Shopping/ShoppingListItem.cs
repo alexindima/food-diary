@@ -54,7 +54,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
             Unit = unit,
             Category = normalizedCategory,
             IsChecked = isChecked,
-            SortOrder = sortOrder
+            SortOrder = sortOrder,
         };
         item.SetCreated();
         return item;

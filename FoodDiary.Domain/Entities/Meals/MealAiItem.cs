@@ -64,7 +64,7 @@ public sealed class MealAiItem : Entity<MealAiItemId> {
             Fats = state.Fats,
             Carbs = state.Carbs,
             Fiber = state.Fiber,
-            Alcohol = state.Alcohol
+            Alcohol = state.Alcohol,
         };
         item.SetCreated();
         return item;

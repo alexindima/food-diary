@@ -89,7 +89,7 @@ public class GenerateShoppingListCommandHandler(
                                 Unit = ingredient.Product.BaseUnit,
                                 Category = ingredient.Product.Category,
                                 TotalAmount = scaledAmount,
-                                SortOrder = sortOrder++
+                                SortOrder = sortOrder++,
                             };
                         }
                     }

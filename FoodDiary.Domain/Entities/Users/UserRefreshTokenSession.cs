@@ -44,7 +44,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
             IpAddress = NormalizeOptionalText(ipAddress, 128),
             UserAgent = NormalizeOptionalText(userAgent, 512),
             CreatedAtUtc = normalizedNow,
-            LastRotatedAtUtc = normalizedNow
+            LastRotatedAtUtc = normalizedNow,
         };
         session.SetCreated(normalizedNow);
         return session;

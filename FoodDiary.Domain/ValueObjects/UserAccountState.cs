@@ -26,14 +26,14 @@ public readonly record struct UserAccountState(
     public UserAccountState MarkDeleted(DateTime deletedAtUtc) {
         return this with {
             DeletedAt = deletedAtUtc,
-            IsActive = false
+            IsActive = false,
         };
     }
 
     public UserAccountState Restore() {
         return this with {
             DeletedAt = null,
-            IsActive = true
+            IsActive = true,
         };
     }
 }

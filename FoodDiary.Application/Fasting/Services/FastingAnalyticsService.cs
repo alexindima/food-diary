@@ -162,7 +162,7 @@ public sealed class FastingAnalyticsService(
                 occurrence.EnergyLevel ?? 0,
                 occurrence.MoodLevel ?? 0,
                 ParseSymptoms(occurrence.Symptoms),
-                occurrence.CheckInNotes)
+                occurrence.CheckInNotes),
         ];
     }
 

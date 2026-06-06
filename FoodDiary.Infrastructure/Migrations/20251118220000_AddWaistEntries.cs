@@ -17,7 +17,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     Circumference = table.Column<double>(type: "double precision", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_WaistEntries", x => x.Id);

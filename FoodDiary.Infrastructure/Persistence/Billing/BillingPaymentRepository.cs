@@ -31,6 +31,6 @@ public sealed class BillingPaymentRepository(FoodDiaryDbContext context) : IBill
     private static bool IsDuplicatePayment(DbUpdateException exception) =>
         exception.InnerException is PostgresException {
             SqlState: PostgresErrorCodes.UniqueViolation,
-            ConstraintName: "IX_BillingPayments_Provider_ExternalPaymentId"
+            ConstraintName: "IX_BillingPayments_Provider_ExternalPaymentId",
         };
 }

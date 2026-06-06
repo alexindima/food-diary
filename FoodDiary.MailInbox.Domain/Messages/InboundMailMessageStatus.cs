@@ -14,7 +14,7 @@ public readonly record struct InboundMailMessageStatus {
         return value switch {
             "received" => Received,
             "archived" => Archived,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), "Unknown inbound mail message status.")
+            _ => throw new ArgumentOutOfRangeException(nameof(value), "Unknown inbound mail message status."),
         };
     }
 

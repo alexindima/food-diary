@@ -38,7 +38,7 @@ public sealed class AdminImpersonationSession : Entity<Guid> {
             Reason = normalizedReason,
             ActorIpAddress = NormalizeOptionalText(actorIpAddress, maxLength: 128),
             ActorUserAgent = NormalizeOptionalText(actorUserAgent, maxLength: 512),
-            StartedAtUtc = NormalizeUtcTimestamp(startedAtUtc, nameof(startedAtUtc))
+            StartedAtUtc = NormalizeUtcTimestamp(startedAtUtc, nameof(startedAtUtc)),
         };
         session.SetCreated(session.StartedAtUtc);
         return session;

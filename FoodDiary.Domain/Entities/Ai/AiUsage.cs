@@ -40,7 +40,7 @@ public sealed class AiUsage : Entity<AiUsageId> {
             Model = normalizedModel,
             InputTokens = normalizedInputTokens,
             OutputTokens = normalizedOutputTokens,
-            TotalTokens = normalizedTotalTokens
+            TotalTokens = normalizedTotalTokens,
         };
         usage.SetCreated();
         return usage;

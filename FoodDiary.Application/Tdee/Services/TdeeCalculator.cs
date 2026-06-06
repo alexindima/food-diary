@@ -101,7 +101,7 @@ public static class TdeeCalculator {
             ( > 0, true, _) => "hint.surplus_while_losing_goal",
             ( > 500, _, true) => "hint.surplus_too_aggressive",
             ( >= 100 and <= 500, _, true) => "hint.surplus_moderate",
-            _ => "hint.review_goals"
+            _ => "hint.review_goals",
         };
     }
 

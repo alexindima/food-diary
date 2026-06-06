@@ -19,14 +19,14 @@ public sealed class UsdaQueryHandlerTests {
     public async Task SearchUsdaFoods_WhenLocalResultsAreSparse_AddsNonDuplicateBrandedResults() {
         var repository = new StubUsdaFoodRepository {
             SearchResults = [
-                new UsdaFood { FdcId = 1, Description = "Chicken breast", FoodCategory = "Poultry" }
-            ]
+                new UsdaFood { FdcId = 1, Description = "Chicken breast", FoodCategory = "Poultry" },
+            ],
         };
         var branded = new StubUsdaFoodSearchService {
             SearchResults = [
                 new UsdaFoodModel(1, "Duplicate chicken", "Branded"),
-                new UsdaFoodModel(2, "Branded chicken", "Branded")
-            ]
+                new UsdaFoodModel(2, "Branded chicken", "Branded"),
+            ],
         };
         var handler = new SearchUsdaFoodsQueryHandler(repository, branded);
 
@@ -42,8 +42,8 @@ public sealed class UsdaQueryHandlerTests {
         var repository = new StubUsdaFoodRepository {
             SearchResults = [
                 new UsdaFood { FdcId = 1, Description = "Chicken breast" },
-                new UsdaFood { FdcId = 2, Description = "Chicken thigh" }
-            ]
+                new UsdaFood { FdcId = 2, Description = "Chicken thigh" },
+            ],
         };
         var branded = new StubUsdaFoodSearchService();
         var handler = new SearchUsdaFoodsQueryHandler(repository, branded);
@@ -60,7 +60,7 @@ public sealed class UsdaQueryHandlerTests {
         var repository = new StubUsdaFoodRepository {
             Food = new UsdaFood { FdcId = 10, Description = "Spinach", FoodCategory = "Vegetables" },
             Nutrients = [
-                CreateNutrient(10, nutrientId: 301, "Calcium", "mg", amount: 120)
+                CreateNutrient(10, nutrientId: 301, "Calcium", "mg", amount: 120),
             ],
             Portions = [
                 new UsdaFoodPortion {
@@ -70,12 +70,12 @@ public sealed class UsdaQueryHandlerTests {
                     MeasureUnitName = "cup",
                     GramWeight = 30,
                     PortionDescription = "1 cup",
-                    Modifier = "chopped"
-                }
+                    Modifier = "chopped",
+                },
             ],
             DailyValues = new Dictionary<int, DailyReferenceValue> {
-                [301] = new() { NutrientId = 301, Value = 1000, Unit = "mg", AgeGroup = "adult", Gender = "all" }
-            }
+                [301] = new() { NutrientId = 301, Value = 1000, Unit = "mg", AgeGroup = "adult", Gender = "all" },
+            },
         };
         var handler = new GetMicronutrientsQueryHandler(repository, new StubUsdaFoodSearchService());
 
@@ -95,8 +95,8 @@ public sealed class UsdaQueryHandlerTests {
     public async Task GetMicronutrients_WhenLocalFoodMissing_UsesBrandedDetailAndDailyValues() {
         var repository = new StubUsdaFoodRepository {
             DailyValues = new Dictionary<int, DailyReferenceValue> {
-                [203] = new() { NutrientId = 203, Value = 50, Unit = "g", AgeGroup = "adult", Gender = "all" }
-            }
+                [203] = new() { NutrientId = 203, Value = 50, Unit = "g", AgeGroup = "adult", Gender = "all" },
+            },
         };
         var branded = new StubUsdaFoodSearchService {
             Detail = new UsdaFoodDetailModel(
@@ -105,7 +105,7 @@ public sealed class UsdaQueryHandlerTests {
                 "Branded",
                 [new MicronutrientModel(203, "Protein", "g", 10, null, null)],
                 [],
-                null)
+                null),
         };
         var handler = new GetMicronutrientsQueryHandler(repository, branded);
 
@@ -166,13 +166,13 @@ public sealed class UsdaQueryHandlerTests {
             NutrientsByFdcId = new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>> {
                 [10] = [
                     CreateNutrient(10, nutrientId: 301, "Calcium", "mg", amount: 120),
-                    CreateNutrient(10, nutrientId: 303, "Iron", "mg", amount: 2.5)
-                ]
+                    CreateNutrient(10, nutrientId: 303, "Iron", "mg", amount: 2.5),
+                ],
             },
             DailyValues = new Dictionary<int, DailyReferenceValue> {
                 [301] = new() { NutrientId = 301, Value = 1000, Unit = "mg", AgeGroup = "adult", Gender = "all" },
-                [303] = new() { NutrientId = 303, Value = 18, Unit = "mg", AgeGroup = "adult", Gender = "all" }
-            }
+                [303] = new() { NutrientId = 303, Value = 18, Unit = "mg", AgeGroup = "adult", Gender = "all" },
+            },
         };
         var handler = new GetDailyMicronutrientsQueryHandler(meals, repository);
 
@@ -254,7 +254,7 @@ public sealed class UsdaQueryHandlerTests {
         AddProductItem(meal, product, 50);
         var repository = new StubUsdaFoodRepository {
             NutrientsByFdcId = new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>(),
-            DailyValues = new Dictionary<int, DailyReferenceValue>()
+            DailyValues = new Dictionary<int, DailyReferenceValue>(),
         };
         var handler = new GetDailyMicronutrientsQueryHandler(
             new StubMealRepository { Meals = [meal] },
@@ -279,7 +279,7 @@ public sealed class UsdaQueryHandlerTests {
             FdcId = fdcId,
             NutrientId = nutrientId,
             Amount = amount,
-            Nutrient = new UsdaNutrient { Id = nutrientId, Name = name, UnitName = unit }
+            Nutrient = new UsdaNutrient { Id = nutrientId, Name = name, UnitName = unit },
         };
 
     [ExcludeFromCodeCoverage]

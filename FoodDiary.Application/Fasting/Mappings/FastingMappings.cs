@@ -120,12 +120,12 @@ public static class FastingMappings {
         FastingProtocol.F18_6 => FastingPlanType.Intermittent,
         FastingProtocol.F20_4 => FastingPlanType.Intermittent,
         FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
-        _ => FastingPlanType.Extended
+        _ => FastingPlanType.Extended,
     };
 
     private static FastingOccurrenceKind ResolveOccurrenceKind(FastingProtocol protocol) => ResolvePlanType(protocol) switch {
         FastingPlanType.Intermittent => FastingOccurrenceKind.FastingWindow,
-        _ => FastingOccurrenceKind.FastDay
+        _ => FastingOccurrenceKind.FastDay,
     };
 
     private static (int? DayNumber, int? DayTotal) ResolveCyclicPhaseProgress(FastingOccurrence occurrence, FastingPlan? plan) {

@@ -189,9 +189,9 @@ public sealed class WebPushNotificationSender(
                     targetUrl = ResolveUrl(notification),
                     url = ResolveUrl(notification),
                     type = notification.Type,
-                    referenceId = notification.ReferenceId
-                }
-            }
+                    referenceId = notification.ReferenceId,
+                },
+            },
         };
 
         return JsonSerializer.Serialize(payload);
@@ -224,7 +224,7 @@ public sealed class WebPushNotificationSender(
             NotificationTypes.DietologistInvitationDeclined => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewRecommendation => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewComment => user.SocialPushNotificationsEnabled,
-            _ => true
+            _ => true,
         };
     }
 }

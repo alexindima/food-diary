@@ -89,7 +89,7 @@ public class ConsumptionsFeatureTests {
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
-                MealAiItemData.Create("Banana", null, 100, "g", 89, 1.1, 0.3, 23, 2.6, 0)
+                MealAiItemData.Create("Banana", null, 100, "g", 89, 1.1, 0.3, 23, 2.6, 0),
             ]);
 
         MealNutritionSummary result = MealNutritionCalculator.Calculate(
@@ -151,7 +151,7 @@ public class ConsumptionsFeatureTests {
             ImageUrl: null,
             ImageAssetId: null,
             Items: [
-                new ConsumptionItemHttpRequest(ProductId.New().Value, null, 150)
+                new ConsumptionItemHttpRequest(ProductId.New().Value, null, 150),
             ],
             AiSessions: [
                 new ConsumptionAiSessionHttpRequest(
@@ -159,7 +159,7 @@ public class ConsumptionsFeatureTests {
                     Source: "Text",
                     RecognizedAtUtc: DateTime.UtcNow,
                     Notes: null,
-                    Items: null!)
+                    Items: null!),
             ]);
 
         UpdateConsumptionCommand command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
@@ -281,7 +281,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 [
                     new ConsumptionItemInput(productId, null, 150),
-                    new ConsumptionItemInput(null, recipeId, 1)
+                    new ConsumptionItemInput(null, recipeId, 1),
                 ],
                 [],
                 true,
@@ -534,7 +534,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 [],
                 [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                    new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0)
+                    new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0),
                 ])],
                 true,
                 null,
@@ -643,7 +643,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 [],
                 [new ConsumptionAiSessionInput(null, "Scanner", DateTime.UtcNow, null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
                 true,
                 null,
@@ -684,7 +684,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 [],
                 [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
                 true,
                 null,
@@ -725,7 +725,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 [],
                 [new ConsumptionAiSessionInput(null, null, null, "recognized", [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
                 true,
                 null,
@@ -1157,7 +1157,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 [],
                 [new ConsumptionAiSessionInput(null, "Scanner", DateTime.UtcNow, null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
                 true,
                 null,
@@ -1199,7 +1199,7 @@ public class ConsumptionsFeatureTests {
                 null,
                 [],
                 [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
                 true,
                 null,
@@ -1333,7 +1333,7 @@ public class ConsumptionsFeatureTests {
                 newAssetId.Value,
                 [],
                 [new ConsumptionAiSessionInput(null, null, null, "generated", [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)
+                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
                 false,
                 120,
@@ -1533,7 +1533,7 @@ public class ConsumptionsFeatureTests {
             recognizedAtUtc: new DateTime(2026, 3, 26, 20, 1, 0, DateTimeKind.Utc),
             notes: "photo",
             items: [
-                MealAiItemData.Create("Pasta", "ÐŸÐ°ÑÑ‚Ð°", 250, "g", 420, 14, 8, 72, 4, 0)
+                MealAiItemData.Create("Pasta", "ÐŸÐ°ÑÑ‚Ð°", 250, "g", 420, 14, 8, 72, 4, 0),
             ]);
         sourceMeal.ApplyNutrition(new MealNutritionUpdate(
             TotalCalories: 430,

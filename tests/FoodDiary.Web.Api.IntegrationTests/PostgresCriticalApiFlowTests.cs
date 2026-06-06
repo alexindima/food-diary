@@ -308,7 +308,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                         "pcs",
                         "Test",
                         false,
-                        0)
+                        0),
                 ]));
 
         await AssertStatusCodeAsync(HttpStatusCode.Created, createShoppingListResponse);
@@ -387,10 +387,10 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                         "Step 1",
                         "Use the uploaded image.",
                         [
-                            new RecipeIngredientHttpRequest(product.Id, null, 1)
+                            new RecipeIngredientHttpRequest(product.Id, null, 1),
                         ],
                         stepAsset.FileUrl,
-                        stepAsset.AssetId)
+                        stepAsset.AssetId),
                 ]));
         RecipePayload? recipe = await createRecipeResponse.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
 

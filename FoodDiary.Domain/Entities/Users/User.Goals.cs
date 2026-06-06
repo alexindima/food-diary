@@ -66,7 +66,7 @@ public sealed partial class User {
             ThursdayCalories = update.ThursdayCalories.HasValue ? update.ThursdayCalories : ThursdayCalories,
             FridayCalories = update.FridayCalories.HasValue ? update.FridayCalories : FridayCalories,
             SaturdayCalories = update.SaturdayCalories.HasValue ? update.SaturdayCalories : SaturdayCalories,
-            SundayCalories = update.SundayCalories.HasValue ? update.SundayCalories : SundayCalories
+            SundayCalories = update.SundayCalories.HasValue ? update.SundayCalories : SundayCalories,
         };
 
         ApplyGoalState(state);

@@ -346,7 +346,7 @@ public sealed class JobsTests {
             Options.Create(new BillingRenewalOptions {
                 Enabled = true,
                 Provider = "MissingProvider",
-                BatchSize = 10
+                BatchSize = 10,
             }),
             new FixedDateTimeProvider(now),
             tracker,
@@ -413,7 +413,7 @@ public sealed class JobsTests {
                         "evt_renewal_job",
                         7.99m,
                         "USD",
-                        "{\"renewal\":true}"))
+                        "{\"renewal\":true}")),
             ],
             new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(now)),
             new FixedDateTimeProvider(now));
@@ -422,7 +422,7 @@ public sealed class JobsTests {
             Options.Create(new BillingRenewalOptions {
                 Enabled = true,
                 Provider = BillingProviderNames.YooKassa,
-                BatchSize = 10
+                BatchSize = 10,
             }),
             new FixedDateTimeProvider(now),
             tracker,
@@ -462,7 +462,7 @@ public sealed class JobsTests {
             Options.Create(new BillingRenewalOptions {
                 Enabled = true,
                 Provider = "YooKassa",
-                BatchSize = 10
+                BatchSize = 10,
             }),
             new FixedDateTimeProvider(now),
             tracker,
@@ -519,7 +519,7 @@ public sealed class JobsTests {
                 RecurringJobIds.ImageAssetsCleanup,
                 RecurringJobIds.BillingRenewal,
                 RecurringJobIds.NotificationsCleanup,
-                RecurringJobIds.UsersCleanup
+                RecurringJobIds.UsersCleanup,
             ],
             recurringJobManager.JobIds);
         Assert.Equal(
@@ -527,7 +527,7 @@ public sealed class JobsTests {
                 RecurringJobIds.ImageAssetsCleanup,
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
-                RecurringJobIds.BillingRenewal
+                RecurringJobIds.BillingRenewal,
             ],
             verifier.ExpectedJobIds);
     }

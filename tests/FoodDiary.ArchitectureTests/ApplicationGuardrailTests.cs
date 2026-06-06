@@ -106,6 +106,7 @@ public sealed class ApplicationGuardrailTests {
             "IProductRepository.cs",
             "IRecipeRepository.cs",
             "IUserRepository.cs",
+            "UserAccountStatusFilter.cs",
         };
 
         string?[] actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)

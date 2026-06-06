@@ -15,7 +15,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             Key = key,
             Verb = HttpVerb.PUT,
             Expires = expiresAt,
-            ContentType = contentType
+            ContentType = contentType,
         };
 
         return s3Client.GetPreSignedURL(request);
@@ -24,7 +24,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
     public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) {
         var request = new DeleteObjectRequest {
             BucketName = bucketName,
-            Key = key
+            Key = key,
         };
 
         return s3Client.DeleteObjectAsync(request, cancellationToken);
@@ -37,7 +37,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
         try {
             GetObjectMetadataResponse response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
                 BucketName = bucketName,
-                Key = key
+                Key = key,
             }, cancellationToken).ConfigureAwait(false);
 
             return new StoredObjectInfo(response.ContentLength, response.Headers.ContentType);

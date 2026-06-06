@@ -49,7 +49,7 @@ public sealed class AiHttpMappingsTests {
     public void FoodNutritionHttpRequest_ToCommand_MapsNestedItems() {
         var userId = Guid.NewGuid();
         var request = new FoodNutritionHttpRequest([
-            new FoodVisionItemHttpModel("egg", "ÑÐ¹Ñ†Ð¾", 2, "pcs", 0.95m)
+            new FoodVisionItemHttpModel("egg", "ÑÐ¹Ñ†Ð¾", 2, "pcs", 0.95m),
         ]);
 
         CalculateFoodNutritionCommand command = request.ToCommand(userId);

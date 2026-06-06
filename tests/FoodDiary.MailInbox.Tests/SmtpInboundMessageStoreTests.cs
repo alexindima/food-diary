@@ -61,7 +61,7 @@ public sealed class SmtpInboundMessageStoreTests {
 
         message.Subject = "Hello";
         message.Body = new TextPart("plain") {
-            Text = "plain text"
+            Text = "plain text",
         };
 
         using var stream = new MemoryStream();

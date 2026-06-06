@@ -93,7 +93,7 @@ public class GetClientDashboardQueryHandler(
             DashboardLayout = null,
             CaloriesBurned = 0,
             TdeeInsight = null,
-            CurrentCycle = null
+            CurrentCycle = null,
         };
     }
 }

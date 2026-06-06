@@ -12,7 +12,7 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
         "image/jpeg",
         "image/png",
         "image/webp",
-        "image/gif"
+        "image/gif",
     };
 
     private readonly S3Options _options = options.Value;
@@ -62,7 +62,7 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
         return cleaned.Length switch {
             0 => "image",
             > 128 => cleaned[..128],
-            _ => cleaned
+            _ => cleaned,
         };
     }
 }

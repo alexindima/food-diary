@@ -213,7 +213,7 @@ public class AdminValidatorTests {
                     Category: "",
                     Difficulty: "",
                     EstimatedReadMinutes: 0,
-                    SortOrder: -1)
+                    SortOrder: -1),
             ]));
 
         Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Lessons[0].Title", StringComparison.Ordinal));

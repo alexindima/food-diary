@@ -33,7 +33,7 @@ public partial class AddFastingTelemetryEvents : Migration {
                 SymptomsCount = table.Column<int>(type: "integer", nullable: true),
                 HadNotes = table.Column<bool>(type: "boolean", nullable: true),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
             constraints: table => {
                 table.PrimaryKey("PK_FastingTelemetryEvents", x => x.Id);

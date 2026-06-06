@@ -30,7 +30,7 @@ public partial class AddDietologistFeature : Migration {
                 RevokedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
             constraints: table => {
                 table.PrimaryKey("PK_DietologistInvitations", x => x.Id);
@@ -60,7 +60,7 @@ public partial class AddDietologistFeature : Migration {
                 IsRead = table.Column<bool>(type: "boolean", nullable: false),
                 ReadAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
             constraints: table => {
                 table.PrimaryKey("PK_Notifications", x => x.Id);
@@ -83,7 +83,7 @@ public partial class AddDietologistFeature : Migration {
                 ReadAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
             constraints: table => {
                 table.PrimaryKey("PK_Recommendations", x => x.Id);

@@ -21,7 +21,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Source = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
                     OccurredAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UserRoleAuditEvents", x => x.Id);

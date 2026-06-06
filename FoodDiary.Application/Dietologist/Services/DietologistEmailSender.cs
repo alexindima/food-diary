@@ -149,7 +149,7 @@ public sealed class DietologistEmailSender(
             Body = htmlBody,
             IsBodyHtml = true,
             BodyEncoding = Encoding.UTF8,
-            SubjectEncoding = Encoding.UTF8
+            SubjectEncoding = Encoding.UTF8,
         };
 
         message.To.Add(new MailAddress(toEmail));

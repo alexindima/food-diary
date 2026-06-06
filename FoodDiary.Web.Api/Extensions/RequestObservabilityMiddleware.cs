@@ -129,7 +129,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         return statusCode switch {
             >= 200 and < 400 => "success",
             >= 400 and < 500 => "client_error",
-            _ => "server_error"
+            _ => "server_error",
         };
     }
 

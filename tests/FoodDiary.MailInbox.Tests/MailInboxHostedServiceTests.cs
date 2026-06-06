@@ -33,7 +33,7 @@ public sealed class MailInboxHostedServiceTests {
         var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
         var service = new MailInboxSmtpHostedService(
             Options.Create(new MailInboxSmtpOptions {
-                Enabled = false
+                Enabled = false,
             }),
             messageStore,
             mailboxFilter,

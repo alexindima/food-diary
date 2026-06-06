@@ -37,7 +37,7 @@ if (builder.Environment.IsDevelopment()) {
 
 if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
     builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString
+        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString,
     });
 }
 

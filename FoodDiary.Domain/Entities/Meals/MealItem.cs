@@ -33,7 +33,7 @@ public class MealItem : Entity<MealItemId> {
             MealId = mealId,
             ProductId = productId,
             RecipeId = null,
-            Amount = normalizedAmount
+            Amount = normalizedAmount,
         };
         item.SetCreated();
         return item;
@@ -49,7 +49,7 @@ public class MealItem : Entity<MealItemId> {
             MealId = mealId,
             ProductId = null,
             RecipeId = recipeId,
-            Amount = normalizedServings
+            Amount = normalizedServings,
         };
         item.SetCreated();
         return item;

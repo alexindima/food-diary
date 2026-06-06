@@ -44,7 +44,7 @@ public sealed class UserRoleAuditEvent : Entity<Guid> {
             Action = action,
             ActorUserId = actorUserId,
             Source = NormalizeRequiredText(source, nameof(source), SourceMaxLength),
-            OccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc))
+            OccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc)),
         };
         auditEvent.SetCreated(auditEvent.OccurredAtUtc);
         return auditEvent;

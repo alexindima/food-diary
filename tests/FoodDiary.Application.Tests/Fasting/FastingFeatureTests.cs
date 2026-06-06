@@ -2219,7 +2219,7 @@ public class FastingFeatureTests {
                 "unsupported",
                 "unsupported-reference",
                 new HashSet<Guid>(),
-                CancellationToken.None
+                CancellationToken.None,
             ])!;
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => task);

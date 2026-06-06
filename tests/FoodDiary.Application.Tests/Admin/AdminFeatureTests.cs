@@ -902,7 +902,7 @@ public class AdminFeatureTests {
         var handler = new SendAdminEmailTemplateTestCommandHandler(
             new EmailOptions {
                 FromAddress = "noreply@example.com",
-                FromName = "FoodDiary"
+                FromName = "FoodDiary",
             },
             transport);
 
@@ -1284,7 +1284,7 @@ public class AdminFeatureTests {
             "Test",
             DateTime.UtcNow);
         var repository = new RecordingImpersonationSessionRepository {
-            PagedResponse = ([session], 45)
+            PagedResponse = ([session], 45),
         };
         var handler = new GetAdminImpersonationSessionsQueryHandler(repository);
 

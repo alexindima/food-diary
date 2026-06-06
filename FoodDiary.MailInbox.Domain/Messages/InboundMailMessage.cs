@@ -58,7 +58,7 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
             HtmlBody = htmlBody,
             RawMime = rawMime,
             Status = InboundMailMessageStatus.Received,
-            ReceivedAtUtc = normalizedReceivedAtUtc
+            ReceivedAtUtc = normalizedReceivedAtUtc,
         };
         message._toRecipients.AddRange(toRecipients.Select(NormalizeRecipient));
         message.SetCreated(normalizedReceivedAtUtc.UtcDateTime);

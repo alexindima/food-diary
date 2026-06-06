@@ -1141,7 +1141,7 @@ public class ProductsFeatureTests {
                 [lunch.Id] = (lunch, 5),
             });
         var recentRepository = new StubRecentItemRepository([
-            new RecentProductUsage(lunch.Id, 5, DateTime.UtcNow)
+            new RecentProductUsage(lunch.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([favorite]);
         var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
@@ -1180,7 +1180,7 @@ public class ProductsFeatureTests {
 
         var repository = new OverviewProductRepository(pagedItems: [(product, 1)]);
         var recentRepository = new StubRecentItemRepository([
-            new RecentProductUsage(product.Id, 1, DateTime.UtcNow)
+            new RecentProductUsage(product.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([]);
         var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
@@ -1353,7 +1353,7 @@ public class ProductsFeatureTests {
         var recentRepository = new StubRecentItemRepository([
             new RecentProductUsage(publicProduct.Id, 3, DateTime.UtcNow),
             new RecentProductUsage(missingProductId, 9, DateTime.UtcNow),
-            new RecentProductUsage(owned.Id, 7, DateTime.UtcNow)
+            new RecentProductUsage(owned.Id, 7, DateTime.UtcNow),
         ]);
         var handler = new GetRecentProductsQueryHandler(recentRepository, repository);
 

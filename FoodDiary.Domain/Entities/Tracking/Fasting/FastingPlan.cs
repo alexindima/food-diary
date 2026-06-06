@@ -56,7 +56,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
             Title = NormalizeTitle(title),
             StartedAtUtc = NormalizeTimestamp(startedAtUtc, nameof(startedAtUtc)),
             IntermittentFastHours = fastHours,
-            IntermittentEatingWindowHours = eatingWindowHours
+            IntermittentEatingWindowHours = eatingWindowHours,
         };
 
         plan.SetCreated();
@@ -81,7 +81,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
             Protocol = protocol,
             Title = NormalizeTitle(title),
             StartedAtUtc = NormalizeTimestamp(startedAtUtc, nameof(startedAtUtc)),
-            ExtendedTargetHours = targetHours
+            ExtendedTargetHours = targetHours,
         };
 
         plan.SetCreated();
@@ -115,7 +115,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
             CyclicEatDayFastHours = eatDayFastHours,
             CyclicEatDayEatingWindowHours = eatDayEatingWindowHours,
             CyclicAnchorDateUtc = normalizedAnchorDate,
-            CyclicNextPhaseDateUtc = normalizedAnchorDate
+            CyclicNextPhaseDateUtc = normalizedAnchorDate,
         };
 
         plan.SetCreated();

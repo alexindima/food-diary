@@ -9,7 +9,7 @@ public sealed class ReferenceDataInvariantTests {
         var nutrient = new UsdaNutrient {
             Id = 1008,
             Name = "Energy",
-            UnitName = "kcal"
+            UnitName = "kcal",
         };
 
         var value = new DailyReferenceValue {
@@ -19,7 +19,7 @@ public sealed class ReferenceDataInvariantTests {
             Unit = "kcal",
             AgeGroup = "adult",
             Gender = "all",
-            Nutrient = nutrient
+            Nutrient = nutrient,
         };
 
         Assert.Equal(1, value.Id);
@@ -35,12 +35,12 @@ public sealed class ReferenceDataInvariantTests {
     public void UsdaFoodNutrient_ExposesConfiguredValues() {
         var food = new UsdaFood {
             FdcId = 1,
-            Description = "Apple"
+            Description = "Apple",
         };
         var nutrient = new UsdaNutrient {
             Id = 1008,
             Name = "Energy",
-            UnitName = "kcal"
+            UnitName = "kcal",
         };
 
         var foodNutrient = new UsdaFoodNutrient {
@@ -49,7 +49,7 @@ public sealed class ReferenceDataInvariantTests {
             NutrientId = nutrient.Id,
             Amount = 52,
             Food = food,
-            Nutrient = nutrient
+            Nutrient = nutrient,
         };
 
         Assert.Equal(10, foodNutrient.Id);
@@ -64,7 +64,7 @@ public sealed class ReferenceDataInvariantTests {
     public void UsdaFoodPortion_ExposesConfiguredValues() {
         var food = new UsdaFood {
             FdcId = 1,
-            Description = "Apple"
+            Description = "Apple",
         };
 
         var portion = new UsdaFoodPortion {
@@ -75,7 +75,7 @@ public sealed class ReferenceDataInvariantTests {
             GramWeight = 182,
             PortionDescription = "1 medium apple",
             Modifier = "with skin",
-            Food = food
+            Food = food,
         };
 
         Assert.Equal(20, portion.Id);

@@ -33,7 +33,7 @@ public sealed class DkimSigningService(IOptions<MailRelayDkimOptions> options) {
         var signer = new DkimSigner(privateKeyStream, domain, selector) {
             HeaderCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Relaxed,
             BodyCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Relaxed,
-            SignatureAlgorithm = DkimSignatureAlgorithm.RsaSha256
+            SignatureAlgorithm = DkimSignatureAlgorithm.RsaSha256,
         };
 
         signer.Sign(message, HeadersToSign);

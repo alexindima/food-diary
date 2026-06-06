@@ -15,7 +15,7 @@ public sealed class InitialAdminHostedService(
     private static readonly string[] BootstrapRoles = [
         RoleNames.Owner,
         RoleNames.Admin,
-        RoleNames.Premium
+        RoleNames.Premium,
     ];
 
     public async Task StartAsync(CancellationToken cancellationToken) {

@@ -65,7 +65,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             EndedAtUtc = null,
             InitialTargetHours = targetHours,
             AddedTargetHours = 0,
-            Notes = NormalizeNotes(notes)
+            Notes = NormalizeNotes(notes),
         };
 
         occurrence.SetCreated();
@@ -98,7 +98,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             EndedAtUtc = null,
             InitialTargetHours = targetHours,
             AddedTargetHours = 0,
-            Notes = NormalizeNotes(notes)
+            Notes = NormalizeNotes(notes),
         };
 
         occurrence.SetCreated();

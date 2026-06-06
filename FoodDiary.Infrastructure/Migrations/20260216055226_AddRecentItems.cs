@@ -19,7 +19,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     LastUsedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UsageCount = table.Column<int>(type: "integer", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_RecentItems", x => x.Id);

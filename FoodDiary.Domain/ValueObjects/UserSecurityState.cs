@@ -37,13 +37,13 @@ public readonly record struct UserSecurityState(
     public UserSecurityState WithRefreshToken(string? refreshToken, DateTime nowUtc) {
         return this with {
             RefreshToken = refreshToken,
-            LastLoginAtUtc = refreshToken is null ? LastLoginAtUtc : nowUtc
+            LastLoginAtUtc = refreshToken is null ? LastLoginAtUtc : nowUtc,
         };
     }
 
     public UserSecurityState WithAuthenticationActivity(DateTime nowUtc) {
         return this with {
-            LastLoginAtUtc = nowUtc
+            LastLoginAtUtc = nowUtc,
         };
     }
 
@@ -51,7 +51,7 @@ public readonly record struct UserSecurityState(
         return this with {
             EmailConfirmationTokenHash = tokenHash,
             EmailConfirmationTokenExpiresAtUtc = expiresAtUtc,
-            EmailConfirmationSentAtUtc = nowUtc
+            EmailConfirmationSentAtUtc = nowUtc,
         };
     }
 
@@ -60,7 +60,7 @@ public readonly record struct UserSecurityState(
             IsEmailConfirmed = isConfirmed,
             EmailConfirmationTokenHash = null,
             EmailConfirmationTokenExpiresAtUtc = null,
-            EmailConfirmationSentAtUtc = null
+            EmailConfirmationSentAtUtc = null,
         };
     }
 
@@ -68,7 +68,7 @@ public readonly record struct UserSecurityState(
         return this with {
             PasswordResetTokenHash = tokenHash,
             PasswordResetTokenExpiresAtUtc = expiresAtUtc,
-            PasswordResetSentAtUtc = nowUtc
+            PasswordResetSentAtUtc = nowUtc,
         };
     }
 
@@ -76,7 +76,7 @@ public readonly record struct UserSecurityState(
         return this with {
             PasswordResetTokenHash = null,
             PasswordResetTokenExpiresAtUtc = null,
-            PasswordResetSentAtUtc = null
+            PasswordResetSentAtUtc = null,
         };
     }
 
@@ -88,7 +88,7 @@ public readonly record struct UserSecurityState(
             EmailConfirmationSentAtUtc = null,
             PasswordResetTokenHash = null,
             PasswordResetTokenExpiresAtUtc = null,
-            PasswordResetSentAtUtc = null
+            PasswordResetSentAtUtc = null,
         };
     }
 }

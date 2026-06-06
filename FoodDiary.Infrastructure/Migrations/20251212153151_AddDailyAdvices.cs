@@ -20,7 +20,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Weight = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     Tag = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_DailyAdvices", x => x.Id);
@@ -35,7 +35,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 table: "DailyAdvices",
                 columns: new[]
                 {
-                    "Id", "Locale", "Value", "Weight", "Tag", "CreatedOnUtc", "ModifiedOnUtc"
+                    "Id", "Locale", "Value", "Weight", "Tag", "CreatedOnUtc", "ModifiedOnUtc",
                 },
                 values: new object[,]
                 {
@@ -48,7 +48,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     { new Guid("d7e3b08a-93dd-4f35-8e0c-4df445f64ae8"), "ru", "Добавьте источник белка к завтраку, чтобы дольше держать сытость.", 3, "protein", createdOn, null },
                     { new Guid("c887d6e8-7d8f-4a91-9af8-9b777787a8f2"), "ru", "Держите нарезанные овощи или ягоды под рукой для быстрых перекусов.", 2, "prep", createdOn, null },
                     { new Guid("ba59c34b-282f-41bb-9e5e-91debf9cc5ee"), "ru", "Запланируйте 10-минутную прогулку после еды, чтобы стабилизировать энергию.", 2, "movement", createdOn, null },
-                    { new Guid("7c26d24d-7df2-4553-8c09-c22b7a9c780b"), "ru", "Заранее занесите ужин в дневник, чтобы уложиться в калораж.", 1, "planning", createdOn, null }
+                    { new Guid("7c26d24d-7df2-4553-8c09-c22b7a9c780b"), "ru", "Заранее занесите ужин в дневник, чтобы уложиться в калораж.", 1, "planning", createdOn, null },
                 });
         }
 

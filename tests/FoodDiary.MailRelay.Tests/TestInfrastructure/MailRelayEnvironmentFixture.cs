@@ -79,7 +79,7 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
                 await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
                 var builder = new NpgsqlConnectionStringBuilder(PostgresConnectionString) {
-                    Database = databaseName
+                    Database = databaseName,
                 };
 
                 return builder.ConnectionString;

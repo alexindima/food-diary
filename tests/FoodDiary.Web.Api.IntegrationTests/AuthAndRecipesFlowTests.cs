@@ -58,7 +58,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                         "Boil ingredients",
                         [new RecipeIngredientHttpRequest(productId, null, 200)],
                         null,
-                        null)
+                        null),
                 ]));
 
         RecipePayload? payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
@@ -156,7 +156,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                         "Updated step",
                         [new RecipeIngredientHttpRequest(ingredientId, null, 180)],
                         null,
-                        null)
+                        null),
                 ]));
         updateResponse.EnsureSuccessStatusCode();
 
@@ -274,7 +274,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                         "Cook recipe",
                         [new RecipeIngredientHttpRequest(ingredientId, null, 200)],
                         null,
-                        null)
+                        null),
                 ])).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 

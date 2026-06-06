@@ -18,7 +18,7 @@ public sealed class Role : AggregateRoot<RoleId> {
 
         var role = new Role {
             Id = RoleId.New(),
-            Name = normalizedName
+            Name = normalizedName,
         };
         role.SetCreated();
         return role;

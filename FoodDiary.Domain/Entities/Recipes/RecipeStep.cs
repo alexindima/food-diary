@@ -37,7 +37,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         var step = new RecipeStep {
             Id = RecipeStepId.New(),
             RecipeId = recipeId,
-            StepNumber = stepNumber
+            StepNumber = stepNumber,
         };
         step.ApplyContentState(content);
         step.SetCreated();

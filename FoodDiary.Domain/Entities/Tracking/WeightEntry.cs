@@ -29,7 +29,7 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
         var entry = new WeightEntry(WeightEntryId.New()) {
             UserId = userId,
             Date = normalizedDate,
-            Weight = normalizedWeight
+            Weight = normalizedWeight,
         };
 
         entry.SetCreated();

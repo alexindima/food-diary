@@ -20,7 +20,7 @@ public sealed class InitialAdminHostedServiceTests {
             provider,
             new InitialAdminOptions {
                 Email = "owner@fooddiary.test",
-                Password = " "
+                Password = " ",
             });
 
         await service.StartAsync(CancellationToken.None);
@@ -42,7 +42,7 @@ public sealed class InitialAdminHostedServiceTests {
             provider,
             new InitialAdminOptions {
                 Email = "owner@fooddiary.test",
-                Password = "StrongPassword123"
+                Password = "StrongPassword123",
             });
 
         await service.StartAsync(CancellationToken.None);
@@ -64,7 +64,7 @@ public sealed class InitialAdminHostedServiceTests {
             provider,
             new InitialAdminOptions {
                 Email = " owner@fooddiary.test ",
-                Password = "StrongPassword123"
+                Password = "StrongPassword123",
             });
 
         await service.StartAsync(CancellationToken.None);

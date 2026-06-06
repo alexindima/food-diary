@@ -153,7 +153,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             if (!ValidateUsage(recipe)) {
                 context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                     "Recipe is already used and cannot be modified") {
-                    ErrorCode = "Validation.Invalid"
+                    ErrorCode = "Validation.Invalid",
                 });
             }
 
@@ -174,7 +174,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
         if (existing is null) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe not found or you do not have permission to modify it") {
-                ErrorCode = "Recipe.NotFound"
+                ErrorCode = "Recipe.NotFound",
             });
             return;
         }
@@ -184,7 +184,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
         if (!ValidateUsage(existing)) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe is already used and cannot be modified") {
-                ErrorCode = "Validation.Invalid"
+                ErrorCode = "Validation.Invalid",
             });
         }
     }

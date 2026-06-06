@@ -50,7 +50,7 @@ public sealed class CycleHttpMappingsTests {
                     startDate.AddDays(1),
                     IsPeriod: true,
                     new DailySymptomsModel(1, 2, 3, 4, 5, 6, 7),
-                    Notes: "day notes")
+                    Notes: "day notes"),
             ],
             new CyclePredictionsModel(
                 NextPeriodStart: startDate.AddDays(29),

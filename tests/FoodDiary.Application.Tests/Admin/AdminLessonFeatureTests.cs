@@ -254,7 +254,7 @@ public class AdminLessonFeatureTests {
                 Version: 1,
                 Lessons: [
                     new ImportAdminLessonItem(" Intro ", " Content ", " Summary ", "EN", "NutritionBasics", "Beginner", 3, 2),
-                    new ImportAdminLessonItem("Advanced", "Details", null, "ru", "Macronutrients", "Advanced", 8, 4)
+                    new ImportAdminLessonItem("Advanced", "Details", null, "ru", "Macronutrients", "Advanced", 8, 4),
                 ]),
             CancellationToken.None);
 
@@ -273,7 +273,7 @@ public class AdminLessonFeatureTests {
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
-                    new ImportAdminLessonItem("Title", "Content", null, "en", "Unknown", "Beginner", 3, 0)
+                    new ImportAdminLessonItem("Title", "Content", null, "en", "Unknown", "Beginner", 3, 0),
                 ]),
             CancellationToken.None);
 
@@ -290,7 +290,7 @@ public class AdminLessonFeatureTests {
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
-                    new ImportAdminLessonItem("Title", "Content", null, "en", "NutritionBasics", "Expert", 3, 0)
+                    new ImportAdminLessonItem("Title", "Content", null, "en", "NutritionBasics", "Expert", 3, 0),
                 ]),
             CancellationToken.None);
 
@@ -307,7 +307,7 @@ public class AdminLessonFeatureTests {
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
-                    new ImportAdminLessonItem(" ", "Content", null, "en", "NutritionBasics", "Beginner", 3, 0)
+                    new ImportAdminLessonItem(" ", "Content", null, "en", "NutritionBasics", "Beginner", 3, 0),
                 ]),
             CancellationToken.None);
 

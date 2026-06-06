@@ -33,6 +33,6 @@ public sealed class BillingWebhookEventRepository(FoodDiaryDbContext context) : 
     private static bool IsDuplicateWebhookEvent(DbUpdateException exception) =>
         exception.InnerException is PostgresException {
             SqlState: PostgresErrorCodes.UniqueViolation,
-            ConstraintName: "IX_BillingWebhookEvents_Provider_EventId"
+            ConstraintName: "IX_BillingWebhookEvents_Provider_EventId",
         };
 }

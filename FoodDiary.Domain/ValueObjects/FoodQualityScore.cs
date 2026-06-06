@@ -31,7 +31,7 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
             <= 100 => 25.0,
             <= 250 => 25.0 - (caloriesPerBase - 100.0) / 150.0 * 10.0,
             <= 400 => 15.0 - (caloriesPerBase - 250.0) / 150.0 * 10.0,
-            _ => Math.Max(0, 5.0 - (caloriesPerBase - 400.0) / 200.0 * 5.0)
+            _ => Math.Max(0, 5.0 - (caloriesPerBase - 400.0) / 200.0 * 5.0),
         };
         score += calDensityScore;
 
@@ -43,7 +43,7 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
             score += proteinRatio switch {
                 >= 0.2 and <= 0.5 => 15.0,
                 >= 0.1 => 15.0 * (proteinRatio / 0.2),
-                _ => 0
+                _ => 0,
             };
         }
 
@@ -61,7 +61,7 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
         FoodQualityGrade grade = finalScore switch {
             >= 67 => FoodQualityGrade.Green,
             >= 34 => FoodQualityGrade.Yellow,
-            _ => FoodQualityGrade.Red
+            _ => FoodQualityGrade.Red,
         };
 
         return new FoodQualityScore(finalScore, grade);
@@ -78,7 +78,7 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
             ProductType.Cheese => -2.0,
             ProductType.Beverage => -5.0,
             ProductType.Dessert => -10.0,
-            _ => 0
+            _ => 0,
         };
     }
 }

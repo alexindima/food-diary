@@ -23,7 +23,7 @@ public partial class AddFastingCheckIns : Migration {
                 Symptoms = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                 Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
             constraints: table => {
                 table.PrimaryKey("PK_FastingCheckIns", x => x.Id);

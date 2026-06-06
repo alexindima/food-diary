@@ -28,7 +28,7 @@ public readonly record struct UserAiQuotaState(
 
         return this with {
             AiInputTokenLimit = inputLimit ?? AiInputTokenLimit,
-            AiOutputTokenLimit = outputLimit ?? AiOutputTokenLimit
+            AiOutputTokenLimit = outputLimit ?? AiOutputTokenLimit,
         };
     }
 }

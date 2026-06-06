@@ -97,7 +97,7 @@ public class CreateConsumptionCommandValidatorTests {
         CreateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0)
+                new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
@@ -108,7 +108,7 @@ public class CreateConsumptionCommandValidatorTests {
         CreateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                new ConsumptionAiItemInput("Apple", null, 100, "g", -1, 10, 5, 20, 3, 0)
+                new ConsumptionAiItemInput("Apple", null, 100, "g", -1, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
@@ -119,7 +119,7 @@ public class CreateConsumptionCommandValidatorTests {
         CreateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 12, 0, 0), null, [
-                new ConsumptionAiItemInput("Apple", null, 100, "g", 100, 10, 5, 20, 3, 0)
+                new ConsumptionAiItemInput("Apple", null, 100, "g", 100, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);

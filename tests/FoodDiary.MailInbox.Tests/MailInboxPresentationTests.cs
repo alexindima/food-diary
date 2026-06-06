@@ -125,7 +125,7 @@ public sealed class MailInboxPresentationTests {
         bool expected) {
         var options = new MailInboxHttpOptions {
             RequireApiKey = requireApiKey,
-            ApiKey = apiKey
+            ApiKey = apiKey,
         };
 
         Assert.Equal(expected, MailInboxHttpOptions.HasValidApiKey(options));
@@ -280,7 +280,7 @@ public sealed class MailInboxPresentationTests {
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyIsMissing_ReturnsUnauthorized() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
             RequireApiKey = true,
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
 
@@ -295,7 +295,7 @@ public sealed class MailInboxPresentationTests {
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
             RequireApiKey = false,
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
@@ -309,7 +309,7 @@ public sealed class MailInboxPresentationTests {
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Options.Create(new MailInboxHttpOptions {
             RequireApiKey = true,
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";

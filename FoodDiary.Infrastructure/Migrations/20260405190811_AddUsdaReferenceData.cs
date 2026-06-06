@@ -15,7 +15,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     FdcId = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     FoodCategoryId = table.Column<int>(type: "integer", nullable: true),
-                    FoodCategory = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true)
+                    FoodCategory = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UsdaFoods", x => x.FdcId);
@@ -26,7 +26,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 columns: table => new {
                     Id = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    UnitName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false)
+                    UnitName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UsdaNutrients", x => x.Id);
@@ -41,7 +41,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     MeasureUnitName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     GramWeight = table.Column<double>(type: "double precision", nullable: false),
                     PortionDescription = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Modifier = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true)
+                    Modifier = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UsdaFoodPortions", x => x.Id);
@@ -59,7 +59,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Id = table.Column<int>(type: "integer", nullable: false),
                     FdcId = table.Column<int>(type: "integer", nullable: false),
                     NutrientId = table.Column<int>(type: "integer", nullable: false),
-                    Amount = table.Column<double>(type: "double precision", nullable: false)
+                    Amount = table.Column<double>(type: "double precision", nullable: false),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UsdaFoodNutrients", x => x.Id);

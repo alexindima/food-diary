@@ -28,7 +28,7 @@ public sealed class TelegramBotWorker(
         logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
         var receiverOptions = new ReceiverOptions {
-            AllowedUpdates = Array.Empty<UpdateType>()
+            AllowedUpdates = Array.Empty<UpdateType>(),
         };
 
         botClient.StartReceiving(
@@ -142,7 +142,7 @@ public sealed class TelegramBotWorker(
             new() {
                 InlineKeyboardButton.WithCallbackData("+250 ml", "water:250"),
                 InlineKeyboardButton.WithCallbackData("+500 ml", "water:500"),
-            }
+            },
         };
 
         var webAppButtons = new List<InlineKeyboardButton>();

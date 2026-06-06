@@ -32,7 +32,7 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
             NotificationTypes.DietologistInvitationReceived => RenderDietologistInvitationReceived(payloadJson, locale),
             NotificationTypes.DietologistInvitationAccepted => RenderDietologistInvitationDecision(NotificationTypes.DietologistInvitationAccepted, payloadJson, locale),
             NotificationTypes.DietologistInvitationDeclined => RenderDietologistInvitationDecision(NotificationTypes.DietologistInvitationDeclined, payloadJson, locale),
-            _ => Render(type, locale)
+            _ => Render(type, locale),
         };
     }
 

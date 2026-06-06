@@ -45,16 +45,16 @@ public sealed class OpenAiFoodServiceTests {
     public async Task AnalyzeFoodImageAsync_WhenTransientFailureOccurs_RetriesPrimaryModelAndReturnsUsage() {
         var responses = new Queue<HttpResponseMessage>([
             new(HttpStatusCode.InternalServerError) {
-                Content = new StringContent("{\"error\":\"temporary\"}")
+                Content = new StringContent("{\"error\":\"temporary\"}"),
             },
-            CreateVisionSuccessResponse()
+            CreateVisionSuccessResponse(),
         ]);
 
         using var httpClient = new HttpClient(new SequenceHttpMessageHandler(responses));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
             ApiKey = "test-key",
             VisionModel = "vision-primary",
-            VisionFallbackModel = "vision-fallback"
+            VisionFallbackModel = "vision-fallback",
         });
 
         Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
@@ -80,16 +80,16 @@ public sealed class OpenAiFoodServiceTests {
 
         var responses = new Queue<HttpResponseMessage>([
             new(HttpStatusCode.BadRequest) {
-                Content = new StringContent("{\"error\":\"bad request\"}")
+                Content = new StringContent("{\"error\":\"bad request\"}"),
             },
-            CreateVisionSuccessResponse()
+            CreateVisionSuccessResponse(),
         ]);
 
         using var httpClient = new HttpClient(new SequenceHttpMessageHandler(responses));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
             ApiKey = "test-key",
             VisionModel = "vision-primary",
-            VisionFallbackModel = "vision-fallback"
+            VisionFallbackModel = "vision-fallback",
         });
 
         Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
@@ -121,8 +121,8 @@ public sealed class OpenAiFoodServiceTests {
                         }
                       ]
                     }
-                    """)
-            }
+                    """),
+            },
         ])));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
@@ -147,8 +147,8 @@ public sealed class OpenAiFoodServiceTests {
                       },
                       "debugPrompt": "user uploaded salmon salad with private note"
                     }
-                    """)
-            }
+                    """),
+            },
         ])));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
@@ -191,7 +191,7 @@ public sealed class OpenAiFoodServiceTests {
                     "total_tokens": 18
                   }
                 }
-                """)
+                """),
         };
     }
 

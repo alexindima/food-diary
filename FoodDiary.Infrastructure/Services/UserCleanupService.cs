@@ -62,7 +62,7 @@ public sealed class UserCleanupService(
         return value.Kind switch {
             DateTimeKind.Utc => value,
             DateTimeKind.Local => value.ToUniversalTime(),
-            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
         };
     }
 

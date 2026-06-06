@@ -45,8 +45,8 @@ internal static class CSharpSyntaxReader {
             .Where(static expression =>
                 expression.Parent is ArgumentSyntax {
                     Parent: ArgumentListSyntax {
-                        Parent: InvocationExpressionSyntax
-                    }
+                        Parent: InvocationExpressionSyntax,
+                    },
                 })
             .Select(expression => new SourceLocation(
                 path,

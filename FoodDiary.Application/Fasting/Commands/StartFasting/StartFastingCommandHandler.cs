@@ -72,7 +72,7 @@ public class StartFastingCommandHandler(
 
         FastingPlanType planType = protocol switch {
             FastingProtocol.F16_8 or FastingProtocol.F18_6 or FastingProtocol.F20_4 or FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
-            _ => FastingPlanType.Extended
+            _ => FastingPlanType.Extended,
         };
 
         return Result.Success(planType);
@@ -89,7 +89,7 @@ public class StartFastingCommandHandler(
                 FastingPlanType.Intermittent => CreateIntermittent(command, userId, startedAtUtc, notes),
                 FastingPlanType.Extended => CreateExtended(command, userId, startedAtUtc, notes),
                 FastingPlanType.Cyclic => CreateCyclic(command, userId, startedAtUtc, notes),
-                _ => Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol)
+                _ => Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol),
             };
         } catch (ArgumentOutOfRangeException) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);

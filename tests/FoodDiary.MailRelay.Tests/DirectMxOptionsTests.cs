@@ -9,7 +9,7 @@ public sealed class DirectMxOptionsTests {
         var options = new DirectMxOptions {
             Port = 25,
             ConnectTimeoutSeconds = 20,
-            LocalDomain = "mail.fooddiary.club"
+            LocalDomain = "mail.fooddiary.club",
         };
 
         Assert.True(DirectMxOptions.HasValidConfiguration(options));
@@ -20,7 +20,7 @@ public sealed class DirectMxOptionsTests {
         var options = new DirectMxOptions {
             Port = 25,
             ConnectTimeoutSeconds = 20,
-            LocalDomain = ""
+            LocalDomain = "",
         };
 
         Assert.True(DirectMxOptions.HasValidConfiguration(options));
@@ -32,7 +32,7 @@ public sealed class DirectMxOptionsTests {
     public void HasValidConfiguration_WhenRequiredValueIsInvalid_ReturnsFalse(int port, int connectTimeoutSeconds) {
         var options = new DirectMxOptions {
             Port = port,
-            ConnectTimeoutSeconds = connectTimeoutSeconds
+            ConnectTimeoutSeconds = connectTimeoutSeconds,
         };
 
         Assert.False(DirectMxOptions.HasValidConfiguration(options));
@@ -45,7 +45,7 @@ public sealed class DirectMxOptionsTests {
         var options = new DirectMxOptions {
             Port = 25,
             ConnectTimeoutSeconds = 20,
-            LocalDomain = localDomain
+            LocalDomain = localDomain,
         };
 
         Assert.False(DirectMxOptions.HasValidConfiguration(options));

@@ -52,9 +52,9 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
             Description = GetDescription(statusCode),
             Content = new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal) {
                 ["application/json"] = new() {
-                    Schema = context.SchemaGenerator.GenerateSchema(typeof(ApiErrorHttpResponse), context.SchemaRepository)
-                }
-            }
+                    Schema = context.SchemaGenerator.GenerateSchema(typeof(ApiErrorHttpResponse), context.SchemaRepository),
+                },
+            },
         };
     }
 
@@ -63,6 +63,6 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
             StatusCodes.Status401Unauthorized => "Unauthorized",
             StatusCodes.Status403Forbidden => "Forbidden",
             StatusCodes.Status500InternalServerError => "Internal Server Error",
-            _ => "Error"
+            _ => "Error",
         };
 }

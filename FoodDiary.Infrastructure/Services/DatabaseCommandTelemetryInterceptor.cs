@@ -29,7 +29,7 @@ internal sealed class DatabaseCommandTelemetryInterceptor : DbCommandInterceptor
             DbCommandMethod.ExecuteReader => "reader",
             DbCommandMethod.ExecuteScalar => "scalar",
             DbCommandMethod.ExecuteNonQuery => "non_query",
-            _ => "unknown"
+            _ => "unknown",
         };
     }
 
@@ -38,7 +38,7 @@ internal sealed class DatabaseCommandTelemetryInterceptor : DbCommandInterceptor
             TimeoutException => "timeout",
             OperationCanceledException => "canceled",
             DbException dbException => dbException.GetType().Name,
-            _ => exception.GetType().Name
+            _ => exception.GetType().Name,
         };
     }
 }

@@ -61,7 +61,7 @@ public class UpdateRecipeCommandHandlerTests {
             ManualAlcohol: null,
             Steps: [
                 CreateStep(order: 1, "Step 1"),
-                CreateStep(order: 1, "Step 2 duplicate order")
+                CreateStep(order: 1, "Step 2 duplicate order"),
             ]);
 
         await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, CancellationToken.None));
@@ -421,7 +421,7 @@ public class UpdateRecipeCommandHandlerTests {
                         Title: null,
                         ImageUrl: null,
                         ImageAssetId: Guid.Empty,
-                        Ingredients: [])
+                        Ingredients: []),
                 ]),
             CancellationToken.None);
 
@@ -455,7 +455,7 @@ public class UpdateRecipeCommandHandlerTests {
                         Title: null,
                         ImageUrl: null,
                         ImageAssetId: ImageAssetId.New().Value,
-                        Ingredients: [])
+                        Ingredients: []),
                 ]),
             CancellationToken.None);
 
@@ -640,7 +640,7 @@ public class UpdateRecipeCommandHandlerTests {
                         Title: null,
                         ImageUrl: null,
                         ImageAssetId: null,
-                        Ingredients: [new RecipeIngredientInput(ProductId: Guid.Empty, NestedRecipeId: null, Amount: 1)])
+                        Ingredients: [new RecipeIngredientInput(ProductId: Guid.Empty, NestedRecipeId: null, Amount: 1)]),
                 ]),
             CancellationToken.None);
 

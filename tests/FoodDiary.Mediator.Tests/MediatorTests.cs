@@ -66,7 +66,7 @@ public sealed class MediatorTests {
                 "inner-before",
                 "handler",
                 "inner-after",
-                "outer-after"
+                "outer-after",
             ],
             BehaviorLog.Entries);
     }

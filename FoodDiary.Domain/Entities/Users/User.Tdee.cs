@@ -25,7 +25,7 @@ public sealed partial class User {
 
         bmr += Gender.ToUpperInvariant() switch {
             "M" => 5.0,
-            _ => -161.0
+            _ => -161.0,
         };
 
         return bmr > 0 ? Math.Round(bmr, 0) : null;
@@ -52,7 +52,7 @@ public sealed partial class User {
             ActivityLevel.Moderate => 1.55,
             ActivityLevel.High => 1.725,
             ActivityLevel.Extreme => 1.9,
-            _ => throw new ArgumentOutOfRangeException(nameof(level), "Activity level must be one of the supported values.")
+            _ => throw new ArgumentOutOfRangeException(nameof(level), "Activity level must be one of the supported values."),
         };
     }
 

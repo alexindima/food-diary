@@ -16,7 +16,7 @@ public sealed class ConfigurableRelayDeliveryTransport(
         return _options.Mode switch {
             MailRelayDeliveryOptions.SmtpSubmissionMode => smtpTransport,
             MailRelayDeliveryOptions.DirectMxMode => directMxTransport,
-            _ => throw new InvalidOperationException($"Unsupported mail relay delivery mode '{_options.Mode}'.")
+            _ => throw new InvalidOperationException($"Unsupported mail relay delivery mode '{_options.Mode}'."),
         };
     }
 }

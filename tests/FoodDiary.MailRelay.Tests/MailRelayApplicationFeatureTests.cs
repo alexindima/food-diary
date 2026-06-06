@@ -30,7 +30,7 @@ public sealed class MailRelayApplicationFeatureTests {
     [Fact]
     public async Task RemoveSuppressionHandler_WhenSuppressionDoesNotExist_ReturnsNotFound() {
         var handler = new RemoveMailRelaySuppressionCommandHandler(CreateUseCases(new RecordingQueueStore {
-            RemoveSuppressionResult = false
+            RemoveSuppressionResult = false,
         }));
 
         Result result = await handler.Handle(new RemoveMailRelaySuppressionCommand("missing@example.com"), CancellationToken.None);
@@ -42,7 +42,7 @@ public sealed class MailRelayApplicationFeatureTests {
     [Fact]
     public async Task RemoveSuppressionHandler_WhenSuppressionExists_ReturnsSuccess() {
         var handler = new RemoveMailRelaySuppressionCommandHandler(CreateUseCases(new RecordingQueueStore {
-            RemoveSuppressionResult = true
+            RemoveSuppressionResult = true,
         }));
 
         Result result = await handler.Handle(new RemoveMailRelaySuppressionCommand("known@example.com"), CancellationToken.None);
@@ -77,7 +77,7 @@ public sealed class MailRelayApplicationFeatureTests {
             null,
             null);
         var handler = new GetMailRelayMessageDetailsQueryHandler(CreateUseCases(new RecordingQueueStore {
-            MessageDetails = details
+            MessageDetails = details,
         }));
 
         Result<MailRelayMessageDetails> result = await handler.Handle(new GetMailRelayMessageDetailsQuery(details.Id), CancellationToken.None);
@@ -109,7 +109,7 @@ public sealed class MailRelayApplicationFeatureTests {
         MailRelayEmailUseCases useCases = CreateUseCases(new RecordingQueueStore {
             Suppressions = [suppression],
             DeliveryEvents = [deliveryEvent],
-            Stats = stats
+            Stats = stats,
         });
 
         Result<IReadOnlyList<MailRelaySuppressionEntry>> suppressions = await new GetMailRelaySuppressionsQueryHandler(useCases)
@@ -201,7 +201,7 @@ public sealed class MailRelayApplicationFeatureTests {
         Result<IReadOnlyList<MailRelayDeliveryEventEntry>> result = await service.IngestManyAsync(
             [
                 new IngestMailEventRequest(MailRelayDeliveryEventType.Complaint, "first@example.com", "ses"),
-                new IngestMailEventRequest("opened", "second@example.com", "ses")
+                new IngestMailEventRequest("opened", "second@example.com", "ses"),
             ],
             CancellationToken.None);
 

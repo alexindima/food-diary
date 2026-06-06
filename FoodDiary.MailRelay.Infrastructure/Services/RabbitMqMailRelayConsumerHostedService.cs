@@ -35,7 +35,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
             Port = _brokerOptions.Port,
             UserName = _brokerOptions.UserName,
             Password = _brokerOptions.Password,
-            VirtualHost = _brokerOptions.VirtualHost
+            VirtualHost = _brokerOptions.VirtualHost,
         };
     }
 

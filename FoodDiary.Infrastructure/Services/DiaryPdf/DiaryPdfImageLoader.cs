@@ -280,19 +280,19 @@ internal sealed partial class DiaryPdfGenerator {
         return imageCount switch {
             2 => [
                 new CollageSlot(0, 0, half, MealImageThumbnailSize),
-                new CollageSlot(half, 0, half, MealImageThumbnailSize)
+                new CollageSlot(half, 0, half, MealImageThumbnailSize),
             ],
             3 => [
                 new CollageSlot(0, 0, half, MealImageThumbnailSize),
                 new CollageSlot(half, 0, half, half),
-                new CollageSlot(half, half, half, half)
+                new CollageSlot(half, half, half, half),
             ],
             _ => [
                 new CollageSlot(0, 0, half, half),
                 new CollageSlot(half, 0, half, half),
                 new CollageSlot(0, half, half, half),
-                new CollageSlot(half, half, half, half)
-            ]
+                new CollageSlot(half, half, half, half),
+            ],
         };
     }
 

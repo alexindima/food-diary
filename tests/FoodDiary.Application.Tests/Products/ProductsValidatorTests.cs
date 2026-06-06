@@ -201,7 +201,7 @@ public class ProductsValidatorTests {
         UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
             BaseUnit = baseUnit,
             ProductType = productType,
-            Visibility = visibility
+            Visibility = visibility,
         };
 
         TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
@@ -239,7 +239,7 @@ public class ProductsValidatorTests {
             FatsPerBase = fats,
             CarbsPerBase = carbs,
             FiberPerBase = fiber,
-            AlcoholPerBase = alcohol
+            AlcoholPerBase = alcohol,
         };
 
         TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
@@ -266,7 +266,7 @@ public class ProductsValidatorTests {
             ImageUrl = "https://cdn.test/image.png",
             ClearImageUrl = true,
             ImageAssetId = Guid.NewGuid(),
-            ClearImageAssetId = true
+            ClearImageAssetId = true,
         };
 
         TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);

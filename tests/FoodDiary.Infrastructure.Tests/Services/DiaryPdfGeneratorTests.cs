@@ -241,7 +241,7 @@ public sealed class DiaryPdfGeneratorTests {
             DateTime.UtcNow,
             null,
             [
-                MealAiItemData.Create("rice", null, 100, "g", 120, 3, 1, 20, 2, 0)
+                MealAiItemData.Create("rice", null, 100, "g", 120, 3, 1, 20, 2, 0),
             ]);
         typeof(MealAiSession)
             .GetProperty(nameof(MealAiSession.ImageAsset))!
@@ -269,7 +269,7 @@ public sealed class DiaryPdfGeneratorTests {
             }
 
             var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
-                Content = new ByteArrayContent(Convert.FromBase64String(TransparentPngBase64))
+                Content = new ByteArrayContent(Convert.FromBase64String(TransparentPngBase64)),
             };
             return Task.FromResult(response);
         }

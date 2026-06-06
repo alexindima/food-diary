@@ -106,7 +106,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             Email = normalizedEmail,
             Password = normalizedPassword,
             HasPassword = hasPassword,
-            IsEmailConfirmed = false
+            IsEmailConfirmed = false,
         };
         user.ApplySecurityState(UserSecurityState.CreateInitial(normalizedPassword, hasPassword));
         user.ApplyPersonalProfileState(UserPersonalProfileState.CreateInitial());
@@ -199,7 +199,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             WednesdayCalories ?? DailyCalorieTarget,
             ThursdayCalories ?? DailyCalorieTarget,
             FridayCalories ?? DailyCalorieTarget,
-            SaturdayCalories ?? DailyCalorieTarget
+            SaturdayCalories ?? DailyCalorieTarget,
         ];
 
         return dayTargets[(int)date.DayOfWeek];

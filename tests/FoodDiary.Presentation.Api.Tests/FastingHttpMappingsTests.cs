@@ -135,7 +135,7 @@ public sealed class FastingHttpMappingsTests {
                     4,
                     5,
                     ["good"],
-                    "Hydration was fine")
+                    "Hydration was fine"),
             ]);
 
         FastingSessionHttpResponse response = model.ToHttpResponse();
@@ -190,10 +190,10 @@ public sealed class FastingHttpMappingsTests {
             new FastingStatsModel(5, 2, 18.4, 66.7, 50.0, DateTime.UtcNow.AddHours(-2), "dizziness"),
             new FastingInsightsModel(
                 [
-                    new FastingMessageModel("mid", "FASTING.PROMPTS.MID_TITLE", "FASTING.PROMPTS.MID_BODY", "neutral")
+                    new FastingMessageModel("mid", "FASTING.PROMPTS.MID_TITLE", "FASTING.PROMPTS.MID_BODY", "neutral"),
                 ],
                 [
-                    new FastingMessageModel("positive", "FASTING.INSIGHTS.POSITIVE_TITLE", "FASTING.INSIGHTS.POSITIVE_BODY", "positive")
+                    new FastingMessageModel("positive", "FASTING.INSIGHTS.POSITIVE_TITLE", "FASTING.INSIGHTS.POSITIVE_BODY", "positive"),
                 ]),
             new FoodDiary.Application.Common.Models.PagedResponse<FastingSessionModel>(
                 [],

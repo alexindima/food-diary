@@ -196,7 +196,7 @@ public sealed class ExternalFoodServiceTests {
             new HttpClient(handler),
             MsOptions.Create(new UsdaApiOptions {
                 ApiKey = apiKey,
-                BaseUrl = "https://usda.test"
+                BaseUrl = "https://usda.test",
             }),
             NullLogger<UsdaFoodSearchService>.Instance);
     }
@@ -205,14 +205,14 @@ public sealed class ExternalFoodServiceTests {
         return new OpenFoodFactsService(
             new HttpClient(handler),
             MsOptions.Create(new OpenFoodFactsApiOptions {
-                BaseUrl = "https://off.test"
+                BaseUrl = "https://off.test",
             }),
             NullLogger<OpenFoodFactsService>.Instance);
     }
 
     private static HttpResponseMessage JsonResponse(string json) =>
         new(HttpStatusCode.OK) {
-            Content = new StringContent(json, Encoding.UTF8, "application/json")
+            Content = new StringContent(json, Encoding.UTF8, "application/json"),
         };
 
     [ExcludeFromCodeCoverage]

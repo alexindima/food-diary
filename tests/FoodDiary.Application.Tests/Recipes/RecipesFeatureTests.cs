@@ -251,7 +251,7 @@ public class RecipesFeatureTests {
             ManualAlcohol: -1,
             Steps: [
                 CreateRecipeCreateStep(order: 1, "Mix"),
-                CreateRecipeCreateStep(order: 1, "Serve")
+                CreateRecipeCreateStep(order: 1, "Serve"),
             ]));
 
         Assert.False(result.IsValid);
@@ -541,7 +541,7 @@ public class RecipesFeatureTests {
                         Title: null,
                         ImageUrl: null,
                         ImageAssetId: stepImageAssetId.Value,
-                        Ingredients: [])
+                        Ingredients: []),
                 ]),
             CancellationToken.None);
 
@@ -570,7 +570,7 @@ public class RecipesFeatureTests {
                         Title: null,
                         ImageUrl: null,
                         ImageAssetId: null,
-                        Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: Guid.Empty, Amount: 1)])
+                        Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: Guid.Empty, Amount: 1)]),
                 ]),
             CancellationToken.None);
 
@@ -601,7 +601,7 @@ public class RecipesFeatureTests {
                         Title: null,
                         ImageUrl: null,
                         ImageAssetId: null,
-                        Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: nestedRecipeId.Value, Amount: 2)])
+                        Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: nestedRecipeId.Value, Amount: 2)]),
                 ]),
             CancellationToken.None);
 
@@ -640,7 +640,7 @@ public class RecipesFeatureTests {
                 ManualAlcohol: 0,
                 Steps: [
                     CreateRecipeCreateStep(order: 1, "Chop vegetables"),
-                    CreateRecipeCreateStep(order: 2, "Boil soup")
+                    CreateRecipeCreateStep(order: 2, "Boil soup"),
                 ]),
             CancellationToken.None);
 
@@ -930,7 +930,7 @@ public class RecipesFeatureTests {
                 [dinner.Id] = (dinner, 5),
             });
         var recentRepository = new StubRecentItemRepository([
-            new RecentRecipeUsage(dinner.Id, 5, DateTime.UtcNow)
+            new RecentRecipeUsage(dinner.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([favorite]);
         var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
@@ -983,7 +983,7 @@ public class RecipesFeatureTests {
 
         var repository = new OverviewRecipeRepository(pagedItems: [(recipe, 1)]);
         var recentRepository = new StubRecentItemRepository([
-            new RecentRecipeUsage(recipe.Id, 1, DateTime.UtcNow)
+            new RecentRecipeUsage(recipe.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([]);
         var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
@@ -1046,7 +1046,7 @@ public class RecipesFeatureTests {
         var recentRepository = new StubRecentItemRepository([
             new RecentRecipeUsage(publicRecipe.Id, 2, DateTime.UtcNow),
             new RecentRecipeUsage(missingRecipeId, 9, DateTime.UtcNow),
-            new RecentRecipeUsage(owned.Id, 5, DateTime.UtcNow)
+            new RecentRecipeUsage(owned.Id, 5, DateTime.UtcNow),
         ]);
         var handler = new GetRecentRecipesQueryHandler(recentRepository, repository);
 
@@ -1213,7 +1213,7 @@ public class RecipesFeatureTests {
         var publicRecipe = Recipe.Create(publicOwnerId, "Public salad", servings: 1, visibility: Visibility.Public);
         var repository = new OverviewRecipeRepository([
             (ownedRecipe, 3),
-            (publicRecipe, 5)
+            (publicRecipe, 5),
         ]);
         var handler = new GetRecipesQueryHandler(repository, new StubUserRepository(user));
 

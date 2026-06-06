@@ -48,7 +48,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     TotalFats = table.Column<double>(type: "double precision", nullable: true),
                     TotalCarbs = table.Column<double>(type: "double precision", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
@@ -69,7 +69,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Instruction = table.Column<string>(type: "text", nullable: false),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_RecipeSteps", x => x.Id);
@@ -90,7 +90,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     NestedRecipeId = table.Column<Guid>(type: "uuid", nullable: true),
                     Amount = table.Column<double>(type: "double precision", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_RecipeIngredients", x => x.Id);
@@ -198,7 +198,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     TotalFats = table.Column<double>(type: "double precision", nullable: true),
                     TotalCarbs = table.Column<double>(type: "double precision", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
@@ -220,7 +220,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Instruction = table.Column<string>(type: "text", nullable: false),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_RecipeSteps", x => x.Id);
@@ -242,7 +242,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     NestedRecipeId = table.Column<int>(type: "integer", nullable: true),
                     Amount = table.Column<double>(type: "double precision", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_RecipeIngredients", x => x.Id);

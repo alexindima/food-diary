@@ -46,7 +46,7 @@ public class GetProductsQueryHandler(
         var productsWithUsage = items.Select(item => new {
             item.Product,
             item.UsageCount,
-            IsOwner = item.Product.UserId == userId
+            IsOwner = item.Product.UserId == userId,
         }).ToList();
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);

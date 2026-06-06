@@ -334,8 +334,8 @@ public class WearablesFeatureTests {
         var client = new StubWearableClient(WearableProvider.Fitbit, null) {
             DataPoints = [
                 new WearableDataPoint(WearableDataType.Steps, 5000),
-                new WearableDataPoint(WearableDataType.CaloriesBurned, 250)
-            ]
+                new WearableDataPoint(WearableDataType.CaloriesBurned, 250),
+            ],
         };
         var handler = new SyncWearableDataCommandHandler([client], connectionRepository, syncRepository);
 
@@ -445,7 +445,7 @@ public class WearablesFeatureTests {
         connectionRepository.Seed(connection);
         DateTime refreshExpiresAtUtc = DateTime.UtcNow.AddHours(2);
         var client = new StubWearableClient(WearableProvider.Fitbit, null) {
-            RefreshTokenResult = new WearableTokenResult("new-access", "new-refresh", "ext", refreshExpiresAtUtc)
+            RefreshTokenResult = new WearableTokenResult("new-access", "new-refresh", "ext", refreshExpiresAtUtc),
         };
         var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository());
 
@@ -473,8 +473,8 @@ public class WearablesFeatureTests {
             DataPoints = [
                 new WearableDataPoint(WearableDataType.HeartRate, 72),
                 new WearableDataPoint(WearableDataType.ActiveMinutes, 20),
-                new WearableDataPoint(WearableDataType.SleepMinutes, 420)
-            ]
+                new WearableDataPoint(WearableDataType.SleepMinutes, 420),
+            ],
         };
         var handler = new SyncWearableDataCommandHandler([client], connectionRepository, syncRepository);
 
@@ -498,7 +498,7 @@ public class WearablesFeatureTests {
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var client = new StubWearableClient(WearableProvider.Fitbit, null) {
-            RefreshTokenResult = null
+            RefreshTokenResult = null,
         };
         var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository());
 

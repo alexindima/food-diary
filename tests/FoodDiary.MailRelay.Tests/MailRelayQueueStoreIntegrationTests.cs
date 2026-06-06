@@ -90,7 +90,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
             BaseRetryDelaySeconds = 1,
             MaxRetryDelaySeconds = 1,
             LockTimeoutSeconds = 1,
-            PollIntervalSeconds = 1
+            PollIntervalSeconds = 1,
         }));
 
     private static RelayEmailMessageRequest CreateRequest() =>

@@ -16,7 +16,7 @@ public sealed class S3ImageStorageService(
         MediaTypeNames.Image.Jpeg,
         "image/png",
         "image/webp",
-        "image/gif"
+        "image/gif",
     };
 
     private readonly S3Options _options = options.Value;
@@ -116,7 +116,7 @@ public sealed class S3ImageStorageService(
         return cleaned.Length switch {
             0 => "image",
             > 128 => cleaned[..128],
-            _ => cleaned
+            _ => cleaned,
         };
     }
 

@@ -31,7 +31,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
             RecipeStepId = recipeStepId,
             ProductId = productId,
             NestedRecipeId = null,
-            Amount = normalizedAmount
+            Amount = normalizedAmount,
         };
         ingredient.SetCreated();
         return ingredient;
@@ -47,7 +47,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
             RecipeStepId = recipeStepId,
             ProductId = null,
             NestedRecipeId = nestedRecipeId,
-            Amount = normalizedServings
+            Amount = normalizedServings,
         };
         ingredient.SetCreated();
         return ingredient;

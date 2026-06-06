@@ -21,7 +21,7 @@ public static class UtcDateNormalizer {
     public static DateTime NormalizeDateUsingLocalFallback(DateTime value) {
         DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
+            _ => value.ToUniversalTime(),
         };
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
@@ -30,7 +30,7 @@ public static class UtcDateNormalizer {
     public static DateTime NormalizeDateEndUsingLocalFallback(DateTime value) {
         DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
+            _ => value.ToUniversalTime(),
         };
 
         return DateTime.SpecifyKind(utc.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);

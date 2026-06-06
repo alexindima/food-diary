@@ -13,7 +13,7 @@ public sealed class MailRelayMessageProcessorTests {
     [Fact]
     public async Task ProcessAsync_WhenRecipientIsSuppressed_MarksMessageSuppressedAndDoesNotSend() {
         var store = new RecordingQueueStore {
-            SuppressedRecipients = ["user@example.com"]
+            SuppressedRecipients = ["user@example.com"],
         };
         var transport = new RecordingTransport();
         MailRelayMessageProcessor processor = CreateProcessor(store, transport);
@@ -50,7 +50,7 @@ public sealed class MailRelayMessageProcessorTests {
         bool expectedTerminalFailure) {
         var store = new RecordingQueueStore();
         var transport = new RecordingTransport {
-            Exception = new InvalidOperationException("SMTP failed")
+            Exception = new InvalidOperationException("SMTP failed"),
         };
         MailRelayMessageProcessor processor = CreateProcessor(store, transport);
 

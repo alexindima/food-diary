@@ -48,7 +48,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
         await CreateDatabaseAsync(databaseName).ConfigureAwait(false);
 
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(_container!.GetConnectionString()) {
-            Database = databaseName
+            Database = databaseName,
         };
 
         return connectionStringBuilder.ConnectionString;

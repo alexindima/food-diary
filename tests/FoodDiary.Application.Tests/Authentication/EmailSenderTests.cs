@@ -183,7 +183,7 @@ public sealed class EmailSenderTests {
             FromAddress = "noreply@example.com",
             FromName = fromName,
             FrontendBaseUrl = frontendBaseUrl,
-            AllowedFrontendBaseUrls = allowedFrontendBaseUrls ?? []
+            AllowedFrontendBaseUrls = allowedFrontendBaseUrls ?? [],
         };
 
     [ExcludeFromCodeCoverage]

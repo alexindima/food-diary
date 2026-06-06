@@ -20,7 +20,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     ActorUserAgent = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
                     StartedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_AdminImpersonationSessions", x => x.Id);

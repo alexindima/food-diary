@@ -35,7 +35,7 @@ builder.Configuration.AddEnvironmentVariables("MAILINBOX_");
 
 if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
     builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString
+        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString,
     });
 }
 
@@ -86,7 +86,7 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
     NpgsqlConnection connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
     await using (connection.ConfigureAwait(false)) {
         string[] requiredTables = new[] {
-        "mailinbox_messages"
+        "mailinbox_messages",
     };
         var existingTables = new HashSet<string>(StringComparer.Ordinal);
 

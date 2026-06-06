@@ -57,7 +57,7 @@ public sealed class Meal : AggregateRoot<MealId> {
 
         var meal = new Meal {
             Id = MealId.New(),
-            UserId = userId
+            UserId = userId,
         };
         meal.ApplyDetailsState(new MealDetailsState(
             Date: NormalizeDate(date),
@@ -247,7 +247,7 @@ public sealed class Meal : AggregateRoot<MealId> {
 
         ApplyDetailsState(state with {
             PreMealSatietyLevel = normalizedPre,
-            PostMealSatietyLevel = normalizedPost
+            PostMealSatietyLevel = normalizedPost,
         });
         SetModified();
     }

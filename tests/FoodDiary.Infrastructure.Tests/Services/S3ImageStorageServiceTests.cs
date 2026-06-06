@@ -134,7 +134,7 @@ public sealed class S3ImageStorageServiceTests {
             Microsoft.Extensions.Options.Options.Create(new S3Options {
                 Bucket = "fooddiary-assets",
                 Region = "eu-central-1",
-                MaxUploadSizeBytes = 5 * 1024 * 1024
+                MaxUploadSizeBytes = 5 * 1024 * 1024,
             }),
             new StubDateTimeProvider());
     }

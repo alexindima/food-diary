@@ -64,7 +64,7 @@ public sealed class NotificationTestScheduler(
                     domainUserId,
                     "Extended",
                     "FastDay",
-                    referenceId)
+                    referenceId),
             };
 
             await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
@@ -88,7 +88,7 @@ public sealed class NotificationTestScheduler(
             NotificationTypes.FastingCheckInReminder => NotificationTypes.FastingCheckInReminder,
             NotificationTypes.EatingWindowStarted => NotificationTypes.EatingWindowStarted,
             NotificationTypes.FastingWindowStarted => NotificationTypes.FastingWindowStarted,
-            _ => NotificationTypes.FastingCompleted
+            _ => NotificationTypes.FastingCompleted,
         };
     }
 }

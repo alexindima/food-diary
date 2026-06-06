@@ -41,7 +41,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
             DurationDays = NormalizeDuration(durationDays),
             TargetCaloriesPerDay = targetCaloriesPerDay,
             IsCurated = true,
-            UserId = null
+            UserId = null,
         };
         plan.SetCreated();
         return plan;
@@ -66,7 +66,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
             DurationDays = NormalizeDuration(durationDays),
             TargetCaloriesPerDay = targetCaloriesPerDay,
             IsCurated = false,
-            UserId = userId
+            UserId = userId,
         };
         plan.SetCreated();
         return plan;
@@ -95,7 +95,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
             DurationDays = DurationDays,
             TargetCaloriesPerDay = TargetCaloriesPerDay,
             IsCurated = false,
-            UserId = userId
+            UserId = userId,
         };
         adopted.SetCreated();
 

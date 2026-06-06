@@ -14,7 +14,7 @@ public partial class AddUserRoles : Migration {
                 Id = table.Column<Guid>(type: "uuid", nullable: false),
                 Name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
             },
             constraints: table => {
                 table.PrimaryKey("PK_Roles", x => x.Id);
@@ -24,7 +24,7 @@ public partial class AddUserRoles : Migration {
             name: "UserRoles",
             columns: table => new {
                 UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                RoleId = table.Column<Guid>(type: "uuid", nullable: false)
+                RoleId = table.Column<Guid>(type: "uuid", nullable: false),
             },
             constraints: table => {
                 table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });

@@ -15,7 +15,7 @@ public static class NotificationTargetUrlResolver {
                 $"/dietologist-invitations/{referenceId}",
             NotificationTypes.DietologistInvitationAccepted => "/profile",
             NotificationTypes.DietologistInvitationDeclined => "/profile",
-            _ => null
+            _ => null,
         };
     }
 }

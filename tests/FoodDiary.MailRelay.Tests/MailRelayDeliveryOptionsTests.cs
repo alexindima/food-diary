@@ -9,7 +9,7 @@ public sealed class MailRelayDeliveryOptionsTests {
     [InlineData(MailRelayDeliveryOptions.DirectMxMode)]
     public void HasSupportedMode_WhenModeIsSupported_ReturnsTrue(string mode) {
         var options = new MailRelayDeliveryOptions {
-            Mode = mode
+            Mode = mode,
         };
 
         Assert.True(MailRelayDeliveryOptions.HasSupportedMode(options));
@@ -18,7 +18,7 @@ public sealed class MailRelayDeliveryOptionsTests {
     [Fact]
     public void HasSupportedMode_WhenModeIsUnknown_ReturnsFalse() {
         var options = new MailRelayDeliveryOptions {
-            Mode = "Unknown"
+            Mode = "Unknown",
         };
 
         Assert.False(MailRelayDeliveryOptions.HasSupportedMode(options));

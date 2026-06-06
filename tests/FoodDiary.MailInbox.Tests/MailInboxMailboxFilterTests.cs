@@ -10,7 +10,7 @@ public sealed class MailInboxMailboxFilterTests {
     [Fact]
     public async Task CanAcceptFromAsync_ReturnsTrue() {
         var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
-            AllowedRecipients = ["admin@fooddiary.club"]
+            AllowedRecipients = ["admin@fooddiary.club"],
         }));
 
         bool canAccept = await filter.CanAcceptFromAsync(
@@ -25,7 +25,7 @@ public sealed class MailInboxMailboxFilterTests {
     [Fact]
     public async Task CanDeliverToAsync_WhenRecipientIsAllowed_ReturnsTrue() {
         var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
-            AllowedRecipients = ["admin@fooddiary.club"]
+            AllowedRecipients = ["admin@fooddiary.club"],
         }));
 
         bool canDeliver = await filter.CanDeliverToAsync(
@@ -40,7 +40,7 @@ public sealed class MailInboxMailboxFilterTests {
     [Fact]
     public async Task CanDeliverToAsync_WhenRecipientIsNotAllowed_ReturnsFalse() {
         var filter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions {
-            AllowedRecipients = ["admin@fooddiary.club"]
+            AllowedRecipients = ["admin@fooddiary.club"],
         }));
 
         bool canDeliver = await filter.CanDeliverToAsync(

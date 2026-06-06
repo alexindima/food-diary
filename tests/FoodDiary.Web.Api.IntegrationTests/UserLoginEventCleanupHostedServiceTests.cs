@@ -21,7 +21,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 Enabled = false,
                 RetentionDays = 30,
                 BatchSize = 10,
-                PollIntervalHours = 1
+                PollIntervalHours = 1,
             }),
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 
@@ -42,7 +42,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 Enabled = true,
                 RetentionDays = 30,
                 BatchSize = 10,
-                PollIntervalHours = 1
+                PollIntervalHours = 1,
             }),
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
         DateTime beforeStartUtc = DateTime.UtcNow;
@@ -71,7 +71,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 Enabled = true,
                 RetentionDays = 30,
                 BatchSize = 10,
-                PollIntervalHours = 1
+                PollIntervalHours = 1,
             }),
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 
@@ -92,7 +92,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 Enabled = true,
                 RetentionDays = 30,
                 BatchSize = 10,
-                PollIntervalHours = 1
+                PollIntervalHours = 1,
             }),
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 

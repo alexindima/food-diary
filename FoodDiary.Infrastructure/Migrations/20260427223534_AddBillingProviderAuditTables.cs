@@ -50,7 +50,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     WebhookEventId = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     ProviderMetadataJson = table.Column<string>(type: "jsonb", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_BillingPayments", x => x.Id);
@@ -81,7 +81,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     PayloadJson = table.Column<string>(type: "jsonb", nullable: true),
                     ErrorMessage = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_BillingWebhookEvents", x => x.Id);

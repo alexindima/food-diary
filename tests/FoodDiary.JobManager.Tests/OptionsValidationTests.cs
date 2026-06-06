@@ -9,7 +9,7 @@ public sealed class OptionsValidationTests {
         var options = new ImageCleanupOptions {
             OlderThanHours = 0,
             BatchSize = 0,
-            Cron = ""
+            Cron = "",
         };
 
         Assert.False(ImageCleanupOptions.HasValidConfiguration(options));
@@ -21,7 +21,7 @@ public sealed class OptionsValidationTests {
             RetentionDays = 30,
             BatchSize = 25,
             Cron = "0 3 * * *",
-            ReassignUserId = "not-a-guid"
+            ReassignUserId = "not-a-guid",
         };
 
         Assert.False(UserCleanupOptions.HasValidConfiguration(options));
@@ -33,7 +33,7 @@ public sealed class OptionsValidationTests {
             RetentionDays = 30,
             BatchSize = 25,
             Cron = "0 3 * * *",
-            ReassignUserId = Guid.NewGuid().ToString()
+            ReassignUserId = Guid.NewGuid().ToString(),
         };
 
         Assert.True(UserCleanupOptions.HasValidConfiguration(options));
@@ -45,7 +45,7 @@ public sealed class OptionsValidationTests {
             Enabled = false,
             Provider = string.Empty,
             BatchSize = 0,
-            Cron = string.Empty
+            Cron = string.Empty,
         };
 
         Assert.True(BillingRenewalOptions.HasValidConfiguration(options));
@@ -57,7 +57,7 @@ public sealed class OptionsValidationTests {
             Enabled = true,
             Provider = "YooKassa",
             BatchSize = 50,
-            Cron = "15 * * * *"
+            Cron = "15 * * * *",
         };
 
         Assert.True(BillingRenewalOptions.HasValidConfiguration(options));
@@ -77,7 +77,7 @@ public sealed class OptionsValidationTests {
             Enabled = true,
             Provider = provider,
             BatchSize = batchSize,
-            Cron = cron
+            Cron = cron,
         };
 
         Assert.False(BillingRenewalOptions.HasValidConfiguration(options));
@@ -92,7 +92,7 @@ public sealed class OptionsValidationTests {
             StandardReadRetentionDays = 60,
             StandardUnreadRetentionDays = 90,
             BatchSize = 100,
-            Cron = "0 4 * * *"
+            Cron = "0 4 * * *",
         };
 
         Assert.True(NotificationCleanupOptions.HasValidConfiguration(options));
@@ -120,7 +120,7 @@ public sealed class OptionsValidationTests {
             StandardReadRetentionDays = standardReadRetentionDays,
             StandardUnreadRetentionDays = standardUnreadRetentionDays,
             BatchSize = batchSize,
-            Cron = cron
+            Cron = cron,
         };
 
         Assert.False(NotificationCleanupOptions.HasValidConfiguration(options));
@@ -138,7 +138,7 @@ public sealed class OptionsValidationTests {
             StandardReadRetentionDays = 60,
             StandardUnreadRetentionDays = 90,
             BatchSize = 100,
-            Cron = "0 4 * * *"
+            Cron = "0 4 * * *",
         };
 
         Assert.False(NotificationCleanupOptions.HasValidConfiguration(options));

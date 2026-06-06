@@ -21,7 +21,7 @@ public sealed class OpenAiFoodClient(
     private const int MaxTransientRetries = 2;
     private static readonly TimeSpan[] RetryDelays = [
         TimeSpan.FromMilliseconds(250),
-        TimeSpan.FromMilliseconds(750)
+        TimeSpan.FromMilliseconds(750),
     ];
 
     private readonly OpenAiOptions _options = options.Value;
@@ -245,17 +245,17 @@ public sealed class OpenAiFoodClient(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = descriptionHint + resolvedPrompt
+                            text = descriptionHint + resolvedPrompt,
                         },
                         new {
                             type = "input_image",
                             image_url = imageUrl,
-                            detail = "high"
-                        }
-                    }
-                }
+                            detail = "high",
+                        },
+                    },
+                },
             },
-            text = BuildFoodVisionTextFormat()
+            text = BuildFoodVisionTextFormat(),
         };
     }
 
@@ -278,12 +278,12 @@ public sealed class OpenAiFoodClient(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = resolvedPrompt
-                        }
-                    }
-                }
+                            text = resolvedPrompt,
+                        },
+                    },
+                },
             },
-            text = BuildFoodVisionTextFormat()
+            text = BuildFoodVisionTextFormat(),
         };
     }
 
@@ -304,18 +304,18 @@ public sealed class OpenAiFoodClient(
                                     nameLocal = new { type = new[] { "string", "null" } },
                                     amount = new { type = "number" },
                                     unit = new { type = "string" },
-                                    confidence = new { type = "number" }
+                                    confidence = new { type = "number" },
                                 },
                                 required = new[] { "nameEn", "nameLocal", "amount", "unit", "confidence" },
-                                additionalProperties = false
-                            }
+                                additionalProperties = false,
+                            },
                         },
                     },
                     required = new[] { "items" },
-                    additionalProperties = false
+                    additionalProperties = false,
                 },
-                strict = true
-            }
+                strict = true,
+            },
         };
     }
 
@@ -323,7 +323,7 @@ public sealed class OpenAiFoodClient(
         var mappedItems = items.Select(item => new {
             name = string.IsNullOrWhiteSpace(item.NameEn) ? (item.NameLocal ?? "unknown") : item.NameEn,
             amount = item.Amount,
-            unit = item.Unit
+            unit = item.Unit,
         });
 
         string itemsJson = JsonSerializer.Serialize(new { items = mappedItems });
@@ -338,16 +338,16 @@ public sealed class OpenAiFoodClient(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = resolvedPrompt
+                            text = resolvedPrompt,
                         },
                         new {
                             type = "input_text",
-                            text = itemsJson
-                        }
-                    }
-                }
+                            text = itemsJson,
+                        },
+                    },
+                },
             },
-            text = BuildFoodNutritionTextFormat()
+            text = BuildFoodNutritionTextFormat(),
         };
     }
 
@@ -378,23 +378,23 @@ public sealed class OpenAiFoodClient(
                                     fat = new { type = "number" },
                                     carbs = new { type = "number" },
                                     fiber = new { type = "number" },
-                                    alcohol = new { type = "number" }
+                                    alcohol = new { type = "number" },
                                 },
                                 required = new[] {
                                     "name", "amount", "unit",
-                                    "calories", "protein", "fat", "carbs", "fiber", "alcohol"
+                                    "calories", "protein", "fat", "carbs", "fiber", "alcohol",
                                 },
-                                additionalProperties = false
-                            }
+                                additionalProperties = false,
+                            },
                         },
                     },
                     required = new[] {
-                        "calories", "protein", "fat", "carbs", "fiber", "alcohol", "items"
+                        "calories", "protein", "fat", "carbs", "fiber", "alcohol", "items",
                     },
-                    additionalProperties = false
+                    additionalProperties = false,
                 },
-                strict = true
-            }
+                strict = true,
+            },
         };
     }
 

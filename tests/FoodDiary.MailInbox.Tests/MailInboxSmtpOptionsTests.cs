@@ -18,7 +18,7 @@ public sealed class MailInboxSmtpOptionsTests {
             ServerName = "mail.fooddiary.club",
             Port = 2525,
             MaxMessageSizeBytes = 1024,
-            AllowedRecipients = ["admin@fooddiary.club"]
+            AllowedRecipients = ["admin@fooddiary.club"],
         };
 
         Assert.True(MailInboxSmtpOptions.HasValidConfiguration(options));
@@ -34,7 +34,7 @@ public sealed class MailInboxSmtpOptionsTests {
             ServerName = "mail.fooddiary.club",
             Port = port,
             MaxMessageSizeBytes = maxMessageSizeBytes,
-            AllowedRecipients = ["admin@fooddiary.club"]
+            AllowedRecipients = ["admin@fooddiary.club"],
         };
 
         Assert.False(MailInboxSmtpOptions.HasValidConfiguration(options));
@@ -46,7 +46,7 @@ public sealed class MailInboxSmtpOptionsTests {
             ServerName = "mail.fooddiary.club",
             Port = 2525,
             MaxMessageSizeBytes = 1024,
-            AllowedRecipients = []
+            AllowedRecipients = [],
         };
 
         Assert.False(MailInboxSmtpOptions.HasValidConfiguration(options));
@@ -60,7 +60,7 @@ public sealed class MailInboxSmtpOptionsTests {
             ServerName = serverName,
             Port = 2525,
             MaxMessageSizeBytes = 1024,
-            AllowedRecipients = ["admin@fooddiary.club"]
+            AllowedRecipients = ["admin@fooddiary.club"],
         };
 
         Assert.False(MailInboxSmtpOptions.HasValidConfiguration(options));
@@ -74,7 +74,7 @@ public sealed class MailInboxSmtpOptionsTests {
             ServerName = "mail.fooddiary.club",
             Port = 2525,
             MaxMessageSizeBytes = 1024,
-            AllowedRecipients = [recipient]
+            AllowedRecipients = [recipient],
         };
 
         Assert.False(MailInboxSmtpOptions.HasValidConfiguration(options));

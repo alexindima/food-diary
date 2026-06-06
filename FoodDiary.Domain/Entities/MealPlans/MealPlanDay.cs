@@ -25,7 +25,7 @@ public sealed class MealPlanDay : Entity<MealPlanDayId> {
         var day = new MealPlanDay {
             Id = MealPlanDayId.New(),
             MealPlanId = planId,
-            DayNumber = dayNumber
+            DayNumber = dayNumber,
         };
         day.SetCreated();
         return day;

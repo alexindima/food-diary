@@ -22,7 +22,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     UserId = table.Column<Guid>(type: "uuid", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_MealPlans", x => x.Id);
@@ -41,7 +41,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     MealPlanId = table.Column<Guid>(type: "uuid", nullable: false),
                     DayNumber = table.Column<int>(type: "integer", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_MealPlanDays", x => x.Id);
@@ -62,7 +62,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     RecipeId = table.Column<Guid>(type: "uuid", nullable: false),
                     Servings = table.Column<int>(type: "integer", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_MealPlanMeals", x => x.Id);

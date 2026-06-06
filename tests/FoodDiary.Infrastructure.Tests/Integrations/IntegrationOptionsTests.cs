@@ -29,7 +29,7 @@ public sealed class IntegrationOptionsTests {
             ApiKey = apiKey,
             VisionModel = visionModel,
             VisionFallbackModel = "fallback",
-            TextModel = textModel
+            TextModel = textModel,
         };
 
         Assert.Equal(expectedTextModelValid, OpenAiOptions.HasTextModelWhenApiKeyConfigured(options));
@@ -40,7 +40,7 @@ public sealed class IntegrationOptionsTests {
     public void OpenAiOptions_WhenVisionModelConfigured_RequiresFallbackModel() {
         var options = new OpenAiOptions {
             VisionModel = "vision",
-            VisionFallbackModel = "   "
+            VisionFallbackModel = "   ",
         };
 
         Assert.False(OpenAiOptions.HasVisionFallbackWhenVisionModelConfigured(options));
@@ -89,7 +89,7 @@ public sealed class IntegrationOptionsTests {
             Subject = "mailto:admin@example.com",
             PublicKey = "public",
             PrivateKey = "private",
-            DefaultUrl = "/"
+            DefaultUrl = "/",
         };
         WebPushOptions missingKey = invalid.WithPublicKey("");
 
@@ -115,7 +115,7 @@ public sealed class IntegrationOptionsTests {
             PremiumMonthlyAmount = monthlyAmount,
             PremiumYearlyAmount = yearlyAmount,
             Currency = currency,
-            ReturnUrl = returnUrl
+            ReturnUrl = returnUrl,
         };
 
         Assert.Equal(expected, YooKassaOptions.HasValidCheckoutConfiguration(options));
@@ -130,6 +130,6 @@ file static class WebPushOptionsTestExtensions {
             Subject = options.Subject,
             PublicKey = publicKey,
             PrivateKey = options.PrivateKey,
-            DefaultUrl = options.DefaultUrl
+            DefaultUrl = options.DefaultUrl,
         };
 }

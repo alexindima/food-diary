@@ -21,7 +21,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
             MaxAttempts = 1,
             BaseRetryDelaySeconds = 30,
             MaxRetryDelaySeconds = 10,
-            LockTimeoutSeconds = 1
+            LockTimeoutSeconds = 1,
         };
 
         Assert.False(MailRelayQueueOptions.HasValidConfiguration(options));
@@ -30,13 +30,13 @@ public sealed class MailRelayInfrastructureOptionsTests {
     [Fact]
     public void MailRelayBrokerOptions_ValidatesSupportedBackendsAndRequiredRabbitMqFields() {
         Assert.False(MailRelayBrokerOptions.HasSupportedBackend(new MailRelayBrokerOptions {
-            Backend = "Unknown"
+            Backend = "Unknown",
         }));
         Assert.True(MailRelayBrokerOptions.HasValidConfiguration(new MailRelayBrokerOptions {
-            Backend = MailRelayBrokerOptions.PostgresPollingBackend
+            Backend = MailRelayBrokerOptions.PostgresPollingBackend,
         }));
         Assert.False(MailRelayBrokerOptions.HasValidConfiguration(new MailRelayBrokerOptions {
-            QueueName = ""
+            QueueName = "",
         }));
     }
 
@@ -48,8 +48,8 @@ public sealed class MailRelayInfrastructureOptionsTests {
     public void OpenTelemetryOptions_HasValidOtlpEndpoint_ReturnsExpectedResult(string? endpoint, bool expected) {
         var options = new OpenTelemetryOptions {
             Otlp = new OpenTelemetryOptions.OtlpOptions {
-                Endpoint = endpoint
-            }
+                Endpoint = endpoint,
+            },
         };
 
         Assert.Equal(expected, OpenTelemetryOptions.HasValidOtlpEndpoint(options));
@@ -71,7 +71,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
                 ["MailRelayQueue:BaseRetryDelaySeconds"] = "5",
                 ["MailRelayQueue:MaxRetryDelaySeconds"] = "10",
                 ["MailRelayQueue:LockTimeoutSeconds"] = "20",
-                ["MailRelayBroker:Backend"] = MailRelayBrokerOptions.PostgresPollingBackend
+                ["MailRelayBroker:Backend"] = MailRelayBrokerOptions.PostgresPollingBackend,
             })
             .Build();
         var services = new ServiceCollection();
@@ -88,7 +88,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     public void AddMailRelayServices_RegistersInfrastructureAbstractionsWithoutCreatingExternalConnections() {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=test;Password=test"
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=test;Password=test",
             })
             .Build();
         var services = new ServiceCollection();

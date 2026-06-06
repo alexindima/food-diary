@@ -5,5 +5,5 @@ public enum DietologistInvitationStatus {
     Accepted = 1,
     Declined = 2,
     Expired = 3,
-    Revoked = 4
+    Revoked = 4,
 }

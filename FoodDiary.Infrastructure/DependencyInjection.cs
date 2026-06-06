@@ -193,7 +193,7 @@ public static class DependencyInjection {
             client.Timeout = TimeSpan.FromSeconds(5);
         }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
             AllowAutoRedirect = false,
-            ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync
+            ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync,
         });
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();

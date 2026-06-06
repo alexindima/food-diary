@@ -198,7 +198,7 @@ public sealed class WearableClientTests {
             MsOptions.Create(new GoogleFitOptions {
                 ClientId = clientId,
                 ClientSecret = "google-secret",
-                RedirectUri = "https://app.test/google"
+                RedirectUri = "https://app.test/google",
             }),
             NullLogger<GoogleFitClient>.Instance);
     }
@@ -209,14 +209,14 @@ public sealed class WearableClientTests {
             MsOptions.Create(new FitbitOptions {
                 ClientId = clientId,
                 ClientSecret = "fitbit-secret",
-                RedirectUri = "https://app.test/fitbit"
+                RedirectUri = "https://app.test/fitbit",
             }),
             NullLogger<FitbitClient>.Instance);
     }
 
     private static HttpResponseMessage JsonResponse(string json) =>
         new(HttpStatusCode.OK) {
-            Content = new StringContent(json, Encoding.UTF8, "application/json")
+            Content = new StringContent(json, Encoding.UTF8, "application/json"),
         };
 
     [ExcludeFromCodeCoverage]

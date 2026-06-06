@@ -21,7 +21,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Locale = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: true),
                     UserAgent = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_WebPushSubscriptions", x => x.Id);

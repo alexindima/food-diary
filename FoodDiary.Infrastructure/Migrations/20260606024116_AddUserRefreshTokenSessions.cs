@@ -23,7 +23,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     LastRotatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RevokedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_UserRefreshTokenSessions", x => x.Id);

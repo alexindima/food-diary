@@ -24,7 +24,7 @@ public class UpdateRecipeCommandValidatorTests {
             recipeId,
             [
                 CreateStep(order: 1, "Step 1"),
-                CreateStep(order: 1, "Step 2 duplicate")
+                CreateStep(order: 1, "Step 2 duplicate"),
             ]);
 
         ValidationResult result = await validator.ValidateAsync(command);
@@ -47,7 +47,7 @@ public class UpdateRecipeCommandValidatorTests {
             recipeId,
             [
                 CreateStep(order: 0, "Step uses index fallback to 1"),
-                CreateStep(order: 2, "Explicit step 2")
+                CreateStep(order: 2, "Explicit step 2"),
             ]);
 
         ValidationResult result = await validator.ValidateAsync(command);
@@ -95,7 +95,7 @@ public class UpdateRecipeCommandValidatorTests {
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
-            ClearDescription = true
+            ClearDescription = true,
         };
 
         ValidationResult result = await validator.ValidateAsync(command);
@@ -117,7 +117,7 @@ public class UpdateRecipeCommandValidatorTests {
             ClearImageUrl = true,
             ImageUrl = "https://cdn.test/soup.png",
             ClearImageAssetId = true,
-            ImageAssetId = ImageAssetId.New().Value
+            ImageAssetId = ImageAssetId.New().Value,
         };
 
         ValidationResult result = await validator.ValidateAsync(command);

@@ -57,7 +57,7 @@ public sealed class PresentationErrorHttpMapperTests {
             nameof(CreateRecipeAlreadyExistsLegacy) => CreateRecipeAlreadyExistsLegacy(),
             nameof(CreateUserNotFound) => CreateUserNotFound(),
             nameof(CreateUnknownError) => CreateUnknownError(),
-            _ => throw new InvalidOperationException($"Unknown test factory: {factoryName}")
+            _ => throw new InvalidOperationException($"Unknown test factory: {factoryName}"),
         };
 
     private static Error CreateTelegramInvalidData() => Errors.Authentication.TelegramInvalidData;

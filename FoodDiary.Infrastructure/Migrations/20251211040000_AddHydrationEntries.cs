@@ -23,7 +23,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AmountMl = table.Column<int>(type: "integer", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_HydrationEntries", x => x.Id);

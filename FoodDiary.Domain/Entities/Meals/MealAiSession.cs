@@ -39,7 +39,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
             ImageAssetId = imageAssetId,
             Source = source,
             RecognizedAtUtc = NormalizeUtc(recognizedAtUtc),
-            Notes = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes))
+            Notes = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes)),
         };
         session.SetCreated();
         return session;

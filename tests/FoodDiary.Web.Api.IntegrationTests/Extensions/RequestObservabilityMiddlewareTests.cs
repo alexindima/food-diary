@@ -104,7 +104,7 @@ string.Equals(instrument.Name, "fooddiary.api.request.duration", StringCompariso
         httpContext.Request.Method = HttpMethods.Post;
         httpContext.Request.Path = "/api/v1/auth/login";
         httpContext.User = new ClaimsPrincipal(new ClaimsIdentity([
-            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
         ], "test"));
 
         await middleware.InvokeAsync(httpContext);
@@ -148,7 +148,7 @@ string.Equals(instrument.Name, "fooddiary.api.request.duration", StringCompariso
         httpContext.Request.Method = HttpMethods.Post;
         httpContext.Request.Path = requestPath;
         httpContext.User = new ClaimsPrincipal(new ClaimsIdentity([
-            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
         ], "test"));
 
         await middleware.InvokeAsync(httpContext);
@@ -354,7 +354,7 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         httpContext.SetEndpoint(new Endpoint(
             static _ => Task.CompletedTask,
             new EndpointMetadataCollection(new OutputCacheAttribute {
-                PolicyName = "PresentationUserScopedCache"
+                PolicyName = "PresentationUserScopedCache",
             }),
             "dashboard"));
 
@@ -398,7 +398,7 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         httpContext.SetEndpoint(new Endpoint(
             static _ => Task.CompletedTask,
             new EndpointMetadataCollection(new OutputCacheAttribute {
-                PolicyName = "PresentationAdminAiUsageCache"
+                PolicyName = "PresentationAdminAiUsageCache",
             }),
             "admin-ai-usage"));
 

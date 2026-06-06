@@ -6,5 +6,5 @@ public enum FastingOccurrenceStatus {
     Completed = 2,
     Interrupted = 3,
     Skipped = 4,
-    Postponed = 5
+    Postponed = 5,
 }

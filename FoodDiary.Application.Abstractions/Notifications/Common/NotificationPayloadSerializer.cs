@@ -9,11 +9,7 @@ public static class NotificationPayloadSerializer {
         JsonSerializer.Serialize(payload, JsonOptions);
 
     public static TPayload? Deserialize<TPayload>(string? payloadJson) {
-        if (string.IsNullOrWhiteSpace(payloadJson)) {
-            return default;
-        }
-
-        return JsonSerializer.Deserialize<TPayload>(payloadJson, JsonOptions);
+        return string.IsNullOrWhiteSpace(payloadJson) ? default : JsonSerializer.Deserialize<TPayload>(payloadJson, JsonOptions);
     }
 
     public static bool TryDeserialize<TPayload>(string? payloadJson, out TPayload? payload) {

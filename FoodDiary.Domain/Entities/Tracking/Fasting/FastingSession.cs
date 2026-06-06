@@ -110,7 +110,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
         FastingProtocol.F72_0 => 72,
         FastingProtocol.CustomIntermittent => 16,
         FastingProtocol.Custom => 16,
-        _ => 16
+        _ => 16,
     };
 
     private static bool IsIntermittentProtocol(FastingProtocol protocol) => protocol switch {
@@ -118,7 +118,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
         FastingProtocol.F18_6 => true,
         FastingProtocol.F20_4 => true,
         FastingProtocol.CustomIntermittent => true,
-        _ => false
+        _ => false,
     };
 
     private static string? NormalizeNotes(string? value) {

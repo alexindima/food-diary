@@ -22,7 +22,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     LastSyncedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_WearableConnections", x => x.Id);
@@ -44,7 +44,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     Value = table.Column<double>(type: "double precision", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_WearableSyncEntries", x => x.Id);

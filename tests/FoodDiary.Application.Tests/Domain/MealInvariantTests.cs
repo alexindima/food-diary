@@ -546,7 +546,7 @@ public class MealInvariantTests {
                     fats: 10,
                     carbs: 10,
                     fiber: 1,
-                    alcohol: 0)
+                    alcohol: 0),
             ]));
     }
 
@@ -570,7 +570,7 @@ public class MealInvariantTests {
                     fats: 10,
                     carbs: 10,
                     fiber: 1,
-                    alcohol: 0)
+                    alcohol: 0),
             ]));
     }
 
@@ -594,7 +594,7 @@ public class MealInvariantTests {
                     fats: 10,
                     carbs: 10,
                     fiber: 1,
-                    alcohol: 0)
+                    alcohol: 0),
             ]));
     }
 
@@ -618,7 +618,7 @@ public class MealInvariantTests {
                     fats: 0.2,
                     carbs: 14,
                     fiber: 2.4,
-                    alcohol: 0)
+                    alcohol: 0),
             ]);
 
         MealAiItem aiItem = Assert.Single(session.Items);
@@ -701,7 +701,7 @@ public class MealInvariantTests {
                     fats: 0.2,
                     carbs: 14,
                     fiber: 2.4,
-                    alcohol: 0)
+                    alcohol: 0),
             ]);
 
         Assert.NotNull(session.ModifiedOnUtc);

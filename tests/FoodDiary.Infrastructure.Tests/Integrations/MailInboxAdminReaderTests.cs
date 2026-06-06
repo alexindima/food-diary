@@ -19,8 +19,8 @@ public sealed class MailInboxAdminReaderTests {
                     ["to@example.com"],
                     "Subject",
                     "received",
-                    receivedAtUtc)
-            ]
+                    receivedAtUtc),
+            ],
         };
         var reader = new MailInboxClientAdminMailInboxReader(client);
 
@@ -51,7 +51,7 @@ public sealed class MailInboxAdminReaderTests {
                 "<p>html</p>",
                 "raw",
                 "received",
-                receivedAtUtc)
+                receivedAtUtc),
         };
         var reader = new MailInboxClientAdminMailInboxReader(client);
 

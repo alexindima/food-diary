@@ -32,7 +32,7 @@ public class OpenFoodFactsProduct {
         DateTime syncedAtUtc) {
         var product = new OpenFoodFactsProduct {
             Barcode = NormalizeRequired(barcode),
-            SearchHitCount = 0
+            SearchHitCount = 0,
         };
 
         product.Update(

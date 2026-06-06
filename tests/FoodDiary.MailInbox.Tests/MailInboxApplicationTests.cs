@@ -100,7 +100,7 @@ public sealed class MailInboxApplicationTests {
         var id = Guid.NewGuid();
         InboundMailMessageDetails details = CreateDetails(id);
         var handler = new GetInboundMailMessageDetailsQueryHandler(new RecordingInboundMailStore {
-            Details = details
+            Details = details,
         });
 
         Result<InboundMailMessageDetails> result = await handler.Handle(new GetInboundMailMessageDetailsQuery(id), CancellationToken.None);
@@ -369,7 +369,7 @@ public sealed class MailInboxApplicationTests {
         public AlwaysFailingTestCommandValidator() {
             RuleFor(static command => command)
                 .Custom(static (_, context) => context.AddFailure(new ValidationFailure("Name", "Required") {
-                    ErrorCode = ""
+                    ErrorCode = "",
                 }));
         }
     }

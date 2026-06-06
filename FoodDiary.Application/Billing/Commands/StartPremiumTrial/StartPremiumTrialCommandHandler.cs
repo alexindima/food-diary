@@ -85,7 +85,7 @@ public sealed class StartPremiumTrialCommandHandler(
             "active" => true,
             "past_due" => !subscription.CurrentPeriodEndUtc.HasValue ||
                 subscription.CurrentPeriodEndUtc > dateTimeProvider.UtcNow,
-            _ => false
+            _ => false,
         };
     }
 }

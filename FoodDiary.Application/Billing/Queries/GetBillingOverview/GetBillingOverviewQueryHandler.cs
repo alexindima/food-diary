@@ -86,7 +86,7 @@ public sealed class GetBillingOverviewQueryHandler(
             "trialing" => subscription.CurrentPeriodEndUtc.HasValue && subscription.CurrentPeriodEndUtc > nowUtc,
             "active" => true,
             "past_due" => !subscription.CurrentPeriodEndUtc.HasValue || subscription.CurrentPeriodEndUtc > nowUtc,
-            _ => false
+            _ => false,
         };
     }
 

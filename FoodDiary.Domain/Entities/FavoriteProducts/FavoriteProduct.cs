@@ -31,7 +31,7 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
             UserId = userId,
             ProductId = productId,
             Name = NormalizeOptionalText(name),
-            CreatedAtUtc = DomainTime.UtcNow
+            CreatedAtUtc = DomainTime.UtcNow,
         };
 
         favorite.SetCreated();

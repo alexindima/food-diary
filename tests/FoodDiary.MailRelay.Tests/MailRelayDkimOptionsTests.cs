@@ -7,7 +7,7 @@ public sealed class MailRelayDkimOptionsTests {
     [Fact]
     public void HasValidConfiguration_WhenDisabled_ReturnsTrue() {
         var options = new MailRelayDkimOptions {
-            Enabled = false
+            Enabled = false,
         };
 
         Assert.True(MailRelayDkimOptions.HasValidConfiguration(options));
@@ -18,7 +18,7 @@ public sealed class MailRelayDkimOptionsTests {
         var options = new MailRelayDkimOptions {
             Enabled = true,
             Domain = "mail.example.com",
-            PrivateKeyPem = "pem"
+            PrivateKeyPem = "pem",
         };
 
         Assert.False(MailRelayDkimOptions.HasValidConfiguration(options));
@@ -31,7 +31,7 @@ public sealed class MailRelayDkimOptionsTests {
             Domain = "mail.example.com",
             Selector = "fd1",
             PrivateKeyPem = "pem",
-            PrivateKeyPath = "/secrets/dkim.pem"
+            PrivateKeyPath = "/secrets/dkim.pem",
         };
 
         Assert.False(MailRelayDkimOptions.HasValidConfiguration(options));
@@ -43,7 +43,7 @@ public sealed class MailRelayDkimOptionsTests {
             Enabled = true,
             Domain = "mail.example.com",
             Selector = "fd1",
-            PrivateKeyPem = "pem"
+            PrivateKeyPem = "pem",
         };
 
         Assert.True(MailRelayDkimOptions.HasValidConfiguration(options));

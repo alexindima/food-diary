@@ -90,7 +90,7 @@ public class DietologistAccessPolicyTests {
             "Weight" => new DietologistPermissionsModel(true, true, false, true, true, true, true, true),
             "Waist" => new DietologistPermissionsModel(true, true, true, false, true, true, true, true),
             "Goals" => new DietologistPermissionsModel(true, true, true, true, false, true, true, true),
-            _ => throw new ArgumentOutOfRangeException(nameof(category))
+            _ => throw new ArgumentOutOfRangeException(nameof(category)),
         };
 
         Error? error = DietologistAccessPolicy.EnsurePermission(perms, category);

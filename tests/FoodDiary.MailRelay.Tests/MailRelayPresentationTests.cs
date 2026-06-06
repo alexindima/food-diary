@@ -94,7 +94,7 @@ public sealed class MailRelayPresentationTests {
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyIsRequiredAndMissing_ReturnsUnauthorized() {
         var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
             RequireApiKey = true,
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
 
@@ -109,7 +109,7 @@ public sealed class MailRelayPresentationTests {
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
         var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
             RequireApiKey = false,
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-Relay-Api-Key"] = "secret";
@@ -125,7 +125,7 @@ public sealed class MailRelayPresentationTests {
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
         var filter = new RelayApiKeyAuthorizationFilter(Options.Create(new MailRelayOptions {
             RequireApiKey = true,
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-Relay-Api-Key"] = "secret";
@@ -167,7 +167,7 @@ public sealed class MailRelayPresentationTests {
                 new RouteData(),
                 new ControllerActionDescriptor {
                     ControllerTypeInfo = controller.GetType().GetTypeInfo(),
-                    AttributeRouteInfo = new AttributeRouteInfo { Template = "api/email/queue" }
+                    AttributeRouteInfo = new AttributeRouteInfo { Template = "api/email/queue" },
                 }),
             [],
             new Dictionary<string, object?>(StringComparer.Ordinal),
@@ -178,8 +178,8 @@ public sealed class MailRelayPresentationTests {
         public TestController() {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext {
-                    TraceIdentifier = "trace"
-                }
+                    TraceIdentifier = "trace",
+                },
             };
         }
     }

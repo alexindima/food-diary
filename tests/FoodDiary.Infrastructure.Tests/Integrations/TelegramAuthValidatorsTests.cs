@@ -182,7 +182,7 @@ public sealed class TelegramAuthValidatorsTests {
         long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
         string dataCheckString = string.Join("\n", [
             string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}"),
-            "id=42"
+            "id=42",
         ]);
         byte[] secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(BotToken));
         string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
@@ -214,7 +214,7 @@ public sealed class TelegramAuthValidatorsTests {
             first_name = "Alex",
             last_name = "Doe",
             photo_url = "https://example.com/photo.jpg",
-            language_code = "en"
+            language_code = "en",
         });
         string dataCheckString = string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}\nuser={userJson}");
         byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes(BotToken), "WebAppData");
@@ -229,7 +229,7 @@ public sealed class TelegramAuthValidatorsTests {
             "id=42",
             "last_name=Doe",
             "photo_url=https://example.com/photo.jpg",
-            "username=alex"
+            "username=alex",
         ]);
         byte[] secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(BotToken));
         string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);

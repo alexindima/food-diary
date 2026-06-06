@@ -74,8 +74,8 @@ public sealed class ApiHostOptionsConfigurationTests {
     public void ApiOutputCacheOptions_HasValidUserScoped_ReturnsExpectedResult(int expirationSeconds, bool expected) {
         var options = new ApiOutputCacheOptions {
             UserScoped = new ApiOutputCacheOptions.UserScopedCacheOptions {
-                ExpirationSeconds = expirationSeconds
-            }
+                ExpirationSeconds = expirationSeconds,
+            },
         };
 
         bool valid = ApiOutputCacheOptions.HasValidUserScoped(options);

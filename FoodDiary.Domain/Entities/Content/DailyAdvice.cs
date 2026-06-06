@@ -36,7 +36,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
             Value = normalizedValue,
             Locale = normalizedLocale,
             Weight = normalizedWeight,
-            Tag = normalizedTag
+            Tag = normalizedTag,
         };
 
         advice.SetCreated();

@@ -34,7 +34,7 @@ public sealed class RecentItem : Entity<RecentItemId> {
             ItemType = itemType,
             ItemId = itemId,
             LastUsedAtUtc = now,
-            UsageCount = 1
+            UsageCount = 1,
         };
 
         recentItem.SetCreated();

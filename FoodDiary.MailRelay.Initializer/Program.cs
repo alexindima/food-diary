@@ -35,7 +35,7 @@ builder.Configuration.AddEnvironmentVariables("MAILRELAY_");
 
 if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
     builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString
+        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString,
     });
 }
 
@@ -95,7 +95,7 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToke
         "mailrelay_outbox_messages",
         "mailrelay_inbox_messages",
         "mailrelay_suppressions",
-        "mailrelay_delivery_events"
+        "mailrelay_delivery_events",
     };
         var existingTables = new HashSet<string>(StringComparer.Ordinal);
 

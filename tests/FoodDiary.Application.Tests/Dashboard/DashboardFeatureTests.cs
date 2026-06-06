@@ -99,7 +99,7 @@ public class DashboardFeatureTests {
         DateTime day2 = day1.AddDays(1);
         var responses = new List<AggregatedStatisticsModel> {
             new(day2, day2, 2000, 100, 70, 250, 30),
-            new(day1, day1, 1800, 90, 60, 220, 25)
+            new(day1, day1, 1800, 90, 60, 220, 25),
         };
 
         IReadOnlyList<DailyCaloriesModel> calories = DashboardMapping.ToWeeklyCalories(responses);
@@ -117,7 +117,7 @@ public class DashboardFeatureTests {
         DateTime previousDate = latestDate.AddDays(-1);
         var entries = new List<WeightEntry> {
             WeightEntry.Create(userId, latestDate, 82.5),
-            WeightEntry.Create(userId, previousDate, 83)
+            WeightEntry.Create(userId, previousDate, 83),
         };
 
         DashboardWeightModel dto = DashboardMapping.ToWeightModel(entries, desired: 80);
@@ -145,7 +145,7 @@ public class DashboardFeatureTests {
         DateTime previousDate = latestDate.AddDays(-1);
         var entries = new List<WaistEntry> {
             WaistEntry.Create(userId, latestDate, 92.1),
-            WaistEntry.Create(userId, previousDate, 92.8)
+            WaistEntry.Create(userId, previousDate, 92.8),
         };
 
         DashboardWaistModel dto = DashboardMapping.ToWaistModel(entries, desired: 90);

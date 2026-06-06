@@ -91,7 +91,7 @@ public sealed class WebPushNotificationSenderTests {
                 Subject = "https://example.com",
                 PublicKey = "public",
                 PrivateKey = "private",
-                DefaultUrl = "/"
+                DefaultUrl = "/",
             }),
             NullLogger<WebPushNotificationSender>.Instance);
     }

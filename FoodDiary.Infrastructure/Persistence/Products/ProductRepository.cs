@@ -53,7 +53,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
             .Take(pageSize)
             .Select(p => new {
                 Product = p,
-                UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
+                UsageCount = p.MealItems.Count + p.RecipeIngredients.Count,
             })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
@@ -130,7 +130,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 : p.UserId == userId))
             .Select(p => new {
                 Product = p,
-                UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
+                UsageCount = p.MealItems.Count + p.RecipeIngredients.Count,
             })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 

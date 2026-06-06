@@ -35,7 +35,7 @@ public sealed class CycleDay : Entity<CycleDayId> {
             Date = NormalizeDate(date),
             IsPeriod = isPeriod,
             Symptoms = symptoms,
-            Notes = NormalizeNotes(notes)
+            Notes = NormalizeNotes(notes),
         };
 
         day.SetCreated();

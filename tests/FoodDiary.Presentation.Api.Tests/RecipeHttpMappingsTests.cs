@@ -120,10 +120,10 @@ public sealed class RecipeHttpMappingsTests {
                     Description: "Chop vegetables",
                     Ingredients: [
                         new RecipeIngredientHttpRequest(productId, null, 200),
-                        new RecipeIngredientHttpRequest(null, nestedRecipeId, 50)
+                        new RecipeIngredientHttpRequest(null, nestedRecipeId, 50),
                     ],
                     ImageUrl: "https://cdn.example/step-1.png",
-                    ImageAssetId: stepAssetId)
+                    ImageAssetId: stepAssetId),
             ]);
 
         CreateRecipeCommand command = request.ToCommand(userId);
@@ -289,8 +289,8 @@ public sealed class RecipeHttpMappingsTests {
                             null,
                             null,
                             null,
-                            null)
-                    ])
+                            null),
+                    ]),
             ],
             true,
             favoriteRecipeId);

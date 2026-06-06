@@ -24,7 +24,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     FiberPer100G = table.Column<double>(type: "double precision", nullable: true),
                     LastSyncedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastSeenAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SearchHitCount = table.Column<int>(type: "integer", nullable: false)
+                    SearchHitCount = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_OpenFoodFactsProducts", x => x.Barcode);

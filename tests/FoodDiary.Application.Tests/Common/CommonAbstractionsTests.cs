@@ -457,7 +457,7 @@ public class CommonAbstractionsTests {
                 .Custom((_, context) => context.AddFailure(new ValidationFailure(
                     nameof(GenericCommand.Value),
                     "value is required") {
-                    ErrorCode = " "
+                    ErrorCode = " ",
                 }));
         }
     }

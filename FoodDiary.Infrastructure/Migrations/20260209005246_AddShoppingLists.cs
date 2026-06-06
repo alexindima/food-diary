@@ -16,7 +16,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_ShoppingLists", x => x.Id);
@@ -41,7 +41,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     IsChecked = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     SortOrder = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_ShoppingListItems", x => x.Id);

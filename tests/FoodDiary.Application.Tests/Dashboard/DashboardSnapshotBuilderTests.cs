@@ -166,12 +166,12 @@ public sealed class DashboardSnapshotBuilderTests {
         var weightRepository = new FilteringWeightEntryRepository([
             WeightEntry.Create(userId, futureDate, 90),
             WeightEntry.Create(userId, selectedDate, 82),
-            WeightEntry.Create(userId, previousDate, 83)
+            WeightEntry.Create(userId, previousDate, 83),
         ]);
         var waistRepository = new FilteringWaistEntryRepository([
             WaistEntry.Create(userId, futureDate, 96),
             WaistEntry.Create(userId, selectedDate, 91),
-            WaistEntry.Create(userId, previousDate, 92)
+            WaistEntry.Create(userId, previousDate, 92),
         ]);
         var builder = new DashboardSnapshotBuilder(
             new EmptyTrendSender(),
@@ -262,7 +262,7 @@ public sealed class DashboardSnapshotBuilderTests {
     public async Task BuildAsync_WhenStatisticsQueryFails_ReturnsFailure() {
         var user = User.Create("dashboard-statistics-failure@example.com", "hash");
         var sender = new ConfigurableDashboardSender {
-            FirstStatisticsError = Errors.Validation.Invalid("statistics", "Statistics failed.")
+            FirstStatisticsError = Errors.Validation.Invalid("statistics", "Statistics failed."),
         };
         DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
 
@@ -280,7 +280,7 @@ public sealed class DashboardSnapshotBuilderTests {
         var user = User.Create("dashboard-weekly-statistics-failure@example.com", "hash");
         var date = new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
         var sender = new ConfigurableDashboardSender {
-            SecondStatisticsError = Errors.Validation.Invalid("weeklyStatistics", "Weekly statistics failed.")
+            SecondStatisticsError = Errors.Validation.Invalid("weeklyStatistics", "Weekly statistics failed."),
         };
         DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
 
@@ -298,7 +298,7 @@ public sealed class DashboardSnapshotBuilderTests {
     public async Task BuildAsync_WhenMealsSectionFails_ReturnsFailure() {
         var user = User.Create("dashboard-meals-failure@example.com", "hash");
         var sender = new ConfigurableDashboardSender {
-            MealsError = Errors.Validation.Invalid("meals", "Meals failed.")
+            MealsError = Errors.Validation.Invalid("meals", "Meals failed."),
         };
         DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
 
@@ -321,7 +321,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new ConfigurableDashboardSender(),
             new StubHydrationEntryRepository([
                 (date.Date, 500),
-                (date.Date.AddDays(1), 700)
+                (date.Date.AddDays(1), 700),
             ]));
 
         Result<DashboardSnapshotModel> result = await builder.BuildAsync(
@@ -409,7 +409,7 @@ public sealed class DashboardSnapshotBuilderTests {
                             AverageProteins: 100,
                             AverageFats: 60,
                             AverageCarbs: 200,
-                            AverageFiber: 25)
+                            AverageFiber: 25),
                     ]));
             }
 

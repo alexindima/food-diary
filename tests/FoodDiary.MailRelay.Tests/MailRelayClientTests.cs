@@ -14,14 +14,14 @@ public sealed class MailRelayClientTests {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Created) {
             Content = JsonContent.Create(new EnqueueMailRelayEmailResponse(
                 Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                "queued"))
+                "queued")),
         });
         using var httpClient = new HttpClient(handler) {
-            BaseAddress = new Uri("https://relay.example.test")
+            BaseAddress = new Uri("https://relay.example.test"),
         };
         var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions {
             BaseUrl = "https://relay.example.test",
-            ApiKey = "secret"
+            ApiKey = "secret",
         }));
 
         EnqueueMailRelayEmailResponse response = await client.EnqueueAsync(CreateRequest(), CancellationToken.None);
@@ -47,10 +47,10 @@ public sealed class MailRelayClientTests {
     [Fact]
     public async Task EnqueueAsync_WhenResponseIsEmpty_Throws() {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Accepted))) {
-            BaseAddress = new Uri("https://relay.example.test")
+            BaseAddress = new Uri("https://relay.example.test"),
         };
         var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions {
-            BaseUrl = "https://relay.example.test"
+            BaseUrl = "https://relay.example.test",
         }));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => client.EnqueueAsync(CreateRequest(), CancellationToken.None));
@@ -59,12 +59,12 @@ public sealed class MailRelayClientTests {
     [Fact]
     public async Task EnqueueAsync_WhenResponseJsonIsInvalid_ThrowsInvalidOperationException() {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Accepted) {
-            Content = new StringContent("{not-json", System.Text.Encoding.UTF8, "application/json")
+            Content = new StringContent("{not-json", System.Text.Encoding.UTF8, "application/json"),
         })) {
-            BaseAddress = new Uri("https://relay.example.test")
+            BaseAddress = new Uri("https://relay.example.test"),
         };
         var client = new MailRelayClient(httpClient, Options.Create(new MailRelayClientOptions {
-            BaseUrl = "https://relay.example.test"
+            BaseUrl = "https://relay.example.test",
         }));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(

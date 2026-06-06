@@ -337,10 +337,10 @@ public sealed class MailRelayEmailHttpMappingsTests {
     public void SuppressionsAndDeliveryEvents_ToHttpResponse_MapLists() {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         IReadOnlyList<MailRelaySuppressionEntry> suppressions = [
-            new("blocked@example.com", "bounce", "aws", now.AddMinutes(-2), now.AddMinutes(-1), now.AddDays(7))
+            new("blocked@example.com", "bounce", "aws", now.AddMinutes(-2), now.AddMinutes(-1), now.AddDays(7)),
         ];
         IReadOnlyList<MailRelayDeliveryEventEntry> deliveryEvents = [
-            new(Guid.NewGuid(), "bounce", "blocked@example.com", "aws", "hard", "provider-1", "smtp; 550", now, now)
+            new(Guid.NewGuid(), "bounce", "blocked@example.com", "aws", "hard", "provider-1", "smtp; 550", now, now),
         ];
 
         MailRelaySuppressionHttpResponse suppressionResponse = Assert.Single(suppressions.ToHttpResponse());

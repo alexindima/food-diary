@@ -45,7 +45,7 @@ public class DailyAdvicesFeatureTests {
         var advices = new List<DailyAdvice> {
             DailyAdvice.Create("Hydrate", "en", weight: 1),
             DailyAdvice.Create("Walk", "en", weight: 1),
-            DailyAdvice.Create("ÐŸÐµÐ¹ Ð²Ð¾Ð´Ñƒ", "ru", weight: 1)
+            DailyAdvice.Create("ÐŸÐµÐ¹ Ð²Ð¾Ð´Ñƒ", "ru", weight: 1),
         };
 
         var date = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
@@ -58,7 +58,7 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public void DailyAdviceSelector_SelectForDate_WhenLocaleHasNoAdvice_ReturnsNull() {
         var advices = new List<DailyAdvice> {
-            DailyAdvice.Create("Hydrate", "en", weight: 1)
+            DailyAdvice.Create("Hydrate", "en", weight: 1),
         };
 
         DailyAdvice? selected = InvokeSelectForDate(advices, DateTime.UtcNow, "ru");
@@ -78,7 +78,7 @@ public class DailyAdvicesFeatureTests {
         var advices = new List<DailyAdvice> {
             DailyAdvice.Create("Hydrate", "en", weight: 1),
             DailyAdvice.Create("Walk", "en", weight: 1),
-            DailyAdvice.Create("Sleep", "en", weight: 1)
+            DailyAdvice.Create("Sleep", "en", weight: 1),
         };
         var ordered = advices.OrderBy(advice => advice.Id.Value).ToList();
         DateTime date = Enumerable

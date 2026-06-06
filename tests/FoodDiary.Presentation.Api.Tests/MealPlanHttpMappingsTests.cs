@@ -99,8 +99,8 @@ public sealed class MealPlanHttpMappingsTests {
                             Calories: 300,
                             Proteins: 20,
                             Fats: 8,
-                            Carbs: 40)
-                    ])
+                            Carbs: 40),
+                    ]),
             ]);
 
         MealPlanHttpResponse response = model.ToHttpResponse();
