@@ -96,10 +96,19 @@ public sealed class ConsumptionHttpMappingsTests {
         var userId = Guid.NewGuid();
         var consumptionId = Guid.NewGuid();
         var request = new UpdateConsumptionHttpRequest(
-            DateTime.UtcNow, "Lunch", Comment: null, ImageUrl: null, ImageAssetId: null,
+            DateTime.UtcNow,
+            "Lunch",
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
             new List<ConsumptionItemHttpRequest> { new(null, Guid.NewGuid(), 2) },
-            ManualCalories: 500, ManualProteins: 30, ManualFats: 20, ManualCarbs: 60,
-            ManualFiber: 5, ManualAlcohol: 0, IsNutritionAutoCalculated: false);
+            IsNutritionAutoCalculated: false,
+            ManualCalories: 500,
+            ManualProteins: 30,
+            ManualFats: 20,
+            ManualCarbs: 60,
+            ManualFiber: 5,
+            ManualAlcohol: 0);
 
         UpdateConsumptionCommand command = request.ToCommand(userId, consumptionId);
 

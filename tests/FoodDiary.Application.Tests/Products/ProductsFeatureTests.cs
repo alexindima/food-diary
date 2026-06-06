@@ -1255,8 +1255,8 @@ public class ProductsFeatureTests {
             carbsPerBase: 3.8,
             fiberPerBase: 0,
             alcoholPerBase: 0,
-            visibility: Visibility.Private,
-            productType: ProductType.Dairy);
+            productType: ProductType.Dairy,
+            visibility: Visibility.Private);
         var fruit = Product.Create(
             user.Id,
             name: "Apple",
@@ -1269,8 +1269,8 @@ public class ProductsFeatureTests {
             carbsPerBase: 14,
             fiberPerBase: 2.4,
             alcoholPerBase: 0,
-            visibility: Visibility.Private,
-            productType: ProductType.Fruit);
+            productType: ProductType.Fruit,
+            visibility: Visibility.Private);
         var handler = new GetProductsOverviewQueryHandler(
             new OverviewProductRepository(pagedItems: [(dairy, 3), (fruit, 2)]),
             new StubRecentItemRepository([]),
@@ -1505,7 +1505,7 @@ public class ProductsFeatureTests {
             IReadOnlyCollection<ProductType>? productTypes = null,
             CancellationToken cancellationToken = default) {
             var filtered = _pagedItems
-                .Where(item => productTypes is null || productTypes.Contains(item.Product.ProductType))
+                .Where(item => productTypes?.Contains(item.Product.ProductType) != false)
                 .ToList();
             return Task.FromResult(((IReadOnlyList<(Product Product, int UsageCount)>)filtered, filtered.Count));
         }

@@ -36,17 +36,20 @@ public static class GamificationCalculator {
         for (int i = 1; i < sortedDatesDesc.Count; i++) {
             DateTime prev = sortedDatesDesc[i - 1].Date;
             DateTime curr = sortedDatesDesc[i].Date;
-            int gap = (prev - curr).Days;
+            switch ((prev - curr).Days) {
+                case 1:
+                    runStreak++;
+                    if (isCurrentRun) {
+                        currentStreak = runStreak;
+                    }
 
-            if (gap == 1) {
-                runStreak++;
-                if (isCurrentRun) {
-                    currentStreak = runStreak;
-                }
-            } else if (gap > 1) {
-                longestStreak = Math.Max(longestStreak, runStreak);
-                runStreak = 1;
-                isCurrentRun = false;
+                    break;
+
+                case > 1:
+                    longestStreak = Math.Max(longestStreak, runStreak);
+                    runStreak = 1;
+                    isCurrentRun = false;
+                    break;
             }
         }
 
@@ -95,11 +98,13 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
                 .Where(m => m.Date.Date == date)
                 .Sum(m => m.TotalCalories);
 
-            if (dayCalories > 0) {
-                double ratio = dayCalories / target.Value;
-                if (ratio >= 0.8 && ratio <= 1.2) {
-                    metDays++;
-                }
+            if (!(dayCalories > 0)) {
+                continue;
+            }
+
+            double ratio = dayCalories / target.Value;
+            if (ratio is >= 0.8 and <= 1.2) {
+                metDays++;
             }
         }
 

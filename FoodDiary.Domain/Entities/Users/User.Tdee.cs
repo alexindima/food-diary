@@ -21,7 +21,7 @@ public sealed partial class User {
         }
 
         // Mifflin-St Jeor: 10 * weight(kg) + 6.25 * height(cm) - 5 * age + offset
-        double bmr = 10.0 * Weight.Value + 6.25 * Height.Value - 5.0 * age;
+        double bmr = (10.0 * Weight.Value) + (6.25 * Height.Value) - (5.0 * age);
 
         bmr += Gender.ToUpperInvariant() switch {
             "M" => 5.0,

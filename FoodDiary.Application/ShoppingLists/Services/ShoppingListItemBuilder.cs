@@ -124,7 +124,7 @@ public static class ShoppingListItemBuilder {
             return Result.Success<MeasurementUnit?>(value: null);
         }
 
-        return Enum.TryParse<MeasurementUnit>(value, ignoreCase: true, out MeasurementUnit parsed)
+        return Enum.TryParse(value, ignoreCase: true, out MeasurementUnit parsed)
             ? Result.Success<MeasurementUnit?>(parsed)
             : Result.Failure<MeasurementUnit?>(
                 Errors.Validation.Invalid(nameof(ShoppingListItemInput.Unit), "Unknown measurement unit value."));

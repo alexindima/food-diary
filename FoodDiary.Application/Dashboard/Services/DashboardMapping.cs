@@ -31,8 +31,8 @@ public static class DashboardMapping {
     }
 
     public static DashboardWeightModel ToWeightModel(IReadOnlyList<WeightEntry> entries, double? desired) {
-        WeightEntry? latest = entries.FirstOrDefault();
-        WeightEntry? previous = entries.Skip(1).FirstOrDefault();
+        WeightEntry? latest = entries.Count > 0 ? entries[0] : null;
+        WeightEntry? previous = entries.Count > 1 ? entries[1] : null;
 
         return new DashboardWeightModel(
             latest is null ? null : new WeightPointModel(latest.Date, latest.Weight),
@@ -41,8 +41,8 @@ public static class DashboardMapping {
     }
 
     public static DashboardWaistModel ToWaistModel(IReadOnlyList<WaistEntry> entries, double? desired) {
-        WaistEntry? latest = entries.FirstOrDefault();
-        WaistEntry? previous = entries.Skip(1).FirstOrDefault();
+        WaistEntry? latest = entries.Count > 0 ? entries[0] : null;
+        WaistEntry? previous = entries.Count > 1 ? entries[1] : null;
 
         return new DashboardWaistModel(
             latest is null ? null : new WaistPointModel(latest.Date, latest.Circumference),

@@ -5,37 +5,38 @@ using FoodDiary.Domain.Entities.Recipes;
 namespace FoodDiary.Application.MealPlans.Mappings;
 
 public static class MealPlanMappings {
-    public static MealPlanModel ToModel(this MealPlan plan) {
-        return new MealPlanModel(
-            plan.Id.Value,
-            plan.Name,
-            plan.Description,
-            plan.DietType.ToString(),
-            plan.DurationDays,
-            plan.TargetCaloriesPerDay,
-            plan.IsCurated,
-            plan.Days
-                .OrderBy(d => d.DayNumber)
-                .Select(d => d.ToModel())
-                .ToList());
-    }
+    extension(MealPlan plan) {
+        public MealPlanModel ToModel() {
+            return new MealPlanModel(
+                plan.Id.Value,
+                plan.Name,
+                plan.Description,
+                plan.DietType.ToString(),
+                plan.DurationDays,
+                plan.TargetCaloriesPerDay,
+                plan.IsCurated,
+                plan.Days
+                    .OrderBy(d => d.DayNumber)
+                    .Select(d => d.ToModel())
+                    .ToList());
+        }
+        public MealPlanSummaryModel ToSummaryModel() {
+            int totalRecipes = plan.Days
+                .SelectMany(d => d.Meals)
+                .Select(m => m.RecipeId)
+                .Distinct()
+                .Count();
 
-    public static MealPlanSummaryModel ToSummaryModel(this MealPlan plan) {
-        int totalRecipes = plan.Days
-            .SelectMany(d => d.Meals)
-            .Select(m => m.RecipeId)
-            .Distinct()
-            .Count();
-
-        return new MealPlanSummaryModel(
-            plan.Id.Value,
-            plan.Name,
-            plan.Description,
-            plan.DietType.ToString(),
-            plan.DurationDays,
-            plan.TargetCaloriesPerDay,
-            plan.IsCurated,
-            totalRecipes);
+            return new MealPlanSummaryModel(
+                plan.Id.Value,
+                plan.Name,
+                plan.Description,
+                plan.DietType.ToString(),
+                plan.DurationDays,
+                plan.TargetCaloriesPerDay,
+                plan.IsCurated,
+                totalRecipes);
+        }
     }
 
     private static MealPlanDayModel ToModel(this MealPlanDay day) {

@@ -20,12 +20,14 @@ public sealed class UsdaProductSearchSuggestionProvider(
             .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.FoodCategory))
             .ToList();
 
-        if (foods.Count < limit) {
-            int remaining = limit - foods.Count;
-            IReadOnlyList<UsdaFoodModel> brandedFoods = await usdaFoodSearchService.SearchBrandedAsync(search, remaining, cancellationToken).ConfigureAwait(false);
-            var existingIds = foods.Select(m => m.FdcId).ToHashSet();
-            foods.AddRange(brandedFoods.Where(f => !existingIds.Contains(f.FdcId)));
+        if (foods.Count >= limit) {
+            return foods.ConvertAll(ToSuggestion);
         }
+
+        int remaining = limit - foods.Count;
+        IReadOnlyList<UsdaFoodModel> brandedFoods = await usdaFoodSearchService.SearchBrandedAsync(search, remaining, cancellationToken).ConfigureAwait(false);
+        var existingIds = foods.Select(m => m.FdcId).ToHashSet();
+        foods.AddRange(brandedFoods.Where(f => !existingIds.Contains(f.FdcId)));
 
         return foods.ConvertAll(ToSuggestion);
     }

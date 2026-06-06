@@ -44,10 +44,6 @@ public class GetClientGoalsQueryHandler(
         }
 
         User? user = await userRepository.GetByIdAsync(clientUserId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure<UserModel>(Errors.Dietologist.AccessDenied);
-        }
-
-        return Result.Success(user.ToModel());
+        return user is null ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied) : Result.Success(user.ToModel());
     }
 }

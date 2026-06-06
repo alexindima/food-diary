@@ -42,7 +42,7 @@ public sealed class GetProductsOverviewQueryHandler(
 
         ProductOverviewOptions options = CreateOptions(query);
 
-        (IReadOnlyList<(Product Product, int UsageCount)>? items, int totalItems) = await productRepository.GetPagedAsync(
+        (IReadOnlyList<(Product Product, int UsageCount)> items, int totalItems) = await productRepository.GetPagedAsync(
             options.UserId,
             query.IncludePublic,
             options.PageNumber,
@@ -82,7 +82,7 @@ public sealed class GetProductsOverviewQueryHandler(
 
     private static ProductOverviewOptions CreateOptions(GetProductsOverviewQuery query) {
         ProductType[]? productTypes = query.ProductTypes?
-            .Select(type => Enum.TryParse<ProductType>(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
+            .Select(type => Enum.TryParse(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()
             .Distinct()
             .ToArray();
@@ -134,11 +134,11 @@ public sealed class GetProductsOverviewQueryHandler(
     private static bool IsSelectedProductType(
         Product product,
         IReadOnlySet<ProductType>? selectedProductTypes) =>
-        selectedProductTypes is null || selectedProductTypes.Contains(product.ProductType);
+        selectedProductTypes?.Contains(product.ProductType) != false;
 
     private static PagedResponse<ProductModel> CreatePagedProducts(
         IReadOnlyList<ProductListItem> products,
-        IReadOnlyDictionary<ProductId, Domain.Entities.FavoriteProducts.FavoriteProduct> favoritesByProductId,
+        IReadOnlyDictionary<ProductId, FavoriteProduct> favoritesByProductId,
         ProductOverviewOptions options,
         int totalItems) =>
         new(
@@ -150,12 +150,12 @@ public sealed class GetProductsOverviewQueryHandler(
 
     private static ProductModel[] ToProductModels(
         IEnumerable<ProductListItem> products,
-        IReadOnlyDictionary<ProductId, Domain.Entities.FavoriteProducts.FavoriteProduct> favoritesByProductId) =>
+        IReadOnlyDictionary<ProductId, FavoriteProduct> favoritesByProductId) =>
         [.. products.Select(product => ToProductModel(product, favoritesByProductId))];
 
     private static ProductModel ToProductModel(
         ProductListItem product,
-        IReadOnlyDictionary<ProductId, Domain.Entities.FavoriteProducts.FavoriteProduct> favoritesByProductId) {
+        IReadOnlyDictionary<ProductId, FavoriteProduct> favoritesByProductId) {
         FavoriteProduct? favorite = favoritesByProductId.GetValueOrDefault(product.Product.Id);
         return product.Product.ToModel(
             product.UsageCount,

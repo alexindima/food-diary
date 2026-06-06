@@ -121,7 +121,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                 "customer.subscription.created" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
                 "customer.subscription.updated" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
                 "customer.subscription.deleted" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
-                "checkout.session.completed" => Result.Success<BillingWebhookEventModel?>(
+                "checkout.session.completed" => Result.Success(
                     await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken).ConfigureAwait(false)),
                 _ => Result.Success<BillingWebhookEventModel?>(value: null),
             };

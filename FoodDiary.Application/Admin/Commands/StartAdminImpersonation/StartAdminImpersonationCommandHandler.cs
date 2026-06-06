@@ -73,8 +73,7 @@ public sealed class StartAdminImpersonationCommandHandler(
     private async Task<Result<User>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
         User? actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(actor) is not null
-            || actor is null
-            || !actor.HasRole(RoleNames.Admin)) {
+            || actor?.HasRole(RoleNames.Admin) != true) {
             return Result.Failure<User>(Errors.Authentication.ImpersonationForbidden);
         }
 

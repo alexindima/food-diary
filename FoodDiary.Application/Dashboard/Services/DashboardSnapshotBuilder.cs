@@ -187,8 +187,9 @@ public class DashboardSnapshotBuilder(
             return Result.Failure<DashboardStatisticsSection>(weeklyStatsResult.Error);
         }
 
+        AggregatedStatisticsModel? statistics = statsResult.Value.Count > 0 ? statsResult.Value[0] : null;
         return Result.Success(new DashboardStatisticsSection(
-            DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), context.CurrentUser),
+            DashboardMapping.ToStatisticsModel(statistics, context.CurrentUser),
             DashboardMapping.ToWeeklyCalories(weeklyStatsResult.Value)));
     }
 

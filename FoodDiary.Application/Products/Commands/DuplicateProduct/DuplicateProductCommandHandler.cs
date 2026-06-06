@@ -56,6 +56,6 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
 
         await productRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(duplicate.ToModel(0, isOwnedByCurrentUser: true));
+        return Result.Success(duplicate.ToModel(isOwnedByCurrentUser: true));
     }
 }

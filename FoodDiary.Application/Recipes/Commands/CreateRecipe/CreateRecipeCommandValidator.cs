@@ -113,14 +113,6 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
 
     private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput> steps) {
         var orders = new HashSet<int>();
-        for (int index = 0; index < steps.Count; index++) {
-            RecipeStepInput step = steps[index];
-            int effectiveOrder = step.Order > 0 ? step.Order : index + 1;
-            if (!orders.Add(effectiveOrder)) {
-                return false;
-            }
-        }
-
-        return true;
+        return steps.Select((step, index) => step.Order > 0 ? step.Order : index + 1).All(orders.Add);
     }
 }

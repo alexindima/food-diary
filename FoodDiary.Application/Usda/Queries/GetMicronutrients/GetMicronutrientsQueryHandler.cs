@@ -48,12 +48,12 @@ public class GetMicronutrientsQueryHandler(
         UsdaFood food,
         IReadOnlyList<UsdaFoodNutrient> nutrients,
         IReadOnlyList<UsdaFoodPortion> portions,
-        IReadOnlyDictionary<int, Domain.Entities.Usda.DailyReferenceValue> dailyValues) {
+        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues) {
         var nutrientModels = nutrients
             .Select(n => {
                 dailyValues.TryGetValue(n.NutrientId, out DailyReferenceValue? drv);
                 double? dailyValue = drv?.Value;
-                double? percentDv = dailyValue is > 0 ? Math.Round(n.Amount / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : (double?)null;
+                double? percentDv = dailyValue is > 0 ? Math.Round(n.Amount / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : null;
 
                 return new MicronutrientModel(
                     n.NutrientId,
@@ -90,12 +90,12 @@ public class GetMicronutrientsQueryHandler(
 
     private static IReadOnlyList<MicronutrientModel> ApplyDailyValues(
         IReadOnlyList<MicronutrientModel> nutrients,
-        IReadOnlyDictionary<int, Domain.Entities.Usda.DailyReferenceValue> dailyValues) =>
+        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues) =>
         nutrients
             .Select(n => {
                 dailyValues.TryGetValue(n.NutrientId, out DailyReferenceValue? drv);
                 double? dailyValue = drv?.Value;
-                double? percentDv = dailyValue is > 0 ? Math.Round(n.AmountPer100g / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : (double?)null;
+                double? percentDv = dailyValue is > 0 ? Math.Round(n.AmountPer100g / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : null;
 
                 return n with {
                     DailyValue = dailyValue,

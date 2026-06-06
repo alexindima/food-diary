@@ -22,12 +22,12 @@ public class SyncWearableDataCommandHandler(
             return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
         }
 
-        if (!Enum.TryParse<WearableProvider>(command.Provider, ignoreCase: true, out WearableProvider provider)) {
+        if (!Enum.TryParse(command.Provider, ignoreCase: true, out WearableProvider provider)) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.InvalidProvider(command.Provider));
         }
 
         WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
-        if (connection is null || !connection.IsActive) {
+        if (connection?.IsActive != true) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.NotConnected(command.Provider));
         }
 
@@ -72,7 +72,7 @@ public class SyncWearableDataCommandHandler(
     }
 
     private async Task<WearableDailySummaryModel> BuildSummaryAsync(
-        Domain.ValueObjects.Ids.UserId userId,
+        UserId userId,
         DateTime date,
         CancellationToken cancellationToken) {
         IReadOnlyList<WearableSyncEntry> entries = await syncRepository.GetDailySummaryAsync(userId, date, cancellationToken).ConfigureAwait(false);

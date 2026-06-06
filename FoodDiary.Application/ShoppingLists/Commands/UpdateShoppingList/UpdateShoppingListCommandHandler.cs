@@ -83,7 +83,7 @@ public class UpdateShoppingListCommandHandler(
     private async Task<Result> ApplyItemsAsync(
         UpdateShoppingListCommand command,
         UserId userId,
-        Domain.Entities.Shopping.ShoppingList list,
+        ShoppingList list,
         CancellationToken cancellationToken) {
         if (command.Items is null) {
             return Result.Success();

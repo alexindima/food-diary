@@ -52,7 +52,7 @@ public class UpdateHydrationEntryCommandHandler(
 
         DateTime? timestampUtc = command.TimestampUtc.HasValue
             ? UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc.Value)
-            : (DateTime?)null;
+            : null;
         entry.Update(command.AmountMl, timestampUtc);
         await repository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
 

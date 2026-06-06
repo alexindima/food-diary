@@ -71,9 +71,10 @@ public sealed class FastingAnalyticsService(
             to: nowUtc,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         IReadOnlyList<FastingOccurrenceAnalysis> analyses = await BuildAnalysesAsync(history, cancellationToken).ConfigureAwait(false);
-        FastingCheckInSnapshot? currentLatestCheckIn = current is null
-            ? null
-            : (await BuildAnalysesAsync([current], cancellationToken).ConfigureAwait(false)).FirstOrDefault()?.LatestCheckIn;
+        IReadOnlyList<FastingOccurrenceAnalysis> currentAnalyses = current is null
+            ? []
+            : await BuildAnalysesAsync([current], cancellationToken).ConfigureAwait(false);
+        FastingCheckInSnapshot? currentLatestCheckIn = currentAnalyses.Count > 0 ? currentAnalyses[0].LatestCheckIn : null;
 
         return new FastingInsightsModel(
             BuildAlerts(current, currentLatestCheckIn, nowUtc),
@@ -87,12 +88,12 @@ public sealed class FastingAnalyticsService(
         DateTime fromUtc,
         DateTime toUtc,
         CancellationToken cancellationToken) {
-        (IReadOnlyList<FastingOccurrence>? occurrences, int totalItems) = await fastingOccurrenceRepository.GetPagedByUserAsync(
+        (IReadOnlyList<FastingOccurrence> occurrences, int totalItems) = await fastingOccurrenceRepository.GetPagedByUserAsync(
             userId,
-            from: fromUtc,
-            to: toUtc,
             page: page,
             limit: limit,
+            from: fromUtc,
+            to: toUtc,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
         var models = occurrences
@@ -116,7 +117,8 @@ public sealed class FastingAnalyticsService(
         return occurrences
             .Select(occurrence => {
                 IReadOnlyList<FastingCheckInSnapshot> timeline = BuildTimeline(occurrence, checkInsByOccurrence.GetValueOrDefault(occurrence.Id));
-                return new FastingOccurrenceAnalysis(occurrence, timeline, timeline.FirstOrDefault());
+                FastingCheckInSnapshot? latestCheckIn = timeline.Count > 0 ? timeline[0] : null;
+                return new FastingOccurrenceAnalysis(occurrence, timeline, latestCheckIn);
             })
             .ToList();
     }
@@ -196,7 +198,7 @@ public sealed class FastingAnalyticsService(
             alerts.Add(currentWarning);
         }
 
-        if (current is null || current.EndedAtUtc.HasValue) {
+        if (current?.EndedAtUtc.HasValue != false) {
             return alerts;
         }
 
@@ -213,19 +215,21 @@ public sealed class FastingAnalyticsService(
             return alerts;
         }
 
-        double elapsedHours = (nowUtc - current.StartedAtUtc).TotalHours;
-        if (elapsedHours >= 20) {
-            alerts.Add(new FastingMessageModel(
-                "late",
-                "FASTING.PROMPTS.LATE_TITLE",
-                "FASTING.PROMPTS.LATE_BODY",
-                "warning"));
-        } else if (elapsedHours >= 12) {
-            alerts.Add(new FastingMessageModel(
-                "mid",
-                "FASTING.PROMPTS.MID_TITLE",
-                "FASTING.PROMPTS.MID_BODY",
-                "neutral"));
+        switch ((nowUtc - current.StartedAtUtc).TotalHours) {
+            case >= 20:
+                alerts.Add(new FastingMessageModel(
+                    "late",
+                    "FASTING.PROMPTS.LATE_TITLE",
+                    "FASTING.PROMPTS.LATE_BODY",
+                    "warning"));
+                break;
+            case >= 12:
+                alerts.Add(new FastingMessageModel(
+                    "mid",
+                    "FASTING.PROMPTS.MID_TITLE",
+                    "FASTING.PROMPTS.MID_BODY",
+                    "neutral"));
+                break;
         }
 
         return alerts;
@@ -271,7 +275,7 @@ public sealed class FastingAnalyticsService(
     private static FastingMessageModel? BuildRecurringSymptomInsight(IReadOnlyList<FastingOccurrenceAnalysis> history) {
         var symptomCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (string? symptom in history
+        foreach (string symptom in history
                      .SelectMany(static analysis => analysis.Timeline)
                      .SelectMany(static checkIn => checkIn.Symptoms)) {
             symptomCounts[symptom] = symptomCounts.TryGetValue(symptom, out int count) ? count + 1 : 1;
@@ -296,8 +300,7 @@ public sealed class FastingAnalyticsService(
         var strongCheckIns = history
             .SelectMany(static analysis => analysis.Timeline)
             .Where(checkIn =>
-                checkIn.EnergyLevel >= 4 &&
-                checkIn.MoodLevel >= 4 &&
+                checkIn is { EnergyLevel: >= 4, MoodLevel: >= 4 } &&
                 !checkIn.Symptoms.Any(RiskySymptoms.Contains))
             .ToList();
 
@@ -332,7 +335,7 @@ public sealed class FastingAnalyticsService(
         int streak = 0;
         DateTime expectedDate = todayUtcDate;
 
-        foreach (FastingOccurrence? occurrence in completedOccurrences.OrderByDescending(static occurrence => occurrence.StartedAtUtc)) {
+        foreach (FastingOccurrence occurrence in completedOccurrences.OrderByDescending(static occurrence => occurrence.StartedAtUtc)) {
             DateTime occurrenceDate = occurrence.StartedAtUtc.Date;
             if (occurrenceDate == expectedDate || occurrenceDate == expectedDate.AddDays(-1)) {
                 streak++;
@@ -348,7 +351,7 @@ public sealed class FastingAnalyticsService(
     private static string? GetTopSymptom(IReadOnlyList<FastingOccurrenceAnalysis> analyses) {
         var symptomCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (string? symptom in analyses
+        foreach (string symptom in analyses
                      .SelectMany(static analysis => analysis.Timeline)
                      .SelectMany(static checkIn => checkIn.Symptoms)) {
             symptomCounts[symptom] = symptomCounts.TryGetValue(symptom, out int count) ? count + 1 : 1;

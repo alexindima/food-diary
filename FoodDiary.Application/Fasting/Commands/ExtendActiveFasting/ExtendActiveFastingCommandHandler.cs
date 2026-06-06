@@ -39,7 +39,6 @@ public class ExtendActiveFastingCommandHandler(
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
-
         if (plan.Type != FastingPlanType.Extended) {
             return Result.Failure<FastingSessionModel>(
                 Errors.Validation.Invalid(nameof(command.AdditionalHours), "Only extended fasting can be extended."));

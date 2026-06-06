@@ -37,12 +37,23 @@ public class CreateRecipeCommentCommandHandler(
         await commentRepository.AddAsync(comment, cancellationToken).ConfigureAwait(false);
 
         // Notify recipe owner (unless commenting on own recipe)
-        if (recipe.UserId != userIdResult.Value) {
-            Notification notification = NotificationFactory.CreateNewComment(
-                recipe.UserId,
-                recipe.Id.Value.ToString());
-            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        if (recipe.UserId == userIdResult.Value) {
+            return Result.Success(new RecipeCommentModel(
+                comment.Id.Value,
+                comment.RecipeId.Value,
+                comment.UserId.Value,
+                AuthorUsername: null,
+                AuthorFirstName: null,
+                comment.Text,
+                comment.CreatedOnUtc,
+                comment.ModifiedOnUtc,
+                IsOwnedByCurrentUser: true));
         }
+
+        Notification notification = NotificationFactory.CreateNewComment(
+            recipe.UserId,
+            recipe.Id.Value.ToString());
+        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new RecipeCommentModel(
             comment.Id.Value,

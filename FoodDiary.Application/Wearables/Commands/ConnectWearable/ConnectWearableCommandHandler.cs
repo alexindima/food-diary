@@ -22,7 +22,7 @@ public class ConnectWearableCommandHandler(
             return Result.Failure<WearableConnectionModel>(userIdResult.Error);
         }
 
-        if (!Enum.TryParse<WearableProvider>(command.Provider, ignoreCase: true, out WearableProvider provider)) {
+        if (!Enum.TryParse(command.Provider, ignoreCase: true, out WearableProvider provider)) {
             return Result.Failure<WearableConnectionModel>(Errors.Wearable.InvalidProvider(command.Provider));
         }
 

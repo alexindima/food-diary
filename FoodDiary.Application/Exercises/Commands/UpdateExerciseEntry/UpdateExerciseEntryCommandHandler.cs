@@ -27,7 +27,7 @@ public class UpdateExerciseEntryCommandHandler(IExerciseEntryRepository reposito
         }
 
         ExerciseType? exerciseType = null;
-        if (command.ExerciseType is not null && Enum.TryParse<ExerciseType>(command.ExerciseType, ignoreCase: true, out ExerciseType parsed)) {
+        if (command.ExerciseType is not null && Enum.TryParse(command.ExerciseType, ignoreCase: true, out ExerciseType parsed)) {
             exerciseType = parsed;
         }
 

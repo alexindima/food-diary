@@ -14,20 +14,16 @@ public sealed class ConfigurableBillingProviderGatewayAccessor(
         StringComparer.OrdinalIgnoreCase);
 
     public IBillingProviderGateway GetActiveProvider() {
-        string? configuredProvider = billingOptions.Value.Provider?.Trim();
+        string configuredProvider = billingOptions.Value.Provider.Trim();
         if (string.IsNullOrWhiteSpace(configuredProvider) ||
             !_providers.TryGetValue(configuredProvider, out IBillingProviderGateway? billingProvider)) {
-            throw new InvalidOperationException(Errors.Billing.ProviderNotConfigured(configuredProvider ?? string.Empty).Message);
+            throw new InvalidOperationException(Errors.Billing.ProviderNotConfigured(configuredProvider).Message);
         }
 
         return billingProvider;
     }
 
     public IBillingProviderGateway? GetProviderOrDefault(string provider) {
-        if (string.IsNullOrWhiteSpace(provider)) {
-            return null;
-        }
-
-        return _providers.GetValueOrDefault(provider.Trim());
+        return string.IsNullOrWhiteSpace(provider) ? null : _providers.GetValueOrDefault(provider.Trim());
     }
 }

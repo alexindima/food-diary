@@ -213,8 +213,8 @@ public sealed class ControllerConventionsTests {
                 MethodInfo? method = GetActionMethods(controllerType)
                     .SingleOrDefault(candidate => string.Equals(candidate.Name, tuple.methodName, StringComparison.Ordinal));
 
-                return method is null || method.GetCustomAttributes<ProducesResponseTypeAttribute>()
-                    .All(attribute => attribute.StatusCode != StatusCodes.Status201Created);
+                return method?.GetCustomAttributes<ProducesResponseTypeAttribute>()
+                    .All(attribute => attribute.StatusCode != StatusCodes.Status201Created) != false;
             })
             .Select(tuple => $"{Path.GetFileNameWithoutExtension(tuple.tree.FilePath)}.{tuple.methodName}")];
 

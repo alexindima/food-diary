@@ -102,11 +102,7 @@ public sealed class FastingNotificationScheduler(
     }
 
     private static bool HasExistingCheckIn(FastingOccurrence occurrence, IReadOnlyList<FastingCheckIn>? checkIns) {
-        if (checkIns is { Count: > 0 }) {
-            return true;
-        }
-
-        return occurrence.CheckInAtUtc.HasValue;
+        return checkIns is { Count: > 0 } || occurrence.CheckInAtUtc.HasValue;
     }
 
     private async Task<int> ProcessCompletionNotificationAsync(

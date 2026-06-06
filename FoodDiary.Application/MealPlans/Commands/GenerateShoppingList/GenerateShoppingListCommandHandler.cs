@@ -26,11 +26,7 @@ public class GenerateShoppingListCommandHandler(
 
         var planId = new MealPlanId(command.PlanId);
         MealPlan? plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
-        if (plan is null) {
-            return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
-        }
-
-        if (!plan.IsCurated && plan.UserId != userIdResult.Value) {
+        if (plan is null || (!plan.IsCurated && plan.UserId != userIdResult.Value)) {
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
         }
 
@@ -42,7 +38,7 @@ public class GenerateShoppingListCommandHandler(
 
     private static ShoppingList CreateShoppingList(UserId userId, MealPlan plan) {
         var shoppingList = ShoppingList.Create(userId, plan.Name);
-        foreach (AggregatedIngredient? item in AggregateIngredients(plan).Values.OrderBy(i => i.SortOrder)) {
+        foreach (AggregatedIngredient item in AggregateIngredients(plan).Values.OrderBy(i => i.SortOrder)) {
             shoppingList.AddItem(
                 item.Name,
                 item.ProductId,
@@ -60,7 +56,7 @@ public class GenerateShoppingListCommandHandler(
         var aggregated = new Dictionary<ProductId, AggregatedIngredient>();
         int sortOrder = 0;
 
-        foreach (MealPlanDay? day in plan.Days.OrderBy(d => d.DayNumber)) {
+        foreach (MealPlanDay day in plan.Days.OrderBy(d => d.DayNumber)) {
             foreach (MealPlanMeal meal in day.Meals) {
                 Recipe? recipe = meal.Recipe;
                 if (recipe is null) {

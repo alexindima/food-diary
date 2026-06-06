@@ -29,12 +29,12 @@ public class GetProductsQueryHandler(
             return Result.Failure<PagedResponse<ProductModel>>(accessError);
         }
         ProductType[]? productTypes = query.ProductTypes?
-            .Select(type => Enum.TryParse<ProductType>(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
+            .Select(type => Enum.TryParse(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()
             .Distinct()
             .ToArray();
 
-        (IReadOnlyList<(Domain.Entities.Products.Product Product, int UsageCount)>? items, int totalItems) = await productRepository.GetPagedAsync(
+        (IReadOnlyList<(Domain.Entities.Products.Product Product, int UsageCount)> items, int totalItems) = await productRepository.GetPagedAsync(
             userId,
             query.IncludePublic,
             pageNumber,

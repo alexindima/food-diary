@@ -120,7 +120,7 @@ static async Task PrintStatusAsync(FoodDiaryDbContext dbContext) {
 
     if (pendingMigrations.Length > 0) {
         Console.WriteLine("Pending migrations:");
-        foreach (string? migration in pendingMigrations) {
+        foreach (string migration in pendingMigrations) {
             Console.WriteLine($"  {migration}");
         }
     }

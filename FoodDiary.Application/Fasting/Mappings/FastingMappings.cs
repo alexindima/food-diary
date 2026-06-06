@@ -107,7 +107,7 @@ public static class FastingMappings {
 
     private static int ResolveDefaultHours(FastingOccurrence occurrence, FastingPlan? plan) {
         if (plan?.Type == FastingPlanType.Cyclic) {
-            return occurrence.Kind == FastingOccurrenceKind.EatDay || occurrence.Kind == FastingOccurrenceKind.EatingWindow
+            return occurrence.Kind is FastingOccurrenceKind.EatDay or FastingOccurrenceKind.EatingWindow
                 ? plan.CyclicEatDayEatingWindowHours ?? 8
                 : plan.CyclicEatDayFastHours ?? 16;
         }
@@ -129,11 +129,7 @@ public static class FastingMappings {
     };
 
     private static (int? DayNumber, int? DayTotal) ResolveCyclicPhaseProgress(FastingOccurrence occurrence, FastingPlan? plan) {
-        if (plan?.Type != FastingPlanType.Cyclic) {
-            return (null, null);
-        }
-
-        if (occurrence.Kind != FastingOccurrenceKind.FastDay && occurrence.Kind != FastingOccurrenceKind.EatDay) {
+        if (plan?.Type != FastingPlanType.Cyclic || (occurrence.Kind != FastingOccurrenceKind.FastDay && occurrence.Kind != FastingOccurrenceKind.EatDay)) {
             return (null, null);
         }
 

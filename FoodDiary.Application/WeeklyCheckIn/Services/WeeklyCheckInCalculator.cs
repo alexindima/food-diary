@@ -70,14 +70,17 @@ public static class WeeklyCheckInCalculator {
             suggestions.Add("suggestion.log_more_days");
         }
 
-        if (dailyCalorieTarget.HasValue && dailyCalorieTarget > 0) {
-            double ratio = thisWeek.AvgDailyCalories / dailyCalorieTarget.Value;
-            if (ratio > 1.15) {
-                suggestions.Add("suggestion.over_calorie_goal");
-            } else if (ratio < 0.85 && thisWeek.DaysLogged >= 3) {
-                suggestions.Add("suggestion.under_calorie_goal");
-            } else if (ratio >= 0.85 && ratio <= 1.15 && thisWeek.DaysLogged >= 5) {
-                suggestions.Add("suggestion.on_track");
+        if (dailyCalorieTarget is > 0) {
+            switch (thisWeek.AvgDailyCalories / dailyCalorieTarget.Value) {
+                case > 1.15:
+                    suggestions.Add("suggestion.over_calorie_goal");
+                    break;
+                case < 0.85 when thisWeek.DaysLogged >= 3:
+                    suggestions.Add("suggestion.under_calorie_goal");
+                    break;
+                case >= 0.85 and <= 1.15 when thisWeek.DaysLogged >= 5:
+                    suggestions.Add("suggestion.on_track");
+                    break;
             }
         }
 

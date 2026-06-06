@@ -64,7 +64,7 @@ public class GetStatisticsQueryHandler(
         DateTime bucketEnd,
         IReadOnlyCollection<Meal> meals) {
         if (meals.Count == 0) {
-            return new AggregatedStatisticsModel(bucketStart, bucketEnd, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            return new AggregatedStatisticsModel(bucketStart, bucketEnd, 0, 0, 0, 0, 0);
         }
 
         double totalCalories = meals.Sum(m => m.TotalCalories);

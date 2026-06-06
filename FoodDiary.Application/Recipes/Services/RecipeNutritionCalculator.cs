@@ -18,7 +18,7 @@ public static class RecipeNutritionCalculator {
 
         foreach (RecipeStep step in recipe.Steps) {
             foreach (RecipeIngredient ingredient in step.Ingredients) {
-                if (ingredient.Product is { } product && product.BaseAmount > 0) {
+                if (ingredient.Product is { BaseAmount: > 0 } product) {
                     double factor = ingredient.Amount / product.BaseAmount;
                     totalCalories += product.CaloriesPerBase * factor;
                     totalProteins += product.ProteinsPerBase * factor;
@@ -27,7 +27,7 @@ public static class RecipeNutritionCalculator {
                     totalFiber += product.FiberPerBase * factor;
                     totalAlcohol += product.AlcoholPerBase * factor;
                     hasComputedValues = true;
-                } else if (ingredient.NestedRecipe is { } nested && nested.Servings > 0) {
+                } else if (ingredient.NestedRecipe is { Servings: > 0 } nested) {
                     double factor = ingredient.Amount / nested.Servings;
                     totalCalories += (nested.TotalCalories ?? 0) * factor;
                     totalProteins += (nested.TotalProteins ?? 0) * factor;

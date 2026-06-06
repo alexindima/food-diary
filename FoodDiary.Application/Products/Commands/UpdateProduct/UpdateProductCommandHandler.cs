@@ -154,11 +154,7 @@ public class UpdateProductCommandHandler(
         string propertyName,
         string errorMessage)
         where TEnum : struct, Enum {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<TEnum?>(value: null);
-        }
-
-        return EnumValueParser.ParseOptional<TEnum>(value, propertyName, errorMessage);
+        return string.IsNullOrWhiteSpace(value) ? Result.Success<TEnum?>(value: null) : EnumValueParser.ParseOptional<TEnum>(value, propertyName, errorMessage);
     }
 
     private static Result<ProductType?> ParseProductType(UpdateProductCommand command) {

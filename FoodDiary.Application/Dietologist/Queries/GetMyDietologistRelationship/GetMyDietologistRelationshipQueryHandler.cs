@@ -38,6 +38,6 @@ public class GetMyDietologistRelationshipQueryHandler(
             DietologistInvitationStatus.Pending,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        return Result.Success<DietologistRelationshipModel?>(pending?.ToRelationshipModel());
+        return Result.Success(pending?.ToRelationshipModel());
     }
 }

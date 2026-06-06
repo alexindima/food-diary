@@ -29,7 +29,7 @@ internal sealed partial class DiaryPdfGenerator {
                 """);
 
             for (int tick = 0; tick <= 4; tick++) {
-                double y = top + plotHeight - plotHeight * tick / 4;
+                double y = top + plotHeight - (plotHeight * tick / 4);
                 double value = maxValue * tick / 4;
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{left}" y1="{y}" x2="{width - right}" y2="{y}" stroke="{GridColor}" stroke-width="1"/>
@@ -39,7 +39,7 @@ internal sealed partial class DiaryPdfGenerator {
 
             int labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
             for (int index = 0; index < labels.Count; index += labelStep) {
-                double x = labels.Count <= 1 ? left : left + plotWidth * index / (labels.Count - 1);
+                double x = labels.Count <= 1 ? left : left + (plotWidth * index / (labels.Count - 1));
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{x}" y1="{top}" x2="{x}" y2="{top + plotHeight}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{x}" y="{height - 10}" text-anchor="middle" fill="{MutedTextColor}" font-size="11" font-family="Arial">{Escape(labels[index])}</text>
@@ -80,7 +80,7 @@ internal sealed partial class DiaryPdfGenerator {
                 """);
 
             for (int tick = 0; tick <= 4; tick++) {
-                double y = top + plotHeight - plotHeight * tick / 4;
+                double y = top + plotHeight - (plotHeight * tick / 4);
                 double value = maxValue * tick / 4;
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{left}" y1="{y}" x2="{width - right}" y2="{y}" stroke="{GridColor}" stroke-width="1"/>
@@ -90,7 +90,7 @@ internal sealed partial class DiaryPdfGenerator {
 
             int labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
             for (int index = 0; index < labels.Count; index += labelStep) {
-                double x = labels.Count <= 1 ? left : left + plotWidth * index / (labels.Count - 1);
+                double x = labels.Count <= 1 ? left : left + (plotWidth * index / (labels.Count - 1));
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{x}" y1="{top}" x2="{x}" y2="{top + plotHeight}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{x}" y="{height - 10}" text-anchor="middle" fill="{MutedTextColor}" font-size="11" font-family="Arial">{Escape(labels[index])}</text>
@@ -101,7 +101,7 @@ internal sealed partial class DiaryPdfGenerator {
                 ChartSeries item = series[index];
                 IReadOnlyList<Point> points = BuildPoints(item.Values, left, top, plotWidth, plotHeight, maxValue);
                 string linePath = BuildSmoothPath(points);
-                double legendX = left + index * 155;
+                double legendX = left + (index * 155);
 
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <circle cx="{legendX}" cy="14" r="5" fill="{item.Color}"/>
@@ -138,7 +138,7 @@ internal sealed partial class DiaryPdfGenerator {
             double height,
             double padding) {
             double maxValue = Math.Max(1, values.DefaultIfEmpty(0).Max());
-            IReadOnlyList<Point> points = BuildPoints(values, padding, padding, width - padding * 2, height - padding * 2, maxValue);
+            IReadOnlyList<Point> points = BuildPoints(values, padding, padding, width - (padding * 2), height - (padding * 2), maxValue);
             string linePath = BuildSmoothPath(points);
             string areaPath = BuildAreaPath(points, height - padding);
 
@@ -163,8 +163,8 @@ internal sealed partial class DiaryPdfGenerator {
 
             return values
                 .Select((value, index) => {
-                    double x = values.Count <= 1 ? left + plotWidth / 2 : left + plotWidth * index / (values.Count - 1);
-                    double y = top + plotHeight - plotHeight * Math.Clamp(value, 0, maxValue) / maxValue;
+                    double x = values.Count <= 1 ? left + (plotWidth / 2) : left + (plotWidth * index / (values.Count - 1));
+                    double y = top + plotHeight - (plotHeight * Math.Clamp(value, 0, maxValue) / maxValue);
                     return new Point(x, y);
                 })
                 .ToArray();

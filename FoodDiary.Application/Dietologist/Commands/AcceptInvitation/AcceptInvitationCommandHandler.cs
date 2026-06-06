@@ -78,7 +78,7 @@ public class AcceptInvitationCommandHandler(
         return Result.Success();
     }
 
-    private static string ResolveDietologistDisplayName(FoodDiary.Domain.Entities.Users.User user) {
+    private static string ResolveDietologistDisplayName(User user) {
         string fullName = $"{user.FirstName} {user.LastName}".Trim();
         return string.IsNullOrWhiteSpace(fullName) ? user.Email : fullName;
     }

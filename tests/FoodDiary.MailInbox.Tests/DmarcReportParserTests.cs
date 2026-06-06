@@ -121,7 +121,7 @@ public sealed class DmarcReportParserTests {
     public void TryParse_WhenAttachmentExceedsLimit_ReturnsNull() {
         string rawMime = CreateRawMessage(new MimePart("application", "xml") {
             FileName = "report.xml",
-            Content = new MimeContent(new MemoryStream(new byte[5 * 1024 * 1024 + 1])),
+            Content = new MimeContent(new MemoryStream(new byte[(5 * 1024 * 1024) + 1])),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
             ContentTransferEncoding = ContentEncoding.Base64,
         });
@@ -175,7 +175,7 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenZipXmlEntryIsTooLarge_ReturnsNull() {
-        string rawMime = CreateRawMessage(CreateZipAttachment("report.xml", new string('a', 2 * 1024 * 1024 + 1)));
+        string rawMime = CreateRawMessage(CreateZipAttachment("report.xml", new string('a', (2 * 1024 * 1024) + 1)));
         var parser = new DmarcReportParser();
 
         DmarcReportPreview? report = parser.TryParse(rawMime);
@@ -241,7 +241,7 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenGzipReportExpandsPastLimit_ReturnsNull() {
-        string rawMime = CreateRawMessage(CreateGzipAttachment(new string('a', 2 * 1024 * 1024 + 1)));
+        string rawMime = CreateRawMessage(CreateGzipAttachment(new string('a', (2 * 1024 * 1024) + 1)));
         var parser = new DmarcReportParser();
 
         DmarcReportPreview? report = parser.TryParse(rawMime);

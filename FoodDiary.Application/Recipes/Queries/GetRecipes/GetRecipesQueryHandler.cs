@@ -26,7 +26,7 @@ public class GetRecipesQueryHandler(
             return Result.Failure<PagedResponse<RecipeModel>>(accessError);
         }
 
-        (IReadOnlyList<(Domain.Entities.Recipes.Recipe Recipe, int UsageCount)>? items, int totalItems) = await recipeRepository.GetPagedAsync(
+        (IReadOnlyList<(Domain.Entities.Recipes.Recipe Recipe, int UsageCount)> items, int totalItems) = await recipeRepository.GetPagedAsync(
             userId,
             query.IncludePublic,
             pageNumber,

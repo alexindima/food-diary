@@ -34,12 +34,13 @@ public class RevokeInvitationCommandHandler(
         }
 
         DietologistInvitation? active = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (active is not null) {
-            active.Revoke();
-            await invitationRepository.UpdateAsync(active, cancellationToken).ConfigureAwait(false);
-            return Result.Success();
+        if (active is null) {
+            return Result.Failure(Errors.Dietologist.NoActiveRelationship);
         }
 
-        return Result.Failure(Errors.Dietologist.NoActiveRelationship);
+        active.Revoke();
+        await invitationRepository.UpdateAsync(active, cancellationToken).ConfigureAwait(false);
+        return Result.Success();
+
     }
 }

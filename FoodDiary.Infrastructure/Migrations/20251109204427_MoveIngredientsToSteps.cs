@@ -20,8 +20,8 @@ namespace FoodDiary.Infrastructure.Migrations {
 
             migrationBuilder.RenameIndex(
                 name: "IX_RecipeIngredients_RecipeId",
-                table: "RecipeIngredients",
-                newName: "IX_RecipeIngredients_RecipeStepId");
+                newName: "IX_RecipeIngredients_RecipeStepId",
+                table: "RecipeIngredients");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_RecipeIngredients_RecipeSteps_RecipeStepId",
@@ -45,8 +45,8 @@ namespace FoodDiary.Infrastructure.Migrations {
 
             migrationBuilder.RenameIndex(
                 name: "IX_RecipeIngredients_RecipeStepId",
-                table: "RecipeIngredients",
-                newName: "IX_RecipeIngredients_RecipeId");
+                newName: "IX_RecipeIngredients_RecipeId",
+                table: "RecipeIngredients");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_RecipeIngredients_Recipes_RecipeId",

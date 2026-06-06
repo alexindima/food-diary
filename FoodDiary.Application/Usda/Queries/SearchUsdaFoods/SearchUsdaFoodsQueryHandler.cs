@@ -21,16 +21,17 @@ public class SearchUsdaFoodsQueryHandler(
             .ToList();
 
         // Supplement with branded foods from USDA API if local results are sparse
-        if (models.Count < query.Limit) {
-            int remaining = query.Limit - models.Count;
-            IReadOnlyList<UsdaFoodModel> brandedFoods = await brandedSearchService.SearchBrandedAsync(
-                query.Search, remaining, cancellationToken).ConfigureAwait(false);
-
-            var existingIds = models.Select(m => m.FdcId).ToHashSet();
-            IEnumerable<UsdaFoodModel> newBranded = brandedFoods.Where(f => !existingIds.Contains(f.FdcId));
-            models.AddRange(newBranded);
+        if (models.Count >= query.Limit) {
+            return Result.Success<IReadOnlyList<UsdaFoodModel>>(models);
         }
 
+        int remaining = query.Limit - models.Count;
+        IReadOnlyList<UsdaFoodModel> brandedFoods = await brandedSearchService.SearchBrandedAsync(
+            query.Search, remaining, cancellationToken).ConfigureAwait(false);
+
+        var existingIds = models.Select(m => m.FdcId).ToHashSet();
+        IEnumerable<UsdaFoodModel> newBranded = brandedFoods.Where(f => !existingIds.Contains(f.FdcId));
+        models.AddRange(newBranded);
         return Result.Success<IReadOnlyList<UsdaFoodModel>>(models);
     }
 }

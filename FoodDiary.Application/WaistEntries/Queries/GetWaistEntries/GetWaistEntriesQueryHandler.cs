@@ -31,10 +31,10 @@ public class GetWaistEntriesQueryHandler(
         }
 
         DateTime? normalizedFrom = query.DateFrom.HasValue
-            ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom.Value)
+            ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom.Value)
             : null;
         DateTime? normalizedTo = query.DateTo.HasValue
-            ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
+            ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
         IReadOnlyList<WaistEntry> entries = await waistEntryRepository.GetEntriesAsync(

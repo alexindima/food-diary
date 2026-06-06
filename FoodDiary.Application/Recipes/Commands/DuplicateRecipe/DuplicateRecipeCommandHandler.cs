@@ -93,7 +93,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             .OrderBy(step => step.StepNumber)
             .ToList();
 
-        foreach (RecipeStep? step in orderedSteps) {
+        foreach (RecipeStep step in orderedSteps) {
             RecipeStep newStep = target.AddStep(step.StepNumber, step.Instruction, step.Title, step.ImageUrl, step.ImageAssetId);
 
             foreach (RecipeIngredient ingredient in step.Ingredients) {

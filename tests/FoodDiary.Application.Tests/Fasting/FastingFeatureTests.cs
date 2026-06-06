@@ -737,8 +737,7 @@ public class FastingFeatureTests {
         var userId = UserId.New();
         var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(active: plan),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
             new StubUnitOfWork());
@@ -755,8 +754,7 @@ public class FastingFeatureTests {
     [Fact]
     public async Task ExtendActiveFasting_WhenNoActiveSession_ReturnsFailure() {
         var userId = UserId.New();
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             CreateUserRepository(userId),
             new StubUnitOfWork());
@@ -773,8 +771,7 @@ public class FastingFeatureTests {
         var userId = UserId.New();
         var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(active: plan),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
             new StubUnitOfWork());
@@ -788,8 +785,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task ExtendActiveFasting_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             new StubUserRepository(user: null),
             new StubUnitOfWork());
@@ -805,8 +801,7 @@ public class FastingFeatureTests {
     public async Task ExtendActiveFasting_WhenCurrentPlanCannotBeLoaded_ReturnsNoActiveSession() {
         var userId = UserId.New();
         var occurrence = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
             new StubUnitOfWork());
@@ -824,8 +819,7 @@ public class FastingFeatureTests {
         var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         occurrence.Complete(FixedNow.AddHours(1));
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(active: plan),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
             new StubUnitOfWork());
@@ -842,8 +836,7 @@ public class FastingFeatureTests {
         var userId = UserId.New();
         var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, targetHours: null);
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(active: plan),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
             new StubUnitOfWork());
@@ -861,8 +854,7 @@ public class FastingFeatureTests {
         user.DeleteAccount(FixedNow);
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(active: plan),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             new StubUserRepository(user),
             new StubUnitOfWork());
@@ -880,8 +872,7 @@ public class FastingFeatureTests {
         var userId = UserId.New();
         var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
-        var handler = new ExtendActiveFastingCommandHandler(
-            new InMemoryFastingPlanRepository(active: plan),
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
             new StubUnitOfWork());

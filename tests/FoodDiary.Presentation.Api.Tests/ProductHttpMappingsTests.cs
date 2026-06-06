@@ -116,10 +116,10 @@ public sealed class ProductHttpMappingsTests {
         var request = new GetProductsOverviewHttpQuery(
             Page: -5,
             Limit: 0,
-            Search: "  bar  ",
-            IncludePublic: true,
             RecentLimit: 100,
             FavoriteLimit: 0,
+            Search: "  bar  ",
+            IncludePublic: true,
             ProductTypes: "Custom,Food");
 
         GetProductsOverviewQuery query = request.ToQuery(userId);

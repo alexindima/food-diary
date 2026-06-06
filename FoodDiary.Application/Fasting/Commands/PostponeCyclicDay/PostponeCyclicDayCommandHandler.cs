@@ -40,7 +40,6 @@ public sealed class PostponeCyclicDayCommandHandler(
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
-
         if (plan.Type != FastingPlanType.Cyclic ||
             (current.Kind != FastingOccurrenceKind.FastDay && current.Kind != FastingOccurrenceKind.EatDay)) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("Only an active cyclic period can be postponed."));

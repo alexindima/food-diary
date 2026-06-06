@@ -48,7 +48,7 @@ public static class TdeeCalculator {
         // TDEE = average food intake + average exercise burn - caloric surplus from weight change
         double adaptiveTdee = avgDailyIntake + avgDailyExercise - caloriesFromWeightChange;
 
-        if (adaptiveTdee < MinReasonableTdee || adaptiveTdee > MaxReasonableTdee) {
+        if (adaptiveTdee is < MinReasonableTdee or > MaxReasonableTdee) {
             return AdaptiveTdeeResult.Insufficient;
         }
 
@@ -110,9 +110,7 @@ public static class TdeeCalculator {
         var daily = new Dictionary<DateTime, double>();
         foreach (Meal meal in meals) {
             DateTime date = meal.Date.Date;
-            if (!daily.TryGetValue(date, out double total)) {
-                total = 0;
-            }
+            double total = daily.GetValueOrDefault(date, 0);
 
             daily[date] = total + meal.TotalCalories;
         }
@@ -147,14 +145,14 @@ public static class TdeeCalculator {
         if (fromStart) {
             double ema = sorted[0].Weight;
             for (int i = 1; i <= half; i++) {
-                ema = EmaAlpha * sorted[i].Weight + (1 - EmaAlpha) * ema;
+                ema = (EmaAlpha * sorted[i].Weight) + ((1 - EmaAlpha) * ema);
             }
 
             return ema;
         } else {
             double ema = sorted[^1].Weight;
             for (int i = sorted.Count - 2; i >= sorted.Count - 1 - half; i--) {
-                ema = EmaAlpha * sorted[i].Weight + (1 - EmaAlpha) * ema;
+                ema = (EmaAlpha * sorted[i].Weight) + ((1 - EmaAlpha) * ema);
             }
 
             return ema;
@@ -165,14 +163,10 @@ public static class TdeeCalculator {
         int weightEntryCount,
         int daysWithCalories,
         double actualDays) {
-        if (weightEntryCount >= 10 && daysWithCalories >= 25 && actualDays >= 28) {
-            return TdeeConfidence.High;
-        }
-
-        if (weightEntryCount >= 5 && daysWithCalories >= 18 && actualDays >= 21) {
-            return TdeeConfidence.Medium;
-        }
-
-        return TdeeConfidence.Low;
+        return weightEntryCount switch {
+            >= 10 when daysWithCalories >= 25 && actualDays >= 28 => TdeeConfidence.High,
+            >= 5 when daysWithCalories >= 18 && actualDays >= 21 => TdeeConfidence.Medium,
+            _ => TdeeConfidence.Low,
+        };
     }
 }

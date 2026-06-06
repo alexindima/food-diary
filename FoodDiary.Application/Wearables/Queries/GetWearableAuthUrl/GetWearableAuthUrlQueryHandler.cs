@@ -19,7 +19,7 @@ public class GetWearableAuthUrlQueryHandler(
             return Task.FromResult(Result.Failure<string>(userIdResult.Error));
         }
 
-        if (!Enum.TryParse<WearableProvider>(query.Provider, ignoreCase: true, out WearableProvider provider)) {
+        if (!Enum.TryParse(query.Provider, ignoreCase: true, out WearableProvider provider)) {
             return Task.FromResult(Result.Failure<string>(Errors.Wearable.InvalidProvider(query.Provider)));
         }
 

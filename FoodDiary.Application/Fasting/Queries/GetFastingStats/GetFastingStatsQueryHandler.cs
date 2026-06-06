@@ -21,10 +21,6 @@ public class GetFastingStatsQueryHandler(
 
         var userId = new UserId(query.UserId!.Value);
         Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<FastingStatsModel>(accessError);
-        }
-
-        return Result.Success(await fastingAnalyticsService.GetStatsAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false));
+        return accessError is not null ? Result.Failure<FastingStatsModel>(accessError) : Result.Success(await fastingAnalyticsService.GetStatsAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false));
     }
 }

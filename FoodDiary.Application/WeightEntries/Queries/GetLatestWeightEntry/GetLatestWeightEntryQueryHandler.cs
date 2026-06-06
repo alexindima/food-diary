@@ -37,7 +37,7 @@ public class GetLatestWeightEntryQueryHandler(
             descending: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        WeightEntry? latest = entries.FirstOrDefault();
+        WeightEntry? latest = entries.Count > 0 ? entries[0] : null;
         return Result.Success(latest?.ToModel());
     }
 }

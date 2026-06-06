@@ -42,25 +42,22 @@ public class EndFastingCommandHandler(
         }
 
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        if (plan.Type == FastingPlanType.Cyclic) {
-            current.Interrupt(now);
-            plan.Stop(now);
-            await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);
-            await fastingPlanRepository.UpdateAsync(plan, cancellationToken).ConfigureAwait(false);
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return Result.Success(current.ToModel(plan));
-        }
-
-        if (plan.Type == FastingPlanType.Intermittent) {
-            current.Complete(now);
-        } else {
-            DateTime targetReachedAtUtc = current.StartedAtUtc.AddHours(current.TargetHours ?? 0);
-            if (now >= targetReachedAtUtc) {
-                current.Complete(now);
-            } else {
+        switch (plan.Type) {
+            case FastingPlanType.Cyclic:
                 current.Interrupt(now);
-            }
+                break;
+            case FastingPlanType.Intermittent:
+                current.Complete(now);
+                break;
+            default:
+                DateTime targetReachedAtUtc = current.StartedAtUtc.AddHours(current.TargetHours ?? 0);
+                if (now >= targetReachedAtUtc) {
+                    current.Complete(now);
+                } else {
+                    current.Interrupt(now);
+                }
+
+                break;
         }
 
         plan.Stop(now);

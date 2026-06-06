@@ -10,7 +10,7 @@ public sealed class UserLoginEventCleanupOptions {
 
     public static bool HasValidConfiguration(UserLoginEventCleanupOptions options) =>
         !options.Enabled ||
-        options.RetentionDays > 0 &&
+        (options.RetentionDays > 0 &&
         options.BatchSize > 0 &&
-        options.PollIntervalHours > 0;
+        options.PollIntervalHours > 0);
 }

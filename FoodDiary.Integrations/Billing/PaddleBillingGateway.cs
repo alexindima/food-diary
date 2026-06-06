@@ -71,7 +71,7 @@ public sealed class PaddleBillingGateway(
         return Result.Success(new BillingCheckoutSessionModel(
             transaction.Id,
             transaction.Checkout.Url,
-            customerId!,
+            customerId,
             priceId,
             request.Plan));
     }
@@ -119,7 +119,7 @@ public sealed class PaddleBillingGateway(
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(Errors.Billing.ProviderNotConfigured(Provider)));
         }
 
-        if (!TryVerifySignature(payload, signatureHeader, out string? signatureError)) {
+        if (!TryVerifySignature(payload, signatureHeader, out string signatureError)) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed(signatureError)));
         }
@@ -197,11 +197,7 @@ public sealed class PaddleBillingGateway(
                     ["user_id"] = request.UserId.ToString(),
                 }),
             cancellationToken).ConfigureAwait(false);
-        if (customerResponse.IsFailure) {
-            return Result.Failure<string>(customerResponse.Error);
-        }
-
-        return Result.Success(customerResponse.Value.Id);
+        return customerResponse.IsFailure ? Result.Failure<string>(customerResponse.Error) : Result.Success(customerResponse.Value.Id);
     }
 
     private async Task<Result<TResponse>> SendAsync<TResponse>(
@@ -262,7 +258,7 @@ public sealed class PaddleBillingGateway(
         string computedHash = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes(signedPayload))).ToLowerInvariant();
         byte[] computedBytes = Encoding.UTF8.GetBytes(computedHash);
 
-        foreach (string? candidate in signatures) {
+        foreach (string candidate in signatures) {
             byte[] candidateBytes = Encoding.UTF8.GetBytes(candidate.Trim().ToLowerInvariant());
             if (candidateBytes.Length == computedBytes.Length &&
                 CryptographicOperations.FixedTimeEquals(candidateBytes, computedBytes)) {
@@ -320,11 +316,7 @@ public sealed class PaddleBillingGateway(
         }
 
         JsonElement firstItem = items[0];
-        if (!firstItem.TryGetProperty("trial_dates", out JsonElement trialDates)) {
-            return default;
-        }
-
-        return trialDates;
+        return !firstItem.TryGetProperty("trial_dates", out JsonElement trialDates) ? default : trialDates;
     }
 
     private static string? GetFirstItemPriceId(JsonElement data) {
@@ -333,11 +325,7 @@ public sealed class PaddleBillingGateway(
         }
 
         JsonElement firstItem = items[0];
-        if (!firstItem.TryGetProperty("price", out JsonElement price)) {
-            return null;
-        }
-
-        return GetString(price, "id");
+        return !firstItem.TryGetProperty("price", out JsonElement price) ? null : GetString(price, "id");
     }
 
     private static string? GetString(JsonElement element, string propertyName) {

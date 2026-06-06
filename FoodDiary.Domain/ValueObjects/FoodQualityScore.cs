@@ -29,9 +29,9 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
         // < 100 kcal/100g = 25 pts, 100-250 = 15-25, 250-400 = 5-15, > 400 = 0-5
         double calDensityScore = caloriesPerBase switch {
             <= 100 => 25.0,
-            <= 250 => 25.0 - (caloriesPerBase - 100.0) / 150.0 * 10.0,
-            <= 400 => 15.0 - (caloriesPerBase - 250.0) / 150.0 * 10.0,
-            _ => Math.Max(0, 5.0 - (caloriesPerBase - 400.0) / 200.0 * 5.0),
+            <= 250 => 25.0 - ((caloriesPerBase - 100.0) / 150.0 * 10.0),
+            <= 400 => 15.0 - ((caloriesPerBase - 250.0) / 150.0 * 10.0),
+            _ => Math.Max(0, 5.0 - ((caloriesPerBase - 400.0) / 200.0 * 5.0)),
         };
         score += calDensityScore;
 

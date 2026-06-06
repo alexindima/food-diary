@@ -35,7 +35,7 @@ public class GetLatestWaistEntryQueryHandler(
             descending: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        WaistEntry? latest = entries.FirstOrDefault();
+        WaistEntry? latest = entries.Count > 0 ? entries[0] : null;
         return Result.Success(latest?.ToModel());
     }
 }

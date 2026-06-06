@@ -16,7 +16,7 @@ public class ExploreRecipesQueryHandler(IRecipeRepository recipeRepository)
         int pageNumber = Math.Max(query.Page, 1);
         int pageSize = Math.Max(query.Limit, 1);
 
-        (IReadOnlyList<(Domain.Entities.Recipes.Recipe Recipe, int UsageCount)>? items, int totalItems) = await recipeRepository.GetExplorePagedAsync(
+        (IReadOnlyList<(Domain.Entities.Recipes.Recipe Recipe, int UsageCount)> items, int totalItems) = await recipeRepository.GetExplorePagedAsync(
             pageNumber, pageSize, query.Search, query.Category,
             query.MaxPrepTime, query.SortBy, cancellationToken).ConfigureAwait(false);
 

@@ -43,7 +43,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     Plan = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: true),
                     Status = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
                     Kind = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: true),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: true, precision: 18, scale: 2),
                     Currency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
                     CurrentPeriodStartUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CurrentPeriodEndUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),

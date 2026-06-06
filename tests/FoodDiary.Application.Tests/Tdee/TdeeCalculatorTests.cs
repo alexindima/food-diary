@@ -264,7 +264,7 @@ public class TdeeCalculatorTests {
         double daysPerEntry = count > 1 ? 30.0 / (count - 1) : 1;
         for (int i = 0; i < count; i++) {
             DateTime date = startDate.AddDays(i * daysPerEntry);
-            entries.Add(WeightEntry.Create(TestUserId, date, startWeight + i * weightChangePerEntry));
+            entries.Add(WeightEntry.Create(TestUserId, date, startWeight + (i * weightChangePerEntry)));
         }
 
         return entries;

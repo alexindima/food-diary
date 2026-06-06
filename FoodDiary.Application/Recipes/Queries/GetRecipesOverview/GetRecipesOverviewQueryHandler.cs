@@ -39,7 +39,7 @@ public sealed class GetRecipesOverviewQueryHandler(
 
         RecipeOverviewOptions options = CreateOptions(query);
 
-        (IReadOnlyList<(Recipe Recipe, int UsageCount)>? items, int totalItems) = await recipeRepository.GetPagedAsync(
+        (IReadOnlyList<(Recipe Recipe, int UsageCount)> items, int totalItems) = await recipeRepository.GetPagedAsync(
             options.UserId,
             query.IncludePublic,
             options.PageNumber,
@@ -119,7 +119,7 @@ public sealed class GetRecipesOverviewQueryHandler(
 
     private static PagedResponse<RecipeModel> CreatePagedRecipes(
         IReadOnlyList<RecipeListItem> recipes,
-        IReadOnlyDictionary<RecipeId, Domain.Entities.FavoriteRecipes.FavoriteRecipe> favoritesByRecipeId,
+        IReadOnlyDictionary<RecipeId, FavoriteRecipe> favoritesByRecipeId,
         RecipeOverviewOptions options,
         int totalItems) =>
         new(
@@ -131,12 +131,12 @@ public sealed class GetRecipesOverviewQueryHandler(
 
     private static RecipeModel[] ToRecipeModels(
         IEnumerable<RecipeListItem> recipes,
-        IReadOnlyDictionary<RecipeId, Domain.Entities.FavoriteRecipes.FavoriteRecipe> favoritesByRecipeId) =>
+        IReadOnlyDictionary<RecipeId, FavoriteRecipe> favoritesByRecipeId) =>
         [.. recipes.Select(recipe => ToRecipeModel(recipe, favoritesByRecipeId))];
 
     private static RecipeModel ToRecipeModel(
         RecipeListItem recipe,
-        IReadOnlyDictionary<RecipeId, Domain.Entities.FavoriteRecipes.FavoriteRecipe> favoritesByRecipeId) {
+        IReadOnlyDictionary<RecipeId, FavoriteRecipe> favoritesByRecipeId) {
         FavoriteRecipe? favorite = favoritesByRecipeId.GetValueOrDefault(recipe.Recipe.Id);
         return recipe.Recipe.ToModel(
             recipe.UsageCount,

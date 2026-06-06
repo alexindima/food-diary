@@ -25,7 +25,6 @@ public sealed class OpenAiFoodClient(
     ];
 
     private readonly OpenAiOptions _options = options.Value;
-    private readonly ILogger<OpenAiFoodClient> _logger = logger;
 
     public async Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> AnalyzeFoodImageAsync(
         string imageUrl,
@@ -141,19 +140,19 @@ public sealed class OpenAiFoodClient(
             try {
                 response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             } catch (HttpRequestException ex) when (attempt < MaxTransientRetries) {
-                _logger.LogWarning(ex, "OpenAI transport error on attempt {Attempt}. Retrying.", attempt + 1);
+                logger.LogWarning(ex, "OpenAI transport error on attempt {Attempt}. Retrying.", attempt + 1);
                 await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
                 continue;
             } catch (HttpRequestException ex) {
-                _logger.LogWarning(ex, "OpenAI request failed due to transport error.");
+                logger.LogWarning(ex, "OpenAI request failed due to transport error.");
                 RecordAiRequest(operation, model, "transport_error");
                 return (false, null, Errors.Ai.OpenAiFailed($"OpenAI transport error: {ex.Message}"));
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested && attempt < MaxTransientRetries) {
-                _logger.LogWarning(ex, "OpenAI request timed out on attempt {Attempt}. Retrying.", attempt + 1);
+                logger.LogWarning(ex, "OpenAI request timed out on attempt {Attempt}. Retrying.", attempt + 1);
                 await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
                 continue;
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
-                _logger.LogWarning(ex, "OpenAI request timed out.");
+                logger.LogWarning(ex, "OpenAI request timed out.");
                 RecordAiRequest(operation, model, "timeout");
                 return (false, null, Errors.Ai.OpenAiFailed("OpenAI request timed out."));
             }
@@ -198,7 +197,7 @@ public sealed class OpenAiFoodClient(
         string summary = SummarizeErrorBody(responseBody);
 
         if (attempt < MaxTransientRetries && IsTransientStatusCode(response.StatusCode)) {
-            _logger.LogWarning(
+            logger.LogWarning(
                 "OpenAI transient failure on attempt {Attempt}. Status={Status} RequestId={RequestId} Summary={Summary}. Retrying.",
                 attempt + 1,
                 statusCode,
@@ -208,7 +207,7 @@ public sealed class OpenAiFoodClient(
             return (true, Error.None);
         }
 
-        _logger.LogWarning(
+        logger.LogWarning(
             "OpenAI request failed. Status={Status} RequestId={RequestId} Summary={Summary}",
             statusCode,
             requestId ?? "n/a",
@@ -406,11 +405,7 @@ public sealed class OpenAiFoodClient(
 
         try {
             FoodVisionModel? parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
-            if (parsed is null || parsed.Items is null) {
-                return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision response is empty."));
-            }
-
-            return Result.Success(parsed);
+            return parsed is null ? Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision response is empty.")) : Result.Success(parsed);
         } catch (JsonException ex) {
             return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse($"Vision JSON invalid: {ex.Message}"));
         }
@@ -424,11 +419,7 @@ public sealed class OpenAiFoodClient(
 
         try {
             FoodNutritionModel? parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
-            if (parsed is null || parsed.Items is null) {
-                return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition response is empty."));
-            }
-
-            return Result.Success(parsed);
+            return parsed is null ? Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition response is empty.")) : Result.Success(parsed);
         } catch (JsonException ex) {
             return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse($"Nutrition JSON invalid: {ex.Message}"));
         }
@@ -493,31 +484,34 @@ string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
 
         try {
             var root = JsonNode.Parse(responseBody);
-            JsonNode? errorNode = root?["error"];
-            if (errorNode is JsonValue errorValue && errorValue.TryGetValue<string>(out string? errorText)) {
-                return TrimSummary(errorText);
-            }
+            if (root != null) {
+                switch (root["error"]) {
+                    case JsonValue errorValue when errorValue.TryGetValue(out string? errorText):
+                        return TrimSummary(errorText);
+                    case JsonObject errorObject: {
+                        var parts = new List<string>();
+                        if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue(out string? errorType) &&
+                            !string.IsNullOrWhiteSpace(errorType)) {
+                            parts.Add(errorType.Trim());
+                        }
 
-            if (errorNode is JsonObject errorObject) {
-                var parts = new List<string>();
-                if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue<string>(out string? errorType) &&
-                    !string.IsNullOrWhiteSpace(errorType)) {
-                    parts.Add(errorType.Trim());
-                }
+                        if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue(out string? errorCode) &&
+                            !string.IsNullOrWhiteSpace(errorCode)) {
+                            parts.Add(errorCode.Trim());
+                        }
 
-                if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue<string>(out string? errorCode) &&
-                    !string.IsNullOrWhiteSpace(errorCode)) {
-                    parts.Add(errorCode.Trim());
-                }
+                        if (errorObject["message"] is JsonValue messageValue &&
+                            messageValue.TryGetValue(out string? errorMessage) &&
+                            !string.IsNullOrWhiteSpace(errorMessage)) {
+                            parts.Add(errorMessage.Trim());
+                        }
 
-                if (errorObject["message"] is JsonValue messageValue &&
-                    messageValue.TryGetValue<string>(out string? errorMessage) &&
-                    !string.IsNullOrWhiteSpace(errorMessage)) {
-                    parts.Add(errorMessage.Trim());
-                }
+                        if (parts.Count > 0) {
+                            return TrimSummary(string.Join(": ", parts));
+                        }
 
-                if (parts.Count > 0) {
-                    return TrimSummary(string.Join(": ", parts));
+                        break;
+                    }
                 }
             }
         } catch (JsonException) {

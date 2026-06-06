@@ -263,10 +263,6 @@ public class CreateRecipeCommandHandler(
             ingredient.NestedRecipeId,
             nameof(ingredient.NestedRecipeId),
             "Nested recipe id");
-        if (nestedRecipeIdResult.IsFailure) {
-            return nestedRecipeIdResult;
-        }
-
-        return Result.Success();
+        return nestedRecipeIdResult.IsFailure ? nestedRecipeIdResult : Result.Success();
     }
 }

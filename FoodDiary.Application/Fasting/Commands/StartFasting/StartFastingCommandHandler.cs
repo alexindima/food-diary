@@ -48,7 +48,7 @@ public class StartFastingCommandHandler(
             return Result.Failure<FastingSessionModel>(creation.Error);
         }
 
-        (FastingPlan? plan, FastingOccurrence? occurrence) = creation.Value;
+        (FastingPlan plan, FastingOccurrence? occurrence) = creation.Value;
 
         await fastingPlanRepository.AddAsync(plan, cancellationToken).ConfigureAwait(false);
         await fastingOccurrenceRepository.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
@@ -59,13 +59,13 @@ public class StartFastingCommandHandler(
 
     private static Result<FastingPlanType> ResolvePlanType(StartFastingCommand command) {
         if (!string.IsNullOrWhiteSpace(command.PlanType)) {
-            return Enum.TryParse<FastingPlanType>(command.PlanType, ignoreCase: true, out FastingPlanType explicitPlanType)
+            return Enum.TryParse(command.PlanType, ignoreCase: true, out FastingPlanType explicitPlanType)
                 ? Result.Success(explicitPlanType)
                 : Result.Failure<FastingPlanType>(Errors.Fasting.InvalidProtocol);
         }
 
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
+            !Enum.TryParse(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
             return Result.Success(FastingPlanType.Intermittent);
         }
 
@@ -101,7 +101,7 @@ public class StartFastingCommandHandler(
         DateTime startedAtUtc,
         string? notes) {
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
+            !Enum.TryParse(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
 
@@ -129,7 +129,7 @@ public class StartFastingCommandHandler(
         DateTime startedAtUtc,
         string? notes) {
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
+            !Enum.TryParse(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
 

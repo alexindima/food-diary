@@ -41,7 +41,6 @@ public sealed class ReduceActiveFastingTargetCommandHandler(
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
-
         if (plan.Type != FastingPlanType.Extended) {
             return Result.Failure<FastingSessionModel>(
                 Errors.Validation.Invalid(nameof(command.ReducedHours), "Only extended fasting target can be reduced."));
