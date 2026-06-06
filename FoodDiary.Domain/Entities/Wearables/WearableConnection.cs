@@ -80,7 +80,7 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
     }
 
     public bool IsTokenExpired() {
-        return TokenExpiresAtUtc.HasValue && TokenExpiresAtUtc.Value <= DomainTime.UtcNow;
+        return TokenExpiresAtUtc <= DomainTime.UtcNow;
     }
 
     private static void EnsureUserId(UserId userId) {

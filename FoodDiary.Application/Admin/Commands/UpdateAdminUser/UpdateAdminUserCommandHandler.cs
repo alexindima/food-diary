@@ -85,7 +85,7 @@ public sealed class UpdateAdminUserCommandHandler(
     }
 
     private static bool IsSelfUpdate(UpdateAdminUserCommand command) =>
-        command.ActorUserId.HasValue && command.ActorUserId.Value == command.UserId;
+        command.ActorUserId == command.UserId;
 
     private async Task<Result<RoleUpdate?>> PrepareRoleUpdateAsync(
         User user,

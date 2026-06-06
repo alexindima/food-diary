@@ -3,6 +3,12 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Events;
 
-public sealed record RecipeAutoNutritionEnabledDomainEvent(RecipeId RecipeId, DateTime? OccurredOnUtcOverride = null) : IDomainEvent {
-    public DateTime OccurredOnUtc { get; } = OccurredOnUtcOverride ?? Common.DomainTime.UtcNow;
+public sealed record RecipeAutoNutritionEnabledDomainEvent : IDomainEvent {
+    public RecipeAutoNutritionEnabledDomainEvent(RecipeId recipeId, DateTime? occurredOnUtcOverride = null) {
+        RecipeId = recipeId;
+        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+    }
+
+    public RecipeId RecipeId { get; }
+    public DateTime OccurredOnUtc { get; }
 }

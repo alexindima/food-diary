@@ -73,7 +73,7 @@ public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRep
             ? query.OrderByDescending(entry => entry.Date).ThenByDescending(entry => entry.CreatedOnUtc)
             : query.OrderBy(entry => entry.Date).ThenBy(entry => entry.CreatedOnUtc);
 
-        if (limit.HasValue && limit.Value > 0) {
+        if (limit > 0) {
             query = query.Take(limit.Value);
         }
 

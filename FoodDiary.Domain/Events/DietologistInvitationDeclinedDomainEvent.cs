@@ -3,10 +3,20 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Events;
 
-public sealed record DietologistInvitationDeclinedDomainEvent(
-    DietologistInvitationId InvitationId,
-    UserId ClientUserId,
-    string DietologistEmail,
-    DateTime? OccurredOnUtcOverride = null) : IDomainEvent {
-    public DateTime OccurredOnUtc { get; } = OccurredOnUtcOverride ?? DomainTime.UtcNow;
+public sealed record DietologistInvitationDeclinedDomainEvent : IDomainEvent {
+    public DietologistInvitationDeclinedDomainEvent(
+        DietologistInvitationId invitationId,
+        UserId clientUserId,
+        string dietologistEmail,
+        DateTime? occurredOnUtcOverride = null) {
+        InvitationId = invitationId;
+        ClientUserId = clientUserId;
+        DietologistEmail = dietologistEmail;
+        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+    }
+
+    public DietologistInvitationId InvitationId { get; }
+    public UserId ClientUserId { get; }
+    public string DietologistEmail { get; }
+    public DateTime OccurredOnUtc { get; }
 }

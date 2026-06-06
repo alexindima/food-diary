@@ -148,7 +148,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         }
 
         DateTime configuredExpiresAtUtc = _dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(expirationMinutes);
-        DateTime tokenExpiresAtUtc = expiresAtUtc.HasValue && expiresAtUtc.Value < configuredExpiresAtUtc
+        DateTime tokenExpiresAtUtc = expiresAtUtc < configuredExpiresAtUtc
             ? expiresAtUtc.Value.ToUniversalTime()
             : configuredExpiresAtUtc;
 

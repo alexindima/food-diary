@@ -18,11 +18,11 @@ public readonly record struct UserAiQuotaState(
     }
 
     public UserAiQuotaState WithLimits(long? inputLimit, long? outputLimit) {
-        if (inputLimit.HasValue && inputLimit.Value < 0) {
+        if (inputLimit < 0) {
             throw new ArgumentOutOfRangeException(nameof(inputLimit), "Input limit must be non-negative.");
         }
 
-        if (outputLimit.HasValue && outputLimit.Value < 0) {
+        if (outputLimit < 0) {
             throw new ArgumentOutOfRangeException(nameof(outputLimit), "Output limit must be non-negative.");
         }
 

@@ -78,7 +78,7 @@ public static class ShoppingListItemBuilder {
             return Errors.Validation.Invalid(nameof(item.Amount), "Amount must be a finite number.");
         }
 
-        return item.Amount.HasValue && item.Amount.Value <= 0
+        return item.Amount <= 0
             ? Errors.Validation.Invalid(nameof(item.Amount), "Amount must be greater than zero.")
             : null;
     }

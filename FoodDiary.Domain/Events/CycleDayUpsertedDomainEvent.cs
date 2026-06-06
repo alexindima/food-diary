@@ -3,6 +3,16 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Events;
 
-public sealed record CycleDayUpsertedDomainEvent(CycleId CycleId, DateTime Date, bool IsCreated, DateTime? OccurredOnUtcOverride = null) : IDomainEvent {
-    public DateTime OccurredOnUtc { get; } = OccurredOnUtcOverride ?? Common.DomainTime.UtcNow;
+public sealed record CycleDayUpsertedDomainEvent : IDomainEvent {
+    public CycleDayUpsertedDomainEvent(CycleId cycleId, DateTime date, bool isCreated, DateTime? occurredOnUtcOverride = null) {
+        CycleId = cycleId;
+        Date = date;
+        IsCreated = isCreated;
+        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+    }
+
+    public CycleId CycleId { get; }
+    public DateTime Date { get; }
+    public bool IsCreated { get; }
+    public DateTime OccurredOnUtc { get; }
 }

@@ -4,16 +4,38 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Events;
 
-public sealed record ShoppingListItemAddedDomainEvent(
-    ShoppingListId ShoppingListId,
-    ShoppingListItemId ShoppingListItemId,
-    ProductId? ProductId,
-    string Name,
-    double? Amount,
-    MeasurementUnit? Unit,
-    string? Category,
-    bool IsChecked,
-    int SortOrder,
-    DateTime? OccurredOnUtcOverride = null) : IDomainEvent {
-    public DateTime OccurredOnUtc { get; } = OccurredOnUtcOverride ?? Common.DomainTime.UtcNow;
+public sealed record ShoppingListItemAddedDomainEvent : IDomainEvent {
+    public ShoppingListItemAddedDomainEvent(
+        ShoppingListId shoppingListId,
+        ShoppingListItemId shoppingListItemId,
+        ProductId? productId,
+        string name,
+        double? amount,
+        MeasurementUnit? unit,
+        string? category,
+        bool isChecked,
+        int sortOrder,
+        DateTime? occurredOnUtcOverride = null) {
+        ShoppingListId = shoppingListId;
+        ShoppingListItemId = shoppingListItemId;
+        ProductId = productId;
+        Name = name;
+        Amount = amount;
+        Unit = unit;
+        Category = category;
+        IsChecked = isChecked;
+        SortOrder = sortOrder;
+        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+    }
+
+    public ShoppingListId ShoppingListId { get; }
+    public ShoppingListItemId ShoppingListItemId { get; }
+    public ProductId? ProductId { get; }
+    public string Name { get; }
+    public double? Amount { get; }
+    public MeasurementUnit? Unit { get; }
+    public string? Category { get; }
+    public bool IsChecked { get; }
+    public int SortOrder { get; }
+    public DateTime OccurredOnUtc { get; }
 }

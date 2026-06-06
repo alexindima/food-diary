@@ -119,7 +119,7 @@ public sealed class WebPushNotificationSender(
         CancellationToken cancellationToken) {
         DateTime utcNow = DateTime.UtcNow;
         var expiredSubscriptions = subscriptions
-            .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= utcNow)
+            .Where(subscription => subscription.ExpirationTimeUtc <= utcNow)
             .ToList();
 
         if (expiredSubscriptions.Count == 0) {

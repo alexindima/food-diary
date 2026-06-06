@@ -193,7 +193,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         }
 
         if (maxPrepTime.HasValue) {
-            query = query.Where(r => r.PrepTime.HasValue && r.PrepTime.Value <= maxPrepTime.Value);
+            query = query.Where(r => r.PrepTime <= maxPrepTime.Value);
         }
 
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);

@@ -98,6 +98,10 @@ dotnet_diagnostic.IDE0305.severity = error
 dotnet_diagnostic.RCS1161.severity = error
 dotnet_diagnostic.RCS1170.severity = warning
 dotnet_diagnostic.RCS1189.severity = error
+dotnet_diagnostic.RCS1199.severity = error
+
+# JetBrains Rider/ReSharper inspections enforced in IDE/Qodana.
+resharper_redundant_qualifier_highlighting = error
 
 # Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
 dotnet_diagnostic.CA1707.severity = none

@@ -245,10 +245,10 @@ public sealed class FastingAnalyticsService(
 
     private static FastingMessageModel? BuildShorterToleranceInsight(IReadOnlyList<FastingOccurrenceAnalysis> history) {
         var shorter = history
-            .Where(static analysis => analysis.Occurrence.TargetHours.HasValue && analysis.Occurrence.TargetHours.Value < 24 && analysis.LatestCheckIn is not null)
+            .Where(static analysis => analysis.Occurrence.TargetHours < 24 && analysis.LatestCheckIn is not null)
             .ToList();
         var longer = history
-            .Where(static analysis => analysis.Occurrence.TargetHours.HasValue && analysis.Occurrence.TargetHours.Value >= 24 && analysis.LatestCheckIn is not null)
+            .Where(static analysis => analysis.Occurrence.TargetHours >= 24 && analysis.LatestCheckIn is not null)
             .ToList();
 
         if (shorter.Count < 2 || longer.Count < 2) {

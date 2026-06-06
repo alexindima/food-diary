@@ -30,7 +30,7 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
 
         IReadOnlyList<WebPushSubscription> subscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
         var expiredSubscriptions = subscriptions
-            .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= dateTimeProvider.GetUtcNow().UtcDateTime)
+            .Where(subscription => subscription.ExpirationTimeUtc <= dateTimeProvider.GetUtcNow().UtcDateTime)
             .ToList();
 
         if (expiredSubscriptions.Count > 0) {

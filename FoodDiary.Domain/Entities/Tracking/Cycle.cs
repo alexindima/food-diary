@@ -105,14 +105,14 @@ public sealed class Cycle : AggregateRoot<CycleId> {
             }
 
             existing.Update(isPeriod, symptoms, normalizedNotes, clearNotes);
-            RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: false));
+            RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, isCreated: false));
             SetModified();
             return existing;
         }
 
         var day = CycleDay.Create(Id, normalizedDate, isPeriod, symptoms, clearNotes ? null : normalizedNotes);
         _days.Add(day);
-        RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: true));
+        RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, isCreated: true));
         SetModified();
         return day;
     }

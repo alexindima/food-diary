@@ -32,13 +32,13 @@ public sealed class DomainEventInvariantTests {
 
         var domainEvent = new MealNutritionAppliedDomainEvent(
             mealId,
-            IsAutoCalculated: true,
-            TotalCalories: 500,
-            TotalProteins: 30,
-            TotalFats: 20,
-            TotalCarbs: 50,
-            TotalFiber: 5,
-            TotalAlcohol: 0,
+            isAutoCalculated: true,
+            totalCalories: 500,
+            totalProteins: 30,
+            totalFats: 20,
+            totalCarbs: 50,
+            totalFiber: 5,
+            totalAlcohol: 0,
             occurredOnUtc);
 
         Assert.Equal(mealId, domainEvent.MealId);
@@ -104,8 +104,8 @@ public sealed class DomainEventInvariantTests {
             1.5,
             MeasurementUnit.Ml,
             "Dairy",
-            IsChecked: true,
-            SortOrder: 2,
+            isChecked: true,
+            sortOrder: 2,
             occurredOnUtc);
 
         Assert.Equal(shoppingListId, domainEvent.ShoppingListId);
