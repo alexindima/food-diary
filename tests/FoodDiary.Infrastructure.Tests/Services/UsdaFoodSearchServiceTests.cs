@@ -10,7 +10,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 public sealed class UsdaFoodSearchServiceTests {
     [Fact]
     public async Task GetFoodDetailAsync_WhenBrandedFoodFound_ReturnsMappedNutrients() {
-        string json = """
+        const string json = """
             {
               "fdcId": 539789,
               "description": "FANTA, SODA, RASPBERRY & PASSIONFRUIT",

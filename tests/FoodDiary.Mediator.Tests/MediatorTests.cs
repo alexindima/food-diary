@@ -6,7 +6,7 @@ namespace FoodDiary.Mediator.Tests;
 public sealed class MediatorTests {
     [Fact]
     public async Task Send_WithTypedRequest_InvokesMatchingHandler() {
-        using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         ISender sender = provider.GetRequiredService<ISender>();
 
         EchoResponse response = await sender.Send(new EchoQuery("value"));
@@ -16,7 +16,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_WithObjectRequest_ReturnsHandlerResponse() {
-        using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         ISender sender = provider.GetRequiredService<ISender>();
 
         object? response = await sender.Send((object)new EchoQuery("object-value"));
@@ -27,7 +27,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_WithUnitRequest_InvokesHandlerAndReturnsTask() {
-        using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         ISender sender = provider.GetRequiredService<ISender>();
         UnitCommandHandler.Handled = false;
 
@@ -38,7 +38,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_PassesCancellationTokenToHandler() {
-        using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         ISender sender = provider.GetRequiredService<ISender>();
         using var cancellationTokenSource = new CancellationTokenSource();
 
@@ -49,7 +49,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_AppliesOpenBehaviorsInRegistrationOrder() {
-        using ServiceProvider provider = CreateProvider(configuration => {
+        await using ServiceProvider provider = CreateProvider(configuration => {
             configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly);
             configuration.AddOpenBehavior(typeof(OuterBehavior<,>));
             configuration.AddOpenBehavior(typeof(InnerBehavior<,>));
@@ -73,7 +73,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_WhenBehaviorShortCircuits_DoesNotInvokeHandler() {
-        using ServiceProvider provider = CreateProvider(configuration => {
+        await using ServiceProvider provider = CreateProvider(configuration => {
             configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly);
             configuration.AddOpenBehavior(typeof(ShortCircuitBehavior<,>));
         });
@@ -88,7 +88,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_WhenOpenBehaviorConstraintDoesNotMatch_SkipsBehavior() {
-        using ServiceProvider provider = CreateProvider(configuration => {
+        await using ServiceProvider provider = CreateProvider(configuration => {
             configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly);
             configuration.AddOpenBehavior(typeof(CommandOnlyBehavior<,>));
         });
@@ -103,7 +103,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_WhenOpenBehaviorConstraintMatches_AppliesBehavior() {
-        using ServiceProvider provider = CreateProvider(configuration => {
+        await using ServiceProvider provider = CreateProvider(configuration => {
             configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly);
             configuration.AddOpenBehavior(typeof(CommandOnlyBehavior<,>));
         });
@@ -127,7 +127,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Publish_WithTypedNotification_InvokesAllHandlers() {
-        using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         IPublisher publisher = provider.GetRequiredService<IPublisher>();
         NotificationLog.Entries.Clear();
 
@@ -138,7 +138,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Publish_WithObjectNotification_InvokesAllHandlers() {
-        using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         IPublisher publisher = provider.GetRequiredService<IPublisher>();
         NotificationLog.Entries.Clear();
 
@@ -149,7 +149,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Publish_WithNonNotificationObject_ThrowsInvalidOperationException() {
-        using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         IPublisher publisher = provider.GetRequiredService<IPublisher>();
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => publisher.Publish(new object()));
@@ -159,7 +159,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_WhenHandlerIsMissing_ThrowsInvalidOperationException() {
-        using ServiceProvider provider = CreateProvider(static _ => { });
+        await using ServiceProvider provider = CreateProvider(static _ => { });
         ISender sender = provider.GetRequiredService<ISender>();
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => sender.Send(new EchoQuery("missing")));
@@ -167,7 +167,7 @@ public sealed class MediatorTests {
 
     [Fact]
     public async Task Send_WithObjectThatIsNotRequest_ThrowsInvalidOperationException() {
-        using ServiceProvider provider = CreateProvider(static _ => { });
+        await using ServiceProvider provider = CreateProvider(static _ => { });
         ISender sender = provider.GetRequiredService<ISender>();
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sender.Send(new object()));

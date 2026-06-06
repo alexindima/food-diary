@@ -79,7 +79,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         var byOperationRaw = await query
             .GroupBy(x => x.Operation)
             .Select(group => new {
-                Key = group.Key,
+                group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
                 Output = group.Sum(x => x.OutputTokens),
@@ -98,7 +98,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         var byModelRaw = await query
             .GroupBy(x => x.Model)
             .Select(group => new {
-                Key = group.Key,
+                group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
                 Output = group.Sum(x => x.OutputTokens),
@@ -107,8 +107,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return byModelRaw
-            .Select(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output))
-            .ToList();
+            .ConvertAll(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output));
     }
 
     private async Task<IReadOnlyList<AiUsageUserSummary>> GetBreakdownByUserAsync(

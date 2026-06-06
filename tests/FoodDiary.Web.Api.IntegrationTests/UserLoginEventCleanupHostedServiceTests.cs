@@ -14,7 +14,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenDisabled_DoesNotDeleteLoginEvents() {
         var repository = new RecordingUserLoginEventRepository();
-        using ServiceProvider provider = BuildServiceProvider(repository);
+        await using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {
@@ -35,7 +35,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenEnabled_DeletesExpiredLoginEventsUntilBatchIsNotFull() {
         var repository = new RecordingUserLoginEventRepository(10, 10, 3);
-        using ServiceProvider provider = BuildServiceProvider(repository);
+        await using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {
@@ -64,7 +64,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenRepositoryThrows_ContinuesUntilStopped() {
         var repository = new ThrowingUserLoginEventRepository();
-        using ServiceProvider provider = BuildServiceProvider(repository);
+        await using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {
@@ -85,7 +85,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenRepositoryObservesCancellation_StopsCleanly() {
         var repository = new CancelingUserLoginEventRepository();
-        using ServiceProvider provider = BuildServiceProvider(repository);
+        await using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {

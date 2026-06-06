@@ -86,7 +86,7 @@ internal static class UsdaDataSeeder {
     private static async Task SeedDailyReferenceValuesAsync(NpgsqlConnection connection) {
         // FDA Daily Values for adults and children 4+ (standard nutrition label values)
         // Source: https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
-        string sql = """
+        const string sql = """
             INSERT INTO "DailyReferenceValues" ("NutrientId", "Value", "Unit", "AgeGroup", "Gender")
             VALUES
                 -- Vitamins

@@ -6,42 +6,42 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Tracking;
 
 internal sealed class FastingOccurrenceConfiguration : IEntityTypeConfiguration<FastingOccurrence> {
-    public void Configure(EntityTypeBuilder<FastingOccurrence> entity) {
-        entity.ToTable("FastingOccurrences");
+    public void Configure(EntityTypeBuilder<FastingOccurrence> builder) {
+        builder.ToTable("FastingOccurrences");
 
-        entity.Property(occurrence => occurrence.Id)
+        builder.Property(occurrence => occurrence.Id)
             .HasConversion(StronglyTypedIdConverters.FastingOccurrenceIdConverter.Instance);
 
-        entity.Property(occurrence => occurrence.PlanId)
+        builder.Property(occurrence => occurrence.PlanId)
             .HasConversion(StronglyTypedIdConverters.FastingPlanIdConverter.Instance);
 
-        entity.Property(occurrence => occurrence.UserId)
+        builder.Property(occurrence => occurrence.UserId)
             .HasConversion(StronglyTypedIdConverters.UserIdConverter.Instance);
 
-        entity.Property(occurrence => occurrence.Kind)
+        builder.Property(occurrence => occurrence.Kind)
             .HasConversion<string>()
             .HasMaxLength(24);
 
-        entity.Property(occurrence => occurrence.Status)
+        builder.Property(occurrence => occurrence.Status)
             .HasConversion<string>()
             .HasMaxLength(16);
 
-        entity.Property(occurrence => occurrence.Notes)
+        builder.Property(occurrence => occurrence.Notes)
             .HasMaxLength(500);
 
-        entity.Property(occurrence => occurrence.Symptoms)
+        builder.Property(occurrence => occurrence.Symptoms)
             .HasMaxLength(200);
 
-        entity.Property(occurrence => occurrence.CheckInNotes)
+        builder.Property(occurrence => occurrence.CheckInNotes)
             .HasMaxLength(500);
 
-        entity.HasIndex(occurrence => occurrence.PlanId);
-        entity.HasIndex(occurrence => occurrence.UserId);
-        entity.HasIndex(occurrence => new { occurrence.UserId, occurrence.Status });
-        entity.HasIndex(occurrence => new { occurrence.PlanId, occurrence.SequenceNumber })
+        builder.HasIndex(occurrence => occurrence.PlanId);
+        builder.HasIndex(occurrence => occurrence.UserId);
+        builder.HasIndex(occurrence => new { occurrence.UserId, occurrence.Status });
+        builder.HasIndex(occurrence => new { occurrence.PlanId, occurrence.SequenceNumber })
             .IsUnique();
 
-        entity.HasOne(occurrence => occurrence.Plan)
+        builder.HasOne(occurrence => occurrence.Plan)
             .WithMany()
             .HasForeignKey(occurrence => occurrence.PlanId)
             .OnDelete(DeleteBehavior.Cascade);

@@ -15,7 +15,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 public sealed class InitialAdminHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenPasswordIsBlank_DoesNotCreateUser() {
-        using ServiceProvider provider = BuildServiceProvider();
+        await using ServiceProvider provider = BuildServiceProvider();
         InitialAdminHostedService service = CreateService(
             provider,
             new InitialAdminOptions {
@@ -32,7 +32,7 @@ public sealed class InitialAdminHostedServiceTests {
 
     [Fact]
     public async Task StartAsync_WhenUserAlreadyExists_DoesNotCreateDuplicate() {
-        using ServiceProvider provider = BuildServiceProvider();
+        await using ServiceProvider provider = BuildServiceProvider();
         using (IServiceScope seedScope = provider.CreateScope()) {
             FoodDiaryDbContext seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             seedContext.Users.Add(User.Create("owner@fooddiary.test", "existing-hash"));
@@ -54,7 +54,7 @@ public sealed class InitialAdminHostedServiceTests {
 
     [Fact]
     public async Task StartAsync_WhenConfigured_CreatesConfirmedAdminWithBootstrapRoles() {
-        using ServiceProvider provider = BuildServiceProvider();
+        await using ServiceProvider provider = BuildServiceProvider();
         using (IServiceScope seedScope = provider.CreateScope()) {
             FoodDiaryDbContext seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             seedContext.Roles.Add(Role.Create(RoleNames.Owner));

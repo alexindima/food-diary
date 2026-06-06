@@ -41,10 +41,9 @@ public sealed class AdminSsoService(IDistributedCache cache, TimeProvider dateTi
 
     private static string GenerateCode() {
         byte[] bytes = RandomNumberGenerator.GetBytes(32);
-        string text = Convert.ToBase64String(bytes)
+        return Convert.ToBase64String(bytes)
             .TrimEnd('=')
             .Replace('+', '-')
             .Replace('/', '_');
-        return text;
     }
 }

@@ -17,7 +17,7 @@ public sealed class MailRelayApplicationValidationTests {
     [Fact]
     public async Task EnqueueCommand_WhenRequestIsInvalid_ReturnsValidationFailureWithoutCallingStore() {
         var queueStore = new RecordingQueueStore();
-        using ServiceProvider provider = CreateProvider(queueStore);
+        await using ServiceProvider provider = CreateProvider(queueStore);
         ISender sender = provider.GetRequiredService<ISender>();
 
         Result<Guid> result = await sender.Send(new EnqueueMailRelayEmailCommand(new RelayEmailMessageRequest(
@@ -35,7 +35,7 @@ public sealed class MailRelayApplicationValidationTests {
 
     [Fact]
     public async Task IngestDeliveryEventCommand_WhenEventTypeIsInvalid_ReturnsValidationFailure() {
-        using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
+        await using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
         ISender sender = provider.GetRequiredService<ISender>();
 
         Result<MailRelayDeliveryEventEntry> result = await sender.Send(new IngestMailRelayDeliveryEventCommand(new IngestMailEventRequest(
@@ -49,7 +49,7 @@ public sealed class MailRelayApplicationValidationTests {
 
     [Fact]
     public async Task GetSuppressionsQuery_WhenEmailIsInvalid_ReturnsValidationFailure() {
-        using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
+        await using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
         ISender sender = provider.GetRequiredService<ISender>();
 
         Result<IReadOnlyList<MailRelaySuppressionEntry>> result = await sender.Send(new GetMailRelaySuppressionsQuery("not-an-email"));

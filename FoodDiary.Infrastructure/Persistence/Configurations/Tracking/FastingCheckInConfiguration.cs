@@ -7,33 +7,33 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Tracking;
 
 internal sealed class FastingCheckInConfiguration : IEntityTypeConfiguration<FastingCheckIn> {
-    public void Configure(EntityTypeBuilder<FastingCheckIn> entity) {
-        entity.ToTable("FastingCheckIns");
+    public void Configure(EntityTypeBuilder<FastingCheckIn> builder) {
+        builder.ToTable("FastingCheckIns");
 
-        entity.Property(checkIn => checkIn.Id)
+        builder.Property(checkIn => checkIn.Id)
             .HasConversion(StronglyTypedIdConverters.FastingCheckInIdConverter.Instance);
 
-        entity.Property(checkIn => checkIn.OccurrenceId)
+        builder.Property(checkIn => checkIn.OccurrenceId)
             .HasConversion(StronglyTypedIdConverters.FastingOccurrenceIdConverter.Instance);
 
-        entity.Property(checkIn => checkIn.UserId)
+        builder.Property(checkIn => checkIn.UserId)
             .HasConversion(StronglyTypedIdConverters.UserIdConverter.Instance);
 
-        entity.Property(checkIn => checkIn.Symptoms)
+        builder.Property(checkIn => checkIn.Symptoms)
             .HasMaxLength(200);
 
-        entity.Property(checkIn => checkIn.Notes)
+        builder.Property(checkIn => checkIn.Notes)
             .HasMaxLength(500);
 
-        entity.HasIndex(checkIn => new { checkIn.OccurrenceId, checkIn.CheckedInAtUtc });
-        entity.HasIndex(checkIn => new { checkIn.UserId, checkIn.CheckedInAtUtc });
+        builder.HasIndex(checkIn => new { checkIn.OccurrenceId, checkIn.CheckedInAtUtc });
+        builder.HasIndex(checkIn => new { checkIn.UserId, checkIn.CheckedInAtUtc });
 
-        entity.HasOne(checkIn => checkIn.Occurrence)
+        builder.HasOne(checkIn => checkIn.Occurrence)
             .WithMany()
             .HasForeignKey(checkIn => checkIn.OccurrenceId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        entity.HasOne<User>()
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(checkIn => checkIn.UserId)
             .OnDelete(DeleteBehavior.Cascade);

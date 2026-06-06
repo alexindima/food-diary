@@ -98,23 +98,24 @@ public sealed class NpgsqlInboundMailStore(
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("limit", limit);
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    var messages = new List<InboundMailMessageSummary>();
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(2));
+                        string? subject = reader.GetNullableString(3);
+                        messages.Add(new InboundMailMessageSummary(
+                            reader.GetGuid(0),
+                            reader.GetNullableString(1),
+                            recipients,
+                            subject,
+                            GetCategory(recipients, subject),
+                            reader.GetString(4),
+                            reader.GetFieldValue<DateTimeOffset>(5)));
+                    }
 
-                var messages = new List<InboundMailMessageSummary>();
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(2));
-                    string? subject = reader.GetNullableString(3);
-                    messages.Add(new InboundMailMessageSummary(
-                        reader.GetGuid(0),
-                        reader.GetNullableString(1),
-                        recipients,
-                        subject,
-                        GetCategory(recipients, subject),
-                        reader.GetString(4),
-                        reader.GetFieldValue<DateTimeOffset>(5)));
+                    return messages;
                 }
-
-                return messages;
             }
         }
     }
@@ -131,29 +132,31 @@ public sealed class NpgsqlInboundMailStore(
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("id", id);
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    return null;
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        return null;
+                    }
+
+                    IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(3));
+                    string? subject = reader.GetNullableString(4);
+                    string rawMime = reader.GetString(7);
+                    DmarcReportPreview? dmarcReport = dmarcReportParser.TryParse(rawMime);
+
+                    return new InboundMailMessageDetails(
+                        reader.GetGuid(0),
+                        reader.GetNullableString(1),
+                        reader.GetNullableString(2),
+                        recipients,
+                        subject,
+                        reader.GetNullableString(5),
+                        reader.GetNullableString(6),
+                        rawMime,
+                        dmarcReport is null ? GetCategory(recipients, subject) : InboundMailMessageCategories.DmarcReport,
+                        dmarcReport,
+                        reader.GetString(8),
+                        reader.GetFieldValue<DateTimeOffset>(9));
                 }
-
-                IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(3));
-                string? subject = reader.GetNullableString(4);
-                string rawMime = reader.GetString(7);
-                DmarcReportPreview? dmarcReport = dmarcReportParser.TryParse(rawMime);
-
-                return new InboundMailMessageDetails(
-                    reader.GetGuid(0),
-                    reader.GetNullableString(1),
-                    reader.GetNullableString(2),
-                    recipients,
-                    subject,
-                    reader.GetNullableString(5),
-                    reader.GetNullableString(6),
-                    rawMime,
-                    dmarcReport is null ? GetCategory(recipients, subject) : InboundMailMessageCategories.DmarcReport,
-                    dmarcReport,
-                    reader.GetString(8),
-                    reader.GetFieldValue<DateTimeOffset>(9));
             }
         }
     }

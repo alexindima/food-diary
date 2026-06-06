@@ -6,31 +6,31 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace FoodDiary.Infrastructure.Persistence.Configurations.Tracking;
 
 internal sealed class FastingPlanConfiguration : IEntityTypeConfiguration<FastingPlan> {
-    public void Configure(EntityTypeBuilder<FastingPlan> entity) {
-        entity.ToTable("FastingPlans");
+    public void Configure(EntityTypeBuilder<FastingPlan> builder) {
+        builder.ToTable("FastingPlans");
 
-        entity.Property(plan => plan.Id)
+        builder.Property(plan => plan.Id)
             .HasConversion(StronglyTypedIdConverters.FastingPlanIdConverter.Instance);
 
-        entity.Property(plan => plan.UserId)
+        builder.Property(plan => plan.UserId)
             .HasConversion(StronglyTypedIdConverters.UserIdConverter.Instance);
 
-        entity.Property(plan => plan.Title)
+        builder.Property(plan => plan.Title)
             .HasMaxLength(120);
 
-        entity.Property(plan => plan.Type)
+        builder.Property(plan => plan.Type)
             .HasConversion<string>()
             .HasMaxLength(24);
 
-        entity.Property(plan => plan.Status)
+        builder.Property(plan => plan.Status)
             .HasConversion<string>()
             .HasMaxLength(16);
 
-        entity.Property(plan => plan.Protocol)
+        builder.Property(plan => plan.Protocol)
             .HasConversion<string>()
             .HasMaxLength(32);
 
-        entity.HasIndex(plan => plan.UserId);
-        entity.HasIndex(plan => new { plan.UserId, plan.Status });
+        builder.HasIndex(plan => plan.UserId);
+        builder.HasIndex(plan => new { plan.UserId, plan.Status });
     }
 }

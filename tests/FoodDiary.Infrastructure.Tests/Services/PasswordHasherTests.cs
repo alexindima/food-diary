@@ -24,7 +24,7 @@ public class PasswordHasherTests {
 
     [Fact]
     public void Verify_WithCorrectPassword_ReturnsTrue() {
-        string password = "MySecurePassword!";
+        const string password = "MySecurePassword!";
         string hash = _hasher.Hash(password);
 
         Assert.True(_hasher.Verify(password, hash));

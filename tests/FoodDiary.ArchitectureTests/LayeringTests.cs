@@ -157,13 +157,11 @@ public class LayeringTests {
         string projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
         var document = XDocument.Load(projectPath);
 
-        var references = document.Descendants("ProjectReference")
+        return document.Descendants("ProjectReference")
             .Select(node => node.Attribute("Include")?.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => GetProjectNameFromReference(value!))
             .ToHashSet(StringComparer.Ordinal);
-
-        return references;
     }
 
     private static HashSet<string> GetPackageReferences(string relativeProjectPath) {

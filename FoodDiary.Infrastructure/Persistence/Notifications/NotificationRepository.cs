@@ -90,10 +90,10 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
 
         List<Notification> candidates = await context.Notifications
             .Where(n =>
-                (transientTypeList.Contains(n.Type) &&
+                (Enumerable.Contains(transientTypeList, n.Type) &&
                  ((n.IsRead && (n.ReadAtUtc ?? n.CreatedOnUtc) < transientReadOlderThanUtc) ||
                   (!n.IsRead && n.CreatedOnUtc < transientUnreadOlderThanUtc))) ||
-                (!transientTypeList.Contains(n.Type) &&
+                (!Enumerable.Contains(transientTypeList, n.Type) &&
                  ((n.IsRead && (n.ReadAtUtc ?? n.CreatedOnUtc) < standardReadOlderThanUtc) ||
                   (!n.IsRead && n.CreatedOnUtc < standardUnreadOlderThanUtc))))
             .OrderBy(n => n.CreatedOnUtc)

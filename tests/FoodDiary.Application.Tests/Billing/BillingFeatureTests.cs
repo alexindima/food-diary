@@ -244,7 +244,7 @@ public sealed class BillingFeatureTests {
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
         var paymentRepository = new RecordingBillingPaymentRepository();
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
-        string providerMetadataJson = "{\"payment_id\":\"pay_456\"}";
+        const string providerMetadataJson = "{\"payment_id\":\"pay_456\"}";
         var webhookModel = new BillingWebhookEventModel(
             "evt_1",
             "payment.succeeded",

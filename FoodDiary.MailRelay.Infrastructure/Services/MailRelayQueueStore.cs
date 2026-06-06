@@ -285,12 +285,14 @@ public sealed class MailRelayQueueStore(
                 command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
 
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    result.Add(ReadQueuedEmailMessage(reader));
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        result.Add(ReadQueuedEmailMessage(reader));
+                    }
 
-                return result;
+                    return result;
+                }
             }
         }
     }
@@ -326,12 +328,14 @@ public sealed class MailRelayQueueStore(
                 command.Parameters.AddWithValue("id", id);
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
 
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    return null;
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        return null;
+                    }
 
-                return ReadQueuedEmailMessage(reader);
+                    return ReadQueuedEmailMessage(reader);
+                }
             }
         }
     }
@@ -380,15 +384,17 @@ public sealed class MailRelayQueueStore(
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
 
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    result.Add(new MailRelayOutboxMessage(
-                        reader.GetGuid(0),
-                        reader.GetGuid(1),
-                        reader.GetInt32(2)));
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        result.Add(new MailRelayOutboxMessage(
+                            reader.GetGuid(0),
+                            reader.GetGuid(1),
+                            reader.GetInt32(2)));
+                    }
 
-                return result;
+                    return result;
+                }
             }
         }
     }
@@ -477,15 +483,17 @@ public sealed class MailRelayQueueStore(
                 command.Parameters.AddWithValue("consumerName", consumerName);
                 command.Parameters.AddWithValue("messageKey", messageKey);
 
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    throw new InvalidOperationException("Inbox claim did not return a row.");
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        throw new InvalidOperationException("Inbox claim did not return a row.");
+                    }
 
-                Guid inboxId = reader.GetGuid(0);
-                string status = reader.GetString(1);
-                MailRelayTelemetry.RecordInboxEvent(string.Equals(status, "processing", StringComparison.Ordinal) ? "claimed" : "duplicate");
-                return new MailRelayInboxClaimResult(string.Equals(status, "processing", StringComparison.Ordinal), inboxId);
+                    Guid inboxId = reader.GetGuid(0);
+                    string status = reader.GetString(1);
+                    MailRelayTelemetry.RecordInboxEvent(string.Equals(status, "processing", StringComparison.Ordinal) ? "claimed" : "duplicate");
+                    return new MailRelayInboxClaimResult(string.Equals(status, "processing", StringComparison.Ordinal), inboxId);
+                }
             }
         }
     }
@@ -583,18 +591,20 @@ public sealed class MailRelayQueueStore(
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("email", (object?)NormalizeEmail(email) ?? DBNull.Value);
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    entries.Add(new MailRelaySuppressionEntry(
-                        reader.GetString(0),
-                        reader.GetString(1),
-                        reader.GetString(2),
-                        GetDateTimeOffset(reader, 3),
-                        GetDateTimeOffset(reader, 4),
-                        reader.IsDBNull(5) ? null : GetDateTimeOffset(reader, 5)));
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        entries.Add(new MailRelaySuppressionEntry(
+                            reader.GetString(0),
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            GetDateTimeOffset(reader, 3),
+                            GetDateTimeOffset(reader, 4),
+                            reader.IsDBNull(5) ? null : GetDateTimeOffset(reader, 5)));
+                    }
 
-                return entries;
+                    return entries;
+                }
             }
         }
     }
@@ -729,21 +739,23 @@ public sealed class MailRelayQueueStore(
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("email", (object?)NormalizeEmail(email) ?? DBNull.Value);
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    result.Add(new MailRelayDeliveryEventEntry(
-                        reader.GetGuid(0),
-                        reader.GetString(1),
-                        reader.GetString(2),
-                        reader.GetString(3),
-                        reader.IsDBNull(4) ? null : reader.GetString(4),
-                        reader.IsDBNull(5) ? null : reader.GetString(5),
-                        reader.IsDBNull(6) ? null : reader.GetString(6),
-                        GetDateTimeOffset(reader, 7),
-                        GetDateTimeOffset(reader, 8)));
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        result.Add(new MailRelayDeliveryEventEntry(
+                            reader.GetGuid(0),
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            reader.GetString(3),
+                            reader.IsDBNull(4) ? null : reader.GetString(4),
+                            reader.IsDBNull(5) ? null : reader.GetString(5),
+                            reader.IsDBNull(6) ? null : reader.GetString(6),
+                            GetDateTimeOffset(reader, 7),
+                            GetDateTimeOffset(reader, 8)));
+                    }
 
-                return result;
+                    return result;
+                }
             }
         }
     }
@@ -790,12 +802,14 @@ public sealed class MailRelayQueueStore(
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("emails", normalizedRecipients);
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    emails.Add(reader.GetString(0));
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        emails.Add(reader.GetString(0));
+                    }
 
-                return emails;
+                    return emails;
+                }
             }
         }
     }
@@ -816,18 +830,20 @@ public sealed class MailRelayQueueStore(
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    return new MailRelayQueueStats(0, 0, 0, 0, 0, 0);
-                }
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        return new MailRelayQueueStats(0, 0, 0, 0, 0, 0);
+                    }
 
-                return new MailRelayQueueStats(
-                    reader.GetInt64(0),
-                    reader.GetInt64(1),
-                    reader.GetInt64(2),
-                    reader.GetInt64(3),
-                    reader.GetInt64(4),
-                    reader.GetInt64(5));
+                    return new MailRelayQueueStats(
+                        reader.GetInt64(0),
+                        reader.GetInt64(1),
+                        reader.GetInt64(2),
+                        reader.GetInt64(3),
+                        reader.GetInt64(4),
+                        reader.GetInt64(5));
+                }
             }
         }
     }
@@ -856,27 +872,29 @@ public sealed class MailRelayQueueStore(
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("id", id);
-                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    return null;
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                await using (reader.ConfigureAwait(false)) {
+                    if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        return null;
+                    }
+
+                    string[] recipients = JsonSerializer.Deserialize<string[]>(reader.GetString(11), JsonOptions) ?? [];
+                    IReadOnlyList<string> suppressedRecipients = await GetSuppressedRecipientsAsync(recipients, cancellationToken).ConfigureAwait(false);
+
+                    return new MailRelayMessageDetails(
+                        reader.GetGuid(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.IsDBNull(3) ? null : reader.GetString(3),
+                        reader.GetInt32(4),
+                        reader.GetInt32(5),
+                        GetDateTimeOffset(reader, 6),
+                        GetDateTimeOffset(reader, 7),
+                        reader.IsDBNull(8) ? null : GetDateTimeOffset(reader, 8),
+                        reader.IsDBNull(9) ? null : GetDateTimeOffset(reader, 9),
+                        reader.IsDBNull(10) ? null : reader.GetString(10),
+                        suppressedRecipients);
                 }
-
-                string[] recipients = JsonSerializer.Deserialize<string[]>(reader.GetString(11), JsonOptions) ?? [];
-                IReadOnlyList<string> suppressedRecipients = await GetSuppressedRecipientsAsync(recipients, cancellationToken).ConfigureAwait(false);
-
-                return new MailRelayMessageDetails(
-                    reader.GetGuid(0),
-                    reader.GetString(1),
-                    reader.GetString(2),
-                    reader.IsDBNull(3) ? null : reader.GetString(3),
-                    reader.GetInt32(4),
-                    reader.GetInt32(5),
-                    GetDateTimeOffset(reader, 6),
-                    GetDateTimeOffset(reader, 7),
-                    reader.IsDBNull(8) ? null : GetDateTimeOffset(reader, 8),
-                    reader.IsDBNull(9) ? null : GetDateTimeOffset(reader, 9),
-                    reader.IsDBNull(10) ? null : reader.GetString(10),
-                    suppressedRecipients);
             }
         }
     }

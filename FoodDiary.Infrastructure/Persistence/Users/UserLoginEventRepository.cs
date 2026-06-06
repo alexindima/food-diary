@@ -136,7 +136,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
     private static string EscapeLikePattern(string value) {
         return value
             .Trim()
-            .Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("\\", @"\\", StringComparison.Ordinal)
             .Replace("%", "\\%", StringComparison.Ordinal)
             .Replace("_", "\\_", StringComparison.Ordinal);
     }

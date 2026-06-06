@@ -18,7 +18,7 @@ public sealed class IdempotencyFilterTests {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-1", userId: "user-123");
-        string cacheKey = "idempotency:user-123:/api/v1/products:key-1";
+        const string cacheKey = "idempotency:user-123:/api/v1/products:key-1";
         await cache.SetStringAsync(cacheKey, "{\"StatusCode\":201,\"Body\":\"{\\u0022id\\u0022:\\u0022cached\\u0022}\"}");
 
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());

@@ -24,10 +24,10 @@ internal sealed class AiPromptProvider(
             return cached;
         }
 
-        string? promptText = null;
+        string? promptText;
         using (IServiceScope scope = scopeFactory.CreateScope()) {
             FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-            AiPromptTemplate? template = await context.Set<Domain.Entities.Ai.AiPromptTemplate>()
+            AiPromptTemplate? template = await context.Set<AiPromptTemplate>()
                 .AsNoTracking()
                 .Where(t => t.Key == key && t.IsActive)
                 .OrderByDescending(t => t.Version)
@@ -36,7 +36,7 @@ internal sealed class AiPromptProvider(
             promptText = template?.PromptText;
         }
 
-        string result = promptText ?? (Fallbacks.TryGetValue(key, out string? fallback) ? fallback : key);
+        string result = promptText ?? (Fallbacks.GetValueOrDefault(key, key));
         cache.Set(cacheKey, result, CacheDuration);
         return result;
     }

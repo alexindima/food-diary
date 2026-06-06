@@ -418,7 +418,7 @@ public sealed class BillingGatewayTests {
 
     [Fact]
     public async Task PaddleWebhook_WhenPayloadMalformed_ReturnsValidationFailure() {
-        string payload = """{ "event_type": "subscription.updated", "data": """;
+        const string payload = """{ "event_type": "subscription.updated", "data": """;
         PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(payload, CreatePaddleSignature(payload, "secret"), CancellationToken.None);

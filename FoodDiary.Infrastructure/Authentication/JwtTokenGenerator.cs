@@ -104,7 +104,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
                 string.Equals(x.Type, JwtClaimNames.RefreshSessionId, StringComparison.Ordinal))?.Value;
             Guid? refreshSessionId = Guid.TryParse(refreshSessionIdClaim, out Guid parsedRefreshSessionId)
                 ? parsedRefreshSessionId
-                : (Guid?)null;
+                : null;
 
             return (new UserId(userIdValue), email, rememberMe, refreshSessionId);
         } catch (Exception ex) when (ex is SecurityTokenException or ArgumentException or FormatException or InvalidOperationException) {
@@ -143,9 +143,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             claims.Add(new Claim(JwtClaimNames.RefreshSessionId, refreshSessionId.Value.ToString()));
         }
 
-        foreach (string role in roles) {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         DateTime configuredExpiresAtUtc = _dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(expirationMinutes);
         DateTime tokenExpiresAtUtc = expiresAtUtc < configuredExpiresAtUtc

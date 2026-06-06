@@ -93,13 +93,14 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             batchSize: 10,
             reassignUserId: survivorUser.Id.Value).ConfigureAwait(false);
 
-        using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
-
-        Assert.Equal(1, removed);
-        await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
-        Assert.Equal(
-            ["users/deleted/meal.webp", "users/deleted/profile.webp"],
-            [.. storage.DeletedObjectKeys.OrderBy(static key => key, StringComparer.Ordinal)]);
+        FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
+        await using (verificationContext.ConfigureAwait(false)) {
+            Assert.Equal(1, removed);
+            await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
+            Assert.Equal(
+                ["users/deleted/meal.webp", "users/deleted/profile.webp"],
+                [.. storage.DeletedObjectKeys.OrderBy(static key => key, StringComparer.Ordinal)]);
+        }
     }
 
     [RequiresDockerFact]

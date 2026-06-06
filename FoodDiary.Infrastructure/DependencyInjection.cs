@@ -189,9 +189,7 @@ public static class DependencyInjection {
         services.AddScoped<IWearableConnectionRepository, WearableConnectionRepository>();
         services.AddScoped<IWearableSyncRepository, WearableSyncRepository>();
         services.AddSingleton<IWearableOAuthStateService, WearableOAuthStateService>();
-        services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => {
-            client.Timeout = TimeSpan.FromSeconds(5);
-        }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
+        services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => { client.Timeout = TimeSpan.FromSeconds(5); }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
             AllowAutoRedirect = false,
             ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync,
         });
@@ -209,11 +207,7 @@ public static class DependencyInjection {
         SocketsHttpConnectionContext context,
         CancellationToken cancellationToken) {
         IPAddress[] addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken).ConfigureAwait(false);
-        IPAddress? publicAddress = addresses.FirstOrDefault(IsPublicAddress);
-        if (publicAddress is null) {
-            throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
-        }
-
+        IPAddress publicAddress = addresses.FirstOrDefault(IsPublicAddress) ?? throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
         var socket = new Socket(publicAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp) {
             NoDelay = true,
         };
@@ -240,26 +234,25 @@ public static class DependencyInjection {
             address = address.MapToIPv4();
         }
 
-        if (address.AddressFamily == AddressFamily.InterNetwork) {
-            byte[] bytes = address.GetAddressBytes();
-            return bytes[0] != 10 &&
-                   bytes[0] != 127 &&
-                   !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
-                   !(bytes[0] == 192 && bytes[1] == 168) &&
-                   !(bytes[0] == 169 && bytes[1] == 254) &&
-                   !(bytes[0] == 100 && bytes[1] is >= 64 and <= 127) &&
-                   !(bytes[0] == 0) &&
-                   !(bytes[0] >= 224);
+        switch (address.AddressFamily) {
+            case AddressFamily.InterNetwork: {
+                    byte[] bytes = address.GetAddressBytes();
+                    return bytes[0] != 10 &&
+                           bytes[0] != 127 &&
+                           !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
+                           !(bytes[0] == 192 && bytes[1] == 168) &&
+                           !(bytes[0] == 169 && bytes[1] == 254) &&
+                           !(bytes[0] == 100 && bytes[1] is >= 64 and <= 127) &&
+                           bytes[0] != 0 &&
+                           !(bytes[0] >= 224);
+                }
+            case AddressFamily.InterNetworkV6: {
+                    byte[] bytes = address.GetAddressBytes();
+                    return address is { IsIPv6LinkLocal: false, IsIPv6SiteLocal: false, IsIPv6Multicast: false } &&
+                           (bytes[0] & 0xfe) != 0xfc;
+                }
+            default:
+                return false;
         }
-
-        if (address.AddressFamily == AddressFamily.InterNetworkV6) {
-            byte[] bytes = address.GetAddressBytes();
-            return !address.IsIPv6LinkLocal &&
-                   !address.IsIPv6SiteLocal &&
-                   !address.IsIPv6Multicast &&
-                   (bytes[0] & 0xfe) != 0xfc;
-        }
-
-        return false;
     }
 }

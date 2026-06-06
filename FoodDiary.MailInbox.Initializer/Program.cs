@@ -100,18 +100,20 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
         var command = new NpgsqlCommand(sql, connection);
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue("tableNames", requiredTables);
-            using NpgsqlDataReader reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
-            while (await reader.ReadAsync().ConfigureAwait(false)) {
-                existingTables.Add(reader.GetString(0));
-            }
+            NpgsqlDataReader reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            await using (reader.ConfigureAwait(false)) {
+                while (await reader.ReadAsync().ConfigureAwait(false)) {
+                    existingTables.Add(reader.GetString(0));
+                }
 
-            Console.WriteLine("Can connect:       True");
-            Console.WriteLine($"Required tables:   {requiredTables.Length}");
-            Console.WriteLine($"Existing tables:   {existingTables.Count}");
+                Console.WriteLine("Can connect:       True");
+                Console.WriteLine($"Required tables:   {requiredTables.Length}");
+                Console.WriteLine($"Existing tables:   {existingTables.Count}");
 
-            foreach (string? table in requiredTables) {
-                string state = existingTables.Contains(table) ? "present" : "missing";
-                Console.WriteLine($"{state,-8} {table}");
+                foreach (string? table in requiredTables) {
+                    string state = existingTables.Contains(table) ? "present" : "missing";
+                    Console.WriteLine($"{state,-8} {table}");
+                }
             }
         }
     }

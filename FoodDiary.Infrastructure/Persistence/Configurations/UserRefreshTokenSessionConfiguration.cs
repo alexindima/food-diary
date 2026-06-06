@@ -6,38 +6,38 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace FoodDiary.Infrastructure.Persistence.Configurations;
 
 internal sealed class UserRefreshTokenSessionConfiguration : IEntityTypeConfiguration<UserRefreshTokenSession> {
-    public void Configure(EntityTypeBuilder<UserRefreshTokenSession> entity) {
-        entity.Property(e => e.UserId).HasConversion(
+    public void Configure(EntityTypeBuilder<UserRefreshTokenSession> builder) {
+        builder.Property(e => e.UserId).HasConversion(
             id => id.Value,
             value => new UserId(value));
 
-        entity.Property(e => e.RefreshTokenHash)
+        builder.Property(e => e.RefreshTokenHash)
             .IsRequired()
             .HasMaxLength(512);
 
-        entity.Property(e => e.AuthProvider)
+        builder.Property(e => e.AuthProvider)
             .HasMaxLength(64);
 
-        entity.Property(e => e.IpAddress)
+        builder.Property(e => e.IpAddress)
             .HasMaxLength(128);
 
-        entity.Property(e => e.UserAgent)
+        builder.Property(e => e.UserAgent)
             .HasMaxLength(512);
 
-        entity.Property(e => e.CreatedAtUtc)
+        builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("timestamp with time zone");
 
-        entity.Property(e => e.LastRotatedAtUtc)
+        builder.Property(e => e.LastRotatedAtUtc)
             .HasColumnType("timestamp with time zone");
 
-        entity.Property(e => e.RevokedAtUtc)
+        builder.Property(e => e.RevokedAtUtc)
             .HasColumnType("timestamp with time zone");
 
-        entity.HasIndex(e => e.UserId);
-        entity.HasIndex(e => e.RevokedAtUtc);
-        entity.HasIndex(e => e.LastRotatedAtUtc);
+        builder.HasIndex(e => e.UserId);
+        builder.HasIndex(e => e.RevokedAtUtc);
+        builder.HasIndex(e => e.LastRotatedAtUtc);
 
-        entity.HasOne<User>()
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);

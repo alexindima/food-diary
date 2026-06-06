@@ -47,9 +47,11 @@ public sealed class TelegramBotWorker(
         }
 
         var stopped = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        using CancellationTokenRegistration registration = stoppingToken.Register(static state =>
+        CancellationTokenRegistration registration = stoppingToken.Register(static state =>
             ((TaskCompletionSource)state!).TrySetResult(), stopped);
-        await stopped.Task.ConfigureAwait(false);
+        await using (registration.ConfigureAwait(false)) {
+            await stopped.Task.ConfigureAwait(false);
+        }
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient tBotClient, Update update, CancellationToken cancellationToken) {
@@ -67,8 +69,7 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        string command = message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
-        switch (command) {
+        switch (message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0]) {
             case "/start":
                 await SendStartAsync(message.Chat.Id, message.From?.Id, cancellationToken).ConfigureAwait(false);
                 return;
@@ -84,7 +85,7 @@ public sealed class TelegramBotWorker(
     private async Task SendStartAsync(long chatId, long? telegramUserId, CancellationToken cancellationToken) {
         bool isLinked = await IsLinkedAsync(telegramUserId, cancellationToken).ConfigureAwait(false);
         if (!isLinked) {
-            string notLinkedText = "To use the bot, open the WebApp once and log in or register.";
+            const string notLinkedText = "To use the bot, open the WebApp once and log in or register.";
             InlineKeyboardMarkup? markup = BuildWebAppMarkup();
             await botClient.SendMessage(
                 chatId,
@@ -94,7 +95,7 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        string text = "Quick actions:";
+        const string text = "Quick actions:";
         InlineKeyboardMarkup keyboard = BuildQuickActionsMarkup();
         await botClient.SendMessage(
             chatId,

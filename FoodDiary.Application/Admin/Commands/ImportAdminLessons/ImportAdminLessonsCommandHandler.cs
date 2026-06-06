@@ -18,12 +18,12 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository 
         for (int index = 0; index < command.Lessons.Count; index++) {
             ImportAdminLessonItem item = command.Lessons[index];
 
-            if (!Enum.TryParse<LessonCategory>(item.Category, ignoreCase: true, out LessonCategory category)) {
+            if (!Enum.TryParse(item.Category, ignoreCase: true, out LessonCategory category)) {
                 return Result.Failure<AdminLessonsImportModel>(
                     Errors.Validation.Invalid(string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].category"), "Invalid lesson category."));
             }
 
-            if (!Enum.TryParse<LessonDifficulty>(item.Difficulty, ignoreCase: true, out LessonDifficulty difficulty)) {
+            if (!Enum.TryParse(item.Difficulty, ignoreCase: true, out LessonDifficulty difficulty)) {
                 return Result.Failure<AdminLessonsImportModel>(
                     Errors.Validation.Invalid(string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].difficulty"), "Invalid lesson difficulty."));
             }

@@ -10,7 +10,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 public sealed class OpenFoodFactsServiceTests {
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductFound_ReturnsMappedProduct() {
-        string json = """
+        const string json = """
             {
               "status": 1,
               "product": {
@@ -46,7 +46,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductNotFound_ReturnsNull() {
-        string json = """{"status": 0, "product": null}""";
+        const string json = """{"status": 0, "product": null}""";
         OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
         OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("0000000000000");
@@ -56,7 +56,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductNameEmpty_ReturnsNull() {
-        string json = """
+        const string json = """
             {
               "status": 1,
               "product": {
@@ -113,7 +113,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task GetByBarcodeAsync_WithNullNutriments_ReturnsProductWithNullNutrition() {
-        string json = """
+        const string json = """
             {
               "status": 1,
               "product": {
@@ -134,7 +134,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task GetByBarcodeAsync_TrimsWhitespaceFromBrandAndCategory() {
-        string json = """
+        const string json = """
             {
               "status": 1,
               "product": {
@@ -156,7 +156,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_WhenProductsFound_ReturnsMappedList() {
-        string json = """
+        const string json = """
             {
               "products": [
                 {
@@ -188,7 +188,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_FiltersOutProductsWithNoName() {
-        string json = """
+        const string json = """
             {
               "products": [
                 { "code": "111", "product_name": "Valid", "nutriments": {} },
@@ -216,7 +216,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_WhenNullProducts_ReturnsEmptyList() {
-        string json = """{"products": null}""";
+        const string json = """{"products": null}""";
         OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
         IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("milk");
@@ -226,7 +226,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_WhenRepeatedWithinCacheWindow_ReturnsCachedResultWithoutSecondRequest() {
-        string json = """
+        const string json = """
             {
               "products": [
                 {

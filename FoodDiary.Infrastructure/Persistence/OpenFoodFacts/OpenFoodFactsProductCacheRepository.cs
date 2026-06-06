@@ -62,7 +62,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
             .ToDictionaryAsync(product => product.Barcode, cancellationToken).ConfigureAwait(false);
         DateTime now = DateTime.UtcNow;
 
-        foreach (OpenFoodFactsProductModel? product in candidates) {
+        foreach (OpenFoodFactsProductModel product in candidates) {
             string barcode = product.Barcode.Trim();
             if (existingProducts.TryGetValue(barcode, out OpenFoodFactsProduct? existingProduct)) {
                 existingProduct.Update(

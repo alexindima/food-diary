@@ -34,7 +34,6 @@ public sealed class RateLimiterOptionsSetupTests {
 
         Assert.NotNull(method);
         object? result = method.Invoke(null, [httpContext]);
-        string partitionKey = Assert.IsType<string>(result);
-        return partitionKey;
+        return Assert.IsType<string>(result);
     }
 }

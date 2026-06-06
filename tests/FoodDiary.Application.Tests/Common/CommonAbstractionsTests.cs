@@ -98,9 +98,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void Error_ImplicitStringConversion_ReturnsCode() {
-        var error = new Error("Custom.Code", "Custom message");
-
-        string code = error;
+        string code = new Error("Custom.Code", "Custom message");
 
         Assert.Equal("Custom.Code", code);
     }

@@ -15,7 +15,7 @@ public sealed class NotificationTestSchedulerTests {
         var repository = new RecordingNotificationRepository();
         var pusher = new RecordingNotificationPusher();
         var sender = new RecordingWebPushNotificationSender();
-        using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        await using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
         using var lifetime = new TestHostApplicationLifetime();
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
@@ -43,7 +43,7 @@ public sealed class NotificationTestSchedulerTests {
         var repository = new RecordingNotificationRepository();
         var pusher = new RecordingNotificationPusher();
         var sender = new ThrowingWebPushNotificationSender();
-        using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        await using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
         using var lifetime = new TestHostApplicationLifetime();
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),

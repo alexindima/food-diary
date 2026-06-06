@@ -57,8 +57,7 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
         int streak = 0;
         DateTime expectedDate = DateTime.UtcNow.Date;
 
-        foreach (FastingSession? session in recentSessions) {
-            DateTime sessionDate = session.StartedAtUtc.Date;
+        foreach (DateTime sessionDate in recentSessions.Select(session => session.StartedAtUtc.Date)) {
             if (sessionDate == expectedDate || sessionDate == expectedDate.AddDays(-1)) {
                 streak++;
                 expectedDate = sessionDate.AddDays(-1);

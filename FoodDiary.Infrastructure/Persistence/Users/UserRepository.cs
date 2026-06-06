@@ -87,9 +87,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             .Where(u => pageIds.Contains(u.Id))
             .ToDictionaryAsync(u => u.Id, cancellationToken).ConfigureAwait(false);
 
-        var items = pageIds
-            .Select(id => usersById[id])
-            .ToList();
+        List<User> items = pageIds.ConvertAll(id => usersById[id]);
 
         return (items, total);
     }
@@ -156,7 +154,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
 
     private static string EscapeLikePattern(string value) {
         return value
-            .Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("\\", @"\\", StringComparison.Ordinal)
             .Replace("%", "\\%", StringComparison.Ordinal)
             .Replace("_", "\\_", StringComparison.Ordinal);
     }
