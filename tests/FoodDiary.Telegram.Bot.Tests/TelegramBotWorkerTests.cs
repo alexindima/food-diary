@@ -551,12 +551,8 @@ public sealed class TelegramBotWorkerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingHttpClientFactory : IHttpClientFactory {
-        private readonly RecordingHttpMessageHandler _handler;
-
-        public RecordingHttpClientFactory(params HttpResponseMessage[] responses) {
-            _handler = new RecordingHttpMessageHandler(new Queue<HttpResponseMessage>(responses));
-        }
+    private sealed class RecordingHttpClientFactory(params HttpResponseMessage[] responses) : IHttpClientFactory {
+        private readonly RecordingHttpMessageHandler _handler = new(new Queue<HttpResponseMessage>(responses));
 
         public IReadOnlyList<HttpRequestMessage> Requests => _handler.Requests;
 

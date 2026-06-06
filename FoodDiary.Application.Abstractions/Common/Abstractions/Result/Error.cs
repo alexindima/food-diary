@@ -1,23 +1,11 @@
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
-public sealed record Error {
+public sealed record Error(
+    string Code,
+    string Message,
+    IReadOnlyDictionary<string, string[]>? Details = null,
+    ErrorKind? Kind = null) {
     public static readonly Error None = new(string.Empty, string.Empty);
-
-    public string Code { get; }
-    public string Message { get; }
-    public IReadOnlyDictionary<string, string[]>? Details { get; }
-    public ErrorKind? Kind { get; }
-
-    public Error(
-        string code,
-        string message,
-        IReadOnlyDictionary<string, string[]>? details = null,
-        ErrorKind? kind = null) {
-        Code = code;
-        Message = message;
-        Details = details;
-        Kind = kind;
-    }
 
     public static implicit operator string(Error error) => error.Code;
 }

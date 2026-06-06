@@ -12,26 +12,18 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 
-public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmailVerificationCommand, Result> {
+public class ResendEmailVerificationCommandHandler(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IEmailSender emailSender,
+    IDateTimeProvider dateTimeProvider,
+    ILogger<ResendEmailVerificationCommandHandler> logger) : ICommandHandler<ResendEmailVerificationCommand, Result> {
     private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(1);
-    private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IEmailSender _emailSender;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ILogger<ResendEmailVerificationCommandHandler> _logger;
-
-    public ResendEmailVerificationCommandHandler(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        IEmailSender emailSender,
-        IDateTimeProvider dateTimeProvider,
-        ILogger<ResendEmailVerificationCommandHandler> logger) {
-        _userRepository = userRepository;
-        _passwordHasher = passwordHasher;
-        _emailSender = emailSender;
-        _dateTimeProvider = dateTimeProvider;
-        _logger = logger;
-    }
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IEmailSender _emailSender = emailSender;
+    private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+    private readonly ILogger<ResendEmailVerificationCommandHandler> _logger = logger;
 
     public async Task<Result> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
         if (command.UserId == Guid.Empty) {

@@ -9,16 +9,11 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 
-public sealed class TelegramBotAuthCommandHandler : ICommandHandler<TelegramBotAuthCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository;
-    private readonly IAuthenticationTokenService _authenticationTokenService;
-
-    public TelegramBotAuthCommandHandler(
-        IUserRepository userRepository,
-        IAuthenticationTokenService authenticationTokenService) {
-        _userRepository = userRepository;
-        _authenticationTokenService = authenticationTokenService;
-    }
+public sealed class TelegramBotAuthCommandHandler(
+    IUserRepository userRepository,
+    IAuthenticationTokenService authenticationTokenService) : ICommandHandler<TelegramBotAuthCommand, Result<AuthenticationModel>> {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
 
     public async Task<Result<AuthenticationModel>> Handle(TelegramBotAuthCommand command, CancellationToken cancellationToken) {
         User? user = await _userRepository.GetByTelegramUserIdAsync(command.TelegramUserId, cancellationToken).ConfigureAwait(false);

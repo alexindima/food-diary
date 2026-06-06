@@ -73,11 +73,11 @@ public sealed class PresentationErrorHttpMapperTests {
     private static Error CreateUserInvalidPassword() => Errors.User.InvalidPassword;
     private static Error CreateUserInvalidCredentials() => Errors.User.InvalidCredentials;
     private static Error CreateUserEmailAlreadyExists() => Errors.User.EmailAlreadyExists;
-    private static Error CreateValidationConflict() => new("Validation.Conflict", "Failure", kind: ErrorKindResolver.Resolve("Validation.Conflict"));
+    private static Error CreateValidationConflict() => new("Validation.Conflict", "Failure", Kind: ErrorKindResolver.Resolve("Validation.Conflict"));
     private static Error CreateAuthenticationInvalidToken() => Errors.Authentication.InvalidToken;
     private static Error CreateValidationRequired() => Errors.Validation.Required("field");
     private static Error CreateProductNotAccessible() => Errors.Product.NotAccessible(Guid.Empty);
-    private static Error CreateRecipeAlreadyExistsLegacy() => new("Recipe.AlreadyExists", "Failure", kind: ErrorKindResolver.Resolve("Recipe.AlreadyExists"));
+    private static Error CreateRecipeAlreadyExistsLegacy() => new("Recipe.AlreadyExists", "Failure", Kind: ErrorKindResolver.Resolve("Recipe.AlreadyExists"));
     private static Error CreateUserNotFound() => Errors.User.NotFound();
     private static Error CreateUnknownError() => new("Unknown.Error", "Failure");
 }

@@ -139,7 +139,7 @@ public sealed class ResultExtensionsTests {
     }
 
     private static Error CreateError(string errorCode, string message) =>
-        new(errorCode, message, kind: ErrorKindResolver.Resolve(errorCode));
+        new(errorCode, message, Kind: ErrorKindResolver.Resolve(errorCode));
 
     private static TestController CreateController(string traceIdentifier) =>
         new() {

@@ -2367,12 +2367,8 @@ public class ConsumptionsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFavoriteMealRepository : IFavoriteMealRepository {
-        private readonly IReadOnlyList<FavoriteMeal> _favorites;
-
-        public StubFavoriteMealRepository(params FavoriteMeal[] favorites) {
-            _favorites = favorites;
-        }
+    private sealed class StubFavoriteMealRepository(params FavoriteMeal[] favorites) : IFavoriteMealRepository {
+        private readonly IReadOnlyList<FavoriteMeal> _favorites = favorites;
 
         public Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();

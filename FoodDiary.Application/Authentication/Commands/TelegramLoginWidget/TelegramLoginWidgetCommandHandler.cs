@@ -10,19 +10,13 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 
-public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<TelegramLoginWidgetCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository;
-    private readonly ITelegramLoginWidgetValidator _telegramLoginWidgetValidator;
-    private readonly IAuthenticationTokenService _authenticationTokenService;
-
-    public TelegramLoginWidgetCommandHandler(
-        IUserRepository userRepository,
-        ITelegramLoginWidgetValidator telegramLoginWidgetValidator,
-        IAuthenticationTokenService authenticationTokenService) {
-        _userRepository = userRepository;
-        _telegramLoginWidgetValidator = telegramLoginWidgetValidator;
-        _authenticationTokenService = authenticationTokenService;
-    }
+public sealed class TelegramLoginWidgetCommandHandler(
+    IUserRepository userRepository,
+    ITelegramLoginWidgetValidator telegramLoginWidgetValidator,
+    IAuthenticationTokenService authenticationTokenService) : ICommandHandler<TelegramLoginWidgetCommand, Result<AuthenticationModel>> {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly ITelegramLoginWidgetValidator _telegramLoginWidgetValidator = telegramLoginWidgetValidator;
+    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
 
     public async Task<Result<AuthenticationModel>> Handle(TelegramLoginWidgetCommand command, CancellationToken cancellationToken) {
         var widgetData = new TelegramLoginWidgetData(

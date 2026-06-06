@@ -249,15 +249,11 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingImageHandler : HttpMessageHandler {
+    private sealed class RecordingImageHandler(bool successfulImageResponse = false) : HttpMessageHandler {
         private const string TransparentPngBase64 =
             "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=";
 
-        private readonly bool _successfulImageResponse;
-
-        public RecordingImageHandler(bool successfulImageResponse = false) {
-            _successfulImageResponse = successfulImageResponse;
-        }
+        private readonly bool _successfulImageResponse = successfulImageResponse;
 
         public int RequestCount { get; private set; }
         public IReadOnlyList<string> RequestedUrls => _requestedUrls;

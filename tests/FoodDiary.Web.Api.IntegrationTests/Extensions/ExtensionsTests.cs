@@ -196,7 +196,7 @@ public sealed class ExtensionsTests {
     }
 
     private static Error CreateError(string errorCode, string message) =>
-        new(errorCode, message, kind: ErrorKindResolver.Resolve(errorCode));
+        new(errorCode, message, Kind: ErrorKindResolver.Resolve(errorCode));
 
     private static HealthCheckRegistration CreateHealthCheckRegistration(string name, IReadOnlyCollection<string> tags) =>
         new(

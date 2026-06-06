@@ -10,16 +10,11 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
 
-public sealed class LinkTelegramCommandHandler : ICommandHandler<LinkTelegramCommand, Result<UserModel>> {
-    private readonly IUserRepository _userRepository;
-    private readonly ITelegramAuthValidator _telegramAuthValidator;
-
-    public LinkTelegramCommandHandler(
-        IUserRepository userRepository,
-        ITelegramAuthValidator telegramAuthValidator) {
-        _userRepository = userRepository;
-        _telegramAuthValidator = telegramAuthValidator;
-    }
+public sealed class LinkTelegramCommandHandler(
+    IUserRepository userRepository,
+    ITelegramAuthValidator telegramAuthValidator) : ICommandHandler<LinkTelegramCommand, Result<UserModel>> {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly ITelegramAuthValidator _telegramAuthValidator = telegramAuthValidator;
 
     public async Task<Result<UserModel>> Handle(LinkTelegramCommand command, CancellationToken cancellationToken) {
         if (command.UserId == Guid.Empty) {

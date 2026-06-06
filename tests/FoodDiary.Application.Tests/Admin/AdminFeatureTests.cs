@@ -1373,22 +1373,17 @@ public class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository : IUserRepository {
-        private readonly User _user;
-        private readonly Dictionary<string, Role> _roles;
-
-        public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
-
-        public InMemoryUserRepository(User user, IEnumerable<string> availableRoles) {
-            _user = user;
-            _roles = availableRoles.ToDictionary(
+    private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository {
+        private readonly User _user = user;
+        private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
                 name => name,
                 name => user.UserRoles
                     .Select(userRole => userRole.Role)
                     .FirstOrDefault(role => string.Equals(role.Name, name, StringComparison.Ordinal))
                     ?? Role.Create(name),
                 StringComparer.Ordinal);
-        }
+
+        public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 

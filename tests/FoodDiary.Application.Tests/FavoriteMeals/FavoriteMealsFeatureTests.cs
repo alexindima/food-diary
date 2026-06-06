@@ -239,19 +239,13 @@ public class FavoriteMealsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFavoriteMealRepository : IFavoriteMealRepository {
-        private readonly FavoriteMeal? _existingByMealId;
-        private readonly FavoriteMeal? _existingById;
-        private readonly IReadOnlyList<FavoriteMeal> _favorites;
-
-        public StubFavoriteMealRepository(
-            FavoriteMeal? existingByMealId = null,
-            FavoriteMeal? existingById = null,
-            IReadOnlyList<FavoriteMeal>? favorites = null) {
-            _existingByMealId = existingByMealId;
-            _existingById = existingById;
-            _favorites = favorites ?? [];
-        }
+    private sealed class StubFavoriteMealRepository(
+        FavoriteMeal? existingByMealId = null,
+        FavoriteMeal? existingById = null,
+        IReadOnlyList<FavoriteMeal>? favorites = null) : IFavoriteMealRepository {
+        private readonly FavoriteMeal? _existingByMealId = existingByMealId;
+        private readonly FavoriteMeal? _existingById = existingById;
+        private readonly IReadOnlyList<FavoriteMeal> _favorites = favorites ?? [];
 
         public bool DeleteCalled { get; private set; }
 

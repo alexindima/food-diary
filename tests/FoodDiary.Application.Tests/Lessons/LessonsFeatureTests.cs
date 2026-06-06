@@ -213,21 +213,16 @@ public class LessonsFeatureTests {
         NutritionLesson.Create(title, "Content", $"{title} summary", locale, category, LessonDifficulty.Beginner, 5, sortOrder);
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubLessonRepository : INutritionLessonRepository {
-        private readonly List<NutritionLesson> _lessons;
-        private readonly List<UserLessonProgress> _progress;
+    private sealed class StubLessonRepository(
+        IReadOnlyCollection<NutritionLesson> lessons,
+        IReadOnlyCollection<UserLessonProgress> progress) : INutritionLessonRepository {
+        private readonly List<NutritionLesson> _lessons = [.. lessons];
+        private readonly List<UserLessonProgress> _progress = [.. progress];
         private readonly bool _hasProgress;
 
         public StubLessonRepository(NutritionLesson? lesson, bool hasProgress)
             : this(lesson is null ? [] : [lesson], []) {
             _hasProgress = hasProgress;
-        }
-
-        public StubLessonRepository(
-            IReadOnlyCollection<NutritionLesson> lessons,
-            IReadOnlyCollection<UserLessonProgress> progress) {
-            _lessons = [.. lessons];
-            _progress = [.. progress];
         }
 
         public bool ProgressAdded { get; private set; }
@@ -252,20 +247,20 @@ public class LessonsFeatureTests {
             LessonCategory? category = null,
             CancellationToken ct = default) {
             LocaleRequests.Add((locale, category));
-            var lessons = _lessons
+            var matchingLessons = _lessons
                 .Where(lesson => string.Equals(lesson.Locale, locale, StringComparison.OrdinalIgnoreCase))
                 .Where(lesson => !category.HasValue || lesson.Category == category.Value)
                 .ToList();
 
-            return Task.FromResult<IReadOnlyList<NutritionLesson>>(lessons);
+            return Task.FromResult<IReadOnlyList<NutritionLesson>>(matchingLessons);
         }
 
         public Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(UserId userId, CancellationToken ct = default) {
-            var progress = _progress
+            var matchingProgress = _progress
                 .Where(item => item.UserId == userId)
                 .ToList();
 
-            return Task.FromResult<IReadOnlyList<UserLessonProgress>>(progress);
+            return Task.FromResult<IReadOnlyList<UserLessonProgress>>(matchingProgress);
         }
 
         public Task<IReadOnlyList<NutritionLesson>> GetAllAsync(CancellationToken ct = default) => throw new NotSupportedException();

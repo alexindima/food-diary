@@ -10,19 +10,13 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramVerify;
 
-public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerifyCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository;
-    private readonly ITelegramAuthValidator _telegramAuthValidator;
-    private readonly IAuthenticationTokenService _authenticationTokenService;
-
-    public TelegramVerifyCommandHandler(
-        IUserRepository userRepository,
-        ITelegramAuthValidator telegramAuthValidator,
-        IAuthenticationTokenService authenticationTokenService) {
-        _userRepository = userRepository;
-        _telegramAuthValidator = telegramAuthValidator;
-        _authenticationTokenService = authenticationTokenService;
-    }
+public sealed class TelegramVerifyCommandHandler(
+    IUserRepository userRepository,
+    ITelegramAuthValidator telegramAuthValidator,
+    IAuthenticationTokenService authenticationTokenService) : ICommandHandler<TelegramVerifyCommand, Result<AuthenticationModel>> {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly ITelegramAuthValidator _telegramAuthValidator = telegramAuthValidator;
+    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
 
     public async Task<Result<AuthenticationModel>> Handle(TelegramVerifyCommand command, CancellationToken cancellationToken) {
         Result<TelegramInitData> initDataResult = _telegramAuthValidator.ValidateInitData(command.InitData);

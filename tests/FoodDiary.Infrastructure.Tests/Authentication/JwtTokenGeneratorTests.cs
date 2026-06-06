@@ -112,15 +112,11 @@ public sealed class JwtTokenGeneratorTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
+    private sealed class StubDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public StubDateTimeProvider()
             : this(new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)) {
         }
 
-        public StubDateTimeProvider(DateTime utcNow) {
-            UtcNow = utcNow;
-        }
-
-        public DateTime UtcNow { get; }
+        public DateTime UtcNow { get; } = utcNow;
     }
 }

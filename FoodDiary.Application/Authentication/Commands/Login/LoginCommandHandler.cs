@@ -10,19 +10,13 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.Login;
 
-public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IAuthenticationTokenService _authenticationTokenService;
-
-    public LoginCommandHandler(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        IAuthenticationTokenService authenticationTokenService) {
-        _userRepository = userRepository;
-        _passwordHasher = passwordHasher;
-        _authenticationTokenService = authenticationTokenService;
-    }
+public class LoginCommandHandler(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IAuthenticationTokenService authenticationTokenService) : ICommandHandler<LoginCommand, Result<AuthenticationModel>> {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
 
     public async Task<Result<AuthenticationModel>> Handle(LoginCommand command, CancellationToken cancellationToken) {
         User? user = await _userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);

@@ -213,16 +213,10 @@ public class UpdateRecipeCommandValidatorTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubRecipeRepository : IRecipeRepository {
-        private readonly RecipeId _recipeId;
-        private readonly UserId _userId;
-        private readonly Recipe _recipe;
-
-        public StubRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) {
-            _recipeId = recipeId;
-            _userId = userId;
-            _recipe = recipe;
-        }
+    private sealed class StubRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) : IRecipeRepository {
+        private readonly RecipeId _recipeId = recipeId;
+        private readonly UserId _userId = userId;
+        private readonly Recipe _recipe = recipe;
 
         public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 

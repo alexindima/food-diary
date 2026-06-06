@@ -5,13 +5,9 @@ using FoodDiary.MailRelay.Domain.Emails;
 namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
-public sealed class RecordingRelayDeliveryTransport : IRelayDeliveryTransport {
+public sealed class RecordingRelayDeliveryTransport(int remainingFailures = 0) : IRelayDeliveryTransport {
     private readonly ConcurrentQueue<RelayEmailMessageRequest> _sent = new();
-    private int _remainingFailures;
-
-    public RecordingRelayDeliveryTransport(int remainingFailures = 0) {
-        _remainingFailures = remainingFailures;
-    }
+    private int _remainingFailures = remainingFailures;
 
     public IReadOnlyCollection<RelayEmailMessageRequest> SentMessages => _sent.ToArray();
 

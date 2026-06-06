@@ -12,25 +12,17 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.RefreshToken;
 
-public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IRefreshTokenSessionRepository _refreshTokenSessionRepository;
-    private readonly IAuthenticationTokenService _authenticationTokenService;
-
-    public RefreshTokenCommandHandler(
-        IUserRepository userRepository,
-        IJwtTokenGenerator jwtTokenGenerator,
-        IPasswordHasher passwordHasher,
-        IRefreshTokenSessionRepository refreshTokenSessionRepository,
-        IAuthenticationTokenService authenticationTokenService) {
-        _userRepository = userRepository;
-        _jwtTokenGenerator = jwtTokenGenerator;
-        _passwordHasher = passwordHasher;
-        _refreshTokenSessionRepository = refreshTokenSessionRepository;
-        _authenticationTokenService = authenticationTokenService;
-    }
+public class RefreshTokenCommandHandler(
+    IUserRepository userRepository,
+    IJwtTokenGenerator jwtTokenGenerator,
+    IPasswordHasher passwordHasher,
+    IRefreshTokenSessionRepository refreshTokenSessionRepository,
+    IAuthenticationTokenService authenticationTokenService) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IRefreshTokenSessionRepository _refreshTokenSessionRepository = refreshTokenSessionRepository;
+    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
 
     public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
         (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validationResult = _jwtTokenGenerator.ValidateToken(command.RefreshToken);
