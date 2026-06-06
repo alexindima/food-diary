@@ -14,14 +14,14 @@ public sealed class GetAdminImpersonationSessionsQueryHandler(
         CancellationToken cancellationToken) {
         int page = query.Page <= 0 ? 1 : query.Page;
         int limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
-        (IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems) pageData = await repository.GetPagedAsync(page, limit, query.Search, cancellationToken).ConfigureAwait(false);
-        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
+        (IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems) = await repository.GetPagedAsync(page, limit, query.Search, cancellationToken).ConfigureAwait(false);
+        int totalPages = (int)Math.Ceiling(TotalItems / (double)limit);
 
         return Result.Success(new PagedResponse<AdminImpersonationSessionReadModel>(
-            pageData.Items,
+            Items,
             page,
             limit,
             totalPages,
-            pageData.TotalItems));
+            TotalItems));
     }
 }

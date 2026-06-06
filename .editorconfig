@@ -87,6 +87,7 @@ dotnet_diagnostic.MA0193.severity = error
 dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0028.severity = error
 dotnet_diagnostic.IDE0032.severity = error
+dotnet_diagnostic.IDE0042.severity = error
 dotnet_diagnostic.IDE0090.severity = error
 dotnet_diagnostic.IDE0290.severity = error
 dotnet_diagnostic.IDE0300.severity = error
@@ -95,6 +96,7 @@ dotnet_diagnostic.IDE0302.severity = error
 dotnet_diagnostic.IDE0303.severity = error
 dotnet_diagnostic.IDE0304.severity = error
 dotnet_diagnostic.IDE0305.severity = error
+dotnet_diagnostic.RCS1077.severity = error
 dotnet_diagnostic.RCS1124.severity = warning
 dotnet_diagnostic.RCS1118.severity = error
 dotnet_diagnostic.RCS1161.severity = error
@@ -105,6 +107,8 @@ dotnet_diagnostic.RCS1261.severity = warning
 
 # JetBrains Rider/ReSharper inspections enforced in IDE/Qodana.
 resharper_redundant_qualifier_highlighting = error
+resharper_using_statement_resource_initialization_highlighting = warning
+resharper_using_statement_resource_initialization_expression_highlighting = warning
 
 # Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
 dotnet_diagnostic.CA1707.severity = none

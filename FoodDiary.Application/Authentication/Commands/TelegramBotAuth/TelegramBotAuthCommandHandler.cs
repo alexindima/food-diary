@@ -12,18 +12,15 @@ namespace FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 public sealed class TelegramBotAuthCommandHandler(
     IUserRepository userRepository,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<TelegramBotAuthCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
-
     public async Task<Result<AuthenticationModel>> Handle(TelegramBotAuthCommand command, CancellationToken cancellationToken) {
-        User? user = await _userRepository.GetByTelegramUserIdAsync(command.TelegramUserId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByTelegramUserIdAsync(command.TelegramUserId, cancellationToken).ConfigureAwait(false);
         Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
         }
 
         User currentUser = user!;
-        IssuedAuthenticationTokens tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
 }

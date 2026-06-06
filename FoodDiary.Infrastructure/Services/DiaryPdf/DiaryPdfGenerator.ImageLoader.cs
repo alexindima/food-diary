@@ -203,25 +203,25 @@ internal sealed partial class DiaryPdfGenerator {
 
         switch (address.AddressFamily) {
             case AddressFamily.InterNetwork: {
-                byte[] bytes = address.GetAddressBytes();
-                return bytes[0] is not (0 or 10 or 127) &&
-                       (bytes[0] != 100 || bytes[1] < 64 || bytes[1] > 127) &&
-                       (bytes[0] != 169 || bytes[1] != 254) &&
-                       (bytes[0] != 172 || bytes[1] < 16 || bytes[1] > 31) &&
-                       (bytes[0] != 192 || bytes[1] != 0 || bytes[2] != 0) &&
-                       (bytes[0] != 192 || bytes[1] != 168) &&
-                       (bytes[0] != 198 || bytes[1] is not (18 or 19)) &&
-                       bytes[0] < 224;
-            }
+                    byte[] bytes = address.GetAddressBytes();
+                    return bytes[0] is not (0 or 10 or 127) &&
+                           (bytes[0] != 100 || bytes[1] < 64 || bytes[1] > 127) &&
+                           (bytes[0] != 169 || bytes[1] != 254) &&
+                           (bytes[0] != 172 || bytes[1] < 16 || bytes[1] > 31) &&
+                           (bytes[0] != 192 || bytes[1] != 0 || bytes[2] != 0) &&
+                           (bytes[0] != 192 || bytes[1] != 168) &&
+                           (bytes[0] != 198 || bytes[1] is not (18 or 19)) &&
+                           bytes[0] < 224;
+                }
             case AddressFamily.InterNetworkV6: {
-                byte[] bytes = address.GetAddressBytes();
-                return !address.IsIPv6LinkLocal &&
-                       !address.IsIPv6Multicast &&
-                       !address.IsIPv6SiteLocal &&
-                       !address.Equals(IPAddress.IPv6Any) &&
-                       !address.Equals(IPAddress.IPv6Loopback) &&
-                       (bytes[0] & 0xfe) != 0xfc;
-            }
+                    byte[] bytes = address.GetAddressBytes();
+                    return !address.IsIPv6LinkLocal &&
+                           !address.IsIPv6Multicast &&
+                           !address.IsIPv6SiteLocal &&
+                           !address.Equals(IPAddress.IPv6Any) &&
+                           !address.Equals(IPAddress.IPv6Loopback) &&
+                           (bytes[0] & 0xfe) != 0xfc;
+                }
             default:
                 return false;
         }

@@ -84,9 +84,7 @@ public sealed class FastingNotificationScheduler(
         int[] reminderHours = [.. new[] {
             occurrence.User.FastingCheckInReminderHours,
             occurrence.User.FastingCheckInFollowUpReminderHours,
-        }
-            .Distinct()
-            .OrderBy(static hour => hour)];
+        }.Distinct().Order()];
 
         foreach (int hour in reminderHours) {
             if (elapsed.TotalHours < hour) {

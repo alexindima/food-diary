@@ -20,8 +20,8 @@ public sealed class GetAdminBillingSubscriptionsQueryHandler(IAdminBillingReposi
             query.Search,
             query.FromUtc,
             query.ToUtc);
-        (IReadOnlyList<AdminBillingSubscriptionReadModel> Items, int TotalItems) pageData = await billingRepository.GetSubscriptionsAsync(filter, cancellationToken).ConfigureAwait(false);
-        return Result.Success(ToPagedResponse(pageData.Items, filter.Page, filter.Limit, pageData.TotalItems));
+        (IReadOnlyList<AdminBillingSubscriptionReadModel> Items, int TotalItems) = await billingRepository.GetSubscriptionsAsync(filter, cancellationToken).ConfigureAwait(false);
+        return Result.Success(ToPagedResponse(Items, filter.Page, filter.Limit, TotalItems));
     }
 
     private static PagedResponse<T> ToPagedResponse<T>(IReadOnlyList<T> items, int page, int limit, int totalItems) {

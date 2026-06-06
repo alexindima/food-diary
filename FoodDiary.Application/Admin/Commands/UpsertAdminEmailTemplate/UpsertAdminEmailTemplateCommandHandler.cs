@@ -46,7 +46,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
     }
 
     private static string NormalizeKey(string value) {
-        string trimmed = value?.Trim() ?? string.Empty;
+        string trimmed = value.Trim();
         return trimmed.ToLowerInvariant();
     }
 }

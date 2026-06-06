@@ -53,7 +53,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return (items.Select(i => (i.Recipe, i.UsageCount)).ToList(), totalItems);
+        return (items.ConvertAll(i => (i.Recipe, i.UsageCount)), totalItems);
     }
 
     public async Task<Recipe?> GetByIdAsync(
@@ -208,7 +208,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             .Select(r => new { Recipe = r, UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return (items.Select(x => (x.Recipe, x.UsageCount)).ToList(), totalItems);
+        return (items.ConvertAll(x => (x.Recipe, x.UsageCount)), totalItems);
     }
 
     private static string EscapeLikePattern(string value) {

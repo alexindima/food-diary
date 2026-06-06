@@ -14,10 +14,6 @@ public sealed class TelegramLoginWidgetCommandHandler(
     IUserRepository userRepository,
     ITelegramLoginWidgetValidator telegramLoginWidgetValidator,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<TelegramLoginWidgetCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly ITelegramLoginWidgetValidator _telegramLoginWidgetValidator = telegramLoginWidgetValidator;
-    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
-
     public async Task<Result<AuthenticationModel>> Handle(TelegramLoginWidgetCommand command, CancellationToken cancellationToken) {
         var widgetData = new TelegramLoginWidgetData(
             command.Id,
@@ -28,19 +24,19 @@ public sealed class TelegramLoginWidgetCommandHandler(
             command.LastName,
             command.PhotoUrl);
 
-        Result<TelegramInitData> validationResult = _telegramLoginWidgetValidator.ValidateLoginWidget(widgetData);
+        Result<TelegramInitData> validationResult = telegramLoginWidgetValidator.ValidateLoginWidget(widgetData);
         if (!validationResult.IsSuccess) {
             return Result.Failure<AuthenticationModel>(validationResult.Error);
         }
 
-        User? user = await _userRepository.GetByTelegramUserIdAsync(validationResult.Value.UserId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByTelegramUserIdAsync(validationResult.Value.UserId, cancellationToken).ConfigureAwait(false);
         Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
         }
 
         User currentUser = user!;
-        IssuedAuthenticationTokens tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
 }

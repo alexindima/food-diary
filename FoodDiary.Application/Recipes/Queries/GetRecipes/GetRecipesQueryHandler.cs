@@ -42,7 +42,7 @@ public class GetRecipesQueryHandler(
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<RecipeModel>(
-            recipes.Select(r => r.Recipe.ToModel(r.UsageCount, r.IsOwner)).ToList(),
+            recipes.ConvertAll(r => r.Recipe.ToModel(r.UsageCount, r.IsOwner)),
             pageNumber,
             pageSize,
             totalPages,

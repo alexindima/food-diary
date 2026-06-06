@@ -65,12 +65,11 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return byDay
-            .Select(x => new AiUsageDailySummary(
+            .ConvertAll(x => new AiUsageDailySummary(
                 DateOnly.FromDateTime(x.Date),
                 x.Total,
                 x.Input,
-                x.Output))
-            .ToList();
+                x.Output));
     }
 
     private static async Task<IReadOnlyList<AiUsageBreakdown>> GetBreakdownByOperationAsync(
@@ -88,8 +87,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return byOperationRaw
-            .Select(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output))
-            .ToList();
+            .ConvertAll(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output));
     }
 
     private static async Task<IReadOnlyList<AiUsageBreakdown>> GetBreakdownByModelAsync(
@@ -131,8 +129,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return byUserRaw
-            .Select(x => new AiUsageUserSummary(new UserId(x.Id), x.Email, x.Total, x.Input, x.Output))
-            .ToList();
+            .ConvertAll(x => new AiUsageUserSummary(new UserId(x.Id), x.Email, x.Total, x.Input, x.Output));
     }
 
     public async Task<AiUsageTotals> GetUserTotalsAsync(

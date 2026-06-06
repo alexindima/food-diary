@@ -104,12 +104,13 @@ public sealed class OpenAiFoodService(
         DateTime monthEndUtc = monthStartUtc.AddMonths(1);
         AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken).ConfigureAwait(false);
 
-        if (totals.InputTokens >= user.AiInputTokenLimit || totals.OutputTokens >= user.AiOutputTokenLimit) {
-            ApplicationAiTelemetry.RecordQuotaRejection(operation);
-            return Result.Failure(Errors.Ai.QuotaExceeded());
+        if (totals.InputTokens < user.AiInputTokenLimit && totals.OutputTokens < user.AiOutputTokenLimit) {
+            return Result.Success();
         }
 
-        return Result.Success();
+        ApplicationAiTelemetry.RecordQuotaRejection(operation);
+        return Result.Failure(Errors.Ai.QuotaExceeded());
+
     }
 
     private async Task SaveUsageAsync<T>(

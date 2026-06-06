@@ -20,13 +20,13 @@ public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReposi
             query.Search,
             query.FromUtc,
             query.ToUtc);
-        (IReadOnlyList<AdminBillingWebhookEventReadModel> Items, int TotalItems) pageData = await billingRepository.GetWebhookEventsAsync(filter, cancellationToken).ConfigureAwait(false);
-        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)filter.Limit);
+        (IReadOnlyList<AdminBillingWebhookEventReadModel> Items, int TotalItems) = await billingRepository.GetWebhookEventsAsync(filter, cancellationToken).ConfigureAwait(false);
+        int totalPages = (int)Math.Ceiling(TotalItems / (double)filter.Limit);
         return Result.Success(new PagedResponse<AdminBillingWebhookEventReadModel>(
-            pageData.Items,
+            Items,
             filter.Page,
             filter.Limit,
             totalPages,
-            pageData.TotalItems));
+            TotalItems));
     }
 }

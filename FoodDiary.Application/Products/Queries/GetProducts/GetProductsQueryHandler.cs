@@ -51,7 +51,7 @@ public class GetProductsQueryHandler(
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<ProductModel>(
-            productsWithUsage.Select(p => p.Product.ToModel(p.UsageCount, p.IsOwner)).ToList(),
+            productsWithUsage.ConvertAll(p => p.Product.ToModel(p.UsageCount, p.IsOwner)),
             pageNumber,
             pageSize,
             totalPages,

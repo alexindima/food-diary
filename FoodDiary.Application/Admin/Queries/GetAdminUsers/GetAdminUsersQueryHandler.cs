@@ -16,10 +16,10 @@ public sealed class GetAdminUsersQueryHandler(IUserRepository userRepository)
         int page = query.Page <= 0 ? 1 : query.Page;
         int limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
 
-        (IReadOnlyList<User> Items, int TotalItems) pageData = await userRepository.GetPagedAsync(query.Search, page, limit, query.Status, cancellationToken).ConfigureAwait(false);
-        var users = pageData.Items.Select(user => user.ToAdminModel()).ToList();
-        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
-        var response = new PagedResponse<AdminUserModel>(users, page, limit, totalPages, pageData.TotalItems);
+        (IReadOnlyList<User> Items, int TotalItems) = await userRepository.GetPagedAsync(query.Search, page, limit, query.Status, cancellationToken).ConfigureAwait(false);
+        var users = Items.Select(user => user.ToAdminModel()).ToList();
+        int totalPages = (int)Math.Ceiling(TotalItems / (double)limit);
+        var response = new PagedResponse<AdminUserModel>(users, page, limit, totalPages, TotalItems);
         return Result.Success(response);
     }
 }

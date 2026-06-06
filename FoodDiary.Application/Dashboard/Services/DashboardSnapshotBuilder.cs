@@ -210,9 +210,9 @@ public class DashboardSnapshotBuilder(
     private async Task<DashboardBodySection> BuildBodySectionAsync(
         DashboardBuildContext context,
         CancellationToken cancellationToken) {
-        (DashboardWeightModel Model, IReadOnlyList<WeightEntrySummaryModel> Trend) weight = await BuildWeightSectionAsync(context, cancellationToken).ConfigureAwait(false);
+        (DashboardWeightModel Model, IReadOnlyList<WeightEntrySummaryModel> Trend) = await BuildWeightSectionAsync(context, cancellationToken).ConfigureAwait(false);
         (DashboardWaistModel Model, IReadOnlyList<WaistEntrySummaryModel> Trend) waist = await BuildWaistSectionAsync(context, cancellationToken).ConfigureAwait(false);
-        return new DashboardBodySection(weight.Model, waist.Model, weight.Trend, waist.Trend);
+        return new DashboardBodySection(Model, waist.Model, Trend, waist.Trend);
     }
 
     private async Task<(DashboardWeightModel Model, IReadOnlyList<WeightEntrySummaryModel> Trend)> BuildWeightSectionAsync(

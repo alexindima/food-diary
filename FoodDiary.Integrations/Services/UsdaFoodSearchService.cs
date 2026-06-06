@@ -48,8 +48,7 @@ internal sealed class UsdaFoodSearchService(
             }
 
             return result.Foods
-                .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.BrandName ?? f.FoodCategory))
-                .ToList();
+                .ConvertAll(f => new UsdaFoodModel(f.FdcId, f.Description, f.BrandName ?? f.FoodCategory));
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "USDA branded food search failed for query '{Query}'", query);
             return [];

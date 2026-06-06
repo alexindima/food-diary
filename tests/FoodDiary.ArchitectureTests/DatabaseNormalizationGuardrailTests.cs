@@ -264,8 +264,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
         }
 
         return entity.GetIndexes()
-            .Where(static index => index.IsUnique)
-            .Any(index => PropertyNamesMatch(index.Properties, expected));
+            .Any(index => index.IsUnique && PropertyNamesMatch(index.Properties, expected));
     }
 
     private static bool PropertyNamesMatch(IReadOnlyList<IProperty> properties, string[] expected) {

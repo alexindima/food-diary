@@ -58,8 +58,8 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items
-            .Select(x => (x.Product, x.UsageCount))
-            .ToList(), totalItems);
+            .ConvertAll(x => (x.Product, x.UsageCount))
+, totalItems);
     }
 
     public async Task<Product?> GetByIdAsync(

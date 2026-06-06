@@ -46,8 +46,8 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository 
 
         await repository.AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
 
-        var models = lessons
-            .Select(static lesson => new AdminLessonModel(
+        List<AdminLessonModel> models = lessons
+            .ConvertAll(static lesson => new AdminLessonModel(
                 lesson.Id.Value,
                 lesson.Title,
                 lesson.Content,
@@ -58,8 +58,7 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository 
                 lesson.EstimatedReadMinutes,
                 lesson.SortOrder,
                 lesson.CreatedOnUtc,
-                lesson.ModifiedOnUtc))
-            .ToList();
+                lesson.ModifiedOnUtc));
 
         return Result.Success(new AdminLessonsImportModel(models.Count, models));
     }

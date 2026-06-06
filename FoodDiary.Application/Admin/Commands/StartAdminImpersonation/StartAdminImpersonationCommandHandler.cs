@@ -70,35 +70,35 @@ public sealed class StartAdminImpersonationCommandHandler(
         return null;
     }
 
-    private async Task<Result<Domain.Entities.Users.User>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
+    private async Task<Result<User>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
         User? actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(actor) is not null
             || actor is null
             || !actor.HasRole(RoleNames.Admin)) {
-            return Result.Failure<Domain.Entities.Users.User>(Errors.Authentication.ImpersonationForbidden);
+            return Result.Failure<User>(Errors.Authentication.ImpersonationForbidden);
         }
 
         return Result.Success(actor);
     }
 
-    private async Task<Result<Domain.Entities.Users.User>> LoadTargetAsync(
+    private async Task<Result<User>> LoadTargetAsync(
         UserId targetUserId,
         Guid targetId,
         CancellationToken cancellationToken) {
         User? target = await userRepository.GetByIdAsync(targetUserId, cancellationToken).ConfigureAwait(false);
         if (target is null) {
-            return Result.Failure<Domain.Entities.Users.User>(Errors.User.NotFound(targetId));
+            return Result.Failure<User>(Errors.User.NotFound(targetId));
         }
 
         if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(target) is not null
             || target.HasRole(RoleNames.Admin)) {
-            return Result.Failure<Domain.Entities.Users.User>(Errors.Authentication.ImpersonationForbidden);
+            return Result.Failure<User>(Errors.Authentication.ImpersonationForbidden);
         }
 
         return Result.Success(target);
     }
 
-    private string GenerateToken(Domain.Entities.Users.User target, UserId actorUserId, string reason) {
+    private string GenerateToken(User target, UserId actorUserId, string reason) {
         string[] roles = [.. target.GetRoleNames()];
         return jwtTokenGenerator.GenerateAccessToken(
             target.Id,
@@ -123,7 +123,7 @@ public sealed class StartAdminImpersonationCommandHandler(
         await sessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
     }
 
-    private void LogStart(UserId actorUserId, Domain.Entities.Users.User target, string reason) {
+    private void LogStart(UserId actorUserId, User target, string reason) {
         auditLogger.Log(
             "admin.user.impersonation.start",
             actorUserId,

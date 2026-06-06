@@ -14,7 +14,6 @@ public sealed class VerifyEmailCommandHandler(
     TimeProvider dateTimeProvider,
     IEmailVerificationNotifier emailVerificationNotifier)
     : ICommandHandler<VerifyEmailCommand, Result> {
-    private readonly IEmailVerificationNotifier _emailVerificationNotifier = emailVerificationNotifier;
     public async Task<Result> Handle(VerifyEmailCommand command, CancellationToken cancellationToken) {
         if (command.UserId == Guid.Empty) {
             return Result.Failure(
@@ -46,7 +45,7 @@ public sealed class VerifyEmailCommandHandler(
         await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         try {
-            await _emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, cancellationToken).ConfigureAwait(false);
+            await emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, cancellationToken).ConfigureAwait(false);
         } catch {
             // Notification failures shouldn't block verification.
         }

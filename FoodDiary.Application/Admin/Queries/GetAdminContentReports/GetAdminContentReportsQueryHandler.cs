@@ -15,11 +15,11 @@ public sealed class GetAdminContentReportsQueryHandler(IContentReportRepository 
         int pageNumber = Math.Max(query.Page, 1);
         int pageSize = Math.Max(query.Limit, 1);
 
-        ReportStatus? status = query.Status is not null && Enum.TryParse<ReportStatus>(query.Status, out ReportStatus parsed)
+        ReportStatus? status = query.Status is not null && Enum.TryParse(query.Status, out ReportStatus parsed)
             ? parsed
             : null;
 
-        (IReadOnlyList<Domain.Entities.Social.ContentReport>? items, int total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<Domain.Entities.Social.ContentReport> items, int total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
 
         var models = items.Select(r => new AdminContentReportModel(
             r.Id.Value,

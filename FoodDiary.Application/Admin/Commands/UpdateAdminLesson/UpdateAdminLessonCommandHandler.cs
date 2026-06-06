@@ -13,12 +13,12 @@ public sealed class UpdateAdminLessonCommandHandler(INutritionLessonRepository r
     public async Task<Result<AdminLessonModel>> Handle(
         UpdateAdminLessonCommand command,
         CancellationToken cancellationToken) {
-        if (!Enum.TryParse<LessonCategory>(command.Category, ignoreCase: true, out LessonCategory category)) {
+        if (!Enum.TryParse(command.Category, ignoreCase: true, out LessonCategory category)) {
             return Result.Failure<AdminLessonModel>(
                 Errors.Validation.Invalid("category", "Invalid lesson category."));
         }
 
-        if (!Enum.TryParse<LessonDifficulty>(command.Difficulty, ignoreCase: true, out LessonDifficulty difficulty)) {
+        if (!Enum.TryParse(command.Difficulty, ignoreCase: true, out LessonDifficulty difficulty)) {
             return Result.Failure<AdminLessonModel>(
                 Errors.Validation.Invalid("difficulty", "Invalid lesson difficulty."));
         }

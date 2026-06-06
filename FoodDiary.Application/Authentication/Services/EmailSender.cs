@@ -198,16 +198,16 @@ public sealed class EmailSender(
             string link = buildLink();
             EmailTemplateContent? template = await _templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
             string brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
-            (string Subject, string Html, string Text) fallback = createFallbackContent(link);
+            (string Subject, string Html, string Text) = createFallbackContent(link);
 
             string subject = template is null
-                ? fallback.Subject
+                ? Subject
                 : ApplyTemplateTokens(template.Subject, link, brand);
             string htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
-                ? fallback.Html
+                ? Html
                 : ApplyTemplateTokens(template.HtmlBody, link, brand);
             string textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
-                ? fallback.Text
+                ? Text
                 : ApplyTemplateTokens(template.TextBody, link, brand);
 
             await SendAsync(toEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
@@ -276,15 +276,13 @@ public sealed class EmailSender(
     }
 
     private async Task SendAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
-        using var message = new MailMessage {
-            From = new MailAddress(_options.FromAddress, _options.FromName),
-            Subject = subject,
-            Body = htmlBody,
-            IsBodyHtml = true,
-            BodyEncoding = Encoding.UTF8,
-            SubjectEncoding = Encoding.UTF8,
-        };
-
+        using var message = new MailMessage();
+        message.From = new MailAddress(_options.FromAddress, _options.FromName);
+        message.Subject = subject;
+        message.Body = htmlBody;
+        message.IsBodyHtml = true;
+        message.BodyEncoding = Encoding.UTF8;
+        message.SubjectEncoding = Encoding.UTF8;
         message.To.Add(new MailAddress(toEmail));
         if (!string.IsNullOrWhiteSpace(textBody)) {
             message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(textBody, Encoding.UTF8, MediaTypeNames.Text.Plain));

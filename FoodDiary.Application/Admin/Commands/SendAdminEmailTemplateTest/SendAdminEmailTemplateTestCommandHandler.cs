@@ -21,15 +21,13 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
         string htmlBody = ApplyTemplateTokens(command.HtmlBody, link, brand, clientName);
         string textBody = ApplyTemplateTokens(command.TextBody, link, brand, clientName);
 
-        using var message = new MailMessage {
-            From = new MailAddress(options.FromAddress, options.FromName),
-            Subject = subject,
-            Body = htmlBody,
-            IsBodyHtml = true,
-            BodyEncoding = Encoding.UTF8,
-            SubjectEncoding = Encoding.UTF8,
-        };
-
+        using var message = new MailMessage();
+        message.From = new MailAddress(options.FromAddress, options.FromName);
+        message.Subject = subject;
+        message.Body = htmlBody;
+        message.IsBodyHtml = true;
+        message.BodyEncoding = Encoding.UTF8;
+        message.SubjectEncoding = Encoding.UTF8;
         message.To.Add(new MailAddress(command.ToEmail));
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(textBody, Encoding.UTF8, MediaTypeNames.Text.Plain));
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));

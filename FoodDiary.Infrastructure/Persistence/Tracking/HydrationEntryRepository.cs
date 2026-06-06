@@ -74,6 +74,6 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
             .OrderBy(x => x.Date)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return results.Select(r => (r.Date, r.TotalMl)).ToList();
+        return results.ConvertAll(r => (r.Date, r.TotalMl));
     }
 }

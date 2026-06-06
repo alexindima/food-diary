@@ -56,7 +56,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
             return;
         }
 
-        var barcodes = candidates.Select(product => product.Barcode.Trim()).ToList();
+        List<string> barcodes = candidates.ConvertAll(product => product.Barcode.Trim());
         Dictionary<string, OpenFoodFactsProduct> existingProducts = await context.OpenFoodFactsProducts
             .Where(product => barcodes.Contains(product.Barcode))
             .ToDictionaryAsync(product => product.Barcode, cancellationToken).ConfigureAwait(false);

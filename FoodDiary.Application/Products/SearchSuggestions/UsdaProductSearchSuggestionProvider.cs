@@ -27,7 +27,7 @@ public sealed class UsdaProductSearchSuggestionProvider(
             foods.AddRange(brandedFoods.Where(f => !existingIds.Contains(f.FdcId)));
         }
 
-        return foods.Select(ToSuggestion).ToList();
+        return foods.ConvertAll(ToSuggestion);
     }
 
     private ProductSearchSuggestionModel ToSuggestion(UsdaFoodModel food) =>

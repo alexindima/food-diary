@@ -18,14 +18,8 @@ public class RefreshTokenCommandHandler(
     IPasswordHasher passwordHasher,
     IRefreshTokenSessionRepository refreshTokenSessionRepository,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-    private readonly IRefreshTokenSessionRepository _refreshTokenSessionRepository = refreshTokenSessionRepository;
-    private readonly IAuthenticationTokenService _authenticationTokenService = authenticationTokenService;
-
     public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
-        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validationResult = _jwtTokenGenerator.ValidateToken(command.RefreshToken);
+        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validationResult = jwtTokenGenerator.ValidateToken(command.RefreshToken);
         if (validationResult == null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
@@ -35,27 +29,27 @@ public class RefreshTokenCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        User? user = await _userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        UserRefreshTokenSession? session = await _refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);
+        UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);
         if (session is null || session.UserId != userId || !session.IsActive) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
         bool isRefreshTokenValid = SecurityTokenGenerator.IsFastStorageHash(session.RefreshTokenHash)
             ? SecurityTokenGenerator.VerifyFastStorageHash(command.RefreshToken, session.RefreshTokenHash)
-            : _passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken), session.RefreshTokenHash);
+            : passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken), session.RefreshTokenHash);
 
         if (!isRefreshTokenValid) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
         User currentUser = user!;
-        IssuedAuthenticationTokens tokens = await _authenticationTokenService
+        IssuedAuthenticationTokens tokens = await authenticationTokenService
             .IssueAndStoreAsync(currentUser, cancellationToken, rememberMe: rememberMe, refreshSessionId: refreshSessionId)
             .ConfigureAwait(false);
         return Result.Success(currentUser.ToAuthenticationModel(tokens));

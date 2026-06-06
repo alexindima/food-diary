@@ -60,7 +60,7 @@ public static class FastingMappings {
         bool isCompleted = occurrence.Status != FastingOccurrenceStatus.Active &&
             occurrence.Status != FastingOccurrenceStatus.Scheduled &&
             occurrence.Status != FastingOccurrenceStatus.Postponed;
-        (int? DayNumber, int? DayTotal) cyclicPhaseProgress = ResolveCyclicPhaseProgress(occurrence, plan);
+        (int? DayNumber, int? DayTotal) = ResolveCyclicPhaseProgress(occurrence, plan);
         var sortedCheckIns = (checkIns ?? [])
             .OrderByDescending(static checkIn => checkIn.CheckedInAtUtc)
             .ToList();
@@ -80,8 +80,8 @@ public static class FastingMappings {
             plan?.CyclicEatDays,
             plan?.CyclicEatDayFastHours,
             plan?.CyclicEatDayEatingWindowHours,
-            cyclicPhaseProgress.DayNumber,
-            cyclicPhaseProgress.DayTotal,
+            DayNumber,
+            DayTotal,
             isCompleted,
             occurrence.Status.ToString(),
             occurrence.Notes,
@@ -91,7 +91,7 @@ public static class FastingMappings {
             latestCheckIn?.MoodLevel ?? occurrence.MoodLevel,
             latestCheckIn is not null ? ParseSymptoms(latestCheckIn.Symptoms) : ParseSymptoms(occurrence.Symptoms),
             latestCheckIn?.Notes ?? occurrence.CheckInNotes,
-            sortedCheckIns.Select(static checkIn => checkIn.ToModel()).ToList());
+            sortedCheckIns.ConvertAll(static checkIn => checkIn.ToModel()));
     }
 
     private static IReadOnlyList<string> ParseSymptoms(string? value) {

@@ -43,7 +43,7 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             ? (DateTime?)UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo.Value)
             : null;
 
-        (IReadOnlyList<Meal> Items, int TotalItems) pageData = await mealRepository.GetPagedAsync(
+        (IReadOnlyList<Meal> Items, int TotalItems) = await mealRepository.GetPagedAsync(
             userId,
             sanitizedPage,
             sanitizedLimit,
@@ -57,14 +57,14 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             .Select(favorite => favorite.ToModel())
             .ToList();
 
-        MealId[] mealIds = [.. pageData.Items
+        MealId[] mealIds = [.. Items
             .Select(meal => meal.Id)
             .Distinct()];
         IReadOnlyDictionary<MealId, FavoriteMeal> favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
 
-        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)sanitizedLimit);
+        int totalPages = (int)Math.Ceiling(TotalItems / (double)sanitizedLimit);
         var allConsumptions = new PagedResponse<ConsumptionModel>(
-            pageData.Items
+            Items
                 .Select(meal => {
                     FavoriteMeal? favorite = favoritesByMealId.GetValueOrDefault(meal.Id);
                     return meal.ToModel(
@@ -75,7 +75,7 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             sanitizedPage,
             sanitizedLimit,
             totalPages,
-            pageData.TotalItems);
+            TotalItems);
 
         return Result.Success(new ConsumptionOverviewModel(allConsumptions, favoriteItems, favorites.Count));
     }

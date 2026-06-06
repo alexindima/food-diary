@@ -20,13 +20,13 @@ public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingRepository 
             query.Search,
             query.FromUtc,
             query.ToUtc);
-        (IReadOnlyList<AdminBillingPaymentReadModel> Items, int TotalItems) pageData = await billingRepository.GetPaymentsAsync(filter, cancellationToken).ConfigureAwait(false);
-        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)filter.Limit);
+        (IReadOnlyList<AdminBillingPaymentReadModel> Items, int TotalItems) = await billingRepository.GetPaymentsAsync(filter, cancellationToken).ConfigureAwait(false);
+        int totalPages = (int)Math.Ceiling(TotalItems / (double)filter.Limit);
         return Result.Success(new PagedResponse<AdminBillingPaymentReadModel>(
-            pageData.Items,
+            Items,
             filter.Page,
             filter.Limit,
             totalPages,
-            pageData.TotalItems));
+            TotalItems));
     }
 }

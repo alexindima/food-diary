@@ -18,11 +18,6 @@ public class ResendEmailVerificationCommandHandler(
     TimeProvider dateTimeProvider,
     ILogger<ResendEmailVerificationCommandHandler> logger) : ICommandHandler<ResendEmailVerificationCommand, Result> {
     private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(1);
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-    private readonly IEmailSender _emailSender = emailSender;
-    private readonly TimeProvider _dateTimeProvider = dateTimeProvider;
-    private readonly ILogger<ResendEmailVerificationCommandHandler> _logger = logger;
 
     public async Task<Result> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
         if (command.UserId == Guid.Empty) {
@@ -30,7 +25,7 @@ public class ResendEmailVerificationCommandHandler(
                 Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
         }
 
-        User? user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
@@ -42,7 +37,7 @@ public class ResendEmailVerificationCommandHandler(
         }
 
         if (currentUser.EmailConfirmationSentAtUtc.HasValue) {
-            TimeSpan elapsed = _dateTimeProvider.GetUtcNow().UtcDateTime - currentUser.EmailConfirmationSentAtUtc.Value;
+            TimeSpan elapsed = dateTimeProvider.GetUtcNow().UtcDateTime - currentUser.EmailConfirmationSentAtUtc.Value;
             if (elapsed < ResendCooldown) {
                 return Result.Failure(
                     Errors.Validation.Invalid(
@@ -52,19 +47,19 @@ public class ResendEmailVerificationCommandHandler(
         }
 
         string emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
-        string emailTokenHash = _passwordHasher.Hash(emailToken);
+        string emailTokenHash = passwordHasher.Hash(emailToken);
         currentUser.SetEmailConfirmationToken(new UserTokenIssue(
             TokenHash: emailTokenHash,
-            ExpiresAtUtc: _dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(24),
-            IssuedAtUtc: _dateTimeProvider.GetUtcNow().UtcDateTime));
-        await _userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
+            ExpiresAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(24),
+            IssuedAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime));
+        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         try {
-            await _emailSender.SendEmailVerificationAsync(
+            await emailSender.SendEmailVerificationAsync(
                 new EmailVerificationMessage(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language, command.ClientOrigin),
                 cancellationToken).ConfigureAwait(false);
         } catch (Exception ex) {
-            _logger.LogError(ex, "Email verification dispatch failed.");
+            logger.LogError(ex, "Email verification dispatch failed.");
             return Result.Failure(
                 Errors.Validation.Invalid(
                     "EmailVerification",

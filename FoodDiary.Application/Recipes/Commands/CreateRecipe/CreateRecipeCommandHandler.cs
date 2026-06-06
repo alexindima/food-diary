@@ -128,14 +128,14 @@ public class CreateRecipeCommandHandler(
             return manualNutritionResult;
         }
 
-        (double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol) manual = manualNutritionResult.Value;
+        (double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol) = manualNutritionResult.Value;
         recipe.SetManualNutrition(
-            manual.Calories,
-            manual.Proteins,
-            manual.Fats,
-            manual.Carbs,
-            manual.Fiber,
-            manual.Alcohol);
+            Calories,
+            Proteins,
+            Fats,
+            Carbs,
+            Fiber,
+            Alcohol);
         return Result.Success();
     }
 

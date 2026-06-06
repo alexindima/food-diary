@@ -95,13 +95,13 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var repository = new UserRepository(context);
 
-        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) summary = await repository.GetAdminDashboardSummaryAsync(recentLimit: 10);
+        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) = await repository.GetAdminDashboardSummaryAsync(recentLimit: 10);
 
-        Assert.Equal(3, summary.TotalUsers);
-        Assert.Equal(2, summary.ActiveUsers);
-        Assert.Equal(1, summary.PremiumUsers);
-        Assert.Equal(1, summary.DeletedUsers);
-        Assert.Equal(2, summary.RecentUsers.Count);
-        Assert.DoesNotContain(summary.RecentUsers, user => user.Id == deletedUser.Id);
+        Assert.Equal(3, TotalUsers);
+        Assert.Equal(2, ActiveUsers);
+        Assert.Equal(1, PremiumUsers);
+        Assert.Equal(1, DeletedUsers);
+        Assert.Equal(2, RecentUsers.Count);
+        Assert.DoesNotContain(RecentUsers, user => user.Id == deletedUser.Id);
     }
 }
