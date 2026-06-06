@@ -14,7 +14,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
         };
 
         string[] violations = [.. SourceScanner.SourceFiles(abstractionsRoot)
-            .Where(path => Path.GetFileName(path).StartsWith("I", StringComparison.Ordinal))
+            .Where(path => Path.GetFileName(path).StartsWith('I'))
             .Where(path => path.EndsWith(".cs", StringComparison.Ordinal))
             .Where(path => {
                 string relativeDirectory = Path.GetDirectoryName(Path.GetRelativePath(abstractionsRoot, path)) ?? string.Empty;

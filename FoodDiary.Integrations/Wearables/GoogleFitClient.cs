@@ -160,19 +160,19 @@ internal sealed class GoogleFitClient(
         }
 
         double numericValue = ReadNumericValue(values[0]);
-        if (dataSourceId?.Contains("step_count") == true) {
+        if (dataSourceId?.Contains("step_count", StringComparison.Ordinal) == true) {
             return new WearableDataPoint(WearableDataType.Steps, numericValue);
         }
 
-        if (dataSourceId?.Contains("calories.expended") == true) {
+        if (dataSourceId?.Contains("calories.expended", StringComparison.Ordinal) == true) {
             return new WearableDataPoint(WearableDataType.CaloriesBurned, numericValue);
         }
 
-        if (dataSourceId?.Contains("active_minutes") == true) {
+        if (dataSourceId?.Contains("active_minutes", StringComparison.Ordinal) == true) {
             return new WearableDataPoint(WearableDataType.ActiveMinutes, numericValue);
         }
 
-        return dataSourceId?.Contains("heart_rate") == true
+        return dataSourceId?.Contains("heart_rate", StringComparison.Ordinal) == true
             ? new WearableDataPoint(WearableDataType.HeartRate, numericValue)
             : null;
     }

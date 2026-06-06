@@ -209,13 +209,12 @@ internal sealed partial class DiaryPdfGenerator {
 
             double magnitude = Math.Pow(10, Math.Floor(Math.Log10(value)));
             double normalized = value / magnitude;
-            int nice = normalized <= 1
-                ? 1
-                : normalized <= 2
-                    ? 2
-                    : normalized <= 5
-                        ? 5
-                        : 10;
+            int nice = normalized switch {
+                <= 1 => 1,
+                <= 2 => 2,
+                <= 5 => 5,
+                _ => 10,
+            };
 
             return nice * magnitude;
         }

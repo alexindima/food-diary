@@ -62,12 +62,14 @@ dotnet_style_prefer_conditional_expression_over_return = false:none
 # Analyzer rollout: add third-party analyzers, then promote individual rules as the codebase is cleaned up.
 dotnet_analyzer_diagnostic.category-Roslynator.severity = suggestion
 dotnet_analyzer_diagnostic.category-Meziantou.Analyzer.severity = suggestion
+dotnet_diagnostic.MA0001.severity = error
 dotnet_diagnostic.MA0002.severity = warning
 dotnet_diagnostic.MA0003.severity = error
 dotnet_diagnostic.MA0004.severity = warning
 dotnet_diagnostic.MA0006.severity = warning
 dotnet_diagnostic.MA0007.severity = error
 dotnet_diagnostic.MA0008.severity = warning
+dotnet_diagnostic.MA0089.severity = error
 dotnet_diagnostic.MA0009.severity = warning
 dotnet_diagnostic.MA0011.severity = warning
 dotnet_diagnostic.MA0015.severity = warning
@@ -103,6 +105,8 @@ dotnet_diagnostic.RCS1161.severity = error
 dotnet_diagnostic.RCS1170.severity = warning
 dotnet_diagnostic.RCS1189.severity = error
 dotnet_diagnostic.RCS1199.severity = error
+dotnet_diagnostic.RCS1217.severity = error
+dotnet_diagnostic.RCS1238.severity = error
 dotnet_diagnostic.RCS1261.severity = warning
 
 # JetBrains Rider/ReSharper inspections enforced in IDE/Qodana.
@@ -114,6 +118,7 @@ resharper_using_statement_resource_initialization_expression_highlighting = warn
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1847.severity = error
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1859.severity = none
 

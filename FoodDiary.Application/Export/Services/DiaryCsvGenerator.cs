@@ -52,8 +52,12 @@ public static class DiaryCsvGenerator {
             return "";
         }
 
-        if (value.Contains('"') || value.Contains(',') || value.Contains('\n') || value.Contains('\r')) {
-            return $"\"{value.Replace("\"", "\"\"")}\"";
+        ReadOnlySpan<char> valueSpan = value.AsSpan();
+        if (valueSpan.Contains('"') ||
+            valueSpan.Contains(',') ||
+            valueSpan.Contains('\n') ||
+            valueSpan.Contains('\r')) {
+            return $"\"{value.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
         }
 
         return value;

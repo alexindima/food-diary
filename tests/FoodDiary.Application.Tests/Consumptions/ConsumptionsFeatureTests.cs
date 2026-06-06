@@ -2009,12 +2009,15 @@ public class ConsumptionsFeatureTests {
             bool includeItems = false,
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<Meal?>(
-                LastAddedMeal is not null && LastAddedMeal.Id == id && LastAddedMeal.UserId == userId
-                    ? LastAddedMeal
-                    : id == meal.Id && userId == meal.UserId
-                        ? meal
-                        : null);
+            Task.FromResult(FindById(id, userId));
+
+        private Meal? FindById(MealId id, UserId userId) {
+            if (LastAddedMeal is not null && LastAddedMeal.Id == id && LastAddedMeal.UserId == userId) {
+                return LastAddedMeal;
+            }
+
+            return id == meal.Id && userId == meal.UserId ? meal : null;
+        }
 
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,

@@ -13,7 +13,7 @@ public sealed class ConsumptionAiSessionInputValidator : AbstractValidator<Consu
             .WithMessage("Unknown AI recognition source value.");
 
         RuleFor(x => x.RecognizedAtUtc)
-            .Must(value => !value.HasValue || value.Value.Kind != DateTimeKind.Unspecified)
+            .Must(value => value is not { Kind: DateTimeKind.Unspecified })
             .WithErrorCode("Validation.Invalid")
             .WithMessage("RecognizedAtUtc timestamp kind must be specified.");
 

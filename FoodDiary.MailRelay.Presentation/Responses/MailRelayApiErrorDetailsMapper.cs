@@ -7,7 +7,7 @@ public static class MailRelayApiErrorDetailsMapper {
         }
 
         string[] segments = path.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        return string.Join(".", segments.Select(ToCamelCaseSegment));
+        return string.Join('.', segments.Select(ToCamelCaseSegment));
     }
 
     private static string ToCamelCaseSegment(string segment) =>

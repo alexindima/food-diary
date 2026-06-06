@@ -1352,12 +1352,15 @@ public class RecipesFeatureTests {
             bool includeSteps = false,
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<Recipe?>(
-                LastAddedRecipe is not null && LastAddedRecipe.Id == id && LastAddedRecipe.UserId == userId
-                    ? LastAddedRecipe
-                    : id == recipe.Id && userId == recipe.UserId
-                        ? recipe
-                        : null);
+            Task.FromResult(FindById(id, userId));
+
+        private Recipe? FindById(RecipeId id, UserId userId) {
+            if (LastAddedRecipe is not null && LastAddedRecipe.Id == id && LastAddedRecipe.UserId == userId) {
+                return LastAddedRecipe;
+            }
+
+            return id == recipe.Id && userId == recipe.UserId ? recipe : null;
+        }
 
         public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
             IEnumerable<RecipeId> ids,

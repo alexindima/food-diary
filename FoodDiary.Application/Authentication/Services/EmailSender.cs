@@ -14,22 +14,24 @@ public sealed class EmailSender(
     IEmailTransport emailTransport) : IEmailSender {
     private const string EmailVerificationSubjectRu =
         "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email";
+
     private const string EmailVerificationIntroRu =
         "\u0421\u043f\u0430\u0441\u0438\u0431\u043e \u0437\u0430 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044e \u0432 FoodDiary.";
+
     private const string EmailVerificationCtaRu =
         "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c email";
+
     private const string PasswordResetSubjectRu =
         "\u0421\u0431\u0440\u043e\u0441 \u043f\u0430\u0440\u043e\u043b\u044f";
+
     private const string PasswordResetIntroRu =
         "\u041c\u044b \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u0438 \u0437\u0430\u043f\u0440\u043e\u0441 \u043d\u0430 \u0441\u043c\u0435\u043d\u0443 \u043f\u0430\u0440\u043e\u043b\u044f FoodDiary.";
+
     private const string PasswordResetCtaRu =
         "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u043f\u0430\u0440\u043e\u043b\u044c";
+
     private const string IgnoreEmailFooterRu =
         "\u0415\u0441\u043b\u0438 \u0432\u044b \u043d\u0435 \u0437\u0430\u043f\u0440\u0430\u0448\u0438\u0432\u0430\u043b\u0438 \u044d\u0442\u043e, \u043f\u0440\u043e\u0441\u0442\u043e \u043f\u0440\u043e\u0438\u0433\u043d\u043e\u0440\u0438\u0440\u0443\u0439\u0442\u0435 \u043f\u0438\u0441\u044c\u043c\u043e.";
-
-    private readonly EmailOptions _options = options;
-    private readonly IEmailTemplateProvider _templateProvider = templateProvider;
-    private readonly IEmailTransport _emailTransport = emailTransport;
 
     public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) {
         string locale = NormalizeLanguage(message.Language);
@@ -37,11 +39,12 @@ public sealed class EmailSender(
             templateKey: "email_verification",
             locale: locale,
             toEmail: message.ToEmail,
-            buildLink: () => BuildLink(_options.VerificationPath, message.UserId, message.Token, message.ClientOrigin),
+            buildLink: () => BuildLink(options.VerificationPath, message.UserId, message.Token, message.ClientOrigin),
             createFallbackContent: link => (
                 Subject: string.Equals(locale, "ru", StringComparison.Ordinal) ? EmailVerificationSubjectRu : "Confirm your email",
                 Html: string.Equals(locale, "ru"
-, StringComparison.Ordinal) ? BuildTemplate(
+                    , StringComparison.Ordinal)
+                    ? BuildTemplate(
                         title: EmailVerificationSubjectRu,
                         intro: EmailVerificationIntroRu,
                         ctaLabel: EmailVerificationCtaRu,
@@ -54,11 +57,12 @@ public sealed class EmailSender(
                         ctaLink: link,
                         footer: "If you did not request this, you can ignore this email."),
                 Text: string.Equals(locale, "ru"
-, StringComparison.Ordinal) ? $$"""
-                      {{EmailVerificationIntroRu}}
-                      {{EmailVerificationSubjectRu}}: {{link}}
-                      {{IgnoreEmailFooterRu}}
-                      """
+                    , StringComparison.Ordinal)
+                    ? $$"""
+                        {{EmailVerificationIntroRu}}
+                        {{EmailVerificationSubjectRu}}: {{link}}
+                        {{IgnoreEmailFooterRu}}
+                        """
                     : $"""
                        Thanks for registering in FoodDiary.
                        Please confirm your email: {link}
@@ -73,11 +77,12 @@ public sealed class EmailSender(
             templateKey: "password_reset",
             locale: locale,
             toEmail: message.ToEmail,
-            buildLink: () => BuildLink(_options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin),
+            buildLink: () => BuildLink(options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin),
             createFallbackContent: link => (
                 Subject: string.Equals(locale, "ru", StringComparison.Ordinal) ? PasswordResetSubjectRu : "Reset your password",
                 Html: string.Equals(locale, "ru"
-, StringComparison.Ordinal) ? BuildTemplate(
+                    , StringComparison.Ordinal)
+                    ? BuildTemplate(
                         title: PasswordResetSubjectRu,
                         intro: PasswordResetIntroRu,
                         ctaLabel: PasswordResetCtaRu,
@@ -90,11 +95,12 @@ public sealed class EmailSender(
                         ctaLink: link,
                         footer: "If you did not request this, you can ignore this email."),
                 Text: string.Equals(locale, "ru"
-, StringComparison.Ordinal) ? $$"""
-                      {{PasswordResetIntroRu}}
-                      {{PasswordResetCtaRu}}: {{link}}
-                      {{IgnoreEmailFooterRu}}
-                      """
+                    , StringComparison.Ordinal)
+                    ? $$"""
+                        {{PasswordResetIntroRu}}
+                        {{PasswordResetCtaRu}}: {{link}}
+                        {{IgnoreEmailFooterRu}}
+                        """
                     : $"""
                        We received a request to reset your FoodDiary password.
                        Reset your password: {link}
@@ -106,21 +112,24 @@ public sealed class EmailSender(
     public async Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {
         string locale = NormalizeLanguage(message.Language);
         string subject = string.Equals(locale, "ru"
-, StringComparison.Ordinal) ? "\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e FoodDiary"
+            , StringComparison.Ordinal)
+            ? "\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e FoodDiary"
             : "FoodDiary test email";
         string intro = string.Equals(locale, "ru"
-, StringComparison.Ordinal) ? "\u042d\u0442\u043e \u0442\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0432\u0430\u0448\u0435\u0433\u043e \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e FoodDiary \u0447\u0435\u0440\u0435\u0437 MailRelay."
+            , StringComparison.Ordinal)
+            ? "\u042d\u0442\u043e \u0442\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0432\u0430\u0448\u0435\u0433\u043e \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e FoodDiary \u0447\u0435\u0440\u0435\u0437 MailRelay."
             : "This test email was sent from your local FoodDiary through MailRelay.";
         string footer = string.Equals(locale, "ru"
-, StringComparison.Ordinal) ? "\u0415\u0441\u043b\u0438 \u043f\u0438\u0441\u044c\u043c\u043e \u0434\u043e\u0448\u043b\u043e, \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0443\u0442\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442."
+            , StringComparison.Ordinal)
+            ? "\u0415\u0441\u043b\u0438 \u043f\u0438\u0441\u044c\u043c\u043e \u0434\u043e\u0448\u043b\u043e, \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0443\u0442\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442."
             : "If this message arrived, the main email dispatch path is working.";
 
         try {
             await SendAsync(
                 message.ToEmail,
                 subject,
-                BuildTemplate(subject, intro, "FoodDiary", _options.FrontendBaseUrl, footer),
-                $"{intro}{Environment.NewLine}{footer}",
+                BuildTemplate(subject, intro, "FoodDiary", options.FrontendBaseUrl, footer),
+                intro + Environment.NewLine + footer,
                 cancellationToken).ConfigureAwait(false);
             ApplicationEmailTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "success");
         } catch (Exception ex) {
@@ -143,7 +152,7 @@ public sealed class EmailSender(
     private string ResolveFrontendBaseUrl(string? clientOrigin) {
         string? requestedOrigin = NormalizeOrigin(clientOrigin);
         if (requestedOrigin is null) {
-            return _options.FrontendBaseUrl;
+            return options.FrontendBaseUrl;
         }
 
         foreach (string allowedBaseUrl in GetAllowedFrontendBaseUrls()) {
@@ -152,15 +161,15 @@ public sealed class EmailSender(
             }
         }
 
-        return _options.FrontendBaseUrl;
+        return options.FrontendBaseUrl;
     }
 
     private IEnumerable<string> GetAllowedFrontendBaseUrls() {
-        if (!string.IsNullOrWhiteSpace(_options.FrontendBaseUrl)) {
-            yield return _options.FrontendBaseUrl;
+        if (!string.IsNullOrWhiteSpace(options.FrontendBaseUrl)) {
+            yield return options.FrontendBaseUrl;
         }
 
-        foreach (string value in _options.AllowedFrontendBaseUrls) {
+        foreach (string value in options.AllowedFrontendBaseUrls) {
             if (!string.IsNullOrWhiteSpace(value)) {
                 yield return value;
             }
@@ -196,8 +205,8 @@ public sealed class EmailSender(
         CancellationToken cancellationToken) {
         try {
             string link = buildLink();
-            EmailTemplateContent? template = await _templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
-            string brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+            EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
+            string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
             (string Subject, string Html, string Text) = createFallbackContent(link);
 
             string subject = template is null
@@ -225,7 +234,7 @@ public sealed class EmailSender(
     }
 
     private string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer) {
-        string brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+        string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
         return $"""
                 <!doctype html>
                 <html lang="en">
@@ -277,7 +286,7 @@ public sealed class EmailSender(
 
     private async Task SendAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
         using var message = new MailMessage();
-        message.From = new MailAddress(_options.FromAddress, _options.FromName);
+        message.From = new MailAddress(options.FromAddress, options.FromName);
         message.Subject = subject;
         message.Body = htmlBody;
         message.IsBodyHtml = true;
@@ -290,6 +299,6 @@ public sealed class EmailSender(
 
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
 
-        await _emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
     }
 }

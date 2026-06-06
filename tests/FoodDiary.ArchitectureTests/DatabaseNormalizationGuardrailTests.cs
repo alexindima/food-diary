@@ -291,8 +291,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
                 continue;
             }
 
-            if (columnName.Contains("(", StringComparison.Ordinal) ||
-                columnName.StartsWith("@", StringComparison.Ordinal) ||
+            if (columnName.AsSpan().Contains('(') ||
+                columnName.StartsWith('@') ||
                 columnName.Equals("cast", StringComparison.OrdinalIgnoreCase)) {
                 continue;
             }

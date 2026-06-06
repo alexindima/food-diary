@@ -70,11 +70,12 @@ public static class TdeeCalculator {
             return Math.Round(adaptiveTdee, 0, MidpointRounding.ToEven);
         }
 
-        double deficit = currentWeight > desiredWeight
-            ? -500.0  // lose ~0.45 kg/week
-            : currentWeight < desiredWeight
-                ? 300.0   // gain ~0.27 kg/week (lean bulk)
-                : 0.0;    // maintain
+        double deficit = 0.0; // maintain
+        if (currentWeight > desiredWeight) {
+            deficit = -500.0; // lose ~0.45 kg/week
+        } else if (currentWeight < desiredWeight) {
+            deficit = 300.0; // gain ~0.27 kg/week (lean bulk)
+        }
 
         double target = adaptiveTdee + deficit;
         return Math.Round(Math.Max(target, 1200.0), 0, MidpointRounding.ToEven);

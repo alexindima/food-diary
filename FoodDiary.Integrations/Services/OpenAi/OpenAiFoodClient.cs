@@ -193,7 +193,7 @@ public sealed class OpenAiFoodClient(
         CancellationToken cancellationToken) {
         int statusCode = (int)response.StatusCode;
         string? requestId = response.Headers.TryGetValues("x-request-id", out IEnumerable<string>? values)
-            ? string.Join(",", values)
+            ? string.Join(',', values)
             : null;
         string summary = SummarizeErrorBody(responseBody);
 
@@ -234,8 +234,8 @@ public sealed class OpenAiFoodClient(
             : $"User hint: {description.Trim()}. ";
 
         string resolvedPrompt = promptTemplate
-            .Replace("{{languageHint}}", languageHint)
-            .Replace("{{descriptionHint}}", descriptionHint);
+            .Replace("{{languageHint}}", languageHint, StringComparison.Ordinal)
+            .Replace("{{descriptionHint}}", descriptionHint, StringComparison.Ordinal);
 
         return new {
             model,
@@ -267,8 +267,8 @@ public sealed class OpenAiFoodClient(
             : "Return nameEn in English and set nameLocal to null.";
 
         string resolvedPrompt = promptTemplate
-            .Replace("{{userText}}", text)
-            .Replace("{{languageHint}}", languageHint);
+            .Replace("{{userText}}", text, StringComparison.Ordinal)
+            .Replace("{{languageHint}}", languageHint, StringComparison.Ordinal);
 
         return new {
             model,
@@ -328,7 +328,7 @@ public sealed class OpenAiFoodClient(
 
         string itemsJson = JsonSerializer.Serialize(new { items = mappedItems });
         string resolvedPrompt = promptTemplate
-            .Replace("{{itemsJson}}", itemsJson);
+            .Replace("{{itemsJson}}", itemsJson, StringComparison.Ordinal);
 
         return new {
             model,

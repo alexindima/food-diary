@@ -270,24 +270,25 @@ public class UpdateConsumptionCommandHandler(
         UpdateConsumptionCommand command,
         UserId userId,
         CancellationToken cancellationToken) {
-        if (command.IsNutritionAutoCalculated) {
-            Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
-            if (nutritionResult.IsFailure) {
-                return nutritionResult;
-            }
-
-            meal.ApplyNutrition(new MealNutritionUpdate(
-                nutritionResult.Value.Calories,
-                nutritionResult.Value.Proteins,
-                nutritionResult.Value.Fats,
-                nutritionResult.Value.Carbs,
-                nutritionResult.Value.Fiber,
-                nutritionResult.Value.Alcohol,
-                IsAutoCalculated: true));
-            return Result.Success();
+        if (!command.IsNutritionAutoCalculated) {
+            return ApplyManualNutrition(meal, command);
         }
 
-        return ApplyManualNutrition(meal, command);
+        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
+        if (nutritionResult.IsFailure) {
+            return nutritionResult;
+        }
+
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            nutritionResult.Value.Calories,
+            nutritionResult.Value.Proteins,
+            nutritionResult.Value.Fats,
+            nutritionResult.Value.Carbs,
+            nutritionResult.Value.Fiber,
+            nutritionResult.Value.Alcohol,
+            IsAutoCalculated: true));
+        return Result.Success();
+
     }
 
     private static Result ApplyManualNutrition(Meal meal, UpdateConsumptionCommand command) {
@@ -362,12 +363,13 @@ public class UpdateConsumptionCommandHandler(
     }
 
     private static bool TryParseAiRecognitionSource(string? source, out AiRecognitionSource result) {
-        if (string.IsNullOrWhiteSpace(source)) {
-            result = AiRecognitionSource.Text;
-            return true;
+        if (!string.IsNullOrWhiteSpace(source)) {
+            return Enum.TryParse(source, ignoreCase: true, out result);
         }
 
-        return Enum.TryParse(source, ignoreCase: true, out result);
+        result = AiRecognitionSource.Text;
+        return true;
+
     }
 
     private static Result<List<MealAiItemData>> CreateAiSessionItems(ConsumptionAiSessionInput session) {

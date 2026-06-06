@@ -295,7 +295,15 @@ public class MealPlansFeatureTests {
         public MealPlan? AddedPlan { get; private set; }
 
         public Task<MealPlan?> GetByIdAsync(MealPlanId id, bool includeDays = false, CancellationToken ct = default) =>
-            Task.FromResult(AddedPlan?.Id == id ? AddedPlan : plan?.Id == id ? plan : null);
+            Task.FromResult(FindById(id));
+
+        private MealPlan? FindById(MealPlanId id) {
+            if (AddedPlan?.Id == id) {
+                return AddedPlan;
+            }
+
+            return plan?.Id == id ? plan : null;
+        }
 
         public Task<MealPlan> AddAsync(MealPlan p, CancellationToken ct = default) {
             AddedPlan = p;

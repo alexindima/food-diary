@@ -15,6 +15,6 @@ public static class ApiErrorDetailsMapper {
     }
 
     public static string ToCamelCasePath(string path) =>
-        string.Join(".", path.Split('.', StringSplitOptions.RemoveEmptyEntries)
+        string.Join('.', path.Split('.', StringSplitOptions.RemoveEmptyEntries)
             .Select(static segment => JsonNamingPolicy.CamelCase.ConvertName(segment)));
 }

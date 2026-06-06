@@ -42,10 +42,6 @@ public sealed class CreatePortalSessionCommandHandler(
         Result<BillingPortalSessionModel> sessionResult = await billingProvider.CreatePortalSessionAsync(
             new BillingPortalSessionRequestModel(subscription.ExternalCustomerId),
             cancellationToken).ConfigureAwait(false);
-        if (sessionResult.IsFailure) {
-            return Result.Failure<BillingPortalSessionModel>(sessionResult.Error);
-        }
-
-        return Result.Success(sessionResult.Value);
+        return sessionResult.IsFailure ? Result.Failure<BillingPortalSessionModel>(sessionResult.Error) : Result.Success(sessionResult.Value);
     }
 }

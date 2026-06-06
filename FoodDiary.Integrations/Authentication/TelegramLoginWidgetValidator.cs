@@ -67,7 +67,7 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
             pairs["photo_url"] = data.PhotoUrl;
         }
 
-        return string.Join("\n", pairs.Select(pair => $"{pair.Key}={pair.Value}"));
+        return string.Join('\n', pairs.Select(pair => $"{pair.Key}={pair.Value}"));
     }
 
     private bool IsValidHash(string dataCheckString, string hash) {

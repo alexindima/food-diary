@@ -83,7 +83,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             .OrderBy(entry => entry.Key, StringComparer.Ordinal)
             .Select(entry => $"{entry.Key}={entry.Value}");
 
-        return string.Join("\n", pairs);
+        return string.Join('\n', pairs);
     }
 
     private bool IsValidHash(string dataCheckString, string hash) {

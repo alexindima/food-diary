@@ -103,6 +103,10 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
             }
         }
 
-        return daysWithGoal > 0 ? (double)metDays / daysWithGoal : (weekMeals.Count > 0 ? 1.0 : 0.0);
+        if (daysWithGoal > 0) {
+            return (double)metDays / daysWithGoal;
+        }
+
+        return weekMeals.Count > 0 ? 1.0 : 0.0;
     }
 }

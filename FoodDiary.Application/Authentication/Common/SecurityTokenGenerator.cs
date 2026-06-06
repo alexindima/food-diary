@@ -17,8 +17,8 @@ public static class SecurityTokenGenerator {
 
     private static string Base64UrlEncode(byte[] bytes) {
         return Convert.ToBase64String(bytes)
-            .Replace("+", "-")
-            .Replace("/", "_")
+            .Replace('+', '-')
+            .Replace('/', '_')
             .TrimEnd('=');
     }
 
@@ -33,7 +33,7 @@ public static class SecurityTokenGenerator {
     }
 
     public static string HashForStorage(string token) {
-        return $"{Sha256StoragePrefix}{NormalizeForSecureHashing(token)}";
+        return Sha256StoragePrefix + NormalizeForSecureHashing(token);
     }
 
     public static bool IsFastStorageHash(string storedHash) {

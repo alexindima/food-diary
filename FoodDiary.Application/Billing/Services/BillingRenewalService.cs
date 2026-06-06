@@ -32,7 +32,7 @@ public sealed class BillingRenewalService(
         string provider,
         int batchSize,
         CancellationToken cancellationToken = default) {
-        if (!TryGetRecurringGateway(provider, out IBillingRecurringProviderGateway? recurringGateway)) {
+        if (!TryGetRecurringGateway(provider, out IBillingRecurringProviderGateway recurringGateway)) {
             return new BillingRenewalRunResult(0, 0, 0);
         }
 

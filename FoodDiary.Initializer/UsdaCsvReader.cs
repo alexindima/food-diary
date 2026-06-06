@@ -35,7 +35,7 @@ internal static class UsdaCsvReader {
     private static string ExtractField(string line, int start, int end) {
         string field = line[start..end].Trim();
         if (field.Length >= 2 && field[0] == '"' && field[^1] == '"') {
-            field = field[1..^1].Replace("\"\"", "\"");
+            field = field[1..^1].Replace("\"\"", "\"", StringComparison.Ordinal);
         }
 
         return field;

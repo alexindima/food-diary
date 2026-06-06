@@ -169,18 +169,18 @@ public class CreateConsumptionCommandHandler(
 
         if (!TryParseAiRecognitionSource(session.Source, out AiRecognitionSource sessionSource)) {
             return Result.Failure(
-                    Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
+                Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
         }
 
         DateTime recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.GetUtcNow().UtcDateTime;
         if (recognizedAtUtc.Kind == DateTimeKind.Unspecified) {
             return Result.Failure(
-                    Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));
+                Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));
         }
 
         if (session.Notes is { Length: > 2048 }) {
             return Result.Failure(
-                    Errors.Validation.Invalid(nameof(session.Notes), "Notes must be at most 2048 characters."));
+                Errors.Validation.Invalid(nameof(session.Notes), "Notes must be at most 2048 characters."));
         }
 
         meal.AddAiSession(
@@ -198,24 +198,24 @@ public class CreateConsumptionCommandHandler(
         CreateConsumptionCommand command,
         UserId userId,
         CancellationToken cancellationToken) {
-        if (command.IsNutritionAutoCalculated) {
-            Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
-            if (nutritionResult.IsFailure) {
-                return nutritionResult;
-            }
-
-            meal.ApplyNutrition(new MealNutritionUpdate(
-                nutritionResult.Value.Calories,
-                nutritionResult.Value.Proteins,
-                nutritionResult.Value.Fats,
-                nutritionResult.Value.Carbs,
-                nutritionResult.Value.Fiber,
-                nutritionResult.Value.Alcohol,
-                IsAutoCalculated: true));
-            return Result.Success();
+        if (!command.IsNutritionAutoCalculated) {
+            return ApplyManualNutrition(meal, command);
         }
 
-        return ApplyManualNutrition(meal, command);
+        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
+        if (nutritionResult.IsFailure) {
+            return nutritionResult;
+        }
+
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            nutritionResult.Value.Calories,
+            nutritionResult.Value.Proteins,
+            nutritionResult.Value.Fats,
+            nutritionResult.Value.Carbs,
+            nutritionResult.Value.Fiber,
+            nutritionResult.Value.Alcohol,
+            IsAutoCalculated: true));
+        return Result.Success();
     }
 
     private static Result ApplyManualNutrition(Meal meal, CreateConsumptionCommand command) {
