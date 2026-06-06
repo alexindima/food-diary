@@ -13,7 +13,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
             "Services",
         };
 
-        string[] violations = SourceScanner.SourceFiles(abstractionsRoot)
+        string[] violations = [.. SourceScanner.SourceFiles(abstractionsRoot)
             .Where(path => Path.GetFileName(path).StartsWith("I", StringComparison.Ordinal))
             .Where(path => path.EndsWith(".cs", StringComparison.Ordinal))
             .Where(path => {
@@ -28,8 +28,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
                     : allowedPurposeFolders.Contains(segments[^1]) is false;
             })
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static path => path, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -37,7 +36,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     [Fact]
     public void ApplicationAbstractions_SourceFiles_DoNotReferenceHostPresentationOrInfrastructureNamespaces() {
         string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
-        string[] forbiddenPatterns = new[] {
+        string[] forbiddenPatterns = [
             "FoodDiary.Web.Api",
             "FoodDiary.Presentation.Api",
             "FoodDiary.Infrastructure",
@@ -47,7 +46,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
             "HttpContext",
             "IConfiguration",
             "IOptions<",
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(abstractionsRoot, forbiddenPatterns);
 

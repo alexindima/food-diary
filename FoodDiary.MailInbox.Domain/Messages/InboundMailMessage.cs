@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FoodDiary.MailInbox.Domain.Messages;
 
 public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
-    private readonly List<string> _toRecipients = new();
+    private readonly List<string> _toRecipients = [];
 
     [ExcludeFromCodeCoverage]
     private InboundMailMessage() {

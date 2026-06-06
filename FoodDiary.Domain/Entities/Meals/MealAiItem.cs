@@ -6,9 +6,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace FoodDiary.Domain.Entities.Meals;
 
 public sealed class MealAiItem : Entity<MealAiItemId> {
-    private const int NameMaxLength = 256;
-    private const int UnitMaxLength = 32;
-
     public MealAiSessionId MealAiSessionId { get; private set; }
     public string NameEn { get; private set; } = string.Empty;
     public string? NameLocal { get; private set; }

@@ -30,7 +30,10 @@ public static class MealNutritionCalculator {
                 continue;
             }
 
-            if (item.RecipeId is not { } recipeId || !recipes.TryGetValue(recipeId, out Recipe? recipe)) continue;
+            if (item.RecipeId is not { } recipeId || !recipes.TryGetValue(recipeId, out Recipe? recipe)) {
+                continue;
+            }
+
             int servings = recipe.Servings <= 0 ? 1 : recipe.Servings;
             double servingsMultiplier = item.Amount;
             calories += ((recipe.TotalCalories ?? 0) / servings) * servingsMultiplier;

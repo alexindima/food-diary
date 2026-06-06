@@ -34,11 +34,11 @@ public class PresentationConventionsTests {
     public void PresentationControllersAndHubs_DoNotParseClaimsDirectly() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
-        string[] scopedDirectories = new[] {
+        string[] scopedDirectories = [
             Path.Combine(presentationRoot, "Features"),
             Path.Combine(presentationRoot, "Hubs"),
             Path.Combine(presentationRoot, "Controllers"),
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(
             scopedDirectories,
@@ -51,14 +51,14 @@ public class PresentationConventionsTests {
     public void PresentationControllers_DoNotReturnAdHocHttpResults() {
         string root = GetRepositoryRoot();
         string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
-        string[] bannedPatterns = new[] {
+        string[] bannedPatterns = [
             "BadRequest(",
             "Unauthorized(",
             "Conflict(",
             "NotFound(",
             "Forbid(",
             "StatusCode(",
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(featuresPath, bannedPatterns);
 

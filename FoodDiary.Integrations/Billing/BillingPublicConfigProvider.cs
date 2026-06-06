@@ -39,7 +39,7 @@ public sealed class BillingPublicConfigProvider(
             AddProvider(providers, BillingProviderNames.YooKassa);
         }
 
-        return providers.ToArray();
+        return [.. providers];
     }
 
     private bool HasValidCheckoutConfiguration(string provider) {

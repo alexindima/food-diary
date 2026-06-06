@@ -848,7 +848,7 @@ public class RecipesFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(repository.LastAddedRecipe);
-        Assert.Equal([1, 2, 3], repository.LastAddedRecipe.Steps.Select(step => step.StepNumber).ToArray());
+        Assert.Equal([1, 2, 3], [.. repository.LastAddedRecipe.Steps.Select(step => step.StepNumber)]);
     }
 
     [Fact]
@@ -1054,7 +1054,7 @@ public class RecipesFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
-        Assert.Equal([publicRecipe.Id.Value, owned.Id.Value], result.Value.Select(x => x.Id).ToArray());
+        Assert.Equal([publicRecipe.Id.Value, owned.Id.Value], [.. result.Value.Select(x => x.Id)]);
         Assert.False(result.Value[0].IsOwnedByCurrentUser);
         Assert.True(result.Value[1].IsOwnedByCurrentUser);
         Assert.Equal(2, result.Value[0].UsageCount);
@@ -1081,7 +1081,7 @@ public class RecipesFeatureTests {
         Assert.Equal(2, result.Value.TotalItems);
         Assert.True(result.Value.Data[0].IsOwnedByCurrentUser);
         Assert.False(result.Value.Data[1].IsOwnedByCurrentUser);
-        Assert.Equal([owned.Id.Value, publicRecipe.Id.Value], result.Value.Data.Select(x => x.Id).ToArray());
+        Assert.Equal([owned.Id.Value, publicRecipe.Id.Value], [.. result.Value.Data.Select(x => x.Id)]);
     }
 
     [Fact]

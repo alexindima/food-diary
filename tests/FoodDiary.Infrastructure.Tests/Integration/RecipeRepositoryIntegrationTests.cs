@@ -56,13 +56,12 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        Recipe[] recipes = Enumerable.Range(0, PerformanceSeedCount)
+        Recipe[] recipes = [.. Enumerable.Range(0, PerformanceSeedCount)
             .Select(index => Recipe.Create(
                 user.Id,
                 string.Create(CultureInfo.InvariantCulture, $"Perf Recipe {index:D4}"),
                 servings: 2,
-                description: string.Create(CultureInfo.InvariantCulture, $"Description {index:D4}")))
-            .ToArray();
+                description: string.Create(CultureInfo.InvariantCulture, $"Description {index:D4}")))];
 
         context.Recipes.AddRange(recipes);
         await context.SaveChangesAsync();

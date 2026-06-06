@@ -90,7 +90,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_BillingSubscriptions_Provider_ExternalPaymentMethodId",
                 table: "BillingSubscriptions",
-                columns: new[] { "Provider", "ExternalPaymentMethodId" });
+                columns: ["Provider", "ExternalPaymentMethodId"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_BillingSubscriptionId",
@@ -100,22 +100,22 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_Provider_ExternalCustomerId",
                 table: "BillingPayments",
-                columns: new[] { "Provider", "ExternalCustomerId" });
+                columns: ["Provider", "ExternalCustomerId"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_Provider_ExternalPaymentId",
                 table: "BillingPayments",
-                columns: new[] { "Provider", "ExternalPaymentId" });
+                columns: ["Provider", "ExternalPaymentId"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_Provider_ExternalPaymentMethodId",
                 table: "BillingPayments",
-                columns: new[] { "Provider", "ExternalPaymentMethodId" });
+                columns: ["Provider", "ExternalPaymentMethodId"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_Provider_ExternalSubscriptionId",
                 table: "BillingPayments",
-                columns: new[] { "Provider", "ExternalSubscriptionId" });
+                columns: ["Provider", "ExternalSubscriptionId"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_UserId",
@@ -130,7 +130,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_BillingWebhookEvents_Provider_EventId",
                 table: "BillingWebhookEvents",
-                columns: new[] { "Provider", "EventId" },
+                columns: ["Provider", "EventId"],
                 unique: true);
         }
 

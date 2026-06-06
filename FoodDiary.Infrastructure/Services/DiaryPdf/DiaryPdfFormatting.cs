@@ -87,11 +87,10 @@ internal sealed partial class DiaryPdfGenerator {
 
     private static IReadOnlyList<string> FormatMealItemLabels(Meal meal, DiaryReportData report, int maxItems) {
         IReadOnlyList<MealCompositionItem> compositionItems = GetMealCompositionItems(meal, report);
-        string[] itemLabels = compositionItems
+        string[] itemLabels = [.. compositionItems
             .Select(item => item.Label)
             .Where(label => !string.IsNullOrWhiteSpace(label))
-            .Take(maxItems)
-            .ToArray();
+            .Take(maxItems)];
 
         if (itemLabels.Length == 0) {
             return [];
@@ -108,16 +107,14 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static IReadOnlyList<MealCompositionItem> GetMealCompositionItems(Meal meal, DiaryReportData report) {
-        MealCompositionItem[] manualItems = meal.Items
+        MealCompositionItem[] manualItems = [.. meal.Items
             .OrderBy(item => item.CreatedOnUtc)
-            .Select(item => FormatMealItem(item, report))
-            .ToArray();
+            .Select(item => FormatMealItem(item, report))];
 
-        MealCompositionItem[] aiItems = meal.AiSessions
+        MealCompositionItem[] aiItems = [.. meal.AiSessions
             .OrderBy(session => session.RecognizedAtUtc)
             .SelectMany(session => session.Items.OrderBy(item => item.CreatedOnUtc))
-            .Select(item => FormatMealAiItem(item, report))
-            .ToArray();
+            .Select(item => FormatMealAiItem(item, report))];
 
         return [.. manualItems, .. aiItems];
     }

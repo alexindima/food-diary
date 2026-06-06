@@ -85,10 +85,14 @@ public class DashboardSnapshotBuilder(
 
         DashboardBuildContext context = contextResult.Value;
         Result<DashboardStatisticsSection> statisticsResult = await BuildStatisticsSectionAsync(request, context, cancellationToken).ConfigureAwait(false);
-        if (statisticsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(statisticsResult.Error);
+        if (statisticsResult.IsFailure) {
+            return Result.Failure<DashboardSnapshotModel>(statisticsResult.Error);
+        }
 
         Result<DashboardMealsModel> mealsResult = await BuildMealsSectionAsync(request, context, cancellationToken).ConfigureAwait(false);
-        if (mealsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
+        if (mealsResult.IsFailure) {
+            return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
+        }
 
         DashboardBodySection body = await BuildBodySectionAsync(context, cancellationToken).ConfigureAwait(false);
         HydrationDailyModel? hydration = await BuildHydrationSectionAsync(context, cancellationToken).ConfigureAwait(false);
@@ -172,12 +176,16 @@ public class DashboardSnapshotBuilder(
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> statsResult = await sender.Send(new GetStatisticsQuery(
             request.UserId, context.DayStart, context.DayEnd, context.PeriodDays), cancellationToken).ConfigureAwait(false);
-        if (statsResult.IsFailure) return Result.Failure<DashboardStatisticsSection>(statsResult.Error);
+        if (statsResult.IsFailure) {
+            return Result.Failure<DashboardStatisticsSection>(statsResult.Error);
+        }
 
         DateTime weeklyFrom = context.PeriodDays == 1 ? context.DayStart.AddDays(-6) : context.DayStart;
         Result<IReadOnlyList<AggregatedStatisticsModel>> weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
             request.UserId, weeklyFrom, context.DayEnd, 1), cancellationToken).ConfigureAwait(false);
-        if (weeklyStatsResult.IsFailure) return Result.Failure<DashboardStatisticsSection>(weeklyStatsResult.Error);
+        if (weeklyStatsResult.IsFailure) {
+            return Result.Failure<DashboardStatisticsSection>(weeklyStatsResult.Error);
+        }
 
         return Result.Success(new DashboardStatisticsSection(
             DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), context.CurrentUser),
@@ -296,7 +304,10 @@ public class DashboardSnapshotBuilder(
     }
 
     private DashboardLayoutModel? ParseDashboardLayout(string? json, UserId userId) {
-        if (string.IsNullOrWhiteSpace(json)) return null;
+        if (string.IsNullOrWhiteSpace(json)) {
+            return null;
+        }
+
         try {
             return JsonSerializer.Deserialize<DashboardLayoutModel>(json);
         } catch (JsonException ex) {

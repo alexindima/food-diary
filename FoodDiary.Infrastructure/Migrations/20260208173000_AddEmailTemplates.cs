@@ -29,7 +29,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_EmailTemplates_Key_Locale",
                 table: "EmailTemplates",
-                columns: new[] { "Key", "Locale" },
+                columns: ["Key", "Locale"],
                 unique: true);
         }
 

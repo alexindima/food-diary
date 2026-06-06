@@ -26,7 +26,7 @@ public sealed class PagedHttpResponseMappingsTests {
 
     [Fact]
     public void ToHttpResponseList_MapsItemsToList() {
-        int[] items = new[] { 2, 4, 6 };
+        int[] items = [2, 4, 6];
 
         IReadOnlyList<string> result = items.ToHttpResponseList(static value => string.Create(CultureInfo.InvariantCulture, $"value-{value}"));
 

@@ -80,7 +80,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_UsdaFoodNutrients_FdcId_NutrientId",
                 table: "UsdaFoodNutrients",
-                columns: new[] { "FdcId", "NutrientId" },
+                columns: ["FdcId", "NutrientId"],
                 unique: true);
 
             migrationBuilder.CreateIndex(

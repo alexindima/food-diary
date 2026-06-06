@@ -59,18 +59,18 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_WearableConnections_UserId_Provider",
                 table: "WearableConnections",
-                columns: new[] { "UserId", "Provider" },
+                columns: ["UserId", "Provider"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WearableSyncEntries_UserId_Date",
                 table: "WearableSyncEntries",
-                columns: new[] { "UserId", "Date" });
+                columns: ["UserId", "Date"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WearableSyncEntries_UserId_Provider_DataType_Date",
                 table: "WearableSyncEntries",
-                columns: new[] { "UserId", "Provider", "DataType", "Date" },
+                columns: ["UserId", "Provider", "DataType", "Date"],
                 unique: true);
         }
 

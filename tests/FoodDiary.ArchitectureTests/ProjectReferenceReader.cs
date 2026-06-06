@@ -22,12 +22,11 @@ internal static class ProjectReferenceReader {
             relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
         var document = XDocument.Load(projectPath);
 
-        return document.Descendants("ProjectReference")
+        return [.. document.Descendants("ProjectReference")
             .Select(node => node.Attribute("Include")?.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => GetProjectNameFromReference(value!))
-            .OrderBy(static name => name, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static name => name, StringComparer.Ordinal)];
     }
 
     private static IEnumerable<string> ReadProductionProjectPaths() =>

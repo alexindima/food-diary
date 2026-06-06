@@ -24,27 +24,27 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_UserId_CreatedOnUtc",
                 table: "Recipes",
-                columns: new[] { "UserId", "CreatedOnUtc" });
+                columns: ["UserId", "CreatedOnUtc"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_Visibility_CreatedOnUtc",
                 table: "Recipes",
-                columns: new[] { "Visibility", "CreatedOnUtc" });
+                columns: ["Visibility", "CreatedOnUtc"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_UserId_CreatedOnUtc",
                 table: "Products",
-                columns: new[] { "UserId", "CreatedOnUtc" });
+                columns: ["UserId", "CreatedOnUtc"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_Visibility_CreatedOnUtc",
                 table: "Products",
-                columns: new[] { "Visibility", "CreatedOnUtc" });
+                columns: ["Visibility", "CreatedOnUtc"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Meals_UserId_Date_CreatedOnUtc",
                 table: "Meals",
-                columns: new[] { "UserId", "Date", "CreatedOnUtc" });
+                columns: ["UserId", "Date", "CreatedOnUtc"]);
         }
 
         /// <inheritdoc />

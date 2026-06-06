@@ -57,7 +57,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_NutritionLessons_Locale_Category",
                 table: "NutritionLessons",
-                columns: new[] { "Locale", "Category" });
+                columns: ["Locale", "Category"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserLessonProgress_LessonId",
@@ -67,7 +67,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_UserLessonProgress_UserId_LessonId",
                 table: "UserLessonProgress",
-                columns: new[] { "UserId", "LessonId" },
+                columns: ["UserId", "LessonId"],
                 unique: true);
         }
 

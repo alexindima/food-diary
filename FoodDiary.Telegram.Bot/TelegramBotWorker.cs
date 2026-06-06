@@ -28,7 +28,7 @@ public sealed class TelegramBotWorker(
         logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
         var receiverOptions = new ReceiverOptions {
-            AllowedUpdates = Array.Empty<UpdateType>(),
+            AllowedUpdates = [],
         };
 
         botClient.StartReceiving(

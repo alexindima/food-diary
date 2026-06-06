@@ -7,11 +7,10 @@ public sealed class DnsClientMxResolver : IMxResolver {
 
     public async Task<IReadOnlyList<MxRecord>> ResolveAsync(string domain, CancellationToken cancellationToken) {
         IDnsQueryResponse result = await _lookupClient.QueryAsync(domain, QueryType.MX, cancellationToken: cancellationToken).ConfigureAwait(false);
-        MxRecord[] records = result.Answers
+        MxRecord[] records = [.. result.Answers
             .MxRecords()
             .Select(static record => new MxRecord(record.Exchange.Value.TrimEnd('.'), record.Preference))
-            .OrderBy(static record => record.Preference)
-            .ToArray();
+            .OrderBy(static record => record.Preference)];
 
         return records.Length > 0 ? records : [new MxRecord(domain, 0)];
     }

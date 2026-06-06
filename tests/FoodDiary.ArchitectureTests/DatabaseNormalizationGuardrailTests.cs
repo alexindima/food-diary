@@ -86,14 +86,13 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void FirstNormalForm_DocumentColumnsRemainExplicitlyApproved() {
-        string[] violations = RelationalEntityTypes()
+        string[] violations = [.. RelationalEntityTypes()
             .SelectMany(entity => entity.GetProperties()
                 .Where(IsPersistedApplicationColumn)
                 .Where(IsDocumentShapedColumn)
                 .Select(property => FormatProperty(entity, property)))
             .Where(column => AllowedDocumentColumns.Contains(column) is false)
-            .OrderBy(static column => column, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -104,14 +103,13 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void FirstNormalForm_RawSqlSchemasDoNotIntroduceUnapprovedJsonColumns() {
-        string[] violations = SourceScanner.SourceFiles([
+        string[] violations = [.. SourceScanner.SourceFiles([
                 ArchitectureTestPaths.FromRoot("FoodDiary.MailInbox.Infrastructure"),
                 ArchitectureTestPaths.FromRoot("FoodDiary.MailRelay.Infrastructure"),
             ])
             .SelectMany(ReadRawSqlJsonColumns)
             .Where(column => AllowedRawSqlDocumentColumns.Contains(column) is false)
-            .OrderBy(static column => column, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -122,7 +120,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void SecondNormalForm_CompositePrimaryKeyTablesDoNotCarryNonKeyFacts() {
-        string[] violations = RelationalEntityTypes()
+        string[] violations = [.. RelationalEntityTypes()
             .Where(static entity => entity.FindPrimaryKey()?.Properties.Count > 1)
             .SelectMany(entity => {
                 var keyProperties = entity.FindPrimaryKey()!.Properties.ToHashSet();
@@ -132,8 +130,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
                     .Where(IsPersistedApplicationColumn)
                     .Select(property => FormatProperty(entity, property));
             })
-            .OrderBy(static column => column, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -144,12 +141,11 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void ThirdNormalForm_SnapshotColumnsRemainExplicitlyApproved() {
-        string[] violations = RelationalEntityTypes()
+        string[] violations = [.. RelationalEntityTypes()
             .SelectMany(entity => FindSnapshotLikeColumns(entity)
                 .Select(property => FormatProperty(entity, property)))
             .Where(column => AllowedSnapshotColumns.Contains(column) is false)
-            .OrderBy(static column => column, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -160,14 +156,13 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void ThirdNormalForm_DerivedColumnsRemainExplicitlyApproved() {
-        string[] violations = RelationalEntityTypes()
+        string[] violations = [.. RelationalEntityTypes()
             .SelectMany(entity => entity.GetProperties()
                 .Where(IsPersistedApplicationColumn)
                 .Where(IsDerivedColumn)
                 .Select(property => FormatProperty(entity, property)))
             .Where(column => AllowedDerivedColumns.Contains(column) is false)
-            .OrderBy(static column => column, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -181,11 +176,10 @@ public sealed class DatabaseNormalizationGuardrailTests {
         var entityTypes = RelationalEntityTypes()
             .ToDictionary(static entity => entity.ClrType.Name, StringComparer.Ordinal);
 
-        string[] violations = ExpectedBusinessKeys
+        string[] violations = [.. ExpectedBusinessKeys
             .Where(expectation => HasUniqueKey(entityTypes, expectation) is false)
             .Select(expectation => $"{expectation.EntityName}({string.Join(", ", expectation.PropertyNames)})")
-            .OrderBy(static value => value, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static value => value, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -262,9 +256,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
             return false;
         }
 
-        string[] expected = expectation.PropertyNames
-            .OrderBy(static name => name, StringComparer.Ordinal)
-            .ToArray();
+        string[] expected = [.. expectation.PropertyNames.OrderBy(static name => name, StringComparer.Ordinal)];
 
         IKey? primaryKey = entity.FindPrimaryKey();
         if (primaryKey is not null && PropertyNamesMatch(primaryKey.Properties, expected)) {
@@ -277,10 +269,9 @@ public sealed class DatabaseNormalizationGuardrailTests {
     }
 
     private static bool PropertyNamesMatch(IReadOnlyList<IProperty> properties, string[] expected) {
-        string[] actual = properties
+        string[] actual = [.. properties
             .Select(static property => property.Name)
-            .OrderBy(static name => name, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static name => name, StringComparer.Ordinal)];
 
         return actual.SequenceEqual(expected, StringComparer.Ordinal);
     }

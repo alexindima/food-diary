@@ -45,7 +45,7 @@ public class GamificationFeatureTests {
         userRepo.Seed(user);
 
         var mealRepo = new StubMealRepository();
-        mealRepo.SetDistinctDates(new List<DateTime> { Today, Today.AddDays(-1), Today.AddDays(-2) });
+        mealRepo.SetDistinctDates([Today, Today.AddDays(-1), Today.AddDays(-2)]);
         mealRepo.SetTotalMealCount(15);
 
         var handler = new GetGamificationQueryHandler(mealRepo, userRepo, new StubDateTimeProvider());

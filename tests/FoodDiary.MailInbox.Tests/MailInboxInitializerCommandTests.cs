@@ -16,7 +16,7 @@ public sealed class MailInboxInitializerCommandTests {
     [InlineData("update", "Host=localhost;Database=mailinbox")]
     public void Parse_WithKnownCommand_ReturnsCommand(string name, string? connectionString) {
         string[] args = connectionString is null
-            ? new[] { name }
+            ? [name]
             : [name, "--connection-string", connectionString];
 
         object? command = Parse(args);

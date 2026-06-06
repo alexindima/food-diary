@@ -246,12 +246,11 @@ public sealed class PaddleBillingGateway(
         string? timestamp = parts
             .Select(static part => part.Split('=', 2))
             .FirstOrDefault(static values => values.Length == 2 && string.Equals(values[0], "ts", StringComparison.OrdinalIgnoreCase))?[1];
-        string[] signatures = parts
+        string[] signatures = [.. parts
             .Select(static part => part.Split('=', 2))
             .Where(static values => values.Length == 2 && string.Equals(values[0], "h1", StringComparison.OrdinalIgnoreCase))
             .Select(static values => values[1])
-            .Where(static value => !string.IsNullOrWhiteSpace(value))
-            .ToArray();
+            .Where(static value => !string.IsNullOrWhiteSpace(value))];
 
         if (string.IsNullOrWhiteSpace(timestamp) || signatures.Length == 0) {
             error = "Paddle-Signature header is malformed.";

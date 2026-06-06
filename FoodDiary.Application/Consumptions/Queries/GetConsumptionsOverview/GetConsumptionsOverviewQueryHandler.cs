@@ -57,10 +57,9 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             .Select(favorite => favorite.ToModel())
             .ToList();
 
-        MealId[] mealIds = pageData.Items
+        MealId[] mealIds = [.. pageData.Items
             .Select(meal => meal.Id)
-            .Distinct()
-            .ToArray();
+            .Distinct()];
         IReadOnlyDictionary<MealId, FavoriteMeal> favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
 
         int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)sanitizedLimit);

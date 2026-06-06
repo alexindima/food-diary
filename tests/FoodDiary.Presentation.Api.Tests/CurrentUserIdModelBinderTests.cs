@@ -2,7 +2,6 @@ using System.Security.Claims;
 using FoodDiary.Presentation.Api.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -59,7 +58,7 @@ public sealed class CurrentUserIdModelBinderTests {
             ModelName = "currentUserId",
             ModelState = new ModelStateDictionary(),
             ValueProvider = new CompositeValueProvider(),
-            ValidationState = new ValidationStateDictionary(),
+            ValidationState = [],
         };
     }
 }

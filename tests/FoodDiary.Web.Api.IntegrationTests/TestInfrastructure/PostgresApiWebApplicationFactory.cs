@@ -18,9 +18,8 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime {
     private PostgreSqlContainer? _container;
     private string? _connectionString;
-    private readonly TestEmailSender _testEmailSender = new();
 
-    public TestEmailSender EmailSender => _testEmailSender;
+    public TestEmailSender EmailSender { get; } = new();
 
     public async Task InitializeAsync() {
         if (!DockerAvailability.IsAvailable(out _)) {
@@ -44,7 +43,7 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
     }
 
     public new async Task DisposeAsync() {
-        _testEmailSender.Clear();
+        EmailSender.Clear();
         base.Dispose();
         if (_container is not null) {
             await _container.DisposeAsync().AsTask().ConfigureAwait(false);
@@ -86,8 +85,8 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
             services.AddDbContext<FoodDiaryDbContext>(options =>
                 options.UseNpgsql(GetRequiredConnectionString()));
             services.AddSingleton<IImageStorageService, TestImageStorageService>();
-            services.AddSingleton(_testEmailSender);
-            services.AddSingleton<IEmailSender>(_testEmailSender);
+            services.AddSingleton(EmailSender);
+            services.AddSingleton<IEmailSender>(EmailSender);
             services.AddSingleton<IPasswordHasher, TestPasswordHasher>();
         });
     }

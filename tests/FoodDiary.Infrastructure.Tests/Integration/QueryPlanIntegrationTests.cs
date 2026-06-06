@@ -23,7 +23,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        Product[] products = Enumerable.Range(0, SeedCount)
+        Product[] products = [.. Enumerable.Range(0, SeedCount)
             .Select(index => Product.Create(
                 user.Id,
                 string.Create(CultureInfo.InvariantCulture, $"Plan Product {index:D4}"),
@@ -36,8 +36,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
                 20,
                 3,
                 0,
-                visibility: Visibility.Private))
-            .ToArray();
+                visibility: Visibility.Private))];
 
         context.Products.AddRange(products);
         await context.SaveChangesAsync();
@@ -66,14 +65,13 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        Recipe[] recipes = Enumerable.Range(0, SeedCount)
+        Recipe[] recipes = [.. Enumerable.Range(0, SeedCount)
             .Select(index => Recipe.Create(
                 user.Id,
                 string.Create(CultureInfo.InvariantCulture, $"Plan Recipe {index:D4}"),
                 servings: 2,
                 description: string.Create(CultureInfo.InvariantCulture, $"Description {index:D4}"),
-                visibility: Visibility.Private))
-            .ToArray();
+                visibility: Visibility.Private))];
 
         context.Recipes.AddRange(recipes);
         await context.SaveChangesAsync();
@@ -98,14 +96,12 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     [RequiresDockerFact]
     public async Task ProductSearchQuery_UsesTrigramNameIndex() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        User[] users = Enumerable.Range(0, 12)
-            .Select(index => User.Create(string.Create(CultureInfo.InvariantCulture, $"products-search-plan-{index}-{Guid.NewGuid():N}@example.com"), "hash"))
-            .ToArray();
+        User[] users = [.. Enumerable.Range(0, 12).Select(index => User.Create(string.Create(CultureInfo.InvariantCulture, $"products-search-plan-{index}-{Guid.NewGuid():N}@example.com"), "hash"))];
 
         context.Users.AddRange(users);
         await context.SaveChangesAsync();
 
-        Product[] products = users.SelectMany((user, userIndex) =>
+        Product[] products = [.. users.SelectMany((user, userIndex) =>
                 Enumerable.Range(0, SeedCount)
                     .Select(index => Product.Create(
                         user.Id,
@@ -121,8 +117,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
                         20,
                         3,
                         0,
-                        visibility: Visibility.Private)))
-            .ToArray();
+                        visibility: Visibility.Private)))];
 
         context.Products.AddRange(products);
         await context.SaveChangesAsync();
@@ -147,14 +142,12 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     [RequiresDockerFact]
     public async Task RecipeSearchQuery_UsesTrigramNameIndex() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        User[] users = Enumerable.Range(0, 12)
-            .Select(index => User.Create(string.Create(CultureInfo.InvariantCulture, $"recipes-search-plan-{index}-{Guid.NewGuid():N}@example.com"), "hash"))
-            .ToArray();
+        User[] users = [.. Enumerable.Range(0, 12).Select(index => User.Create(string.Create(CultureInfo.InvariantCulture, $"recipes-search-plan-{index}-{Guid.NewGuid():N}@example.com"), "hash"))];
 
         context.Users.AddRange(users);
         await context.SaveChangesAsync();
 
-        Recipe[] recipes = users.SelectMany((user, userIndex) =>
+        Recipe[] recipes = [.. users.SelectMany((user, userIndex) =>
                 Enumerable.Range(0, SeedCount)
                     .Select(index => Recipe.Create(
                         user.Id,
@@ -163,8 +156,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
                             : string.Create(CultureInfo.InvariantCulture, $"Background Recipe {userIndex:D2}-{index:D4}"),
                         servings: 2,
                         description: string.Create(CultureInfo.InvariantCulture, $"Description {userIndex:D2}-{index:D4}"),
-                        visibility: Visibility.Private)))
-            .ToArray();
+                        visibility: Visibility.Private)))];
 
         context.Recipes.AddRange(recipes);
         await context.SaveChangesAsync();
@@ -194,14 +186,13 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         await context.SaveChangesAsync();
 
         var startDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        MealType[] mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
-        Meal[] meals = Enumerable.Range(0, SeedCount)
+        MealType[] mealTypes = [MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack];
+        Meal[] meals = [.. Enumerable.Range(0, SeedCount)
             .Select(index => Meal.Create(
                 user.Id,
                 startDate.AddDays(index),
                 mealTypes[index % mealTypes.Length],
-                comment: string.Create(CultureInfo.InvariantCulture, $"Plan Meal {index:D4}")))
-            .ToArray();
+                comment: string.Create(CultureInfo.InvariantCulture, $"Plan Meal {index:D4}")))];
 
         context.Meals.AddRange(meals);
         await context.SaveChangesAsync();

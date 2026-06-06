@@ -96,9 +96,7 @@ public sealed class ProjectDependencyMatrixTests {
     [Fact]
     public void AllProductionProjects_AreCoveredByDependencyMatrix() {
         IReadOnlyList<string> actualProjects = ProjectReferenceReader.ReadProductionProjectNames();
-        string[] expectedProjects = AllowedProductionProjectReferences.Keys
-            .OrderBy(static name => name, StringComparer.Ordinal)
-            .ToArray();
+        string[] expectedProjects = [.. AllowedProductionProjectReferences.Keys.OrderBy(static name => name, StringComparer.Ordinal)];
 
         Assert.Equal(expectedProjects, actualProjects);
     }
@@ -121,25 +119,23 @@ public sealed class ProjectDependencyMatrixTests {
     [Fact]
     public void CoreProjects_ReferenceMailBoundedContextsOnlyThroughAllowedClientProjects() {
         IReadOnlyDictionary<string, string[]> actualReferencesByProject = ProjectReferenceReader.ReadProductionProjectReferences();
-        string[] coreProjects = actualReferencesByProject.Keys
+        string[] coreProjects = [.. actualReferencesByProject.Keys
             .Where(static projectName => projectName.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal) is false)
-            .Where(static projectName => projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal) is false)
-            .ToArray();
+            .Where(static projectName => projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal) is false)];
 
         var allowedMailClientReferences = new HashSet<string>(StringComparer.Ordinal) {
             "FoodDiary.MailInbox.Client",
             "FoodDiary.MailRelay.Client",
         };
 
-        string[] violations = coreProjects
+        string[] violations = [.. coreProjects
             .SelectMany(projectName => actualReferencesByProject[projectName]
                 .Where(static reference => reference.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal) ||
                                            reference.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))
                 .Where(reference => allowedMailClientReferences.Contains(reference) is false ||
                                     string.Equals(projectName, "FoodDiary.Integrations", StringComparison.Ordinal) is false)
                 .Select(reference => $"{projectName} -> {reference}"))
-            .OrderBy(static value => value, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static value => value, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

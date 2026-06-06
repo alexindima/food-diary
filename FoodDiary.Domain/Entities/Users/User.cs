@@ -517,14 +517,12 @@ public sealed partial class User : AggregateRoot<UserId> {
         ArgumentNullException.ThrowIfNull(roles);
         EnsureNotDeleted();
 
-        RoleId[] requestedRoleIds = roles
+        RoleId[] requestedRoleIds = [.. roles
             .Select(role => role.Id)
-            .OrderBy(id => id.Value)
-            .ToArray();
-        RoleId[] currentRoleIds = _userRoles
+            .OrderBy(id => id.Value)];
+        RoleId[] currentRoleIds = [.. _userRoles
             .Select(role => role.RoleId)
-            .OrderBy(id => id.Value)
-            .ToArray();
+            .OrderBy(id => id.Value)];
 
         if (requestedRoleIds.SequenceEqual(currentRoleIds)) {
             return;

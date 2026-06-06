@@ -232,7 +232,7 @@ public class TdeeCalculatorTests {
         DateTime baseDate = DateTime.UtcNow.AddDays(-30);
         // Noisy weights around 80 kg - EMA should smooth them
         var weights = new List<WeightEntry>();
-        double[] noisy = new[] { 80.5, 79.2, 80.8, 79.5, 80.3, 79.8, 80.1, 79.9, 80.0, 80.2 };
+        double[] noisy = [80.5, 79.2, 80.8, 79.5, 80.3, 79.8, 80.1, 79.9, 80.0, 80.2];
         double daysPerEntry = 30.0 / (noisy.Length - 1);
         for (int i = 0; i < noisy.Length; i++) {
             weights.Add(WeightEntry.Create(TestUserId, baseDate.AddDays(i * daysPerEntry), noisy[i]));

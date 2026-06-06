@@ -142,7 +142,7 @@ public sealed class BaseApiControllerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubSender : ISender {
-        private readonly Dictionary<object, object> _responses = new();
+        private readonly Dictionary<object, object> _responses = [];
 
         public StubSender Register<TResponse>(IRequest<TResponse> request, TResponse response) {
             _responses[request] = response!;
@@ -190,7 +190,7 @@ public sealed class BaseApiControllerTests {
 
         private readonly ConcurrentQueue<Activity> _completedActivities = new();
 
-        public Activity[] CompletedActivitiesSnapshot => _completedActivities.ToArray();
+        public Activity[] CompletedActivitiesSnapshot => [.. _completedActivities];
 
         public void Dispose() {
             _listener.Dispose();

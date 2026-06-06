@@ -31,7 +31,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_Provider_ExternalPaymentId",
                 table: "BillingPayments",
-                columns: new[] { "Provider", "ExternalPaymentId" },
+                columns: ["Provider", "ExternalPaymentId"],
                 unique: true);
         }
 
@@ -44,7 +44,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_BillingPayments_Provider_ExternalPaymentId",
                 table: "BillingPayments",
-                columns: new[] { "Provider", "ExternalPaymentId" });
+                columns: ["Provider", "ExternalPaymentId"]);
         }
     }
 }

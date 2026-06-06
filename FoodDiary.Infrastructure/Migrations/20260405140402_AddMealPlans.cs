@@ -83,7 +83,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_MealPlanDays_MealPlanId_DayNumber",
                 table: "MealPlanDays",
-                columns: new[] { "MealPlanId", "DayNumber" },
+                columns: ["MealPlanId", "DayNumber"],
                 unique: true);
 
             migrationBuilder.CreateIndex(

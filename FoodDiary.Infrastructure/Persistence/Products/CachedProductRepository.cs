@@ -33,12 +33,14 @@ public class CachedProductRepository(
         bool includePublic = true,
         CancellationToken cancellationToken = default) {
         string key = CacheKey(id, userId, includePublic);
-        if (cache.TryGetValue(key, out Product? cached))
+        if (cache.TryGetValue(key, out Product? cached)) {
             return cached;
+        }
 
         Product? product = await inner.GetByIdAsync(id, userId, includePublic, cancellationToken).ConfigureAwait(false);
-        if (product is not null)
+        if (product is not null) {
             cache.Set(key, product, CacheDuration);
+        }
 
         return product;
     }

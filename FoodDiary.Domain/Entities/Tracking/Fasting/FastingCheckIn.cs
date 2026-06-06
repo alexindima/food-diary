@@ -78,11 +78,10 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
             return null;
         }
 
-        string[] normalized = values
+        string[] normalized = [.. values
             .Where(static value => !string.IsNullOrWhiteSpace(value))
             .Select(static value => value.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .Distinct(StringComparer.OrdinalIgnoreCase)];
 
         if (normalized.Length == 0) {
             return null;

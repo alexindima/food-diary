@@ -32,7 +32,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_WeightEntries_UserId_Date",
                 table: "WeightEntries",
-                columns: new[] { "UserId", "Date" },
+                columns: ["UserId", "Date"],
                 unique: true);
         }
 

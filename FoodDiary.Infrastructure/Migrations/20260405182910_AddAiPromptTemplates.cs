@@ -28,12 +28,12 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_AiPromptTemplates_Key_IsActive",
                 table: "AiPromptTemplates",
-                columns: new[] { "Key", "IsActive" });
+                columns: ["Key", "IsActive"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AiPromptTemplates_Key_Locale",
                 table: "AiPromptTemplates",
-                columns: new[] { "Key", "Locale" },
+                columns: ["Key", "Locale"],
                 unique: true);
         }
 

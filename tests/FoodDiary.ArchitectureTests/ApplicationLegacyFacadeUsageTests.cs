@@ -9,13 +9,12 @@ public class ApplicationLegacyFacadeUsageTests {
         string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
         string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        string[] violations = Directory
+        string[] violations = [.. Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
             .Where(entry => entry.line.Contains("recipe.Update(", StringComparison.Ordinal))
-            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.file}:{entry.lineNumber}"))
-            .ToArray();
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.file}:{entry.lineNumber}"))];
 
         Assert.True(
             violations.Length == 0,
@@ -29,13 +28,12 @@ public class ApplicationLegacyFacadeUsageTests {
         string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
         string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        string[] violations = Directory
+        string[] violations = [.. Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
             .Where(entry => entry.line.Contains("product.UpdateIdentity(", StringComparison.Ordinal))
-            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.file}:{entry.lineNumber}"))
-            .ToArray();
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.file}:{entry.lineNumber}"))];
 
         Assert.True(
             violations.Length == 0,
@@ -49,13 +47,12 @@ public class ApplicationLegacyFacadeUsageTests {
         string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
         string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        string[] violations = Directory
+        string[] violations = [.. Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
             .Where(entry => entry.line.Contains("user.UpdateProfile(", StringComparison.Ordinal))
-            .Select(entry => $"{entry.file}:{entry.lineNumber.ToString(CultureInfo.InvariantCulture)}")
-            .ToArray();
+            .Select(entry => $"{entry.file}:{entry.lineNumber.ToString(CultureInfo.InvariantCulture)}")];
 
         Assert.True(
             violations.Length == 0,
@@ -69,13 +66,12 @@ public class ApplicationLegacyFacadeUsageTests {
         string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
         string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        string[] violations = Directory
+        string[] violations = [.. Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .Select(file => new { file, content = File.ReadAllText(file) })
             .Where(entry => entry.content.Contains("meal.ApplyNutrition(", StringComparison.Ordinal) &&
                             entry.content.Contains("isAutoCalculated:", StringComparison.Ordinal))
-            .Select(entry => entry.file)
-            .ToArray();
+            .Select(entry => entry.file)];
 
         Assert.True(
             violations.Length == 0,

@@ -116,10 +116,9 @@ public sealed class DmarcReportParser {
         XElement? metadata = root.Elements().FirstOrDefault(static element => IsElement(element, "report_metadata"));
         XElement? policy = root.Elements().FirstOrDefault(static element => IsElement(element, "policy_published"));
         XElement? dateRange = metadata?.Elements().FirstOrDefault(static element => IsElement(element, "date_range"));
-        DmarcReportRecordPreview[] records = root.Elements()
+        DmarcReportRecordPreview[] records = [.. root.Elements()
             .Where(static element => IsElement(element, "record"))
-            .Select(ParseRecord)
-            .ToArray();
+            .Select(ParseRecord)];
 
         return new DmarcReportPreview(
             GetChildValue(metadata, "org_name"),

@@ -68,11 +68,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
     }
 
     private static DateTime NormalizeUtc(DateTime value) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(nameof(value), "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(nameof(value), "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 
     private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {

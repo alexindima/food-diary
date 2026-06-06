@@ -16,7 +16,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_AiUsages_UserId_CreatedOnUtc",
                 table: "AiUsages",
-                columns: new[] { "UserId", "CreatedOnUtc" });
+                columns: ["UserId", "CreatedOnUtc"]);
         }
 
         /// <inheritdoc />

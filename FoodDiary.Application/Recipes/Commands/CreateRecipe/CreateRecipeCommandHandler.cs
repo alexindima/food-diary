@@ -39,13 +39,19 @@ public class CreateRecipeCommandHandler(
         CreateRecipeValues values = valuesResult.Value;
         Recipe recipe = CreateRecipe(command, values);
         Result stepsResult = await AddStepsAsync(recipe, command, values.UserId, cancellationToken).ConfigureAwait(false);
-        if (stepsResult.IsFailure) return Result.Failure<RecipeModel>(stepsResult.Error);
+        if (stepsResult.IsFailure) {
+            return Result.Failure<RecipeModel>(stepsResult.Error);
+        }
 
         Result ingredientsResult = await EnsureIngredientsAccessibleAsync(command.Steps, recipe.Id, values.UserId, cancellationToken).ConfigureAwait(false);
-        if (ingredientsResult.IsFailure) return Result.Failure<RecipeModel>(ingredientsResult.Error);
+        if (ingredientsResult.IsFailure) {
+            return Result.Failure<RecipeModel>(ingredientsResult.Error);
+        }
 
         Result nutritionResult = ApplyNutrition(recipe, command);
-        if (nutritionResult.IsFailure) return Result.Failure<RecipeModel>(nutritionResult.Error);
+        if (nutritionResult.IsFailure) {
+            return Result.Failure<RecipeModel>(nutritionResult.Error);
+        }
 
         return await SaveAndLoadAsync(recipe, values.UserId, cancellationToken).ConfigureAwait(false);
     }

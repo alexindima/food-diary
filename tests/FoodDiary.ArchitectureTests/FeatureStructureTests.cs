@@ -8,12 +8,11 @@ public class FeatureStructureTests {
         string applicationPath = Path.Combine(root, "FoodDiary.Application");
         var excluded = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "bin", "obj", "Common" };
 
-        string[] featureDirectories = Directory.GetDirectories(applicationPath)
+        string[] featureDirectories = [.. Directory.GetDirectories(applicationPath)
             .Select(Path.GetFileName)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(name => name!)
-            .Where(name => !excluded.Contains(name))
-            .ToArray();
+            .Where(name => !excluded.Contains(name))];
 
         Assert.NotEmpty(featureDirectories);
 
@@ -66,7 +65,7 @@ public class FeatureStructureTests {
     public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot) {
         string root = GetRepositoryRoot();
         string projectPath = Path.Combine(root, projectFolder);
-        string[] sourceFiles = SourceScanner.SourceFiles(projectPath).ToArray();
+        string[] sourceFiles = [.. SourceScanner.SourceFiles(projectPath)];
 
         Assert.NotEmpty(sourceFiles);
 

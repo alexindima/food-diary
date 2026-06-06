@@ -29,14 +29,14 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_DailyAdvices_Locale_Tag",
                 table: "DailyAdvices",
-                columns: new[] { "Locale", "Tag" });
+                columns: ["Locale", "Tag"]);
 
             migrationBuilder.InsertData(
                 table: "DailyAdvices",
-                columns: new[]
-                {
+                columns:
+                [
                     "Id", "Locale", "Value", "Weight", "Tag", "CreatedOnUtc", "ModifiedOnUtc",
-                },
+                ],
                 values: new object[,]
                 {
                     { new Guid("fce76c5a-3066-46aa-9193-3c8cbdb06f50"), "en", "Start your day with a glass of water before coffee.", 3, "hydration", createdOn, null },

@@ -15,10 +15,9 @@ internal sealed partial class DiaryPdfGenerator {
         CancellationToken cancellationToken) {
         using var gate = new SemaphoreSlim(MaxParallelMealImageDownloads);
         var cache = new Dictionary<string, Lazy<Task<byte[]?>>>(StringComparer.Ordinal);
-        Task<MealImageEntry>[] tasks = meals
+        Task<MealImageEntry>[] tasks = [.. meals
             .Take(MaxMealImagesPerReport)
-            .Select(meal => LoadMealImageEntryAsync(meal, cache, gate, cancellationToken))
-            .ToArray();
+            .Select(meal => LoadMealImageEntryAsync(meal, cache, gate, cancellationToken))];
 
         MealImageEntry[] entries = await Task.WhenAll(tasks).ConfigureAwait(false);
 

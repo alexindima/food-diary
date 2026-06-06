@@ -110,8 +110,8 @@ static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
 
 static async Task PrintStatusAsync(FoodDiaryDbContext dbContext) {
     bool canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
-    string[] appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
-    string[] pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false)).ToArray();
+    string[] appliedMigrations = [.. (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false))];
+    string[] pendingMigrations = [.. (await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false))];
 
     Console.WriteLine($"Can connect:       {canConnect}");
     Console.WriteLine($"Applied count:     {appliedMigrations.Length}");
@@ -148,7 +148,7 @@ static async Task RollbackDatabaseAsync(FoodDiaryDbContext dbContext, string? ta
 }
 
 static async Task RollbackLastMigrationAsync(FoodDiaryDbContext dbContext) {
-    string[] appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
+    string[] appliedMigrations = [.. (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false))];
     if (appliedMigrations.Length == 0) {
         Console.WriteLine("Database has no applied migrations.");
         return;

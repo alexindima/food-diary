@@ -48,9 +48,7 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
             .Take(60)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        recentSessions = recentSessions
-            .Where(static s => s.IsSuccessfulCompletion)
-            .ToList();
+        recentSessions = [.. recentSessions.Where(static s => s.IsSuccessfulCompletion)];
 
         if (recentSessions.Count == 0) {
             return 0;

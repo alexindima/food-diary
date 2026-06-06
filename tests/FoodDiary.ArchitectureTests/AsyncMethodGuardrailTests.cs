@@ -45,14 +45,13 @@ public sealed class AsyncMethodGuardrailTests {
     [Fact]
     public void BackendAsyncMethods_UseAsyncSuffixUnlessFrameworkEntryPoint() {
         string root = GetRepositoryRoot();
-        string[] violations = GetBackendMethods(root)
+        string[] violations = [.. GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike)
             .Where(method => method.Name.EndsWith("Async", StringComparison.Ordinal) is false)
             .Where(method => AllowedNonAsyncSuffixNames.Contains(method.Name) is false)
             .Where(method => IsControllerAction(method) is false)
             .Select(method => method.Format(root))
-            .OrderBy(static value => value, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static value => value, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -64,13 +63,12 @@ public sealed class AsyncMethodGuardrailTests {
     [Fact]
     public void BackendSynchronousMethods_DoNotUseAsyncSuffix() {
         string root = GetRepositoryRoot();
-        string[] violations = GetBackendMethods(root)
+        string[] violations = [.. GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike is false)
             .Where(method => method.Name.EndsWith("Async", StringComparison.Ordinal))
             .Where(method => IsFrameworkAsyncHook(method) is false)
             .Select(method => method.Format(root))
-            .OrderBy(static value => value, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static value => value, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -82,13 +80,12 @@ public sealed class AsyncMethodGuardrailTests {
     [Fact]
     public void BackendAsyncMethods_AcceptCancellationTokenUnlessFrameworkEntryPoint() {
         string root = GetRepositoryRoot();
-        string[] violations = GetBackendMethods(root)
+        string[] violations = [.. GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike)
             .Where(static method => method.Parameters.Contains("CancellationToken", StringComparison.Ordinal) is false)
             .Where(method => IsCancellationTokenProvidedByFramework(method) is false)
             .Select(method => method.Format(root))
-            .OrderBy(static value => value, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static value => value, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,

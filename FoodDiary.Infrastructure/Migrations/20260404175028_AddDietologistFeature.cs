@@ -116,12 +116,12 @@ public partial class AddDietologistFeature : Migration {
         migrationBuilder.CreateIndex(
             name: "IX_DietologistInvitations_ClientUserId_Status",
             table: "DietologistInvitations",
-            columns: new[] { "ClientUserId", "Status" });
+            columns: ["ClientUserId", "Status"]);
 
         migrationBuilder.CreateIndex(
             name: "IX_DietologistInvitations_DietologistEmail_Status",
             table: "DietologistInvitations",
-            columns: new[] { "DietologistEmail", "Status" });
+            columns: ["DietologistEmail", "Status"]);
 
         migrationBuilder.CreateIndex(
             name: "IX_DietologistInvitations_DietologistUserId",
@@ -136,7 +136,7 @@ public partial class AddDietologistFeature : Migration {
         migrationBuilder.CreateIndex(
             name: "IX_Notifications_UserId_IsRead",
             table: "Notifications",
-            columns: new[] { "UserId", "IsRead" });
+            columns: ["UserId", "IsRead"]);
 
         migrationBuilder.CreateIndex(
             name: "IX_Recommendations_ClientUserId",
@@ -146,7 +146,7 @@ public partial class AddDietologistFeature : Migration {
         migrationBuilder.CreateIndex(
             name: "IX_Recommendations_DietologistUserId_ClientUserId",
             table: "Recommendations",
-            columns: new[] { "DietologistUserId", "ClientUserId" });
+            columns: ["DietologistUserId", "ClientUserId"]);
     }
 
     /// <inheritdoc />

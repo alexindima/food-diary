@@ -68,7 +68,7 @@ internal sealed partial class DiaryPdfGenerator {
             CultureInfo culture = ResolveCulture(texts.CultureName);
             TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
             IReadOnlyList<DiaryDay> days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset, culture);
-            Meal[] orderedMeals = meals.OrderBy(meal => meal.Date).ToArray();
+            Meal[] orderedMeals = [.. meals.OrderBy(meal => meal.Date)];
             return new DiaryReportData(
                 orderedMeals,
                 days,
@@ -96,9 +96,7 @@ internal sealed partial class DiaryPdfGenerator {
             for (int index = 0; index < dayCount; index++) {
                 DateTime start = dateFrom.AddDays(index);
                 DateTime end = index == dayCount - 1 ? dateTo : start.AddDays(1).AddTicks(-1);
-                Meal[] bucketMeals = meals
-                    .Where(meal => meal.Date >= start && meal.Date <= end)
-                    .ToArray();
+                Meal[] bucketMeals = [.. meals.Where(meal => meal.Date >= start && meal.Date <= end)];
 
                 DateTime labelDate = start.Add(displayOffset).Date;
                 result.Add(new DiaryDay(

@@ -88,7 +88,7 @@ public class GetDailyMicronutrientsQueryHandler(
     private static List<DailyMicronutrientModel> BuildNutrientModels(
         IReadOnlyDictionary<int, AggregatedNutrient> aggregated,
         IReadOnlyDictionary<int, DailyReferenceValue> dailyValues) {
-        return aggregated
+        return [.. aggregated
             .Select(kvp => {
                 dailyValues.TryGetValue(kvp.Key, out DailyReferenceValue? drv);
                 double? dv = drv?.Value;
@@ -102,8 +102,7 @@ public class GetDailyMicronutrientsQueryHandler(
                     dv,
                     percentDv);
             })
-            .OrderBy(n => n.Name, StringComparer.Ordinal)
-            .ToList();
+            .OrderBy(n => n.Name, StringComparer.Ordinal)];
     }
 
     private sealed record AggregatedNutrient(string Name, string Unit, double Total);

@@ -16,9 +16,7 @@ public sealed class HangfireRecurringJobRegistrationVerifier(
             .Where(static id => !string.IsNullOrWhiteSpace(id))
             .ToHashSet(StringComparer.Ordinal);
 
-        string[] missingJobIds = expectedJobIds
-            .Where(expectedJobId => !registeredJobIds.Contains(expectedJobId))
-            .ToArray();
+        string[] missingJobIds = [.. expectedJobIds.Where(expectedJobId => !registeredJobIds.Contains(expectedJobId))];
 
         if (missingJobIds.Length == 0) {
             logger.LogInformation(

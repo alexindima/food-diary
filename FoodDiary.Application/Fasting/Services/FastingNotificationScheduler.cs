@@ -23,13 +23,13 @@ public sealed class FastingNotificationScheduler(
     public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         IReadOnlyList<FastingOccurrence> activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
-        FastingOccurrenceId[] activeOccurrenceIds = activeOccurrences.Select(static x => x.Id).ToArray();
+        FastingOccurrenceId[] activeOccurrenceIds = [.. activeOccurrences.Select(static x => x.Id)];
         IReadOnlyList<FastingCheckIn> checkIns = activeOccurrenceIds.Length == 0
             ? []
             : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken).ConfigureAwait(false);
         var checkInLookup = checkIns
             .GroupBy(static x => x.OccurrenceId)
-            .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)group.ToList());
+            .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)[.. group]);
         var usersToPush = new HashSet<Guid>();
         int createdCount = 0;
 
@@ -81,13 +81,12 @@ public sealed class FastingNotificationScheduler(
         }
 
         int createdCount = 0;
-        int[] reminderHours = new[] {
+        int[] reminderHours = [.. new[] {
             occurrence.User.FastingCheckInReminderHours,
             occurrence.User.FastingCheckInFollowUpReminderHours,
         }
             .Distinct()
-            .OrderBy(static hour => hour)
-            .ToArray();
+            .OrderBy(static hour => hour)];
 
         foreach (int hour in reminderHours) {
             if (elapsed.TotalHours < hour) {

@@ -84,7 +84,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_FastingOccurrences_PlanId_SequenceNumber",
                 table: "FastingOccurrences",
-                columns: new[] { "PlanId", "SequenceNumber" },
+                columns: ["PlanId", "SequenceNumber"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -95,7 +95,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_FastingOccurrences_UserId_Status",
                 table: "FastingOccurrences",
-                columns: new[] { "UserId", "Status" });
+                columns: ["UserId", "Status"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_FastingPlans_UserId",
@@ -105,7 +105,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_FastingPlans_UserId_Status",
                 table: "FastingPlans",
-                columns: new[] { "UserId", "Status" });
+                columns: ["UserId", "Status"]);
         }
 
         /// <inheritdoc />

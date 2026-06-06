@@ -4,14 +4,13 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class HostCompositionBoundaryTests {
     [Fact]
     public void NonHostProductionProjects_DoNotReferencePrimaryWebApiNamespace() {
-        string[] nonHostRoots = ProjectReferenceReader.ReadProductionProjectNames()
+        string[] nonHostRoots = [.. ProjectReferenceReader.ReadProductionProjectNames()
             .Where(static projectName => string.Equals(projectName, "FoodDiary.Web.Api", StringComparison.Ordinal) is false)
             .Where(static projectName => string.Equals(projectName, "FoodDiary.Initializer", StringComparison.Ordinal) is false)
             .Where(static projectName => string.Equals(projectName, "FoodDiary.JobManager", StringComparison.Ordinal) is false)
             .Where(static projectName => projectName.EndsWith(".WebApi", StringComparison.Ordinal) is false)
             .Where(static projectName => projectName.EndsWith(".Initializer", StringComparison.Ordinal) is false)
-            .Select(projectName => ArchitectureTestPaths.FromRoot(ProjectFolderFromProjectName(projectName)))
-            .ToArray();
+            .Select(projectName => ArchitectureTestPaths.FromRoot(ProjectFolderFromProjectName(projectName)))];
 
         string[] violations = SourceScanner.FindLinePatternViolations(nonHostRoots, ["FoodDiary.Web.Api"]);
 
@@ -20,18 +19,18 @@ public sealed class HostCompositionBoundaryTests {
 
     [Fact]
     public void ApplicationAndPresentationProjects_DoNotReferenceHostOnlyOptionsOrExtensions() {
-        string[] sourceRoots = new[] {
+        string[] sourceRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Application"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Resources"),
-        };
-        string[] forbiddenPatterns = new[] {
+        ];
+        string[] forbiddenPatterns = [
             "FoodDiary.Web.Api.Options",
             "FoodDiary.Web.Api.Extensions",
             "ApiServiceCollectionExtensions",
             "ApiApplicationBuilderExtensions",
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(sourceRoots, forbiddenPatterns);
 

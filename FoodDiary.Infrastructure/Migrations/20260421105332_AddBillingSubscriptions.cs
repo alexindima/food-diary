@@ -44,13 +44,13 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_BillingSubscriptions_Provider_ExternalCustomerId",
                 table: "BillingSubscriptions",
-                columns: new[] { "Provider", "ExternalCustomerId" },
+                columns: ["Provider", "ExternalCustomerId"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillingSubscriptions_Provider_ExternalSubscriptionId",
                 table: "BillingSubscriptions",
-                columns: new[] { "Provider", "ExternalSubscriptionId" },
+                columns: ["Provider", "ExternalSubscriptionId"],
                 unique: true);
 
             migrationBuilder.CreateIndex(

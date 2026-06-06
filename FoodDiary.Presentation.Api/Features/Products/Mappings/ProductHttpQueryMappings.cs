@@ -46,10 +46,9 @@ public static class ProductHttpQueryMappings {
             return null;
         }
 
-        string[] values = productTypes
+        string[] values = [.. productTypes
             .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .Distinct(StringComparer.OrdinalIgnoreCase)];
 
         return values.Length > 0 ? values : null;
     }

@@ -471,7 +471,7 @@ public sealed class MailInboxPresentationTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubSender : ISender {
-        private readonly Dictionary<object, object> _responses = new();
+        private readonly Dictionary<object, object> _responses = [];
 
         public object? LastRequest { get; private set; }
 

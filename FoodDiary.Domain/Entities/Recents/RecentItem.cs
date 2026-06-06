@@ -51,10 +51,6 @@ public sealed class RecentItem : Entity<RecentItemId> {
     }
 
     private static DateTime NormalizeUtc(DateTime value) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(nameof(value), "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(nameof(value), "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 }

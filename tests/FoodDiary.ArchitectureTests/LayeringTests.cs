@@ -145,7 +145,7 @@ public class LayeringTests {
     public void PresentationApi_OnlyBaseControllersRemainInControllersFolder() {
         string root = GetRepositoryRoot();
         string[] controllerFiles = Directory.GetFiles(Path.Combine(root, "FoodDiary.Presentation.Api", "Controllers"), "*Controller.cs");
-        string?[] names = controllerFiles.Select(Path.GetFileNameWithoutExtension).ToArray();
+        string?[] names = [.. controllerFiles.Select(Path.GetFileNameWithoutExtension)];
 
         Assert.Contains("BaseApiController", names);
         Assert.Contains("AuthorizedController", names);

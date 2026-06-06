@@ -44,7 +44,9 @@ public class UpdateConsumptionCommandHandler(
 
         UpdateConsumptionValues values = valuesResult.Value;
         Result updateResult = await ApplyUpdatesAsync(values.Meal, command, values, cancellationToken).ConfigureAwait(false);
-        if (updateResult.IsFailure) return Result.Failure<ConsumptionModel>(updateResult.Error);
+        if (updateResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(updateResult.Error);
+        }
 
         await mealRepository.UpdateAsync(values.Meal, cancellationToken).ConfigureAwait(false);
         await recentItemRepository.RegisterUsageAsync(
@@ -67,7 +69,9 @@ public class UpdateConsumptionCommandHandler(
 
         var userId = new UserId(command.UserId!.Value);
         Result<Meal> mealResult = await ResolveMealAsync(command, userId, cancellationToken).ConfigureAwait(false);
-        if (mealResult.IsFailure) return Result.Failure<UpdateConsumptionValues>(mealResult.Error);
+        if (mealResult.IsFailure) {
+            return Result.Failure<UpdateConsumptionValues>(mealResult.Error);
+        }
 
         Result<MealType?> mealTypeResult = EnumValueParser.ParseOptional<MealType>(
             command.MealType,
@@ -163,10 +167,14 @@ public class UpdateConsumptionCommandHandler(
         meal.ClearAiSessions();
 
         Result itemsResult = AddManualItems(meal, command.Items);
-        if (itemsResult.IsFailure) return itemsResult;
+        if (itemsResult.IsFailure) {
+            return itemsResult;
+        }
 
         Result aiSessionsResult = await AddAiSessionsAsync(meal, command.AiSessions, values.UserId, cancellationToken).ConfigureAwait(false);
-        if (aiSessionsResult.IsFailure) return aiSessionsResult;
+        if (aiSessionsResult.IsFailure) {
+            return aiSessionsResult;
+        }
 
         return await ApplyNutritionAsync(meal, command, values.UserId, cancellationToken).ConfigureAwait(false);
     }

@@ -454,9 +454,9 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithInvalidUnit_FailsWithUnitField() {
-        ShoppingListItemInput[] items = new[] {
+        ShoppingListItemInput[] items = [
             new ShoppingListItemInput(null, "Milk", 1, "invalid_unit", null, false, 1),
-        };
+        ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
@@ -484,9 +484,9 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithNonPositiveAmount_Fails() {
-        ShoppingListItemInput[] items = new[] {
+        ShoppingListItemInput[] items = [
             new ShoppingListItemInput(null, "Milk", 0, null, null, false, 1),
-        };
+        ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
@@ -503,9 +503,9 @@ public class ShoppingListsFeatureTests {
     [InlineData(double.PositiveInfinity)]
     [InlineData(double.NegativeInfinity)]
     public async Task ShoppingListItemBuilder_WithNonFiniteAmount_Fails(double amount) {
-        ShoppingListItemInput[] items = new[] {
+        ShoppingListItemInput[] items = [
             new ShoppingListItemInput(null, "Milk", amount, null, null, false, 1),
-        };
+        ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
@@ -520,9 +520,9 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithEmptyProductId_FailsWithValidationError() {
-        ShoppingListItemInput[] items = new[] {
+        ShoppingListItemInput[] items = [
             new ShoppingListItemInput(Guid.Empty, null, 1, null, null, false, 1),
-        };
+        ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
@@ -549,9 +549,9 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithBlankCustomName_FailsWithNameRequired() {
-        ShoppingListItemInput[] items = new[] {
+        ShoppingListItemInput[] items = [
             new ShoppingListItemInput(null, "   ", 1, null, null, false, null),
-        };
+        ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,

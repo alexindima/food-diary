@@ -23,7 +23,7 @@ public class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRep
         }
 
         string normalized = locale.Trim().ToLowerInvariant();
-        int separatorIndex = normalized.IndexOfAny(new[] { '-', '_' });
+        int separatorIndex = normalized.IndexOfAny(['-', '_']);
         return separatorIndex > 0 ? normalized[..separatorIndex] : normalized;
     }
 }

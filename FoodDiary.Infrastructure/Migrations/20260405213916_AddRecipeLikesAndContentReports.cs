@@ -55,12 +55,12 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_ContentReports_Status_CreatedOnUtc",
                 table: "ContentReports",
-                columns: new[] { "Status", "CreatedOnUtc" });
+                columns: ["Status", "CreatedOnUtc"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContentReports_UserId_TargetType_TargetId",
                 table: "ContentReports",
-                columns: new[] { "UserId", "TargetType", "TargetId" });
+                columns: ["UserId", "TargetType", "TargetId"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeLikes_RecipeId",
@@ -70,7 +70,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeLikes_UserId_RecipeId",
                 table: "RecipeLikes",
-                columns: new[] { "UserId", "RecipeId" },
+                columns: ["UserId", "RecipeId"],
                 unique: true);
         }
 

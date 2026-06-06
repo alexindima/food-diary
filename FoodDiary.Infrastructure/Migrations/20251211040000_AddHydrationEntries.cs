@@ -38,7 +38,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_HydrationEntries_User_Timestamp",
                 table: "HydrationEntries",
-                columns: new[] { "UserId", "Timestamp" });
+                columns: ["UserId", "Timestamp"]);
         }
 
         /// <inheritdoc />

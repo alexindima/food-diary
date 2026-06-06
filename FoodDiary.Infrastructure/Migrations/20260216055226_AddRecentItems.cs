@@ -34,13 +34,13 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_RecentItems_UserId_ItemType_ItemId",
                 table: "RecentItems",
-                columns: new[] { "UserId", "ItemType", "ItemId" },
+                columns: ["UserId", "ItemType", "ItemId"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecentItems_UserId_ItemType_LastUsedAtUtc",
                 table: "RecentItems",
-                columns: new[] { "UserId", "ItemType", "LastUsedAtUtc" });
+                columns: ["UserId", "ItemType", "LastUsedAtUtc"]);
         }
 
         /// <inheritdoc />

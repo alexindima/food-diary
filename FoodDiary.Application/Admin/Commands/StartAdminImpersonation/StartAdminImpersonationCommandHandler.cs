@@ -99,7 +99,7 @@ public sealed class StartAdminImpersonationCommandHandler(
     }
 
     private string GenerateToken(Domain.Entities.Users.User target, UserId actorUserId, string reason) {
-        string[] roles = target.GetRoleNames().ToArray();
+        string[] roles = [.. target.GetRoleNames()];
         return jwtTokenGenerator.GenerateAccessToken(
             target.Id,
             target.Email,

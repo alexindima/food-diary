@@ -170,7 +170,7 @@ public sealed class Meal : AggregateRoot<MealId> {
                 .Select(item => MealAiItem.CreateFromState(item.ToState()))
                 .ToList();
 
-            foreach (MealAiItem? item in createdItems) {
+            foreach (MealAiItem item in createdItems) {
                 item.AttachToSession(session.Id);
             }
 
@@ -317,19 +317,11 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     private static DateTime NormalizeDate(DateTime value) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            return DateTime.SpecifyKind(value, DateTimeKind.Utc);
-        }
-
-        return DateTime.SpecifyKind(value.ToUniversalTime(), DateTimeKind.Utc);
+        return DateTime.SpecifyKind(value.Kind == DateTimeKind.Unspecified ? value : value.ToUniversalTime(), DateTimeKind.Utc);
     }
 
     private static double RequireNonNegative(double value, string paramName) {
-        if (value < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
-        }
-
-        return value;
+        return value < 0 ? throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.") : value;
     }
 
     private static double RoundNonNegative(double value, string paramName) {

@@ -260,7 +260,7 @@ public class FavoriteMealsFeatureTests {
             IReadOnlyCollection<MealId> mealIds,
             CancellationToken ct = default) {
             IReadOnlyDictionary<MealId, FavoriteMeal> result = _existingByMealId is null
-                ? new Dictionary<MealId, FavoriteMeal>()
+                ? []
                 : new Dictionary<MealId, FavoriteMeal> { [_existingByMealId.MealId] = _existingByMealId };
 
             return Task.FromResult(result);

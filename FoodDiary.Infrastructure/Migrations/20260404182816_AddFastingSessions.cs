@@ -43,7 +43,7 @@ public partial class AddFastingSessions : Migration {
         migrationBuilder.CreateIndex(
             name: "IX_FastingSessions_UserId_IsCompleted",
             table: "FastingSessions",
-            columns: new[] { "UserId", "IsCompleted" });
+            columns: ["UserId", "IsCompleted"]);
     }
 
     /// <inheritdoc />

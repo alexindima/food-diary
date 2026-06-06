@@ -12,15 +12,14 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
 
     [Fact]
     public void MigrationTypes_AreExcludedFromCodeCoverage() {
-        string?[] migrationTypesMissingAttribute = typeof(global::FoodDiary.Infrastructure.Persistence.FoodDiaryDbContext).Assembly
+        string?[] migrationTypesMissingAttribute = [.. typeof(global::FoodDiary.Infrastructure.Persistence.FoodDiaryDbContext).Assembly
             .GetTypes()
             .Where(static type => string.Equals(type.Namespace, "FoodDiary.Infrastructure.Migrations", StringComparison.Ordinal))
             .Where(static type => type.IsNested is false)
             .Where(static type => typeof(Migration).IsAssignableFrom(type) || typeof(ModelSnapshot).IsAssignableFrom(type))
             .Where(static type => type.GetCustomAttributes(typeof(ExcludeFromCodeCoverageAttribute), inherit: false).Length == 0)
             .Select(static type => type.FullName)
-            .OrderBy(static typeName => typeName, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static typeName => typeName, StringComparer.Ordinal)];
 
         Assert.Empty(migrationTypesMissingAttribute);
     }

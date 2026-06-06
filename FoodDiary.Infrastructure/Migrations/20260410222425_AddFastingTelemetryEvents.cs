@@ -42,7 +42,7 @@ public partial class AddFastingTelemetryEvents : Migration {
         migrationBuilder.CreateIndex(
             name: "IX_FastingTelemetryEvents_Name_OccurredAtUtc",
             table: "FastingTelemetryEvents",
-            columns: new[] { "Name", "OccurredAtUtc" });
+            columns: ["Name", "OccurredAtUtc"]);
 
         migrationBuilder.CreateIndex(
             name: "IX_FastingTelemetryEvents_OccurredAtUtc",
@@ -52,7 +52,7 @@ public partial class AddFastingTelemetryEvents : Migration {
         migrationBuilder.CreateIndex(
             name: "IX_FastingTelemetryEvents_ReminderPresetId_Name_OccurredAtUtc",
             table: "FastingTelemetryEvents",
-            columns: new[] { "ReminderPresetId", "Name", "OccurredAtUtc" });
+            columns: ["ReminderPresetId", "Name", "OccurredAtUtc"]);
     }
 
     /// <inheritdoc />

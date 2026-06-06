@@ -286,11 +286,10 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             return null;
         }
 
-        string[] normalized = values
+        string[] normalized = [.. values
             .Where(static value => !string.IsNullOrWhiteSpace(value))
             .Select(static value => value.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .Distinct(StringComparer.OrdinalIgnoreCase)];
 
         if (normalized.Length == 0) {
             return null;

@@ -11,13 +11,12 @@ public sealed class TestCoverageExclusionGuardrailTests {
     [Fact]
     public void TestTypes_AreExcludedFromCodeCoverage() {
         string testRoot = ArchitectureTestPaths.FromRoot("tests");
-        string[] violations = Directory.EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = [.. Directory.EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => ArchitectureTestPaths.IsGeneratedOrBuildPath(path) is false)
             .SelectMany(FindTypesWithoutCoverageExclusion)
             .OrderBy(static violation => violation.Path, PathComparer)
             .ThenBy(static violation => violation.Line)
-            .Select(static violation => violation.Format())
-            .ToArray();
+            .Select(static violation => violation.Format())];
 
         Assert.True(
             violations.Length == 0,

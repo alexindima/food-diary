@@ -67,10 +67,6 @@ public sealed class AdminImpersonationSession : Entity<Guid> {
     }
 
     private static DateTime NormalizeUtcTimestamp(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 }

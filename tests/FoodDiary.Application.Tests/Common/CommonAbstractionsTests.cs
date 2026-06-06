@@ -33,27 +33,25 @@ public class CommonAbstractionsTests {
             Path.Combine(applicationRoot, "Common", "Behaviors", "ValidationBehavior.cs"),
         };
 
-        string[] violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = [.. Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(path => allowedFiles.Contains(path) is false)
             .Where(ContainsAdHocErrorConstruction)
             .Select(path => Path.GetRelativePath(applicationRoot, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static path => path, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void CentralErrorCatalog_DefinesErrorKind_ForAllPublishedErrors() {
-        string[] missingKinds = typeof(Errors)
+        string[] missingKinds = [.. typeof(Errors)
             .GetNestedTypes(BindingFlags.Public)
             .SelectMany(GetErrorsFromType)
             .Where(static error => error.Kind is null)
             .Select(static error => error.Code)
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
+            .Distinct(StringComparer.Ordinal)];
 
         Assert.Empty(missingKinds);
     }
@@ -70,15 +68,14 @@ public class CommonAbstractionsTests {
 
         HashSet<string> knownCodes = GetKnownErrorCodes();
 
-        string[] violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = [.. Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(path => allowedFiles.Contains(path) is false)
             .SelectMany(path => GetReferencedStringErrorCodes(path)
                 .Where(code => knownCodes.Contains(code) is false)
                 .Select(code => $"{Path.GetRelativePath(applicationRoot, path)}: {code}"))
-            .OrderBy(static value => value, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static value => value, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -628,9 +625,7 @@ public class CommonAbstractionsTests {
                 continue;
             }
 
-            object?[] arguments = method.GetParameters()
-                .Select(CreateSampleArgument)
-                .ToArray();
+            object?[] arguments = [.. method.GetParameters().Select(CreateSampleArgument)];
 
             if (method.Invoke(null, arguments) is Error error) {
                 yield return error;

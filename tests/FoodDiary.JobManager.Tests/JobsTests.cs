@@ -779,7 +779,7 @@ public sealed class JobsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeUserRepository(params User[] users) : IUserRepository {
-        private readonly List<User> _users = users.ToList();
+        private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
@@ -815,7 +815,7 @@ public sealed class JobsTests {
 
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
             GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
-            Task.FromResult((_users.Count, _users.Count, 0, 0, (IReadOnlyList<User>)_users.Take(recentLimit).ToList()));
+            Task.FromResult((_users.Count, _users.Count, 0, 0, (IReadOnlyList<User>)[.. _users.Take(recentLimit)]));
 
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(
             IReadOnlyList<string> names,
@@ -839,7 +839,7 @@ public sealed class JobsTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
         : IBillingSubscriptionRepository {
-        public List<BillingSubscription> Subscriptions { get; } = subscriptions.ToList();
+        public List<BillingSubscription> Subscriptions { get; } = [.. subscriptions];
 
         public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(Subscriptions.FirstOrDefault(subscription => subscription.UserId == userId));

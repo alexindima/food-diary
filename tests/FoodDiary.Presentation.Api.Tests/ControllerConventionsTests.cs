@@ -17,60 +17,55 @@ public sealed class ControllerConventionsTests {
 
     [Fact]
     public void FeatureControllers_HaveApiControllerAttribute() {
-        string?[] violations = GetFeatureControllerTypes()
+        string?[] violations = [.. GetFeatureControllerTypes()
             .Where(type => type.GetCustomAttribute<ApiControllerAttribute>() is null)
-            .Select(type => type.FullName)
-            .ToArray();
+            .Select(type => type.FullName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllerActions_ReturnTaskOfActionResult() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => method.ReturnType != typeof(Task<IActionResult>))
-            .Select(FormatMethodName)
-            .ToArray();
+            .Select(FormatMethodName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllers_DoNotExposeMoreThanEightActions() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .Select(type => new {
                 Type = type,
                 ActionCount = GetActionMethods(type).Length,
             })
             .Where(static entry => entry.ActionCount > 8)
-            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.Type.FullName} ({entry.ActionCount} actions)"))
-            .ToArray();
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.Type.FullName} ({entry.ActionCount} actions)"))];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllerActions_DeclareProducesResponseTypes() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>().Any() is false)
-            .Select(FormatMethodName)
-            .ToArray();
+            .Select(FormatMethodName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllerActions_UseStandardApiErrorContract_ForExplicitErrorResponses() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .SelectMany(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>()
                 .Where(attribute => attribute.StatusCode >= 400)
                 .Where(attribute => attribute.Type != typeof(ApiErrorHttpResponse))
                 .Select(_ => FormatMethodName(method)))
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
+            .Distinct(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -84,10 +79,9 @@ public sealed class ControllerConventionsTests {
             ["AuthTelegramController"] = "api/v{version:apiVersion}/auth/telegram",
         };
 
-        Type[] authControllers = GetFeatureControllerTypes()
+        Type[] authControllers = [.. GetFeatureControllerTypes()
             .Where(type => string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
-            .OrderBy(type => type.Name, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(type => type.Name, StringComparer.Ordinal)];
 
         Dictionary<string, string> actualRoutes = authControllers.ToDictionary(
             type => type.Name,
@@ -99,122 +93,113 @@ public sealed class ControllerConventionsTests {
 
     [Fact]
     public void FeatureControllerBodyParameters_UsePresentationHttpRequestTypes() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .SelectMany(method => method.GetParameters()
                 .Where(parameter => parameter.GetCustomAttribute<FromBodyAttribute>() is not null)
                 .Where(parameter => !IsPresentationHttpRequestType(parameter.ParameterType))
-                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))
-            .ToArray();
+                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllerHttpRequestParameters_ExplicitlyUseFromBody() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .SelectMany(method => method.GetParameters()
                 .Where(parameter => IsPresentationHttpRequestType(parameter.ParameterType))
                 .Where(parameter => parameter.GetCustomAttribute<FromBodyAttribute>() is null)
-                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))
-            .ToArray();
+                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllerComplexQueryParameters_UsePresentationHttpQueryTypes() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .SelectMany(method => method.GetParameters()
                 .Where(parameter => parameter.GetCustomAttribute<FromQueryAttribute>() is not null)
                 .Where(parameter => !IsSimpleTransportScalar(parameter.ParameterType))
                 .Where(parameter => !IsPresentationHttpQueryType(parameter.ParameterType))
-                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))
-            .ToArray();
+                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void NonAuthFeatureControllers_RequireAuthorizationAtControllerLevel() {
-        string?[] violations = GetFeatureControllerTypes()
+        string?[] violations = [.. GetFeatureControllerTypes()
             .Where(type => !string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
             .Where(type => !IsAnonymousInfrastructureController(type))
             .Where(type => type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)) is false)
             .Where(type => type.GetCustomAttribute<AuthorizeAttribute>() is null)
-            .Select(type => type.FullName)
-            .ToArray();
+            .Select(type => type.FullName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void NonAuthFeatureActions_DoNotDocumentUnauthorizedOrForbiddenResponses_Manually() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
             .Where(DeclaresProtectedResponses)
-            .Select(FormatMethodName)
-            .ToArray();
+            .Select(FormatMethodName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void AllowAnonymous_IsUsedOnlyInAuthFeature() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => !IsAnonymousInfrastructureController(method.DeclaringType))
             .Where(method => method.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
             .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
-            .Select(FormatMethodName)
-            .ToArray();
+            .Select(FormatMethodName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void SimpleFeatureControllers_UseBaseControllerHelpers_InsteadOfDirectMediatorSend() {
-        string[] violations = GetControllerSyntaxTrees()
+        string[] violations = [.. GetControllerSyntaxTrees()
             .Where(tree => tree.GetRoot()
                 .DescendantNodes()
                 .OfType<InvocationExpressionSyntax>()
                 .Any(static invocation => invocation.Expression is IdentifierNameSyntax { Identifier.ValueText: "Send" }))
             .Select(static tree => Path.GetFileName(tree.FilePath))
-            .OrderBy(static name => name, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static name => name, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllers_DoNotUseControllerTokenInRoutes() {
-        string?[] violations = GetFeatureControllerTypes()
+        string?[] violations = [.. GetFeatureControllerTypes()
             .Where(type => type.GetCustomAttribute<RouteAttribute>()?.Template?.Contains("[controller]", StringComparison.OrdinalIgnoreCase) is true)
-            .Select(type => type.FullName)
-            .ToArray();
+            .Select(type => type.FullName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void HttpGetActions_DoNotDeclareCreatedResponses() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => method.GetCustomAttributes<HttpGetAttribute>().Any())
             .Where(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>()
                 .Any(attribute => attribute.StatusCode == StatusCodes.Status201Created))
-            .Select(FormatMethodName)
-            .ToArray();
+            .Select(FormatMethodName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void HandleCreatedActions_DeclareCreatedResponses() {
-        string[] violations = GetControllerSyntaxTrees()
+        string[] violations = [.. GetControllerSyntaxTrees()
             .SelectMany(tree => GetHandleCreatedMethods(tree)
                 .Select(methodName => (tree, methodName)))
             .Where(tuple => {
@@ -231,32 +216,29 @@ public sealed class ControllerConventionsTests {
                 return method is null || method.GetCustomAttributes<ProducesResponseTypeAttribute>()
                     .All(attribute => attribute.StatusCode != StatusCodes.Status201Created);
             })
-            .Select(tuple => $"{Path.GetFileNameWithoutExtension(tuple.tree.FilePath)}.{tuple.methodName}")
-            .ToArray();
+            .Select(tuple => $"{Path.GetFileNameWithoutExtension(tuple.tree.FilePath)}.{tuple.methodName}")];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllerActions_DoNotDocumentInternalServerError_Manually() {
-        string[] violations = GetFeatureControllerTypes()
+        string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>()
                 .Any(attribute => attribute.StatusCode == StatusCodes.Status500InternalServerError))
-            .Select(FormatMethodName)
-            .ToArray();
+            .Select(FormatMethodName)];
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void FeatureControllers_DoNotReferenceApplicationTypesDirectly() {
-        string[] violations = GetControllerSyntaxTrees()
+        string[] violations = [.. GetControllerSyntaxTrees()
             .Where(static tree => IsAllowedApplicationAbstractionReference(tree.FilePath) is false)
             .Where(static tree => ReferencesApplicationTypes(tree))
             .Select(static tree => Path.GetFileName(tree.FilePath))
-            .OrderBy(static name => name, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static name => name, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -270,11 +252,10 @@ public sealed class ControllerConventionsTests {
     [InlineData("*HttpResponseMappings.cs", "Mappings")]
     public void FeatureTransportFiles_LiveInExpectedFolders(string filePattern, string expectedFolderName) {
         string presentationRoot = GetPresentationRoot();
-        string[] violations = Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories)
+        string[] violations = [.. Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories)
             .Where(path => string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), expectedFolderName, StringComparison.Ordinal) is false)
             .Select(static path => Path.GetRelativePath(GetPresentationRoot(), path))
-            .OrderBy(static path => path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static path => path, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -282,16 +263,16 @@ public sealed class ControllerConventionsTests {
     [Fact]
     public void FeatureTransportFiles_DoNotLiveOutsideFeaturesFolder() {
         string presentationRoot = GetPresentationRoot();
-        string[] patterns = new[] {
+        string[] patterns = [
             "*HttpRequest.cs",
             "*HttpQuery.cs",
             "*HttpResponse.cs",
             "*HttpMappings.cs",
             "*HttpQueryMappings.cs",
             "*HttpResponseMappings.cs",
-        };
+        ];
 
-        string[] violations = patterns
+        string[] violations = [.. patterns
             .SelectMany(pattern => Directory.GetFiles(presentationRoot, pattern, SearchOption.AllDirectories))
             .Where(path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
             .Where(path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
@@ -301,8 +282,7 @@ public sealed class ControllerConventionsTests {
                 and not "PagedHttpResponseMappings.cs"
                 and not "EnumerableHttpResponseMappings.cs")
             .Select(path => Path.GetRelativePath(presentationRoot, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static path => path, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -343,16 +323,13 @@ public sealed class ControllerConventionsTests {
             .Select(static method => method.Identifier.ValueText);
 
     private static Type[] GetFeatureControllerTypes() =>
-        PresentationAssembly.GetTypes()
+        [.. PresentationAssembly.GetTypes()
             .Where(type => type is { IsAbstract: false, IsClass: true })
             .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
-            .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))
-            .ToArray();
+            .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))];
 
     private static MethodInfo[] GetActionMethods(Type controllerType) =>
-        controllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-            .Where(method => method.GetCustomAttributes<HttpMethodAttribute>().Any())
-            .ToArray();
+        [.. controllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).Where(method => method.GetCustomAttributes<HttpMethodAttribute>().Any())];
 
     private static bool DeclaresProtectedResponses(MethodInfo method) =>
         method.GetCustomAttributes<ProducesResponseTypeAttribute>()

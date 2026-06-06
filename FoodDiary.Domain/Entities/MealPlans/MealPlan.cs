@@ -18,7 +18,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
     public int DurationDays { get; private set; }
     public double? TargetCaloriesPerDay { get; private set; }
     public bool IsCurated { get; private set; }
-    public UserId? UserId { get; private set; }
+    public UserIdType? UserId { get; private set; }
     public User? User { get; private set; }
 
     private readonly List<MealPlanDay> _days = [];

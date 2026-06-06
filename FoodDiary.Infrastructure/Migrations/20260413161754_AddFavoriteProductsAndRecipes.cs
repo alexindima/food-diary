@@ -76,7 +76,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_FavoriteProducts_UserId_ProductId",
                 table: "FavoriteProducts",
-                columns: new[] { "UserId", "ProductId" },
+                columns: ["UserId", "ProductId"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -92,7 +92,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_FavoriteRecipes_UserId_RecipeId",
                 table: "FavoriteRecipes",
-                columns: new[] { "UserId", "RecipeId" },
+                columns: ["UserId", "RecipeId"],
                 unique: true);
         }
 

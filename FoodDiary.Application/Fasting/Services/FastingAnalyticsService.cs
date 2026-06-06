@@ -132,7 +132,7 @@ public sealed class FastingAnalyticsService(
 
         return (await fastingCheckInRepository.GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken).ConfigureAwait(false))
             .GroupBy(static checkIn => checkIn.OccurrenceId)
-            .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)group.ToList());
+            .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)[.. group]);
     }
 
     private static IReadOnlyList<FastingCheckInSnapshot> BuildTimeline(

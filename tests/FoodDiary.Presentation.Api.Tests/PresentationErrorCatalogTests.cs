@@ -35,23 +35,21 @@ public sealed class PresentationErrorCatalogTests {
 
     [Fact]
     public void CentralErrorCatalog_DefinesErrorKind_ForAllPublishedErrors() {
-        string[] missingKinds = GetCatalogErrors()
+        string[] missingKinds = [.. GetCatalogErrors()
             .Where(static error => error.Kind is null)
             .Select(static error => error.Code)
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
+            .Distinct(StringComparer.Ordinal)];
 
         Assert.Empty(missingKinds);
     }
 
     [Fact]
     public void CentralErrorCatalog_CanBeEnumeratedWithoutDuplicatesOrMissingCodes() {
-        string[] duplicates = GetCatalogErrors()
+        string[] duplicates = [.. GetCatalogErrors()
             .GroupBy(static error => error.Code, StringComparer.Ordinal)
             .Where(group => group.Count() > 1)
             .Where(group => group.Key is not "User.NotFound" and not "ShoppingList.NotFound")
-            .Select(group => group.Key)
-            .ToArray();
+            .Select(group => group.Key)];
 
         Assert.Empty(duplicates);
     }
@@ -84,9 +82,7 @@ public sealed class PresentationErrorCatalogTests {
                 continue;
             }
 
-            object?[] arguments = method.GetParameters()
-                .Select(CreateSampleArgument)
-                .ToArray();
+            object?[] arguments = [.. method.GetParameters().Select(CreateSampleArgument)];
 
             if (method.Invoke(null, arguments) is Error error) {
                 yield return error;

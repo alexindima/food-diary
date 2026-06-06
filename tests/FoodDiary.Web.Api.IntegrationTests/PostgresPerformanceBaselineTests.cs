@@ -196,7 +196,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             User user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
 
-            Product[] products = Enumerable.Range(0, count)
+            Product[] products = [.. Enumerable.Range(0, count)
                 .Select(index => Product.Create(
                     user.Id,
                     string.Create(CultureInfo.InvariantCulture, $"Perf Product {index:D4}"),
@@ -209,8 +209,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
                     20,
                     3,
                     0,
-                    visibility: Visibility.Private))
-                .ToArray();
+                    visibility: Visibility.Private))];
 
             dbContext.Products.AddRange(products);
             await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -223,14 +222,13 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             User user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
 
-            Recipe[] recipes = Enumerable.Range(0, count)
+            Recipe[] recipes = [.. Enumerable.Range(0, count)
                 .Select(index => Recipe.Create(
                     user.Id,
                     string.Create(CultureInfo.InvariantCulture, $"Perf Recipe {index:D4}"),
                     servings: 2,
                     description: string.Create(CultureInfo.InvariantCulture, $"Description {index:D4}"),
-                    visibility: Visibility.Private))
-                .ToArray();
+                    visibility: Visibility.Private))];
 
             dbContext.Recipes.AddRange(recipes);
             await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -265,7 +263,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.NotNull(product);
 
         var startDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        MealType[] mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
+        MealType[] mealTypes = [MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack];
 
         foreach (int index in Enumerable.Range(0, count)) {
             HttpResponseMessage createConsumptionResponse = await client.PostAsJsonAsync(

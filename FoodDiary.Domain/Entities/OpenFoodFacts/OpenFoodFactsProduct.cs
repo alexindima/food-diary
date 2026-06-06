@@ -80,11 +80,7 @@ public class OpenFoodFactsProduct {
     }
 
     private static string NormalizeRequired(string value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            throw new ArgumentException("Value is required.", nameof(value));
-        }
-
-        return value.Trim();
+        return string.IsNullOrWhiteSpace(value) ? throw new ArgumentException("Value is required.", nameof(value)) : value.Trim();
     }
 
     private static string? NormalizeOptional(string? value) =>

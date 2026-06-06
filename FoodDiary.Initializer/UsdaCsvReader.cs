@@ -26,7 +26,7 @@ internal static class UsdaCsvReader {
         }
 
         fields.Add(ExtractField(line, start, line.Length));
-        return fields.ToArray();
+        return [.. fields];
     }
 
     public static string Truncate(string value, int maxLength) =>

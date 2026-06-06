@@ -46,17 +46,16 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
         DateTime windowStartUtc = DateTime.UtcNow.AddHours(-normalizedWindowHours);
         IReadOnlyList<FastingTelemetryEventRecord> events = await repository.GetSinceAsync(windowStartUtc, cancellationToken).ConfigureAwait(false);
 
-        FastingTelemetryEventRecord[] startedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.started", StringComparison.Ordinal)).ToArray();
-        FastingTelemetryEventRecord[] completedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.completed", StringComparison.Ordinal)).ToArray();
-        FastingTelemetryEventRecord[] checkInEvents = events.Where(x => string.Equals(x.Name, "fasting.check-in.saved", StringComparison.Ordinal)).ToArray();
-        FastingTelemetryEventRecord[] reminderPresetSelections = events.Where(x => string.Equals(x.Name, "fasting.reminder-preset.selected", StringComparison.Ordinal)).ToArray();
-        FastingTelemetryEventRecord[] reminderTimingSaves = events.Where(x => string.Equals(x.Name, "fasting.reminder-timing.saved", StringComparison.Ordinal)).ToArray();
-        double[] completedDurations = completedEvents
+        FastingTelemetryEventRecord[] startedEvents = [.. events.Where(x => string.Equals(x.Name, "fasting.session.started", StringComparison.Ordinal))];
+        FastingTelemetryEventRecord[] completedEvents = [.. events.Where(x => string.Equals(x.Name, "fasting.session.completed", StringComparison.Ordinal))];
+        FastingTelemetryEventRecord[] checkInEvents = [.. events.Where(x => string.Equals(x.Name, "fasting.check-in.saved", StringComparison.Ordinal))];
+        FastingTelemetryEventRecord[] reminderPresetSelections = [.. events.Where(x => string.Equals(x.Name, "fasting.reminder-preset.selected", StringComparison.Ordinal))];
+        FastingTelemetryEventRecord[] reminderTimingSaves = [.. events.Where(x => string.Equals(x.Name, "fasting.reminder-timing.saved", StringComparison.Ordinal))];
+        double[] completedDurations = [.. completedEvents
             .Where(x => x.ActualDurationHours.HasValue)
-            .Select(x => x.ActualDurationHours!.Value)
-            .ToArray();
+            .Select(x => x.ActualDurationHours!.Value)];
 
-        FastingTelemetryPresetSnapshot[] topPresets = startedEvents
+        FastingTelemetryPresetSnapshot[] topPresets = [.. startedEvents
             .GroupBy(x => x.ReminderPresetId ?? "custom", StringComparer.OrdinalIgnoreCase)
             .Select(group => {
                 string presetId = group.Key;
@@ -82,8 +81,7 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
             .OrderByDescending(x => x.StartedSessions)
             .ThenByDescending(x => x.SelectionCount)
             .ThenBy(x => x.PresetId, StringComparer.OrdinalIgnoreCase)
-            .Take(5)
-            .ToArray();
+            .Take(5)];
 
         return new FastingTelemetrySummarySnapshot(
             normalizedWindowHours,

@@ -153,7 +153,7 @@ public class StatisticsFeatureTests {
             DateTime? dateFrom,
             DateTime? dateTo,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult((Items: (IReadOnlyList<Meal>)Array.Empty<Meal>(), TotalItems: 0));
+            Task.FromResult((Items: (IReadOnlyList<Meal>)[], TotalItems: 0));
 
         public virtual Task<IReadOnlyList<Meal>> GetByPeriodAsync(
             UserId userId,

@@ -21,11 +21,14 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
             return;
         }
 
-        IAuthorizeData[] authorizeAttributes = controllerAction.MethodInfo
-            .GetCustomAttributes(inherit: true)
-            .OfType<IAuthorizeData>()
-            .Concat(controllerAction.ControllerTypeInfo.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>())
-            .ToArray();
+        IAuthorizeData[] authorizeAttributes =
+        [
+            .. controllerAction.MethodInfo
+                        .GetCustomAttributes(inherit: true)
+                        .OfType<IAuthorizeData>()
+,
+            .. controllerAction.ControllerTypeInfo.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>(),
+        ];
 
         if (authorizeAttributes.Length == 0) {
             return;
@@ -41,7 +44,7 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
     }
 
     private static void AddApiErrorResponse(OpenApiOperation operation, OperationFilterContext context, int statusCode) {
-        operation.Responses ??= new OpenApiResponses();
+        operation.Responses ??= [];
 
         string statusCodeText = statusCode.ToString(CultureInfo.InvariantCulture);
         if (operation.Responses.ContainsKey(statusCodeText)) {

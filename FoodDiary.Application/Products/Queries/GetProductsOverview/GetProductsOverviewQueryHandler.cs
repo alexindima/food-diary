@@ -62,11 +62,10 @@ public sealed class GetProductsOverviewQueryHandler(
         var favoriteLookup = allFavorites.ToDictionary(favorite => favorite.ProductId);
 
         IReadOnlyList<ProductListItem> recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
-        ProductId[] favoriteProductIds = allProducts
+        ProductId[] favoriteProductIds = [.. allProducts
             .Select(x => x.Product.Id)
             .Concat(recentItems.Select(x => x.Product.Id))
-            .Distinct()
-            .ToArray();
+            .Distinct()];
         var favoritesByProductId = favoriteLookup
             .Where(pair => favoriteProductIds.Contains(pair.Key))
             .ToDictionary();
@@ -95,7 +94,7 @@ public sealed class GetProductsOverviewQueryHandler(
             Math.Clamp(query.RecentLimit, 1, 50),
             Math.Clamp(query.FavoriteLimit, 1, 50),
             productTypes is { Length: > 0 } ? productTypes : null,
-            productTypes is { Length: > 0 } ? productTypes.ToHashSet() : null);
+            productTypes is { Length: > 0 } ? [.. productTypes] : null);
     }
 
     private async Task<IReadOnlyList<ProductListItem>> GetRecentItemsAsync(
@@ -152,9 +151,7 @@ public sealed class GetProductsOverviewQueryHandler(
     private static ProductModel[] ToProductModels(
         IEnumerable<ProductListItem> products,
         IReadOnlyDictionary<ProductId, Domain.Entities.FavoriteProducts.FavoriteProduct> favoritesByProductId) =>
-        products
-            .Select(product => ToProductModel(product, favoritesByProductId))
-            .ToArray();
+        [.. products.Select(product => ToProductModel(product, favoritesByProductId))];
 
     private static ProductModel ToProductModel(
         ProductListItem product,

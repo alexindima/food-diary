@@ -99,7 +99,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
         Assert.Equal(
             ["users/deleted/meal.webp", "users/deleted/profile.webp"],
-            storage.DeletedObjectKeys.OrderBy(static key => key, StringComparer.Ordinal).ToArray());
+            [.. storage.DeletedObjectKeys.OrderBy(static key => key, StringComparer.Ordinal)]);
     }
 
     [RequiresDockerFact]

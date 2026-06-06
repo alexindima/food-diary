@@ -26,10 +26,9 @@ public static class DependencyInjection {
     }
 
     private static void RegisterMediatorHandlers(this IServiceCollection services, Assembly assembly) {
-        Type[] implementationTypes = assembly
+        Type[] implementationTypes = [.. assembly
             .GetTypes()
-            .Where(static type => type is { IsAbstract: false, IsInterface: false })
-            .ToArray();
+            .Where(static type => type is { IsAbstract: false, IsInterface: false })];
 
         foreach (Type? implementationType in implementationTypes) {
             foreach (Type? serviceType in implementationType.GetInterfaces().Where(IsMediatorHandler)) {

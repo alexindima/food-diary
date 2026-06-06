@@ -190,9 +190,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task ImportAdminLessons_WithTooManyLessons_HasError() {
-        ImportAdminLessonItem[] lessons = Enumerable.Range(0, 101)
-            .Select(index => ValidLesson(title: string.Create(CultureInfo.InvariantCulture, $"Lesson {index}")))
-            .ToArray();
+        ImportAdminLessonItem[] lessons = [.. Enumerable.Range(0, 101).Select(index => ValidLesson(title: string.Create(CultureInfo.InvariantCulture, $"Lesson {index}")))];
 
         TestValidationResult<ImportAdminLessonsCommand> result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
             new ImportAdminLessonsCommand(1, lessons));

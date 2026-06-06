@@ -20,7 +20,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class ControllerSecurityContractTests {
     [Fact]
     public void AiFoodController_RequiresPremiumRole_AndAiRateLimitPolicy() {
-        AuthorizeAttribute[] authorizeAttributes = typeof(AiFoodController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
+        AuthorizeAttribute[] authorizeAttributes = [.. typeof(AiFoodController).GetCustomAttributes<AuthorizeAttribute>(inherit: true)];
         EnableRateLimitingAttribute rateLimit = AssertSingleAttribute<EnableRateLimitingAttribute>(typeof(AiFoodController));
 
         Assert.NotEmpty(authorizeAttributes);
@@ -81,7 +81,7 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void AdminLessonsController_RequiresAdminRole() {
-        AuthorizeAttribute[] authorizeAttributes = typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
+        AuthorizeAttribute[] authorizeAttributes = [.. typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true)];
 
         Assert.NotEmpty(authorizeAttributes);
         Assert.Contains(authorizeAttributes, static attribute => string.Equals(attribute.Roles, PresentationRoleNames.Admin, StringComparison.Ordinal));
@@ -124,14 +124,14 @@ public sealed class ControllerSecurityContractTests {
 
     private static TAttribute AssertSingleAttribute<TAttribute>(Type type)
         where TAttribute : Attribute {
-        TAttribute[] attributes = type.GetCustomAttributes<TAttribute>(inherit: true).ToArray();
+        TAttribute[] attributes = [.. type.GetCustomAttributes<TAttribute>(inherit: true)];
         Assert.Single(attributes);
         return attributes[0];
     }
 
     private static TAttribute AssertSingleAttribute<TAttribute>(MemberInfo member)
         where TAttribute : Attribute {
-        TAttribute[] attributes = member.GetCustomAttributes<TAttribute>(inherit: true).ToArray();
+        TAttribute[] attributes = [.. member.GetCustomAttributes<TAttribute>(inherit: true)];
         Assert.Single(attributes);
         return attributes[0];
     }

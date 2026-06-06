@@ -95,11 +95,10 @@ public sealed class UpdateAdminUserCommandHandler(
             return Result.Success<RoleUpdate?>(null);
         }
 
-        string[] requestedRoles = command.Roles
+        string[] requestedRoles = [.. command.Roles
             .Where(role => !string.IsNullOrWhiteSpace(role))
             .Select(role => role.Trim())
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
+            .Distinct(StringComparer.Ordinal)];
 
         Error? rolesError = ValidateRequestedRoles(user, command, requestedRoles);
         if (rolesError is not null) {

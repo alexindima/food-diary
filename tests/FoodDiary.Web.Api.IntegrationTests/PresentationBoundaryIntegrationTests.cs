@@ -423,9 +423,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         JsonElement paths = json.RootElement.GetProperty("paths");
-        string[] pathNames = paths.EnumerateObject()
-            .Select(property => property.Name)
-            .ToArray();
+        string[] pathNames = [.. paths.EnumerateObject().Select(property => property.Name)];
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Contains(pathNames, path => string.Equals(path, "/api/v{version}/products", StringComparison.OrdinalIgnoreCase));
@@ -542,7 +540,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     private static string BuildFocusedOpenApiSnapshot(JsonElement root) {
-        string[] selectedPaths = new[] {
+        string[] selectedPaths = [
             "/api/v{version}/auth/register",
             "/api/v{version}/auth/login",
             "/api/v{version}/products",
@@ -555,13 +553,12 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/users/overview",
             "/api/v{version}/weight-entries",
             "/api/v{version}/waist-entries",
-        };
+        ];
 
         JsonElement paths = root.GetProperty("paths");
-        EndpointSnapshot[] endpoints = selectedPaths
+        EndpointSnapshot[] endpoints = [.. selectedPaths
             .Select(path => CreateEndpointSnapshot(paths, path))
-            .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)];
 
         var snapshot = new OpenApiFocusedSnapshot(
             root.GetProperty("openapi").GetString() ?? string.Empty,
@@ -573,7 +570,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     private static string BuildAuthAdminOpenApiSnapshot(JsonElement root) {
-        string[] selectedPaths = new[] {
+        string[] selectedPaths = [
             "/api/v{version}/auth/register",
             "/api/v{version}/auth/login",
             "/api/v{version}/auth/google",
@@ -601,13 +598,12 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v{version}/admin/email-templates/test",
             "/api/v{version}/admin/email-templates/{key}/{locale}",
             "/api/v{version}/admin/ai-usage/summary",
-        };
+        ];
 
         JsonElement paths = root.GetProperty("paths");
-        EndpointSnapshot[] endpoints = selectedPaths
+        EndpointSnapshot[] endpoints = [.. selectedPaths
             .Select(path => CreateEndpointSnapshot(paths, path))
-            .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)];
 
         var snapshot = new OpenApiFocusedSnapshot(
             root.GetProperty("openapi").GetString() ?? string.Empty,
@@ -620,10 +616,9 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static string BuildFullOpenApiSnapshot(JsonElement root) {
         JsonElement paths = root.GetProperty("paths");
-        EndpointSnapshot[] endpoints = paths.EnumerateObject()
+        EndpointSnapshot[] endpoints = [.. paths.EnumerateObject()
             .Select(property => CreateEndpointSnapshot(paths, property.Name))
-            .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)];
 
         var snapshot = new OpenApiFocusedSnapshot(
             root.GetProperty("openapi").GetString() ?? string.Empty,
@@ -636,18 +631,16 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static EndpointSnapshot CreateEndpointSnapshot(JsonElement paths, string path) {
         JsonElement pathNode = paths.GetProperty(path);
-        OperationSnapshot[] operations = pathNode.EnumerateObject()
+        OperationSnapshot[] operations = [.. pathNode.EnumerateObject()
             .Select(operation => new OperationSnapshot(
                 operation.Name,
                 operation.Value.TryGetProperty("requestBody", out _),
                 operation.Value.TryGetProperty("responses", out JsonElement responses)
-                    ? responses.EnumerateObject()
+                    ? [.. responses.EnumerateObject()
                         .Select(response => response.Name)
-                        .OrderBy(code => code, StringComparer.Ordinal)
-                        .ToArray()
+                        .OrderBy(code => code, StringComparer.Ordinal)]
                     : Array.Empty<string>()))
-            .OrderBy(operation => operation.Method, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(operation => operation.Method, StringComparer.Ordinal)];
 
         return new EndpointSnapshot(path.ToLowerInvariant(), operations);
     }

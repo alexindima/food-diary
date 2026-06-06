@@ -19,9 +19,7 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
         context.Users.Add(user);
 
         var baseline = new DateTime(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc);
-        Guid[] existingProductIds = Enumerable.Range(0, 100)
-            .Select(_ => Guid.NewGuid())
-            .ToArray();
+        Guid[] existingProductIds = [.. Enumerable.Range(0, 100).Select(_ => Guid.NewGuid())];
 
         for (int i = 0; i < existingProductIds.Length; i++) {
             context.RecentItems.Add(RecentItem.Create(

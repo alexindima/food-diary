@@ -77,10 +77,9 @@ public sealed class PresentationServiceCollectionExtensionsTests {
 
         app.MapPresentationApi("TestCors");
 
-        RouteEndpoint[] endpoints = ((IEndpointRouteBuilder)app).DataSources
+        RouteEndpoint[] endpoints = [.. ((IEndpointRouteBuilder)app).DataSources
             .SelectMany(dataSource => dataSource.Endpoints)
-            .OfType<RouteEndpoint>()
-            .ToArray();
+            .OfType<RouteEndpoint>()];
 
         Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification", StringComparison.Ordinal));
         Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification/negotiate", StringComparison.Ordinal));

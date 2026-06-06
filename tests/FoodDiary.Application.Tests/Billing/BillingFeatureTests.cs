@@ -1828,7 +1828,7 @@ public sealed class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeUserRepository(params User[] users) : IUserRepository {
-        private readonly List<User> _users = users.ToList();
+        private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
         public int UpdateCount { get; private set; }
@@ -1866,7 +1866,7 @@ public sealed class BillingFeatureTests {
 
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
             GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
-            Task.FromResult((_users.Count, _users.Count, 0, 0, (IReadOnlyList<User>)_users.Take(recentLimit).ToList()));
+            Task.FromResult((_users.Count, _users.Count, 0, 0, (IReadOnlyList<User>)[.. _users.Take(recentLimit)]));
 
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(
             IReadOnlyList<string> names,
@@ -1893,7 +1893,7 @@ public sealed class BillingFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
         : IBillingSubscriptionRepository {
-        public List<BillingSubscription> Subscriptions { get; } = subscriptions.ToList();
+        public List<BillingSubscription> Subscriptions { get; } = [.. subscriptions];
         public int UpdateCount { get; private set; }
 
         public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
@@ -2086,8 +2086,7 @@ public sealed class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingRecurringBillingGateway(string providerName) : IBillingRecurringProviderGateway {
-        private readonly string _provider = providerName;
-        public string Provider => _provider;
+        public string Provider { get; } = providerName;
         public int CreatePaymentCallCount { get; private set; }
 
         public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
@@ -2095,7 +2094,7 @@ public sealed class BillingFeatureTests {
             CancellationToken cancellationToken = default) {
             CreatePaymentCallCount++;
             return Task.FromResult(Result.Failure<BillingRecurringPaymentModel>(
-                Errors.Billing.ProviderOperationFailed(_provider, "declined")));
+                Errors.Billing.ProviderOperationFailed(Provider, "declined")));
         }
     }
 

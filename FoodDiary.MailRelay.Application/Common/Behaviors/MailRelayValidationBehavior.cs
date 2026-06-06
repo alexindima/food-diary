@@ -14,7 +14,7 @@ public sealed class MailRelayValidationBehavior<TRequest, TResponse>(IEnumerable
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
-        IValidator<TRequest>[] validatorList = validators.ToArray();
+        IValidator<TRequest>[] validatorList = [.. validators];
         if (validatorList.Length == 0) {
             return await next(cancellationToken).ConfigureAwait(false);
         }
@@ -22,10 +22,9 @@ public sealed class MailRelayValidationBehavior<TRequest, TResponse>(IEnumerable
         var context = new ValidationContext<TRequest>(request);
         ValidationResult[] validationResults = await Task.WhenAll(
             validatorList.Select(validator => validator.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
-        ValidationFailure[] errors = validationResults
+        ValidationFailure[] errors = [.. validationResults
             .Where(static result => !result.IsValid)
-            .SelectMany(static result => result.Errors)
-            .ToArray();
+            .SelectMany(static result => result.Errors)];
 
         if (errors.Length == 0) {
             return await next(cancellationToken).ConfigureAwait(false);

@@ -367,8 +367,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     private static JsonObject BuildAdminUsersSnapshot(JsonElement root) {
         JsonElement data = root.GetProperty("data");
         string[] firstUserKeys = data.GetArrayLength() > 0
-            ? data[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal).ToArray()
-            : Array.Empty<string>();
+            ? [.. data[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)]
+            : [];
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
@@ -381,10 +381,9 @@ public sealed class PresentationPayloadContractIntegrationTests(
         JsonElement steps = root.GetProperty("steps");
         JsonElement firstStep = steps[0];
         JsonElement ingredients = firstStep.GetProperty("ingredients");
-        string[] firstIngredientKeys = ingredients[0].EnumerateObject()
+        string[] firstIngredientKeys = [.. ingredients[0].EnumerateObject()
             .Select(property => property.Name)
-            .OrderBy(static name => name, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static name => name, StringComparer.Ordinal)];
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
@@ -400,8 +399,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     private static JsonObject BuildStatisticsSnapshot(JsonElement root) {
         string[] firstItemKeys = root.GetArrayLength() > 0
-            ? root[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal).ToArray()
-            : Array.Empty<string>();
+            ? [.. root[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)]
+            : [];
 
         return new JsonObject {
             ["isArray"] = root.ValueKind == JsonValueKind.Array,
@@ -457,7 +456,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["isEmailConfirmed"] = root.GetProperty("isEmailConfirmed").GetBoolean(),
             ["dashboardLayoutKeys"] = dashboardLayout.ValueKind == JsonValueKind.Object
                 ? ToJsonArray(dashboardLayout.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal))
-                : new JsonArray(),
+                : [],
         };
     }
 

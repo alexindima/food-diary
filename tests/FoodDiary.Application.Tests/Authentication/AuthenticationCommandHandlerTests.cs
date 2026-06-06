@@ -1002,7 +1002,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user = null, params User[] otherUsers) : IUserRepository {
-        private readonly List<User> _users = user is null ? otherUsers.ToList() : [user, .. otherUsers];
+        private readonly List<User> _users = user is null ? [.. otherUsers] : [user, .. otherUsers];
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
@@ -1071,7 +1071,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubNotificationRepository(params Notification[] notifications) : INotificationRepository {
-        public List<Notification> Notifications { get; } = notifications.ToList();
+        public List<Notification> Notifications { get; } = [.. notifications];
 
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<Notification>>(Notifications.Where(x => x.UserId == userId).Take(limit).ToList());

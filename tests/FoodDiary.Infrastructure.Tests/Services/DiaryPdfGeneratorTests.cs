@@ -13,11 +13,11 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithMeals_ReturnsPdfDocument() {
         var userId = UserId.New();
-        Meal[] meals = new[] {
+        Meal[] meals = [
             CreateMeal(userId, new DateTime(2026, 5, 2, 21, 4, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7),
             CreateMeal(userId, new DateTime(2026, 5, 3, 20, 41, 0, DateTimeKind.Utc), 905, 58, 45, 66, 5),
             CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3),
-        };
+        ];
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(

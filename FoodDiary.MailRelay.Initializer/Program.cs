@@ -90,13 +90,13 @@ static async Task ExecuteAsync(
 static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToken cancellationToken) {
     NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
     await using (connection.ConfigureAwait(false)) {
-        string[] requiredTables = new[] {
+        string[] requiredTables = [
         "mailrelay_outbound_emails",
         "mailrelay_outbox_messages",
         "mailrelay_inbox_messages",
         "mailrelay_suppressions",
         "mailrelay_delivery_events",
-    };
+    ];
         var existingTables = new HashSet<string>(StringComparer.Ordinal);
 
         const string sql = """

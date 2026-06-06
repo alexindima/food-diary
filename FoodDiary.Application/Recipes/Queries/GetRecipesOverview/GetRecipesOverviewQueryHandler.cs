@@ -58,11 +58,10 @@ public sealed class GetRecipesOverviewQueryHandler(
         var favoriteLookup = allFavorites.ToDictionary(favorite => favorite.RecipeId);
 
         IReadOnlyList<RecipeListItem> recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
-        RecipeId[] favoriteRecipeIds = allRecipes
+        RecipeId[] favoriteRecipeIds = [.. allRecipes
             .Select(x => x.Recipe.Id)
             .Concat(recentItems.Select(x => x.Recipe.Id))
-            .Distinct()
-            .ToArray();
+            .Distinct()];
         var favoritesByRecipeId = favoriteLookup
             .Where(pair => favoriteRecipeIds.Contains(pair.Key))
             .ToDictionary();
@@ -133,9 +132,7 @@ public sealed class GetRecipesOverviewQueryHandler(
     private static RecipeModel[] ToRecipeModels(
         IEnumerable<RecipeListItem> recipes,
         IReadOnlyDictionary<RecipeId, Domain.Entities.FavoriteRecipes.FavoriteRecipe> favoritesByRecipeId) =>
-        recipes
-            .Select(recipe => ToRecipeModel(recipe, favoritesByRecipeId))
-            .ToArray();
+        [.. recipes.Select(recipe => ToRecipeModel(recipe, favoritesByRecipeId))];
 
     private static RecipeModel ToRecipeModel(
         RecipeListItem recipe,

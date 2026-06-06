@@ -147,11 +147,18 @@ internal static class UsdaDataSeeder {
             await foreach (string? line in UsdaCsvReader.ReadLinesAsync(foodCsvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food.csv: fdc_id, data_type, description, food_category_id, publication_date
-                if (fields.Length < 4) continue;
-                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int fdcId)) continue;
+                if (fields.Length < 4) {
+                    continue;
+                }
+
+                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int fdcId)) {
+                    continue;
+                }
 
                 // Only import SR Legacy foods
-                if (!string.Equals(fields[1], "sr_legacy_food", StringComparison.Ordinal)) continue;
+                if (!string.Equals(fields[1], "sr_legacy_food", StringComparison.Ordinal)) {
+                    continue;
+                }
 
                 int? foodCategoryId = int.TryParse(fields[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int catId2) ? catId2 : null;
                 string? foodCategory = foodCategoryId.HasValue && categories.TryGetValue(foodCategoryId.Value, out string? catName)
@@ -191,8 +198,13 @@ internal static class UsdaDataSeeder {
             await foreach (string? line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // nutrient.csv: id, name, unit_name, nutrient_nbr, rank
-                if (fields.Length < 3) continue;
-                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
+                if (fields.Length < 3) {
+                    continue;
+                }
+
+                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) {
+                    continue;
+                }
 
                 await writer.StartRowAsync().ConfigureAwait(false);
                 await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
@@ -222,13 +234,29 @@ internal static class UsdaDataSeeder {
             await foreach (string? line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food_nutrient.csv: id, fdc_id, nutrient_id, amount, ...
-                if (fields.Length < 4) continue;
-                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
-                if (!int.TryParse(fields[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int fdcId)) continue;
-                if (!int.TryParse(fields[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int nutrientId)) continue;
-                if (!double.TryParse(fields[3], NumberStyles.Float, CultureInfo.InvariantCulture, out double amount)) continue;
+                if (fields.Length < 4) {
+                    continue;
+                }
 
-                if (!validFdcIds.Contains(fdcId)) continue;
+                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) {
+                    continue;
+                }
+
+                if (!int.TryParse(fields[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int fdcId)) {
+                    continue;
+                }
+
+                if (!int.TryParse(fields[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int nutrientId)) {
+                    continue;
+                }
+
+                if (!double.TryParse(fields[3], NumberStyles.Float, CultureInfo.InvariantCulture, out double amount)) {
+                    continue;
+                }
+
+                if (!validFdcIds.Contains(fdcId)) {
+                    continue;
+                }
 
                 await writer.StartRowAsync().ConfigureAwait(false);
                 await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
@@ -258,11 +286,21 @@ internal static class UsdaDataSeeder {
             await foreach (string? line in UsdaCsvReader.ReadLinesAsync(csvPath).ConfigureAwait(false)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food_portion.csv: id, fdc_id, seq_num, amount, measure_unit_id, portion_description, modifier, gram_weight, ...
-                if (fields.Length < 8) continue;
-                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
-                if (!int.TryParse(fields[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int fdcId)) continue;
+                if (fields.Length < 8) {
+                    continue;
+                }
 
-                if (!validFdcIds.Contains(fdcId)) continue;
+                if (!int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) {
+                    continue;
+                }
+
+                if (!int.TryParse(fields[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int fdcId)) {
+                    continue;
+                }
+
+                if (!validFdcIds.Contains(fdcId)) {
+                    continue;
+                }
 
                 if (!double.TryParse(fields[3], NumberStyles.Float, CultureInfo.InvariantCulture, out double amount)) {
                     amount = 1.0;
@@ -271,7 +309,9 @@ internal static class UsdaDataSeeder {
                 string? portionDescription = string.IsNullOrWhiteSpace(fields[5]) ? null : fields[5];
                 string? modifier = string.IsNullOrWhiteSpace(fields[6]) ? null : fields[6];
 
-                if (!double.TryParse(fields[7], NumberStyles.Float, CultureInfo.InvariantCulture, out double gramWeight)) continue;
+                if (!double.TryParse(fields[7], NumberStyles.Float, CultureInfo.InvariantCulture, out double gramWeight)) {
+                    continue;
+                }
 
                 // measure_unit_name is not in CSV directly; use portion_description as fallback
                 string measureUnitName = modifier ?? portionDescription ?? "serving";

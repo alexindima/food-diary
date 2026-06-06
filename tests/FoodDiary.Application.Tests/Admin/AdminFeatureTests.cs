@@ -309,7 +309,7 @@ public class AdminFeatureTests {
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
         UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
-        string[] beforeRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
+        string[] beforeRoles = [.. user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal)];
 
         Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -322,7 +322,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        string[] afterRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
+        string[] afterRoles = [.. user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal)];
 
         Assert.True(result.IsSuccess);
         Assert.Equal(beforeRoles, afterRoles);
@@ -373,7 +373,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
+        Assert.Equal([RoleNames.Admin], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
     }
 
     [Fact]
@@ -398,7 +398,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
+        Assert.Equal([RoleNames.Admin, RoleNames.Owner], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
     }
 
     [Fact]
@@ -423,7 +423,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin, RoleNames.Owner], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
+        Assert.Equal([RoleNames.Admin, RoleNames.Owner], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
     }
 
     [Fact]
@@ -448,7 +448,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(
             [RoleNames.Admin, RoleNames.Owner, RoleNames.Support],
-            user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
+            [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
     }
 
     [Fact]
@@ -499,7 +499,7 @@ public class AdminFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("own Admin role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal([RoleNames.Admin, RoleNames.Premium], user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal).ToArray());
+        Assert.Equal([RoleNames.Admin, RoleNames.Premium], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
     }
 
     [Fact]
@@ -1347,7 +1347,7 @@ public class AdminFeatureTests {
 
     private static User CreateUserWithRoles(string email, IReadOnlyList<string> roleNames) {
         var user = User.Create(email, "hash");
-        Role[] roles = roleNames.Select(name => Role.Create(name)).ToArray();
+        Role[] roles = [.. roleNames.Select(name => Role.Create(name))];
         user.ReplaceRoles(roles);
         return user;
     }
@@ -1610,7 +1610,7 @@ public class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryAiPromptTemplateRepository(params AiPromptTemplate[] templates) : IAiPromptTemplateRepository {
-        private readonly List<AiPromptTemplate> _templates = templates.ToList();
+        private readonly List<AiPromptTemplate> _templates = [.. templates];
 
         public IReadOnlyList<AiPromptTemplate> Templates => _templates;
         public int UpdateCallCount { get; private set; }

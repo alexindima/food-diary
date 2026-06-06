@@ -767,11 +767,10 @@ public sealed class MailRelayQueueStore(
     public async Task<IReadOnlyList<string>> GetSuppressedRecipientsAsync(
         IReadOnlyCollection<string> recipients,
         CancellationToken cancellationToken) {
-        string?[] normalizedRecipients = recipients
+        string?[] normalizedRecipients = [.. recipients
             .Select(NormalizeEmail)
             .Where(static email => !string.IsNullOrWhiteSpace(email))
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
+            .Distinct(StringComparer.Ordinal)];
 
         if (normalizedRecipients.Length == 0) {
             return [];

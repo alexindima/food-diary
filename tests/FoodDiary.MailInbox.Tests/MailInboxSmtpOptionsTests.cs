@@ -176,7 +176,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.IsType<SmtpInboundMessageStore>(provider.GetRequiredService<SmtpInboundMessageStore>());
         Assert.IsType<MailInboxMailboxFilter>(provider.GetRequiredService<MailInboxMailboxFilter>());
 
-        IHostedService[] hostedServices = provider.GetServices<IHostedService>().ToArray();
+        IHostedService[] hostedServices = [.. provider.GetServices<IHostedService>()];
         Assert.Contains(hostedServices, static service => service is MailInboxSchemaInitializerHostedService);
         Assert.Contains(hostedServices, static service => service is MailInboxSmtpHostedService);
     }

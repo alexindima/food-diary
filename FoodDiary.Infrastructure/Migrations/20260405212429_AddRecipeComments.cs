@@ -38,7 +38,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeComments_RecipeId_CreatedOnUtc",
                 table: "RecipeComments",
-                columns: new[] { "RecipeId", "CreatedOnUtc" });
+                columns: ["RecipeId", "CreatedOnUtc"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeComments_UserId",

@@ -1722,7 +1722,7 @@ public class FastingFeatureTests {
 
         var handler = new GetFastingInsightsQueryHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository(checkIns.ToArray())),
+            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository([.. checkIns])),
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
@@ -1767,7 +1767,7 @@ public class FastingFeatureTests {
 
         var handler = new GetFastingInsightsQueryHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository(checkIns.ToArray())),
+            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository([.. checkIns])),
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 

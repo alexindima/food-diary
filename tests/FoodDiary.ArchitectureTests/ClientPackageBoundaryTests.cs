@@ -8,7 +8,7 @@ public sealed class ClientPackageBoundaryTests {
     public void ClientPackages_DoNotReferenceServerSideNamespaces(string projectFolder) {
         string clientRoot = ArchitectureTestPaths.FromRoot(projectFolder);
         string boundedContextPrefix = projectFolder[..projectFolder.LastIndexOf(".", StringComparison.Ordinal)];
-        string[] forbiddenPatterns = new[] {
+        string[] forbiddenPatterns = [
             $"{boundedContextPrefix}.Application",
             $"{boundedContextPrefix}.Domain",
             $"{boundedContextPrefix}.Infrastructure",
@@ -23,7 +23,7 @@ public sealed class ClientPackageBoundaryTests {
             "MailKit",
             "MimeKit",
             "SmtpServer",
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(clientRoot, forbiddenPatterns);
 
@@ -42,7 +42,7 @@ public sealed class ClientPackageBoundaryTests {
             $"{contextName}Client.cs",
         };
 
-        string[] violations = SourceScanner.SourceFiles(clientRoot)
+        string[] violations = [.. SourceScanner.SourceFiles(clientRoot)
             .Where(path => {
                 string relative = Path.GetRelativePath(clientRoot, path);
                 return relative.StartsWith($"Models{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false &&
@@ -51,8 +51,7 @@ public sealed class ClientPackageBoundaryTests {
                        allowedRootFiles.Contains(relative) is false;
             })
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static path => path, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

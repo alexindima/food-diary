@@ -21,15 +21,12 @@ public sealed class SmtpInboundMessageStore(
         byte[] rawBytes = buffer.ToArray();
         string rawMime = Encoding.UTF8.GetString(rawBytes);
         MimeMessage message = await ParseMessageAsync(rawBytes, cancellationToken).ConfigureAwait(false);
-        string[] recipients = message.To.Mailboxes
+        string[] recipients = [.. message.To.Mailboxes
             .Select(static mailbox => mailbox.Address)
-            .Where(static address => !string.IsNullOrWhiteSpace(address))
-            .ToArray();
+            .Where(static address => !string.IsNullOrWhiteSpace(address))];
 
         if (recipients.Length == 0) {
-            recipients = transaction.To
-                .Select(static mailbox => $"{mailbox.User}@{mailbox.Host}")
-                .ToArray();
+            recipients = [.. transaction.To.Select(static mailbox => $"{mailbox.User}@{mailbox.Host}")];
         }
 
         var inboundMessage = InboundMailMessage.Receive(

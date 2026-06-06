@@ -80,7 +80,7 @@ public sealed class MailInboxArchitectureTests {
     public void MailInboxDomainSource_DoesNotReferenceFrameworkOrInfrastructureTypes() {
         string root = GetRepositoryRoot();
         string domainRoot = Path.Combine(root, "FoodDiary.MailInbox.Domain");
-        string[] forbiddenPatterns = new[] {
+        string[] forbiddenPatterns = [
             "Microsoft.",
             "Npgsql",
             "MailKit",
@@ -89,7 +89,7 @@ public sealed class MailInboxArchitectureTests {
             "IOptions",
             "IConfiguration",
             "HttpContext",
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(domainRoot, forbiddenPatterns);
 
@@ -100,7 +100,7 @@ public sealed class MailInboxArchitectureTests {
     public void MailInboxApplicationSource_DoesNotReferenceTransportPersistenceOrConfigurationTypes() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.MailInbox.Application");
-        string[] forbiddenPatterns = new[] {
+        string[] forbiddenPatterns = [
             "Microsoft.AspNetCore",
             "Microsoft.Extensions.Options",
             "Microsoft.Extensions.Configuration",
@@ -113,7 +113,7 @@ public sealed class MailInboxArchitectureTests {
             "HttpContext",
             "HttpRequest",
             "IEndpointRouteBuilder",
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
@@ -124,13 +124,13 @@ public sealed class MailInboxArchitectureTests {
     public void MailInboxPresentationSource_DoesNotReferenceInfrastructureLayer() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.MailInbox.Presentation");
-        string[] forbiddenPatterns = new[] {
+        string[] forbiddenPatterns = [
             "FoodDiary.MailInbox.Infrastructure",
             "Npgsql",
             "MailKit",
             "MimeKit",
             "SmtpServer",
-        };
+        ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
 
@@ -157,7 +157,7 @@ public sealed class MailInboxArchitectureTests {
             Path.Combine("Controllers", "MailInboxControllerBase.cs"),
         };
 
-        string[] violations = Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
+        string[] violations = [.. Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
             .Where(static path => IsGeneratedPath(path) is false)
             .Where(path => {
                 string relative = Path.GetRelativePath(presentationRoot, path);
@@ -165,8 +165,7 @@ public sealed class MailInboxArchitectureTests {
                        allowedControllerFiles.Contains(relative) is false;
             })
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static path => path, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -182,7 +181,7 @@ public sealed class MailInboxArchitectureTests {
             new { Folder = "Mappings", Suffix = "HttpMappings.cs" },
         };
 
-        string[] violations = conventions
+        string[] violations = [.. conventions
             .SelectMany(convention => Directory.GetFiles(presentationRoot, "*.cs", SearchOption.AllDirectories)
                 .Where(static path => IsGeneratedPath(path) is false)
                 .Where(path => path.Contains(
@@ -191,8 +190,7 @@ public sealed class MailInboxArchitectureTests {
                 .Where(path => path.Contains($"{Path.DirectorySeparatorChar}{convention.Folder}{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
                 .Where(path => path.EndsWith(convention.Suffix, StringComparison.Ordinal) is false)
                 .Select(path => Path.GetRelativePath(root, path)))
-            .OrderBy(static path => path, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(static path => path, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -202,12 +200,11 @@ public sealed class MailInboxArchitectureTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.MailInbox.Application");
 
-        string[] violations = Directory.GetFiles(applicationRoot, "I*.cs", SearchOption.AllDirectories)
+        string[] violations = [.. Directory.GetFiles(applicationRoot, "I*.cs", SearchOption.AllDirectories)
             .Where(static path => IsGeneratedPath(path) is false)
             .SelectMany(path => GetAsyncMethodSignatures(path)
                 .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
-                .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))
-            .ToArray();
+                .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))];
 
         Assert.Empty(violations);
     }

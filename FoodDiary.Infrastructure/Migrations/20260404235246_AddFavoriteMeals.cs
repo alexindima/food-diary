@@ -49,7 +49,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_FavoriteMeals_UserId_MealId",
                 table: "FavoriteMeals",
-                columns: new[] { "UserId", "MealId" },
+                columns: ["UserId", "MealId"],
                 unique: true);
         }
 

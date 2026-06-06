@@ -46,13 +46,19 @@ public class UpdateRecipeCommandHandler(
         ApplyRecipeUpdates(values.Recipe, command, values);
 
         Result stepsResult = await ReplaceStepsAsync(values.Recipe, values.Steps, values.UserId, cancellationToken).ConfigureAwait(false);
-        if (stepsResult.IsFailure) return Result.Failure<RecipeModel>(stepsResult.Error);
+        if (stepsResult.IsFailure) {
+            return Result.Failure<RecipeModel>(stepsResult.Error);
+        }
 
         Result nutritionResult = ApplyNutrition(values.Recipe, command);
-        if (nutritionResult.IsFailure) return Result.Failure<RecipeModel>(nutritionResult.Error);
+        if (nutritionResult.IsFailure) {
+            return Result.Failure<RecipeModel>(nutritionResult.Error);
+        }
 
         Result<Recipe> updatedResult = await SaveAndReloadAsync(values.Recipe, values.UserId, cancellationToken).ConfigureAwait(false);
-        if (updatedResult.IsFailure) return Result.Failure<RecipeModel>(updatedResult.Error);
+        if (updatedResult.IsFailure) {
+            return Result.Failure<RecipeModel>(updatedResult.Error);
+        }
 
         await CleanupAssetsAsync(command, values, cancellationToken).ConfigureAwait(false);
         Recipe updated = updatedResult.Value;
@@ -80,7 +86,9 @@ public class UpdateRecipeCommandHandler(
 
         var recipeId = new RecipeId(command.RecipeId);
         Result<Recipe> recipeResult = await ResolveEditableRecipeAsync(command, recipeId, userId, cancellationToken).ConfigureAwait(false);
-        if (recipeResult.IsFailure) return Result.Failure<UpdateRecipeValues>(recipeResult.Error);
+        if (recipeResult.IsFailure) {
+            return Result.Failure<UpdateRecipeValues>(recipeResult.Error);
+        }
 
         Result<Visibility?> visibilityResult = ParseVisibility(command);
         if (visibilityResult.IsFailure) {

@@ -31,7 +31,10 @@ internal static class DailyAdviceSelector {
         int todayIndex = GetWeightedIndex(ordered, targetDate, normalizedLocale);
         DailyAdvice selected = ordered[todayIndex];
 
-        if (ordered.Count <= 1) return selected;
+        if (ordered.Count <= 1) {
+            return selected;
+        }
+
         int previousIndex = GetWeightedIndex(ordered, targetDate.AddDays(-1), normalizedLocale);
         if (ordered[previousIndex].Id == selected.Id) {
             selected = ordered[(todayIndex + 1) % ordered.Count];

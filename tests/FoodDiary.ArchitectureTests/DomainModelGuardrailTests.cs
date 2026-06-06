@@ -9,7 +9,7 @@ public class DomainModelGuardrailTests {
 
     [Fact]
     public void DomainAggregates_DoNotIntroduceNewWidePublicMutators() {
-        string[] violations = typeof(AggregateRoot<>).Assembly
+        string[] violations = [.. typeof(AggregateRoot<>).Assembly
             .GetTypes()
             .Where(IsConcreteAggregateRoot)
             .SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
@@ -17,8 +17,7 @@ public class DomainModelGuardrailTests {
                 .Where(method => method.GetParameters().Length > 8)
                 .Where(method => !AllowedWideMutators.Contains($"{method.DeclaringType!.FullName}.{method.Name}"))
                 .Select(method => $"{method.DeclaringType!.FullName}.{method.Name}({method.GetParameters().Length} params)"))
-            .OrderBy(name => name, StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(name => name, StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,

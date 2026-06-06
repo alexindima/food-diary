@@ -1361,7 +1361,7 @@ public class ProductsFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
-        Assert.Equal([publicProduct.Id.Value, owned.Id.Value], result.Value.Select(x => x.Id).ToArray());
+        Assert.Equal([publicProduct.Id.Value, owned.Id.Value], [.. result.Value.Select(x => x.Id)]);
         Assert.False(result.Value[0].IsOwnedByCurrentUser);
         Assert.True(result.Value[1].IsOwnedByCurrentUser);
         Assert.Equal(3, result.Value[0].UsageCount);
@@ -1385,7 +1385,7 @@ public class ProductsFeatureTests {
             string? search,
             IReadOnlyCollection<ProductType>? productTypes = null,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult((Items: (IReadOnlyList<(Product Product, int UsageCount)>)Array.Empty<(Product Product, int UsageCount)>(), TotalItems: 0));
+            Task.FromResult((Items: (IReadOnlyList<(Product Product, int UsageCount)>)[], TotalItems: 0));
 
         public Task<Product?> GetByIdAsync(
             ProductId id,

@@ -71,7 +71,7 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        Product[] products = Enumerable.Range(0, PerformanceSeedCount)
+        Product[] products = [.. Enumerable.Range(0, PerformanceSeedCount)
             .Select(index => Product.Create(
                 user.Id,
                 string.Create(CultureInfo.InvariantCulture, $"Perf Product {index:D4}"),
@@ -83,8 +83,7 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
                 5,
                 20,
                 3,
-                0))
-            .ToArray();
+                0))];
 
         context.Products.AddRange(products);
         await context.SaveChangesAsync();

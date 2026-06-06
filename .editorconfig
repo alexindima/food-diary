@@ -25,7 +25,7 @@ csharp_new_line_before_finally = false
 csharp_style_namespace_declarations = file_scoped:suggestion
 csharp_style_implicit_object_creation_when_type_is_apparent = true:error
 csharp_style_prefer_primary_constructors = true:error
-csharp_prefer_braces = true:suggestion
+csharp_prefer_braces = true:error
 csharp_prefer_simple_using_statement = true:suggestion
 csharp_style_prefer_method_group_conversion = true:suggestion
 csharp_style_prefer_top_level_statements = false:none
@@ -51,6 +51,7 @@ dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
 dotnet_style_predefined_type_for_member_access = true:suggestion
 dotnet_style_object_initializer = true:suggestion
 dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_collection_expression = true:error
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
@@ -82,9 +83,18 @@ dotnet_diagnostic.MA0144.severity = warning
 dotnet_diagnostic.MA0150.severity = warning
 dotnet_diagnostic.MA0188.severity = error
 dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.IDE0028.severity = error
+dotnet_diagnostic.IDE0032.severity = error
 dotnet_diagnostic.IDE0090.severity = error
 dotnet_diagnostic.IDE0290.severity = error
+dotnet_diagnostic.IDE0300.severity = error
+dotnet_diagnostic.IDE0301.severity = error
+dotnet_diagnostic.IDE0302.severity = error
+dotnet_diagnostic.IDE0303.severity = error
+dotnet_diagnostic.IDE0304.severity = error
+dotnet_diagnostic.IDE0305.severity = error
 dotnet_diagnostic.RCS1161.severity = error
+dotnet_diagnostic.RCS1189.severity = error
 
 # Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
 dotnet_diagnostic.CA1707.severity = none
@@ -98,11 +108,20 @@ dotnet_diagnostic.MA0048.severity = warning
 # Domain value objects are not interop contracts; keep layout attributes out of business code.
 dotnet_diagnostic.MA0008.severity = suggestion
 
+[FoodDiary.Domain/Common/Entity.cs]
+dotnet_diagnostic.IDE0032.severity = none
+
 [FoodDiary.MailInbox.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
 
+[FoodDiary.MailInbox.Domain/Common/Entity.cs]
+dotnet_diagnostic.IDE0032.severity = none
+
 [FoodDiary.MailRelay.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailRelay.Domain/Common/Entity.cs]
+dotnet_diagnostic.IDE0032.severity = none
 
 [FoodDiary.Application.Abstractions/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error

@@ -49,13 +49,19 @@ public class CreateConsumptionCommandHandler(
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
 
         Result itemsResult = AddManualItems(meal, command.Items);
-        if (itemsResult.IsFailure) return Result.Failure<ConsumptionModel>(itemsResult.Error);
+        if (itemsResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(itemsResult.Error);
+        }
 
         Result aiSessionsResult = await AddAiSessionsAsync(meal, command.AiSessions, values.UserId, cancellationToken).ConfigureAwait(false);
-        if (aiSessionsResult.IsFailure) return Result.Failure<ConsumptionModel>(aiSessionsResult.Error);
+        if (aiSessionsResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(aiSessionsResult.Error);
+        }
 
         Result nutritionResult = await ApplyNutritionAsync(meal, command, values.UserId, cancellationToken).ConfigureAwait(false);
-        if (nutritionResult.IsFailure) return Result.Failure<ConsumptionModel>(nutritionResult.Error);
+        if (nutritionResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(nutritionResult.Error);
+        }
 
         return await SaveAndLoadAsync(meal, values.UserId, cancellationToken).ConfigureAwait(false);
     }

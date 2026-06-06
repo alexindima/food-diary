@@ -85,9 +85,9 @@ static async Task ExecuteAsync(
 static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
     NpgsqlConnection connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
     await using (connection.ConfigureAwait(false)) {
-        string[] requiredTables = new[] {
+        string[] requiredTables = [
         "mailinbox_messages",
-    };
+    ];
         var existingTables = new HashSet<string>(StringComparer.Ordinal);
 
         const string sql = """

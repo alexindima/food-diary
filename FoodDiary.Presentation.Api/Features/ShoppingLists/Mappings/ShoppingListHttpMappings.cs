@@ -24,7 +24,7 @@ public static class ShoppingListHttpMappings {
         new(
             userId,
             request.Name,
-            request.Items?.Select(ToInput).ToList() ?? new());
+            request.Items?.Select(ToInput).ToList() ?? []);
 
     public static UpdateShoppingListCommand ToCommand(
         this UpdateShoppingListHttpRequest request,

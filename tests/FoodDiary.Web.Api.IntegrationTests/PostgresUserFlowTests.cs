@@ -127,7 +127,10 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
     }
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
-        if (response.StatusCode == expected) return;
+        if (response.StatusCode == expected) {
+            return;
+        }
+
         string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail(string.Create(CultureInfo.InvariantCulture, $"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}"));
     }

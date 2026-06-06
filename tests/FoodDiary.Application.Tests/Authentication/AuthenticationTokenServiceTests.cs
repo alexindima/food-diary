@@ -102,7 +102,7 @@ public class AuthenticationTokenServiceTests {
 
     private static User CreateUser(string email, params string[] roles) {
         var user = User.Create(email, "password-hash");
-        Role[] roleEntities = roles.Select(Role.Create).ToArray();
+        Role[] roleEntities = [.. roles.Select(Role.Create)];
         user.ReplaceRoles(roleEntities);
         return user;
     }
@@ -158,11 +158,10 @@ public class AuthenticationTokenServiceTests {
             DateTime olderThanUtc,
             int batchSize,
             CancellationToken cancellationToken = default) {
-            UserLoginEvent[] expiredItems = Items
+            UserLoginEvent[] expiredItems = [.. Items
                 .Where(item => item.LoggedInAtUtc < olderThanUtc)
                 .OrderBy(item => item.LoggedInAtUtc)
-                .Take(Math.Max(batchSize, 1))
-                .ToArray();
+                .Take(Math.Max(batchSize, 1))];
 
             foreach (UserLoginEvent? item in expiredItems) {
                 Items.Remove(item);

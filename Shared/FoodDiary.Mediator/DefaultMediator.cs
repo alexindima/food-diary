@@ -20,11 +20,10 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
             cancellationToken: token);
 
         Type behaviorType = typeof(IPipelineBehavior<,>).MakeGenericType(requestType, responseType);
-        object[] behaviors = serviceProvider
+        object[] behaviors = [.. serviceProvider
             .GetServices(behaviorType)
             .OfType<object>()
-            .Reverse()
-            .ToArray();
+            .Reverse()];
 
         foreach (object? behavior in behaviors) {
             RequestHandlerDelegate<TResponse> next = handlerDelegate;

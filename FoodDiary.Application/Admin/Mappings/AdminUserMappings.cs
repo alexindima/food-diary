@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Admin.Mappings;
 
 public static class AdminUserMappings {
     public static AdminUserModel ToAdminModel(this User user) {
-        string[] roles = user.GetRoleNames().ToArray();
+        string[] roles = [.. user.GetRoleNames()];
 
         return new AdminUserModel(
             user.Id.Value,

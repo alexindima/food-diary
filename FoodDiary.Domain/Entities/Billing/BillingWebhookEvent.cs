@@ -60,18 +60,10 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
     }
 
     private static string? NormalizeOptional(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return null;
-        }
-
-        return value.Trim();
+        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
     private static DateTime NormalizeRequiredUtc(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 }

@@ -65,7 +65,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             .GroupBy(n => n.FdcId)
             .ToDictionary(
                 g => g.Key,
-                g => (IReadOnlyList<UsdaFoodNutrient>)g.ToList());
+                g => (IReadOnlyList<UsdaFoodNutrient>)[.. g]);
     }
 
     public async Task<IReadOnlyDictionary<int, DailyReferenceValue>> GetDailyReferenceValuesAsync(

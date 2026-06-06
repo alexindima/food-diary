@@ -62,13 +62,13 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_CycleDays_CycleId_Date",
                 table: "CycleDays",
-                columns: new[] { "CycleId", "Date" },
+                columns: ["CycleId", "Date"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cycles_User_StartDate",
                 table: "Cycles",
-                columns: new[] { "UserId", "StartDate" });
+                columns: ["UserId", "StartDate"]);
         }
 
         /// <inheritdoc />

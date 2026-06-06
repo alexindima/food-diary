@@ -82,7 +82,7 @@ public sealed class AuthenticationTokenService(
             roles.Add(RoleNames.Premium);
         }
 
-        return roles.ToArray();
+        return [.. roles];
     }
 
     private DateTime? ResolveAccessTokenCapUtc(User user) {

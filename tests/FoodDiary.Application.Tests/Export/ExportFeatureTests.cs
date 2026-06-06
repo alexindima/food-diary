@@ -36,7 +36,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
         var userId = UserId.New();
-        Meal[] meals = new[] { CreateMeal(userId), CreateMeal(userId, TestDate.AddDays(1), MealType.Lunch) };
+        Meal[] meals = [CreateMeal(userId), CreateMeal(userId, TestDate.AddDays(1), MealType.Lunch)];
         ExportDiaryQueryHandler handler = CreateHandler(meals);
 
         Result<FileExportResult> result = await handler.Handle(
@@ -53,7 +53,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithPdfFormat_ReturnsPdfFileResult() {
         var userId = UserId.New();
-        Meal[] meals = new[] { CreateMeal(userId) };
+        Meal[] meals = [CreateMeal(userId)];
         var pdfGenerator = new StubPdfGenerator();
         var handler = new ExportDiaryQueryHandler(new StubMealRepository(meals), new SingleUserRepository(), pdfGenerator);
 

@@ -34,7 +34,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             migrationBuilder.CreateIndex(
                 name: "IX_DailyReferenceValues_NutrientId_AgeGroup_Gender",
                 table: "DailyReferenceValues",
-                columns: new[] { "NutrientId", "AgeGroup", "Gender" },
+                columns: ["NutrientId", "AgeGroup", "Gender"],
                 unique: true);
         }
 

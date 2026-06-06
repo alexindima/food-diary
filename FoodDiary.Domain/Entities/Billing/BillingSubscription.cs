@@ -190,9 +190,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         }
 
         return status.Trim().ToLowerInvariant() switch {
-            "active" => currentPeriodEndUtc,
-            "trialing" => currentPeriodEndUtc,
-            "past_due" => currentPeriodEndUtc,
+            "active" or "trialing" or "past_due" => currentPeriodEndUtc,
             _ => null,
         };
     }

@@ -24,10 +24,9 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         ValidationResult[] validationResults = await Task.WhenAll(
             _validators.Select(v => v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
 
-        ValidationFailure[] errors = validationResults
+        ValidationFailure[] errors = [.. validationResults
             .Where(r => !r.IsValid)
-            .SelectMany(r => r.Errors)
-            .ToArray();
+            .SelectMany(r => r.Errors)];
 
         if (errors.Length == 0) {
             return await next(cancellationToken).ConfigureAwait(false);
@@ -63,7 +62,10 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         }
 
         Type resultType = typeof(TResponse);
-        if (!resultType.IsGenericType || resultType.GetGenericTypeDefinition() != typeof(Result<>)) throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
+        if (!resultType.IsGenericType || resultType.GetGenericTypeDefinition() != typeof(Result<>)) {
+            throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
+        }
+
         Type valueType = resultType.GetGenericArguments()[0];
         MethodInfo? failureMethod = typeof(Result)
             .GetMethod(nameof(Result.Failure), 1, [typeof(Error)]);

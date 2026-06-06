@@ -74,7 +74,10 @@ public class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsy
 
     private static string ResolveFeature(Type controllerType) {
         string? ns = controllerType.Namespace;
-        if (string.IsNullOrWhiteSpace(ns)) return "Unknown";
+        if (string.IsNullOrWhiteSpace(ns)) {
+            return "Unknown";
+        }
+
         string[] segments = ns.Split('.');
         int idx = Array.IndexOf(segments, "Features");
         return idx >= 0 && idx < segments.Length - 1 ? segments[idx + 1] : "Unknown";

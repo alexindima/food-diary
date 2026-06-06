@@ -123,7 +123,7 @@ public sealed class WebPushNotificationSender(
             .ToList();
 
         if (expiredSubscriptions.Count == 0) {
-            return subscriptions.ToList();
+            return [.. subscriptions];
         }
 
         await subscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
@@ -133,7 +133,7 @@ public sealed class WebPushNotificationSender(
             notification.UserId.Value,
             notification.Id.Value);
 
-        return subscriptions.Except(expiredSubscriptions).ToList();
+        return [.. subscriptions.Except(expiredSubscriptions)];
     }
 
     private async Task<(int DeliveredCount, List<WebPushSubscription> InvalidSubscriptions)> SendToSubscriptionsAsync(
